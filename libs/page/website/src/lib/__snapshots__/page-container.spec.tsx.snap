@@ -461,8 +461,19 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-135 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -511,7 +522,7 @@ exports[`Page Container should render ById 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -583,15 +594,6 @@ exports[`Page Container should render ById 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-148 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-148 {
     font-size: 32px;
@@ -607,15 +609,6 @@ exports[`Page Container should render ById 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-150 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-150.MuiTypography-gutterBottom {
@@ -638,8 +631,19 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-158 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -657,7 +661,7 @@ exports[`Page Container should render ById 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -694,8 +698,19 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-179 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -709,8 +724,19 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-198 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -724,8 +750,19 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-213 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -763,7 +800,6 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-234 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -777,7 +813,6 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-257 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -791,7 +826,6 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-278 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -805,7 +839,6 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-297 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -819,7 +852,6 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-312 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -857,7 +889,6 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-333 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -871,7 +902,6 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-356 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -885,7 +915,6 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-377 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -899,7 +928,6 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-392 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -913,8 +941,19 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-411 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -3498,8 +3537,19 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-135 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -3548,7 +3598,7 @@ exports[`Page Container should render BySlug 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3620,15 +3670,6 @@ exports[`Page Container should render BySlug 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-148 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-148 {
     font-size: 32px;
@@ -3644,15 +3685,6 @@ exports[`Page Container should render BySlug 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-150 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-150.MuiTypography-gutterBottom {
@@ -3675,8 +3707,19 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-158 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -3694,7 +3737,7 @@ exports[`Page Container should render BySlug 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3731,8 +3774,19 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-179 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -3746,8 +3800,19 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-198 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -3761,8 +3826,19 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-213 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -3800,7 +3876,6 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-234 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3814,7 +3889,6 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-257 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3828,7 +3902,6 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-278 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3842,7 +3915,6 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-297 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3856,7 +3928,6 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-312 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3894,7 +3965,6 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-333 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3908,7 +3978,6 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-356 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3922,7 +3991,6 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-377 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3936,7 +4004,6 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-392 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3950,8 +4017,19 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-411 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -6535,8 +6613,19 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-135 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -6585,7 +6674,7 @@ exports[`Page Container should render WithChildren 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6657,15 +6746,6 @@ exports[`Page Container should render WithChildren 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-148 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-148 {
     font-size: 32px;
@@ -6681,15 +6761,6 @@ exports[`Page Container should render WithChildren 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-150 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-150.MuiTypography-gutterBottom {
@@ -6712,8 +6783,19 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-158 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -6731,7 +6813,7 @@ exports[`Page Container should render WithChildren 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6768,8 +6850,19 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-179 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -6783,8 +6876,19 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-198 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -6798,8 +6902,19 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-213 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -6837,7 +6952,6 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-234 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6851,7 +6965,6 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-257 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6865,7 +6978,6 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-278 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6879,7 +6991,6 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-297 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6893,7 +7004,6 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-312 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6931,7 +7041,6 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-333 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6945,7 +7054,6 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-356 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6959,7 +7067,6 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-377 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6973,7 +7080,6 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-392 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6987,8 +7093,19 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-411 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -9575,8 +9692,19 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-135 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -9625,7 +9753,7 @@ exports[`Page Container should render WithClassName 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -9697,15 +9825,6 @@ exports[`Page Container should render WithClassName 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-148 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-148 {
     font-size: 32px;
@@ -9721,15 +9840,6 @@ exports[`Page Container should render WithClassName 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-150 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-150.MuiTypography-gutterBottom {
@@ -9752,8 +9862,19 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-158 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -9771,7 +9892,7 @@ exports[`Page Container should render WithClassName 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -9808,8 +9929,19 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-179 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -9823,8 +9955,19 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-198 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -9838,8 +9981,19 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-213 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -9877,7 +10031,6 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-234 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -9891,7 +10044,6 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-257 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -9905,7 +10057,6 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-278 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -9919,7 +10070,6 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-297 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -9933,7 +10083,6 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-312 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -9971,7 +10120,6 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-333 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -9985,7 +10133,6 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-356 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -9999,7 +10146,6 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-377 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -10013,7 +10159,6 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-392 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -10027,8 +10172,19 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-411 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -12612,8 +12768,19 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-135 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -12662,7 +12829,7 @@ exports[`Page Container should render WithEmotion 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -12734,15 +12901,6 @@ exports[`Page Container should render WithEmotion 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-148 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-148 {
     font-size: 32px;
@@ -12758,15 +12916,6 @@ exports[`Page Container should render WithEmotion 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-150 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-150.MuiTypography-gutterBottom {
@@ -12789,8 +12938,19 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-158 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -12808,7 +12968,7 @@ exports[`Page Container should render WithEmotion 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -12845,8 +13005,19 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-179 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -12860,8 +13031,19 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-198 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -12875,8 +13057,19 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-213 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -12914,7 +13107,6 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-234 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -12928,7 +13120,6 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-257 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -12942,7 +13133,6 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-278 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -12956,7 +13146,6 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-297 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -12970,7 +13159,6 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-312 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -13008,7 +13196,6 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-333 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -13022,7 +13209,6 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-356 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -13036,7 +13222,6 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-377 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -13050,7 +13235,6 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-392 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -13064,8 +13248,19 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-411 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {

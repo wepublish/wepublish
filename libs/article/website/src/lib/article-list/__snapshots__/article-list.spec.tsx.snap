@@ -28,7 +28,6 @@ exports[`ArticleList should render Default 1`] = `
 
 .emotion-4 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -77,7 +76,7 @@ exports[`ArticleList should render Default 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -122,15 +121,6 @@ exports[`ArticleList should render Default 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-15 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-15 {
     font-size: 32px;
@@ -146,15 +136,6 @@ exports[`ArticleList should render Default 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-17 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-17.MuiTypography-gutterBottom {
@@ -177,7 +158,6 @@ exports[`ArticleList should render Default 1`] = `
 
 .emotion-25 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -191,7 +171,6 @@ exports[`ArticleList should render Default 1`] = `
 
 .emotion-46 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -205,7 +184,6 @@ exports[`ArticleList should render Default 1`] = `
 
 .emotion-67 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -219,7 +197,6 @@ exports[`ArticleList should render Default 1`] = `
 
 .emotion-88 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -233,7 +210,6 @@ exports[`ArticleList should render Default 1`] = `
 
 .emotion-109 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -247,7 +223,6 @@ exports[`ArticleList should render Default 1`] = `
 
 .emotion-130 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -261,7 +236,6 @@ exports[`ArticleList should render Default 1`] = `
 
 .emotion-151 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -275,7 +249,6 @@ exports[`ArticleList should render Default 1`] = `
 
 .emotion-172 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -289,7 +262,6 @@ exports[`ArticleList should render Default 1`] = `
 
 .emotion-193 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -303,7 +275,6 @@ exports[`ArticleList should render Default 1`] = `
 
 .emotion-214 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1025,7 +996,6 @@ exports[`ArticleList should render WithClassName 1`] = `
 
 .emotion-4 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1074,7 +1044,7 @@ exports[`ArticleList should render WithClassName 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1119,15 +1089,6 @@ exports[`ArticleList should render WithClassName 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-15 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-15 {
     font-size: 32px;
@@ -1143,15 +1104,6 @@ exports[`ArticleList should render WithClassName 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-17 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-17.MuiTypography-gutterBottom {
@@ -1174,7 +1126,6 @@ exports[`ArticleList should render WithClassName 1`] = `
 
 .emotion-25 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1188,7 +1139,6 @@ exports[`ArticleList should render WithClassName 1`] = `
 
 .emotion-46 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1202,7 +1152,6 @@ exports[`ArticleList should render WithClassName 1`] = `
 
 .emotion-67 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1216,7 +1165,6 @@ exports[`ArticleList should render WithClassName 1`] = `
 
 .emotion-88 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1230,7 +1178,6 @@ exports[`ArticleList should render WithClassName 1`] = `
 
 .emotion-109 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1244,7 +1191,6 @@ exports[`ArticleList should render WithClassName 1`] = `
 
 .emotion-130 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1258,7 +1204,6 @@ exports[`ArticleList should render WithClassName 1`] = `
 
 .emotion-151 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1272,7 +1217,6 @@ exports[`ArticleList should render WithClassName 1`] = `
 
 .emotion-172 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1286,7 +1230,6 @@ exports[`ArticleList should render WithClassName 1`] = `
 
 .emotion-193 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1300,7 +1243,6 @@ exports[`ArticleList should render WithClassName 1`] = `
 
 .emotion-214 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2022,7 +1964,6 @@ exports[`ArticleList should render WithEmotion 1`] = `
 
 .emotion-4 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2071,7 +2012,7 @@ exports[`ArticleList should render WithEmotion 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2116,15 +2057,6 @@ exports[`ArticleList should render WithEmotion 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-15 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-15 {
     font-size: 32px;
@@ -2140,15 +2072,6 @@ exports[`ArticleList should render WithEmotion 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-17 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-17.MuiTypography-gutterBottom {
@@ -2171,7 +2094,6 @@ exports[`ArticleList should render WithEmotion 1`] = `
 
 .emotion-25 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2185,7 +2107,6 @@ exports[`ArticleList should render WithEmotion 1`] = `
 
 .emotion-46 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2199,7 +2120,6 @@ exports[`ArticleList should render WithEmotion 1`] = `
 
 .emotion-67 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2213,7 +2133,6 @@ exports[`ArticleList should render WithEmotion 1`] = `
 
 .emotion-88 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2227,7 +2146,6 @@ exports[`ArticleList should render WithEmotion 1`] = `
 
 .emotion-109 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2241,7 +2159,6 @@ exports[`ArticleList should render WithEmotion 1`] = `
 
 .emotion-130 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2255,7 +2172,6 @@ exports[`ArticleList should render WithEmotion 1`] = `
 
 .emotion-151 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2269,7 +2185,6 @@ exports[`ArticleList should render WithEmotion 1`] = `
 
 .emotion-172 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2283,7 +2198,6 @@ exports[`ArticleList should render WithEmotion 1`] = `
 
 .emotion-193 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2297,7 +2211,6 @@ exports[`ArticleList should render WithEmotion 1`] = `
 
 .emotion-214 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3091,7 +3004,6 @@ exports[`ArticleList should render WithoutImage 1`] = `
 
 .emotion-4 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3140,7 +3052,7 @@ exports[`ArticleList should render WithoutImage 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3185,15 +3097,6 @@ exports[`ArticleList should render WithoutImage 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-15 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-15 {
     font-size: 32px;
@@ -3209,15 +3112,6 @@ exports[`ArticleList should render WithoutImage 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-17 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-17.MuiTypography-gutterBottom {
@@ -3240,7 +3134,6 @@ exports[`ArticleList should render WithoutImage 1`] = `
 
 .emotion-25 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3254,7 +3147,6 @@ exports[`ArticleList should render WithoutImage 1`] = `
 
 .emotion-46 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3268,7 +3160,6 @@ exports[`ArticleList should render WithoutImage 1`] = `
 
 .emotion-67 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3282,7 +3173,6 @@ exports[`ArticleList should render WithoutImage 1`] = `
 
 .emotion-88 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3296,7 +3186,6 @@ exports[`ArticleList should render WithoutImage 1`] = `
 
 .emotion-109 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3310,7 +3199,6 @@ exports[`ArticleList should render WithoutImage 1`] = `
 
 .emotion-130 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3324,7 +3212,6 @@ exports[`ArticleList should render WithoutImage 1`] = `
 
 .emotion-151 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3338,7 +3225,6 @@ exports[`ArticleList should render WithoutImage 1`] = `
 
 .emotion-172 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3352,7 +3238,6 @@ exports[`ArticleList should render WithoutImage 1`] = `
 
 .emotion-193 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3366,7 +3251,6 @@ exports[`ArticleList should render WithoutImage 1`] = `
 
 .emotion-214 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {

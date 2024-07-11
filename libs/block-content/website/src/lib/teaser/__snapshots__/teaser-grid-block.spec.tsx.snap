@@ -16,8 +16,19 @@ exports[`Teaser Grid Block should render OneColumn 1`] = `
 
 .emotion-2 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-2 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-2 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -66,7 +77,7 @@ exports[`Teaser Grid Block should render OneColumn 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -138,15 +149,6 @@ exports[`Teaser Grid Block should render OneColumn 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-15 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-15 {
     font-size: 32px;
@@ -162,15 +164,6 @@ exports[`Teaser Grid Block should render OneColumn 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-17 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-17.MuiTypography-gutterBottom {
@@ -189,8 +182,19 @@ exports[`Teaser Grid Block should render OneColumn 1`] = `
 
 .emotion-23 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-23 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-23 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -204,8 +208,19 @@ exports[`Teaser Grid Block should render OneColumn 1`] = `
 
 .emotion-42 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-42 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-42 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -431,7 +446,6 @@ exports[`Teaser Grid Block should render ThreeColumns 1`] = `
 
 .emotion-2 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -480,7 +494,7 @@ exports[`Teaser Grid Block should render ThreeColumns 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -552,15 +566,6 @@ exports[`Teaser Grid Block should render ThreeColumns 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-15 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-15 {
     font-size: 32px;
@@ -576,15 +581,6 @@ exports[`Teaser Grid Block should render ThreeColumns 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-17 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-17.MuiTypography-gutterBottom {
@@ -603,7 +599,6 @@ exports[`Teaser Grid Block should render ThreeColumns 1`] = `
 
 .emotion-23 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -617,7 +612,6 @@ exports[`Teaser Grid Block should render ThreeColumns 1`] = `
 
 .emotion-42 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -843,7 +837,6 @@ exports[`Teaser Grid Block should render WithClassName 1`] = `
 
 .emotion-2 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -892,7 +885,7 @@ exports[`Teaser Grid Block should render WithClassName 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -964,15 +957,6 @@ exports[`Teaser Grid Block should render WithClassName 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-15 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-15 {
     font-size: 32px;
@@ -988,15 +972,6 @@ exports[`Teaser Grid Block should render WithClassName 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-17 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-17.MuiTypography-gutterBottom {
@@ -1015,7 +990,6 @@ exports[`Teaser Grid Block should render WithClassName 1`] = `
 
 .emotion-23 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1029,7 +1003,6 @@ exports[`Teaser Grid Block should render WithClassName 1`] = `
 
 .emotion-42 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1255,7 +1228,6 @@ exports[`Teaser Grid Block should render WithEmotion 1`] = `
 
 .emotion-2 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1304,7 +1276,7 @@ exports[`Teaser Grid Block should render WithEmotion 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1376,15 +1348,6 @@ exports[`Teaser Grid Block should render WithEmotion 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-15 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-15 {
     font-size: 32px;
@@ -1400,15 +1363,6 @@ exports[`Teaser Grid Block should render WithEmotion 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-17 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-17.MuiTypography-gutterBottom {
@@ -1427,7 +1381,6 @@ exports[`Teaser Grid Block should render WithEmotion 1`] = `
 
 .emotion-23 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1441,7 +1394,6 @@ exports[`Teaser Grid Block should render WithEmotion 1`] = `
 
 .emotion-42 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
