@@ -1438,8 +1438,19 @@ https://unsplash.it/200/100 200w"
 
 .emotion-2 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-2 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-2 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -1488,7 +1499,7 @@ https://unsplash.it/200/100 200w"
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1560,15 +1571,6 @@ https://unsplash.it/200/100 200w"
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-15 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-15 {
     font-size: 32px;
@@ -1584,15 +1586,6 @@ https://unsplash.it/200/100 200w"
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-17 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-17.MuiTypography-gutterBottom {
@@ -1611,8 +1604,19 @@ https://unsplash.it/200/100 200w"
 
 .emotion-23 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-23 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-23 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -1639,8 +1643,19 @@ https://unsplash.it/200/100 200w"
 
 .emotion-42 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-42 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-42 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -1654,8 +1669,19 @@ https://unsplash.it/200/100 200w"
 
 .emotion-61 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-61 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-61 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -1669,8 +1695,19 @@ https://unsplash.it/200/100 200w"
 
 .emotion-76 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-76 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-76 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -1984,7 +2021,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-2 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2033,7 +2069,7 @@ https://unsplash.it/200/100 200w"
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2105,15 +2141,6 @@ https://unsplash.it/200/100 200w"
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-15 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-15 {
     font-size: 32px;
@@ -2129,15 +2156,6 @@ https://unsplash.it/200/100 200w"
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-17 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-17.MuiTypography-gutterBottom {
@@ -2156,7 +2174,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-23 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2183,7 +2200,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-42 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2197,7 +2213,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-61 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2211,7 +2226,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-76 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2525,7 +2539,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-2 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2574,7 +2587,7 @@ https://unsplash.it/200/100 200w"
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2646,15 +2659,6 @@ https://unsplash.it/200/100 200w"
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-15 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-15 {
     font-size: 32px;
@@ -2670,15 +2674,6 @@ https://unsplash.it/200/100 200w"
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-17 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-17.MuiTypography-gutterBottom {
@@ -2697,7 +2692,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-23 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2724,7 +2718,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-42 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2738,7 +2731,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-57 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2752,8 +2744,19 @@ https://unsplash.it/200/100 200w"
 
 .emotion-76 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-76 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-76 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -4011,8 +4014,19 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-134 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-134 .emotion-148 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-134 .emotion-150 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -4061,7 +4075,7 @@ exports[`Blocks should render WithLayout 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  max-height: 50lvh;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -4133,15 +4147,6 @@ exports[`Blocks should render WithLayout 1`] = `
   font-size: 26px;
 }
 
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-147 {
-      font-size: 3rem;
-      line-height: 1.15;
-    }
-  }
-}
-
 @media (min-width: 900px) {
   .emotion-147 {
     font-size: 32px;
@@ -4157,15 +4162,6 @@ exports[`Blocks should render WithLayout 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
-}
-
-@media (min-width:900px) {
-  @container (min-width: 50lvw) {
-    .emotion-149 {
-      font-size: 1.25rem;
-      line-height: 1.4;
-    }
-  }
 }
 
 .emotion-149.MuiTypography-gutterBottom {
@@ -4184,8 +4180,19 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-155 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-155 .emotion-148 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-155 .emotion-150 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -4212,8 +4219,19 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-174 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-174 .emotion-148 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-174 .emotion-150 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -4227,8 +4245,19 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-193 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-193 .emotion-148 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-193 .emotion-150 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -4242,8 +4271,19 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-208 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-208 .emotion-148 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-208 .emotion-150 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -4281,7 +4321,6 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-229 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4295,7 +4334,6 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-250 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4309,7 +4347,6 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-269 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4323,7 +4360,6 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-288 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4337,7 +4373,6 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-303 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4375,7 +4410,6 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-324 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4389,7 +4423,6 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-345 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4403,7 +4436,6 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-364 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4417,7 +4449,6 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-379 {
   display: grid;
-  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4431,8 +4462,19 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-398 {
   display: grid;
-  container-type: inline-size;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-398 .emotion-148 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-398 .emotion-150 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {

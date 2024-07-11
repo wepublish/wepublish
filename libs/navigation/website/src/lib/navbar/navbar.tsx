@@ -313,6 +313,7 @@ export function Navbar({
       {isMenuOpen && Boolean(mainItems || categories?.length) && (
         <NavPaper
           profileUrl={profileUrl}
+          subscriptionsUrl={subscriptionsUrl}
           loginUrl={loginUrl}
           main={mainItems}
           categories={categories}
@@ -436,11 +437,13 @@ const NavPaper = ({
   categories,
   loginUrl,
   profileUrl,
+  subscriptionsUrl,
   closeMenu,
   children
 }: PropsWithChildren<{
-  loginUrl: string
-  profileUrl: string
+  loginUrl?: string | null
+  profileUrl?: string | null
+  subscriptionsUrl?: string | null
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
   closeMenu: () => void
@@ -469,7 +472,7 @@ const NavPaper = ({
         })}
 
         <NavPaperActions>
-          {!hasUser && (
+          {!hasUser && loginUrl && (
             <Button
               LinkComponent={Link}
               href={loginUrl}
@@ -482,24 +485,39 @@ const NavPaper = ({
 
           {hasUser && (
             <>
-              <Button
-                LinkComponent={Link}
-                href={profileUrl}
-                variant="contained"
-                color="secondary"
-                onClick={closeMenu}>
-                Mein Konto
-              </Button>
+              {profileUrl && (
+                <Button
+                  LinkComponent={Link}
+                  href={profileUrl}
+                  variant="contained"
+                  color="secondary"
+                  onClick={closeMenu}>
+                  Mein Konto
+                </Button>
+              )}
 
-              <Button
-                onClick={() => {
-                  logout()
-                  closeMenu()
-                }}
-                variant="outlined"
-                color="secondary">
-                Logout
-              </Button>
+              {subscriptionsUrl && (
+                <Button
+                  LinkComponent={Link}
+                  href={subscriptionsUrl}
+                  variant="contained"
+                  color="accent"
+                  onClick={closeMenu}>
+                  Meine Abos
+                </Button>
+              )}
+
+              {loginUrl && (
+                <Button
+                  onClick={() => {
+                    logout()
+                    closeMenu()
+                  }}
+                  variant="outlined"
+                  color="secondary">
+                  Logout
+                </Button>
+              )}
             </>
           )}
         </NavPaperActions>
