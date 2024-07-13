@@ -31,9 +31,14 @@ export const selectTeaserPreTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PeerArticleTeaser':
     case 'ArticleTeaser':
-      return teaser.preTitle || teaser.article?.preTitle
-    case 'EventTeaser':
+      return (
+        teaser.preTitle ||
+        teaser.article?.preTitle ||
+        teaser.article?.tags?.find(({main}) => !!main)?.tag
+      )
     case 'PageTeaser':
+      return teaser.preTitle || teaser.page?.tags?.find(({main}) => !!main)?.tag
+    case 'EventTeaser':
     case 'CustomTeaser':
       return teaser.preTitle
   }

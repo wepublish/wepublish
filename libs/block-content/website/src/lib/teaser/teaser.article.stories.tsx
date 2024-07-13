@@ -44,7 +44,8 @@ const author = {
   links: [],
   image: undefined,
   createdAt: new Date('2023-01-01').toISOString(),
-  modifiedAt: new Date('2023-01-01').toISOString()
+  modifiedAt: new Date('2023-01-01').toISOString(),
+  tags: []
 } as FullAuthorFragment
 
 const articleTeaser = {
@@ -56,12 +57,19 @@ const articleTeaser = {
   lead: 'Lead',
   article: {
     id: 'clg2cxnig57497901rej8i9ubj1',
+    slug: '',
     title: 'Title on the article',
     preTitle: 'Pre Title on the article',
     lead: 'Lead on the article',
     url: 'https://example.com',
     authors: [author, author],
     publishedAt: new Date('2023-01-01').toISOString(),
+    updatedAt: new Date('2023-01-01').toISOString(),
+    tags: [],
+    breaking: false,
+    comments: [],
+    properties: [],
+    socialMediaAuthors: [],
 
     blocks: [
       {
