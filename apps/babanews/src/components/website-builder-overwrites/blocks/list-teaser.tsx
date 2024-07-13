@@ -1,9 +1,9 @@
 import {styled} from '@mui/material'
 import {
   Image,
-  PreTitle,
   Teaser,
   TeaserImageWrapper,
+  TeaserPreTitle,
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper
 } from '@wepublish/website'
@@ -42,7 +42,7 @@ export const ListTeaser = styled(Teaser)`
       margin-bottom: ${({theme}) => theme.spacing(0.5)};
     }
 
-    ${PreTitle} {
+    ${TeaserPreTitle} {
       transform: none;
     }
 

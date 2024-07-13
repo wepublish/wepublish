@@ -17,7 +17,7 @@ export const TeaserGridBlockWrapper = styled('div', {
   column-gap: ${({theme}) => theme.spacing(2)};
   row-gap: ${({theme}) => theme.spacing(5)};
   grid-template-columns: 1fr;
-  align-items: stretch;
+  align-items: start;
 
   ${({theme, numColumns}) =>
     numColumns > 1 &&

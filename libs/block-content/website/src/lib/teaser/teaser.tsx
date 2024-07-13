@@ -255,7 +255,7 @@ export const TeaserPreTitleWrapper = styled('div')`
   }
 `
 
-export const PreTitle = styled('div')`
+export const TeaserPreTitle = styled('div')`
   transition: background-color 0.3s ease-in-out;
   padding: ${({theme}) => `${theme.spacing(0.5)} ${theme.spacing(2)}`};
   background-color: ${({theme}) => theme.palette.accent.main};
@@ -328,7 +328,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
         {preTitle && (
           <TeaserPreTitleWrapper>
-            <PreTitle>{preTitle}</PreTitle>
+            <TeaserPreTitle>{preTitle}</TeaserPreTitle>
           </TeaserPreTitleWrapper>
         )}
         {!preTitle && <TeaserPreTitleNoContent />}
