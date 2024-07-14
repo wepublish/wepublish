@@ -6,6 +6,7 @@ import {MediaAdapterService} from '@wepublish/image/api'
 import {PaymentsService} from '@wepublish/payment/api'
 import {MailContext} from '@wepublish/mail/api'
 import helmet from 'helmet'
+import {GatewayModule} from './nestapp/gateway.module'
 
 async function bootstrap() {
   const nestApp = await NestFactory.create(AppModule)
@@ -32,6 +33,15 @@ async function bootstrap() {
 
   await nestApp.listen(port)
   Logger.log(`🚀 Application is running on: http://localhost:${port}`)
+
+  const gatewayPort = +port + 1
+  const gatewayApp = await NestFactory.create(GatewayModule, {})
+  gatewayApp.enableCors({
+    origin: true,
+    credentials: true
+  })
+  await gatewayApp.listen(gatewayPort)
+  Logger.log(`🚀 Gateway is running on: http://localhost:${gatewayPort}`)
 }
 
 bootstrap()

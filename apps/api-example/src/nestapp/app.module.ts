@@ -1,4 +1,4 @@
-import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
+import {ApolloDriverConfig, ApolloFederationDriver} from '@nestjs/apollo'
 import {Global, Module} from '@nestjs/common'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {GraphQLModule} from '@nestjs/graphql'
@@ -49,7 +49,7 @@ import {PrismaClient} from '@prisma/client'
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
+      driver: ApolloFederationDriver,
       resolvers: {RichText: GraphQLRichText},
       autoSchemaFile: './apps/api-example/schema-v2.graphql',
       sortSchema: true,
