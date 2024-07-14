@@ -72,10 +72,10 @@ export class SettingRestriction {
 @ObjectType()
 export class Setting {
   @Field(type => ID)
-  id?: string
+  id!: string
 
   @Field(type => SettingName)
-  name?: string
+  name!: string
 
   @Field(type => GraphQLSettingValueType, {nullable: true})
   value?: any

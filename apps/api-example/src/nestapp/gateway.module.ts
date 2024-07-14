@@ -10,7 +10,7 @@ import {GraphQLModule} from '@nestjs/graphql'
       server: {
         introspection: true,
         playground: true,
-        path: '/'
+        path: '/v1'
       },
       gateway: {
         buildService: ({name, url}) => {
@@ -27,8 +27,8 @@ import {GraphQLModule} from '@nestjs/graphql'
         },
         supergraphSdl: new IntrospectAndCompose({
           subgraphs: [
-            {name: 'v1', url: process.env.HOST_URL + '/v1'},
-            {name: 'v2', url: process.env.HOST_URL + '/v2'}
+            {name: 'v1', url: `http://localhost:${getPort()}/v1`},
+            {name: 'v2', url: `http://localhost:${getPort()}/v2`}
           ]
         })
       }
@@ -36,3 +36,8 @@ import {GraphQLModule} from '@nestjs/graphql'
   ]
 })
 export class GatewayModule {}
+
+function getPort() {
+  const port = process.env.PORT ?? 4000
+  return +port + 1
+}

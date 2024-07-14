@@ -27,8 +27,8 @@ export const GraphQLInputPoint = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLPoint = new GraphQLObjectType<any, Context>({
-  name: 'Point',
+export const GraphQLFocalPoint = new GraphQLObjectType<any, Context>({
+  name: 'FocalPoint',
   fields: {
     x: {type: new GraphQLNonNull(GraphQLFloat)},
     y: {type: new GraphQLNonNull(GraphQLFloat)}
@@ -141,7 +141,7 @@ export const GraphQLImage = new GraphQLObjectType<ImageWithTransformURL, Context
     format: {type: new GraphQLNonNull(GraphQLString)},
     width: {type: new GraphQLNonNull(GraphQLInt)},
     height: {type: new GraphQLNonNull(GraphQLInt)},
-    focalPoint: {type: GraphQLPoint},
+    focalPoint: {type: GraphQLFocalPoint},
 
     url: {
       type: GraphQLString,
@@ -168,3 +168,12 @@ export const GraphQLImageConnection = new GraphQLObjectType<any, Context>({
     pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)}
   }
 })
+
+export const GraphQLImageResolver = {
+  __resolveReference: async (reference, {loaders}: Context) => {
+    const {id} = reference
+    const image = await loaders.images.load(id)
+    if (!image) throw new Error('Image not found')
+    return image
+  }
+}

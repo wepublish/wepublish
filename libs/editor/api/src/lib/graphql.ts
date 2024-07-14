@@ -18,10 +18,10 @@ export type Scalars = {
   Color: string;
   Date: string;
   DateTime: string;
+  GraphQLSettingValueType: any;
   RichText: Node[];
   Slug: string;
   Upload: File;
-  Value: any;
   VoteValue: number;
 };
 
@@ -548,17 +548,17 @@ export type EventFilter = {
 };
 
 export enum EventSort {
-  CreatedAt = 'CREATED_AT',
-  EndsAt = 'ENDS_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  StartsAt = 'STARTS_AT'
+  CreatedAt = 'CreatedAt',
+  EndsAt = 'EndsAt',
+  ModifiedAt = 'ModifiedAt',
+  StartsAt = 'StartsAt'
 }
 
 export enum EventStatus {
-  Cancelled = 'CANCELLED',
-  Postponed = 'POSTPONED',
-  Rescheduled = 'RESCHEDULED',
-  Scheduled = 'SCHEDULED'
+  Cancelled = 'Cancelled',
+  Postponed = 'Postponed',
+  Rescheduled = 'Rescheduled',
+  Scheduled = 'Scheduled'
 }
 
 export type EventTeaser = {
@@ -649,6 +649,12 @@ export type FlexTeaserInput = {
   teaser?: InputMaybe<TeaserInput>;
 };
 
+export type FocalPoint = {
+  __typename?: 'FocalPoint';
+  x: Scalars['Float'];
+  y: Scalars['Float'];
+};
+
 export type FullCommentRatingSystem = {
   __typename?: 'FullCommentRatingSystem';
   answers: Array<CommentRatingSystemAnswer>;
@@ -696,7 +702,7 @@ export type Image = {
   extension: Scalars['String'];
   fileSize: Scalars['Int'];
   filename?: Maybe<Scalars['String']>;
-  focalPoint?: Maybe<Point>;
+  focalPoint?: Maybe<FocalPoint>;
   format: Scalars['String'];
   height: Scalars['Int'];
   id: Scalars['ID'];
@@ -1733,10 +1739,10 @@ export type PaymentMethodInput = {
 };
 
 export enum PaymentPeriodicity {
-  Biannual = 'BIANNUAL',
-  Monthly = 'MONTHLY',
-  Quarterly = 'QUARTERLY',
-  Yearly = 'YEARLY'
+  Biannual = 'biannual',
+  Monthly = 'monthly',
+  Quarterly = 'quarterly',
+  Yearly = 'yearly'
 }
 
 export type PaymentProvider = {
@@ -1845,12 +1851,6 @@ export type Permission = {
   deprecated: Scalars['Boolean'];
   description: Scalars['String'];
   id: Scalars['String'];
-};
-
-export type Point = {
-  __typename?: 'Point';
-  x: Scalars['Float'];
-  y: Scalars['Float'];
 };
 
 export type PolisConversationBlock = {
@@ -2352,7 +2352,7 @@ export type Setting = {
   id: Scalars['ID'];
   name: SettingName;
   settingRestriction?: Maybe<SettingRestriction>;
-  value: Scalars['Value'];
+  value: Scalars['GraphQLSettingValueType'];
 };
 
 export enum SettingName {
@@ -2363,6 +2363,7 @@ export enum SettingName {
   BodyScript = 'BODY_SCRIPT',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
   HeadScript = 'HEAD_SCRIPT',
+  MailProviderName = 'MAIL_PROVIDER_NAME',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
   MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
@@ -2383,8 +2384,8 @@ export type SettingRestriction = {
 };
 
 export enum SortOrder {
-  Ascending = 'ASCENDING',
-  Descending = 'DESCENDING'
+  Ascending = 'Ascending',
+  Descending = 'Descending'
 }
 
 export type SoundCloudTrackBlock = {
@@ -2447,9 +2448,9 @@ export type SubscriptionDeactivationInput = {
 };
 
 export enum SubscriptionDeactivationReason {
-  InvoiceNotPaid = 'INVOICE_NOT_PAID',
-  None = 'NONE',
-  UserSelfDeactivated = 'USER_SELF_DEACTIVATED'
+  InvoiceNotPaid = 'invoiceNotPaid',
+  None = 'none',
+  UserSelfDeactivated = 'userSelfDeactivated'
 }
 
 export type SubscriptionFilter = {
@@ -2716,7 +2717,7 @@ export type UpdatePollExternalVoteSources = {
 
 export type UpdateSettingArgs = {
   name: SettingName;
-  value: Scalars['Value'];
+  value: Scalars['GraphQLSettingValueType'];
 };
 
 export type UploadImageInput = {
@@ -3327,7 +3328,7 @@ export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, lar
 
 export type ImageRefFragment = { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
-export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null };
+export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null };
 
 export type ImageListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>;
@@ -3344,7 +3345,7 @@ export type ImageQueryVariables = Exact<{
 }>;
 
 
-export type ImageQuery = { __typename?: 'Query', image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null };
+export type ImageQuery = { __typename?: 'Query', image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type UploadImageMutationVariables = Exact<{
   input: UploadImageInput;
@@ -3359,14 +3360,14 @@ export type UpdateImageMutationVariables = Exact<{
 }>;
 
 
-export type UpdateImageMutation = { __typename?: 'Mutation', updateImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null };
+export type UpdateImageMutation = { __typename?: 'Mutation', updateImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type DeleteImageMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null };
+export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type InvoiceFragment = { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> };
 
