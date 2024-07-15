@@ -152,6 +152,40 @@ export const WithoutPreTitle = {
   }
 }
 
+export const WithoutArticlePreTitle = {
+  args: {
+    alignment: {
+      x: 0,
+      y: 0,
+      w: 3,
+      h: 4,
+      __typename: 'FlexAlignment'
+    },
+    teaser: {
+      ...articleTeaser,
+      preTitle: null,
+      article: {
+        ...articleTeaser.article,
+        preTitle: '',
+        tags: [
+          {
+            __typename: 'Tag',
+            id: '123',
+            tag: 'Secondary Tag',
+            main: false
+          },
+          {
+            __typename: 'Tag',
+            id: '1234',
+            tag: 'Main Tag',
+            main: true
+          }
+        ]
+      }
+    }
+  }
+}
+
 export const WithoutTitle = {
   args: {
     alignment: {
