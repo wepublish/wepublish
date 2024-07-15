@@ -1523,10 +1523,12 @@ https://unsplash.it/200/100 200w"
 }
 
 .emotion-13 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -1540,6 +1542,7 @@ https://unsplash.it/200/100 200w"
 
 .emotion-13:where(.emotion-3:hover .emotion-13) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -2045,10 +2048,12 @@ https://unsplash.it/200/100 200w"
 }
 
 .emotion-13 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -2062,6 +2067,7 @@ https://unsplash.it/200/100 200w"
 
 .emotion-13:where(.emotion-3:hover .emotion-13) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -2563,10 +2569,12 @@ https://unsplash.it/200/100 200w"
 }
 
 .emotion-13 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -2580,6 +2588,7 @@ https://unsplash.it/200/100 200w"
 
 .emotion-13:where(.emotion-3:hover .emotion-13) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -4027,10 +4036,12 @@ exports[`Blocks should render WithLayout 1`] = `
 }
 
 .emotion-145 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -4044,6 +4055,7 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-145:where(.emotion-135:hover .emotion-145) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
