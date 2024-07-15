@@ -6,7 +6,8 @@ import {
   PropsWithChildren,
   ReactNode,
   ScriptHTMLAttributes,
-  useContext
+  useContext,
+  useMemo
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {
@@ -327,7 +328,10 @@ export const useWebsiteBuilder = () => {
 export const WebsiteBuilderProvider = memo<PropsWithChildren<PartialDeep<WebsiteBuilderProps>>>(
   ({children, ...components}) => {
     const parentComponents = useWebsiteBuilder()
-    const newComponents = mergeDeepRight(parentComponents, components) as WebsiteBuilderProps
+    const newComponents = useMemo(
+      () => mergeDeepRight(parentComponents, components) as WebsiteBuilderProps,
+      [components, parentComponents]
+    )
 
     return (
       <WebsiteBuilderContext.Provider value={newComponents}>
