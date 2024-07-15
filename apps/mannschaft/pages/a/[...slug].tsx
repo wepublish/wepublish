@@ -7,7 +7,7 @@ import {
   CommentListContainer,
   useWebsiteBuilder
 } from '@wepublish/website'
-import {GetStaticProps} from 'next'
+import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
@@ -51,10 +51,29 @@ export default function ArticleBySlug() {
   )
 }
 
-export const getStaticPaths = getArticlePathsBasedOnPage('')
+export const getStaticPaths: GetStaticPaths = async ctx => {
+  const result = await getArticlePathsBasedOnPage('')(ctx)
+
+  result.paths = result.paths.map(path => {
+    if (typeof path === 'object') {
+      return {
+        params: {
+          slug: [path.params.tag, path.params.slug].filter((param): param is string =>
+            Boolean(param)
+          )
+        }
+      }
+    }
+
+    return path
+  })
+
+  return result
+}
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug} = params || {}
+  const {slug: slugs} = params || {}
+  const slug = typeof slugs === 'object' ? slugs.reverse()[0] : slugs
   const {publicRuntimeConfig} = getConfig()
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])

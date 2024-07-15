@@ -76,6 +76,7 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -128,7 +129,6 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -672,6 +672,7 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -724,7 +725,6 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1268,6 +1268,7 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1320,7 +1321,6 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;

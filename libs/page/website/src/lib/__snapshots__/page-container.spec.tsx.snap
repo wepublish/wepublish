@@ -408,6 +408,14 @@ exports[`Page Container should render ById 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -457,6 +465,18 @@ exports[`Page Container should render ById 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-135 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -502,6 +522,7 @@ exports[`Page Container should render ById 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -581,7 +602,6 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -615,6 +635,18 @@ exports[`Page Container should render ById 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -629,6 +661,7 @@ exports[`Page Container should render ById 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -669,6 +702,18 @@ exports[`Page Container should render ById 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -683,6 +728,18 @@ exports[`Page Container should render ById 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-198 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -694,6 +751,18 @@ exports[`Page Container should render ById 1`] = `
 .emotion-213 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -873,6 +942,18 @@ exports[`Page Container should render ById 1`] = `
 .emotion-411 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -1868,7 +1949,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -3391,6 +3484,14 @@ exports[`Page Container should render BySlug 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -3440,6 +3541,18 @@ exports[`Page Container should render BySlug 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-135 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -3485,6 +3598,7 @@ exports[`Page Container should render BySlug 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3564,7 +3678,6 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3598,6 +3711,18 @@ exports[`Page Container should render BySlug 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -3612,6 +3737,7 @@ exports[`Page Container should render BySlug 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3652,6 +3778,18 @@ exports[`Page Container should render BySlug 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -3666,6 +3804,18 @@ exports[`Page Container should render BySlug 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-198 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -3677,6 +3827,18 @@ exports[`Page Container should render BySlug 1`] = `
 .emotion-213 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -3856,6 +4018,18 @@ exports[`Page Container should render BySlug 1`] = `
 .emotion-411 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -4851,7 +5025,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -6374,6 +6560,14 @@ exports[`Page Container should render WithChildren 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -6423,6 +6617,18 @@ exports[`Page Container should render WithChildren 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-135 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -6468,6 +6674,7 @@ exports[`Page Container should render WithChildren 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6547,7 +6754,6 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -6581,6 +6787,18 @@ exports[`Page Container should render WithChildren 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -6595,6 +6813,7 @@ exports[`Page Container should render WithChildren 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6635,6 +6854,18 @@ exports[`Page Container should render WithChildren 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -6649,6 +6880,18 @@ exports[`Page Container should render WithChildren 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-198 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -6660,6 +6903,18 @@ exports[`Page Container should render WithChildren 1`] = `
 .emotion-213 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -6839,6 +7094,18 @@ exports[`Page Container should render WithChildren 1`] = `
 .emotion-411 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -7834,7 +8101,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -9360,6 +9639,14 @@ exports[`Page Container should render WithClassName 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -9409,6 +9696,18 @@ exports[`Page Container should render WithClassName 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-135 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -9454,6 +9753,7 @@ exports[`Page Container should render WithClassName 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -9533,7 +9833,6 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -9567,6 +9866,18 @@ exports[`Page Container should render WithClassName 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -9581,6 +9892,7 @@ exports[`Page Container should render WithClassName 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -9621,6 +9933,18 @@ exports[`Page Container should render WithClassName 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -9635,6 +9959,18 @@ exports[`Page Container should render WithClassName 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-198 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -9646,6 +9982,18 @@ exports[`Page Container should render WithClassName 1`] = `
 .emotion-213 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -9825,6 +10173,18 @@ exports[`Page Container should render WithClassName 1`] = `
 .emotion-411 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -10820,7 +11180,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -12343,6 +12715,14 @@ exports[`Page Container should render WithEmotion 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -12392,6 +12772,18 @@ exports[`Page Container should render WithEmotion 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-135 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -12437,6 +12829,7 @@ exports[`Page Container should render WithEmotion 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -12516,7 +12909,6 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -12550,6 +12942,18 @@ exports[`Page Container should render WithEmotion 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -12564,6 +12968,7 @@ exports[`Page Container should render WithEmotion 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -12604,6 +13009,18 @@ exports[`Page Container should render WithEmotion 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -12618,6 +13035,18 @@ exports[`Page Container should render WithEmotion 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-198 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -12629,6 +13058,18 @@ exports[`Page Container should render WithEmotion 1`] = `
 .emotion-213 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -12808,6 +13249,18 @@ exports[`Page Container should render WithEmotion 1`] = `
 .emotion-411 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -13803,7 +14256,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />

@@ -81,6 +81,7 @@ exports[`Teaser List Block should render Article 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -160,7 +161,6 @@ exports[`Teaser List Block should render Article 1`] = `
 
 .emotion-19 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -488,6 +488,7 @@ exports[`Teaser List Block should render Event 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -567,7 +568,6 @@ exports[`Teaser List Block should render Event 1`] = `
 
 .emotion-19 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -895,6 +895,7 @@ exports[`Teaser List Block should render Page 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -974,7 +975,6 @@ exports[`Teaser List Block should render Page 1`] = `
 
 .emotion-19 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1277,6 +1277,7 @@ exports[`Teaser List Block should render WithClassName 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1356,7 +1357,6 @@ exports[`Teaser List Block should render WithClassName 1`] = `
 
 .emotion-19 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1684,6 +1684,7 @@ exports[`Teaser List Block should render WithEmotion 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1763,7 +1764,6 @@ exports[`Teaser List Block should render WithEmotion 1`] = `
 
 .emotion-19 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -2099,6 +2099,7 @@ exports[`Teaser List Block should render WithTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2178,7 +2179,6 @@ exports[`Teaser List Block should render WithTitle 1`] = `
 
 .emotion-20 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;

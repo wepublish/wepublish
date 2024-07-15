@@ -166,10 +166,22 @@ export const selectTeaserTags = (teaser: TeaserType) => {
 export const TeaserWrapper = styled('article')<FlexAlignment>`
   display: grid;
 
-  ${({w}) =>
+  ${({theme, w}) =>
     w > 6 &&
     css`
       grid-column: 1 / -1;
+
+      ${theme.breakpoints.up('md')} {
+        ${TeaserTitle} {
+          font-size: ${theme.typography.h3.fontSize};
+          line-height: ${theme.typography.h3.lineHeight};
+        }
+
+        ${TeaserLead} {
+          font-size: ${theme.typography.h6.fontSize};
+          line-height: ${theme.typography.h6.lineHeight};
+        }
+      }
     `}
 
   ${({theme, h, w, x, y}) => css`
@@ -206,6 +218,7 @@ const useImageStyles = () => {
 
   return useMemo(
     () => css`
+      max-height: 400px;
       width: 100%;
       object-fit: cover;
       grid-column: 1/13;
@@ -243,7 +256,6 @@ export const TeaserTitle = styled('h1')`
 
 export const TeaserLead = styled('p')`
   font-weight: 300;
-  font-size: ${({theme}) => theme.typography.body1.fontSize};
   grid-area: lead;
 `
 

@@ -76,6 +76,7 @@ exports[`AuthorList Container should render Default 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -128,7 +129,6 @@ exports[`AuthorList Container should render Default 1`] = `
 
 .emotion-17 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -452,6 +452,7 @@ exports[`AuthorList Container should render WithClassName 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -504,7 +505,6 @@ exports[`AuthorList Container should render WithClassName 1`] = `
 
 .emotion-17 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -828,6 +828,7 @@ exports[`AuthorList Container should render WithEmotion 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -880,7 +881,6 @@ exports[`AuthorList Container should render WithEmotion 1`] = `
 
 .emotion-17 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1204,6 +1204,7 @@ exports[`AuthorList Container should render WithFilter 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1256,7 +1257,6 @@ exports[`AuthorList Container should render WithFilter 1`] = `
 
 .emotion-17 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;

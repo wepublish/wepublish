@@ -49,15 +49,12 @@ exports[`Navbar Container should render Default 1`] = `
   padding-right: 16px;
   min-height: 56px;
   display: grid;
-  grid-template-columns: auto 1fr auto 1fr auto;
+  grid-template-columns: max-content max-content 1fr;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   grid-auto-flow: column;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
   justify-items: center;
   min-height: unset;
   padding: 0;
@@ -86,9 +83,9 @@ exports[`Navbar Container should render Default 1`] = `
 
 @media (min-width:600px) {
   .emotion-4 {
+    grid-template-columns: 1fr max-content 1fr;
     min-height: unset;
     padding: 0;
-    grid-auto-columns: 1fr;
   }
 }
 
@@ -96,19 +93,12 @@ exports[`Navbar Container should render Default 1`] = `
   .emotion-4 {
     min-height: unset;
     padding: 0;
-    grid-auto-columns: 1fr;
   }
 }
 
 .emotion-5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
+  display: grid;
+  grid-template-columns: max-content 1fr;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -251,9 +241,8 @@ exports[`Navbar Container should render Default 1`] = `
 }
 
 .emotion-11 {
-  grid-column: 2;
-  margin: 0 8px;
   display: none;
+  gap: 16px;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -282,7 +271,6 @@ exports[`Navbar Container should render Default 1`] = `
   text-decoration: underline;
   text-decoration-color: rgba(233, 30, 99, 0.4);
   font-size: 1rem;
-  margin: 0 8px 0 16px;
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #000;
@@ -299,10 +287,32 @@ exports[`Navbar Container should render Default 1`] = `
 }
 
 .emotion-16 {
-  grid-column: 4;
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  color: unset;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
 }
 
-.emotion-18 {
+.emotion-16:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-17 {
+  fill: currentColor;
+  width: auto;
+}
+
+.emotion-19 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -317,17 +327,23 @@ exports[`Navbar Container should render Default 1`] = `
   align-items: center;
   justify-self: end;
   gap: 8px;
-  grid-column: 5;
+  padding-right: 8px;
   justify-self: end;
 }
 
 @media (min-width:900px) {
-  .emotion-18 {
+  .emotion-19 {
     gap: 16px;
   }
 }
 
-.emotion-20 {
+@media (min-width:1333px) {
+  .emotion-19 {
+    padding-right: 0;
+  }
+}
+
+.emotion-21 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -336,11 +352,11 @@ exports[`Navbar Container should render Default 1`] = `
   text-decoration-color: rgba(233, 30, 99, 0.4);
 }
 
-.emotion-20:hover {
+.emotion-21:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-21 {
+.emotion-22 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -388,33 +404,33 @@ exports[`Navbar Container should render Default 1`] = `
   color: black;
 }
 
-.emotion-21::-moz-focus-inner {
+.emotion-22::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-21.Mui-disabled {
+.emotion-22.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-21 {
+  .emotion-22 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-21:hover {
+.emotion-22:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-21:hover {
+  .emotion-22:hover {
     background-color: transparent;
   }
 }
 
-.emotion-21.Mui-disabled {
+.emotion-22.Mui-disabled {
   background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
@@ -462,41 +478,47 @@ exports[`Navbar Container should render Default 1`] = `
               />
             </button>
           </div>
+          <div
+            class="emotion-11 emotion-12"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/"
+            >
+              Home
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/a/abcd"
+            >
+              Artikel
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="https://google.com"
+            >
+              Google
+            </a>
+          </div>
         </div>
+        <a
+          aria-label="Startseite"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-16"
+          href="/"
+        >
+          <div
+            class="emotion-17 emotion-18"
+          />
+        </a>
         <div
-          class="emotion-11 emotion-12"
+          class="emotion-19 emotion-20"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/"
-          >
-            Home
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/a/abcd"
-          >
-            Artikel
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="https://google.com"
-          >
-            Google
-          </a>
-        </div>
-        <div
-          class="emotion-16 emotion-17"
-        />
-        <div
-          class="emotion-18 emotion-19"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-20"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-21"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-21"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-22"
               tabindex="0"
               type="button"
             >
@@ -579,15 +601,12 @@ exports[`Navbar Container should render WithClassName 1`] = `
   padding-right: 16px;
   min-height: 56px;
   display: grid;
-  grid-template-columns: auto 1fr auto 1fr auto;
+  grid-template-columns: max-content max-content 1fr;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   grid-auto-flow: column;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
   justify-items: center;
   min-height: unset;
   padding: 0;
@@ -616,9 +635,9 @@ exports[`Navbar Container should render WithClassName 1`] = `
 
 @media (min-width:600px) {
   .emotion-4 {
+    grid-template-columns: 1fr max-content 1fr;
     min-height: unset;
     padding: 0;
-    grid-auto-columns: 1fr;
   }
 }
 
@@ -626,19 +645,12 @@ exports[`Navbar Container should render WithClassName 1`] = `
   .emotion-4 {
     min-height: unset;
     padding: 0;
-    grid-auto-columns: 1fr;
   }
 }
 
 .emotion-5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
+  display: grid;
+  grid-template-columns: max-content 1fr;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -781,9 +793,8 @@ exports[`Navbar Container should render WithClassName 1`] = `
 }
 
 .emotion-11 {
-  grid-column: 2;
-  margin: 0 8px;
   display: none;
+  gap: 16px;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -812,7 +823,6 @@ exports[`Navbar Container should render WithClassName 1`] = `
   text-decoration: underline;
   text-decoration-color: rgba(233, 30, 99, 0.4);
   font-size: 1rem;
-  margin: 0 8px 0 16px;
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #000;
@@ -829,10 +839,32 @@ exports[`Navbar Container should render WithClassName 1`] = `
 }
 
 .emotion-16 {
-  grid-column: 4;
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  color: unset;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
 }
 
-.emotion-18 {
+.emotion-16:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-17 {
+  fill: currentColor;
+  width: auto;
+}
+
+.emotion-19 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -847,17 +879,23 @@ exports[`Navbar Container should render WithClassName 1`] = `
   align-items: center;
   justify-self: end;
   gap: 8px;
-  grid-column: 5;
+  padding-right: 8px;
   justify-self: end;
 }
 
 @media (min-width:900px) {
-  .emotion-18 {
+  .emotion-19 {
     gap: 16px;
   }
 }
 
-.emotion-20 {
+@media (min-width:1333px) {
+  .emotion-19 {
+    padding-right: 0;
+  }
+}
+
+.emotion-21 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -866,11 +904,11 @@ exports[`Navbar Container should render WithClassName 1`] = `
   text-decoration-color: rgba(233, 30, 99, 0.4);
 }
 
-.emotion-20:hover {
+.emotion-21:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-21 {
+.emotion-22 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -918,33 +956,33 @@ exports[`Navbar Container should render WithClassName 1`] = `
   color: black;
 }
 
-.emotion-21::-moz-focus-inner {
+.emotion-22::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-21.Mui-disabled {
+.emotion-22.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-21 {
+  .emotion-22 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-21:hover {
+.emotion-22:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-21:hover {
+  .emotion-22:hover {
     background-color: transparent;
   }
 }
 
-.emotion-21.Mui-disabled {
+.emotion-22.Mui-disabled {
   background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
@@ -992,41 +1030,47 @@ exports[`Navbar Container should render WithClassName 1`] = `
               />
             </button>
           </div>
+          <div
+            class="emotion-11 emotion-12"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/"
+            >
+              Home
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/a/abcd"
+            >
+              Artikel
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="https://google.com"
+            >
+              Google
+            </a>
+          </div>
         </div>
+        <a
+          aria-label="Startseite"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-16"
+          href="/"
+        >
+          <div
+            class="emotion-17 emotion-18"
+          />
+        </a>
         <div
-          class="emotion-11 emotion-12"
+          class="emotion-19 emotion-20"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/"
-          >
-            Home
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/a/abcd"
-          >
-            Artikel
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="https://google.com"
-          >
-            Google
-          </a>
-        </div>
-        <div
-          class="emotion-16 emotion-17"
-        />
-        <div
-          class="emotion-18 emotion-19"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-20"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-21"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-21"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-22"
               tabindex="0"
               type="button"
             >
@@ -1109,15 +1153,12 @@ exports[`Navbar Container should render WithEmotion 1`] = `
   padding-right: 16px;
   min-height: 56px;
   display: grid;
-  grid-template-columns: auto 1fr auto 1fr auto;
+  grid-template-columns: max-content max-content 1fr;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   grid-auto-flow: column;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
   justify-items: center;
   min-height: unset;
   padding: 0;
@@ -1146,9 +1187,9 @@ exports[`Navbar Container should render WithEmotion 1`] = `
 
 @media (min-width:600px) {
   .emotion-4 {
+    grid-template-columns: 1fr max-content 1fr;
     min-height: unset;
     padding: 0;
-    grid-auto-columns: 1fr;
   }
 }
 
@@ -1156,19 +1197,12 @@ exports[`Navbar Container should render WithEmotion 1`] = `
   .emotion-4 {
     min-height: unset;
     padding: 0;
-    grid-auto-columns: 1fr;
   }
 }
 
 .emotion-5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
+  display: grid;
+  grid-template-columns: max-content 1fr;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1311,9 +1345,8 @@ exports[`Navbar Container should render WithEmotion 1`] = `
 }
 
 .emotion-11 {
-  grid-column: 2;
-  margin: 0 8px;
   display: none;
+  gap: 16px;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1342,7 +1375,6 @@ exports[`Navbar Container should render WithEmotion 1`] = `
   text-decoration: underline;
   text-decoration-color: rgba(233, 30, 99, 0.4);
   font-size: 1rem;
-  margin: 0 8px 0 16px;
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #000;
@@ -1359,10 +1391,32 @@ exports[`Navbar Container should render WithEmotion 1`] = `
 }
 
 .emotion-16 {
-  grid-column: 4;
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  color: unset;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
 }
 
-.emotion-18 {
+.emotion-16:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-17 {
+  fill: currentColor;
+  width: auto;
+}
+
+.emotion-19 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1377,17 +1431,23 @@ exports[`Navbar Container should render WithEmotion 1`] = `
   align-items: center;
   justify-self: end;
   gap: 8px;
-  grid-column: 5;
+  padding-right: 8px;
   justify-self: end;
 }
 
 @media (min-width:900px) {
-  .emotion-18 {
+  .emotion-19 {
     gap: 16px;
   }
 }
 
-.emotion-20 {
+@media (min-width:1333px) {
+  .emotion-19 {
+    padding-right: 0;
+  }
+}
+
+.emotion-21 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -1396,11 +1456,11 @@ exports[`Navbar Container should render WithEmotion 1`] = `
   text-decoration-color: rgba(233, 30, 99, 0.4);
 }
 
-.emotion-20:hover {
+.emotion-21:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-21 {
+.emotion-22 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1448,33 +1508,33 @@ exports[`Navbar Container should render WithEmotion 1`] = `
   color: black;
 }
 
-.emotion-21::-moz-focus-inner {
+.emotion-22::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-21.Mui-disabled {
+.emotion-22.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-21 {
+  .emotion-22 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-21:hover {
+.emotion-22:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-21:hover {
+  .emotion-22:hover {
     background-color: transparent;
   }
 }
 
-.emotion-21.Mui-disabled {
+.emotion-22.Mui-disabled {
   background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
@@ -1522,41 +1582,47 @@ exports[`Navbar Container should render WithEmotion 1`] = `
               />
             </button>
           </div>
+          <div
+            class="emotion-11 emotion-12"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/"
+            >
+              Home
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/a/abcd"
+            >
+              Artikel
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="https://google.com"
+            >
+              Google
+            </a>
+          </div>
         </div>
+        <a
+          aria-label="Startseite"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-16"
+          href="/"
+        >
+          <div
+            class="emotion-17 emotion-18"
+          />
+        </a>
         <div
-          class="emotion-11 emotion-12"
+          class="emotion-19 emotion-20"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/"
-          >
-            Home
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/a/abcd"
-          >
-            Artikel
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="https://google.com"
-          >
-            Google
-          </a>
-        </div>
-        <div
-          class="emotion-16 emotion-17"
-        />
-        <div
-          class="emotion-18 emotion-19"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-20"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-21"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-21"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-22"
               tabindex="0"
               type="button"
             >

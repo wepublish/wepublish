@@ -75,6 +75,18 @@ exports[`Focus Teaser should render Article 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-9 .emotion-23 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-9 .emotion-25 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-9 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -120,6 +132,7 @@ exports[`Focus Teaser should render Article 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -199,7 +212,6 @@ exports[`Focus Teaser should render Article 1`] = `
 
 .emotion-24 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -712,6 +724,18 @@ exports[`Focus Teaser should render Event 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-9 .emotion-23 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-9 .emotion-25 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-9 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -757,6 +781,7 @@ exports[`Focus Teaser should render Event 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -836,7 +861,6 @@ exports[`Focus Teaser should render Event 1`] = `
 
 .emotion-24 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1349,6 +1373,18 @@ exports[`Focus Teaser should render Page 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-9 .emotion-23 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-9 .emotion-25 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-9 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -1394,6 +1430,7 @@ exports[`Focus Teaser should render Page 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1473,7 +1510,6 @@ exports[`Focus Teaser should render Page 1`] = `
 
 .emotion-24 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1986,6 +2022,18 @@ exports[`Focus Teaser should render WithClassName 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-9 .emotion-23 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-9 .emotion-25 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-9 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -2031,6 +2079,7 @@ exports[`Focus Teaser should render WithClassName 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2110,7 +2159,6 @@ exports[`Focus Teaser should render WithClassName 1`] = `
 
 .emotion-24 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -2623,6 +2671,18 @@ exports[`Focus Teaser should render WithEmotion 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-9 .emotion-23 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-9 .emotion-25 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-9 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -2668,6 +2728,7 @@ exports[`Focus Teaser should render WithEmotion 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2747,7 +2808,6 @@ exports[`Focus Teaser should render WithEmotion 1`] = `
 
 .emotion-24 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3269,6 +3329,18 @@ exports[`Focus Teaser should render WithLink 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-10 .emotion-24 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-10 .emotion-26 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-10 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -3305,6 +3377,7 @@ exports[`Focus Teaser should render WithLink 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3384,7 +3457,6 @@ exports[`Focus Teaser should render WithLink 1`] = `
 
 .emotion-25 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;

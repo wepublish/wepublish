@@ -13,7 +13,10 @@ exports[`CommentList Container should render Default 1`] = `
 }
 
 .emotion-2:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-4 {
@@ -24,7 +27,6 @@ exports[`CommentList Container should render Default 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-6 {
@@ -75,10 +77,6 @@ exports[`CommentList Container should render Default 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-20 {
-  padding: 12px;
 }
 
 .emotion-22 {
@@ -169,6 +167,12 @@ exports[`CommentList Container should render Default 1`] = `
   height: 100%;
   width: 2px;
   background-color: currentColor;
+}
+
+.emotion-138 {
+  font-size: 0.75em;
+  font-weight: 300;
+  color: #e91e63;
 }
 
 <section
@@ -685,6 +689,18 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="emotion-138 emotion-17"
+              >
+                <a
+                  class="emotion-18 emotion-19"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
@@ -890,6 +906,18 @@ https://unsplash.it/200/200 200w"
             >
               Dr. Anonymous
             </div>
+          </div>
+          <div
+            class="emotion-138 emotion-17"
+          >
+            <a
+              class="emotion-18 emotion-19"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
           </div>
         </div>
       </header>
@@ -1215,6 +1243,18 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="emotion-138 emotion-17"
+              >
+                <a
+                  class="emotion-18 emotion-19"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
@@ -1539,6 +1579,18 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="emotion-138 emotion-17"
+          >
+            <a
+              class="emotion-18 emotion-19"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
@@ -1862,6 +1914,18 @@ https://unsplash.it/200/200 200w"
                 >
                   Dr. Anonymous
                 </div>
+              </div>
+              <div
+                class="emotion-138 emotion-17"
+              >
+                <a
+                  class="emotion-18 emotion-19"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
               </div>
             </div>
           </header>
@@ -2429,6 +2493,18 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="emotion-138 emotion-17"
+              >
+                <a
+                  class="emotion-18 emotion-19"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
@@ -2619,7 +2695,10 @@ exports[`CommentList Container should render WithClassName 1`] = `
 }
 
 .emotion-2:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-4 {
@@ -2630,7 +2709,6 @@ exports[`CommentList Container should render WithClassName 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-6 {
@@ -2681,10 +2759,6 @@ exports[`CommentList Container should render WithClassName 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-20 {
-  padding: 12px;
 }
 
 .emotion-22 {
@@ -2775,6 +2849,12 @@ exports[`CommentList Container should render WithClassName 1`] = `
   height: 100%;
   width: 2px;
   background-color: currentColor;
+}
+
+.emotion-138 {
+  font-size: 0.75em;
+  font-weight: 300;
+  color: #e91e63;
 }
 
 <section
@@ -3291,6 +3371,18 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="emotion-138 emotion-17"
+              >
+                <a
+                  class="emotion-18 emotion-19"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
@@ -3496,6 +3588,18 @@ https://unsplash.it/200/200 200w"
             >
               Dr. Anonymous
             </div>
+          </div>
+          <div
+            class="emotion-138 emotion-17"
+          >
+            <a
+              class="emotion-18 emotion-19"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
           </div>
         </div>
       </header>
@@ -3821,6 +3925,18 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="emotion-138 emotion-17"
+              >
+                <a
+                  class="emotion-18 emotion-19"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
@@ -4145,6 +4261,18 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="emotion-138 emotion-17"
+          >
+            <a
+              class="emotion-18 emotion-19"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
@@ -4468,6 +4596,18 @@ https://unsplash.it/200/200 200w"
                 >
                   Dr. Anonymous
                 </div>
+              </div>
+              <div
+                class="emotion-138 emotion-17"
+              >
+                <a
+                  class="emotion-18 emotion-19"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
               </div>
             </div>
           </header>
@@ -5035,6 +5175,18 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="emotion-138 emotion-17"
+              >
+                <a
+                  class="emotion-18 emotion-19"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
@@ -5225,7 +5377,10 @@ exports[`CommentList Container should render WithEmotion 1`] = `
 }
 
 .emotion-2:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-4 {
@@ -5236,7 +5391,6 @@ exports[`CommentList Container should render WithEmotion 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-6 {
@@ -5287,10 +5441,6 @@ exports[`CommentList Container should render WithEmotion 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-20 {
-  padding: 12px;
 }
 
 .emotion-22 {
@@ -5381,6 +5531,12 @@ exports[`CommentList Container should render WithEmotion 1`] = `
   height: 100%;
   width: 2px;
   background-color: currentColor;
+}
+
+.emotion-138 {
+  font-size: 0.75em;
+  font-weight: 300;
+  color: #e91e63;
 }
 
 <section
@@ -5897,6 +6053,18 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="emotion-138 emotion-17"
+              >
+                <a
+                  class="emotion-18 emotion-19"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
@@ -6102,6 +6270,18 @@ https://unsplash.it/200/200 200w"
             >
               Dr. Anonymous
             </div>
+          </div>
+          <div
+            class="emotion-138 emotion-17"
+          >
+            <a
+              class="emotion-18 emotion-19"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
           </div>
         </div>
       </header>
@@ -6427,6 +6607,18 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="emotion-138 emotion-17"
+              >
+                <a
+                  class="emotion-18 emotion-19"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
@@ -6751,6 +6943,18 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="emotion-138 emotion-17"
+          >
+            <a
+              class="emotion-18 emotion-19"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
@@ -7074,6 +7278,18 @@ https://unsplash.it/200/200 200w"
                 >
                   Dr. Anonymous
                 </div>
+              </div>
+              <div
+                class="emotion-138 emotion-17"
+              >
+                <a
+                  class="emotion-18 emotion-19"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
               </div>
             </div>
           </header>
@@ -7640,6 +7856,18 @@ https://unsplash.it/200/200 200w"
                 >
                   Dr. Anonymous
                 </div>
+              </div>
+              <div
+                class="emotion-138 emotion-17"
+              >
+                <a
+                  class="emotion-18 emotion-19"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
               </div>
             </div>
           </header>

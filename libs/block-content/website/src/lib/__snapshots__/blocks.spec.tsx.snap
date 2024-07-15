@@ -1871,9 +1871,29 @@ https://unsplash.it/200/100 200w"
       style="width: auto; height: auto;"
     />
   </div>
-  <div
+  .emotion-0 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+<div
     class="emotion-0 emotion-1"
-  />
+  >
+    <blockquote
+      class="instagram-media"
+      data-instgrm-captioned="true"
+      data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+      data-instgrm-version="14"
+    />
+    <script
+      async=""
+      data-testid="fake-script"
+      src="https://www.instagram.com/embed.js"
+    />
+  </div>
   <div
     class="emotion-0 emotion-1"
   />
@@ -1969,6 +1989,18 @@ https://unsplash.it/200/100 200w"
 }
 
 @media (min-width:900px) {
+  .emotion-2 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-2 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-2 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -2014,6 +2046,7 @@ https://unsplash.it/200/100 200w"
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2093,7 +2126,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-17 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -2120,6 +2152,18 @@ https://unsplash.it/200/100 200w"
 .emotion-23 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-23 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-23 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -2150,6 +2194,18 @@ https://unsplash.it/200/100 200w"
 }
 
 @media (min-width:900px) {
+  .emotion-42 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-42 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-42 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -2164,6 +2220,18 @@ https://unsplash.it/200/100 200w"
 }
 
 @media (min-width:900px) {
+  .emotion-61 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-61 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-61 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -2175,6 +2243,18 @@ https://unsplash.it/200/100 200w"
 .emotion-76 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-76 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-76 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -2536,6 +2616,7 @@ https://unsplash.it/200/100 200w"
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2615,7 +2696,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-17 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3004,6 +3084,18 @@ https://unsplash.it/200/100 200w"
 }
 
 @media (min-width:900px) {
+  .emotion-8 .emotion-22 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-8 .emotion-24 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -3049,6 +3141,7 @@ https://unsplash.it/200/100 200w"
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3128,7 +3221,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-23 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3617,6 +3709,7 @@ https://unsplash.it/200/100 200w"
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3696,7 +3789,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-19 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -4184,6 +4276,18 @@ https://unsplash.it/200/100 200w"
 }
 
 @media (min-width:900px) {
+  .emotion-8 .emotion-22 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-8 .emotion-24 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -4229,6 +4333,7 @@ https://unsplash.it/200/100 200w"
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -4308,7 +4413,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-23 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -4882,6 +4986,7 @@ https://unsplash.it/200/100 200w"
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -4961,7 +5066,6 @@ https://unsplash.it/200/100 200w"
 
 .emotion-17 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -5040,6 +5144,18 @@ https://unsplash.it/200/100 200w"
 .emotion-76 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-76 .emotion-16 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-76 .emotion-18 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -5390,7 +5506,7 @@ https://unsplash.it/200/100 200w"
 .emotion-10 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -6475,6 +6591,14 @@ exports[`Blocks should render WithLayout 1`] = `
   justify-content: center;
 }
 
+.emotion-168 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-174 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -6524,6 +6648,18 @@ exports[`Blocks should render WithLayout 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-192 .emotion-206 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-192 .emotion-208 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-192 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -6569,6 +6705,7 @@ exports[`Blocks should render WithLayout 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6648,7 +6785,6 @@ exports[`Blocks should render WithLayout 1`] = `
 
 .emotion-207 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -6675,6 +6811,18 @@ exports[`Blocks should render WithLayout 1`] = `
 .emotion-213 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-213 .emotion-206 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-208 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -6705,6 +6853,18 @@ exports[`Blocks should render WithLayout 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-232 .emotion-206 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-232 .emotion-208 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-232 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -6719,6 +6879,18 @@ exports[`Blocks should render WithLayout 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-251 .emotion-206 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-251 .emotion-208 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-251 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -6730,6 +6902,18 @@ exports[`Blocks should render WithLayout 1`] = `
 .emotion-266 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-266 .emotion-206 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-266 .emotion-208 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -6964,6 +7148,18 @@ exports[`Blocks should render WithLayout 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-839 .emotion-206 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-839 .emotion-208 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-839 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -6990,7 +7186,7 @@ exports[`Blocks should render WithLayout 1`] = `
 .emotion-870 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -8283,7 +8479,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-168 emotion-169"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-170 emotion-171"
     />

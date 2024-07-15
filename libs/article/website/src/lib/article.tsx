@@ -28,14 +28,19 @@ export const ArticleTags = styled('div')`
 
 export const ArticleAuthors = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({theme}) => theme.spacing(3)};
+`
+
+export const ArticleDate = styled('time')`
+  margin-top: -${({theme}) => theme.spacing(2)};
 `
 
 export function Article({className, data, children, loading, error}: BuilderArticleProps) {
   const {
     AuthorChip,
     ArticleSEO,
-    elements: {Link}
+    elements: {Link},
+    date
   } = useWebsiteBuilder()
 
   return (
@@ -48,8 +53,14 @@ export function Article({className, data, children, loading, error}: BuilderArti
         {!!data?.article?.authors.length && (
           <ArticleAuthors>
             {data.article.authors.map(author => (
-              <AuthorChip key={author.id} author={author} publishedAt={data.article!.publishedAt} />
+              <AuthorChip key={author.id} author={author} />
             ))}
+
+            {data.article.publishedAt && (
+              <ArticleDate suppressHydrationWarning dateTime={data.article.publishedAt}>
+                {date.format(new Date(data.article.publishedAt), false)}
+              </ArticleDate>
+            )}
           </ArticleAuthors>
         )}
 
@@ -61,7 +72,7 @@ export function Article({className, data, children, loading, error}: BuilderArti
                 label={tag.tag}
                 component={Link}
                 href={tag.url}
-                color="secondary"
+                color="primary"
                 variant="outlined"
                 clickable
               />
