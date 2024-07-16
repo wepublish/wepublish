@@ -32,7 +32,8 @@ export class NovaMediaAdapter implements MediaAdapter {
     const response = await fetch(this.internalURL, {
       method: 'POST',
       headers: {authorization: `Bearer ${this.token}`},
-      body: form
+      body: form,
+      signal: AbortSignal.timeout(50000)
     })
 
     const json = await response.json()

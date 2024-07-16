@@ -332,7 +332,7 @@ export const NavPaperWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
   position: absolute;
-  bottom: 0;
+  bottom: 1px; // Fixes a 1px gap between navbar and paper
   left: 0;
   right: 0;
   transform: translateY(100%);

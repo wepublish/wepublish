@@ -193,7 +193,7 @@
   },
   "prisma": {
     "schema": "libs/api/prisma/schema.prisma",
-    "seed": "nx seed api-example"
+    "seed": "nx seed api-example --prod"
   },
   "husky": {
     "hooks": {

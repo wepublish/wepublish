@@ -289,9 +289,12 @@ export const TeaserPreTitleWrapper = styled('div')`
 `
 
 export const PreTitle = styled('div')`
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: ${({theme}) => `${theme.spacing(0.5)} ${theme.spacing(2)}`};
   background-color: ${({theme}) => theme.palette.accent.main};
+  color: ${({theme}) => theme.palette.accent.contrastText};
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -299,6 +302,7 @@ export const PreTitle = styled('div')`
 
   :where(${TeaserWrapper}:hover &) {
     background-color: ${({theme}) => theme.palette.primary.main};
+    color: ${({theme}) => theme.palette.primary.contrastText};
   }
 
   ${({theme}) => theme.breakpoints.up('md')} {

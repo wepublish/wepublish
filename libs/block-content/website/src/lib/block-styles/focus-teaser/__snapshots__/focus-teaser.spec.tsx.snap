@@ -169,10 +169,12 @@ exports[`Focus Teaser should render Article 1`] = `
 }
 
 .emotion-20 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -186,6 +188,7 @@ exports[`Focus Teaser should render Article 1`] = `
 
 .emotion-20:where(.emotion-10:hover .emotion-20) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -818,10 +821,12 @@ exports[`Focus Teaser should render Event 1`] = `
 }
 
 .emotion-20 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -835,6 +840,7 @@ exports[`Focus Teaser should render Event 1`] = `
 
 .emotion-20:where(.emotion-10:hover .emotion-20) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -1467,10 +1473,12 @@ exports[`Focus Teaser should render Page 1`] = `
 }
 
 .emotion-20 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -1484,6 +1492,7 @@ exports[`Focus Teaser should render Page 1`] = `
 
 .emotion-20:where(.emotion-10:hover .emotion-20) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -2116,10 +2125,12 @@ exports[`Focus Teaser should render WithClassName 1`] = `
 }
 
 .emotion-20 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -2133,6 +2144,7 @@ exports[`Focus Teaser should render WithClassName 1`] = `
 
 .emotion-20:where(.emotion-10:hover .emotion-20) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -2765,10 +2777,12 @@ exports[`Focus Teaser should render WithEmotion 1`] = `
 }
 
 .emotion-20 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -2782,6 +2796,7 @@ exports[`Focus Teaser should render WithEmotion 1`] = `
 
 .emotion-20:where(.emotion-10:hover .emotion-20) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -3414,10 +3429,12 @@ exports[`Focus Teaser should render WithLink 1`] = `
 }
 
 .emotion-21 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -3431,6 +3448,7 @@ exports[`Focus Teaser should render WithLink 1`] = `
 
 .emotion-21:where(.emotion-11:hover .emotion-21) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
