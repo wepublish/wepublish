@@ -559,10 +559,12 @@ exports[`Page should render Default 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -576,6 +578,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -4004,10 +4007,12 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -4021,6 +4026,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -7452,10 +7458,12 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -7469,6 +7477,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -10897,10 +10906,12 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -10914,6 +10925,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -14414,10 +14426,12 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -14431,6 +14445,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -17859,10 +17874,12 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -17876,6 +17893,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -21304,10 +21322,12 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -21321,6 +21341,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
