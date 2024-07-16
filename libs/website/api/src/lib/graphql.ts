@@ -1556,6 +1556,7 @@ export type FullArticleFragment = { __typename?: 'Article', id: string, publishe
 export type ArticleQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['Slug']>;
   id?: InputMaybe<Scalars['ID']>;
+  token?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -2916,8 +2917,8 @@ export const FullSessionWithTokenFragmentDoc = gql`
 }
     ${FullUserFragmentDoc}`;
 export const ArticleDocument = gql`
-    query Article($slug: Slug, $id: ID) {
-  article(slug: $slug, id: $id) {
+    query Article($slug: Slug, $id: ID, $token: String) {
+  article(slug: $slug, id: $id, token: $token) {
     ...FullArticle
   }
 }
@@ -2937,6 +2938,7 @@ export const ArticleDocument = gql`
  *   variables: {
  *      slug: // value for 'slug'
  *      id: // value for 'id'
+ *      token: // value for 'token'
  *   },
  * });
  */
