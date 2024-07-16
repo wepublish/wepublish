@@ -23,6 +23,8 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import {CookieOrPay} from '../src/cookie-or-pay/cookie-or-pay'
+import {MannschaftTeaser} from '../src/mannschaft-teaser'
+import {MannschaftBlockRenderer} from '../src/mannschaft-block-renderer'
 
 setDefaultOptions({
   locale: de
@@ -100,6 +102,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Head={Head}
           Script={Script}
           elements={{Link: NextWepublishLink}}
+          blocks={{Teaser: MannschaftTeaser, Renderer: MannschaftBlockRenderer}}
           date={{format: dateFormatter}}
           meta={{siteTitle}}>
           <ThemeProvider theme={theme}>
