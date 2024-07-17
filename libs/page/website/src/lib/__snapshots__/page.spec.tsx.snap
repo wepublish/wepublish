@@ -453,15 +453,27 @@ exports[`Page should render Default 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 .emotion-135 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -510,6 +522,7 @@ exports[`Page should render Default 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -546,10 +559,12 @@ exports[`Page should render Default 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -563,6 +578,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -589,7 +605,6 @@ exports[`Page should render Default 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -623,6 +638,18 @@ exports[`Page should render Default 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -637,6 +664,7 @@ exports[`Page should render Default 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -677,6 +705,18 @@ exports[`Page should render Default 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -688,6 +728,18 @@ exports[`Page should render Default 1`] = `
 .emotion-198 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -705,6 +757,18 @@ exports[`Page should render Default 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-213 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -719,10 +783,10 @@ exports[`Page should render Default 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -884,6 +948,18 @@ exports[`Page should render Default 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-411 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -910,7 +986,7 @@ exports[`Page should render Default 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -2014,17 +2090,7 @@ https://unsplash.it/200/100 200w"
       <div
         class="emotion-109 emotion-110"
         style="width: auto; height: auto;"
-      >
-        <div
-          class="fb-video"
-          data-allowfullscreen="true"
-          data-autoplay="false"
-          data-controls="true"
-          data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
-          id=":r0:"
-          style="width: 100%; height: 100%;"
-        />
-      </div>
+      />
     </div>
     <div
       class="emotion-111 emotion-112"
@@ -2050,14 +2116,7 @@ https://unsplash.it/200/100 200w"
       <div
         class="emotion-117 emotion-118"
         style="width: auto; height: auto;"
-      >
-        <iframe
-          allow="autoplay"
-          frameborder="0"
-          src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F744469711"
-          style="width: 100%; height: 100%;"
-        />
-      </div>
+      />
     </div>
     <div
       class="emotion-119 emotion-120"
@@ -2084,11 +2143,7 @@ https://unsplash.it/200/100 200w"
       <div
         class="emotion-127 emotion-128"
         style="width: auto; height: auto;"
-      >
-        <div
-          style="width: 100%; height: 100%; overflow: hidden;"
-        />
-      </div>
+      />
     </div>
     <div
       class="emotion-129 emotion-130"
@@ -2096,13 +2151,7 @@ https://unsplash.it/200/100 200w"
       <div
         class="emotion-131 emotion-132"
         style="width: auto; height: auto;"
-      >
-        <div
-          style="width: 100%; height: 100%;"
-        >
-          <div />
-        </div>
-      </div>
+      />
     </div>
     <div
       class="emotion-133 emotion-134"
@@ -3825,15 +3874,27 @@ exports[`Page should render WithChildren 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 .emotion-135 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -3882,6 +3943,7 @@ exports[`Page should render WithChildren 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3918,10 +3980,12 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -3935,6 +3999,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -3961,7 +4026,6 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3995,6 +4059,18 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -4009,6 +4085,7 @@ exports[`Page should render WithChildren 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -4049,6 +4126,18 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -4060,6 +4149,18 @@ exports[`Page should render WithChildren 1`] = `
 .emotion-198 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -4077,6 +4178,18 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-213 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -4091,10 +4204,10 @@ exports[`Page should render WithChildren 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -4256,6 +4369,18 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-411 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -4282,7 +4407,7 @@ exports[`Page should render WithChildren 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -7200,15 +7325,27 @@ exports[`Page should render WithClassName 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 .emotion-135 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -7257,6 +7394,7 @@ exports[`Page should render WithClassName 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -7293,10 +7431,12 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -7310,6 +7450,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -7336,7 +7477,6 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -7370,6 +7510,18 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -7384,6 +7536,7 @@ exports[`Page should render WithClassName 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -7424,6 +7577,18 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -7435,6 +7600,18 @@ exports[`Page should render WithClassName 1`] = `
 .emotion-198 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -7452,6 +7629,18 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-213 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -7466,10 +7655,10 @@ exports[`Page should render WithClassName 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -7631,6 +7820,18 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-411 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -7657,7 +7858,7 @@ exports[`Page should render WithClassName 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -10572,15 +10773,27 @@ exports[`Page should render WithEmotion 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 .emotion-135 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -10629,6 +10842,7 @@ exports[`Page should render WithEmotion 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -10665,10 +10879,12 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -10682,6 +10898,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -10708,7 +10925,6 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -10742,6 +10958,18 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -10756,6 +10984,7 @@ exports[`Page should render WithEmotion 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -10796,6 +11025,18 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -10807,6 +11048,18 @@ exports[`Page should render WithEmotion 1`] = `
 .emotion-198 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -10824,6 +11077,18 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-213 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -10838,10 +11103,10 @@ exports[`Page should render WithEmotion 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -11003,6 +11268,18 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-411 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -11029,7 +11306,7 @@ exports[`Page should render WithEmotion 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -14016,15 +14293,27 @@ exports[`Page should render WithoutDescription 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 .emotion-135 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -14073,6 +14362,7 @@ exports[`Page should render WithoutDescription 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -14109,10 +14399,12 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -14126,6 +14418,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -14152,7 +14445,6 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -14186,6 +14478,18 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -14200,6 +14504,7 @@ exports[`Page should render WithoutDescription 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -14240,6 +14545,18 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -14251,6 +14568,18 @@ exports[`Page should render WithoutDescription 1`] = `
 .emotion-198 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -14268,6 +14597,18 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-213 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -14282,10 +14623,10 @@ exports[`Page should render WithoutDescription 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -14447,6 +14788,18 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-411 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -14473,7 +14826,7 @@ exports[`Page should render WithoutDescription 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -17388,15 +17741,27 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 .emotion-135 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -17445,6 +17810,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -17481,10 +17847,12 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -17498,6 +17866,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -17524,7 +17893,6 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -17558,6 +17926,18 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -17572,6 +17952,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -17612,6 +17993,18 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -17623,6 +18016,18 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 .emotion-198 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -17640,6 +18045,18 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-213 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -17654,10 +18071,10 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -17819,6 +18236,18 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-411 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -17845,7 +18274,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -20760,15 +21189,27 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 .emotion-135 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -20817,6 +21258,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -20853,10 +21295,12 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -20870,6 +21314,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -20896,7 +21341,6 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -20930,6 +21374,18 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -20944,6 +21400,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -20984,6 +21441,18 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -20995,6 +21464,18 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 .emotion-198 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -21012,6 +21493,18 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-213 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -21026,10 +21519,10 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -21191,6 +21684,18 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-411 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -21217,7 +21722,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;

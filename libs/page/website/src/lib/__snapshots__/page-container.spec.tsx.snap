@@ -453,15 +453,27 @@ exports[`Page Container should render ById 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 .emotion-135 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -510,6 +522,7 @@ exports[`Page Container should render ById 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -546,10 +559,12 @@ exports[`Page Container should render ById 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -563,6 +578,7 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -589,7 +605,6 @@ exports[`Page Container should render ById 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -623,6 +638,18 @@ exports[`Page Container should render ById 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -637,6 +664,7 @@ exports[`Page Container should render ById 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -677,6 +705,18 @@ exports[`Page Container should render ById 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -688,6 +728,18 @@ exports[`Page Container should render ById 1`] = `
 .emotion-198 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -705,6 +757,18 @@ exports[`Page Container should render ById 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-213 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -719,10 +783,10 @@ exports[`Page Container should render ById 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -881,6 +945,18 @@ exports[`Page Container should render ById 1`] = `
 .emotion-411 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -3456,15 +3532,27 @@ exports[`Page Container should render BySlug 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 .emotion-135 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -3513,6 +3601,7 @@ exports[`Page Container should render BySlug 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3549,10 +3638,12 @@ exports[`Page Container should render BySlug 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -3566,6 +3657,7 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -3592,7 +3684,6 @@ exports[`Page Container should render BySlug 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3626,6 +3717,18 @@ exports[`Page Container should render BySlug 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -3640,6 +3743,7 @@ exports[`Page Container should render BySlug 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3680,6 +3784,18 @@ exports[`Page Container should render BySlug 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -3691,6 +3807,18 @@ exports[`Page Container should render BySlug 1`] = `
 .emotion-198 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -3708,6 +3836,18 @@ exports[`Page Container should render BySlug 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-213 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -3722,10 +3862,10 @@ exports[`Page Container should render BySlug 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -3884,6 +4024,18 @@ exports[`Page Container should render BySlug 1`] = `
 .emotion-411 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -6459,15 +6611,27 @@ exports[`Page Container should render WithChildren 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 .emotion-135 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -6516,6 +6680,7 @@ exports[`Page Container should render WithChildren 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6552,10 +6717,12 @@ exports[`Page Container should render WithChildren 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -6569,6 +6736,7 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -6595,7 +6763,6 @@ exports[`Page Container should render WithChildren 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -6629,6 +6796,18 @@ exports[`Page Container should render WithChildren 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -6643,6 +6822,7 @@ exports[`Page Container should render WithChildren 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6683,6 +6863,18 @@ exports[`Page Container should render WithChildren 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -6694,6 +6886,18 @@ exports[`Page Container should render WithChildren 1`] = `
 .emotion-198 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -6711,6 +6915,18 @@ exports[`Page Container should render WithChildren 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-213 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -6725,10 +6941,10 @@ exports[`Page Container should render WithChildren 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -6887,6 +7103,18 @@ exports[`Page Container should render WithChildren 1`] = `
 .emotion-411 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -9465,15 +9693,27 @@ exports[`Page Container should render WithClassName 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 .emotion-135 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -9522,6 +9762,7 @@ exports[`Page Container should render WithClassName 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -9558,10 +9799,12 @@ exports[`Page Container should render WithClassName 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -9575,6 +9818,7 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -9601,7 +9845,6 @@ exports[`Page Container should render WithClassName 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -9635,6 +9878,18 @@ exports[`Page Container should render WithClassName 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -9649,6 +9904,7 @@ exports[`Page Container should render WithClassName 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -9689,6 +9945,18 @@ exports[`Page Container should render WithClassName 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -9700,6 +9968,18 @@ exports[`Page Container should render WithClassName 1`] = `
 .emotion-198 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -9717,6 +9997,18 @@ exports[`Page Container should render WithClassName 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-213 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -9731,10 +10023,10 @@ exports[`Page Container should render WithClassName 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -9893,6 +10185,18 @@ exports[`Page Container should render WithClassName 1`] = `
 .emotion-411 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -12468,15 +12772,27 @@ exports[`Page Container should render WithEmotion 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 .emotion-135 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-135 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-135 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -12525,6 +12841,7 @@ exports[`Page Container should render WithEmotion 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -12561,10 +12878,12 @@ exports[`Page Container should render WithEmotion 1`] = `
 }
 
 .emotion-146 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -12578,6 +12897,7 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-146:where(.emotion-136:hover .emotion-146) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -12604,7 +12924,6 @@ exports[`Page Container should render WithEmotion 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -12638,6 +12957,18 @@ exports[`Page Container should render WithEmotion 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-158 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-158 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-158 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -12652,6 +12983,7 @@ exports[`Page Container should render WithEmotion 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -12692,6 +13024,18 @@ exports[`Page Container should render WithEmotion 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-179 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-179 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-179 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -12703,6 +13047,18 @@ exports[`Page Container should render WithEmotion 1`] = `
 .emotion-198 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-198 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-198 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {
@@ -12720,6 +13076,18 @@ exports[`Page Container should render WithEmotion 1`] = `
 }
 
 @media (min-width:900px) {
+  .emotion-213 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-213 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
   .emotion-213 {
     grid-column-start: 1;
     grid-column-end: 13;
@@ -12734,10 +13102,10 @@ exports[`Page Container should render WithEmotion 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -12896,6 +13264,18 @@ exports[`Page Container should render WithEmotion 1`] = `
 .emotion-411 {
   display: grid;
   grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-411 .emotion-149 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-411 .emotion-151 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 @media (min-width:900px) {

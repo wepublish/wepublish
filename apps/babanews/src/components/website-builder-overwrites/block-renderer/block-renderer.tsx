@@ -10,8 +10,6 @@ import {
 import {cond} from 'ramda'
 import {useMemo} from 'react'
 
-import {FullWidthBanner} from '../../babanews/fullwidth-banner/fullwidth-banner'
-import {isFullWidthBanner} from '../../babanews/fullwidth-banner/is-fullwidth-banner'
 import {InstagramBanner} from '../../babanews/instagram-banner/instagram-banner'
 import {isInstagramBanner} from '../../babanews/instagram-banner/is-instagram-banner'
 import {Container} from '../../layout/container'
@@ -25,16 +23,6 @@ export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
   const extraBlockMap = useMemo(
     () =>
       cond([
-        [
-          isFullWidthBanner,
-          block => (
-            <FullWidthContainer>
-              <Container>
-                <FullWidthBanner {...block} />
-              </Container>
-            </FullWidthContainer>
-          )
-        ],
         [
           isInstagramBanner,
           block => (

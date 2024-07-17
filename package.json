@@ -122,7 +122,6 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/react-test-renderer": "^17.0.1",
     "@types/resize-observer-browser": "^0.1.6",
-    "@types/react-test-renderer": "^17.0.1",
     "@types/supertest": "^2.0.12",
     "@types/webpack": "^4.35.3",
     "@types/webpack-dev-server": "^2.9.4",
@@ -194,7 +193,7 @@
   },
   "prisma": {
     "schema": "libs/api/prisma/schema.prisma",
-    "seed": "nx seed api-example"
+    "seed": "nx seed api-example --prod"
   },
   "husky": {
     "hooks": {
@@ -311,7 +310,7 @@
     "react-i18next": "^13.0.0",
     "react-icons": "^5.2.1",
     "react-page-visibility": "^6.4.0",
-    "react-player": "^2.12.0",
+    "react-player": "3.0.0-canary.4",
     "react-router-dom": "^6.3.0",
     "react-sortable-hoc": "^1.11.0",
     "react-tweet": "^3.0.3",

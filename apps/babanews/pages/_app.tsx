@@ -24,6 +24,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 import {BabanewsBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BabanewsTeaserGrid} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme from '../src/styles/theme'
+import {BabanewsBanner} from '../src/components/website-builder-overwrites/blocks/banner'
 
 setDefaultOptions({
   locale: de
@@ -82,6 +83,9 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           blocks={{
             Renderer: BabanewsBlockRenderer,
             TeaserGrid: BabanewsTeaserGrid
+          }}
+          blockStyles={{
+            Banner: BabanewsBanner
           }}>
           <ThemeProvider theme={theme}>
             <CssBaseline />

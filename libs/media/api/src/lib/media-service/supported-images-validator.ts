@@ -6,6 +6,7 @@ const supportedMimeTypes = [
   'image/png',
   'image/gif',
   'image/jpeg',
+  'image/jpg',
   'image/avif',
   'image/tiff'
 ]
@@ -17,7 +18,7 @@ export class SupportedImagesValidator extends FileValidator {
 
   override async isValid(file?: IFile): Promise<boolean> {
     if (!file) {
-      return true
+      return false
     }
 
     return supportedMimeTypes.includes(file.mimetype)
