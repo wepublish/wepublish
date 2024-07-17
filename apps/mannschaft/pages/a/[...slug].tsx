@@ -13,8 +13,9 @@ import {useRouter} from 'next/router'
 
 export default function ArticleBySlug() {
   const {
-    query: {slug}
+    query: {slug: slugs}
   } = useRouter()
+  const slug = typeof slugs === 'object' ? slugs.reverse()[0] : slugs
   const {
     elements: {H3}
   } = useWebsiteBuilder()
