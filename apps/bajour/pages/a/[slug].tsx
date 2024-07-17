@@ -16,6 +16,7 @@ import {
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {ComponentProps} from 'react'
 
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
 import {FrageDesTagesArticle} from '../../src/components/frage-des-tages/frage-des-tages-article'
@@ -45,9 +46,9 @@ export const AuthorWrapper = styled(ContentWrapper)`
   }
 `
 
-export default function ArticleBySlug() {
+export default function ArticleBySlugIdOrToken() {
   const {
-    query: {slug}
+    query: {slug, id, token}
   } = useRouter()
   const {
     elements: {H5}
@@ -60,6 +61,12 @@ export default function ArticleBySlug() {
     }
   })
 
+  const containerProps = {
+    slug,
+    id,
+    token
+  } as ComponentProps<typeof ArticleContainer>
+
   const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
 
   return (
@@ -70,7 +77,7 @@ export default function ArticleBySlug() {
       }}
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
-        <ArticleContainer slug={slug as string} />
+        <ArticleContainer {...containerProps} />
 
         <BriefingNewsletter />
 

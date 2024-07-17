@@ -10,10 +10,11 @@ import {
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {ComponentProps} from 'react'
 
-export default function ArticleBySlug() {
+export default function ArticleBySlugIdOrToken() {
   const {
-    query: {slug: slugs}
+    query: {slug: slugs, id, token}
   } = useRouter()
   const slug = typeof slugs === 'object' ? slugs.reverse()[0] : slugs
   const {
@@ -27,9 +28,15 @@ export default function ArticleBySlug() {
     }
   })
 
+  const containerProps = {
+    slug,
+    id,
+    token
+  } as ComponentProps<typeof ArticleContainer>
+
   return (
     <>
-      <ArticleContainer slug={slug as string} />
+      <ArticleContainer {...containerProps} />
 
       {data?.article && (
         <>
