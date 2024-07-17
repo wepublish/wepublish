@@ -2,10 +2,10 @@ import {ApiV1} from '@wepublish/website'
 import {GetServerSideProps} from 'next'
 import getConfig from 'next/config'
 
-import ArticleBySlugIdOrToken from '../[...slug]'
+import PageBySlugIdOrToken from '../[slug]'
 
-export default function PreviewArticleByToken() {
-  return <ArticleBySlugIdOrToken />
+export default function PreviewPageByToken() {
+  return <PageBySlugIdOrToken />
 }
 
 export const getServerSideProps = (async ({params}) => {
@@ -14,9 +14,9 @@ export const getServerSideProps = (async ({params}) => {
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
-  const [article] = await Promise.all([
+  const [page] = await Promise.all([
     client.query({
-      query: ApiV1.ArticleDocument,
+      query: ApiV1.PageDocument,
       variables: {
         token
       }
@@ -29,7 +29,7 @@ export const getServerSideProps = (async ({params}) => {
     })
   ])
 
-  if (article.data && !article.data.article) {
+  if (page.data && !page.data.page) {
     return {
       notFound: true
     }

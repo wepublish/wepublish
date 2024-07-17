@@ -1,14 +1,11 @@
-import {ApiV1, ArticleContainer} from '@wepublish/website'
+import {ApiV1} from '@wepublish/website'
 import {GetServerSideProps} from 'next'
 import getConfig from 'next/config'
-import {useRouter} from 'next/router'
+
+import ArticleBySlugIdOrToken from '../[slug]'
 
 export default function PreviewArticleByToken() {
-  const {
-    query: {token}
-  } = useRouter()
-
-  return <ArticleContainer token={token as string} />
+  return <ArticleBySlugIdOrToken />
 }
 
 export const getServerSideProps = (async ({params}) => {

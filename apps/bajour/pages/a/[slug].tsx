@@ -24,6 +24,7 @@ import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
+import {ComponentProps} from 'react'
 
 const uppercase = css`
   text-transform: uppercase;
@@ -45,9 +46,9 @@ export const AuthorWrapper = styled(ContentWrapper)`
   }
 `
 
-export default function ArticleBySlug() {
+export default function ArticleBySlugIdOrToken() {
   const {
-    query: {slug}
+    query: {slug, id, token}
   } = useRouter()
   const {
     elements: {H5}
@@ -60,6 +61,12 @@ export default function ArticleBySlug() {
     }
   })
 
+  const containerProps = {
+    slug,
+    id,
+    token
+  } as ComponentProps<typeof ArticleContainer>
+
   const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
 
   return (
@@ -70,7 +77,7 @@ export default function ArticleBySlug() {
       }}
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
-        <ArticleContainer slug={slug as string} />
+        <ArticleContainer {...containerProps} />
 
         <BriefingNewsletter />
 

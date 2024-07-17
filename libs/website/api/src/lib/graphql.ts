@@ -1925,6 +1925,7 @@ export type FullPageFragment = { __typename?: 'Page', id: string, slug: string, 
 export type PageQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['Slug']>;
   id?: InputMaybe<Scalars['ID']>;
+  token?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -3874,8 +3875,8 @@ export type NavigationQueryHookResult = ReturnType<typeof useNavigationQuery>;
 export type NavigationLazyQueryHookResult = ReturnType<typeof useNavigationLazyQuery>;
 export type NavigationQueryResult = Apollo.QueryResult<NavigationQuery, NavigationQueryVariables>;
 export const PageDocument = gql`
-    query Page($slug: Slug, $id: ID) {
-  page(slug: $slug, id: $id) {
+    query Page($slug: Slug, $id: ID, $token: String) {
+  page(slug: $slug, id: $id, token: $token) {
     ...FullPage
   }
 }
@@ -3895,6 +3896,7 @@ export const PageDocument = gql`
  *   variables: {
  *      slug: // value for 'slug'
  *      id: // value for 'id'
+ *      token: // value for 'token'
  *   },
  * });
  */
