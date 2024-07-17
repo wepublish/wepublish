@@ -20,8 +20,7 @@ export const isHotAndTrendingTeasers = (
 export const HotAndTrendingBlockStyle = ({
   teasers,
   blockStyle,
-  className,
-  ...props
+  className
 }: BuilderTeaserGridBlockProps | BuilderTeaserListBlockProps) => {
   const {
     blocks: {Teaser}

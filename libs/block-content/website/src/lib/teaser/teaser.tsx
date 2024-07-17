@@ -142,6 +142,27 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
   }
 }
 
+export const selectTeaserTags = (teaser: TeaserType) => {
+  switch (teaser.__typename) {
+    case 'PageTeaser': {
+      return teaser.page?.tags ?? []
+    }
+
+    case 'ArticleTeaser': {
+      return teaser.article?.tags ?? []
+    }
+
+    case 'EventTeaser':
+      return teaser.event?.tags ?? []
+
+    case 'PeerArticleTeaser':
+    case 'CustomTeaser':
+      return []
+  }
+
+  return []
+}
+
 export const TeaserWrapper = styled('article')<FlexAlignment>`
   display: grid;
 
@@ -267,7 +288,7 @@ export const TeaserPreTitleWrapper = styled('div')`
   }
 `
 
-export const PreTitle = styled('div')`
+export const TeaserPreTitle = styled('div')`
   transition-property: color, background-color;
   transition-duration: 0.3s;
   transition-timing-function: ease-in-out;
@@ -344,7 +365,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
         {preTitle && (
           <TeaserPreTitleWrapper>
-            <PreTitle>{preTitle}</PreTitle>
+            <TeaserPreTitle>{preTitle}</TeaserPreTitle>
           </TeaserPreTitleWrapper>
         )}
         {!preTitle && <TeaserPreTitleNoContent />}

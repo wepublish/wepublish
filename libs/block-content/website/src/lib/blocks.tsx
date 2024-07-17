@@ -27,6 +27,11 @@ import {isPolisConversationBlock} from './polis-conversation/polis-conversation-
 import {isBreakBlock} from './break/break-block'
 import {memo} from 'react'
 import {isTeaserListBlock} from './teaser/teaser-list-block'
+import {isTeaserSliderBlockStyle} from './block-styles/teaser-slider/teaser-slider'
+import {isImageSliderBlockStyle} from './block-styles/image-slider/image-slider'
+import {isFocusTeaserBlockStyle} from './block-styles/focus-teaser/focus-teaser'
+import {isContextBoxBlockStyle} from './block-styles/context-box/context-box'
+import {isBannerBlockStyle} from './block-styles/banner/banner'
 
 export const hasBlockStyle =
   (blockStyle: string) =>
@@ -34,7 +39,15 @@ export const hasBlockStyle =
     block.blockStyle === blockStyle
 
 export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
-  const {blocks} = useWebsiteBuilder()
+  const {blocks, blockStyles} = useWebsiteBuilder()
+
+  const blockStylesCond = cond([
+    [isImageSliderBlockStyle, block => <blockStyles.ImageSlider {...block} />],
+    [isTeaserSliderBlockStyle, block => <blockStyles.TeaserSlider {...block} />],
+    [isFocusTeaserBlockStyle, block => <blockStyles.FocusTeaser {...block} />],
+    [isContextBoxBlockStyle, block => <blockStyles.ContextBox {...block} />],
+    [isBannerBlockStyle, block => <blockStyles.Banner {...block} />]
+  ])
 
   const facebookEmbedCond = cond([
     [isFacebookPostBlock, block => <blocks.FacebookPost {...block} />],
@@ -65,6 +78,7 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   ])
 
   return (
+    blockStylesCond(block) ??
     facebookEmbedCond(block) ??
     embedCond(block) ??
     teaserCond(block) ??

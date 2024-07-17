@@ -4,7 +4,7 @@ import {allPass} from 'ramda'
 
 export const isHotAndTrendingTeaser = allPass([
   ({teaser}: BuilderTeaserProps) => teaser?.__typename === 'CustomTeaser',
-  ({teaser}: BuilderTeaserProps) => teaser?.preTitle === 'daily-news'
+  ({teaser}: BuilderTeaserProps) => teaser?.preTitle === 'hot-and-trending'
 ])
 
 const HotAndTrendingTeaserWrapper = styled('div')`

@@ -39,15 +39,11 @@ export const BajourComment = (props: BuilderCommentProps) => {
   const highlightSourceTag = tags.some((tag: ApiV1.Tag) => tag.tag === bajourTags.QuelleHervorheben)
   const moderationTag = tags.some((tag: ApiV1.Tag) => tag.tag === bajourTags.Moderation)
 
-  const cssToPass = () => {
-    if (moderationTag) {
-      return highlightModeration(theme)
-    }
-    if (highlightSourceTag) {
-      return highlightSource(theme)
-    }
-    return undefined
-  }
+  const commentStyles = moderationTag
+    ? highlightModeration(theme)
+    : highlightSourceTag
+    ? highlightSource(theme)
+    : undefined
 
-  return <Comment {...props} css={cssToPass()} />
+  return <Comment {...props} css={commentStyles} />
 }

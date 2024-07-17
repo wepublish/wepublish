@@ -1,0 +1,583 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Image Slider should render Default 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 40px;
+}
+
+.emotion-4 {
+  position: relative;
+}
+
+.emotion-6 {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.emotion-8 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto;
+}
+
+.emotion-10 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  justify-self: center;
+}
+
+.emotion-24 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.emotion-26 {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  border: none;
+  width: 16px;
+  height: 16px;
+  background-color: #eeeeee;
+  color: #e91e63;
+  border-radius: 50%;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+}
+
+.emotion-26:focus {
+  outline: none;
+}
+
+.emotion-28 {
+  display: block;
+  background-color: currentColor;
+  height: 100%;
+}
+
+<section
+    class="emotion-0 emotion-1"
+  >
+    <div
+      class="emotion-2 emotion-3"
+    >
+      <div
+        class="keen-slider emotion-4 emotion-5"
+      >
+        <div
+          class="keen-slider__slide"
+        >
+          <figure
+            class="emotion-6 emotion-7"
+          >
+            <div
+              class="emotion-8 emotion-9"
+            >
+              <img
+                alt="An image description"
+                class="emotion-10 emotion-11"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+              <figcaption>
+                ABC 
+              </figcaption>
+            </div>
+          </figure>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <figure
+            class="emotion-6 emotion-7"
+          >
+            <div
+              class="emotion-8 emotion-9"
+            >
+              <img
+                alt="An image description"
+                class="emotion-10 emotion-11"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+          </figure>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <figure
+            class="emotion-6 emotion-7"
+          >
+            <div
+              class="emotion-8 emotion-9"
+            >
+              <img
+                alt="An image description"
+                class="emotion-10 emotion-11"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+              <figcaption>
+                Ultra Long Caption just to make sure this is rendering correctly. Because we never know what some people might write. 
+              </figcaption>
+            </div>
+          </figure>
+        </div>
+      </div>
+      <div
+        class="emotion-24 emotion-25"
+      >
+        <button
+          aria-label="Slide 1"
+          class="emotion-26 emotion-27"
+        >
+          <span
+            class="emotion-28 emotion-29"
+          />
+        </button>
+        <button
+          aria-label="Slide 2"
+          class="emotion-26 emotion-27"
+        />
+        <button
+          aria-label="Slide 3"
+          class="emotion-26 emotion-27"
+        />
+      </div>
+    </div>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`Image Slider should render WithClassName 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 40px;
+}
+
+.emotion-4 {
+  position: relative;
+}
+
+.emotion-6 {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.emotion-8 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto;
+}
+
+.emotion-10 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  justify-self: center;
+}
+
+.emotion-24 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.emotion-26 {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  border: none;
+  width: 16px;
+  height: 16px;
+  background-color: #eeeeee;
+  color: #e91e63;
+  border-radius: 50%;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+}
+
+.emotion-26:focus {
+  outline: none;
+}
+
+.emotion-28 {
+  display: block;
+  background-color: currentColor;
+  height: 100%;
+}
+
+<section
+    class="emotion-0 emotion-1"
+  >
+    <div
+      class="emotion-2 emotion-3"
+    >
+      <div
+        class="keen-slider emotion-4 emotion-5"
+      >
+        <div
+          class="keen-slider__slide"
+        >
+          <figure
+            class="emotion-6 emotion-7"
+          >
+            <div
+              class="emotion-8 emotion-9"
+            >
+              <img
+                alt="An image description"
+                class="emotion-10 emotion-11"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+              <figcaption>
+                ABC 
+              </figcaption>
+            </div>
+          </figure>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <figure
+            class="emotion-6 emotion-7"
+          >
+            <div
+              class="emotion-8 emotion-9"
+            >
+              <img
+                alt="An image description"
+                class="emotion-10 emotion-11"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+          </figure>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <figure
+            class="emotion-6 emotion-7"
+          >
+            <div
+              class="emotion-8 emotion-9"
+            >
+              <img
+                alt="An image description"
+                class="emotion-10 emotion-11"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+              <figcaption>
+                Ultra Long Caption just to make sure this is rendering correctly. Because we never know what some people might write. 
+              </figcaption>
+            </div>
+          </figure>
+        </div>
+      </div>
+      <div
+        class="emotion-24 emotion-25"
+      >
+        <button
+          aria-label="Slide 1"
+          class="emotion-26 emotion-27"
+        >
+          <span
+            class="emotion-28 emotion-29"
+          />
+        </button>
+        <button
+          aria-label="Slide 2"
+          class="emotion-26 emotion-27"
+        />
+        <button
+          aria-label="Slide 3"
+          class="emotion-26 emotion-27"
+        />
+      </div>
+    </div>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`Image Slider should render WithEmotion 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 40px;
+}
+
+.emotion-4 {
+  position: relative;
+}
+
+.emotion-6 {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.emotion-8 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto;
+}
+
+.emotion-10 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  justify-self: center;
+}
+
+.emotion-24 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.emotion-26 {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  border: none;
+  width: 16px;
+  height: 16px;
+  background-color: #eeeeee;
+  color: #e91e63;
+  border-radius: 50%;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+}
+
+.emotion-26:focus {
+  outline: none;
+}
+
+.emotion-28 {
+  display: block;
+  background-color: currentColor;
+  height: 100%;
+}
+
+<section
+    class="emotion-0 emotion-1"
+  >
+    <div
+      class="emotion-2 emotion-3"
+    >
+      <div
+        class="keen-slider emotion-4 emotion-5"
+      >
+        <div
+          class="keen-slider__slide"
+        >
+          <figure
+            class="emotion-6 emotion-7"
+          >
+            <div
+              class="emotion-8 emotion-9"
+            >
+              <img
+                alt="An image description"
+                class="emotion-10 emotion-11"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+              <figcaption>
+                ABC 
+              </figcaption>
+            </div>
+          </figure>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <figure
+            class="emotion-6 emotion-7"
+          >
+            <div
+              class="emotion-8 emotion-9"
+            >
+              <img
+                alt="An image description"
+                class="emotion-10 emotion-11"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+          </figure>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <figure
+            class="emotion-6 emotion-7"
+          >
+            <div
+              class="emotion-8 emotion-9"
+            >
+              <img
+                alt="An image description"
+                class="emotion-10 emotion-11"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+              <figcaption>
+                Ultra Long Caption just to make sure this is rendering correctly. Because we never know what some people might write. 
+              </figcaption>
+            </div>
+          </figure>
+        </div>
+      </div>
+      <div
+        class="emotion-24 emotion-25"
+      >
+        <button
+          aria-label="Slide 1"
+          class="emotion-26 emotion-27"
+        >
+          <span
+            class="emotion-28 emotion-29"
+          />
+        </button>
+        <button
+          aria-label="Slide 2"
+          class="emotion-26 emotion-27"
+        />
+        <button
+          aria-label="Slide 3"
+          class="emotion-26 emotion-27"
+        />
+      </div>
+    </div>
+  </section>
+</DocumentFragment>
+`;
