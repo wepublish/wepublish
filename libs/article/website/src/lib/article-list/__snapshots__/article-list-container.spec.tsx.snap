@@ -8,10 +8,10 @@ exports[`AuthorList Container should render Default 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -384,10 +384,10 @@ exports[`AuthorList Container should render WithClassName 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -760,10 +760,10 @@ exports[`AuthorList Container should render WithEmotion 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {
@@ -1136,10 +1136,10 @@ exports[`AuthorList Container should render WithFilter 1`] = `
   column-gap: 16px;
   row-gap: 40px;
   grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
 }
 
 @media (min-width:600px) {

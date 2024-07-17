@@ -288,7 +288,7 @@ export const TeaserPreTitleWrapper = styled('div')`
   }
 `
 
-export const PreTitle = styled('div')`
+export const TeaserPreTitle = styled('div')`
   transition-property: color, background-color;
   transition-duration: 0.3s;
   transition-timing-function: ease-in-out;
@@ -365,7 +365,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
         {preTitle && (
           <TeaserPreTitleWrapper>
-            <PreTitle>{preTitle}</PreTitle>
+            <TeaserPreTitle>{preTitle}</TeaserPreTitle>
           </TeaserPreTitleWrapper>
         )}
         {!preTitle && <TeaserPreTitleNoContent />}

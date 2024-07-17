@@ -3022,7 +3022,7 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
   background-color: #e91e63;
 }
 
-.css-7wlgk-PreTitle:where(.emotion-1:hover .css-7wlgk-PreTitle) {
+.css-hc9hel-TeaserPreTitle:where(.emotion-1:hover .css-hc9hel-TeaserPreTitle) {
   background-color: #e91e63;
   color: #fff;
 }
@@ -4783,7 +4783,7 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
   background-color: #e91e63;
 }
 
-.css-7wlgk-PreTitle:where(.emotion-1:hover .css-7wlgk-PreTitle) {
+.css-hc9hel-TeaserPreTitle:where(.emotion-1:hover .css-hc9hel-TeaserPreTitle) {
   background-color: #e91e63;
   color: #fff;
 }
@@ -6558,7 +6558,7 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
   background-color: #e91e63;
 }
 
-.css-7wlgk-PreTitle:where(.emotion-1:hover .css-7wlgk-PreTitle) {
+.css-hc9hel-TeaserPreTitle:where(.emotion-1:hover .css-hc9hel-TeaserPreTitle) {
   background-color: #e91e63;
   color: #fff;
 }
