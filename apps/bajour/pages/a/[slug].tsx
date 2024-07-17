@@ -23,7 +23,7 @@ import {Container} from '../../src/components/layout/container'
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
-import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
+import {BajourTeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
 
 const uppercase = css`
   text-transform: uppercase;
@@ -31,7 +31,7 @@ const uppercase = css`
 
 const RelatedArticleSlider = (props: BuilderArticleListProps) => {
   return (
-    <WebsiteBuilderProvider blocks={{TeaserGrid: TeaserSlider}}>
+    <WebsiteBuilderProvider blocks={{TeaserGrid: BajourTeaserSlider}}>
       <ArticleList {...props} />
     </WebsiteBuilderProvider>
   )
@@ -87,12 +87,11 @@ export default function ArticleBySlug() {
               />
             </ArticleWrapper>
 
-            {data?.article?.authors.length &&
-              data?.article?.authors.map(a => (
-                <AuthorWrapper key={a.id}>
-                  <BajourAuthorChip key={a.id} author={a} />
-                </AuthorWrapper>
-              ))}
+            {data?.article?.authors.map(a => (
+              <AuthorWrapper key={a.id}>
+                <BajourAuthorChip key={a.id} author={a} />
+              </AuthorWrapper>
+            ))}
 
             {!isFDT && (
               <ArticleWrapper>

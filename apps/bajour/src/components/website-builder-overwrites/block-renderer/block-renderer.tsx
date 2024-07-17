@@ -16,12 +16,9 @@ import {BestOfWePublish} from '../../best-of-wepublish/best-of-wepublish'
 import {isBestOfWePublish} from '../../best-of-wepublish/is-best-of-wepublish'
 import {BaselBriefing, BaselBriefingProps} from '../../briefing/basel-briefing'
 import {isAnyBriefing} from '../../briefing/is-briefing'
-import {ContextBox} from '../../context-box/context-box'
-import {isContextBox} from '../../context-box/is-context-box'
 import {FrageDesTages} from '../../frage-des-tages/frage-des-tages'
 import {isFrageDesTages} from '../../frage-des-tages/is-frage-des-tages'
 import {isSmallTeaser, SmallTeaser} from '../blocks/small-teaser'
-import {isTeaserSlider, TeaserSlider} from '../blocks/teaser-slider/teaser-slider'
 import {isWideTeaser, WideTeaser} from '../blocks/wide-teaser'
 
 export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
@@ -46,8 +43,6 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
       cond([
         [isOldRelatedArticles, block => <Fragment />],
         [isFrageDesTages, block => <FrageDesTages {...block} />],
-        [isContextBox, block => <ContextBox {...block} />],
-        [isTeaserSlider, block => <TeaserSlider {...block} />],
         [isBestOfWePublish, block => <BestOfWePublish {...block} />],
         [isAnyBriefing, block => <BaselBriefing {...(block as BaselBriefingProps)} />],
         [isArchive, block => <Archive {...block} />],
