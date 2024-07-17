@@ -45,7 +45,7 @@ const breakBlock = {
   __typename: 'LinkPageBreakBlock',
   text: 'Break block test',
   linkText: 'Link Text',
-  linkURL: 'Link URL',
+  linkURL: 'https://example.com',
   styleOption: 'default',
   richText: [
     {
@@ -126,20 +126,21 @@ export const WithButton = {
     hideButton: false
   }
 }
-
-export const WithClassName = {
-  args: {
-    ...breakBlock,
-    className: 'extra-classname'
-  }
-}
-
 export const WithEmotion = {
+  ...Default,
   args: {
-    ...breakBlock,
+    ...Default.args,
     css: css`
       background-color: #eee;
     `
+  }
+}
+
+export const WithClassName = {
+  ...Default,
+  args: {
+    ...Default.args,
+    className: 'extra-classname'
   }
 }
 
