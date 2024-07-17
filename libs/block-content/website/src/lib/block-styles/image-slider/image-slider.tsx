@@ -12,7 +12,8 @@ import {
   SliderInnerContainer,
   SlidesContainer,
   SliderBallContainer,
-  SliderBall
+  SliderBall,
+  SliderBallFill
 } from '../teaser-slider/teaser-slider'
 import {Block, ImageGalleryBlock} from '@wepublish/website/api'
 
@@ -59,8 +60,9 @@ export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => 
                 <SliderBall
                   key={idx}
                   onClick={() => sliderRef.current?.moveToIdx(idx)}
-                  isActive={currentSlide === idx}
-                />
+                  aria-label={`Slide ${idx + 1}`}>
+                  {currentSlide === idx && <SliderBallFill />}
+                </SliderBall>
               ))}
             </SliderBallContainer>
           )}

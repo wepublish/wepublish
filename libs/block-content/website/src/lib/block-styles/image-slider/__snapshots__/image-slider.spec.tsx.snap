@@ -69,6 +69,12 @@ exports[`Image Slider should render Default 1`] = `
   outline: none;
 }
 
+.emotion-28 {
+  display: block;
+  background-color: currentColor;
+  height: 100%;
+}
+
 <section
     class="emotion-0 emotion-1"
   >
@@ -167,12 +173,19 @@ https://unsplash.it/200/200 200w"
         class="emotion-24 emotion-25"
       >
         <button
+          aria-label="Slide 1"
+          class="emotion-26 emotion-27"
+        >
+          <span
+            class="emotion-28 emotion-29"
+          />
+        </button>
+        <button
+          aria-label="Slide 2"
           class="emotion-26 emotion-27"
         />
         <button
-          class="emotion-26 emotion-27"
-        />
-        <button
+          aria-label="Slide 3"
           class="emotion-26 emotion-27"
         />
       </div>
@@ -250,6 +263,12 @@ exports[`Image Slider should render WithClassName 1`] = `
   outline: none;
 }
 
+.emotion-28 {
+  display: block;
+  background-color: currentColor;
+  height: 100%;
+}
+
 <section
     class="emotion-0 emotion-1"
   >
@@ -348,12 +367,19 @@ https://unsplash.it/200/200 200w"
         class="emotion-24 emotion-25"
       >
         <button
+          aria-label="Slide 1"
+          class="emotion-26 emotion-27"
+        >
+          <span
+            class="emotion-28 emotion-29"
+          />
+        </button>
+        <button
+          aria-label="Slide 2"
           class="emotion-26 emotion-27"
         />
         <button
-          class="emotion-26 emotion-27"
-        />
-        <button
+          aria-label="Slide 3"
           class="emotion-26 emotion-27"
         />
       </div>
@@ -431,6 +457,12 @@ exports[`Image Slider should render WithEmotion 1`] = `
   outline: none;
 }
 
+.emotion-28 {
+  display: block;
+  background-color: currentColor;
+  height: 100%;
+}
+
 <section
     class="emotion-0 emotion-1"
   >
@@ -529,12 +561,19 @@ https://unsplash.it/200/200 200w"
         class="emotion-24 emotion-25"
       >
         <button
+          aria-label="Slide 1"
+          class="emotion-26 emotion-27"
+        >
+          <span
+            class="emotion-28 emotion-29"
+          />
+        </button>
+        <button
+          aria-label="Slide 2"
           class="emotion-26 emotion-27"
         />
         <button
-          class="emotion-26 emotion-27"
-        />
-        <button
+          aria-label="Slide 3"
           class="emotion-26 emotion-27"
         />
       </div>
