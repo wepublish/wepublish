@@ -486,6 +486,249 @@ https://unsplash.it/200/200 200w"
 </DocumentFragment>
 `;
 
+exports[`Teaser Article should render WithoutArticlePreTitle 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 5;
+  }
+}
+
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+  background-color: #e91e63;
+}
+
+.emotion-2 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-3 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-5 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-5:empty {
+  min-height: 32px;
+}
+
+.emotion-7 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 400px;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-7:where(.emotion-1:hover .emotion-7) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-9 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #F5FF64;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+  grid-area: pretitle;
+}
+
+.emotion-9:where(.emotion-1:hover .emotion-9) {
+  background-color: #e91e63;
+}
+
+.emotion-11 {
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-11:where(.emotion-1:hover .emotion-11) {
+  background-color: #e91e63;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-11 {
+    font-size: 18px;
+  }
+}
+
+.emotion-13 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-13 {
+    font-size: 32px;
+  }
+}
+
+.emotion-15 {
+  font-weight: 300;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-15.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-17 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+.emotion-19 {
+  font-weight: 500;
+}
+
+.emotion-21 {
+  font-weight: 400;
+}
+
+<article
+    class="emotion-0 emotion-1"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-2"
+      href="https://example.com"
+    >
+      <div
+        class="emotion-3 emotion-4"
+      >
+        <div
+          class="emotion-5 emotion-6"
+        >
+          <img
+            alt="An image description"
+            class="emotion-7 emotion-8"
+            loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+          />
+        </div>
+        <div
+          class="emotion-9 emotion-10"
+        >
+          <div
+            class="emotion-11 emotion-12"
+          >
+            Main Tag
+          </div>
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+        >
+          Title
+        </h1>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-15 emotion-16"
+        >
+          Lead
+        </p>
+        <div
+          class="emotion-17 emotion-18"
+        >
+          <span
+            class="emotion-19 emotion-20"
+          >
+            Von Foobar, Foobar 
+          </span>
+          <time
+            class="emotion-21 emotion-22"
+            datetime="2023-01-01T00:00:00.000Z"
+          >
+            | 01.01.2023 
+          </time>
+        </div>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
 exports[`Teaser Article should render WithoutAuthors 1`] = `
 <DocumentFragment>
   .emotion-0 {
@@ -2397,6 +2640,10 @@ exports[`Teaser Custom should render Default 1`] = `
   transform: scale(1.1);
 }
 
+.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+  background-color: #e91e63;
+}
+
 .emotion-2 {
   margin: 0;
   font: inherit;
@@ -2614,6 +2861,10 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
+}
+
+.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+  background-color: #e91e63;
 }
 
 .emotion-2 {
@@ -2840,6 +3091,10 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
+}
+
+.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+  background-color: #e91e63;
 }
 
 .emotion-2 {
@@ -6554,13 +6809,8 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
   transform: scale(1.1);
 }
 
-.css-6mexrt-TeaserPreTitleWrapper:where(.emotion-1:hover .css-6mexrt-TeaserPreTitleWrapper) {
+.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
   background-color: #e91e63;
-}
-
-.css-hc9hel-TeaserPreTitle:where(.emotion-1:hover .css-hc9hel-TeaserPreTitle) {
-  background-color: #e91e63;
-  color: #fff;
 }
 
 .emotion-2 {
@@ -6625,10 +6875,11 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
 .emotion-9 {
   -webkit-transition: background-color 0.3s ease-in-out;
   transition: background-color 0.3s ease-in-out;
-  background-color: #000;
+  background-color: #F5FF64;
   height: 3px;
   width: 100%;
   margin-bottom: 12px;
+  grid-area: pretitle;
 }
 
 .emotion-9:where(.emotion-1:hover .emotion-9) {
@@ -6636,6 +6887,35 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
 }
 
 .emotion-11 {
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-11:where(.emotion-1:hover .emotion-11) {
+  background-color: #e91e63;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-11 {
+    font-size: 18px;
+  }
+}
+
+.emotion-13 {
   grid-area: title;
   margin-bottom: 8px;
   margin: 0;
@@ -6646,12 +6926,12 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
 }
 
 @media (min-width: 900px) {
-  .emotion-11 {
+  .emotion-13 {
     font-size: 32px;
   }
 }
 
-.emotion-13 {
+.emotion-15 {
   font-weight: 300;
   grid-area: lead;
   margin: 0;
@@ -6662,11 +6942,11 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
   margin-bottom: 0.35em;
 }
 
-.emotion-13.MuiTypography-gutterBottom {
+.emotion-15.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-15 {
+.emotion-17 {
   margin: 0;
   font-size: 12px;
   grid-area: authors;
@@ -6704,19 +6984,25 @@ https://unsplash.it/200/200 200w"
         </div>
         <div
           class="emotion-9 emotion-10"
-        />
+        >
+          <div
+            class="emotion-11 emotion-12"
+          >
+            Main Tag
+          </div>
+        </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-11 emotion-12"
+          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
         >
           Title
         </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-15 emotion-16"
         >
           Lead
         </p>
         <div
-          class="emotion-15 emotion-16"
+          class="emotion-17 emotion-18"
         />
       </div>
     </a>
@@ -9510,6 +9796,198 @@ https://unsplash.it/200/200 200w"
         </p>
         <div
           class="emotion-17 emotion-18"
+        />
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser should render WithoutPreTitle 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 5;
+  }
+}
+
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.css-6mexrt-TeaserPreTitleWrapper:where(.emotion-1:hover .css-6mexrt-TeaserPreTitleWrapper) {
+  background-color: #e91e63;
+}
+
+.css-hc9hel-TeaserPreTitle:where(.emotion-1:hover .css-hc9hel-TeaserPreTitle) {
+  background-color: #e91e63;
+  color: #fff;
+}
+
+.emotion-2 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-3 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-5 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-5:empty {
+  min-height: 32px;
+}
+
+.emotion-7 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 400px;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-7:where(.emotion-1:hover .emotion-7) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-9 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #000;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.emotion-9:where(.emotion-1:hover .emotion-9) {
+  background-color: #e91e63;
+}
+
+.emotion-11 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-11 {
+    font-size: 32px;
+  }
+}
+
+.emotion-13 {
+  font-weight: 300;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-13.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-15 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+<article
+    class="emotion-0 emotion-1"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-2"
+      href="https://example.com"
+    >
+      <div
+        class="emotion-3 emotion-4"
+      >
+        <div
+          class="emotion-5 emotion-6"
+        >
+          <img
+            alt="An image description"
+            class="emotion-7 emotion-8"
+            loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+          />
+        </div>
+        <div
+          class="emotion-9 emotion-10"
+        />
+        <h1
+          class="MuiTypography-root MuiTypography-h4 emotion-11 emotion-12"
+        >
+          Teambesprechung vom 23.05.
+        </h1>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-13 emotion-14"
+        >
+          Lead
+        </p>
+        <div
+          class="emotion-15 emotion-16"
         />
       </div>
     </a>
