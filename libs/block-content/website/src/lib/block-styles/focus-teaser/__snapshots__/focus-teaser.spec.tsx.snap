@@ -12,6 +12,7 @@ exports[`Focus Teaser should render Article 1`] = `
 
 .emotion-2 {
   display: grid;
+  color: rgba(0, 0, 0, 0.87);
   background-color: #A4EFEF;
 }
 
@@ -664,6 +665,7 @@ exports[`Focus Teaser should render Event 1`] = `
 
 .emotion-2 {
   display: grid;
+  color: rgba(0, 0, 0, 0.87);
   background-color: #A4EFEF;
 }
 
@@ -1316,6 +1318,7 @@ exports[`Focus Teaser should render Page 1`] = `
 
 .emotion-2 {
   display: grid;
+  color: rgba(0, 0, 0, 0.87);
   background-color: #A4EFEF;
 }
 
@@ -1968,6 +1971,7 @@ exports[`Focus Teaser should render WithClassName 1`] = `
 
 .emotion-2 {
   display: grid;
+  color: rgba(0, 0, 0, 0.87);
   background-color: #A4EFEF;
 }
 
@@ -2620,6 +2624,7 @@ exports[`Focus Teaser should render WithEmotion 1`] = `
 
 .emotion-2 {
   display: grid;
+  color: rgba(0, 0, 0, 0.87);
   background-color: #A4EFEF;
 }
 
@@ -3272,6 +3277,7 @@ exports[`Focus Teaser should render WithLink 1`] = `
 
 .emotion-2 {
   display: grid;
+  color: rgba(0, 0, 0, 0.87);
   background-color: #A4EFEF;
 }
 

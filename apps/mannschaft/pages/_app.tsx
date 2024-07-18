@@ -24,8 +24,11 @@ import {CookieOrPay} from '../src/cookie-or-pay/cookie-or-pay'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {MainSpacer} from '../src/main-spacer'
 import {MannschaftBlockRenderer} from '../src/mannschaft-block-renderer'
+import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import theme from '../src/theme'
+import {MannschaftBreakBlock} from '../src/mannschaft-break-block'
+import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
 
 setDefaultOptions({
   locale: de
@@ -91,8 +94,16 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
+          Page={MannschaftPage}
           elements={{Link: NextWepublishLink}}
-          blocks={{Teaser: MannschaftTeaser, Renderer: MannschaftBlockRenderer}}
+          blocks={{
+            Teaser: MannschaftTeaser,
+            Break: MannschaftBreakBlock,
+            Renderer: MannschaftBlockRenderer
+          }}
+          blockStyles={{
+            FocusTeaser: MannschaftFocusTeaser
+          }}
           date={{format: dateFormatter}}
           meta={{siteTitle}}>
           <ThemeProvider theme={theme}>
