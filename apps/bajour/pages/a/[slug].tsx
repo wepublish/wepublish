@@ -16,6 +16,7 @@ import {
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {ComponentProps} from 'react'
 
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
 import {FrageDesTagesArticle} from '../../src/components/frage-des-tages/frage-des-tages-article'
@@ -23,7 +24,7 @@ import {Container} from '../../src/components/layout/container'
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
-import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
+import {BajourTeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
 
 const uppercase = css`
   text-transform: uppercase;
@@ -31,7 +32,7 @@ const uppercase = css`
 
 const RelatedArticleSlider = (props: BuilderArticleListProps) => {
   return (
-    <WebsiteBuilderProvider blocks={{TeaserGrid: TeaserSlider}}>
+    <WebsiteBuilderProvider blocks={{TeaserGrid: BajourTeaserSlider}}>
       <ArticleList {...props} />
     </WebsiteBuilderProvider>
   )
@@ -45,9 +46,9 @@ export const AuthorWrapper = styled(ContentWrapper)`
   }
 `
 
-export default function ArticleBySlug() {
+export default function ArticleBySlugIdOrToken() {
   const {
-    query: {slug}
+    query: {slug, id, token}
   } = useRouter()
   const {
     elements: {H5}
@@ -60,6 +61,12 @@ export default function ArticleBySlug() {
     }
   })
 
+  const containerProps = {
+    slug,
+    id,
+    token
+  } as ComponentProps<typeof ArticleContainer>
+
   const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
 
   return (
@@ -70,7 +77,7 @@ export default function ArticleBySlug() {
       }}
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
-        <ArticleContainer slug={slug as string} />
+        <ArticleContainer {...containerProps} />
 
         <BriefingNewsletter />
 
@@ -87,12 +94,11 @@ export default function ArticleBySlug() {
               />
             </ArticleWrapper>
 
-            {data?.article?.authors.length &&
-              data?.article?.authors.map(a => (
-                <AuthorWrapper key={a.id}>
-                  <BajourAuthorChip key={a.id} author={a} />
-                </AuthorWrapper>
-              ))}
+            {data?.article?.authors.map(a => (
+              <AuthorWrapper key={a.id}>
+                <BajourAuthorChip key={a.id} author={a} />
+              </AuthorWrapper>
+            ))}
 
             {!isFDT && (
               <ArticleWrapper>

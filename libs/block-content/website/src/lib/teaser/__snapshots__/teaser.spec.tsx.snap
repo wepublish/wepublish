@@ -15,7 +15,7 @@ exports[`Teaser Article should render Default 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -63,6 +63,7 @@ exports[`Teaser Article should render Default 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -99,10 +100,12 @@ exports[`Teaser Article should render Default 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -116,6 +119,7 @@ exports[`Teaser Article should render Default 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -142,7 +146,6 @@ exports[`Teaser Article should render Default 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -255,7 +258,7 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -303,6 +306,7 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -339,10 +343,12 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -356,6 +362,7 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -382,7 +389,6 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -495,7 +501,7 @@ exports[`Teaser Article should render WithoutArticlePreTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -543,6 +549,7 @@ exports[`Teaser Article should render WithoutArticlePreTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -579,10 +586,12 @@ exports[`Teaser Article should render WithoutArticlePreTitle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -596,6 +605,7 @@ exports[`Teaser Article should render WithoutArticlePreTitle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -622,7 +632,6 @@ exports[`Teaser Article should render WithoutArticlePreTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -735,7 +744,7 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -783,6 +792,7 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -819,10 +829,12 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -836,6 +848,7 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -862,7 +875,6 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -966,7 +978,7 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -1014,6 +1026,7 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1050,10 +1063,12 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -1067,6 +1082,7 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -1093,7 +1109,6 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1206,7 +1221,7 @@ exports[`Teaser Article should render WithoutDate 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -1254,6 +1269,7 @@ exports[`Teaser Article should render WithoutDate 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1290,10 +1306,12 @@ exports[`Teaser Article should render WithoutDate 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -1307,6 +1325,7 @@ exports[`Teaser Article should render WithoutDate 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -1333,7 +1352,6 @@ exports[`Teaser Article should render WithoutDate 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1436,7 +1454,7 @@ exports[`Teaser Article should render WithoutImage 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -1484,6 +1502,7 @@ exports[`Teaser Article should render WithoutImage 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1520,10 +1539,12 @@ exports[`Teaser Article should render WithoutImage 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -1537,6 +1558,7 @@ exports[`Teaser Article should render WithoutImage 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -1563,7 +1585,6 @@ exports[`Teaser Article should render WithoutImage 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1676,14 +1697,14 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-s7u69o-ImageWrapper-Teaser:where(.emotion-1:hover .css-s7u69o-ImageWrapper-Teaser) {
+.css-s6gs1e-ImageWrapper-Teaser:where(.emotion-1:hover .css-s6gs1e-ImageWrapper-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -1740,10 +1761,12 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
 }
 
 .emotion-9 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -1757,6 +1780,7 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
 
 .emotion-9:where(.emotion-1:hover .emotion-9) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -1783,7 +1807,6 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1881,7 +1904,7 @@ exports[`Teaser Article should render WithoutLead 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -1929,6 +1952,7 @@ exports[`Teaser Article should render WithoutLead 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1965,10 +1989,12 @@ exports[`Teaser Article should render WithoutLead 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -1982,6 +2008,7 @@ exports[`Teaser Article should render WithoutLead 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -2008,7 +2035,6 @@ exports[`Teaser Article should render WithoutLead 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -2121,7 +2147,7 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -2169,6 +2195,7 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2205,10 +2232,12 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -2222,6 +2251,7 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -2248,7 +2278,6 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -2361,7 +2390,7 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -2409,6 +2438,7 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2445,10 +2475,12 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -2462,6 +2494,7 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -2488,7 +2521,6 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -2601,7 +2633,7 @@ exports[`Teaser Custom should render Default 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -2649,6 +2681,7 @@ exports[`Teaser Custom should render Default 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2685,10 +2718,12 @@ exports[`Teaser Custom should render Default 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -2702,6 +2737,7 @@ exports[`Teaser Custom should render Default 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -2728,7 +2764,6 @@ exports[`Teaser Custom should render Default 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -2821,7 +2856,7 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -2869,6 +2904,7 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2905,10 +2941,12 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -2922,6 +2960,7 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -2948,7 +2987,6 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3041,14 +3079,14 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-s7u69o-ImageWrapper-Teaser:where(.emotion-1:hover .css-s7u69o-ImageWrapper-Teaser) {
+.css-s6gs1e-ImageWrapper-Teaser:where(.emotion-1:hover .css-s6gs1e-ImageWrapper-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -3105,10 +3143,12 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
 }
 
 .emotion-9 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -3122,6 +3162,7 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
 
 .emotion-9:where(.emotion-1:hover .emotion-9) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -3148,7 +3189,6 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3226,7 +3266,7 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -3237,8 +3277,9 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
   background-color: #e91e63;
 }
 
-.css-161zlv4-PreTitle:where(.emotion-1:hover .css-161zlv4-PreTitle) {
+.css-hc9hel-TeaserPreTitle:where(.emotion-1:hover .css-hc9hel-TeaserPreTitle) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 .emotion-2 {
@@ -3278,6 +3319,7 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3330,7 +3372,6 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3417,7 +3458,7 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -3465,6 +3506,7 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3501,10 +3543,12 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -3518,6 +3562,7 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -3544,7 +3589,6 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3635,7 +3679,7 @@ exports[`Teaser Event should render Default 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -3683,6 +3727,7 @@ exports[`Teaser Event should render Default 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3719,10 +3764,12 @@ exports[`Teaser Event should render Default 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -3736,6 +3783,7 @@ exports[`Teaser Event should render Default 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -3762,7 +3810,6 @@ exports[`Teaser Event should render Default 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3866,7 +3913,7 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -3914,6 +3961,7 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3950,10 +3998,12 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -3967,6 +4017,7 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -3993,7 +4044,6 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -4097,7 +4147,7 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -4145,6 +4195,7 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -4181,10 +4232,12 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -4198,6 +4251,7 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -4224,7 +4278,6 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -4328,7 +4381,7 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -4376,6 +4429,7 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -4412,10 +4466,12 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -4429,6 +4485,7 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -4538,7 +4595,7 @@ exports[`Teaser Event should render WithoutImage 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -4586,6 +4643,7 @@ exports[`Teaser Event should render WithoutImage 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -4622,10 +4680,12 @@ exports[`Teaser Event should render WithoutImage 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -4639,6 +4699,7 @@ exports[`Teaser Event should render WithoutImage 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -4665,7 +4726,6 @@ exports[`Teaser Event should render WithoutImage 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -4769,14 +4829,14 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-s7u69o-ImageWrapper-Teaser:where(.emotion-1:hover .css-s7u69o-ImageWrapper-Teaser) {
+.css-s6gs1e-ImageWrapper-Teaser:where(.emotion-1:hover .css-s6gs1e-ImageWrapper-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -4833,10 +4893,12 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
 }
 
 .emotion-9 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -4850,6 +4912,7 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
 
 .emotion-9:where(.emotion-1:hover .emotion-9) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -4876,7 +4939,6 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -4965,7 +5027,7 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -4976,8 +5038,9 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
   background-color: #e91e63;
 }
 
-.css-161zlv4-PreTitle:where(.emotion-1:hover .css-161zlv4-PreTitle) {
+.css-hc9hel-TeaserPreTitle:where(.emotion-1:hover .css-hc9hel-TeaserPreTitle) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 .emotion-2 {
@@ -5017,6 +5080,7 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -5069,7 +5133,6 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -5167,7 +5230,7 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -5215,6 +5278,7 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -5251,10 +5315,12 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -5268,6 +5334,7 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -5294,7 +5361,6 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -5398,7 +5464,7 @@ exports[`Teaser Page should render Default 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -5446,6 +5512,7 @@ exports[`Teaser Page should render Default 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -5482,10 +5549,12 @@ exports[`Teaser Page should render Default 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -5499,6 +5568,7 @@ exports[`Teaser Page should render Default 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -5525,7 +5595,6 @@ exports[`Teaser Page should render Default 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -5618,7 +5687,7 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -5666,6 +5735,7 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -5702,10 +5772,12 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -5719,6 +5791,7 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -5745,7 +5818,6 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -5838,7 +5910,7 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -5886,6 +5958,7 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -5922,10 +5995,12 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -5939,6 +6014,7 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -5965,7 +6041,6 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -6058,7 +6133,7 @@ exports[`Teaser Page should render WithoutImage 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -6106,6 +6181,7 @@ exports[`Teaser Page should render WithoutImage 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6142,10 +6218,12 @@ exports[`Teaser Page should render WithoutImage 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -6159,6 +6237,7 @@ exports[`Teaser Page should render WithoutImage 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -6185,7 +6264,6 @@ exports[`Teaser Page should render WithoutImage 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -6278,7 +6356,7 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -6326,6 +6404,7 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6362,10 +6441,12 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -6379,6 +6460,7 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -6405,7 +6487,6 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -6498,7 +6579,7 @@ exports[`Teaser Page should render WithoutLead 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -6546,6 +6627,7 @@ exports[`Teaser Page should render WithoutLead 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6582,10 +6664,12 @@ exports[`Teaser Page should render WithoutLead 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -6599,6 +6683,7 @@ exports[`Teaser Page should render WithoutLead 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -6625,7 +6710,6 @@ exports[`Teaser Page should render WithoutLead 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -6718,7 +6802,7 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -6766,6 +6850,7 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6802,10 +6887,12 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -6819,6 +6906,7 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -6845,7 +6933,6 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -6938,7 +7025,7 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -6986,6 +7073,7 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -7022,10 +7110,12 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -7039,6 +7129,7 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -7065,7 +7156,6 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -7158,7 +7248,7 @@ exports[`Teaser PeerArticle should render Default 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -7206,6 +7296,7 @@ exports[`Teaser PeerArticle should render Default 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -7242,10 +7333,12 @@ exports[`Teaser PeerArticle should render Default 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -7259,6 +7352,7 @@ exports[`Teaser PeerArticle should render Default 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -7285,7 +7379,6 @@ exports[`Teaser PeerArticle should render Default 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -7398,7 +7491,7 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -7446,6 +7539,7 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -7482,10 +7576,12 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -7499,6 +7595,7 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -7525,7 +7622,6 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -7638,7 +7734,7 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -7686,6 +7782,7 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -7722,10 +7819,12 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -7739,6 +7838,7 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -7765,7 +7865,6 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -7869,7 +7968,7 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -7917,6 +8016,7 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -7953,10 +8053,12 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -7970,6 +8072,7 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -7996,7 +8099,6 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -8109,7 +8211,7 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -8157,6 +8259,7 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -8193,10 +8296,12 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -8210,6 +8315,7 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -8236,7 +8342,6 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -8339,7 +8444,7 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -8387,6 +8492,7 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -8423,10 +8529,12 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -8440,6 +8548,7 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -8466,7 +8575,6 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -8579,14 +8687,14 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-s7u69o-ImageWrapper-Teaser:where(.emotion-1:hover .css-s7u69o-ImageWrapper-Teaser) {
+.css-s6gs1e-ImageWrapper-Teaser:where(.emotion-1:hover .css-s6gs1e-ImageWrapper-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -8643,10 +8751,12 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
 }
 
 .emotion-9 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -8660,6 +8770,7 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
 
 .emotion-9:where(.emotion-1:hover .emotion-9) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -8686,7 +8797,6 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -8784,7 +8894,7 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -8832,6 +8942,7 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -8868,10 +8979,12 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -8885,6 +8998,7 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -8911,7 +9025,6 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -9024,7 +9137,7 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -9072,6 +9185,7 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -9108,10 +9222,12 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -9125,6 +9241,7 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -9151,7 +9268,6 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -9264,7 +9380,7 @@ exports[`Teaser should render WithClassName 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -9308,6 +9424,7 @@ exports[`Teaser should render WithClassName 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -9344,10 +9461,12 @@ exports[`Teaser should render WithClassName 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -9361,6 +9480,7 @@ exports[`Teaser should render WithClassName 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -9387,7 +9507,6 @@ exports[`Teaser should render WithClassName 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -9480,7 +9599,7 @@ exports[`Teaser should render WithEmotion 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -9524,6 +9643,7 @@ exports[`Teaser should render WithEmotion 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -9560,10 +9680,12 @@ exports[`Teaser should render WithEmotion 1`] = `
 }
 
 .emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -9577,6 +9699,7 @@ exports[`Teaser should render WithEmotion 1`] = `
 
 .emotion-11:where(.emotion-1:hover .emotion-11) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -9603,7 +9726,6 @@ exports[`Teaser should render WithEmotion 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -9696,7 +9818,7 @@ exports[`Teaser should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -9707,8 +9829,9 @@ exports[`Teaser should render WithoutPreTitle 1`] = `
   background-color: #e91e63;
 }
 
-.css-161zlv4-PreTitle:where(.emotion-1:hover .css-161zlv4-PreTitle) {
+.css-hc9hel-TeaserPreTitle:where(.emotion-1:hover .css-hc9hel-TeaserPreTitle) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 .emotion-2 {
@@ -9748,6 +9871,7 @@ exports[`Teaser should render WithoutPreTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -9800,7 +9924,6 @@ exports[`Teaser should render WithoutPreTitle 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
