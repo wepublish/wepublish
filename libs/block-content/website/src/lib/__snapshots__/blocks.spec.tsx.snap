@@ -3099,25 +3099,12 @@ https://unsplash.it/200/100 200w"
 
 .emotion-8 {
   display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-8 .emotion-22 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-8 .emotion-24 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
 }
 
 @media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
-    grid-column-end: 13;
+    grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 2;
   }
@@ -4297,25 +4284,12 @@ https://unsplash.it/200/100 200w"
 
 .emotion-8 {
   display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-8 .emotion-22 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-8 .emotion-24 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
 }
 
 @media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
-    grid-column-end: 13;
+    grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 2;
   }
@@ -9164,7 +9138,7 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-194 emotion-195"
+              class="emotion-289 emotion-195"
               x="0"
               y="0"
             >
@@ -9230,7 +9204,7 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-194 emotion-195"
+              class="emotion-289 emotion-195"
               x="0"
               y="0"
             >
@@ -9290,7 +9264,7 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-194 emotion-195"
+              class="emotion-289 emotion-195"
               x="0"
               y="0"
             >
@@ -9349,7 +9323,7 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-194 emotion-195"
+              class="emotion-289 emotion-195"
               x="0"
               y="0"
             >
@@ -9397,7 +9371,7 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-194 emotion-195"
+              class="emotion-289 emotion-195"
               x="0"
               y="0"
             >
@@ -9861,7 +9835,7 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-194 emotion-195"
+              class="emotion-289 emotion-195"
               x="0"
               y="0"
             >
@@ -9927,7 +9901,7 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-194 emotion-195"
+              class="emotion-289 emotion-195"
               x="0"
               y="0"
             >
@@ -9987,7 +9961,7 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-194 emotion-195"
+              class="emotion-289 emotion-195"
               x="0"
               y="0"
             >
@@ -10053,7 +10027,7 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-194 emotion-195"
+              class="emotion-289 emotion-195"
               x="0"
               y="0"
             >
@@ -10113,7 +10087,7 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-194 emotion-195"
+              class="emotion-289 emotion-195"
               x="0"
               y="0"
             >
@@ -10179,7 +10153,7 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-194 emotion-195"
+              class="emotion-289 emotion-195"
               x="0"
               y="0"
             >
