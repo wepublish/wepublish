@@ -361,8 +361,6 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
   const imageStyles = useImageStyles()
 
-  console.log(alignment)
-
   return (
     <TeaserWrapper {...alignment}>
       <TeaserContent href={href} className={className}>

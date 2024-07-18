@@ -19,7 +19,11 @@ const theme = createTheme(WePTheme, {
   palette: {
     primary: augmentColor({color: {main: '#000'}}),
     secondary: augmentColor({color: {main: '#E94090'}}),
-    accent: augmentColor({color: {main: '#FFEE00', light: '#00AEC2'}})
+    accent: augmentColor({color: {main: '#00AEC2', light: '#FFEE00'}}),
+    error: augmentColor({color: {main: '#e4002c'}}),
+    warning: augmentColor({color: {main: '#f07d24'}}),
+    info: augmentColor({color: {main: '#1e398f'}}),
+    success: augmentColor({color: {main: '#0aa537'}})
   },
   typography: {
     h1: {

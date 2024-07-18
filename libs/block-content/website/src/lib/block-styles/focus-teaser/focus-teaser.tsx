@@ -17,6 +17,7 @@ export const FocusTeaserWrapper = styled('section')`
 
 export const FocusedTeaserContent = styled('div')`
   display: grid;
+  color: ${({theme}) => theme.palette.accent.contrastText};
   background-color: ${({theme}) => theme.palette.accent.light};
 
   ${({theme}) => theme.breakpoints.up('lg')} {
