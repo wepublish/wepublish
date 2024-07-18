@@ -22,25 +22,12 @@ exports[`Teaser Slider Teaser Grid should render Article 1`] = `
 
 .emotion-8 {
   display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-8 .emotion-22 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-8 .emotion-24 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
 }
 
 @media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
-    grid-column-end: 13;
+    grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 2;
   }
@@ -625,25 +612,12 @@ exports[`Teaser Slider Teaser Grid should render Event 1`] = `
 
 .emotion-8 {
   display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-8 .emotion-22 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-8 .emotion-24 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
 }
 
 @media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
-    grid-column-end: 13;
+    grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 2;
   }
@@ -1228,25 +1202,12 @@ exports[`Teaser Slider Teaser Grid should render Page 1`] = `
 
 .emotion-8 {
   display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-8 .emotion-22 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-8 .emotion-24 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
 }
 
 @media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
-    grid-column-end: 13;
+    grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 2;
   }
@@ -1831,25 +1792,12 @@ exports[`Teaser Slider Teaser Grid should render WithClassName 1`] = `
 
 .emotion-8 {
   display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-8 .emotion-22 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-8 .emotion-24 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
 }
 
 @media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
-    grid-column-end: 13;
+    grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 2;
   }
@@ -2434,25 +2382,12 @@ exports[`Teaser Slider Teaser Grid should render WithEmotion 1`] = `
 
 .emotion-8 {
   display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-8 .emotion-22 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-8 .emotion-24 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
 }
 
 @media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
-    grid-column-end: 13;
+    grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 2;
   }
@@ -3037,25 +2972,12 @@ exports[`Teaser Slider Teaser List should render Article 1`] = `
 
 .emotion-8 {
   display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-8 .emotion-22 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-8 .emotion-24 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
 }
 
 @media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
-    grid-column-end: 13;
+    grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 2;
   }
@@ -3640,25 +3562,12 @@ exports[`Teaser Slider Teaser List should render Event 1`] = `
 
 .emotion-8 {
   display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-8 .emotion-22 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-8 .emotion-24 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
 }
 
 @media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
-    grid-column-end: 13;
+    grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 2;
   }
@@ -4243,25 +4152,12 @@ exports[`Teaser Slider Teaser List should render Page 1`] = `
 
 .emotion-8 {
   display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-8 .emotion-22 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-8 .emotion-24 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
 }
 
 @media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
-    grid-column-end: 13;
+    grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 2;
   }
@@ -4846,25 +4742,12 @@ exports[`Teaser Slider Teaser List should render WithClassName 1`] = `
 
 .emotion-8 {
   display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-8 .emotion-22 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-8 .emotion-24 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
 }
 
 @media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
-    grid-column-end: 13;
+    grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 2;
   }
@@ -5449,25 +5332,12 @@ exports[`Teaser Slider Teaser List should render WithEmotion 1`] = `
 
 .emotion-8 {
   display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-8 .emotion-22 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-8 .emotion-24 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
 }
 
 @media (min-width:900px) {
   .emotion-8 {
     grid-column-start: 1;
-    grid-column-end: 13;
+    grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 2;
   }
@@ -6060,25 +5930,12 @@ exports[`Teaser Slider Teaser List should render WithTitle 1`] = `
 
 .emotion-9 {
   display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-9 .emotion-23 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-9 .emotion-25 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
 }
 
 @media (min-width:900px) {
   .emotion-9 {
     grid-column-start: 1;
-    grid-column-end: 13;
+    grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 2;
   }

@@ -167,7 +167,7 @@ export const TeaserSlider = ({
                 <Teaser
                   teaser={teaser}
                   blockStyle={blockStyle}
-                  alignment={alignmentForTeaserBlock(0, 1)}
+                  alignment={alignmentForTeaserBlock(0, 3)}
                 />
               </div>
             ))}
