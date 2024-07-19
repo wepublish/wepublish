@@ -1,5 +1,13 @@
-import {css, useTheme} from '@mui/material'
-import {BlockRenderer, BuilderBlockRendererProps, isFocusTeaserBlockStyle} from '@wepublish/website'
+import {css, Theme, useTheme} from '@mui/material'
+import {
+  BlockRenderer,
+  BreakBlockWrapper,
+  BuilderBlockRendererProps,
+  isFocusTeaserBlockStyle,
+  isTeaserSliderBlockStyle,
+  SliderBall,
+  TeaserTitle
+} from '@wepublish/website'
 import {cond} from 'ramda'
 import {useMemo} from 'react'
 
@@ -18,6 +26,19 @@ import {
   isVioletBreakBlock,
   isWarningBreakBlock
 } from './mannschaft-break-block'
+
+const seamlessBackground = (theme: Theme) => css`
+  margin-top: -${theme.spacing(7)};
+  margin-bottom: -${theme.spacing(7)};
+
+  &:has(+ * > ${BreakBlockWrapper}) {
+    margin-bottom: 0;
+  }
+
+  &:last-child {
+    margin-bottom: -${theme.spacing(3)};
+  }
+`
 
 export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
   const theme = useTheme()
@@ -43,10 +64,28 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
             background-color: ${theme.palette.primary.main};
           `
         ],
+        [
+          isTeaserSliderBlockStyle,
+          () => css`
+            padding-top: ${theme.spacing(6)};
+            padding-bottom: ${theme.spacing(6)};
+            color: ${theme.palette.primary.contrastText};
+            background-color: ${theme.palette.primary.main};
+
+            ${TeaserTitle} {
+              color: ${theme.palette.secondary.main};
+            }
+
+            ${SliderBall} {
+              color: ${theme.palette.secondary.main};
+            }
+          `
+        ],
         // Break Blocks
         [
           isPrimaryBreakBlock,
           () => css`
+            ${seamlessBackground(theme)}
             color: ${theme.palette.primary.contrastText};
             background-color: ${theme.palette.primary.main};
           `
@@ -54,6 +93,7 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isSecondaryBreakBlock,
           () => css`
+            ${seamlessBackground(theme)}
             color: ${theme.palette.secondary.contrastText};
             background-color: ${theme.palette.secondary.main};
           `
@@ -61,6 +101,7 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isAccentBreakBlock,
           () => css`
+            ${seamlessBackground(theme)}
             color: ${theme.palette.accent.contrastText};
             background-color: ${theme.palette.accent.main};
           `
@@ -68,6 +109,7 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isLightAccentBreakBlock,
           () => css`
+            ${seamlessBackground(theme)}
             color: ${theme.palette.accent.contrastText};
             background-color: ${theme.palette.accent.light};
           `
@@ -75,6 +117,7 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isVioletBreakBlock,
           () => css`
+            ${seamlessBackground(theme)}
             color: ${theme.palette.getContrastText('#945fa4')};
             background-color: #945fa4;
           `
@@ -82,6 +125,7 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isPurpleBreakBlock,
           () => css`
+            ${seamlessBackground(theme)}
             color: ${theme.palette.getContrastText('#831d81')};
             background-color: #831d81;
           `
@@ -89,6 +133,7 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isInfoBreakBlock,
           () => css`
+            ${seamlessBackground(theme)}
             color: ${theme.palette.info.contrastText};
             background-color: ${theme.palette.info.main};
           `
@@ -96,6 +141,7 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isSuccessBreakBlock,
           () => css`
+            ${seamlessBackground(theme)}
             color: ${theme.palette.success.contrastText};
             background-color: ${theme.palette.success.main};
           `
@@ -103,6 +149,7 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isSuccessBreakBlock,
           () => css`
+            ${seamlessBackground(theme)}
             color: ${theme.palette.success.contrastText};
             background-color: ${theme.palette.success.main};
           `
@@ -110,6 +157,7 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isWarningBreakBlock,
           () => css`
+            ${seamlessBackground(theme)}
             color: ${theme.palette.warning.contrastText};
             background-color: ${theme.palette.warning.main};
           `
@@ -117,6 +165,7 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isErrorBreakBlock,
           () => css`
+            ${seamlessBackground(theme)}
             color: ${theme.palette.error.contrastText};
             background-color: ${theme.palette.error.main};
           `
