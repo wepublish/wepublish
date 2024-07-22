@@ -13,7 +13,7 @@ const InstagramEmbed = styled.div`
 // Define some globals set by the SDKs.
 declare global {
   interface Window {
-    instgrm: any
+    instgrm?: any
   }
 }
 

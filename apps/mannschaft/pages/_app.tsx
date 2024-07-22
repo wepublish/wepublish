@@ -1,4 +1,4 @@
-import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -20,9 +20,15 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {ReactComponent as Logo} from '../src/logo.svg'
-import theme from '../src/theme'
 import {CookieOrPay} from '../src/cookie-or-pay/cookie-or-pay'
+import {ReactComponent as Logo} from '../src/logo.svg'
+import {MainSpacer} from '../src/main-spacer'
+import {MannschaftBlockRenderer} from '../src/mannschaft-block-renderer'
+import {MannschaftPage} from '../src/mannschaft-page'
+import {MannschaftTeaser} from '../src/mannschaft-teaser'
+import theme from '../src/theme'
+import {MannschaftBreakBlock} from '../src/mannschaft-break-block'
+import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
 
 setDefaultOptions({
   locale: de
@@ -47,17 +53,6 @@ const Spacer = styled('div')`
   grid-template-rows: min-content 1fr min-content;
   gap: ${({theme}) => theme.spacing(3)};
   min-height: 100vh;
-`
-
-const MainSpacer = styled(Container)`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(5)};
-
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
-    }
-  `}
 `
 
 const LogoLink = styled(NextWepublishLink)`
@@ -99,7 +94,16 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
+          Page={MannschaftPage}
           elements={{Link: NextWepublishLink}}
+          blocks={{
+            Teaser: MannschaftTeaser,
+            Break: MannschaftBreakBlock,
+            Renderer: MannschaftBlockRenderer
+          }}
+          blockStyles={{
+            FocusTeaser: MannschaftFocusTeaser
+          }}
           date={{format: dateFormatter}}
           meta={{siteTitle}}>
           <ThemeProvider theme={theme}>

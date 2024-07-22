@@ -116,7 +116,24 @@ export const WithoutPreTitle = {
     },
     teaser: {
       ...pageTeaser,
-      preTitle: null
+      preTitle: null,
+      page: {
+        ...pageTeaser.page,
+        tags: [
+          {
+            __typename: 'Tag',
+            id: '123',
+            tag: 'Secondary Tag',
+            main: false
+          },
+          {
+            __typename: 'Tag',
+            id: '1234',
+            tag: 'Main Tag',
+            main: true
+          }
+        ]
+      }
     }
   }
 }

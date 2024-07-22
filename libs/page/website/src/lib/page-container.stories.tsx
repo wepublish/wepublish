@@ -2300,6 +2300,32 @@ export const BySlug = {
   }
 }
 
+export const ByToken = {
+  args: {
+    token: 'foobar'
+  },
+
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: PageDocument,
+            variables: {
+              token: 'foobar'
+            }
+          },
+          result: {
+            data: {
+              page
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
 export const WithChildren = {
   args: {
     id: page.id,

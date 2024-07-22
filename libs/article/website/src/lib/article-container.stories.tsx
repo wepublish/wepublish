@@ -2369,6 +2369,32 @@ export const BySlug = {
   }
 }
 
+export const ByToken = {
+  args: {
+    token: 'foobar'
+  },
+
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: ArticleDocument,
+            variables: {
+              token: 'foobar'
+            }
+          },
+          result: {
+            data: {
+              article
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
 export const WithChildren = {
   args: {
     id: article.id,

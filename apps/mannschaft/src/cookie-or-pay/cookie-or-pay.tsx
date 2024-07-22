@@ -38,10 +38,16 @@ export const CookieOrPayWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2)};
 `
 
+const ConsentCard = styled(Card)`
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-auto-rows: max-content;
+`
+
 export const CookieOrPayConsents = styled('div')`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
-  align-items: start;
+  align-items: stretch;
   gap: ${({theme}) => theme.spacing(3)};
 `
 
@@ -60,14 +66,14 @@ export const CookieOrPayText = styled('div')`
 
 export const CookieOrPay = ({onPay, onCookie}: CookieOrPayProps) => {
   const {hasUser} = useUser()
-  const {pathname} = useRouter()
+  const {asPath} = useRouter()
   const [display, setDisplay] = useState(false)
   const hasNotified = useRef(false)
   const {data: subscriptions} = ApiV1.useSubscriptionsQuery({
     skip: !hasUser
   })
   const {
-    elements: {H5, Paragraph, Button, Link}
+    elements: {H5, Paragraph, Button, Link, UnorderedList, ListItem}
   } = useWebsiteBuilder()
 
   const onNotify = useCallback((notify: () => void) => {
@@ -85,83 +91,129 @@ export const CookieOrPay = ({onPay, onCookie}: CookieOrPayProps) => {
     }
 
     const excludedPages = ['/mitmachen', '/login', '/signup', '/datenschutz', '/profile']
-    setDisplay(!excludedPages.some(str => pathname.startsWith(str)))
-  }, [hasUser, subscriptions, onPay, onCookie, pathname, onNotify])
+    setDisplay(!excludedPages.some(str => asPath.startsWith(str)))
+  }, [hasUser, subscriptions, onPay, onCookie, asPath, onNotify])
 
   return (
     <Modal open={display} component="section" slots={{backdrop: CookieOrPayBackdrop}}>
       <CookieOrPayWrapper>
         <H5 component="h1" color="white">
-          Wie möchten Sie www.mannschaft.com nutzen?
+          Wie möchten Sie MANNSCHAFT.com nutzen?
         </H5>
 
         <CookieOrPayConsents>
-          <Card sx={acceptCookiesStyles}>
+          <ConsentCard sx={acceptCookiesStyles}>
             <CardContent>
               <H5 component="h2" gutterBottom>
-                Mit Werbung nutzen
+                Option 1: Weiterhin kostenlos nutzen
               </H5>
 
+              <Paragraph gutterBottom>
+                Nutze unsere Webseite wie gewohnt und erhalte Zugriff auf die kostenlosen Beiträge
+                mit Werbung und dem üblichen Tracking. Details dazu findest du in den{' '}
+                <Link href="/datenschutz">Datenschutzrichtlinien</Link>.
+              </Paragraph>
+
               <Paragraph gutterBottom={false}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.{' '}
-                <Link href="/datenschutz">Datenschutzhinweisen</Link>.
+                Bitte beachte, dass die kostenlose Nutzung unseres Angebotes ohne deine Einwilligung
+                nicht möglich ist.
               </Paragraph>
             </CardContent>
 
             <CardActions>
               <Button
-                variant="text"
                 onClick={() => {
                   setDisplay(false)
                   localStorage.setItem(CookieOrPayKey, new Date().getTime().toString())
                   onNotify(() => onCookie?.())
                 }}>
-                AKZEPTIEREN UND WEITER
+                Akzeptieren und weiter
               </Button>
             </CardActions>
-          </Card>
+          </ConsentCard>
 
-          <Card>
+          <ConsentCard>
             <CardContent>
               <H5 component="h2" gutterBottom>
-                Ohne Werbung nutzen
+                Option 2: Vollen Zugriff erhalten
               </H5>
 
+              <Paragraph gutterBottom>
+                Erhalte vollen Zugang zu all unseren Beiträgen und lege deine
+                Datenschutzeinstellungen selber fest. Du bist bereits Abonnent*in? Dann logge dich
+                einfach <Link href="/login">hier ein</Link>.
+              </Paragraph>
+
               <Paragraph gutterBottom={false}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Wenn du bereits ein kostenloses Benutzer*innenkonto hast, kannst du einfach im
+                Bereich <Link href="/mitmachen">Abonnement</Link> dein MANNSCHAFT-Abo bestellen.
               </Paragraph>
             </CardContent>
 
             <CardActions>
-              <Button variant="text" LinkComponent={Link} href="/mitmachen">
-                MEHR ZUM MANNSCHAFT-ABO
+              <Button LinkComponent={Link} href="/mitmachen">
+                Mehr zum Mannschaft-Abo
               </Button>
             </CardActions>
-          </Card>
+          </ConsentCard>
         </CookieOrPayConsents>
 
         <CookieOrPayText>
-          <Paragraph>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          <Paragraph gutterBottom>
+            <strong>Allgemeine Informationen</strong>: Sowohl das Printprodukt MANNSCHAFT Magazin
+            als auch die Onlineplattform MANNSCHAFT.com finanzieren sich über die Beiträge von
+            Abonent*innen und Werbeplatzierungen. Werbeinhalte in Form von Bannern, gesponserten
+            Beiträgen und Printinseraten werden mit «Werbung» oder «Sponsored By» gekennzeichnet.
           </Paragraph>
 
-          <Paragraph>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          <H5>Vorteile des Abonnentenmodells:</H5>
+          <UnorderedList>
+            <ListItem>Vollen Zugriff auf alle Beiträge (kostenlos und +)</ListItem>
+            <ListItem>Individuelle Datenschutzeinstellungen</ListItem>
+            <ListItem>
+              Verschiedene Abo-Modelle von rein Digital-Abo bis zu Print-Abo (inkl. Digital-Abo)
+            </ListItem>
+          </UnorderedList>
+
+          <H5>Einwilligung zu Cookies und Daten</H5>
+          <Paragraph gutterBottom>
+            Nutze unsere Webseite wie gewohnt kostenlos. Um unser digitales Angebot zu finanzieren
+            und laufend zu verbessern, arbeiten wir mit Drittanbietern zusammen. Wir verwenden dafür
+            Cookies und andere Technologien, um Informationen auf deinem Gerät zu speichern und
+            abzurufen (dies gilt für die Nutzung von unserem Service „Weiterhin kostenlos nutzen“).
+            Diese können auch personenbezogene Daten umfassen (z. B. Wiedererkennungsmerkmale,
+            IP-Adressen, Profildaten), die in den Bereichen personalisierte Anzeigen und Inhalte,
+            Anzeigen- und Inhaltsmessung, Erkenntnisse über Zielgruppen und Produktentwicklung
+            verwendet werden. Einige unserer Partner verarbeiten deine Daten auf Grundlage von
+            berechtigtem Interesse. Die Verarbeitung kann im Falle deiner Einwilligung auch
+            außerhalb der EU/EWR erfolgen, wo unter Umständen kein vergleichbares Datenschutzniveau
+            herrscht, z.B. in den USA; in diesem Fall erfolgt die Übermittlung in ein solches
+            Drittland auf Grundlage von Art. 49 Abs. 1 a DSGVO. Deine Einwilligung kannst du
+            jederzeit mit Wirkung für die Zukunft in unserer{' '}
+            <Link href="/datenschutz">Datenschutzrichtlinie</Link> widerrufen.
           </Paragraph>
 
           <Paragraph gutterBottom={false}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Die Gesamtanzahl an Partnern, mit denen wir zusammenarbeiten: 151
           </Paragraph>
+          <Paragraph gutterBottom>Die Verarbeitung erfolgt zu den folgenden Zwecken:</Paragraph>
+
+          <UnorderedList>
+            <ListItem>Speichern von oder Zugriff auf Informationen auf einem Endgerät</ListItem>
+            <ListItem>
+              Genaue Standortdaten und Identifikation durch Scannen von Endgeräten
+            </ListItem>
+            <ListItem>Personalisierte Werbung</ListItem>
+            <ListItem>Personalisierte Inhalte</ListItem>
+            <ListItem>
+              Messung von Werbeleistung und der Performance von Inhalten, Zielgruppenforschung sowie
+              Entwicklung und Verbesserung der Angebote
+            </ListItem>
+            <ListItem>Verwendung reduzierter Daten zur Auswahl von Inhalten</ListItem>
+            <ListItem>
+              Datenübermittlung an Partner außerhalb der EU/EWR (Drittlandstransfer)
+            </ListItem>
+          </UnorderedList>
         </CookieOrPayText>
       </CookieOrPayWrapper>
     </Modal>

@@ -29,7 +29,7 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/a/:id((?!tag).*)/:slug',
+        source: '/a/:id((?!tag|preview).*)/:slug',
         destination: '/a/:slug',
         permanent: false
       },

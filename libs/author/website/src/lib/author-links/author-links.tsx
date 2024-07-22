@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import {css, styled} from '@mui/material'
 import {BuilderAuthorLinksProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {FaInstagram, FaLinkedin, FaTwitter} from 'react-icons/fa6'
 import {MdContactMail, MdFacebook, MdMail, MdWeb} from 'react-icons/md'
@@ -7,7 +7,12 @@ export const AuthorLinksWrapper = styled('aside')`
   display: grid;
   grid-auto-columns: max-content;
   grid-auto-flow: column;
+  align-items: center;
   gap: ${({theme}) => theme.spacing(2)};
+`
+
+const linkStyles = css`
+  display: grid;
 `
 
 export const AuthorLinkIcon = ({title}: {title: string}) => {
@@ -50,7 +55,7 @@ export function AuthorLinks({links, className}: BuilderAuthorLinksProps) {
   return (
     <AuthorLinksWrapper className={className}>
       {links.map((link, index) => (
-        <Link key={index} href={link.url} target="__blank" title={link.title}>
+        <Link key={index} href={link.url} target="__blank" title={link.title} css={linkStyles}>
           <AuthorLinkIcon title={link.title} />
         </Link>
       ))}

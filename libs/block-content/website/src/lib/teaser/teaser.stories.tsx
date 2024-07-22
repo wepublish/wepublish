@@ -40,6 +40,22 @@ const customTeaser = {
   __typename: 'CustomTeaser'
 } as CustomTeaser
 
+export const WithoutPreTitle = {
+  args: {
+    alignment: {
+      x: 0,
+      y: 0,
+      w: 3,
+      h: 4,
+      __typename: 'FlexAlignment'
+    },
+    teaser: {
+      ...customTeaser,
+      preTitle: null
+    }
+  }
+}
+
 export const WithClassName = {
   args: {
     alignment: {
