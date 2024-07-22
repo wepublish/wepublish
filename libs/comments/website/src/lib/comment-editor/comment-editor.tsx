@@ -7,7 +7,6 @@ import {
   useUser
 } from '@wepublish/authentication/website'
 import {toPlaintext} from '@wepublish/richtext'
-import {Link} from '@wepublish/ui'
 import {BuilderCommentEditorProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {setCookie} from 'cookies-next'
 import {add} from 'date-fns'
@@ -85,6 +84,7 @@ export const Register = styled('div')`
   grid-column: 1/2;
   margin: 0 ${({theme}) => theme.spacing(4)};
   margin-top: ${({theme}) => theme.spacing(3)};
+  border-left: 1px solid ${({theme}) => theme.palette.grey.main};
 
   ${({theme}) => theme.breakpoints.up('sm')} {
     grid-column: 2/3;
@@ -174,7 +174,7 @@ export const CommentEditor = ({
 }: BuilderCommentEditorProps) => {
   const theme = useTheme()
   const {
-    elements: {TextField, Button, Alert, H3}
+    elements: {TextField, Button, Alert, H3, Link}
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
   const [modalOpen, setModalOpen] = useState(!hasUser)
@@ -386,7 +386,7 @@ export const CommentEditor = ({
             <InitialModalWrapper>
               <H3 css={headingStyles}>Du bist nicht eingeloggt</H3>
               <InitialModalContent>
-                <Button onClick={handleGuestComment} variant="text" css={initialButtonsStyles}>
+                <Button onClick={handleGuestComment} variant="outlined" css={initialButtonsStyles}>
                   als gast kommentieren
                 </Button>
                 <Button onClick={handleLoginRegister} css={initialButtonsStyles}>

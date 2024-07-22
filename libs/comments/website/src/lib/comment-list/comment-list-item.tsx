@@ -219,12 +219,17 @@ export const CommentListItem = ({
   )
 }
 
+const CommentWarningWrapper = styled('div')`
+  padding-top: ${({theme}) => `${theme.spacing(1)}`};
+  padding-bottom: ${({theme}) => `${theme.spacing(1)}`};
+`
+
 const CommentListItemStateWarnings = (props: Pick<BuilderCommentListItemProps, 'state'>) => {
   const {
     elements: {Alert}
   } = useWebsiteBuilder()
 
-  return cond([
+  const errors = cond([
     [
       ({state}) => state === CommentState.PendingApproval,
       () => <Alert severity="info">Kommentar wartet auf Freischaltung.</Alert>
@@ -239,4 +244,10 @@ const CommentListItemStateWarnings = (props: Pick<BuilderCommentListItemProps, '
     ],
     [({state}: typeof props) => true, (_: typeof props): JSX.Element | null => null]
   ])(props)
+
+  if (!errors) {
+    return
+  }
+
+  return <CommentWarningWrapper>{errors}</CommentWarningWrapper>
 }
