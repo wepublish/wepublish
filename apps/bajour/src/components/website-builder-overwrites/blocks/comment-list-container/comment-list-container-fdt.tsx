@@ -84,6 +84,7 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
 
   ${CommentListItemActions} {
     padding: ${({theme}) => theme.spacing(1.5)};
+    margin-bottom: ${({theme}) => theme.spacing(2)};
   }
 
   ${CommentEditorWrapper} {

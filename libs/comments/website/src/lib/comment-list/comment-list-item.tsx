@@ -1,4 +1,4 @@
-import {lighten, styled} from '@mui/material'
+import {css, lighten, styled, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {CommentState} from '@wepublish/website/api'
 import {BuilderCommentListItemProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -7,6 +7,7 @@ import {MdEdit, MdReply} from 'react-icons/md'
 import {getStateForEditor} from './comment-list.state'
 import {CommentListItemShare} from './comment-list-item-share'
 import {Button} from '@wepublish/ui'
+import {useMemo} from 'react'
 
 export const CommentListItemChildren = styled('aside')`
   display: grid;
@@ -43,6 +44,20 @@ export const CommentListItemActionsButtons = styled('div')`
   justify-content: space-between;
 `
 
+const useButtonStyles = () => {
+  const theme = useTheme()
+  return useMemo(
+    () => css`
+      border-width: 1px;
+      &:hover {
+        border-width: 1px;
+        background-color: ${lighten(theme.palette.primary.main, 0.9)};
+      }
+    `,
+    [theme]
+  )
+}
+
 export const CommentReplyButton = styled(Button)(({theme}) => ({
   border: '1px solid',
   '&:hover': {
@@ -65,6 +80,7 @@ export const CommentListItem = ({
   openEditorsStateDispatch: dispatch,
   ratingSystem,
   className,
+  signUpUrl,
   ...comment
 }: BuilderCommentListItemProps) => {
   const {id, text, title, state, children, userRatings, overriddenRatings, calculatedRatings} =
@@ -85,10 +101,11 @@ export const CommentListItem = ({
     loggedInUser?.id === comment.user?.id &&
     (userCanEdit || comment.state === CommentState.PendingUserChanges)
   const canReply = anonymousCanComment || hasLoggedInUser
-  const canShare = anonymousCanComment || hasLoggedInUser
 
   const showReply = getStateForEditor(openEditorsState)('add', id)
   const showEdit = getStateForEditor(openEditorsState)('edit', id)
+
+  const buttonStyles = useButtonStyles()
 
   return (
     <Comment {...comment} showContent={!showEdit} className={className}>
@@ -109,28 +126,28 @@ export const CommentListItem = ({
           maxCommentLength={maxCommentLength}
           error={edit.error}
           loading={edit.loading}
+          canReply={canReply}
+          parentUrl={comment.url}
+          signUpUrl={signUpUrl}
         />
       )}
 
       <CommentListItemActions>
         <CommentListItemActionsButtons>
-          {canReply && (
-            <CommentReplyButton
-              startIcon={<MdReply />}
-              variant="outlined"
-              size="small"
-              onClick={() => {
-                dispatch({
-                  type: 'add',
-                  action: 'open',
-                  commentId: id
-                })
-              }}>
-              Antworten
-            </CommentReplyButton>
-          )}
-
-          {canShare && <CommentListItemShare url={comment.url} title="share" />}
+          <Button
+            startIcon={<MdReply />}
+            variant="outlined"
+            size="small"
+            css={buttonStyles}
+            onClick={() => {
+              dispatch({
+                type: 'add',
+                action: 'open',
+                commentId: id
+              })
+            }}>
+            Antworten
+          </Button>
 
           {canEdit && (
             <Button
@@ -147,6 +164,8 @@ export const CommentListItem = ({
               Editieren
             </Button>
           )}
+
+          <CommentListItemShare url={comment.url} title="share" />
         </CommentListItemActionsButtons>
 
         <CommentRatings
@@ -172,6 +191,10 @@ export const CommentListItem = ({
           challenge={challenge}
           error={add.error}
           loading={add.loading}
+          canReply={canReply}
+          parentUrl={comment.url}
+          signUpUrl={signUpUrl}
+          anonymousCanComment={anonymousCanComment}
         />
       )}
 
@@ -194,6 +217,7 @@ export const CommentListItem = ({
               userCanEdit={userCanEdit}
               maxCommentLength={maxCommentLength}
               className={className}
+              signUpUrl={signUpUrl}
             />
           ))}
         </CommentListItemChildren>
@@ -202,12 +226,17 @@ export const CommentListItem = ({
   )
 }
 
+const CommentWarningWrapper = styled('div')`
+  padding-top: ${({theme}) => `${theme.spacing(1)}`};
+  padding-bottom: ${({theme}) => `${theme.spacing(1)}`};
+`
+
 const CommentListItemStateWarnings = (props: Pick<BuilderCommentListItemProps, 'state'>) => {
   const {
     elements: {Alert}
   } = useWebsiteBuilder()
 
-  return cond([
+  const errors = cond([
     [
       ({state}) => state === CommentState.PendingApproval,
       () => <Alert severity="info">Kommentar wartet auf Freischaltung.</Alert>
@@ -222,4 +251,10 @@ const CommentListItemStateWarnings = (props: Pick<BuilderCommentListItemProps, '
     ],
     [({state}: typeof props) => true, (_: typeof props): JSX.Element | null => null]
   ])(props)
+
+  if (!errors) {
+    return
+  }
+
+  return <CommentWarningWrapper>{errors}</CommentWarningWrapper>
 }
