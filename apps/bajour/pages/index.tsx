@@ -1,11 +1,10 @@
 import {styled} from '@mui/material'
-import {ContentWidthProvider} from '@wepublish/website'
+import {ContentWidthProvider, SliderContainer} from '@wepublish/website'
 import {ApiV1, PageContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
 import {BestOfWePublishWrapper} from '../src/components/best-of-wepublish/best-of-wepublish'
-import {SliderContainer} from '../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
 
 const Homepage = styled(PageContainer)`
   grid-column: -1/1;

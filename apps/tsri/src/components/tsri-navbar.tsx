@@ -1,5 +1,12 @@
 import {styled, SxProps, Theme} from '@mui/material'
-import {ApiV1, Navbar, NavbarInnerWrapper, useUser, useWebsiteBuilder} from '@wepublish/website'
+import {
+  ApiV1,
+  Navbar,
+  NavbarActions,
+  NavbarInnerWrapper,
+  useUser,
+  useWebsiteBuilder
+} from '@wepublish/website'
 
 export const TsriNavbar = styled(Navbar)`
   ${NavbarInnerWrapper} {
@@ -13,10 +20,19 @@ export const TsriNavbar = styled(Navbar)`
       padding-right: ${({theme}) => theme.spacing(3)};
     }
   }
+
+  ${NavbarActions} {
+    .MuiIconButton-root {
+      display: none;
+    }
+  }
 `
 
 const buttonStyles: SxProps<Theme> = theme => ({
-  padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`
+  [theme.breakpoints.up('sm')]: {
+    fontSize: '1.1em',
+    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`
+  }
 })
 
 export const MitmachenButton = () => {
@@ -34,7 +50,7 @@ export const MitmachenButton = () => {
 
   return (
     !hasSubscription && (
-      <Button LinkComponent={Link} href="/mitmachen" size="large" sx={buttonStyles}>
+      <Button LinkComponent={Link} href="/mitmachen" size="small" sx={buttonStyles}>
         Member werden
       </Button>
     )

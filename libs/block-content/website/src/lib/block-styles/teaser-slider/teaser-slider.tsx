@@ -1,118 +1,72 @@
 import 'keen-slider/keen-slider.min.css'
 
-import {css, styled, useMediaQuery, useTheme} from '@mui/material'
-import {
-  ApiV1,
-  BuilderTeaserGridBlockProps,
-  BuilderTeaserListBlockProps,
-  hasBlockStyle,
-  isFilledTeaser,
-  isTeaserGridBlock,
-  isTeaserListBlock,
-  useWebsiteBuilder
-} from '@wepublish/website'
+import {styled, useMediaQuery, useTheme} from '@mui/material'
 import {useKeenSlider} from 'keen-slider/react'
 import {allPass, anyPass} from 'ramda'
 import {useState} from 'react'
 
-import {TeaserSlide} from './teaser-slide'
-
-export const isTeaserSlider = (
-  block: ApiV1.Block
-): block is ApiV1.TeaserGridBlock | ApiV1.TeaserListBlock =>
-  allPass([hasBlockStyle('Slider'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)
+import {Block, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
+import {hasBlockStyle} from '../../blocks'
+import {
+  alignmentForTeaserBlock,
+  isFilledTeaser,
+  isTeaserGridBlock
+} from '../../teaser/teaser-grid-block'
+import {isTeaserListBlock} from '../../teaser/teaser-list-block'
+import {
+  BuilderBlockStyleProps,
+  BuilderTeaserListBlockProps,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
 
 export const SliderContainer = styled('section')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
 `
 
-const SliderInnerContainer = styled('div')`
+export const SliderInnerContainer = styled('div')`
   display: grid;
-  position: relative;
-  padding-top: ${({theme}) => theme.spacing(2)};
-  padding-bottom: ${({theme}) => theme.spacing(2)};
   gap: ${({theme}) => theme.spacing(5)};
-
-  ${({theme}) => theme.breakpoints.up('sm')} {
-    padding-top: ${({theme}) => theme.spacing(3)};
-    padding-bottom: ${({theme}) => theme.spacing(3)};
-  }
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    padding-top: ${({theme}) => theme.spacing(5)};
-  }
-
-  ${({theme}) => theme.breakpoints.up('xl')} {
-    padding-top: ${({theme}) => theme.spacing(7)};
-  }
 `
 
-const SlidesContainer = styled('div')`
+export const SlidesContainer = styled('div')`
   position: relative;
 `
 
-const SliderTitle = styled('div')`
-  ${({theme}) => theme.breakpoints.up('sm')} {
-    margin-left: calc(100% / 12);
-    margin-right: calc(100% / 12);
-  }
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    margin-left: calc((100% / 12) * 2);
-    margin-right: calc((100% / 12) * 2);
-  }
+export const SliderTitle = styled('div')`
+  text-align: center;
 `
 
-const SliderInnerBackground = styled('div')`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: -1;
-  background: #feede8;
-
-  ${({theme}) => theme.breakpoints.up('sm')} {
-    left: calc(100% / 12);
-    right: calc(100% / 12);
-  }
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    left: calc((100% / 12) * 2);
-    right: calc((100% / 12) * 2);
-  }
-`
-
-const BallContainer = styled('div')`
+export const SliderBallContainer = styled('div')`
   display: flex;
   justify-content: center;
   gap: ${({theme}) => theme.spacing(1)};
 `
 
-const Ball = styled('button', {
-  shouldForwardProp: prop => prop !== 'isActive'
-})<{isActive: boolean}>`
+export const SliderBall = styled('button')`
   appearance: none;
   border: none;
   width: ${({theme}) => theme.spacing(2)};
   height: ${({theme}) => theme.spacing(2)};
-  background: ${({theme}) => theme.palette.common.white};
+  background-color: ${({theme}) => theme.palette.grey[200]};
+  color: ${({theme}) => theme.palette.primary.main};
   border-radius: 50%;
   cursor: pointer;
+  overflow: hidden;
+  padding: 0;
 
   :focus {
     outline: none;
   }
-
-  ${({theme, isActive}) =>
-    isActive &&
-    css`
-      background: ${theme.palette.error.main};
-    `}
 `
 
-const useSlidesPerView = () => {
+export const SliderBallFill = styled('span')`
+  display: block;
+  background-color: currentColor;
+  height: 100%;
+`
+
+export const useSlidesPerView = () => {
   const theme = useTheme()
 
   const sm = useMediaQuery(theme.breakpoints.up('sm'), {
@@ -150,7 +104,7 @@ const useSlidesPerView = () => {
   return 1.4
 }
 
-const useSlidesPadding = () => {
+export const useSlidesPadding = () => {
   const theme = useTheme()
 
   const sm = useMediaQuery(theme.breakpoints.up('sm'), {
@@ -164,10 +118,15 @@ const useSlidesPadding = () => {
   return 16
 }
 
-export const TeaserSlider = (props: BuilderTeaserGridBlockProps | BuilderTeaserListBlockProps) => {
-  const {teasers, blockStyle} = props
+export const TeaserSlider = ({
+  blockStyle,
+  className,
+  teasers,
+  ...props
+}: BuilderBlockStyleProps['TeaserSlider']) => {
   const {
-    elements: {H5}
+    elements: {H5},
+    blocks: {Teaser}
   } = useWebsiteBuilder()
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
@@ -194,7 +153,7 @@ export const TeaserSlider = (props: BuilderTeaserGridBlockProps | BuilderTeaserL
 
   return (
     !!filledTeasers.length && (
-      <SliderContainer>
+      <SliderContainer className={className}>
         <SliderTitle>
           {(props as BuilderTeaserListBlockProps).title && (
             <H5 component={'h1'}>{(props as BuilderTeaserListBlockProps).title}</H5>
@@ -202,29 +161,37 @@ export const TeaserSlider = (props: BuilderTeaserGridBlockProps | BuilderTeaserL
         </SliderTitle>
 
         <SliderInnerContainer>
-          <SliderInnerBackground />
-
           <SlidesContainer ref={ref} className="keen-slider">
             {filledTeasers.map((teaser, index) => (
               <div key={index} className="keen-slider__slide">
-                {<TeaserSlide teaser={teaser} blockStyle={blockStyle} />}
+                <Teaser
+                  teaser={teaser}
+                  blockStyle={blockStyle}
+                  alignment={alignmentForTeaserBlock(0, 3)}
+                />
               </div>
             ))}
           </SlidesContainer>
 
           {loaded && sliderRef.current && (
-            <BallContainer>
+            <SliderBallContainer>
               {[...Array(sliderRef.current?.track.details?.slides.length).keys()].map(idx => (
-                <Ball
+                <SliderBall
                   key={idx}
                   onClick={() => sliderRef.current?.moveToIdx(idx)}
-                  isActive={currentSlide === idx}
-                />
+                  aria-label={`Slide ${idx + 1}`}>
+                  {currentSlide === idx && <SliderBallFill />}
+                </SliderBall>
               ))}
-            </BallContainer>
+            </SliderBallContainer>
           )}
         </SliderInnerContainer>
       </SliderContainer>
     )
   )
 }
+
+export const isTeaserSliderBlockStyle = (
+  block: Block
+): block is TeaserGridBlock | TeaserListBlock =>
+  allPass([hasBlockStyle('Slider'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)

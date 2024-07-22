@@ -1,0 +1,133 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Banner should render Default 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  aspect-ratio: 2.7/1;
+  width: 100%;
+  background-color: #0288d1;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  object-fit: cover;
+}
+
+<a
+    class="emotion-0 emotion-1"
+    href="https://example.com"
+    target="_blank"
+  >
+    <img
+      alt="An image description"
+      class="emotion-2 emotion-3"
+      loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+      srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+      title="An image title"
+    />
+  </a>
+</DocumentFragment>
+`;
+
+exports[`Banner should render WithClassName 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  aspect-ratio: 2.7/1;
+  width: 100%;
+  background-color: #0288d1;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  object-fit: cover;
+}
+
+<a
+    class="emotion-0 emotion-1"
+    href="https://example.com"
+    target="_blank"
+  >
+    <img
+      alt="An image description"
+      class="emotion-2 emotion-3"
+      loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+      srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+      title="An image title"
+    />
+  </a>
+</DocumentFragment>
+`;
+
+exports[`Banner should render WithEmotion 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  aspect-ratio: 2.7/1;
+  width: 100%;
+  background-color: #0288d1;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  object-fit: cover;
+}
+
+<a
+    class="emotion-0 emotion-1"
+    href="https://example.com"
+    target="_blank"
+  >
+    <img
+      alt="An image description"
+      class="emotion-2 emotion-3"
+      loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+      srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+      title="An image title"
+    />
+  </a>
+</DocumentFragment>
+`;

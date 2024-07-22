@@ -927,7 +927,7 @@ https://unsplash.it/200/100 200w"
       </div>
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-16"
-        href="Link URL"
+        href="https://example.com"
         tabindex="0"
         target="_blank"
       >

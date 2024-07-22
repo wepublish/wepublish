@@ -21,7 +21,6 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {TsriBlockRenderer} from '../src/components/block-renderer/block-renderer'
 import {Paywall} from '../src/components/paywall'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
 import {MitmachenButton, TsriNavbar} from '../src/components/tsri-navbar'
@@ -105,7 +104,6 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Navbar={TsriNavbar}
           elements={{Link: NextWepublishLink}}
           blocks={{
-            Renderer: TsriBlockRenderer,
             Teaser: TsriTeaser,
             Break: TsriBreakBlock,
             Quote: TsriQuoteBlock,
@@ -146,7 +144,6 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 categorySlugs={[['categories', 'about-us']]}
                 slug="main"
                 headerSlug="header"
-                loginUrl=""
                 actions={<MitmachenButton />}
               />
 

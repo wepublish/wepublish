@@ -43,6 +43,7 @@ export class AppController {
     uploadedFile: Express.Multer.File
   ) {
     const imageId = uuidv4()
+    console.log(imageId)
     const metadata = await this.media.saveImage(imageId, uploadedFile.buffer)
 
     res.status(201).send({

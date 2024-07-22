@@ -1,28 +1,23 @@
 import {styled} from '@mui/material'
-import {
-  alignmentForTeaserBlock,
-  ApiV1,
-  BuilderTeaserListBlockProps,
-  hasBlockStyle,
-  ImageWrapper,
-  isTeaserListBlock,
-  TeaserListBlockTeasers,
-  useWebsiteBuilder
-} from '@wepublish/website'
+import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
+import {alignmentForTeaserBlock} from '../../teaser/teaser-grid-block'
+import {TeaserListBlockTeasers, isTeaserListBlock} from '../../teaser/teaser-list-block'
+import {Block, TeaserListBlock} from '@wepublish/website/api'
+import {hasBlockStyle} from '../../blocks'
+import {selectTeaserTags} from '../../teaser/teaser'
+import {ImageWrapper} from '@wepublish/image/website'
 
-export const isFocusTeaser = (block: ApiV1.Block): block is ApiV1.TeaserListBlock =>
-  allPass([hasBlockStyle('Focus'), isTeaserListBlock])(block)
-
-const FocusTeaserWrapper = styled('section')`
+export const FocusTeaserWrapper = styled('section')`
   grid-column: -1/1;
   display: grid;
   column-gap: ${({theme}) => theme.spacing(2)};
   row-gap: ${({theme}) => theme.spacing(5)};
 `
 
-const FocusedTeaserContent = styled('div')`
+export const FocusedTeaserContent = styled('div')`
   display: grid;
+  color: ${({theme}) => theme.palette.accent.contrastText};
   background-color: ${({theme}) => theme.palette.accent.light};
 
   ${({theme}) => theme.breakpoints.up('lg')} {
@@ -30,7 +25,7 @@ const FocusedTeaserContent = styled('div')`
   }
 `
 
-const FocusedTeaserTitle = styled('div')`
+export const FocusedTeaserTitle = styled('div')`
   display: grid;
   color: ${({theme}) => theme.palette.secondary.contrastText};
   background-color: ${({theme}) => theme.palette.secondary.main};
@@ -40,7 +35,7 @@ const FocusedTeaserTitle = styled('div')`
   padding: ${({theme}) => theme.spacing(9)};
 `
 
-const FocusedTeaser = styled('div')`
+export const FocusedTeaser = styled('div')`
   padding: ${({theme}) => theme.spacing(4)};
 
   ${ImageWrapper} {
@@ -60,34 +55,13 @@ const FocusedTeaser = styled('div')`
   }
 `
 
-export const selectTags = (teaser: ApiV1.Teaser): ApiV1.Tag[] => {
-  switch (teaser.__typename) {
-    case 'PageTeaser': {
-      return teaser.page?.tags ?? []
-    }
-
-    case 'ArticleTeaser': {
-      return teaser.article?.tags ?? []
-    }
-
-    case 'EventTeaser':
-      return teaser.event?.tags ?? []
-
-    case 'PeerArticleTeaser':
-    case 'CustomTeaser':
-      return []
-  }
-
-  return []
-}
-
 export const FocusTeaser = ({
   teasers,
   filter,
   blockStyle,
   title,
   className
-}: BuilderTeaserListBlockProps) => {
+}: BuilderBlockStyleProps['FocusTeaser']) => {
   const {
     blocks: {Teaser},
     elements: {Link, H3}
@@ -97,7 +71,7 @@ export const FocusTeaser = ({
 
   const focusTeaserTitle = title && <H3 component={'h1'}>{title}</H3>
   const tags =
-    focusedTeaser && selectTags(focusedTeaser).filter(({id}) => filter.tags?.includes(id))
+    focusedTeaser && selectTeaserTags(focusedTeaser).filter(({id}) => filter.tags?.includes(id))
 
   return (
     <FocusTeaserWrapper className={className}>
@@ -136,3 +110,6 @@ export const FocusTeaser = ({
     </FocusTeaserWrapper>
   )
 }
+
+export const isFocusTeaserBlockStyle = (block: Block): block is TeaserListBlock =>
+  allPass([hasBlockStyle('Focus'), isTeaserListBlock])(block)
