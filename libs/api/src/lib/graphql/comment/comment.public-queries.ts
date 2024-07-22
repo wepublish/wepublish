@@ -12,7 +12,7 @@ import {Context} from '../../context'
 import {CalculatedRating, PublicCommentSort} from '../../db/comment'
 import {SortOrder} from '@wepublish/utils/api'
 
-interface CommentWithTags extends Comment {
+export interface CommentWithTags extends Comment {
   tags: {tag: Tag}[]
   calculatedRatings: CalculatedRating[]
   title: string | null

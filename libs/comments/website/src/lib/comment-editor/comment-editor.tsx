@@ -84,7 +84,7 @@ export const Register = styled('div')`
   grid-column: 1/2;
   margin: 0 ${({theme}) => theme.spacing(4)};
   margin-top: ${({theme}) => theme.spacing(3)};
-  border-left: 1px solid ${({theme}) => theme.palette.grey.main};
+  border-left: 1px solid ${({theme}) => theme.palette.grey[300]};
 
   ${({theme}) => theme.breakpoints.up('sm')} {
     grid-column: 2/3;
