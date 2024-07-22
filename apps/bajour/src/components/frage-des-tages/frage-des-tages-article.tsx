@@ -9,6 +9,7 @@ import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-bl
 import {AuthorBox} from './author-box'
 import frageDesTagesLogo from './frage-des-tages.svg'
 import {InfoBox} from './info-box'
+import {TopComments} from './frage-des-tages'
 
 export const FrageDesTagesContainer = styled('div')`
   padding: ${({theme}) => `${theme.spacing(1.5)}`};
@@ -80,13 +81,6 @@ export const Comments = styled('div')`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: ${({theme}) => theme.spacing(6)};
-`
-
-export const TopComments = styled('div')`
-  font-size: 1rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin: ${({theme}) => `${theme.spacing(2)} 0 ${theme.spacing(1)} 0`};
 `
 
 export const FDTLogo = styled(Image)`

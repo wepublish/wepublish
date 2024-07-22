@@ -24,6 +24,7 @@ const avatarStyles = css`
 
 export const CommentWrapper = styled('article')`
   display: grid;
+  grid-template-rows: max-content auto;
   gap: ${({theme}) => theme.spacing(2)};
 
   &:target {
@@ -38,7 +39,6 @@ export const CommentHeader = styled('header')`
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: ${({theme}) => theme.spacing(2)};
-  align-items: center;
 `
 
 export const CommentHeaderContent = styled('div')``
@@ -80,20 +80,6 @@ export const CommentFlairLink = styled('a')`
 `
 
 export const CommentContent = styled('div')``
-
-export const CommentChildren = styled('aside')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
-  border-left: 2px solid currentColor;
-  padding: ${({theme}) => theme.spacing(3)};
-  padding-right: 0;
-`
-
-export const CommentActions = styled('div')`
-  display: flex;
-  flex-flow: row wrap;
-  gap: ${({theme}) => theme.spacing(1)};
-`
 
 export const titleStyles = () => css`
   font-weight: 600;

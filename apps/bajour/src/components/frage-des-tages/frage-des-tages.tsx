@@ -93,7 +93,7 @@ export const AuthorAndContext = styled('div')`
   ${({theme}) =>
     css`
       ${theme.breakpoints.up('sm')} {
-        gap: ${theme.spacing(6)};
+        gap: ${theme.spacing(4)};
         grid-template-columns: repeat(2, 1fr);
       }
     `}
@@ -102,7 +102,7 @@ export const AuthorAndContext = styled('div')`
 export const Comments = styled('div')`
   display: grid;
   grid-template-columns: 1fr;
-  gap: ${({theme}) => theme.spacing(6)};
+  gap: ${({theme}) => theme.spacing(4)};
 
   ${({theme}) =>
     css`
@@ -117,6 +117,7 @@ export const TopComments = styled('div')`
   font-weight: bold;
   text-transform: uppercase;
   margin: ${({theme}) => `${theme.spacing(2)} 0 ${theme.spacing(1)} 0`};
+  padding-left: ${({theme}) => `${theme.spacing(1)}`};
 `
 
 export const StyledComment = styled(Comment)`
