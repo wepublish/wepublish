@@ -1114,11 +1114,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title=""
             />
             <input
@@ -1691,7 +1690,7 @@ exports[`Personal Data Form Container should render DeleteImage 1`] = `
 - First value
 + Second value
 
-@@ -577,10 +577,148 @@
+@@ -576,10 +576,152 @@
               </fieldset>
             </div>
           </div>
@@ -1807,20 +1806,24 @@ exports[`Personal Data Form Container should render DeleteImage 1`] = `
 +
 + fragment ImageURLs on Image {
 +   url
-+   bigURL: transformURL(input: {width: 800, output: PNG, quality: 1})
-+   largeURL: transformURL(input: {width: 500, output: PNG, quality: 1})
-+   mediumURL: transformURL(input: {width: 300, output: PNG, quality: 1})
-+   smallURL: transformURL(input: {width: 200, output: PNG, quality: 1})
-+   squareBigURL: transformURL(
-+     input: {width: 800, height: 800, output: PNG, quality: 1}
++   xl: transformURL(input: {width: 1200, output: PNG, quality: 1})
++   l: transformURL(input: {width: 1000, output: PNG, quality: 1})
++   m: transformURL(input: {width: 800, output: PNG, quality: 1})
++   s: transformURL(input: {width: 500, output: PNG, quality: 1})
++   xs: transformURL(input: {width: 300, output: PNG, quality: 1})
++   xxs: transformURL(input: {width: 200, output: PNG, quality: 1})
++   xlSquare: transformURL(
++     input: {width: 1200, height: 1200, output: PNG, quality: 1}
 +   )
-+   squareLargeURL: transformURL(
-+     input: {width: 500, height: 500, output: PNG, quality: 1}
++   lSquare: transformURL(
++     input: {width: 1000, height: 1000, output: PNG, quality: 1}
 +   )
-+   squareMediumURL: transformURL(
++   mSquare: transformURL(input: {width: 800, height: 800, output: PNG, quality: 1})
++   sSquare: transformURL(input: {width: 500, height: 500, output: PNG, quality: 1})
++   xsSquare: transformURL(
 +     input: {width: 300, height: 300, output: PNG, quality: 1}
 +   )
-+   squareSmallURL: transformURL(
++   xxsSquare: transformURL(
 +     input: {width: 200, height: 200, output: PNG, quality: 1}
 +   )
 +   __typename
@@ -1847,7 +1850,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
 - First value
 + Second value
 
-@@ -114,11 +114,11 @@
+@@ -113,11 +113,11 @@
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rp:"
@@ -1860,7 +1863,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
             >
-@@ -151,11 +151,11 @@
+@@ -150,11 +150,11 @@
               autocomplete="name"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rq:"
@@ -1873,7 +1876,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
             >
-@@ -264,11 +264,11 @@
+@@ -263,11 +263,11 @@
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rt:"
@@ -1886,7 +1889,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -301,11 +301,11 @@
+@@ -300,11 +300,11 @@
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":ru:"
@@ -1899,7 +1902,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -338,11 +338,11 @@
+@@ -337,11 +337,11 @@
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rv:"
@@ -1912,7 +1915,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -375,11 +375,11 @@
+@@ -374,11 +374,11 @@
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r10:"
@@ -1925,7 +1928,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -404,12 +404,12 @@
+@@ -403,12 +403,12 @@
           </p>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1940,7 +1943,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
             >
               Passwort
             </label>
-@@ -421,11 +421,11 @@
+@@ -420,11 +420,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r11:"
@@ -1953,7 +1956,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
-@@ -458,11 +458,11 @@
+@@ -457,11 +457,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -1966,7 +1969,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -471,12 +471,12 @@
+@@ -470,12 +470,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1981,7 +1984,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
             >
               Passwort wiederholen
             </label>
-@@ -488,11 +488,11 @@
+@@ -487,11 +487,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r12:"
@@ -1994,7 +1997,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
-@@ -525,11 +525,11 @@
+@@ -524,11 +524,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -3123,11 +3126,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title=""
             />
             <input
@@ -4809,11 +4811,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title=""
             />
             <input

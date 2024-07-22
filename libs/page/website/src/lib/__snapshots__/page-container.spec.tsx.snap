@@ -1084,19 +1084,67 @@ exports[`Page Container should render ById 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/500/300"
+        content=""
         property="og:image"
+      />
+      <meta
+        content="200"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="1000"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="1200"
+        property="og:image:width"
       />
       <meta
         content="summary_large_image"
         name="twitter:card"
+      />
+      <meta
+        content="max-image-preview:large"
+        name="robots"
       />
     </div>
     <script
       data-testid="fake-script"
       type="application/ld+json"
     >
-      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","bigURL":"https://unsplash.it/800/400","largeURL":"https://unsplash.it/500/300","mediumURL":"https://unsplash.it/300/200","smallURL":"https://unsplash.it/200/100","squareBigURL":"https://unsplash.it/800/800","squareLargeURL":"https://unsplash.it/500/500","squareMediumURL":"https://unsplash.it/300/300","squareSmallURL":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
     </script>
     <div
       class="emotion-3 emotion-4"
@@ -1480,11 +1528,10 @@ exports[`Page Container should render ById 1`] = `
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <figcaption>
@@ -1510,11 +1557,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -1534,11 +1580,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -1558,11 +1603,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -1596,11 +1640,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -1649,11 +1692,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -1702,11 +1744,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -1767,11 +1808,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
       </div>
@@ -2053,11 +2093,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -2120,11 +2159,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               />
             </div>
@@ -2181,11 +2219,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -2236,11 +2273,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -2280,11 +2316,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -2339,11 +2374,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -2406,11 +2440,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               />
             </div>
@@ -2467,11 +2500,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -2522,11 +2554,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -2566,11 +2597,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -2625,11 +2655,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -2692,11 +2721,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -2753,11 +2781,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -2797,11 +2824,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -2852,11 +2878,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -2923,11 +2948,10 @@ https://unsplash.it/200/100 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title=""
             />
           </div>
@@ -4163,19 +4187,67 @@ exports[`Page Container should render BySlug 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/500/300"
+        content=""
         property="og:image"
+      />
+      <meta
+        content="200"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="1000"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="1200"
+        property="og:image:width"
       />
       <meta
         content="summary_large_image"
         name="twitter:card"
+      />
+      <meta
+        content="max-image-preview:large"
+        name="robots"
       />
     </div>
     <script
       data-testid="fake-script"
       type="application/ld+json"
     >
-      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","bigURL":"https://unsplash.it/800/400","largeURL":"https://unsplash.it/500/300","mediumURL":"https://unsplash.it/300/200","smallURL":"https://unsplash.it/200/100","squareBigURL":"https://unsplash.it/800/800","squareLargeURL":"https://unsplash.it/500/500","squareMediumURL":"https://unsplash.it/300/300","squareSmallURL":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
     </script>
     <div
       class="emotion-3 emotion-4"
@@ -4559,11 +4631,10 @@ exports[`Page Container should render BySlug 1`] = `
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <figcaption>
@@ -4589,11 +4660,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -4613,11 +4683,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -4637,11 +4706,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -4675,11 +4743,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -4728,11 +4795,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -4781,11 +4847,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -4846,11 +4911,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
       </div>
@@ -5132,11 +5196,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -5199,11 +5262,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               />
             </div>
@@ -5260,11 +5322,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -5315,11 +5376,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -5359,11 +5419,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -5418,11 +5477,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -5485,11 +5543,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               />
             </div>
@@ -5546,11 +5603,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -5601,11 +5657,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -5645,11 +5700,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -5704,11 +5758,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -5771,11 +5824,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -5832,11 +5884,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -5876,11 +5927,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -5931,11 +5981,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -6002,11 +6051,10 @@ https://unsplash.it/200/100 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title=""
             />
           </div>
@@ -7242,19 +7290,67 @@ exports[`Page Container should render ByToken 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/500/300"
+        content=""
         property="og:image"
+      />
+      <meta
+        content="200"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="1000"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="1200"
+        property="og:image:width"
       />
       <meta
         content="summary_large_image"
         name="twitter:card"
+      />
+      <meta
+        content="max-image-preview:large"
+        name="robots"
       />
     </div>
     <script
       data-testid="fake-script"
       type="application/ld+json"
     >
-      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","bigURL":"https://unsplash.it/800/400","largeURL":"https://unsplash.it/500/300","mediumURL":"https://unsplash.it/300/200","smallURL":"https://unsplash.it/200/100","squareBigURL":"https://unsplash.it/800/800","squareLargeURL":"https://unsplash.it/500/500","squareMediumURL":"https://unsplash.it/300/300","squareSmallURL":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
     </script>
     <div
       class="emotion-3 emotion-4"
@@ -7638,11 +7734,10 @@ exports[`Page Container should render ByToken 1`] = `
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <figcaption>
@@ -7668,11 +7763,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -7692,11 +7786,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -7716,11 +7809,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -7754,11 +7846,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -7807,11 +7898,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -7860,11 +7950,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -7925,11 +8014,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
       </div>
@@ -8211,11 +8299,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -8278,11 +8365,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               />
             </div>
@@ -8339,11 +8425,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -8394,11 +8479,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -8438,11 +8522,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -8497,11 +8580,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -8564,11 +8646,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               />
             </div>
@@ -8625,11 +8706,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -8680,11 +8760,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -8724,11 +8803,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -8783,11 +8861,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -8850,11 +8927,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -8911,11 +8987,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -8955,11 +9030,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -9010,11 +9084,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -9081,11 +9154,10 @@ https://unsplash.it/200/100 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title=""
             />
           </div>
@@ -10321,19 +10393,67 @@ exports[`Page Container should render WithChildren 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/500/300"
+        content=""
         property="og:image"
+      />
+      <meta
+        content="200"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="1000"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="1200"
+        property="og:image:width"
       />
       <meta
         content="summary_large_image"
         name="twitter:card"
+      />
+      <meta
+        content="max-image-preview:large"
+        name="robots"
       />
     </div>
     <script
       data-testid="fake-script"
       type="application/ld+json"
     >
-      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","bigURL":"https://unsplash.it/800/400","largeURL":"https://unsplash.it/500/300","mediumURL":"https://unsplash.it/300/200","smallURL":"https://unsplash.it/200/100","squareBigURL":"https://unsplash.it/800/800","squareLargeURL":"https://unsplash.it/500/500","squareMediumURL":"https://unsplash.it/300/300","squareSmallURL":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
     </script>
     <div
       class="emotion-3 emotion-4"
@@ -10717,11 +10837,10 @@ exports[`Page Container should render WithChildren 1`] = `
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <figcaption>
@@ -10747,11 +10866,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -10771,11 +10889,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -10795,11 +10912,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -10833,11 +10949,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -10886,11 +11001,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -10939,11 +11053,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -11004,11 +11117,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
       </div>
@@ -11290,11 +11402,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -11357,11 +11468,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               />
             </div>
@@ -11418,11 +11528,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -11473,11 +11582,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -11517,11 +11625,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -11576,11 +11683,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -11643,11 +11749,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               />
             </div>
@@ -11704,11 +11809,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -11759,11 +11863,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -11803,11 +11906,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -11862,11 +11964,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -11929,11 +12030,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -11990,11 +12090,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -12034,11 +12133,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -12089,11 +12187,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -12160,11 +12257,10 @@ https://unsplash.it/200/100 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title=""
             />
           </div>
@@ -13403,19 +13499,67 @@ exports[`Page Container should render WithClassName 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/500/300"
+        content=""
         property="og:image"
+      />
+      <meta
+        content="200"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="1000"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="1200"
+        property="og:image:width"
       />
       <meta
         content="summary_large_image"
         name="twitter:card"
+      />
+      <meta
+        content="max-image-preview:large"
+        name="robots"
       />
     </div>
     <script
       data-testid="fake-script"
       type="application/ld+json"
     >
-      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","bigURL":"https://unsplash.it/800/400","largeURL":"https://unsplash.it/500/300","mediumURL":"https://unsplash.it/300/200","smallURL":"https://unsplash.it/200/100","squareBigURL":"https://unsplash.it/800/800","squareLargeURL":"https://unsplash.it/500/500","squareMediumURL":"https://unsplash.it/300/300","squareSmallURL":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
     </script>
     <div
       class="emotion-3 emotion-4"
@@ -13799,11 +13943,10 @@ exports[`Page Container should render WithClassName 1`] = `
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <figcaption>
@@ -13829,11 +13972,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -13853,11 +13995,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -13877,11 +14018,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -13915,11 +14055,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -13968,11 +14107,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -14021,11 +14159,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -14086,11 +14223,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
       </div>
@@ -14372,11 +14508,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -14439,11 +14574,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               />
             </div>
@@ -14500,11 +14634,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -14555,11 +14688,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -14599,11 +14731,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -14658,11 +14789,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -14725,11 +14855,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               />
             </div>
@@ -14786,11 +14915,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -14841,11 +14969,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -14885,11 +15012,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -14944,11 +15070,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -15011,11 +15136,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -15072,11 +15196,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -15116,11 +15239,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -15171,11 +15293,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -15242,11 +15363,10 @@ https://unsplash.it/200/100 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title=""
             />
           </div>
@@ -16482,19 +16602,67 @@ exports[`Page Container should render WithEmotion 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/500/300"
+        content=""
         property="og:image"
+      />
+      <meta
+        content="200"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="1000"
+        property="og:image:width"
+      />
+      <meta
+        content=""
+        property="og:image"
+      />
+      <meta
+        content="1200"
+        property="og:image:width"
       />
       <meta
         content="summary_large_image"
         name="twitter:card"
+      />
+      <meta
+        content="max-image-preview:large"
+        name="robots"
       />
     </div>
     <script
       data-testid="fake-script"
       type="application/ld+json"
     >
-      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","bigURL":"https://unsplash.it/800/400","largeURL":"https://unsplash.it/500/300","mediumURL":"https://unsplash.it/300/200","smallURL":"https://unsplash.it/200/100","squareBigURL":"https://unsplash.it/800/800","squareLargeURL":"https://unsplash.it/500/500","squareMediumURL":"https://unsplash.it/300/300","squareSmallURL":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
     </script>
     <div
       class="emotion-3 emotion-4"
@@ -16878,11 +17046,10 @@ exports[`Page Container should render WithEmotion 1`] = `
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <figcaption>
@@ -16908,11 +17075,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -16932,11 +17098,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -16956,11 +17121,10 @@ https://unsplash.it/200/100 200w"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-            srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset=""
             title=""
           />
           <p
@@ -16994,11 +17158,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -17047,11 +17210,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -17100,11 +17262,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
         <div
@@ -17165,11 +17326,10 @@ https://unsplash.it/200/100 200w"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset=""
           title=""
         />
       </div>
@@ -17451,11 +17611,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -17518,11 +17677,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               />
             </div>
@@ -17579,11 +17737,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -17634,11 +17791,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -17678,11 +17834,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -17737,11 +17892,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -17804,11 +17958,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               />
             </div>
@@ -17865,11 +18018,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -17920,11 +18072,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -17964,11 +18115,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -18023,11 +18173,10 @@ https://unsplash.it/200/200 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -18090,11 +18239,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -18151,11 +18299,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -18195,11 +18342,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -18250,11 +18396,10 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset=""
                 title=""
               />
             </div>
@@ -18321,11 +18466,10 @@ https://unsplash.it/200/100 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title=""
             />
           </div>

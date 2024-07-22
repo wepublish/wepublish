@@ -1,15 +1,19 @@
 fragment ImageURLs on Image {
   url
 
-  bigURL: transformURL(input: {width: 800, output: PNG, quality: 1})
-  largeURL: transformURL(input: {width: 500, output: PNG, quality: 1})
-  mediumURL: transformURL(input: {width: 300, output: PNG, quality: 1})
-  smallURL: transformURL(input: {width: 200, output: PNG, quality: 1})
+  xl: transformURL(input: {width: 1200, output: PNG, quality: 1})
+  l: transformURL(input: {width: 1000, output: PNG, quality: 1})
+  m: transformURL(input: {width: 800, output: PNG, quality: 1})
+  s: transformURL(input: {width: 500, output: PNG, quality: 1})
+  xs: transformURL(input: {width: 300, output: PNG, quality: 1})
+  xxs: transformURL(input: {width: 200, output: PNG, quality: 1})
 
-  squareBigURL: transformURL(input: {width: 800, height: 800, output: PNG, quality: 1})
-  squareLargeURL: transformURL(input: {width: 500, height: 500, output: PNG, quality: 1})
-  squareMediumURL: transformURL(input: {width: 300, height: 300, output: PNG, quality: 1})
-  squareSmallURL: transformURL(input: {width: 200, height: 200, output: PNG, quality: 1})
+  xlSquare: transformURL(input: {width: 1200, height: 1200, output: PNG, quality: 1})
+  lSquare: transformURL(input: {width: 1000, height: 1000, output: PNG, quality: 1})
+  mSquare: transformURL(input: {width: 800, height: 800, output: PNG, quality: 1})
+  sSquare: transformURL(input: {width: 500, height: 500, output: PNG, quality: 1})
+  xsSquare: transformURL(input: {width: 300, height: 300, output: PNG, quality: 1})
+  xxsSquare: transformURL(input: {width: 200, height: 200, output: PNG, quality: 1})
 }
 
 fragment FullImage on Image {
