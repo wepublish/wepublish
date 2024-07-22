@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {Typography} from '@mui/material'
-import {IntendedRouteStorageKey} from '@wepublish/utils/website'
+import {IntendedRouteStorageKey} from '@wepublish/website'
 import {
   ApiV1,
   AuthTokenStorageKey,
