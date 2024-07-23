@@ -11,7 +11,8 @@ import {
   ContentWrapper,
   PollBlock,
   useWebsiteBuilder,
-  WebsiteBuilderProvider
+  WebsiteBuilderProvider,
+  Article
 } from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
@@ -19,12 +20,13 @@ import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
-import {FrageDesTagesArticle} from '../../src/components/frage-des-tages/frage-des-tages-article'
+import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
 import {Container} from '../../src/components/layout/container'
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {BajourTeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
+import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
 
 const uppercase = css`
   text-transform: uppercase;
@@ -73,8 +75,9 @@ export default function ArticleBySlugIdOrToken() {
     <WebsiteBuilderProvider
       ArticleList={RelatedArticleSlider}
       blocks={{
-        Poll: isFDT ? FrageDesTagesArticle : PollBlock
+        Poll: isFDT ? FdtPollBlock : PollBlock
       }}
+      Article={isFDT ? FdTArticle : Article}
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
         <ArticleContainer {...containerProps} />

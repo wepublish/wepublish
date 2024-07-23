@@ -116,7 +116,7 @@ const PollBlockStyled = styled(PollBlock)`
   }
 `
 
-export const FrageDesTagesArticle = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
+export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
   const [vote] = ApiV1.usePollVoteMutation()
   const router = useRouter()
   const {
