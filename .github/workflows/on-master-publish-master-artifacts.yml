@@ -13,6 +13,18 @@ jobs:
       - id: image_tag
         run: echo "::set-output name=tag::$(date +%s)-${{ github.sha }}"
 
+  setup-website-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up matrix
+        id: set-matrix
+        run: deployment/read_deployment_config.sh '.website.staging.deployment' true
+
   publish_master_docker:
     needs: date_sha_tag
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
