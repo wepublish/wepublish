@@ -8,20 +8,9 @@ type IdSlugOrToken =
   | {id?: never; token?: never; slug: string}
   | {id?: never; token: string; slug?: never}
 
-export type ArticleContainerProps = PropsWithChildren<IdSlugOrToken & BuilderContainerProps> & {
-  hideAuthors?: boolean
-  hideTags?: boolean
-}
+export type ArticleContainerProps = PropsWithChildren<IdSlugOrToken & BuilderContainerProps>
 
-export function ArticleContainer({
-  id,
-  slug,
-  token,
-  className,
-  children,
-  hideAuthors,
-  hideTags
-}: ArticleContainerProps) {
+export function ArticleContainer({id, slug, token, className, children}: ArticleContainerProps) {
   const {Article} = useWebsiteBuilder()
   const {data, loading, error} = useArticleQuery({
     variables: {
@@ -33,13 +22,7 @@ export function ArticleContainer({
 
   return (
     <PollBlockProvider>
-      <Article
-        data={data}
-        loading={loading}
-        error={error}
-        className={className}
-        hideAuthors={hideAuthors}
-        hideTags={hideTags}>
+      <Article data={data} loading={loading} error={error} className={className}>
         {children}
       </Article>
     </PollBlockProvider>

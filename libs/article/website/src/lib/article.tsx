@@ -35,15 +35,7 @@ export const ArticleDate = styled('time')`
   margin-top: -${({theme}) => theme.spacing(2)};
 `
 
-export function Article({
-  className,
-  data,
-  children,
-  hideAuthors,
-  hideTags,
-  loading,
-  error
-}: BuilderArticleProps) {
+export function Article({className, data, children, loading, error}: BuilderArticleProps) {
   const {
     AuthorChip,
     ArticleSEO,
@@ -58,7 +50,7 @@ export function Article({
       <Blocks blocks={(data?.article?.blocks as Block[]) ?? []} type="Article" />
 
       <ArticleInfoWrapper>
-        {!!data?.article?.authors.length && !hideAuthors && (
+        {!!data?.article?.authors.length && (
           <ArticleAuthors>
             {data.article.authors.map(author => (
               <AuthorChip key={author.id} author={author} />
@@ -72,7 +64,7 @@ export function Article({
           </ArticleAuthors>
         )}
 
-        {!!data?.article?.tags.length && !hideTags && (
+        {!!data?.article?.tags.length && (
           <ArticleTags>
             {data.article.tags.map(tag => (
               <Chip

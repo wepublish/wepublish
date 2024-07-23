@@ -10,8 +10,6 @@ import {PropsWithChildren} from 'react'
 export type BuilderArticleProps = PropsWithChildren<
   Pick<QueryResult<ArticleQuery>, 'data' | 'loading' | 'error'> & {
     className?: string
-    hideAuthors?: boolean
-    hideTags?: boolean
   }
 >
 
