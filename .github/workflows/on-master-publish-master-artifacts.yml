@@ -13,18 +13,6 @@ jobs:
       - id: image_tag
         run: echo "::set-output name=tag::$(date +%s)-${{ github.sha }}"
 
-  setup-website-matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up matrix
-        id: set-matrix
-        run: deployment/read_deployment_config.sh '.website.staging.deployment' true
-
   publish_master_docker:
     needs: date_sha_tag
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
@@ -49,17 +37,4 @@ jobs:
         ghcr.io/wepublish/storybook:master-${{ needs.date_sha_tag.outputs.tag }}
         ghcr.io/wepublish/storybook:master
         wepublishch/storybook:master
-    secrets: inherit
-
-  publish_master_docker_website:
-    name: Website
-    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker ]
-    uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
-    strategy:
-      matrix: ${{fromJson(needs.publish_master_docker.outputs.matrix)}}
-    with:
-      website_project: ${{ matrix.target }}
-      api_url: https://api-${{ matrix.target }}.wepublish.dev
-      website_tags: |
-        ghcr.io/wepublish/website-${{ matrix.target }}:master-${{ needs.date_sha_tag.outputs.tag }}
     secrets: inherit
