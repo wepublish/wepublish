@@ -39,6 +39,9 @@ export const CommentHeader = styled('header')`
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: ${({theme}) => theme.spacing(2)};
+  padding-left: ${({theme}) => theme.spacing(1)};
+  padding-top: ${({theme}) => theme.spacing(1)};
+  padding-right: ${({theme}) => theme.spacing(1)};
 `
 
 export const CommentHeaderContent = styled('div')``

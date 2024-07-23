@@ -77,12 +77,6 @@ export const AuthorAndContext = styled('div')`
     `}
 `
 
-export const Comments = styled('div')`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: ${({theme}) => theme.spacing(6)};
-`
-
 export const FDTLogo = styled(Image)`
   grid-column: 10 / 13;
 

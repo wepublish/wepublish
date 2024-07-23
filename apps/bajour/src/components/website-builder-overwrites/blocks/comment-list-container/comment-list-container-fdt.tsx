@@ -44,7 +44,7 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
     }
 
     ${CommentHeader} {
-      padding: ${({theme}) => theme.spacing(1.5)};
+      padding: ${({theme}) => theme.spacing(1)};
       background-color: ${({theme}) => theme.palette.common.white};
       border-top-right-radius: ${({theme}) => theme.spacing(2.5)};
       border-top-left-radius: ${({theme}) => theme.spacing(2.5)};
@@ -73,7 +73,9 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
   }
 
   ${CommentContent} {
-    padding-top: 0;
+    padding-top: ${({theme}) => theme.spacing(1)};
+    padding-left: ${({theme}) => theme.spacing(1)};
+    padding-right: ${({theme}) => theme.spacing(1)};
     padding-bottom: 0;
     span {
       // what other way to style <RichText /> ?
@@ -84,7 +86,6 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
 
   ${CommentListItemActions} {
     padding: ${({theme}) => theme.spacing(1.5)};
-    margin-bottom: ${({theme}) => theme.spacing(2)};
   }
 
   ${CommentEditorWrapper} {
