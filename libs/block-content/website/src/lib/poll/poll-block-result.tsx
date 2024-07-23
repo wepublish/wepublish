@@ -76,7 +76,10 @@ export const PollBlockResult = ({
     <PollBlockResultWrapper>
       <PollBlockResultInfo>
         <PollBlockResultName>{answer}</PollBlockResultName>
-        <PollBlockResultPercentage>{Math.round(percentage || 0)}%</PollBlockResultPercentage>
+
+        {percentage && (
+          <PollBlockResultPercentage>{Math.round(percentage)}%</PollBlockResultPercentage>
+        )}
       </PollBlockResultInfo>
 
       <PollBlockVoteBar>

@@ -8,14 +8,6 @@ import {format} from 'date-fns'
 import {de} from 'date-fns/locale'
 import {useEffect, useMemo, useState} from 'react'
 
-function formatCommentDate(isoDateString: string): string {
-  const date: Date = new Date(isoDateString)
-
-  const formattedDate: string = format(date, 'd. MMMM yyyy | HH:mm', {locale: de})
-
-  return formattedDate
-}
-
 const avatarStyles = css`
   width: 46px;
   height: 46px;
@@ -39,9 +31,6 @@ export const CommentHeader = styled('header')`
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: ${({theme}) => theme.spacing(2)};
-  padding-left: ${({theme}) => theme.spacing(1)};
-  padding-top: ${({theme}) => theme.spacing(1)};
-  padding-right: ${({theme}) => theme.spacing(1)};
 `
 
 export const CommentHeaderContent = styled('div')``
@@ -84,7 +73,7 @@ export const CommentFlairLink = styled('a')`
 
 export const CommentContent = styled('div')``
 
-export const titleStyles = () => css`
+export const CommentTitle = styled('h1')`
   font-weight: 600;
 `
 
@@ -107,17 +96,6 @@ export const Comment = ({
     blocks: {RichText},
     date
   } = useWebsiteBuilder()
-
-  const [commentId, setCommentId] = useState<string | null>(null)
-
-  const titleCss = useMemo(() => titleStyles(), [])
-
-  useEffect(() => {
-    const commentId = window.location.hash.replace('#', '')
-    if (commentId) {
-      setCommentId(commentId)
-    }
-  }, [])
 
   const image = user?.image ?? guestUserImage
   const isVerified = authorType === CommentAuthorType.VerifiedUser
@@ -161,7 +139,7 @@ export const Comment = ({
       {showContent && (
         <CommentContent>
           {title && (
-            <Paragraph gutterBottom={false} css={titleCss}>
+            <Paragraph gutterBottom={false} component={CommentTitle}>
               {title}
             </Paragraph>
           )}
