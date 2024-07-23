@@ -1,4 +1,4 @@
-name: Deploy Helm Frontend
+name: Deploy Helm Website
 
 on:
   workflow_call:

@@ -13,14 +13,14 @@ PROJECT_FILE=apps/${PROJECT}/deployment.config.json
 shift 3
 
 # Add env from env files
-customVars=$(jq -r ".frontend.${ENV}.env | to_entries | map(\"\(.key)=\(.value|tostring)\") | .[]" $PROJECT_FILE)
+customVars=$(jq -r ".website.${ENV}.env | to_entries | map(\"\(.key)=\(.value|tostring)\") | .[]" $PROJECT_FILE)
 for var in $customVars; do
   envvars="${envvars}${var}\n"
 done
 
 # Add secrets to env from github secrets
 secretenvvars=""
-for secret in $(jq -r ".frontend.${ENV}.secret_env[]" "$PROJECT_FILE"); do
+for secret in $(jq -r ".website.${ENV}.secret_env[]" "$PROJECT_FILE"); do
 
   # Check if secure env exists
   echo "${secret}" |grep -v "$(echo $arg |cut -d '=' -f 1)=" > /dev/null

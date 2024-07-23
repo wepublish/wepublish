@@ -57,7 +57,7 @@ jobs:
     secrets: inherit
 
   publish_master_docker_website:
-    name: Frontend
+    name: Website
     needs: [ setup-website-matrix, date_sha_tag, publish_master_docker ]
     if: ${{ needs.helm_deployment.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml

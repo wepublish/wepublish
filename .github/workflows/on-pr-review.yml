@@ -283,7 +283,7 @@ jobs:
 
 
   publish_docker_website_image:
-    name: Build Docker Frontend
+    name: Build Docker Website
     needs: [setup-website-matrix, helm_deployment]
     if: ${{ needs.helm_deployment.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
@@ -298,7 +298,7 @@ jobs:
     secrets: inherit
 
   helm_deployment_website:
-    name: Helm Deployment Frontend
+    name: Helm Deployment Website
     needs: [publish_docker_website_image, setup-website-matrix]
     if: ${{ needs.publish_docker_website_image.result == 'success' }}
     uses: ./.github/workflows/on-demand-deploy-helm-website.yml

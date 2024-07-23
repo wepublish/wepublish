@@ -12,11 +12,11 @@ done
 # If project is passed check for the project
 if [[ ! -z $PROJECT ]]; then
   if [[ -z $(echo "@$targets@" |sed "s/ /@/g" |grep "@${PROJECT}@") ]]; then
-    echo "Project <$PROJECT> has no frontend, skipping..."
-    echo ::set-output name=has-frontend::false
+    echo "Project <$PROJECT> has no website, skipping..."
+    echo ::set-output name=has-website::false
   else
-    echo "Project <$PROJECT> has frontend."
-    echo ::set-output name=has-frontend::true
+    echo "Project <$PROJECT> has website."
+    echo ::set-output name=has-website::true
   fi
   exit 0
 fi
