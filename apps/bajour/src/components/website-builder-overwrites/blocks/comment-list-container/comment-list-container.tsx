@@ -7,7 +7,6 @@ import {
   CommentListContainer as BaseCommentListContainer,
   CommentListItemActions,
   CommentListItemChildren,
-  CommentReplyButton,
   CommentWrapper
 } from '@wepublish/website'
 
@@ -43,10 +42,6 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
       padding: ${({theme}) => theme.spacing(1.5)};
       border-bottom-right-radius: ${({theme}) => theme.spacing(2.5)};
       border-bottom-left-radius: ${({theme}) => theme.spacing(2.5)};
-    }
-
-    ${CommentReplyButton} {
-      display: none;
     }
   }
 

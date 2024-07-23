@@ -6,7 +6,6 @@ import {cond} from 'ramda'
 import {MdEdit, MdReply} from 'react-icons/md'
 import {getStateForEditor} from './comment-list.state'
 import {CommentListItemShare} from './comment-list-item-share'
-import {Button} from '@wepublish/ui'
 import {useMemo} from 'react'
 
 export const CommentListItemChildren = styled('aside')`
@@ -57,14 +56,6 @@ const useButtonStyles = () => {
     [theme]
   )
 }
-
-export const CommentReplyButton = styled(Button)(({theme}) => ({
-  border: '1px solid',
-  '&:hover': {
-    border: '1px solid',
-    backgroundColor: lighten(theme.palette.primary.main, 0.8)
-  }
-}))
 
 export const CommentListItem = ({
   anonymousCanComment,
