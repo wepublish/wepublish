@@ -50,3 +50,16 @@ jobs:
         ghcr.io/wepublish/storybook:master
         wepublishch/storybook:master
     secrets: inherit
+
+  publish_master_docker_website:
+    name: Website
+    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker ]
+    uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
+    strategy:
+      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
+    with:
+      website_project: ${{ matrix.target }}
+      api_url: https://api-${{ matrix.target }}.wepublish.dev
+      website_tags: |
+        ghcr.io/wepublish/website-${{ matrix.target }}:master-${{ needs.date_sha_tag.outputs.tag }}
+    secrets: inherit
