@@ -10,7 +10,14 @@ import {Container} from '../src/components/layout/container'
 export default function Mitmachen() {
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
   const {
-    query: {memberPlanBySlug, additionalMemberPlans, firstName, mail, lastName}
+    query: {
+      memberPlanBySlug,
+      additionalMemberPlans,
+      firstName,
+      mail,
+      lastName,
+      deactivateSubscriptionId
+    }
   } = useRouter()
 
   return (
@@ -40,6 +47,7 @@ export default function Mitmachen() {
             ? [preselectedMemberPlan]
             : memberPlans
         }}
+        deactivateSubscriptionId={deactivateSubscriptionId as string | undefined}
       />
     </Container>
   )

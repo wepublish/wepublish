@@ -3,13 +3,20 @@ import {ApiV1, PageContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {ComponentProps} from 'react'
 
-export default function PageBySlug() {
+export default function PageBySlugIdOrToken() {
   const {
-    query: {slug}
+    query: {slug, id, token}
   } = useRouter()
 
-  return <PageContainer slug={slug as string} />
+  const containerProps = {
+    slug,
+    id,
+    token
+  } as ComponentProps<typeof PageContainer>
+
+  return <PageContainer {...containerProps} />
 }
 
 export const getStaticPaths = getPagePathsBasedOnPage('')

@@ -73,6 +73,7 @@ export const CommentListItem = ({
   openEditorsStateDispatch: dispatch,
   ratingSystem,
   className,
+  signUpUrl,
   ...comment
 }: BuilderCommentListItemProps) => {
   const {id, text, title, state, children, userRatings, overriddenRatings, calculatedRatings} =
@@ -93,7 +94,6 @@ export const CommentListItem = ({
     loggedInUser?.id === comment.user?.id &&
     (userCanEdit || comment.state === CommentState.PendingUserChanges)
   const canReply = anonymousCanComment || hasLoggedInUser
-  const canShare = anonymousCanComment || hasLoggedInUser
 
   const showReply = getStateForEditor(openEditorsState)('add', id)
   const showEdit = getStateForEditor(openEditorsState)('edit', id)
@@ -119,29 +119,28 @@ export const CommentListItem = ({
           maxCommentLength={maxCommentLength}
           error={edit.error}
           loading={edit.loading}
+          canReply={canReply}
+          parentUrl={comment.url}
+          signUpUrl={signUpUrl}
         />
       )}
 
       <CommentListItemActions>
         <CommentListItemActionsButtons>
-          {canReply && (
-            <Button
-              startIcon={<MdReply />}
-              variant="outlined"
-              size="small"
-              css={buttonStyles}
-              onClick={() => {
-                dispatch({
-                  type: 'add',
-                  action: 'open',
-                  commentId: id
-                })
-              }}>
-              Antworten
-            </Button>
-          )}
-
-          {canShare && <CommentListItemShare url={comment.url} title="share" />}
+          <Button
+            startIcon={<MdReply />}
+            variant="outlined"
+            size="small"
+            css={buttonStyles}
+            onClick={() => {
+              dispatch({
+                type: 'add',
+                action: 'open',
+                commentId: id
+              })
+            }}>
+            Antworten
+          </Button>
 
           {canEdit && (
             <Button
@@ -158,6 +157,8 @@ export const CommentListItem = ({
               Editieren
             </Button>
           )}
+
+          <CommentListItemShare url={comment.url} title="share" />
         </CommentListItemActionsButtons>
 
         <CommentRatings
@@ -183,6 +184,10 @@ export const CommentListItem = ({
           challenge={challenge}
           error={add.error}
           loading={add.loading}
+          canReply={canReply}
+          parentUrl={comment.url}
+          signUpUrl={signUpUrl}
+          anonymousCanComment={anonymousCanComment}
         />
       )}
 
@@ -205,6 +210,7 @@ export const CommentListItem = ({
               userCanEdit={userCanEdit}
               maxCommentLength={maxCommentLength}
               className={className}
+              signUpUrl={signUpUrl}
             />
           ))}
         </CommentListItemChildren>
@@ -213,12 +219,17 @@ export const CommentListItem = ({
   )
 }
 
+const CommentWarningWrapper = styled('div')`
+  padding-top: ${({theme}) => `${theme.spacing(1)}`};
+  padding-bottom: ${({theme}) => `${theme.spacing(1)}`};
+`
+
 const CommentListItemStateWarnings = (props: Pick<BuilderCommentListItemProps, 'state'>) => {
   const {
     elements: {Alert}
   } = useWebsiteBuilder()
 
-  return cond([
+  const errors = cond([
     [
       ({state}) => state === CommentState.PendingApproval,
       () => <Alert severity="info">Kommentar wartet auf Freischaltung.</Alert>
@@ -233,4 +244,10 @@ const CommentListItemStateWarnings = (props: Pick<BuilderCommentListItemProps, '
     ],
     [({state}: typeof props) => true, (_: typeof props): JSX.Element | null => null]
   ])(props)
+
+  if (!errors) {
+    return
+  }
+
+  return <CommentWarningWrapper>{errors}</CommentWarningWrapper>
 }

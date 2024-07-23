@@ -48,8 +48,8 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
     deactivation: {type: GraphQLSubscriptionDeactivation},
     url: {
       type: new GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver((subscription, _, {urlAdapter}) => {
-        return urlAdapter.getSubscriptionURL(subscription)
+      resolve: createProxyingResolver(async (subscription, _, {urlAdapter}) => {
+        return await urlAdapter.getSubscriptionURL(subscription)
       })
     }
   }

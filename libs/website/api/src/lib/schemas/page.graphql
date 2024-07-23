@@ -32,8 +32,8 @@ fragment FullPage on Page {
   }
 }
 
-query Page($slug: Slug, $id: ID) {
-  page(slug: $slug, id: $id) {
+query Page($slug: Slug, $id: ID, $token: String) {
+  page(slug: $slug, id: $id, token: $token) {
     ...FullPage
   }
 }

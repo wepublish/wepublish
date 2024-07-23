@@ -61,7 +61,7 @@ export function InvoiceListItem({
 }: BuilderInvoiceListItemProps) {
   const {
     meta: {locale},
-    elements: {H6, Button, Alert},
+    elements: {H6, Button, Alert, Link},
     date
   } = useWebsiteBuilder()
 
@@ -152,10 +152,17 @@ export function InvoiceListItem({
         )}
 
         {/* @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated  */}
+        {/* @TODO: Make href used in <Link> component customizable if necessary. You may want to make the custom Bajour filters default filters. */}
         {showPayrexxSubscriptionWarning && (
-          <Alert severity="warning">
-            Wir haben vor einiger Zeit das Membersystem umgestellt. Du verfügst noch über eine alte
-            Membership, die automatisch abgebucht wird.
+          <Alert
+            severity="warning"
+            action={
+              <Link
+                href={`/mitmachen?memberPlanBySlug=${subscription?.memberPlan.slug}&upsell=true&deactivateSubscriptionId=${subscription?.id}`}>
+                <Button>Jetzt Abo ersetzen</Button>
+              </Link>
+            }>
+            Wir haben vor einiger Zeit das Membersystem angepasst und dein Abo ist veraltet.
           </Alert>
         )}
       </InvoiceListItemContent>

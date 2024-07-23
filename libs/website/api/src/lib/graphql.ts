@@ -1556,6 +1556,7 @@ export type FullArticleFragment = { __typename?: 'Article', id: string, publishe
 export type ArticleQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['Slug']>;
   id?: InputMaybe<Scalars['ID']>;
+  token?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -1832,6 +1833,7 @@ export type SubscribeMutationVariables = Exact<{
   subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput> | PublicPropertiesInput>;
   successURL?: InputMaybe<Scalars['String']>;
   failureURL?: InputMaybe<Scalars['String']>;
+  deactivateSubscriptionId?: InputMaybe<Scalars['ID']>;
 }>;
 
 
@@ -1923,6 +1925,7 @@ export type FullPageFragment = { __typename?: 'Page', id: string, slug: string, 
 export type PageQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['Slug']>;
   id?: InputMaybe<Scalars['ID']>;
+  token?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -2915,8 +2918,8 @@ export const FullSessionWithTokenFragmentDoc = gql`
 }
     ${FullUserFragmentDoc}`;
 export const ArticleDocument = gql`
-    query Article($slug: Slug, $id: ID) {
-  article(slug: $slug, id: $id) {
+    query Article($slug: Slug, $id: ID, $token: String) {
+  article(slug: $slug, id: $id, token: $token) {
     ...FullArticle
   }
 }
@@ -2936,6 +2939,7 @@ export const ArticleDocument = gql`
  *   variables: {
  *      slug: // value for 'slug'
  *      id: // value for 'id'
+ *      token: // value for 'token'
  *   },
  * });
  */
@@ -3438,7 +3442,7 @@ export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMuta
 export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
 export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
 export const SubscribeDocument = gql`
-    mutation Subscribe($memberPlanId: ID, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: ID, $paymentMethodSlug: Slug, $subscriptionProperties: [PublicPropertiesInput!], $successURL: String, $failureURL: String) {
+    mutation Subscribe($memberPlanId: ID, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: ID, $paymentMethodSlug: Slug, $subscriptionProperties: [PublicPropertiesInput!], $successURL: String, $failureURL: String, $deactivateSubscriptionId: ID) {
   createSubscription(
     memberPlanID: $memberPlanId
     memberPlanSlug: $memberPlanSlug
@@ -3450,6 +3454,7 @@ export const SubscribeDocument = gql`
     subscriptionProperties: $subscriptionProperties
     successURL: $successURL
     failureURL: $failureURL
+    deactivateSubscriptionId: $deactivateSubscriptionId
   ) {
     ...FullPayment
   }
@@ -3480,6 +3485,7 @@ export type SubscribeMutationFn = Apollo.MutationFunction<SubscribeMutation, Sub
  *      subscriptionProperties: // value for 'subscriptionProperties'
  *      successURL: // value for 'successURL'
  *      failureURL: // value for 'failureURL'
+ *      deactivateSubscriptionId: // value for 'deactivateSubscriptionId'
  *   },
  * });
  */
@@ -3869,8 +3875,8 @@ export type NavigationQueryHookResult = ReturnType<typeof useNavigationQuery>;
 export type NavigationLazyQueryHookResult = ReturnType<typeof useNavigationLazyQuery>;
 export type NavigationQueryResult = Apollo.QueryResult<NavigationQuery, NavigationQueryVariables>;
 export const PageDocument = gql`
-    query Page($slug: Slug, $id: ID) {
-  page(slug: $slug, id: $id) {
+    query Page($slug: Slug, $id: ID, $token: String) {
+  page(slug: $slug, id: $id, token: $token) {
     ...FullPage
   }
 }
@@ -3890,6 +3896,7 @@ export const PageDocument = gql`
  *   variables: {
  *      slug: // value for 'slug'
  *      id: // value for 'id'
+ *      token: // value for 'token'
  *   },
  * });
  */

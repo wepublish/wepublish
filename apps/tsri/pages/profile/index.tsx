@@ -9,20 +9,39 @@ import {
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
+import {MdOutlinePayments} from 'react-icons/md'
 
 const ProfileWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
 `
 
+const ProfileHeading = styled('div')`
+  display: grid;
+  grid-template-columns: auto auto;
+`
+
+const SubscriptionLink = styled('div')`
+  text-align: right;
+`
+
 function Profile() {
   const {
-    elements: {H4}
+    elements: {H4, Button, Link}
   } = useWebsiteBuilder()
 
   return (
     <ProfileWrapper>
-      <H4 component={'h1'}>Profil</H4>
+      <ProfileHeading>
+        <H4 component={'h1'}>Profil</H4>
+        <SubscriptionLink>
+          <Link href={'/profile/subscription'}>
+            <Button size={'large'} startIcon={<MdOutlinePayments />}>
+              Meine Abos
+            </Button>
+          </Link>
+        </SubscriptionLink>
+      </ProfileHeading>
 
       <PersonalDataFormContainer mediaEmail="info@tsri.ch" />
     </ProfileWrapper>

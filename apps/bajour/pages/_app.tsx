@@ -26,10 +26,12 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {MainGrid} from '../src/components/layout/main-grid'
-import {BajourPaymentMethodPicker} from '../src/components/payment-method-picker/payment-method-picker'
-import {BajourQuoteBlock} from '../src/components/quote/bajour-quote'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
+import {BajourTeaserSlider} from '../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
+import {BajourContextBox} from '../src/components/website-builder-overwrites/context-box/context-box'
+import {BajourPaymentMethodPicker} from '../src/components/website-builder-overwrites/payment-method-picker/payment-method-picker'
+import {BajourQuoteBlock} from '../src/components/website-builder-overwrites/quote/bajour-quote'
 import {BajourBreakBlock} from '../src/components/website-builder-styled/blocks/break-block-styled'
 import {
   BajourTeaserGrid,
@@ -127,6 +129,10 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               TeaserList: BajourTeaserList,
               Break: BajourBreakBlock,
               Quote: BajourQuoteBlock
+            }}
+            blockStyles={{
+              ContextBox: BajourContextBox,
+              TeaserSlider: BajourTeaserSlider
             }}
             thirdParty={{
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
