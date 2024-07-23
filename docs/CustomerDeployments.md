@@ -6,7 +6,7 @@ Every project that needs to be deployed should have a `deployment.config.json` f
 
 ```json
 {
-  "frontend": {
+  "website": {
     "production": {
       "deployment": true,
       "env": {
