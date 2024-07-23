@@ -1,9 +1,8 @@
-import {Article, ArticleAuthors, ArticleTags} from '@wepublish/website'
 import {styled} from '@mui/material'
+import {Article, ArticleInfoWrapper} from '@wepublish/website'
 
 export const FdTArticle = styled(Article)`
-  ${ArticleAuthors},
-  ${ArticleTags} {
+  ${ArticleInfoWrapper} {
     display: none;
   }
 `

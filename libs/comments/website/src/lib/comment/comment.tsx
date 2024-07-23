@@ -4,10 +4,6 @@ import {CommentAuthorType} from '@wepublish/website/api'
 import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdPerson, MdVerified} from 'react-icons/md'
 
-import {format} from 'date-fns'
-import {de} from 'date-fns/locale'
-import {useEffect, useMemo, useState} from 'react'
-
 const avatarStyles = css`
   width: 46px;
   height: 46px;
