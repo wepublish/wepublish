@@ -1,8 +1,9 @@
 name: Publish master artifacts
 
 on:
-  pull_request:
-    types: [ opened, synchronize, reopened]
+  push:
+    branches:
+      - master
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
