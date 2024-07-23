@@ -56,7 +56,7 @@ jobs:
         wepublishch/storybook:master
     secrets: inherit
 
-  publish_docker_website_image:
+  publish_master_docker_website:
     name: Frontend
     needs: [ setup-website-matrix, date_sha_tag, publish_master_docker ]
     if: ${{ needs.helm_deployment.result == 'success' }}
