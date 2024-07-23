@@ -11,22 +11,9 @@ import {
 
 export const CommentListContainer = styled(BaseCommentListContainer)`
   > *:nth-of-type(-n + 2) {
-    ${CommentListItemActions} {
-      background-color: ${({theme}) => theme.palette.secondary.light};
-      border-bottom-right-radius: ${({theme}) => theme.spacing(2.5)};
-      border-bottom-left-radius: ${({theme}) => theme.spacing(2.5)};
-      padding: ${({theme}) => theme.spacing(1.5)};
-    }
-
-    ${CommentContent} {
-      background-color: ${({theme}) => theme.palette.secondary.light};
-    }
-
-    ${CommentHeader} {
-      background-color: ${({theme}) => theme.palette.secondary.light};
-      border-top-right-radius: ${({theme}) => theme.spacing(2.5)};
-      border-top-left-radius: ${({theme}) => theme.spacing(2.5)};
-    }
+    background-color: ${({theme}) => theme.palette.secondary.light};
+    border-radius: ${({theme}) => theme.spacing(2.5)};
+    padding: ${({theme}) => theme.spacing(1.5)};
   }
 
   ${CommentListItemChildren} {
