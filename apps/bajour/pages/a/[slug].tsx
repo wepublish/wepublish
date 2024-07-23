@@ -77,7 +77,7 @@ export default function ArticleBySlugIdOrToken() {
       }}
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
-        <ArticleContainer {...containerProps} />
+        <ArticleContainer {...containerProps} hideAuthors={isFDT} hideTags={isFDT} />
 
         <BriefingNewsletter />
 
