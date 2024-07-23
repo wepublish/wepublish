@@ -75,6 +75,8 @@ export const CommentList = ({
           maxCommentLength={maxCommentLength}
           children={(comment.children as Comment[]) ?? []}
           signUpUrl={signUpUrl}
+          commentDepth={0}
+          maxCommentDepth={0}
         />
       ))}
 

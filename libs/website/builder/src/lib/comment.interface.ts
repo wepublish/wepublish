@@ -79,6 +79,8 @@ export type BuilderCommentListItemProps = Comment & {
   className?: string
   ratingSystem: FullCommentRatingSystem
   signUpUrl: string
+  commentDepth: number
+  maxCommentDepth?: number
 } & Pick<
     BuilderCommentListProps,
     | 'anonymousCanComment'
