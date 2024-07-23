@@ -1,9 +1,8 @@
 name: Publish master artifacts
 
 on:
-  push:
-    branches:
-      - master
+  pull_request:
+    types: [ opened, synchronize, reopened]
 
 jobs:
   date_sha_tag:
