@@ -10,7 +10,7 @@ import {
 } from '@wepublish/website'
 
 export const CommentListContainer = styled(BaseCommentListContainer)`
-  > *:nth-of-type(-n + 2) {
+  > ${CommentWrapper}:nth-of-type(-n + 2) {
     background-color: ${({theme}) => theme.palette.secondary.light};
     border-radius: ${({theme}) => theme.spacing(2.5)};
     padding: ${({theme}) => theme.spacing(1.5)};
