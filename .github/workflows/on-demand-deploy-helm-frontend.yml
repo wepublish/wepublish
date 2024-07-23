@@ -3,7 +3,7 @@ name: Deploy Helm Frontend
 on:
   workflow_call:
     inputs:
-      frontend_project:
+      website_project:
         required: true
         type: string
       api_url:
@@ -13,7 +13,7 @@ on:
 jobs:
 
   build-and-push:
-    name: ${{inputs.frontend_target}}
+    name: ${{inputs.website_target}}
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
@@ -24,7 +24,7 @@ jobs:
       - name: Get environment variables
         id: get-env
         run: |
-          ./deployment/frontend_read_env.sh review ${{ inputs.frontend_project }} helm API_URL=${{ inputs.api_url }} FRONTEND_URL=https://${{ inputs.frontend_project }}-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+          ./deployment/website_read_env.sh review ${{ inputs.website_project }} helm API_URL=${{ inputs.api_url }} WEBSITE_URL=https://${{ inputs.website_project }}-${{ github.event.pull_request.number }}.reviews.wepublish.dev
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
 
@@ -53,12 +53,12 @@ jobs:
           deployment:
             env:
           $(echo -e "${{ steps.get-env.outputs.envvars }}" | awk '{print "    "$0}')
-          frontend:
-            image: ghcr.io/wepublish/frontend-${{ inputs.frontend_project }}:${{ github.sha }}
+          website:
+            image: ghcr.io/wepublish/website-${{ inputs.website_project }}:${{ github.sha }}
             env:
               NODE_ENV: production
           EOF
           cat values.yaml
-          export POD_NAME=review-${{ github.event.pull_request.number }}-${{ inputs.frontend_project }}-frontend
+          export POD_NAME=review-${{ github.event.pull_request.number }}-${{ inputs.website_project }}-website
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
-          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish-frontend -n reviews -f values.yaml --wait
+          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish-website -n reviews -f values.yaml --wait

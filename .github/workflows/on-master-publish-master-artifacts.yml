@@ -18,7 +18,7 @@ jobs:
       - id: image_tag
         run: echo "::set-output name=tag::$(date +%s)-${{ github.sha }}"
 
-  setup-frontend-matrix:
+  setup-website-matrix:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -28,7 +28,7 @@ jobs:
 
       - name: Set up matrix
         id: set-matrix
-        run: deployment/read_deployment_config.sh '.frontend.staging.deployment' true
+        run: deployment/read_deployment_config.sh '.website.staging.deployment' true
 
   publish_master_docker:
     needs: date_sha_tag
@@ -54,22 +54,18 @@ jobs:
         ghcr.io/wepublish/storybook:master-${{ needs.date_sha_tag.outputs.tag }}
         ghcr.io/wepublish/storybook:master
         wepublishch/storybook:master
-      website_tags: |
-        ghcr.io/wepublish/website:master-${{ needs.date_sha_tag.outputs.tag }}
-        ghcr.io/wepublish/website:master
-        wepublishch/website:master
     secrets: inherit
 
-  publish_docker_frontend_image:
+  publish_docker_website_image:
     name: Frontend
-    needs: [ setup-frontend-matrix, date_sha_tag, publish_master_docker ]
+    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker ]
     if: ${{ needs.helm_deployment.result == 'success' }}
-    uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
+    uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
       matrix: ${{fromJson(needs.publish_master_docker.outputs.matrix)}}
     with:
-      frontend_project: ${{ matrix.target }}
+      website_project: ${{ matrix.target }}
       api_url: https://api-${{ matrix.target }}.wepublish.dev
-      frontend_tags: |
-        ghcr.io/wepublish/frontend-${{ matrix.target }}:master-${{ needs.date_sha_tag.outputs.tag }}
+      website_tags: |
+        ghcr.io/wepublish/website-${{ matrix.target }}:master-${{ needs.date_sha_tag.outputs.tag }}
     secrets: inherit

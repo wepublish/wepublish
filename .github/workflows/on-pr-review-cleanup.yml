@@ -51,7 +51,7 @@ jobs:
           # Delete PVCs associated with the PR
           kubectl get pvc -n reviews | grep "\-$PR_NUM\-" | awk '{print $1}' | xargs -r kubectl delete pvc -n reviews
 
-  cleanup-frontend-matrix:
+  cleanup-website-matrix:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -61,13 +61,13 @@ jobs:
 
       - name: Set up matrix
         id: set-matrix
-        run: deployment/read_deployment_config.sh '.frontend.review.deployment' true
-  uninstall_frontend:
-    name: Uninstall frontend
-    if: ${{ needs.cleanup-frontend-matrix.result == 'success' }}
+        run: deployment/read_deployment_config.sh '.website.review.deployment' true
+  uninstall_website:
+    name: Uninstall website
+    if: ${{ needs.cleanup-website-matrix.result == 'success' }}
     strategy:
-      matrix: ${{fromJson(needs.cleanup-frontend-matrix.outputs.matrix)}}
-    needs: [cleanup-frontend-matrix]
+      matrix: ${{fromJson(needs.cleanup-website-matrix.outputs.matrix)}}
+    needs: [cleanup-website-matrix]
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
@@ -97,7 +97,7 @@ jobs:
 
       - name: Delete review environment
         run: |
-          HELM_NAME=review-${{ github.event.pull_request.number }}-${{ matrix.target }}-frontend
+          HELM_NAME=review-${{ github.event.pull_request.number }}-${{ matrix.target }}-website
           
           # Delete Helm releases if they exist
           helm get all $HELM_NAME -n reviews && helm uninstall $HELM_NAME -n reviews

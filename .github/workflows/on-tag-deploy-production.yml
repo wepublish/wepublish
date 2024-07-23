@@ -37,27 +37,27 @@ jobs:
         ghcr.io/wepublish/media:production-${{ needs.get-tag.outputs.project }}-${{ needs.get-tag.outputs.version }}
     secrets: inherit
 
-  check-if-frontend-deployment:
+  check-if-website-deployment:
     runs-on: ubuntu-latest
     outputs:
-      has-frontend: ${{ steps.read-deployment-config.outputs.has-frontend }}
+      has-website: ${{ steps.read-deployment-config.outputs.has-website }}
     needs: [ get-tag ]
     if: ${{ needs.get-tag.result == 'success' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - id: read-deployment-config
-        run: ./deployment/read_deployment_config.sh '.frontend.production.deployment' true ${{ needs.get-tag.outputs.project }}
+        run: ./deployment/read_deployment_config.sh '.website.production.deployment' true ${{ needs.get-tag.outputs.project }}
 
-  deploy_frontend_production:
-    name: ${{ needs.get-tag.outputs.project }} frontend
-    needs: [ get-tag, check-if-frontend-deployment ]
-    if: ${{ needs.check-if-frontend-deployment.outputs.has-frontend == 'true' }}
-    uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
+  deploy_website_production:
+    name: ${{ needs.get-tag.outputs.project }} website
+    needs: [ get-tag, check-if-website-deployment ]
+    if: ${{ needs.check-if-website-deployment.outputs.has-website == 'true' }}
+    uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     with:
-      frontend_project: ${{ needs.get-tag.outputs.project }}
+      website_project: ${{ needs.get-tag.outputs.project }}
       api_url: https://api-${{ needs.get-tag.outputs.project }}.wepublish.media
-      frontend_tags: |
-        ghcr.io/wepublish/frontend-${{ needs.get-tag.outputs.project }}:production-${{ needs.get-tag.outputs.version }}
+      website_tags: |
+        ghcr.io/wepublish/website-${{ needs.get-tag.outputs.project }}:production-${{ needs.get-tag.outputs.version }}
       environment: production
     secrets: inherit

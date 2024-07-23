@@ -1,15 +1,15 @@
-name: Publish docker frontend image
+name: Publish docker website image
 
 on:
   workflow_call:
     inputs:
-      frontend_project:
+      website_project:
         required: true
         type: string
       api_url:
         required: true
         type: string
-      frontend_tags:
+      website_tags:
         required: true
         type: string
       environment:
@@ -18,14 +18,14 @@ on:
 
 jobs:
   build-and-push:
-    name: ${{inputs.frontend_target}}
+    name: ${{inputs.website_target}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Get environment variables
         id: get-env
         run: |
-          ./deployment/frontend_read_env.sh ${{ inputs.environment }} ${{ inputs.frontend_project }} docker NEXT_PROJECT=${{ inputs.frontend_project }} API_URL=${{ inputs.api_url }}
+          ./deployment/website_read_env.sh ${{ inputs.environment }} ${{ inputs.website_project }} docker NEXT_PROJECT=${{ inputs.website_project }} API_URL=${{ inputs.api_url }}
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
 
@@ -41,7 +41,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Build and push ${{ inputs.frontend_project }}
+      - name: Build and push ${{ inputs.website_project }}
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -50,4 +50,4 @@ jobs:
             ${{ steps.get-env.outputs.envvars }}
           push: true
           tags: |
-            ${{ inputs.frontend_tags }}
+            ${{ inputs.website_tags }}

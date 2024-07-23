@@ -13,14 +13,14 @@ metadata:
     {{- end }}
 spec:
   rules:
-    {{- $frontendUrl := urlParse .Values.deployment.env.FRONTEND_URL }}
-    - host: {{ $frontendUrl.host }}
+    {{- $websiteUrl := urlParse .Values.deployment.env.WEBSITE_URL }}
+    - host: {{ $websiteUrl.host }}
       http:
         paths:
-          - path: {{ $frontendUrl.path | default "/" }}
+          - path: {{ $websiteUrl.path | default "/" }}
             pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ $fullName }}-frontend
+                name: {{ $fullName }}-website
                 port:
                   name: http

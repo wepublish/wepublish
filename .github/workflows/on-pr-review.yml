@@ -31,8 +31,6 @@ jobs:
         ghcr.io/wepublish/migration:${{ github.sha }}
       storybook_tags: |
         ghcr.io/wepublish/storybook:${{ github.sha }}
-      website_tags: |
-        ghcr.io/wepublish/website:${{ github.sha }}
       media_tags: |
         ghcr.io/wepublish/media:${{ github.sha }}
     secrets: inherit
@@ -255,9 +253,6 @@ jobs:
             image: ghcr.io/wepublish/editor:${{ github.sha }}
             env:
               PEER_BY_DEFAULT: "true"
-          website:
-            image: ghcr.io/wepublish/website:${{ github.sha }}
-            enabled: true
           storybook:
             enabled: true
             image: ghcr.io/wepublish/storybook:${{ github.sha }}
@@ -275,7 +270,7 @@ jobs:
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
           helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
 
-  setup-frontend-matrix:
+  setup-website-matrix:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -284,41 +279,41 @@ jobs:
         uses: actions/checkout@v4
       - name: Set up matrix
         id: set-matrix
-        run: deployment/read_deployment_config.sh '.frontend.review.deployment' true
+        run: deployment/read_deployment_config.sh '.website.review.deployment' true
 
 
-  publish_docker_frontend_image:
+  publish_docker_website_image:
     name: Build Docker Frontend
-    needs: [setup-frontend-matrix, helm_deployment]
+    needs: [setup-website-matrix, helm_deployment]
     if: ${{ needs.helm_deployment.result == 'success' }}
-    uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
+    uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
-      matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
+      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
     with:
-      frontend_project: ${{ matrix.target }}
+      website_project: ${{ matrix.target }}
       api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
       environment: review
-      frontend_tags: |
-        ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
+      website_tags: |
+        ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.sha }}
     secrets: inherit
 
-  helm_deployment_frontend:
+  helm_deployment_website:
     name: Helm Deployment Frontend
-    needs: [publish_docker_frontend_image, setup-frontend-matrix]
-    if: ${{ needs.publish_docker_frontend_image.result == 'success' }}
-    uses: ./.github/workflows/on-demand-deploy-helm-frontend.yml
+    needs: [publish_docker_website_image, setup-website-matrix]
+    if: ${{ needs.publish_docker_website_image.result == 'success' }}
+    uses: ./.github/workflows/on-demand-deploy-helm-website.yml
     strategy:
-      matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
+      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
     with:
-      frontend_project: ${{ matrix.target }}
+      website_project: ${{ matrix.target }}
       api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
     secrets: inherit
 
 
   notify:
     name: Notify
-    needs: [setup-frontend-matrix, helm_deployment_frontend]
-    if: ${{ needs.helm_deployment_frontend.result == 'success' }}
+    needs: [setup-website-matrix, helm_deployment_website]
+    if: ${{ needs.helm_deployment_website.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -331,7 +326,7 @@ jobs:
       - name: Create Deployment Text
         id: deploymentComment
         env:
-          PROJECTS: ${{needs.setup-frontend-matrix.outputs.matrix}}
+          PROJECTS: ${{needs.setup-website-matrix.outputs.matrix}}
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |

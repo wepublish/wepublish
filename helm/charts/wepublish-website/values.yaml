@@ -6,7 +6,7 @@ deployment:
     FRONTEND_URL: https://front
 
 frontend:
-  image: ghcr.io/wepublish/frontend
+  image: ghcr.io/wepublish/website
   env:
     NODE_ENV: production
   envFromSecretRefName:

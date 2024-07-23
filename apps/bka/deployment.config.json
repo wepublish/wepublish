@@ -1,5 +1,5 @@
 {
-  "frontend": {
+  "website": {
     "production": {
       "deployment": false,
       "env": {},

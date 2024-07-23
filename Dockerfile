@@ -1,8 +1,8 @@
 #######
-## Next sites
+## Website
 #######
 
-FROM node:18.19.1-bookworm-slim as build-next
+FROM node:18.19.1-bookworm-slim as build-website
 ### FRONT_ARG_REPLACER ###
 
 WORKDIR /wepublish
@@ -11,7 +11,7 @@ RUN npm ci
 RUN npx nx build ${NEXT_PROJECT}
 RUN bash /wepublish/deployment/map-secrets.sh clean
 
-FROM node:18.19.1-bookworm-slim as next
+FROM node:18.19.1-bookworm-slim as website
 MAINTAINER WePublish Foundation
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -27,11 +27,11 @@ RUN groupadd -r wepublish && \
     echo "#!/bin/bash\n bash /wepublish/map-secrets.sh restore && node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \
     chown -R wepublish:wepublish /entrypoint.sh && \
     chmod +x /entrypoint.sh
-COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
-COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/${NEXT_PROJECT}/public
-COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/apps/${NEXT_PROJECT}/public/_next/static
-COPY --chown=wepublish:wepublish --from=build-next /wepublish/secrets_name.list /wepublish/secrets_name.list
-COPY --chown=wepublish:wepublish --from=build-next /wepublish/deployment/map-secrets.sh /wepublish/map-secrets.sh
+COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
+COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/${NEXT_PROJECT}/public
+COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/apps/${NEXT_PROJECT}/public/_next/static
+COPY --chown=wepublish:wepublish --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
+COPY --chown=wepublish:wepublish --from=build-website /wepublish/deployment/map-secrets.sh /wepublish/map-secrets.sh
 EXPOSE 4001
 USER wepublish
 ENTRYPOINT ["/entrypoint.sh"]
@@ -158,20 +158,6 @@ COPY --from=build-media --chown=wepublish:wepublish /app/node_modules ./node_mod
 USER wepublish
 EXPOSE 4100
 CMD ["node", "main.js"]
-
-
-#######
-## Website
-#######
-FROM node:18.19.1-bookworm-slim as website
-MAINTAINER WePublish Foundation
-ENV ADDRESS=0.0.0.0
-ENV PORT=4200
-WORKDIR /wepublish
-COPY . .
-RUN npm ci
-EXPOSE 4200
-CMD ["npx", "nx", "serve", "website-example"]
 
 ######
 ## Storybook

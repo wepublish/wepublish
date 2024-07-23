@@ -37,10 +37,6 @@ jobs:
         ghcr.io/wepublish/storybook:${{ needs.release_version.outputs.version }}
         ghcr.io/wepublish/storybook:next
         wepublishch/storybook:${{ needs.release_version.outputs.version }}
-      website_tags: |
-        ghcr.io/wepublish/website:${{ needs.release_version.outputs.version }}
-        ghcr.io/wepublish/website:next
-        wepublishch/website:${{ needs.release_version.outputs.version }}
       media_tags: |
         ghcr.io/wepublish/media:${{ needs.release_version.outputs.version }}
         ghcr.io/wepublish/media:next
@@ -73,11 +69,6 @@ jobs:
         ghcr.io/wepublish/storybook:latest
         wepublishch/storybook:${{ needs.release_version.outputs.version }}
         wepublishch/storybook:latest
-      website_tags: |
-        ghcr.io/wepublish/website:${{ needs.release_version.outputs.version }}
-        ghcr.io/wepublish/website:latest
-        wepublishch/website:${{ needs.release_version.outputs.version }}
-        wepublishch/website:latest
       media_tags: |
         ghcr.io/wepublish/media:${{ needs.release_version.outputs.version }}
         ghcr.io/wepublish/media:latest
