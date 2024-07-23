@@ -16,7 +16,7 @@ exports[`Page should render Default 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -1055,6 +1055,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -1069,10 +1070,6 @@ exports[`Page should render Default 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -1127,26 +1124,26 @@ exports[`Page should render Default 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -1161,11 +1158,11 @@ exports[`Page should render Default 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -1175,12 +1172,12 @@ exports[`Page should render Default 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1192,7 +1189,7 @@ exports[`Page should render Default 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -1206,7 +1203,7 @@ exports[`Page should render Default 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -3224,11 +3221,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -3258,17 +3255,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -3286,13 +3283,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -3449,7 +3446,7 @@ exports[`Page should render WithChildren 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -4488,6 +4485,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -4502,10 +4500,6 @@ exports[`Page should render WithChildren 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -4560,26 +4554,26 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -4594,11 +4588,11 @@ exports[`Page should render WithChildren 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -4608,12 +4602,12 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4625,7 +4619,7 @@ exports[`Page should render WithChildren 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -4639,7 +4633,7 @@ exports[`Page should render WithChildren 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -6684,11 +6678,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -6718,17 +6712,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -6746,13 +6740,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -6912,7 +6906,7 @@ exports[`Page should render WithClassName 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -7951,6 +7945,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -7965,10 +7960,6 @@ exports[`Page should render WithClassName 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -8023,26 +8014,26 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -8057,11 +8048,11 @@ exports[`Page should render WithClassName 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -8071,12 +8062,12 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -8088,7 +8079,7 @@ exports[`Page should render WithClassName 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -8102,7 +8093,7 @@ exports[`Page should render WithClassName 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -10147,11 +10138,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -10181,17 +10172,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -10209,13 +10200,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -10372,7 +10363,7 @@ exports[`Page should render WithEmotion 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -11411,6 +11402,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -11425,10 +11417,6 @@ exports[`Page should render WithEmotion 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -11483,26 +11471,26 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -11517,11 +11505,11 @@ exports[`Page should render WithEmotion 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -11531,12 +11519,12 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -11548,7 +11536,7 @@ exports[`Page should render WithEmotion 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -11562,7 +11550,7 @@ exports[`Page should render WithEmotion 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -13607,11 +13595,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -13641,17 +13629,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -13669,13 +13657,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -13904,7 +13892,7 @@ exports[`Page should render WithoutDescription 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -14943,6 +14931,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -14957,10 +14946,6 @@ exports[`Page should render WithoutDescription 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -15015,26 +15000,26 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -15049,11 +15034,11 @@ exports[`Page should render WithoutDescription 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -15063,12 +15048,12 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -15080,7 +15065,7 @@ exports[`Page should render WithoutDescription 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -15094,7 +15079,7 @@ exports[`Page should render WithoutDescription 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -17139,11 +17124,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -17173,17 +17158,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -17201,13 +17186,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -17364,7 +17349,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -18403,6 +18388,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -18417,10 +18403,6 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -18475,26 +18457,26 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -18509,11 +18491,11 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -18523,12 +18505,12 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -18540,7 +18522,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -18554,7 +18536,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -20599,11 +20581,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -20633,17 +20615,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -20661,13 +20643,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -20824,7 +20806,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -21863,6 +21845,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -21877,10 +21860,6 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -21935,26 +21914,26 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -21969,11 +21948,11 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -21983,12 +21962,12 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -22000,7 +21979,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -22014,7 +21993,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -24051,11 +24030,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -24085,17 +24064,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -24113,13 +24092,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"

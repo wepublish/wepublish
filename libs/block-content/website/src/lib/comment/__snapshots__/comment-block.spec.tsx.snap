@@ -9,6 +9,7 @@ exports[`Comment List should render Default 1`] = `
 
 .emotion-2 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -23,10 +24,6 @@ exports[`Comment List should render Default 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-6 {
@@ -81,19 +78,19 @@ exports[`Comment List should render Default 1`] = `
 }
 
 .emotion-22 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-22.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-25 {
+.emotion-26 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -102,11 +99,11 @@ exports[`Comment List should render Default 1`] = `
   margin-bottom: 0.35em;
 }
 
-.emotion-25.MuiTypography-gutterBottom {
+.emotion-26.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-25:last-child {
+.emotion-26:last-child {
   margin-bottom: 0;
 }
 
@@ -187,13 +184,13 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-20 emotion-21"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-22"
+        <h1
+          class="MuiTypography-root MuiTypography-body1 emotion-22 emotion-23"
         >
           de Finibus Bonorum et Malorum
-        </p>
+        </h1>
         <div
-          class="emotion-23 emotion-24"
+          class="emotion-24 emotion-25"
         >
           <div
             data-gramm="false"
@@ -202,7 +199,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-26"
               data-slate-node="element"
             >
               <span
@@ -293,13 +290,13 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-20 emotion-21"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-22"
+        <h1
+          class="MuiTypography-root MuiTypography-body1 emotion-22 emotion-23"
         >
           de Finibus Bonorum et Malorum
-        </p>
+        </h1>
         <div
-          class="emotion-23 emotion-24"
+          class="emotion-24 emotion-25"
         >
           <div
             data-gramm="false"
@@ -308,7 +305,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-26"
               data-slate-node="element"
             >
               <span
@@ -338,6 +335,7 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
 
 .emotion-2 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -352,10 +350,6 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-6 {
@@ -402,19 +396,19 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
 }
 
 .emotion-20 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-20.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-23 {
+.emotion-24 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -423,11 +417,11 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
   margin-bottom: 0.35em;
 }
 
-.emotion-23.MuiTypography-gutterBottom {
+.emotion-24.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-23:last-child {
+.emotion-24:last-child {
   margin-bottom: 0;
 }
 
@@ -484,13 +478,13 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-18 emotion-19"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-20"
+        <h1
+          class="MuiTypography-root MuiTypography-body1 emotion-20 emotion-21"
         >
           de Finibus Bonorum et Malorum
-        </p>
+        </h1>
         <div
-          class="emotion-21 emotion-22"
+          class="emotion-22 emotion-23"
         >
           <div
             data-gramm="false"
@@ -499,7 +493,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24"
               data-slate-node="element"
             >
               <span
@@ -566,13 +560,13 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-18 emotion-19"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-20"
+        <h1
+          class="MuiTypography-root MuiTypography-body1 emotion-20 emotion-21"
         >
           de Finibus Bonorum et Malorum
-        </p>
+        </h1>
         <div
-          class="emotion-21 emotion-22"
+          class="emotion-22 emotion-23"
         >
           <div
             data-gramm="false"
@@ -581,7 +575,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24"
               data-slate-node="element"
             >
               <span
@@ -611,6 +605,7 @@ exports[`Comment List should render WithClassName 1`] = `
 
 .emotion-2 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -625,10 +620,6 @@ exports[`Comment List should render WithClassName 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-6 {
@@ -683,19 +674,19 @@ exports[`Comment List should render WithClassName 1`] = `
 }
 
 .emotion-22 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-22.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-25 {
+.emotion-26 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -704,11 +695,11 @@ exports[`Comment List should render WithClassName 1`] = `
   margin-bottom: 0.35em;
 }
 
-.emotion-25.MuiTypography-gutterBottom {
+.emotion-26.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-25:last-child {
+.emotion-26:last-child {
   margin-bottom: 0;
 }
 
@@ -789,13 +780,13 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-20 emotion-21"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-22"
+        <h1
+          class="MuiTypography-root MuiTypography-body1 emotion-22 emotion-23"
         >
           de Finibus Bonorum et Malorum
-        </p>
+        </h1>
         <div
-          class="emotion-23 emotion-24"
+          class="emotion-24 emotion-25"
         >
           <div
             data-gramm="false"
@@ -804,7 +795,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-26"
               data-slate-node="element"
             >
               <span
@@ -895,13 +886,13 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-20 emotion-21"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-22"
+        <h1
+          class="MuiTypography-root MuiTypography-body1 emotion-22 emotion-23"
         >
           de Finibus Bonorum et Malorum
-        </p>
+        </h1>
         <div
-          class="emotion-23 emotion-24"
+          class="emotion-24 emotion-25"
         >
           <div
             data-gramm="false"
@@ -910,7 +901,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-26"
               data-slate-node="element"
             >
               <span
@@ -940,6 +931,7 @@ exports[`Comment List should render WithEmotion 1`] = `
 
 .emotion-2 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -954,10 +946,6 @@ exports[`Comment List should render WithEmotion 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-6 {
@@ -1012,19 +1000,19 @@ exports[`Comment List should render WithEmotion 1`] = `
 }
 
 .emotion-22 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-22.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-25 {
+.emotion-26 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -1033,11 +1021,11 @@ exports[`Comment List should render WithEmotion 1`] = `
   margin-bottom: 0.35em;
 }
 
-.emotion-25.MuiTypography-gutterBottom {
+.emotion-26.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-25:last-child {
+.emotion-26:last-child {
   margin-bottom: 0;
 }
 
@@ -1118,13 +1106,13 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-20 emotion-21"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-22"
+        <h1
+          class="MuiTypography-root MuiTypography-body1 emotion-22 emotion-23"
         >
           de Finibus Bonorum et Malorum
-        </p>
+        </h1>
         <div
-          class="emotion-23 emotion-24"
+          class="emotion-24 emotion-25"
         >
           <div
             data-gramm="false"
@@ -1133,7 +1121,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-26"
               data-slate-node="element"
             >
               <span
@@ -1224,13 +1212,13 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-20 emotion-21"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-22"
+        <h1
+          class="MuiTypography-root MuiTypography-body1 emotion-22 emotion-23"
         >
           de Finibus Bonorum et Malorum
-        </p>
+        </h1>
         <div
-          class="emotion-23 emotion-24"
+          class="emotion-24 emotion-25"
         >
           <div
             data-gramm="false"
@@ -1239,7 +1227,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-26"
               data-slate-node="element"
             >
               <span
@@ -1269,6 +1257,7 @@ exports[`Comment List should render WithError 1`] = `
 
 .emotion-2 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -1283,10 +1272,6 @@ exports[`Comment List should render WithError 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-6 {
@@ -1341,19 +1326,19 @@ exports[`Comment List should render WithError 1`] = `
 }
 
 .emotion-22 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-22.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-25 {
+.emotion-26 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -1362,11 +1347,11 @@ exports[`Comment List should render WithError 1`] = `
   margin-bottom: 0.35em;
 }
 
-.emotion-25.MuiTypography-gutterBottom {
+.emotion-26.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-25:last-child {
+.emotion-26:last-child {
   margin-bottom: 0;
 }
 
@@ -1447,13 +1432,13 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-20 emotion-21"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-22"
+        <h1
+          class="MuiTypography-root MuiTypography-body1 emotion-22 emotion-23"
         >
           de Finibus Bonorum et Malorum
-        </p>
+        </h1>
         <div
-          class="emotion-23 emotion-24"
+          class="emotion-24 emotion-25"
         >
           <div
             data-gramm="false"
@@ -1462,7 +1447,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-26"
               data-slate-node="element"
             >
               <span
@@ -1553,13 +1538,13 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-20 emotion-21"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-22"
+        <h1
+          class="MuiTypography-root MuiTypography-body1 emotion-22 emotion-23"
         >
           de Finibus Bonorum et Malorum
-        </p>
+        </h1>
         <div
-          class="emotion-23 emotion-24"
+          class="emotion-24 emotion-25"
         >
           <div
             data-gramm="false"
@@ -1568,7 +1553,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-26"
               data-slate-node="element"
             >
               <span
@@ -1598,6 +1583,7 @@ exports[`Comment List should render WithLoading 1`] = `
 
 .emotion-2 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -1612,10 +1598,6 @@ exports[`Comment List should render WithLoading 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-6 {
@@ -1670,19 +1652,19 @@ exports[`Comment List should render WithLoading 1`] = `
 }
 
 .emotion-22 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-22.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-25 {
+.emotion-26 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -1691,11 +1673,11 @@ exports[`Comment List should render WithLoading 1`] = `
   margin-bottom: 0.35em;
 }
 
-.emotion-25.MuiTypography-gutterBottom {
+.emotion-26.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-25:last-child {
+.emotion-26:last-child {
   margin-bottom: 0;
 }
 
@@ -1776,13 +1758,13 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-20 emotion-21"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-22"
+        <h1
+          class="MuiTypography-root MuiTypography-body1 emotion-22 emotion-23"
         >
           de Finibus Bonorum et Malorum
-        </p>
+        </h1>
         <div
-          class="emotion-23 emotion-24"
+          class="emotion-24 emotion-25"
         >
           <div
             data-gramm="false"
@@ -1791,7 +1773,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-26"
               data-slate-node="element"
             >
               <span
@@ -1882,13 +1864,13 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-20 emotion-21"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-22"
+        <h1
+          class="MuiTypography-root MuiTypography-body1 emotion-22 emotion-23"
         >
           de Finibus Bonorum et Malorum
-        </p>
+        </h1>
         <div
-          class="emotion-23 emotion-24"
+          class="emotion-24 emotion-25"
         >
           <div
             data-gramm="false"
@@ -1897,7 +1879,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-26"
               data-slate-node="element"
             >
               <span

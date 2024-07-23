@@ -16,7 +16,7 @@ exports[`Article should render Default 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -1061,6 +1061,7 @@ exports[`Article should render Default 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -1075,10 +1076,6 @@ exports[`Article should render Default 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -1133,26 +1130,26 @@ exports[`Article should render Default 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -1167,11 +1164,11 @@ exports[`Article should render Default 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -1181,12 +1178,12 @@ exports[`Article should render Default 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1198,7 +1195,7 @@ exports[`Article should render Default 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -1212,7 +1209,7 @@ exports[`Article should render Default 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -1222,18 +1219,18 @@ exports[`Article should render Default 1`] = `
   align-items: center;
 }
 
-.emotion-515 {
+.emotion-516 {
   display: grid;
   gap: 32px;
   grid-row-start: 2;
 }
 
-.emotion-517 {
+.emotion-518 {
   display: grid;
   gap: 24px;
 }
 
-.emotion-519 {
+.emotion-520 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1251,12 +1248,12 @@ exports[`Article should render Default 1`] = `
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-.emotion-521 {
+.emotion-522 {
   display: grid;
   width: 60px;
 }
 
-.emotion-523 {
+.emotion-524 {
   max-width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
@@ -1265,7 +1262,7 @@ exports[`Article should render Default 1`] = `
   border-radius: 50%;
 }
 
-.emotion-525 {
+.emotion-526 {
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -1286,11 +1283,11 @@ exports[`Article should render Default 1`] = `
   justify-content: space-between;
 }
 
-.emotion-527 {
+.emotion-528 {
   font-weight: 500;
 }
 
-.emotion-532 {
+.emotion-533 {
   display: grid;
   grid-auto-columns: max-content;
   grid-auto-flow: column;
@@ -1301,7 +1298,7 @@ exports[`Article should render Default 1`] = `
   gap: 16px;
 }
 
-.emotion-534 {
+.emotion-535 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -1311,15 +1308,15 @@ exports[`Article should render Default 1`] = `
   display: grid;
 }
 
-.emotion-534:hover {
+.emotion-535:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-555 {
+.emotion-556 {
   margin-top: -16px;
 }
 
-.emotion-557 {
+.emotion-558 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1331,7 +1328,7 @@ exports[`Article should render Default 1`] = `
   gap: 8px;
 }
 
-.emotion-559 {
+.emotion-560 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -1410,32 +1407,32 @@ exports[`Article should render Default 1`] = `
   color: #e91e63;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-559::-moz-focus-inner {
+.emotion-560::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-559 {
+  .emotion-560 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -1444,17 +1441,17 @@ exports[`Article should render Default 1`] = `
   font-size: 0.75rem;
 }
 
-.emotion-559 .MuiChip-avatarColorPrimary {
+.emotion-560 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559 .MuiChip-avatarColorSecondary {
+.emotion-560 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(0, 0, 0);
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -1462,13 +1459,13 @@ exports[`Article should render Default 1`] = `
   font-size: 0.625rem;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 5px;
   margin-right: -6px;
   color: inherit;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(255, 255, 255, 0.7);
   font-size: 22px;
@@ -1476,70 +1473,70 @@ exports[`Article should render Default 1`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover {
+.emotion-560 .MuiChip-deleteIcon:hover {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #fff;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.emotion-559:active {
+.emotion-560:active {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-559:hover,
-.emotion-559.Mui-focusVisible {
+.emotion-560:hover,
+.emotion-560.Mui-focusVisible {
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559.MuiChip-clickable:hover {
+.emotion-560.MuiChip-clickable:hover {
   background-color: rgba(233, 30, 99, 0.04);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(233, 30, 99, 0.12);
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-iconSmall {
+.emotion-560 .MuiChip-iconSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   color: rgba(233, 30, 99, 0.7);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #e91e63;
 }
 
-.emotion-559 .MuiChip-deleteIconSmall {
+.emotion-560 .MuiChip-deleteIconSmall {
   margin-right: 3px;
 }
 
-.emotion-560 {
+.emotion-561 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 12px;
@@ -1547,7 +1544,7 @@ exports[`Article should render Default 1`] = `
   white-space: nowrap;
 }
 
-.emotion-561 {
+.emotion-562 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -3599,11 +3596,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -3633,17 +3630,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -3661,13 +3658,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -3805,20 +3802,20 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <aside
-      class="emotion-515 emotion-516"
+      class="emotion-516 emotion-517"
     >
       <div
-        class="emotion-517 emotion-518"
+        class="emotion-518 emotion-519"
       >
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3832,11 +3829,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -3847,16 +3844,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -3876,7 +3873,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -3900,7 +3897,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -3923,14 +3920,14 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3944,11 +3941,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -3959,16 +3956,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -3988,7 +3985,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -4012,7 +4009,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -4035,41 +4032,41 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <time
-          class="emotion-555 emotion-556"
+          class="emotion-556 emotion-557"
           datetime="2023-01-01T00:00:00.000Z"
         >
           01.01.2023
         </time>
       </div>
       <div
-        class="emotion-557 emotion-558"
+        class="emotion-558 emotion-559"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             foo
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             bar
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
       </div>
@@ -4094,7 +4091,7 @@ exports[`Article should render WithChildren 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -5139,6 +5136,7 @@ exports[`Article should render WithChildren 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -5153,10 +5151,6 @@ exports[`Article should render WithChildren 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -5211,26 +5205,26 @@ exports[`Article should render WithChildren 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -5245,11 +5239,11 @@ exports[`Article should render WithChildren 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -5259,12 +5253,12 @@ exports[`Article should render WithChildren 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -5276,7 +5270,7 @@ exports[`Article should render WithChildren 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -5290,7 +5284,7 @@ exports[`Article should render WithChildren 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -5300,18 +5294,18 @@ exports[`Article should render WithChildren 1`] = `
   align-items: center;
 }
 
-.emotion-515 {
+.emotion-516 {
   display: grid;
   gap: 32px;
   grid-row-start: 2;
 }
 
-.emotion-517 {
+.emotion-518 {
   display: grid;
   gap: 24px;
 }
 
-.emotion-519 {
+.emotion-520 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -5329,12 +5323,12 @@ exports[`Article should render WithChildren 1`] = `
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-.emotion-521 {
+.emotion-522 {
   display: grid;
   width: 60px;
 }
 
-.emotion-523 {
+.emotion-524 {
   max-width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
@@ -5343,7 +5337,7 @@ exports[`Article should render WithChildren 1`] = `
   border-radius: 50%;
 }
 
-.emotion-525 {
+.emotion-526 {
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -5364,11 +5358,11 @@ exports[`Article should render WithChildren 1`] = `
   justify-content: space-between;
 }
 
-.emotion-527 {
+.emotion-528 {
   font-weight: 500;
 }
 
-.emotion-532 {
+.emotion-533 {
   display: grid;
   grid-auto-columns: max-content;
   grid-auto-flow: column;
@@ -5379,7 +5373,7 @@ exports[`Article should render WithChildren 1`] = `
   gap: 16px;
 }
 
-.emotion-534 {
+.emotion-535 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -5389,15 +5383,15 @@ exports[`Article should render WithChildren 1`] = `
   display: grid;
 }
 
-.emotion-534:hover {
+.emotion-535:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-555 {
+.emotion-556 {
   margin-top: -16px;
 }
 
-.emotion-557 {
+.emotion-558 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -5409,7 +5403,7 @@ exports[`Article should render WithChildren 1`] = `
   gap: 8px;
 }
 
-.emotion-559 {
+.emotion-560 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -5488,32 +5482,32 @@ exports[`Article should render WithChildren 1`] = `
   color: #e91e63;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-559::-moz-focus-inner {
+.emotion-560::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-559 {
+  .emotion-560 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -5522,17 +5516,17 @@ exports[`Article should render WithChildren 1`] = `
   font-size: 0.75rem;
 }
 
-.emotion-559 .MuiChip-avatarColorPrimary {
+.emotion-560 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559 .MuiChip-avatarColorSecondary {
+.emotion-560 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(0, 0, 0);
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -5540,13 +5534,13 @@ exports[`Article should render WithChildren 1`] = `
   font-size: 0.625rem;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 5px;
   margin-right: -6px;
   color: inherit;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(255, 255, 255, 0.7);
   font-size: 22px;
@@ -5554,70 +5548,70 @@ exports[`Article should render WithChildren 1`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover {
+.emotion-560 .MuiChip-deleteIcon:hover {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #fff;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.emotion-559:active {
+.emotion-560:active {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-559:hover,
-.emotion-559.Mui-focusVisible {
+.emotion-560:hover,
+.emotion-560.Mui-focusVisible {
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559.MuiChip-clickable:hover {
+.emotion-560.MuiChip-clickable:hover {
   background-color: rgba(233, 30, 99, 0.04);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(233, 30, 99, 0.12);
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-iconSmall {
+.emotion-560 .MuiChip-iconSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   color: rgba(233, 30, 99, 0.7);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #e91e63;
 }
 
-.emotion-559 .MuiChip-deleteIconSmall {
+.emotion-560 .MuiChip-deleteIconSmall {
   margin-right: 3px;
 }
 
-.emotion-560 {
+.emotion-561 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 12px;
@@ -5625,7 +5619,7 @@ exports[`Article should render WithChildren 1`] = `
   white-space: nowrap;
 }
 
-.emotion-561 {
+.emotion-562 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -7704,11 +7698,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -7738,17 +7732,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -7766,13 +7760,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -7910,20 +7904,20 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <aside
-      class="emotion-515 emotion-516"
+      class="emotion-516 emotion-517"
     >
       <div
-        class="emotion-517 emotion-518"
+        class="emotion-518 emotion-519"
       >
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -7937,11 +7931,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -7952,16 +7946,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -7981,7 +7975,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -8005,7 +7999,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -8028,14 +8022,14 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8049,11 +8043,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -8064,16 +8058,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -8093,7 +8087,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -8117,7 +8111,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -8140,41 +8134,41 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <time
-          class="emotion-555 emotion-556"
+          class="emotion-556 emotion-557"
           datetime="2023-01-01T00:00:00.000Z"
         >
           01.01.2023
         </time>
       </div>
       <div
-        class="emotion-557 emotion-558"
+        class="emotion-558 emotion-559"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             foo
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             bar
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
       </div>
@@ -8202,7 +8196,7 @@ exports[`Article should render WithClassName 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -9247,6 +9241,7 @@ exports[`Article should render WithClassName 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -9261,10 +9256,6 @@ exports[`Article should render WithClassName 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -9319,26 +9310,26 @@ exports[`Article should render WithClassName 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -9353,11 +9344,11 @@ exports[`Article should render WithClassName 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -9367,12 +9358,12 @@ exports[`Article should render WithClassName 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -9384,7 +9375,7 @@ exports[`Article should render WithClassName 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -9398,7 +9389,7 @@ exports[`Article should render WithClassName 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -9408,18 +9399,18 @@ exports[`Article should render WithClassName 1`] = `
   align-items: center;
 }
 
-.emotion-515 {
+.emotion-516 {
   display: grid;
   gap: 32px;
   grid-row-start: 2;
 }
 
-.emotion-517 {
+.emotion-518 {
   display: grid;
   gap: 24px;
 }
 
-.emotion-519 {
+.emotion-520 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -9437,12 +9428,12 @@ exports[`Article should render WithClassName 1`] = `
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-.emotion-521 {
+.emotion-522 {
   display: grid;
   width: 60px;
 }
 
-.emotion-523 {
+.emotion-524 {
   max-width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
@@ -9451,7 +9442,7 @@ exports[`Article should render WithClassName 1`] = `
   border-radius: 50%;
 }
 
-.emotion-525 {
+.emotion-526 {
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -9472,11 +9463,11 @@ exports[`Article should render WithClassName 1`] = `
   justify-content: space-between;
 }
 
-.emotion-527 {
+.emotion-528 {
   font-weight: 500;
 }
 
-.emotion-532 {
+.emotion-533 {
   display: grid;
   grid-auto-columns: max-content;
   grid-auto-flow: column;
@@ -9487,7 +9478,7 @@ exports[`Article should render WithClassName 1`] = `
   gap: 16px;
 }
 
-.emotion-534 {
+.emotion-535 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -9497,15 +9488,15 @@ exports[`Article should render WithClassName 1`] = `
   display: grid;
 }
 
-.emotion-534:hover {
+.emotion-535:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-555 {
+.emotion-556 {
   margin-top: -16px;
 }
 
-.emotion-557 {
+.emotion-558 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -9517,7 +9508,7 @@ exports[`Article should render WithClassName 1`] = `
   gap: 8px;
 }
 
-.emotion-559 {
+.emotion-560 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -9596,32 +9587,32 @@ exports[`Article should render WithClassName 1`] = `
   color: #e91e63;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-559::-moz-focus-inner {
+.emotion-560::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-559 {
+  .emotion-560 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -9630,17 +9621,17 @@ exports[`Article should render WithClassName 1`] = `
   font-size: 0.75rem;
 }
 
-.emotion-559 .MuiChip-avatarColorPrimary {
+.emotion-560 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559 .MuiChip-avatarColorSecondary {
+.emotion-560 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(0, 0, 0);
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -9648,13 +9639,13 @@ exports[`Article should render WithClassName 1`] = `
   font-size: 0.625rem;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 5px;
   margin-right: -6px;
   color: inherit;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(255, 255, 255, 0.7);
   font-size: 22px;
@@ -9662,70 +9653,70 @@ exports[`Article should render WithClassName 1`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover {
+.emotion-560 .MuiChip-deleteIcon:hover {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #fff;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.emotion-559:active {
+.emotion-560:active {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-559:hover,
-.emotion-559.Mui-focusVisible {
+.emotion-560:hover,
+.emotion-560.Mui-focusVisible {
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559.MuiChip-clickable:hover {
+.emotion-560.MuiChip-clickable:hover {
   background-color: rgba(233, 30, 99, 0.04);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(233, 30, 99, 0.12);
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-iconSmall {
+.emotion-560 .MuiChip-iconSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   color: rgba(233, 30, 99, 0.7);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #e91e63;
 }
 
-.emotion-559 .MuiChip-deleteIconSmall {
+.emotion-560 .MuiChip-deleteIconSmall {
   margin-right: 3px;
 }
 
-.emotion-560 {
+.emotion-561 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 12px;
@@ -9733,7 +9724,7 @@ exports[`Article should render WithClassName 1`] = `
   white-space: nowrap;
 }
 
-.emotion-561 {
+.emotion-562 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -11812,11 +11803,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -11846,17 +11837,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -11874,13 +11865,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -12018,20 +12009,20 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <aside
-      class="emotion-515 emotion-516"
+      class="emotion-516 emotion-517"
     >
       <div
-        class="emotion-517 emotion-518"
+        class="emotion-518 emotion-519"
       >
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12045,11 +12036,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -12060,16 +12051,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -12089,7 +12080,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -12113,7 +12104,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -12136,14 +12127,14 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12157,11 +12148,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -12172,16 +12163,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -12201,7 +12192,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -12225,7 +12216,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -12248,41 +12239,41 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <time
-          class="emotion-555 emotion-556"
+          class="emotion-556 emotion-557"
           datetime="2023-01-01T00:00:00.000Z"
         >
           01.01.2023
         </time>
       </div>
       <div
-        class="emotion-557 emotion-558"
+        class="emotion-558 emotion-559"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             foo
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             bar
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
       </div>
@@ -12307,7 +12298,7 @@ exports[`Article should render WithEmotion 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -13352,6 +13343,7 @@ exports[`Article should render WithEmotion 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -13366,10 +13358,6 @@ exports[`Article should render WithEmotion 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -13424,26 +13412,26 @@ exports[`Article should render WithEmotion 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -13458,11 +13446,11 @@ exports[`Article should render WithEmotion 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -13472,12 +13460,12 @@ exports[`Article should render WithEmotion 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -13489,7 +13477,7 @@ exports[`Article should render WithEmotion 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -13503,7 +13491,7 @@ exports[`Article should render WithEmotion 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -13513,18 +13501,18 @@ exports[`Article should render WithEmotion 1`] = `
   align-items: center;
 }
 
-.emotion-515 {
+.emotion-516 {
   display: grid;
   gap: 32px;
   grid-row-start: 2;
 }
 
-.emotion-517 {
+.emotion-518 {
   display: grid;
   gap: 24px;
 }
 
-.emotion-519 {
+.emotion-520 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -13542,12 +13530,12 @@ exports[`Article should render WithEmotion 1`] = `
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-.emotion-521 {
+.emotion-522 {
   display: grid;
   width: 60px;
 }
 
-.emotion-523 {
+.emotion-524 {
   max-width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
@@ -13556,7 +13544,7 @@ exports[`Article should render WithEmotion 1`] = `
   border-radius: 50%;
 }
 
-.emotion-525 {
+.emotion-526 {
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -13577,11 +13565,11 @@ exports[`Article should render WithEmotion 1`] = `
   justify-content: space-between;
 }
 
-.emotion-527 {
+.emotion-528 {
   font-weight: 500;
 }
 
-.emotion-532 {
+.emotion-533 {
   display: grid;
   grid-auto-columns: max-content;
   grid-auto-flow: column;
@@ -13592,7 +13580,7 @@ exports[`Article should render WithEmotion 1`] = `
   gap: 16px;
 }
 
-.emotion-534 {
+.emotion-535 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -13602,15 +13590,15 @@ exports[`Article should render WithEmotion 1`] = `
   display: grid;
 }
 
-.emotion-534:hover {
+.emotion-535:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-555 {
+.emotion-556 {
   margin-top: -16px;
 }
 
-.emotion-557 {
+.emotion-558 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -13622,7 +13610,7 @@ exports[`Article should render WithEmotion 1`] = `
   gap: 8px;
 }
 
-.emotion-559 {
+.emotion-560 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -13701,32 +13689,32 @@ exports[`Article should render WithEmotion 1`] = `
   color: #e91e63;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-559::-moz-focus-inner {
+.emotion-560::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-559 {
+  .emotion-560 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -13735,17 +13723,17 @@ exports[`Article should render WithEmotion 1`] = `
   font-size: 0.75rem;
 }
 
-.emotion-559 .MuiChip-avatarColorPrimary {
+.emotion-560 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559 .MuiChip-avatarColorSecondary {
+.emotion-560 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(0, 0, 0);
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -13753,13 +13741,13 @@ exports[`Article should render WithEmotion 1`] = `
   font-size: 0.625rem;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 5px;
   margin-right: -6px;
   color: inherit;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(255, 255, 255, 0.7);
   font-size: 22px;
@@ -13767,70 +13755,70 @@ exports[`Article should render WithEmotion 1`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover {
+.emotion-560 .MuiChip-deleteIcon:hover {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #fff;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.emotion-559:active {
+.emotion-560:active {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-559:hover,
-.emotion-559.Mui-focusVisible {
+.emotion-560:hover,
+.emotion-560.Mui-focusVisible {
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559.MuiChip-clickable:hover {
+.emotion-560.MuiChip-clickable:hover {
   background-color: rgba(233, 30, 99, 0.04);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(233, 30, 99, 0.12);
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-iconSmall {
+.emotion-560 .MuiChip-iconSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   color: rgba(233, 30, 99, 0.7);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #e91e63;
 }
 
-.emotion-559 .MuiChip-deleteIconSmall {
+.emotion-560 .MuiChip-deleteIconSmall {
   margin-right: 3px;
 }
 
-.emotion-560 {
+.emotion-561 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 12px;
@@ -13838,7 +13826,7 @@ exports[`Article should render WithEmotion 1`] = `
   white-space: nowrap;
 }
 
-.emotion-561 {
+.emotion-562 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -15917,11 +15905,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -15951,17 +15939,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -15979,13 +15967,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -16123,20 +16111,20 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <aside
-      class="emotion-515 emotion-516"
+      class="emotion-516 emotion-517"
     >
       <div
-        class="emotion-517 emotion-518"
+        class="emotion-518 emotion-519"
       >
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -16150,11 +16138,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -16165,16 +16153,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -16194,7 +16182,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -16218,7 +16206,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -16241,14 +16229,14 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -16262,11 +16250,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -16277,16 +16265,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -16306,7 +16294,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -16330,7 +16318,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -16353,41 +16341,41 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <time
-          class="emotion-555 emotion-556"
+          class="emotion-556 emotion-557"
           datetime="2023-01-01T00:00:00.000Z"
         >
           01.01.2023
         </time>
       </div>
       <div
-        class="emotion-557 emotion-558"
+        class="emotion-558 emotion-559"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             foo
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             bar
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
       </div>
@@ -16516,7 +16504,7 @@ exports[`Article should render WithoutAuthors 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -17561,6 +17549,7 @@ exports[`Article should render WithoutAuthors 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -17575,10 +17564,6 @@ exports[`Article should render WithoutAuthors 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -17633,26 +17618,26 @@ exports[`Article should render WithoutAuthors 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -17667,11 +17652,11 @@ exports[`Article should render WithoutAuthors 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -17681,12 +17666,12 @@ exports[`Article should render WithoutAuthors 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -17698,7 +17683,7 @@ exports[`Article should render WithoutAuthors 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -17712,7 +17697,7 @@ exports[`Article should render WithoutAuthors 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -17722,13 +17707,13 @@ exports[`Article should render WithoutAuthors 1`] = `
   align-items: center;
 }
 
-.emotion-515 {
+.emotion-516 {
   display: grid;
   gap: 32px;
   grid-row-start: 2;
 }
 
-.emotion-517 {
+.emotion-518 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -17740,7 +17725,7 @@ exports[`Article should render WithoutAuthors 1`] = `
   gap: 8px;
 }
 
-.emotion-519 {
+.emotion-520 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -17819,32 +17804,32 @@ exports[`Article should render WithoutAuthors 1`] = `
   color: #e91e63;
 }
 
-.emotion-519:hover {
+.emotion-520:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-519::-moz-focus-inner {
+.emotion-520::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-519.Mui-disabled {
+.emotion-520.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-519 {
+  .emotion-520 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-519.Mui-disabled {
+.emotion-520.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-519 .MuiChip-avatar {
+.emotion-520 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -17853,17 +17838,17 @@ exports[`Article should render WithoutAuthors 1`] = `
   font-size: 0.75rem;
 }
 
-.emotion-519 .MuiChip-avatarColorPrimary {
+.emotion-520 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-519 .MuiChip-avatarColorSecondary {
+.emotion-520 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(0, 0, 0);
 }
 
-.emotion-519 .MuiChip-avatarSmall {
+.emotion-520 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -17871,13 +17856,13 @@ exports[`Article should render WithoutAuthors 1`] = `
   font-size: 0.625rem;
 }
 
-.emotion-519 .MuiChip-icon {
+.emotion-520 .MuiChip-icon {
   margin-left: 5px;
   margin-right: -6px;
   color: inherit;
 }
 
-.emotion-519 .MuiChip-deleteIcon {
+.emotion-520 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(255, 255, 255, 0.7);
   font-size: 22px;
@@ -17885,70 +17870,70 @@ exports[`Article should render WithoutAuthors 1`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-519 .MuiChip-deleteIcon:hover {
+.emotion-520 .MuiChip-deleteIcon:hover {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.emotion-519 .MuiChip-deleteIcon:hover,
-.emotion-519 .MuiChip-deleteIcon:active {
+.emotion-520 .MuiChip-deleteIcon:hover,
+.emotion-520 .MuiChip-deleteIcon:active {
   color: #fff;
 }
 
-.emotion-519:hover {
+.emotion-520:hover {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-519.Mui-focusVisible {
+.emotion-520.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.emotion-519:active {
+.emotion-520:active {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-519:hover,
-.emotion-519.Mui-focusVisible {
+.emotion-520:hover,
+.emotion-520.Mui-focusVisible {
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-519.MuiChip-clickable:hover {
+.emotion-520.MuiChip-clickable:hover {
   background-color: rgba(233, 30, 99, 0.04);
 }
 
-.emotion-519.Mui-focusVisible {
+.emotion-520.Mui-focusVisible {
   background-color: rgba(233, 30, 99, 0.12);
 }
 
-.emotion-519 .MuiChip-avatar {
+.emotion-520 .MuiChip-avatar {
   margin-left: 4px;
 }
 
-.emotion-519 .MuiChip-avatarSmall {
+.emotion-520 .MuiChip-avatarSmall {
   margin-left: 2px;
 }
 
-.emotion-519 .MuiChip-icon {
+.emotion-520 .MuiChip-icon {
   margin-left: 4px;
 }
 
-.emotion-519 .MuiChip-iconSmall {
+.emotion-520 .MuiChip-iconSmall {
   margin-left: 2px;
 }
 
-.emotion-519 .MuiChip-deleteIcon {
+.emotion-520 .MuiChip-deleteIcon {
   color: rgba(233, 30, 99, 0.7);
 }
 
-.emotion-519 .MuiChip-deleteIcon:hover,
-.emotion-519 .MuiChip-deleteIcon:active {
+.emotion-520 .MuiChip-deleteIcon:hover,
+.emotion-520 .MuiChip-deleteIcon:active {
   color: #e91e63;
 }
 
-.emotion-519 .MuiChip-deleteIconSmall {
+.emotion-520 .MuiChip-deleteIconSmall {
   margin-right: 3px;
 }
 
-.emotion-520 {
+.emotion-521 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 12px;
@@ -17956,7 +17941,7 @@ exports[`Article should render WithoutAuthors 1`] = `
   white-space: nowrap;
 }
 
-.emotion-521 {
+.emotion-522 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -20019,11 +20004,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -20053,17 +20038,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -20081,13 +20066,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -20225,37 +20210,37 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <aside
-      class="emotion-515 emotion-516"
+      class="emotion-516 emotion-517"
     >
       <div
-        class="emotion-517 emotion-518"
+        class="emotion-518 emotion-519"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-519"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-520"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-520"
+            class="MuiChip-label MuiChip-labelMedium emotion-521"
           >
             foo
           </span>
           <span
-            class="MuiTouchRipple-root emotion-521"
+            class="MuiTouchRipple-root emotion-522"
           />
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-519"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-520"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-520"
+            class="MuiChip-label MuiChip-labelMedium emotion-521"
           >
             bar
           </span>
           <span
-            class="MuiTouchRipple-root emotion-521"
+            class="MuiTouchRipple-root emotion-522"
           />
         </a>
       </div>
@@ -20280,7 +20265,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -21325,6 +21310,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -21339,10 +21325,6 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -21397,26 +21379,26 @@ exports[`Article should render WithoutImageMetadata 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -21431,11 +21413,11 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -21445,12 +21427,12 @@ exports[`Article should render WithoutImageMetadata 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -21462,7 +21444,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -21476,7 +21458,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -21486,18 +21468,18 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   align-items: center;
 }
 
-.emotion-515 {
+.emotion-516 {
   display: grid;
   gap: 32px;
   grid-row-start: 2;
 }
 
-.emotion-517 {
+.emotion-518 {
   display: grid;
   gap: 24px;
 }
 
-.emotion-519 {
+.emotion-520 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -21515,12 +21497,12 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-.emotion-521 {
+.emotion-522 {
   display: grid;
   width: 60px;
 }
 
-.emotion-523 {
+.emotion-524 {
   max-width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
@@ -21529,7 +21511,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   border-radius: 50%;
 }
 
-.emotion-525 {
+.emotion-526 {
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -21550,11 +21532,11 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   justify-content: space-between;
 }
 
-.emotion-527 {
+.emotion-528 {
   font-weight: 500;
 }
 
-.emotion-532 {
+.emotion-533 {
   display: grid;
   grid-auto-columns: max-content;
   grid-auto-flow: column;
@@ -21565,7 +21547,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   gap: 16px;
 }
 
-.emotion-534 {
+.emotion-535 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -21575,15 +21557,15 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   display: grid;
 }
 
-.emotion-534:hover {
+.emotion-535:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-555 {
+.emotion-556 {
   margin-top: -16px;
 }
 
-.emotion-557 {
+.emotion-558 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -21595,7 +21577,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   gap: 8px;
 }
 
-.emotion-559 {
+.emotion-560 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -21674,32 +21656,32 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   color: #e91e63;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-559::-moz-focus-inner {
+.emotion-560::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-559 {
+  .emotion-560 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -21708,17 +21690,17 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   font-size: 0.75rem;
 }
 
-.emotion-559 .MuiChip-avatarColorPrimary {
+.emotion-560 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559 .MuiChip-avatarColorSecondary {
+.emotion-560 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(0, 0, 0);
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -21726,13 +21708,13 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   font-size: 0.625rem;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 5px;
   margin-right: -6px;
   color: inherit;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(255, 255, 255, 0.7);
   font-size: 22px;
@@ -21740,70 +21722,70 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover {
+.emotion-560 .MuiChip-deleteIcon:hover {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #fff;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.emotion-559:active {
+.emotion-560:active {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-559:hover,
-.emotion-559.Mui-focusVisible {
+.emotion-560:hover,
+.emotion-560.Mui-focusVisible {
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559.MuiChip-clickable:hover {
+.emotion-560.MuiChip-clickable:hover {
   background-color: rgba(233, 30, 99, 0.04);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(233, 30, 99, 0.12);
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-iconSmall {
+.emotion-560 .MuiChip-iconSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   color: rgba(233, 30, 99, 0.7);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #e91e63;
 }
 
-.emotion-559 .MuiChip-deleteIconSmall {
+.emotion-560 .MuiChip-deleteIconSmall {
   margin-right: 3px;
 }
 
-.emotion-560 {
+.emotion-561 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 12px;
@@ -21811,7 +21793,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   white-space: nowrap;
 }
 
-.emotion-561 {
+.emotion-562 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -23890,11 +23872,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -23924,17 +23906,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -23952,13 +23934,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -24096,20 +24078,20 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <aside
-      class="emotion-515 emotion-516"
+      class="emotion-516 emotion-517"
     >
       <div
-        class="emotion-517 emotion-518"
+        class="emotion-518 emotion-519"
       >
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -24123,11 +24105,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -24138,16 +24120,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -24167,7 +24149,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -24191,7 +24173,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -24214,14 +24196,14 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -24235,11 +24217,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -24250,16 +24232,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -24279,7 +24261,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -24303,7 +24285,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -24326,41 +24308,41 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <time
-          class="emotion-555 emotion-556"
+          class="emotion-556 emotion-557"
           datetime="2023-01-01T00:00:00.000Z"
         >
           01.01.2023
         </time>
       </div>
       <div
-        class="emotion-557 emotion-558"
+        class="emotion-558 emotion-559"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             foo
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             bar
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
       </div>
@@ -24385,7 +24367,7 @@ exports[`Article should render WithoutLead 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -25430,6 +25412,7 @@ exports[`Article should render WithoutLead 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -25444,10 +25427,6 @@ exports[`Article should render WithoutLead 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -25502,26 +25481,26 @@ exports[`Article should render WithoutLead 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -25536,11 +25515,11 @@ exports[`Article should render WithoutLead 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -25550,12 +25529,12 @@ exports[`Article should render WithoutLead 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -25567,7 +25546,7 @@ exports[`Article should render WithoutLead 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -25581,7 +25560,7 @@ exports[`Article should render WithoutLead 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -25591,18 +25570,18 @@ exports[`Article should render WithoutLead 1`] = `
   align-items: center;
 }
 
-.emotion-515 {
+.emotion-516 {
   display: grid;
   gap: 32px;
   grid-row-start: 2;
 }
 
-.emotion-517 {
+.emotion-518 {
   display: grid;
   gap: 24px;
 }
 
-.emotion-519 {
+.emotion-520 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -25620,12 +25599,12 @@ exports[`Article should render WithoutLead 1`] = `
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-.emotion-521 {
+.emotion-522 {
   display: grid;
   width: 60px;
 }
 
-.emotion-523 {
+.emotion-524 {
   max-width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
@@ -25634,7 +25613,7 @@ exports[`Article should render WithoutLead 1`] = `
   border-radius: 50%;
 }
 
-.emotion-525 {
+.emotion-526 {
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -25655,11 +25634,11 @@ exports[`Article should render WithoutLead 1`] = `
   justify-content: space-between;
 }
 
-.emotion-527 {
+.emotion-528 {
   font-weight: 500;
 }
 
-.emotion-532 {
+.emotion-533 {
   display: grid;
   grid-auto-columns: max-content;
   grid-auto-flow: column;
@@ -25670,7 +25649,7 @@ exports[`Article should render WithoutLead 1`] = `
   gap: 16px;
 }
 
-.emotion-534 {
+.emotion-535 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -25680,15 +25659,15 @@ exports[`Article should render WithoutLead 1`] = `
   display: grid;
 }
 
-.emotion-534:hover {
+.emotion-535:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-555 {
+.emotion-556 {
   margin-top: -16px;
 }
 
-.emotion-557 {
+.emotion-558 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -25700,7 +25679,7 @@ exports[`Article should render WithoutLead 1`] = `
   gap: 8px;
 }
 
-.emotion-559 {
+.emotion-560 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -25779,32 +25758,32 @@ exports[`Article should render WithoutLead 1`] = `
   color: #e91e63;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-559::-moz-focus-inner {
+.emotion-560::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-559 {
+  .emotion-560 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -25813,17 +25792,17 @@ exports[`Article should render WithoutLead 1`] = `
   font-size: 0.75rem;
 }
 
-.emotion-559 .MuiChip-avatarColorPrimary {
+.emotion-560 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559 .MuiChip-avatarColorSecondary {
+.emotion-560 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(0, 0, 0);
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -25831,13 +25810,13 @@ exports[`Article should render WithoutLead 1`] = `
   font-size: 0.625rem;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 5px;
   margin-right: -6px;
   color: inherit;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(255, 255, 255, 0.7);
   font-size: 22px;
@@ -25845,70 +25824,70 @@ exports[`Article should render WithoutLead 1`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover {
+.emotion-560 .MuiChip-deleteIcon:hover {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #fff;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.emotion-559:active {
+.emotion-560:active {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-559:hover,
-.emotion-559.Mui-focusVisible {
+.emotion-560:hover,
+.emotion-560.Mui-focusVisible {
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559.MuiChip-clickable:hover {
+.emotion-560.MuiChip-clickable:hover {
   background-color: rgba(233, 30, 99, 0.04);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(233, 30, 99, 0.12);
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-iconSmall {
+.emotion-560 .MuiChip-iconSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   color: rgba(233, 30, 99, 0.7);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #e91e63;
 }
 
-.emotion-559 .MuiChip-deleteIconSmall {
+.emotion-560 .MuiChip-deleteIconSmall {
   margin-right: 3px;
 }
 
-.emotion-560 {
+.emotion-561 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 12px;
@@ -25916,7 +25895,7 @@ exports[`Article should render WithoutLead 1`] = `
   white-space: nowrap;
 }
 
-.emotion-561 {
+.emotion-562 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -27991,11 +27970,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -28025,17 +28004,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -28053,13 +28032,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -28197,20 +28176,20 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <aside
-      class="emotion-515 emotion-516"
+      class="emotion-516 emotion-517"
     >
       <div
-        class="emotion-517 emotion-518"
+        class="emotion-518 emotion-519"
       >
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -28224,11 +28203,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -28239,16 +28218,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -28268,7 +28247,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -28292,7 +28271,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -28315,14 +28294,14 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -28336,11 +28315,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -28351,16 +28330,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -28380,7 +28359,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -28404,7 +28383,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -28427,41 +28406,41 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <time
-          class="emotion-555 emotion-556"
+          class="emotion-556 emotion-557"
           datetime="2023-01-01T00:00:00.000Z"
         >
           01.01.2023
         </time>
       </div>
       <div
-        class="emotion-557 emotion-558"
+        class="emotion-558 emotion-559"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             foo
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             bar
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
       </div>
@@ -28486,7 +28465,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-497, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -29531,6 +29510,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
 
 .emotion-472 {
   display: grid;
+  grid-template-rows: max-content auto;
   gap: 16px;
 }
 
@@ -29545,10 +29525,6 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: 16px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .emotion-476 {
@@ -29603,26 +29579,26 @@ exports[`Article should render WithoutSocialMedia 1`] = `
 }
 
 .emotion-492 {
+  font-weight: 600;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .emotion-492.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-496 {
+.emotion-497 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-498 {
+.emotion-499 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -29637,11 +29613,11 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   container-type: inline-size;
 }
 
-.emotion-498:hover {
+.emotion-499:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-499 {
+.emotion-500 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -29651,12 +29627,12 @@ exports[`Article should render WithoutSocialMedia 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-499 {
+  .emotion-500 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-505 {
+.emotion-506 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -29668,7 +29644,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   gap: 8px;
 }
 
-.emotion-507 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -29682,7 +29658,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   align-items: center;
 }
 
-.emotion-509 {
+.emotion-510 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -29692,18 +29668,18 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   align-items: center;
 }
 
-.emotion-515 {
+.emotion-516 {
   display: grid;
   gap: 32px;
   grid-row-start: 2;
 }
 
-.emotion-517 {
+.emotion-518 {
   display: grid;
   gap: 24px;
 }
 
-.emotion-519 {
+.emotion-520 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -29721,12 +29697,12 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-.emotion-521 {
+.emotion-522 {
   display: grid;
   width: 60px;
 }
 
-.emotion-523 {
+.emotion-524 {
   max-width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
@@ -29735,7 +29711,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   border-radius: 50%;
 }
 
-.emotion-525 {
+.emotion-526 {
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -29756,11 +29732,11 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   justify-content: space-between;
 }
 
-.emotion-527 {
+.emotion-528 {
   font-weight: 500;
 }
 
-.emotion-532 {
+.emotion-533 {
   display: grid;
   grid-auto-columns: max-content;
   grid-auto-flow: column;
@@ -29771,7 +29747,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   gap: 16px;
 }
 
-.emotion-534 {
+.emotion-535 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -29781,15 +29757,15 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   display: grid;
 }
 
-.emotion-534:hover {
+.emotion-535:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-555 {
+.emotion-556 {
   margin-top: -16px;
 }
 
-.emotion-557 {
+.emotion-558 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -29801,7 +29777,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   gap: 8px;
 }
 
-.emotion-559 {
+.emotion-560 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -29880,32 +29856,32 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   color: #e91e63;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-559::-moz-focus-inner {
+.emotion-560::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-559 {
+  .emotion-560 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-559.Mui-disabled {
+.emotion-560.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -29914,17 +29890,17 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   font-size: 0.75rem;
 }
 
-.emotion-559 .MuiChip-avatarColorPrimary {
+.emotion-560 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559 .MuiChip-avatarColorSecondary {
+.emotion-560 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(0, 0, 0);
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -29932,13 +29908,13 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   font-size: 0.625rem;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 5px;
   margin-right: -6px;
   color: inherit;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(255, 255, 255, 0.7);
   font-size: 22px;
@@ -29946,70 +29922,70 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover {
+.emotion-560 .MuiChip-deleteIcon:hover {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #fff;
 }
 
-.emotion-559:hover {
+.emotion-560:hover {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.emotion-559:active {
+.emotion-560:active {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-559:hover,
-.emotion-559.Mui-focusVisible {
+.emotion-560:hover,
+.emotion-560.Mui-focusVisible {
   background-color: rgb(163, 21, 69);
 }
 
-.emotion-559.MuiChip-clickable:hover {
+.emotion-560.MuiChip-clickable:hover {
   background-color: rgba(233, 30, 99, 0.04);
 }
 
-.emotion-559.Mui-focusVisible {
+.emotion-560.Mui-focusVisible {
   background-color: rgba(233, 30, 99, 0.12);
 }
 
-.emotion-559 .MuiChip-avatar {
+.emotion-560 .MuiChip-avatar {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-avatarSmall {
+.emotion-560 .MuiChip-avatarSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-icon {
+.emotion-560 .MuiChip-icon {
   margin-left: 4px;
 }
 
-.emotion-559 .MuiChip-iconSmall {
+.emotion-560 .MuiChip-iconSmall {
   margin-left: 2px;
 }
 
-.emotion-559 .MuiChip-deleteIcon {
+.emotion-560 .MuiChip-deleteIcon {
   color: rgba(233, 30, 99, 0.7);
 }
 
-.emotion-559 .MuiChip-deleteIcon:hover,
-.emotion-559 .MuiChip-deleteIcon:active {
+.emotion-560 .MuiChip-deleteIcon:hover,
+.emotion-560 .MuiChip-deleteIcon:active {
   color: #e91e63;
 }
 
-.emotion-559 .MuiChip-deleteIconSmall {
+.emotion-560 .MuiChip-deleteIconSmall {
   margin-right: 3px;
 }
 
-.emotion-560 {
+.emotion-561 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 12px;
@@ -30017,7 +29993,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   white-space: nowrap;
 }
 
-.emotion-561 {
+.emotion-562 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -32096,11 +32072,11 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-490 emotion-491"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 emotion-492"
+          <h1
+            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
           >
             de Finibus Bonorum et Malorum
-          </p>
+          </h1>
           <div
             class="emotion-7 emotion-8"
           >
@@ -32130,17 +32106,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-496 emotion-497"
+      class="emotion-497 emotion-498"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-498"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
         href="https://example.com"
       >
         <article
-          class="emotion-499 emotion-500"
+          class="emotion-500 emotion-501"
         >
           <div
-            class="emotion-501 emotion-502"
+            class="emotion-502 emotion-503"
           >
             <img
               alt="DSC07717"
@@ -32158,13 +32134,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-505 emotion-506"
+            class="emotion-506 emotion-507"
           >
             <div
-              class="emotion-507 emotion-508"
+              class="emotion-508 emotion-509"
             >
               <div
-                class="emotion-509 emotion-510"
+                class="emotion-510 emotion-511"
               >
                 <svg
                   fill="currentColor"
@@ -32302,20 +32278,20 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <aside
-      class="emotion-515 emotion-516"
+      class="emotion-516 emotion-517"
     >
       <div
-        class="emotion-517 emotion-518"
+        class="emotion-518 emotion-519"
       >
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -32329,11 +32305,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -32344,16 +32320,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -32373,7 +32349,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -32397,7 +32373,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -32420,14 +32396,14 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="emotion-519 emotion-520"
+          class="emotion-520 emotion-521"
         >
           <div
-            class="emotion-521 emotion-522"
+            class="emotion-522 emotion-523"
           >
             <img
               alt="DSC07717"
-              class="emotion-523 emotion-28"
+              class="emotion-524 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -32441,11 +32417,11 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <div
-            class="emotion-525 emotion-526"
+            class="emotion-526 emotion-527"
           >
             <div>
               <div
-                class="emotion-527 emotion-528"
+                class="emotion-528 emotion-529"
               >
                 Von 
                 <a
@@ -32456,16 +32432,16 @@ https://unsplash.it/200/200 200w"
                 </a>
               </div>
               <div
-                class="emotion-530 emotion-531"
+                class="emotion-531 emotion-532"
               >
                 Editor
               </div>
             </div>
             <aside
-              class="emotion-532 emotion-533"
+              class="emotion-533 emotion-534"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://twitter.com"
                 target="__blank"
                 title="Twitter"
@@ -32485,7 +32461,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://facebook.com"
                 target="__blank"
                 title="Facebook"
@@ -32509,7 +32485,7 @@ https://unsplash.it/200/200 200w"
                 </svg>
               </a>
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-534"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-535"
                 href="https://instagram.com"
                 target="__blank"
                 title="Instagram"
@@ -32532,41 +32508,41 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <time
-          class="emotion-555 emotion-556"
+          class="emotion-556 emotion-557"
           datetime="2023-01-01T00:00:00.000Z"
         >
           01.01.2023
         </time>
       </div>
       <div
-        class="emotion-557 emotion-558"
+        class="emotion-558 emotion-559"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             foo
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-559"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-outlinedPrimary emotion-560"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-560"
+            class="MuiChip-label MuiChip-labelMedium emotion-561"
           >
             bar
           </span>
           <span
-            class="MuiTouchRipple-root emotion-561"
+            class="MuiTouchRipple-root emotion-562"
           />
         </a>
       </div>
