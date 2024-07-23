@@ -72,6 +72,8 @@ export const CommentListItem = ({
   ratingSystem,
   className,
   signUpUrl,
+  commentDepth,
+  maxCommentDepth,
   ...comment
 }: BuilderCommentListItemProps) => {
   const {id, text, title, state, children, userRatings, overriddenRatings, calculatedRatings} =
@@ -91,7 +93,8 @@ export const CommentListItem = ({
     hasLoggedInUser &&
     loggedInUser?.id === comment.user?.id &&
     (userCanEdit || comment.state === CommentState.PendingUserChanges)
-  const canReply = anonymousCanComment || hasLoggedInUser
+  const maxDepthHit = maxCommentDepth !== undefined && commentDepth > maxCommentDepth
+  const canReply = (anonymousCanComment || hasLoggedInUser) && !maxDepthHit
 
   const showReply = getStateForEditor(openEditorsState)('add', id)
   const showEdit = getStateForEditor(openEditorsState)('edit', id)
@@ -125,20 +128,22 @@ export const CommentListItem = ({
 
       <CommentListItemActions>
         <CommentListItemActionsButtons>
-          <Button
-            startIcon={<MdReply />}
-            variant="outlined"
-            size="small"
-            css={buttonStyles}
-            onClick={() => {
-              dispatch({
-                type: 'add',
-                action: 'open',
-                commentId: id
-              })
-            }}>
-            Antworten
-          </Button>
+          {canReply && (
+            <Button
+              startIcon={<MdReply />}
+              variant="outlined"
+              size="small"
+              css={buttonStyles}
+              onClick={() => {
+                dispatch({
+                  type: 'add',
+                  action: 'open',
+                  commentId: id
+                })
+              }}>
+              Antworten
+            </Button>
+          )}
 
           {canEdit && (
             <Button
@@ -209,6 +214,8 @@ export const CommentListItem = ({
               maxCommentLength={maxCommentLength}
               className={className}
               signUpUrl={signUpUrl}
+              commentDepth={commentDepth + 1}
+              maxCommentDepth={maxCommentDepth}
             />
           ))}
         </CommentListItemChildren>
