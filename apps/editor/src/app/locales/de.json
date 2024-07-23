@@ -668,6 +668,8 @@
     "memberPlanEdit": {
       "active": "Aktiv",
       "activeDescription": "Plan verfügbar machen",
+      "currency": "Währung",
+      "currencyRequired": "Währung erforderlich",
       "amountPerMonthMin": "Minimaler Betrag / Monat",
       "amountPerMonthMinRequired": "Minimaler Betrag erforderlich",
       "amountPerMonthMinZero": "Minimaler Betrag muss mindestens 0 betragen",

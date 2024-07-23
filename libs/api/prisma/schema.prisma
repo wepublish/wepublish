@@ -485,6 +485,11 @@ model AvailablePaymentMethod {
   @@map("member.plans.payment-methods")
 }
 
+enum Currency {
+  CHF @map("CHF")
+  EUR @map("EUR")
+}
+
 model MemberPlan {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
@@ -495,6 +500,7 @@ model MemberPlan {
   tags                    String[]
   description             Json
   active                  Boolean
+  currency                Currency
   amountPerMonthMin       Float
   availablePaymentMethods AvailablePaymentMethod[]
   extendable              Boolean                  @default(true)

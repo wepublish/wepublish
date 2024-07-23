@@ -427,6 +427,11 @@ export type CreatedToken = {
   token: Scalars['String'];
 };
 
+export enum Currency {
+  Chf = 'CHF',
+  Eur = 'EUR'
+}
+
 export type CustomTeaser = {
   __typename?: 'CustomTeaser';
   contentUrl?: Maybe<Scalars['String']>;
@@ -927,6 +932,7 @@ export type MemberPlan = {
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
   createdAt: Scalars['DateTime'];
+  currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
   id: Scalars['ID'];
@@ -955,6 +961,7 @@ export type MemberPlanInput = {
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
+  currency: Currency;
   description?: InputMaybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['ID']>;

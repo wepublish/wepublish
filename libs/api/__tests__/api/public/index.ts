@@ -271,6 +271,11 @@ export type CommentUpdateInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export enum Currency {
+  Chf = 'CHF',
+  Eur = 'EUR'
+}
+
 export type CustomTeaser = {
   __typename?: 'CustomTeaser';
   contentUrl?: Maybe<Scalars['String']>;
@@ -566,6 +571,7 @@ export type MemberPlan = {
   __typename?: 'MemberPlan';
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
+  currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
   id: Scalars['ID'];

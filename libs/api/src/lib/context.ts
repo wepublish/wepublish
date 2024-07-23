@@ -1009,6 +1009,20 @@ export async function contextFromRequest(
         throw new Error('paymentProvider not found')
       }
 
+      const memberPlan = await this.prisma.memberPlan.findFirst({
+        where: {
+          Subscription: {
+            some: {
+              id: invoice.subscriptionID
+            }
+          }
+        }
+      })
+
+      if (!memberPlan) {
+        throw new Error('MemberPlan not found')
+      }
+
       const payment = await prisma.payment.create({
         data: {
           paymentMethodID,
@@ -1029,6 +1043,7 @@ export async function contextFromRequest(
       const intent = await paymentProvider.createIntent({
         paymentID: payment.id,
         invoice,
+        currency: memberPlan.currency,
         saveCustomer,
         successURL,
         failureURL,

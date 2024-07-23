@@ -64,6 +64,7 @@ import type { CommentAuthorType } from "@prisma/client";
 import type { RatingSystemType } from "@prisma/client";
 import type { MailLogState } from "@prisma/client";
 import type { PaymentPeriodicity } from "@prisma/client";
+import type { Currency } from "@prisma/client";
 import type { PaymentState } from "@prisma/client";
 import type { SubscriptionDeactivationReason } from "@prisma/client";
 import type { TagType } from "@prisma/client";
@@ -1127,6 +1128,7 @@ type MemberPlanFactoryDefineInput = {
     tags?: Prisma.MemberPlanCreatetagsInput | Prisma.Enumerable<string>;
     description?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
     active?: boolean;
+    currency?: Currency;
     amountPerMonthMin?: number;
     extendable?: boolean;
     maxCount?: number | null;
