@@ -21,14 +21,15 @@ import {PassportModule} from '@nestjs/passport'
             port: +config.getOrThrow('S3_PORT'),
             accessKey: config.getOrThrow('S3_ACCESS_KEY'),
             secretKey: config.getOrThrow('S3_SECRET_KEY'),
-            useSSL: Boolean(config.get('S3_SSL'))
+            useSSL: Boolean(config.get('S3_SSL')),
+            region: config.get('S3_REGION', 'us-east-1')
           }),
           inject: [ConfigService]
         })
       ],
-      useFactory: () => ({
-        uploadBucket: 'wepublish-staff',
-        transformationBucket: 'wepublish-transformed'
+      useFactory: (config: ConfigService) => ({
+        uploadBucket: config.get('S3_UPLOAD_BUCKET', 'wepublish-staff'),
+        transformationBucket: config.get('S3_TRANSFORMATION_BUCKET', 'wepublish-transformed')
       })
     }),
     TokenModule.registerAsync({
