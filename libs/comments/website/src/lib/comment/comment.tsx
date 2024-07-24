@@ -104,7 +104,7 @@ export const Comment = ({
   const image = user?.image ?? guestUserImage
   const isVerified = authorType === CommentAuthorType.VerifiedUser
   const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
-  const highlight = !!tags.find(
+  const highlight = !!tags?.find(
     tag => tag.tag?.replace(/\s+/g, '').toLowerCase() === 'quellehervorheben'
   )
 

@@ -36,6 +36,7 @@ import {
   SelectPicker,
   toaster
 } from 'rsuite'
+import FormHelpText from 'rsuite/FormHelpText'
 
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;
@@ -243,20 +244,6 @@ const CommentEditView = memo(() => {
                 <RPanel bordered header={t('commentEditView.actions')}>
                   <FlexboxGrid>
                     <FlexboxGrid.Item colspan={24} style={{textAlign: 'start'}}>
-                      {comment && (
-                        <Checkbox
-                          checked={!!comment?.featured}
-                          onChange={(value, checked) => {
-                            setComment({
-                              ...comment,
-                              featured: checked
-                            })
-                          }}>
-                          {t('commentEditView.featured')}
-                        </Checkbox>
-                      )}
-                    </FlexboxGrid.Item>
-                    <FlexboxGrid.Item colspan={24} style={{textAlign: 'start'}}>
                       <IconButton
                         appearance="ghost"
                         color="violet"
@@ -299,6 +286,25 @@ const CommentEditView = memo(() => {
               <RCol xs={24}>
                 <RPanel bordered header={t('commentEditView.variousPanelHeader')}>
                   <Row>
+                    {/* featured comment (top comment) */}
+                    {comment && (
+                      <RCol xs={24}>
+                        <Checkbox
+                          checked={!!comment?.featured}
+                          onChange={(value, checked) => {
+                            setComment({
+                              ...comment,
+                              featured: checked
+                            })
+                          }}>
+                          {t('commentEditView.featured')}
+                        </Checkbox>
+                        <FormHelpText>
+                          Der Kommentar erscheint zu oberst in der Liste der Kommentare.
+                        </FormHelpText>
+                      </RCol>
+                    )}
+
                     {/* tags */}
                     <RCol xs={24}>
                       <Form.ControlLabel>{t('commentEditView.tags')}</Form.ControlLabel>
