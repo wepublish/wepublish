@@ -3,6 +3,7 @@ import {styled} from '@mui/material'
 import {CommentAuthorType} from '@wepublish/website/api'
 import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdPerson, MdVerified} from 'react-icons/md'
+import {isValidUrl} from '@wepublish/utils'
 
 const avatarStyles = css`
   width: 46px;
@@ -50,15 +51,19 @@ export const CommentVerifiedBadge = styled('div')`
   color: ${({theme}) => theme.palette.info.main};
 `
 
-export const CommentFlair = styled('div')<{isGuest: boolean}>`
+export const CommentFlair = styled('div')<{highlight?: boolean}>`
   font-size: 0.75em;
   font-weight: 300;
 
-  ${({isGuest, theme}) =>
-    isGuest &&
+  ${({highlight, theme}) =>
+    highlight &&
     css`
       color: ${theme.palette.primary.main};
     `}
+`
+
+export const Source = styled('p')`
+  margin: 0;
 `
 
 export const CommentFlairLink = styled('a')`
@@ -86,7 +91,8 @@ export const Comment = ({
   source,
   children,
   createdAt,
-  showContent = true
+  showContent = true,
+  tags
 }: BuilderCommentProps) => {
   const {
     elements: {Paragraph, Image},
@@ -94,11 +100,13 @@ export const Comment = ({
     date
   } = useWebsiteBuilder()
 
+  const sourceFlairDate = source || user?.flair || date.format(new Date(createdAt))
   const image = user?.image ?? guestUserImage
   const isVerified = authorType === CommentAuthorType.VerifiedUser
-  const isGuest = authorType === CommentAuthorType.GuestUser
-  const flair = user?.flair || source
   const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
+  const highlight = !!tags.find(
+    tag => tag.tag?.replace(/\s+/g, '').toLowerCase() === 'quellehervorheben'
+  )
 
   return (
     <CommentWrapper className={className} id={id}>
@@ -117,19 +125,15 @@ export const Comment = ({
             )}
           </CommentName>
 
-          {source && (
-            <CommentFlair isGuest={isGuest}>
-              <CommentFlairLink href={source} target="_blank" rel="noopener noreferrer">
-                {flair}
+          <CommentFlair highlight={highlight}>
+            {isValidUrl(sourceFlairDate) ? (
+              <CommentFlairLink href={sourceFlairDate} target="_blank" rel="noopener noreferrer">
+                {sourceFlairDate}
               </CommentFlairLink>
-            </CommentFlair>
-          )}
-
-          {user?.flair && !source && <CommentFlair isGuest={isGuest}>{user?.flair}</CommentFlair>}
-
-          {!flair && createdAt && (
-            <CommentFlair isGuest={isGuest}>{date.format(new Date(createdAt))}</CommentFlair>
-          )}
+            ) : (
+              sourceFlairDate
+            )}
+          </CommentFlair>
         </CommentHeaderContent>
       </CommentHeader>
 
