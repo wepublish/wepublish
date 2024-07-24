@@ -299,9 +299,7 @@ const CommentEditView = memo(() => {
                           }}>
                           {t('commentEditView.featured')}
                         </Checkbox>
-                        <FormHelpText>
-                          Der Kommentar erscheint zu oberst in der Liste der Kommentare.
-                        </FormHelpText>
+                        <FormHelpText>{t('commentEditView.featuredHelpText')}</FormHelpText>
                       </RCol>
                     )}
 
