@@ -28,6 +28,7 @@ export const CommentListItemChildren = styled('aside')`
 `
 
 export const CommentListItemActions = styled('div')`
+  padding-top: ${({theme}) => theme.spacing(1)};
   display: flex;
   flex-flow: row wrap;
   gap: ${({theme}) => theme.spacing(1)};

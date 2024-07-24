@@ -37,7 +37,6 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
     }
 
     ${CommentContent} {
-      padding-top: 0;
       padding-bottom: 0;
       background-color: ${({theme}) => theme.palette.common.white};
     }
@@ -54,19 +53,12 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
   }
 
   ${CommentContent} {
-    padding-top: ${({theme}) => theme.spacing(1)};
-    padding-left: ${({theme}) => theme.spacing(1)};
-    padding-right: ${({theme}) => theme.spacing(1)};
     padding-bottom: 0;
     span {
       // what other way to style <RichText /> ?
       font-weight: 300;
       line-height: 1.2;
     }
-  }
-
-  ${CommentListItemActions} {
-    padding: ${({theme}) => theme.spacing(1.5)};
   }
 
   ${CommentEditorWrapper} {

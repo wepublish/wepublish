@@ -13,7 +13,6 @@ const avatarStyles = css`
 export const CommentWrapper = styled('article')`
   display: grid;
   grid-template-rows: max-content auto;
-  gap: ${({theme}) => theme.spacing(2)};
 
   &:target {
     border: 2px solid ${({theme}) => theme.palette.primary.main};
@@ -67,7 +66,9 @@ export const CommentFlairLink = styled('a')`
   color: ${({theme}) => theme.palette.primary.main};
 `
 
-export const CommentContent = styled('div')``
+export const CommentContent = styled('div')`
+  padding-top: ${({theme}) => theme.spacing(1)};
+`
 
 export const CommentTitle = styled('h1')`
   font-weight: 600;
