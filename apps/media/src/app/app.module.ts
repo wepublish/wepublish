@@ -25,7 +25,8 @@ import {PassportModule} from '@nestjs/passport'
             region: config.get('S3_REGION', 'us-east-1')
           }),
           inject: [ConfigService]
-        })
+        }),
+        ConfigModule
       ],
       useFactory: (config: ConfigService) => ({
         uploadBucket: config.get('S3_UPLOAD_BUCKET', 'wepublish-staff'),
