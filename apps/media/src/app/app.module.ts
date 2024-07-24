@@ -30,7 +30,8 @@ import {PassportModule} from '@nestjs/passport'
       useFactory: (config: ConfigService) => ({
         uploadBucket: config.get('S3_UPLOAD_BUCKET', 'wepublish-staff'),
         transformationBucket: config.get('S3_TRANSFORMATION_BUCKET', 'wepublish-transformed')
-      })
+      }),
+      inject: [ConfigService]
     }),
     TokenModule.registerAsync({
       imports: [ConfigModule, PassportModule],
