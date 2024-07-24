@@ -41,8 +41,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       has-website: ${{ steps.read-deployment-config.outputs.has-website }}
-    needs: [ get-tag ]
-    if: ${{ needs.get-tag.result == 'success' }}
+    needs: [ get-tag, deploy-wepublish-production ]
+    if: ${{ needs.deploy-wepublish-production.result == 'success' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
