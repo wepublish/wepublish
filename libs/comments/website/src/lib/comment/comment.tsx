@@ -51,15 +51,9 @@ export const CommentVerifiedBadge = styled('div')`
   color: ${({theme}) => theme.palette.info.main};
 `
 
-export const CommentFlair = styled('div')<{highlight?: boolean}>`
+export const CommentFlair = styled('div')`
   font-size: 0.75em;
   font-weight: 300;
-
-  ${({highlight, theme}) =>
-    highlight &&
-    css`
-      color: ${theme.palette.primary.main};
-    `}
 `
 
 export const Source = styled('p')`
@@ -104,9 +98,6 @@ export const Comment = ({
   const image = user?.image ?? guestUserImage
   const isVerified = authorType === CommentAuthorType.VerifiedUser
   const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
-  const highlight = !!tags?.find(
-    tag => tag.tag?.replace(/\s+/g, '').toLowerCase() === 'quellehervorheben'
-  )
 
   return (
     <CommentWrapper className={className} id={id}>
@@ -125,7 +116,7 @@ export const Comment = ({
             )}
           </CommentName>
 
-          <CommentFlair highlight={highlight}>
+          <CommentFlair>
             {isValidUrl(sourceFlairDate) ? (
               <CommentFlairLink href={sourceFlairDate} target="_blank" rel="noopener noreferrer">
                 {sourceFlairDate}
