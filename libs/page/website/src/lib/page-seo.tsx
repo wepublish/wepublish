@@ -5,9 +5,9 @@ import {BuilderPageSEOProps, useWebsiteBuilder} from '@wepublish/website/builder
 import {useMemo} from 'react'
 
 export const getPageSEO = (page: Page) => {
-  const firstTitle = page.blocks.find(isTitleBlock)
-  const firstRichText = page.blocks.find(isRichTextBlock)
-  const firstImageBlock = page.blocks.find(isImageBlock)
+  const firstTitle = page.blocks?.find(isTitleBlock)
+  const firstRichText = page.blocks?.find(isRichTextBlock)
+  const firstImageBlock = page.blocks?.find(isImageBlock)
 
   const socialMediaDescription =
     page.socialMediaDescription ||

@@ -16,6 +16,16 @@ exports[`Articles can be created/edited/deleted: can be created 1`] = `
       "pending": null,
       "published": null,
       "shared": false,
+      "tags": ArrayContaining [
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 1",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 2",
+        },
+      ],
     },
   },
   "errors": undefined,
@@ -44,6 +54,7 @@ exports[`Articles can be created/edited/deleted: can be deleted 1`] = `
       "pending": null,
       "published": null,
       "shared": false,
+      "tags": [],
     },
   },
   "errors": undefined,
@@ -72,6 +83,16 @@ exports[`Articles can be created/edited/deleted: can be published 1`] = `
         "updatedAt": 2020-11-25T23:55:35.000Z,
       },
       "shared": false,
+      "tags": ArrayContaining [
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 1",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 2",
+        },
+      ],
     },
   },
   "errors": undefined,
@@ -99,6 +120,16 @@ exports[`Articles can be created/edited/deleted: can be published in the future 
       },
       "published": null,
       "shared": false,
+      "tags": ArrayContaining [
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 1",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 2",
+        },
+      ],
     },
   },
   "errors": undefined,
@@ -126,6 +157,16 @@ exports[`Articles can be created/edited/deleted: can be published twice in the f
       },
       "published": null,
       "shared": false,
+      "tags": ArrayContaining [
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 1",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 2",
+        },
+      ],
     },
   },
   "errors": undefined,
@@ -154,6 +195,7 @@ exports[`Articles can be created/edited/deleted: can be published twice with aut
         "updatedAt": 2020-12-25T23:55:35.000Z,
       },
       "shared": false,
+      "tags": [],
     },
   },
   "errors": undefined,
@@ -177,6 +219,16 @@ exports[`Articles can be created/edited/deleted: can be read by id 1`] = `
       "pending": null,
       "published": null,
       "shared": false,
+      "tags": ArrayContaining [
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 1",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 2",
+        },
+      ],
     },
   },
   "errors": undefined,
@@ -205,6 +257,16 @@ exports[`Articles can be created/edited/deleted: can be unpublished 1`] = `
       "pending": null,
       "published": null,
       "shared": false,
+      "tags": ArrayContaining [
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 1",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 2",
+        },
+      ],
     },
   },
   "errors": undefined,
@@ -233,6 +295,20 @@ exports[`Articles can be created/edited/deleted: can be updated 1`] = `
       "pending": null,
       "published": null,
       "shared": false,
+      "tags": ArrayContaining [
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 1",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 2",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 3",
+        },
+      ],
     },
   },
   "errors": undefined,

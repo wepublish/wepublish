@@ -44,6 +44,7 @@
       "@wepublish/image/website": ["libs/image/website/src/index.ts"],
       "@wepublish/jobs": ["libs/jobs/src/index.ts"],
       "@wepublish/mail/api": ["libs/mail/api/src/index.ts"],
+      "@wepublish/media/api": ["libs/media/api/src/index.ts"],
       "@wepublish/member-plan/api": ["libs/member-plan/api/src/index.ts"],
       "@wepublish/membership/api": ["libs/membership/api/src/index.ts"],
       "@wepublish/membership/editor": ["libs/membership/editor/src/index.ts"],
@@ -61,10 +62,12 @@
       "@wepublish/richtext": ["libs/richtext/src/index.ts"],
       "@wepublish/richtext/api": ["libs/richtext/api/src/index.ts"],
       "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
+      "@wepublish/scripts/api": ["libs/scripts/api/src/index.ts"],
       "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
       "@wepublish/settings/editor": ["libs/settings/editor/src/index.ts"],
       "@wepublish/stats/api": ["libs/stats/api/src/index.ts"],
       "@wepublish/storybook": ["libs/storybook/src/index.ts"],
+      "@wepublish/system-info": ["libs/system-info/api/src/index.ts"],
       "@wepublish/testing": ["libs/testing/src/index.ts"],
       "@wepublish/ui": ["libs/ui/src/index.ts"],
       "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],
@@ -79,7 +82,9 @@
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
-      "@wepublish/website/server": ["libs/website/src/server.ts"]
+      "@wepublish/website/server": ["libs/website/src/server.ts"],
+      "@wepublish/errors": ["libs/errors/src/index.ts"],
+      "@wepublish/errors/website": ["libs/errors/website/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

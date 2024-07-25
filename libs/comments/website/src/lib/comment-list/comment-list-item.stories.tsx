@@ -93,7 +93,8 @@ const anonymousComment = {
   children: [],
   calculatedRatings: [],
   overriddenRatings: [],
-  userRatings: []
+  userRatings: [],
+  url: ''
 } as CommentListQuery['comments'][number]
 
 const verifiedUserComment = {
@@ -132,7 +133,8 @@ const verifiedUserComment = {
   tags: [],
   userRatings: [],
   calculatedRatings: [],
-  overriddenRatings: []
+  overriddenRatings: [],
+  url: ''
 } as CommentListQuery['comments'][number]
 
 const ratingSystem = {

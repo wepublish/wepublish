@@ -333,7 +333,20 @@ const article = {
   slug: 'slug',
   url: 'https://example.com',
   authors: [author, {...author, id: '1234'}],
-  tags: ['foo', 'bar'],
+  tags: [
+    {
+      id: '123',
+      tag: 'foo',
+      main: false,
+      __typename: 'Tag'
+    },
+    {
+      id: '123',
+      tag: 'bar',
+      main: false,
+      __typename: 'Tag'
+    }
+  ],
   breaking: false,
   publishedAt: new Date('2023-01-01').toISOString(),
   image,

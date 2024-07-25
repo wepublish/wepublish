@@ -20,16 +20,18 @@ import {useRouter} from 'next/router'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {FaTwitter} from 'react-icons/fa6'
-import {MdFacebook, MdMail} from 'react-icons/md'
+import {MdFacebook, MdMail, MdSearch} from 'react-icons/md'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {MainGrid} from '../src/components/layout/main-grid'
-import {BajourPaymentMethodPicker} from '../src/components/payment-method-picker/payment-method-picker'
-import {BajourQuoteBlock} from '../src/components/quote/bajour-quote'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
+import {BajourTeaserSlider} from '../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
+import {BajourContextBox} from '../src/components/website-builder-overwrites/context-box/context-box'
+import {BajourPaymentMethodPicker} from '../src/components/website-builder-overwrites/payment-method-picker/payment-method-picker'
+import {BajourQuoteBlock} from '../src/components/website-builder-overwrites/quote/bajour-quote'
 import {BajourBreakBlock} from '../src/components/website-builder-styled/blocks/break-block-styled'
 import {
   BajourTeaserGrid,
@@ -128,6 +130,10 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               Break: BajourBreakBlock,
               Quote: BajourQuoteBlock
             }}
+            blockStyles={{
+              ContextBox: BajourContextBox,
+              TeaserSlider: BajourTeaserSlider
+            }}
             thirdParty={{
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
             }}
@@ -141,6 +147,10 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                     slug="main"
                     categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
                     headerSlug="header">
+                    <ButtonLink href="/search">
+                      <MdSearch size="32" />
+                    </ButtonLink>
+
                     <ButtonLink href="https://www.facebook.com/bajourbasel">
                       <MdFacebook size="32" />
                     </ButtonLink>
@@ -165,12 +175,13 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               )}
 
               <Script
-                src={publicRuntimeConfig.env.API_URL! + '/static/head.js'}
-                strategy="beforeInteractive"
-              />
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
+                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
                 strategy="afterInteractive"
+              />
+
+              <Script
+                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
+                strategy="lazyOnload"
               />
 
               {popup && (

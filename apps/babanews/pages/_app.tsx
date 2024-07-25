@@ -24,6 +24,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 import {BabanewsBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BabanewsTeaserGrid} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme from '../src/styles/theme'
+import {BabanewsBanner} from '../src/components/website-builder-overwrites/blocks/banner'
 
 setDefaultOptions({
   locale: de
@@ -82,6 +83,9 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           blocks={{
             Renderer: BabanewsBlockRenderer,
             TeaserGrid: BabanewsTeaserGrid
+          }}
+          blockStyles={{
+            Banner: BabanewsBanner
           }}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -112,7 +116,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               categorySlugs={[['categories', 'about-us']]}
               slug="main"
               headerSlug="header"
-              showSubscriptionsUrl={false}
+              subscriptionsUrl={null}
             />
 
             <ContentSpacer>
@@ -122,12 +126,13 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
 
             <Script
-              src={publicRuntimeConfig.env.API_URL! + '/static/head.js'}
-              strategy="beforeInteractive"
-            />
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
+              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
               strategy="afterInteractive"
+            />
+
+            <Script
+              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
+              strategy="lazyOnload"
             />
           </ThemeProvider>
         </WebsiteBuilderProvider>

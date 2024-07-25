@@ -14,7 +14,7 @@ import {Node} from 'slate'
 import {seed as rootSeed} from '../../../libs/api/prisma/seed'
 import {NavigationLinkType} from '../../../libs/api/src/lib/db/navigation'
 import {hashPassword} from '../../../libs/api/src/lib/db/user'
-import {KarmaMediaAdapter} from '../../../libs/api/src/lib/media/karmaMediaAdapter'
+import {NovaMediaAdapter} from '../../../libs/api/src/lib/media/novaMediaAdapter'
 import {capitalize} from '@mui/material'
 import {
   BlockType,
@@ -30,6 +30,7 @@ import {
   PollBlock,
   EventBlock
 } from '../../../libs/api/src/lib/db/block'
+import {bootstrap} from '../../media/src/bootstrap'
 
 const shuffle = <T>(list: T[]): T[] => {
   let idx = -1
@@ -72,7 +73,7 @@ function getText(min = 1, max = 10) {
 async function seedImages(prisma: PrismaClient) {
   const internalUrl = process.env.MEDIA_SERVER_INTERNAL_URL
 
-  const mediaAdapter = new KarmaMediaAdapter(
+  const mediaAdapter = new NovaMediaAdapter(
     new URL(process.env.MEDIA_SERVER_URL),
     process.env.MEDIA_SERVER_TOKEN,
     internalUrl ? new URL(internalUrl) : undefined
@@ -796,6 +797,7 @@ async function seedComments(prisma: PrismaClient, articleIds: string[], imageIds
 }
 
 async function seed() {
+  const {app} = await bootstrap(['error'])
   const prisma = new PrismaClient()
   await prisma.$connect()
 
@@ -812,11 +814,10 @@ async function seed() {
       throw 'Website Example seeding has already been done. Skipping'
     }
 
-    const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
-
     const tags = Array.from({length: 5}, () => faker.word.noun().toLowerCase())
     const polls = await seedPoll(prisma)
     const navigations = await seedNavigations(prisma, tags)
+    const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
     const authors = await seedAuthors(prisma, [womanProfilePhoto.id, manProfilePhoto.id])
     const events = await seedEvents(
       prisma,
@@ -841,31 +842,36 @@ async function seed() {
       articles.map(({id}) => id)
     )
 
-    await prisma.user.create({
-      data: {
-        email: 'dev@wepublish.ch',
-        emailVerifiedAt: new Date(),
-        name: 'Dev User',
-        active: true,
-        roleIDs: [adminUserRole.id],
-        password: await hashPassword('123')
-      }
-    })
-
-    await prisma.user.upsert({
-      where: {
-        email: 'editor@wepublish.ch'
-      },
-      update: {},
-      create: {
-        email: 'editor@wepublish.ch',
-        emailVerifiedAt: new Date(),
-        name: 'Editor User',
-        active: true,
-        roleIDs: [editorUserRole.id],
-        password: await hashPassword('123')
-      }
-    })
+    await Promise.all([
+      prisma.user.upsert({
+        where: {
+          email: 'dev@wepublish.ch'
+        },
+        update: {},
+        create: {
+          email: 'dev@wepublish.ch',
+          emailVerifiedAt: new Date(),
+          name: 'Dev User',
+          active: true,
+          roleIDs: [adminUserRole.id],
+          password: await hashPassword('123')
+        }
+      }),
+      prisma.user.upsert({
+        where: {
+          email: 'editor@wepublish.ch'
+        },
+        update: {},
+        create: {
+          email: 'editor@wepublish.ch',
+          emailVerifiedAt: new Date(),
+          name: 'Editor User',
+          active: true,
+          roleIDs: [editorUserRole.id],
+          password: await hashPassword('123')
+        }
+      })
+    ])
   } catch (e) {
     if (typeof e === 'string') {
       console.warn(e)
@@ -873,6 +879,7 @@ async function seed() {
       throw e
     }
   } finally {
+    await app.close()
     await prisma.$disconnect()
   }
 }

@@ -9,7 +9,7 @@ export const PollBlockResultWrapper = styled('div')`
 export const PollBlockResultInfo = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(1)};
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   justify-content: space-between;
   padding: 0 ${({theme}) => theme.spacing(1)};
 `
@@ -70,14 +70,16 @@ export const PollBlockResult = ({
   totalVotes,
   highlight
 }: PollBlockResultProps) => {
-  const percentage = (voteCount / totalVotes) * 100
+  const percentage = totalVotes ? (voteCount / totalVotes) * 100 : null
 
   return (
     <PollBlockResultWrapper>
       <PollBlockResultInfo>
         <PollBlockResultName>{answer}</PollBlockResultName>
 
-        <PollBlockResultPercentage>{Math.round(percentage)}%</PollBlockResultPercentage>
+        {percentage !== null && (
+          <PollBlockResultPercentage>{Math.round(percentage)}%</PollBlockResultPercentage>
+        )}
       </PollBlockResultInfo>
 
       <PollBlockVoteBar>

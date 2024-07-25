@@ -6,8 +6,10 @@ import {
   AuthorInput,
   CreateArticle,
   CreateAuthor,
+  CreateTag,
   DeleteArticle,
   PublishArticle,
+  TagType,
   UnpublishArticle,
   UpdateArticle
 } from '../api/private'
@@ -30,14 +32,43 @@ beforeAll(async () => {
 describe('Articles', () => {
   describe('can be created/edited/deleted:', () => {
     const articleIds: string[] = []
+    const tagIds = [] as string[]
 
     beforeAll(async () => {
+      const [tag1, tag2, tag3] = await Promise.all([
+        testServerPrivate.executeOperation({
+          query: CreateTag,
+          variables: {
+            tag: 'Tag 1',
+            type: TagType.Article
+          }
+        }),
+        testServerPrivate.executeOperation({
+          query: CreateTag,
+          variables: {
+            tag: 'Tag 2',
+            type: TagType.Article
+          }
+        }),
+        testServerPrivate.executeOperation({
+          query: CreateTag,
+          variables: {
+            tag: 'Tag 3',
+            type: TagType.Article
+          }
+        })
+      ])
+
+      tagIds.push(tag1.data?.createTag.id)
+      tagIds.push(tag2.data?.createTag.id)
+      tagIds.push(tag3.data?.createTag.id)
+
       const articleInput: ArticleInput = {
         title: 'This is the best test article',
         slug: generateRandomString(),
         shared: false,
         hidden: false,
-        tags: ['testing', 'awesome'],
+        tags: [tagIds[0], tagIds[1]],
         breaking: true,
         lead: 'This article will rock your world. Never has there been a better article',
         preTitle: 'Testing GraphQL',
@@ -53,6 +84,7 @@ describe('Articles', () => {
         socialMediaImageID: null,
         blocks: []
       }
+
       const res = await testServerPrivate.executeOperation({
         query: CreateArticle,
         variables: {
@@ -69,7 +101,7 @@ describe('Articles', () => {
         slug: generateRandomString(),
         shared: false,
         hidden: false,
-        tags: ['testing', 'awesome'],
+        tags: [tagIds[0], tagIds[1]],
         breaking: true,
         lead: 'This article will rock your world. Never has there been a better article',
         preTitle: 'Testing GraphQL',
@@ -98,7 +130,17 @@ describe('Articles', () => {
             id: expect.any(String),
             latest: expect.objectContaining({
               slug: expect.any(String)
-            })
+            }),
+            tags: expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 1'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 2'
+              })
+            ])
           }
         }
       })
@@ -131,7 +173,17 @@ describe('Articles', () => {
             id: expect.any(String),
             latest: expect.objectContaining({
               slug: expect.any(String)
-            })
+            }),
+            tags: expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 1'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 2'
+              })
+            ])
           }
         }
       })
@@ -146,7 +198,7 @@ describe('Articles', () => {
             slug: generateRandomString(),
             shared: false,
             hidden: false,
-            tags: ['testing', 'awesome', 'another'],
+            tags: [tagIds[0], tagIds[1], tagIds[2]],
             breaking: true,
             lead: 'This updated article will rock your world. Never has there been a better article',
             preTitle: 'Testing GraphQL',
@@ -172,7 +224,21 @@ describe('Articles', () => {
             id: expect.any(String),
             latest: expect.objectContaining({
               slug: expect.any(String)
-            })
+            }),
+            tags: expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 1'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 2'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 3'
+              })
+            ])
           }
         }
       })
@@ -195,7 +261,17 @@ describe('Articles', () => {
             id: expect.any(String),
             latest: expect.objectContaining({
               slug: expect.any(String)
-            })
+            }),
+            tags: expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 1'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 2'
+              })
+            ])
           }
         }
       })
@@ -289,7 +365,7 @@ describe('Articles', () => {
         slug: generateRandomString(),
         shared: false,
         hidden: false,
-        tags: [],
+        tags: [tagIds[0], tagIds[1]],
         breaking: true,
         lead: '',
         preTitle: '',
@@ -332,7 +408,17 @@ describe('Articles', () => {
             }),
             pending: {
               publishAt: expect.any(Date)
-            }
+            },
+            tags: expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 1'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 2'
+              })
+            ])
           }
         }
       })
@@ -356,7 +442,7 @@ describe('Articles', () => {
         slug: generateRandomString(),
         shared: false,
         hidden: false,
-        tags: [],
+        tags: [tagIds[0], tagIds[1]],
         breaking: true,
         lead: '',
         preTitle: '',
@@ -420,7 +506,17 @@ describe('Articles', () => {
             }),
             pending: {
               publishAt: expect.any(Date)
-            }
+            },
+            tags: expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 1'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 2'
+              })
+            ])
           }
         }
       })
@@ -440,7 +536,17 @@ describe('Articles', () => {
             id: expect.any(String),
             latest: expect.objectContaining({
               slug: expect.any(String)
-            })
+            }),
+            tags: expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 1'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 2'
+              })
+            ])
           }
         }
       })

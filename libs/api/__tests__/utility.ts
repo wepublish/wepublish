@@ -1,4 +1,4 @@
-import {CommentItemType, Event, Peer, PrismaClient, Subscription} from '@prisma/client'
+import {CommentItemType, Event, Peer, PrismaClient, Subscription, Tag} from '@prisma/client'
 import {ApolloServer} from 'apollo-server-express'
 import * as crypto from 'crypto'
 import {URL} from 'url'
@@ -33,35 +33,35 @@ export interface TestClient {
 }
 
 class ExampleURLAdapter implements URLAdapter {
-  getPublicArticleURL(article: PublicArticle): string {
+  async getPublicArticleURL(article: PublicArticle) {
     return `https://demo.wepublish.ch/article/${article.id}/${article.slug}`
   }
 
-  getPublicPageURL(page: PublicPage): string {
+  async getPublicPageURL(page: PublicPage) {
     return `https://demo.wepublish.ch/page/${page.id}/${page.slug}`
   }
 
-  getPeeredArticleURL(peer: Peer, article: Article): string {
+  async getPeeredArticleURL(peer: Peer, article: Article) {
     return `https://demo.wepublish.ch/peerArticle/${peer.id}/${article.id}`
   }
 
-  getAuthorURL(author: Author): string {
+  async getAuthorURL(author: Author) {
     return `https://demo.wepublish.ch/author/${author.slug || author.id}`
   }
 
-  getEventURL(event: Event): string {
+  async getEventURL(event: Event) {
     return `https://demo.wepublish.ch/events/${event.id}`
   }
 
-  getArticlePreviewURL(token: string): string {
+  async getArticlePreviewURL(token: string) {
     return `https://demo.wepulish.ch/article/preview/${token}`
   }
 
-  getPagePreviewURL(token: string): string {
+  async getPagePreviewURL(token: string) {
     return `https://demo.wepulish.ch/page/preview/${token}`
   }
 
-  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer): string {
+  async getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer) {
     if (comment.itemType === CommentItemType.article) {
       return `https://demo.wepublish.media/comments/a/${item.id}/${item.slug}/${comment.id}`
     }
@@ -73,12 +73,16 @@ class ExampleURLAdapter implements URLAdapter {
     return `https://demo.wepublish.media/comments/${item.slug}/${comment.id}`
   }
 
-  getLoginURL(token: string): string {
+  getLoginURL(token: string) {
     return `https://demo.wepublish.ch/login/${token}`
   }
 
-  getSubscriptionURL(subscription: Subscription): string {
+  async getSubscriptionURL(subscription: Subscription) {
     return `https://demo.wepublish.ch/profile/subscription/${subscription.id}`
+  }
+
+  async getTagURL(tag: Tag) {
+    return `https://demo.wepublish.ch/a/tag/${tag.tag}`
   }
 }
 

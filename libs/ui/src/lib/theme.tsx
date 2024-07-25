@@ -1,7 +1,9 @@
 import {createTheme, CSSObject, SimplePaletteColorOptions} from '@mui/material'
+import {createBreakpoints} from '@mui/system'
 
 const {
-  palette: {augmentColor}
+  palette: {augmentColor},
+  breakpoints: originalBreakpoints
 } = createTheme()
 
 declare module '@mui/material/styles' {
@@ -65,7 +67,7 @@ export const theme = createTheme({
   palette: {
     primary: augmentColor({color: {main: '#e91e63'}}),
     secondary: augmentColor({color: {main: '#000'}}),
-    accent: augmentColor({color: {main: '#F5FF64'}}),
+    accent: augmentColor({color: {main: '#F5FF64', light: '#A4EFEF'}}),
     grey: {
       800: '#1a1a1a'
     }
@@ -129,5 +131,11 @@ export const theme = createTheme({
         }
       }
     }
-  }
+  },
+  breakpoints: createBreakpoints({
+    values: {
+      ...originalBreakpoints.values,
+      lg: 1333
+    }
+  })
 })

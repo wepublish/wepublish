@@ -27,6 +27,7 @@ import {
 
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
+import {GraphQLTag} from './tag/tag'
 
 export const GraphQLPageFilter = new GraphQLInputObjectType({
   name: 'PageFilter',
@@ -108,7 +109,10 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
 
     title: {type: GraphQLString},
     description: {type: GraphQLString},
-    tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
+    tags: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString))),
+      deprecationReason: 'Tags now live on the Page itself'
+    },
 
     properties: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataProperty)))
@@ -116,11 +120,11 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
 
     url: {
       type: new GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver((pageRevision, args, {urlAdapter}, info) => {
+      resolve: createProxyingResolver(async (pageRevision, args, {urlAdapter}, info) => {
         // The URLAdapter expects a public page to generate the public page URL.
         // The URL should never be created with values from the updatedAt and
         // publishedAt dates, but they are required by the method.
-        return urlAdapter.getPublicPageURL({
+        return await urlAdapter.getPublicPageURL({
           ...pageRevision,
           id: info?.variableValues?.id || 'ID-DOES-NOT-EXIST',
           updatedAt: new Date(),
@@ -175,6 +179,23 @@ export const GraphQLPage = new GraphQLObjectType<Page, Context>({
       resolve: createProxyingResolver(({draft, pending, published}) => {
         return draft ?? pending ?? published
       })
+    },
+
+    tags: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
+      resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
+        const tags = await tag.findMany({
+          where: {
+            pages: {
+              some: {
+                pageId: id
+              }
+            }
+          }
+        })
+
+        return tags
+      })
     }
   }
   // TODO: Implement page history
@@ -202,14 +223,29 @@ export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
 
     url: {
       type: new GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver((page, _, {urlAdapter}) => {
-        return urlAdapter.getPublicPageURL(page)
+      resolve: createProxyingResolver(async (page, _, {urlAdapter}) => {
+        return await urlAdapter.getPublicPageURL(page)
       })
     },
 
     title: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
-    tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
+    tags: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
+      resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
+        const tags = await tag.findMany({
+          where: {
+            pages: {
+              some: {
+                pageId: id
+              }
+            }
+          }
+        })
+
+        return tags
+      })
+    },
 
     properties: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublic))),

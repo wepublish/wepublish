@@ -2,24 +2,481 @@
 
 exports[`Navbar should render Default 1`] = `
 <DocumentFragment>
-  <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+  .emotion-0 {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #fff;
+}
+
+.emotion-2 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  position: static;
+  background-color: transparent;
+  color: inherit;
+}
+
+.emotion-4 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  grid-auto-flow: column;
+  justify-items: center;
+  min-height: unset;
+  padding: 0;
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width:0px) {
+  @media (orientation: landscape) {
+    .emotion-4 {
+      min-height: 48px;
+    }
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    min-height: 64px;
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    grid-template-columns: 1fr max-content 1fr;
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+.emotion-5 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: start;
+  gap: 16px;
+}
+
+.emotion-7 {
+  background-color: #e91e63;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 52px;
+  height: 52px;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    width: 60px;
+    height: 60px;
+  }
+
+  .emotion-7 svg {
+    font-size: 36px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .emotion-7 svg {
+    font-size: 52px;
+  }
+}
+
+.emotion-9 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 12px;
+  font-size: 1.75rem;
+  color: white;
+}
+
+.emotion-9::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-9.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-9 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-9:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-9:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-9.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-10 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-11 {
+  display: none;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+@media (min-width: 740px) {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-13 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  font-size: 1rem;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #000;
+}
+
+.emotion-13:hover {
+  text-decoration-color: inherit;
+}
+
+@media (min-width:900px) {
+  .emotion-13 {
+    font-size: 1.3rem;
+  }
+}
+
+.emotion-15 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  color: unset;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
+}
+
+.emotion-15:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-16 {
+  fill: currentColor;
+  width: auto;
+}
+
+.emotion-18 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 2.253968253968254;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 40px;
+  max-width: 200px;
+}
+
+@media (min-width:900px) {
+  .emotion-18 {
+    max-height: 48px;
+    max-width: 240px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-18 {
+    max-height: 72px;
+    max-width: 304px;
+  }
+}
+
+.emotion-20 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: end;
+  gap: 8px;
+  padding-right: 8px;
+  justify-self: end;
+}
+
+@media (min-width:900px) {
+  .emotion-20 {
+    gap: 16px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-20 {
+    padding-right: 0;
+  }
+}
+
+.emotion-22 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-22:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-23 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 2em;
+  color: black;
+}
+
+.emotion-23::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-23.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-23 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-23:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-23:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-23.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+<nav
+    class="emotion-0 emotion-1"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic emotion-2"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular emotion-3 emotion-4"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl213"
+          class="emotion-5 emotion-6"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="emotion-7 emotion-8"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1e6y8q3-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -41,39 +498,43 @@ exports[`Navbar should render Default 1`] = `
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </div>
-        </div>
-        <div
-          class="css-lp67xt-NavbarLinks ei6evl214"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
-            href="/foo/"
+          <div
+            class="emotion-11 emotion-12"
           >
-            Foo
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
-            href="/bar"
-          >
-            Bar
-          </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/foo/"
+            >
+              Foo
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/bar"
+            >
+              Bar
+            </a>
+          </div>
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-g9hqhg-MuiTypography-root-MuiLink-root-Navbar"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-15"
           href="/"
         >
           <div
-            class="css-31ym2f-NavbarLogoWrapper ei6evl210"
+            class="emotion-16 emotion-17"
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="emotion-18 emotion-19"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -83,22 +544,19 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-cl7riy-NavbarSpacer ei6evl29"
-        />
-        <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="emotion-20 emotion-21"
         >
           <a
-            aria-label="Login"
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-v0nm25-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
               tabindex="0"
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -116,7 +574,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </a>
@@ -129,24 +587,481 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 
 exports[`Navbar should render WithChildren 1`] = `
 <DocumentFragment>
-  <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+  .emotion-0 {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #fff;
+}
+
+.emotion-2 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  position: static;
+  background-color: transparent;
+  color: inherit;
+}
+
+.emotion-4 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  grid-auto-flow: column;
+  justify-items: center;
+  min-height: unset;
+  padding: 0;
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width:0px) {
+  @media (orientation: landscape) {
+    .emotion-4 {
+      min-height: 48px;
+    }
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    min-height: 64px;
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    grid-template-columns: 1fr max-content 1fr;
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+.emotion-5 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: start;
+  gap: 16px;
+}
+
+.emotion-7 {
+  background-color: #e91e63;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 52px;
+  height: 52px;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    width: 60px;
+    height: 60px;
+  }
+
+  .emotion-7 svg {
+    font-size: 36px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .emotion-7 svg {
+    font-size: 52px;
+  }
+}
+
+.emotion-9 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 12px;
+  font-size: 1.75rem;
+  color: white;
+}
+
+.emotion-9::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-9.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-9 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-9:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-9:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-9.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-10 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-11 {
+  display: none;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+@media (min-width: 740px) {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-13 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  font-size: 1rem;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #000;
+}
+
+.emotion-13:hover {
+  text-decoration-color: inherit;
+}
+
+@media (min-width:900px) {
+  .emotion-13 {
+    font-size: 1.3rem;
+  }
+}
+
+.emotion-15 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  color: unset;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
+}
+
+.emotion-15:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-16 {
+  fill: currentColor;
+  width: auto;
+}
+
+.emotion-18 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 2.253968253968254;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 40px;
+  max-width: 200px;
+}
+
+@media (min-width:900px) {
+  .emotion-18 {
+    max-height: 48px;
+    max-width: 240px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-18 {
+    max-height: 72px;
+    max-width: 304px;
+  }
+}
+
+.emotion-20 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: end;
+  gap: 8px;
+  padding-right: 8px;
+  justify-self: end;
+}
+
+@media (min-width:900px) {
+  .emotion-20 {
+    gap: 16px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-20 {
+    padding-right: 0;
+  }
+}
+
+.emotion-22 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-22:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-23 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 2em;
+  color: black;
+}
+
+.emotion-23::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-23.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-23 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-23:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-23:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-23.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+<nav
+    class="emotion-0 emotion-1"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic emotion-2"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular emotion-3 emotion-4"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl213"
+          class="emotion-5 emotion-6"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="emotion-7 emotion-8"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1e6y8q3-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -168,39 +1083,43 @@ exports[`Navbar should render WithChildren 1`] = `
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </div>
-        </div>
-        <div
-          class="css-lp67xt-NavbarLinks ei6evl214"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
-            href="/foo/"
+          <div
+            class="emotion-11 emotion-12"
           >
-            Foo
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
-            href="/bar"
-          >
-            Bar
-          </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/foo/"
+            >
+              Foo
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/bar"
+            >
+              Bar
+            </a>
+          </div>
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-g9hqhg-MuiTypography-root-MuiLink-root-Navbar"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-15"
           href="/"
         >
           <div
-            class="css-31ym2f-NavbarLogoWrapper ei6evl210"
+            class="emotion-16 emotion-17"
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="emotion-18 emotion-19"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -210,22 +1129,19 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-cl7riy-NavbarSpacer ei6evl29"
-        />
-        <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="emotion-20 emotion-21"
         >
           <a
-            aria-label="Login"
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-v0nm25-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
               tabindex="0"
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -243,7 +1159,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </a>
@@ -256,24 +1172,481 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 
 exports[`Navbar should render WithClassName 1`] = `
 <DocumentFragment>
-  <nav
-    class="extra-classname css-1afpbz6-NavbarWrapper ei6evl216"
+  .emotion-0 {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #fff;
+}
+
+.emotion-2 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  position: static;
+  background-color: transparent;
+  color: inherit;
+}
+
+.emotion-4 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  grid-auto-flow: column;
+  justify-items: center;
+  min-height: unset;
+  padding: 0;
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width:0px) {
+  @media (orientation: landscape) {
+    .emotion-4 {
+      min-height: 48px;
+    }
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    min-height: 64px;
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    grid-template-columns: 1fr max-content 1fr;
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+.emotion-5 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: start;
+  gap: 16px;
+}
+
+.emotion-7 {
+  background-color: #e91e63;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 52px;
+  height: 52px;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    width: 60px;
+    height: 60px;
+  }
+
+  .emotion-7 svg {
+    font-size: 36px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .emotion-7 svg {
+    font-size: 52px;
+  }
+}
+
+.emotion-9 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 12px;
+  font-size: 1.75rem;
+  color: white;
+}
+
+.emotion-9::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-9.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-9 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-9:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-9:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-9.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-10 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-11 {
+  display: none;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+@media (min-width: 740px) {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-13 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  font-size: 1rem;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #000;
+}
+
+.emotion-13:hover {
+  text-decoration-color: inherit;
+}
+
+@media (min-width:900px) {
+  .emotion-13 {
+    font-size: 1.3rem;
+  }
+}
+
+.emotion-15 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  color: unset;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
+}
+
+.emotion-15:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-16 {
+  fill: currentColor;
+  width: auto;
+}
+
+.emotion-18 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 2.253968253968254;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 40px;
+  max-width: 200px;
+}
+
+@media (min-width:900px) {
+  .emotion-18 {
+    max-height: 48px;
+    max-width: 240px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-18 {
+    max-height: 72px;
+    max-width: 304px;
+  }
+}
+
+.emotion-20 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: end;
+  gap: 8px;
+  padding-right: 8px;
+  justify-self: end;
+}
+
+@media (min-width:900px) {
+  .emotion-20 {
+    gap: 16px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-20 {
+    padding-right: 0;
+  }
+}
+
+.emotion-22 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-22:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-23 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 2em;
+  color: black;
+}
+
+.emotion-23::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-23.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-23 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-23:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-23:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-23.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+<nav
+    class="extra-classname emotion-0 emotion-1"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic emotion-2"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular emotion-3 emotion-4"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl213"
+          class="emotion-5 emotion-6"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="emotion-7 emotion-8"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1e6y8q3-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -295,39 +1668,43 @@ exports[`Navbar should render WithClassName 1`] = `
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </div>
-        </div>
-        <div
-          class="css-lp67xt-NavbarLinks ei6evl214"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
-            href="/foo/"
+          <div
+            class="emotion-11 emotion-12"
           >
-            Foo
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
-            href="/bar"
-          >
-            Bar
-          </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/foo/"
+            >
+              Foo
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/bar"
+            >
+              Bar
+            </a>
+          </div>
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-g9hqhg-MuiTypography-root-MuiLink-root-Navbar"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-15"
           href="/"
         >
           <div
-            class="css-31ym2f-NavbarLogoWrapper ei6evl210"
+            class="emotion-16 emotion-17"
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="emotion-18 emotion-19"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -337,22 +1714,19 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-cl7riy-NavbarSpacer ei6evl29"
-        />
-        <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="emotion-20 emotion-21"
         >
           <a
-            aria-label="Login"
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-v0nm25-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
               tabindex="0"
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -370,7 +1744,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </a>
@@ -383,24 +1757,481 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 
 exports[`Navbar should render WithEmotion 1`] = `
 <DocumentFragment>
-  <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+  .emotion-0 {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #fff;
+}
+
+.emotion-2 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  position: static;
+  background-color: transparent;
+  color: inherit;
+}
+
+.emotion-4 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  grid-auto-flow: column;
+  justify-items: center;
+  min-height: unset;
+  padding: 0;
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width:0px) {
+  @media (orientation: landscape) {
+    .emotion-4 {
+      min-height: 48px;
+    }
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    min-height: 64px;
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    grid-template-columns: 1fr max-content 1fr;
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+.emotion-5 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: start;
+  gap: 16px;
+}
+
+.emotion-7 {
+  background-color: #e91e63;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 52px;
+  height: 52px;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    width: 60px;
+    height: 60px;
+  }
+
+  .emotion-7 svg {
+    font-size: 36px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .emotion-7 svg {
+    font-size: 52px;
+  }
+}
+
+.emotion-9 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 12px;
+  font-size: 1.75rem;
+  color: white;
+}
+
+.emotion-9::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-9.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-9 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-9:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-9:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-9.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-10 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-11 {
+  display: none;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+@media (min-width: 740px) {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-13 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  font-size: 1rem;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #000;
+}
+
+.emotion-13:hover {
+  text-decoration-color: inherit;
+}
+
+@media (min-width:900px) {
+  .emotion-13 {
+    font-size: 1.3rem;
+  }
+}
+
+.emotion-15 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  color: unset;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
+}
+
+.emotion-15:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-16 {
+  fill: currentColor;
+  width: auto;
+}
+
+.emotion-18 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 2.253968253968254;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 40px;
+  max-width: 200px;
+}
+
+@media (min-width:900px) {
+  .emotion-18 {
+    max-height: 48px;
+    max-width: 240px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-18 {
+    max-height: 72px;
+    max-width: 304px;
+  }
+}
+
+.emotion-20 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: end;
+  gap: 8px;
+  padding-right: 8px;
+  justify-self: end;
+}
+
+@media (min-width:900px) {
+  .emotion-20 {
+    gap: 16px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-20 {
+    padding-right: 0;
+  }
+}
+
+.emotion-22 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-22:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-23 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 2em;
+  color: black;
+}
+
+.emotion-23::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-23.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-23 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-23:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-23:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-23.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+<nav
+    class="emotion-0 emotion-1"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic emotion-2"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular emotion-3 emotion-4"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl213"
+          class="emotion-5 emotion-6"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="emotion-7 emotion-8"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1e6y8q3-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -422,39 +2253,43 @@ exports[`Navbar should render WithEmotion 1`] = `
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </div>
-        </div>
-        <div
-          class="css-lp67xt-NavbarLinks ei6evl214"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
-            href="/foo/"
+          <div
+            class="emotion-11 emotion-12"
           >
-            Foo
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
-            href="/bar"
-          >
-            Bar
-          </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/foo/"
+            >
+              Foo
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/bar"
+            >
+              Bar
+            </a>
+          </div>
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-g9hqhg-MuiTypography-root-MuiLink-root-Navbar"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-15"
           href="/"
         >
           <div
-            class="css-31ym2f-NavbarLogoWrapper ei6evl210"
+            class="emotion-16 emotion-17"
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="emotion-18 emotion-19"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -464,22 +2299,19 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-cl7riy-NavbarSpacer ei6evl29"
-        />
-        <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="emotion-20 emotion-21"
         >
           <a
-            aria-label="Login"
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-v0nm25-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
               tabindex="0"
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -497,7 +2329,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </a>
@@ -510,24 +2342,435 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 
 exports[`Navbar should render WithError 1`] = `
 <DocumentFragment>
-  <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+  .emotion-0 {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #fff;
+}
+
+.emotion-2 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  position: static;
+  background-color: transparent;
+  color: inherit;
+}
+
+.emotion-4 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  grid-auto-flow: column;
+  justify-items: center;
+  min-height: unset;
+  padding: 0;
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width:0px) {
+  @media (orientation: landscape) {
+    .emotion-4 {
+      min-height: 48px;
+    }
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    min-height: 64px;
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    grid-template-columns: 1fr max-content 1fr;
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+.emotion-5 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: start;
+  gap: 16px;
+}
+
+.emotion-7 {
+  background-color: #e91e63;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 52px;
+  height: 52px;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    width: 60px;
+    height: 60px;
+  }
+
+  .emotion-7 svg {
+    font-size: 36px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .emotion-7 svg {
+    font-size: 52px;
+  }
+}
+
+.emotion-9 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 12px;
+  font-size: 1.75rem;
+  color: white;
+}
+
+.emotion-9::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-9.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-9 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-9:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-9:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-9.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-10 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-11 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  color: unset;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
+}
+
+.emotion-11:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-12 {
+  fill: currentColor;
+  width: auto;
+}
+
+.emotion-14 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 2.253968253968254;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 40px;
+  max-width: 200px;
+}
+
+@media (min-width:900px) {
+  .emotion-14 {
+    max-height: 48px;
+    max-width: 240px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-14 {
+    max-height: 72px;
+    max-width: 304px;
+  }
+}
+
+.emotion-16 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: end;
+  gap: 8px;
+  padding-right: 8px;
+  justify-self: end;
+}
+
+@media (min-width:900px) {
+  .emotion-16 {
+    gap: 16px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-16 {
+    padding-right: 0;
+  }
+}
+
+.emotion-18 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-18:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-19 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 2em;
+  color: black;
+}
+
+.emotion-19::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-19.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-19 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-19:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-19:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-19.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+<nav
+    class="emotion-0 emotion-1"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic emotion-2"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular emotion-3 emotion-4"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl213"
+          class="emotion-5 emotion-6"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="emotion-7 emotion-8"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1e6y8q3-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -549,23 +2792,27 @@ exports[`Navbar should render WithError 1`] = `
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </div>
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-g9hqhg-MuiTypography-root-MuiLink-root-Navbar"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-11"
           href="/"
         >
           <div
-            class="css-31ym2f-NavbarLogoWrapper ei6evl210"
+            class="emotion-12 emotion-13"
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="emotion-14 emotion-15"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -575,22 +2822,19 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-cl7riy-NavbarSpacer ei6evl29"
-        />
-        <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="emotion-16 emotion-17"
         >
           <a
-            aria-label="Login"
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-18"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-v0nm25-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-19"
               tabindex="0"
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -608,7 +2852,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </a>
@@ -621,24 +2865,435 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 
 exports[`Navbar should render WithLoading 1`] = `
 <DocumentFragment>
-  <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+  .emotion-0 {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #fff;
+}
+
+.emotion-2 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  position: static;
+  background-color: transparent;
+  color: inherit;
+}
+
+.emotion-4 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  grid-auto-flow: column;
+  justify-items: center;
+  min-height: unset;
+  padding: 0;
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width:0px) {
+  @media (orientation: landscape) {
+    .emotion-4 {
+      min-height: 48px;
+    }
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    min-height: 64px;
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    grid-template-columns: 1fr max-content 1fr;
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+.emotion-5 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: start;
+  gap: 16px;
+}
+
+.emotion-7 {
+  background-color: #e91e63;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 52px;
+  height: 52px;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    width: 60px;
+    height: 60px;
+  }
+
+  .emotion-7 svg {
+    font-size: 36px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .emotion-7 svg {
+    font-size: 52px;
+  }
+}
+
+.emotion-9 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 12px;
+  font-size: 1.75rem;
+  color: white;
+}
+
+.emotion-9::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-9.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-9 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-9:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-9:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-9.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-10 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-11 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  color: unset;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
+}
+
+.emotion-11:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-12 {
+  fill: currentColor;
+  width: auto;
+}
+
+.emotion-14 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 2.253968253968254;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 40px;
+  max-width: 200px;
+}
+
+@media (min-width:900px) {
+  .emotion-14 {
+    max-height: 48px;
+    max-width: 240px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-14 {
+    max-height: 72px;
+    max-width: 304px;
+  }
+}
+
+.emotion-16 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: end;
+  gap: 8px;
+  padding-right: 8px;
+  justify-self: end;
+}
+
+@media (min-width:900px) {
+  .emotion-16 {
+    gap: 16px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-16 {
+    padding-right: 0;
+  }
+}
+
+.emotion-18 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-18:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-19 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 2em;
+  color: black;
+}
+
+.emotion-19::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-19.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-19 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-19:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-19:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-19.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+<nav
+    class="emotion-0 emotion-1"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic emotion-2"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular emotion-3 emotion-4"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl213"
+          class="emotion-5 emotion-6"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="emotion-7 emotion-8"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1e6y8q3-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -660,23 +3315,27 @@ exports[`Navbar should render WithLoading 1`] = `
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </div>
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-g9hqhg-MuiTypography-root-MuiLink-root-Navbar"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-11"
           href="/"
         >
           <div
-            class="css-31ym2f-NavbarLogoWrapper ei6evl210"
+            class="emotion-12 emotion-13"
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="emotion-14 emotion-15"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -686,22 +3345,19 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-cl7riy-NavbarSpacer ei6evl29"
-        />
-        <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="emotion-16 emotion-17"
         >
           <a
-            aria-label="Login"
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-18"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-v0nm25-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-19"
               tabindex="0"
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -719,7 +3375,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </a>
@@ -732,24 +3388,481 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 
 exports[`Navbar should render WithLoggedIn 1`] = `
 <DocumentFragment>
-  <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+  .emotion-0 {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #fff;
+}
+
+.emotion-2 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  position: static;
+  background-color: transparent;
+  color: inherit;
+}
+
+.emotion-4 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  grid-auto-flow: column;
+  justify-items: center;
+  min-height: unset;
+  padding: 0;
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width:0px) {
+  @media (orientation: landscape) {
+    .emotion-4 {
+      min-height: 48px;
+    }
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    min-height: 64px;
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    grid-template-columns: 1fr max-content 1fr;
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+.emotion-5 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: start;
+  gap: 16px;
+}
+
+.emotion-7 {
+  background-color: #e91e63;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 52px;
+  height: 52px;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    width: 60px;
+    height: 60px;
+  }
+
+  .emotion-7 svg {
+    font-size: 36px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .emotion-7 svg {
+    font-size: 52px;
+  }
+}
+
+.emotion-9 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 12px;
+  font-size: 1.75rem;
+  color: white;
+}
+
+.emotion-9::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-9.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-9 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-9:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-9:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-9.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-10 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-11 {
+  display: none;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+@media (min-width: 740px) {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-13 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  font-size: 1rem;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #000;
+}
+
+.emotion-13:hover {
+  text-decoration-color: inherit;
+}
+
+@media (min-width:900px) {
+  .emotion-13 {
+    font-size: 1.3rem;
+  }
+}
+
+.emotion-15 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  color: unset;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
+}
+
+.emotion-15:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-16 {
+  fill: currentColor;
+  width: auto;
+}
+
+.emotion-18 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 2.253968253968254;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 40px;
+  max-width: 200px;
+}
+
+@media (min-width:900px) {
+  .emotion-18 {
+    max-height: 48px;
+    max-width: 240px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-18 {
+    max-height: 72px;
+    max-width: 304px;
+  }
+}
+
+.emotion-20 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: end;
+  gap: 8px;
+  padding-right: 8px;
+  justify-self: end;
+}
+
+@media (min-width:900px) {
+  .emotion-20 {
+    gap: 16px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-20 {
+    padding-right: 0;
+  }
+}
+
+.emotion-22 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-22:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-23 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 2em;
+  color: black;
+}
+
+.emotion-23::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-23.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-23 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-23:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-23:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-23.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+<nav
+    class="emotion-0 emotion-1"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic emotion-2"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular emotion-3 emotion-4"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl213"
+          class="emotion-5 emotion-6"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="emotion-7 emotion-8"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1e6y8q3-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -771,39 +3884,43 @@ exports[`Navbar should render WithLoggedIn 1`] = `
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </div>
-        </div>
-        <div
-          class="css-lp67xt-NavbarLinks ei6evl214"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
-            href="/foo/"
+          <div
+            class="emotion-11 emotion-12"
           >
-            Foo
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
-            href="/bar"
-          >
-            Bar
-          </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/foo/"
+            >
+              Foo
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/bar"
+            >
+              Bar
+            </a>
+          </div>
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-g9hqhg-MuiTypography-root-MuiLink-root-Navbar"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-15"
           href="/"
         >
           <div
-            class="css-31ym2f-NavbarLogoWrapper ei6evl210"
+            class="emotion-16 emotion-17"
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="emotion-18 emotion-19"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -813,22 +3930,19 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-cl7riy-NavbarSpacer ei6evl29"
-        />
-        <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="emotion-20 emotion-21"
         >
           <a
-            aria-label="Profil"
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
             href="/profile/subscription"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-v0nm25-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-23"
               tabindex="0"
               type="button"
             >
               <svg
+                aria-label="Subscriptions"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -846,21 +3960,21 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </a>
           <a
-            aria-label="Profil"
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
             href="/profile"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-v0nm25-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
               tabindex="0"
               type="button"
             >
               <svg
+                aria-label="Profil"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -878,7 +3992,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </a>
@@ -891,24 +4005,435 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 
 exports[`Navbar should render WithoutItems 1`] = `
 <DocumentFragment>
-  <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+  .emotion-0 {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #fff;
+}
+
+.emotion-2 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  position: static;
+  background-color: transparent;
+  color: inherit;
+}
+
+.emotion-4 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  grid-auto-flow: column;
+  justify-items: center;
+  min-height: unset;
+  padding: 0;
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width:0px) {
+  @media (orientation: landscape) {
+    .emotion-4 {
+      min-height: 48px;
+    }
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    min-height: 64px;
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    grid-template-columns: 1fr max-content 1fr;
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+.emotion-5 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: start;
+  gap: 16px;
+}
+
+.emotion-7 {
+  background-color: #e91e63;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 52px;
+  height: 52px;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    width: 60px;
+    height: 60px;
+  }
+
+  .emotion-7 svg {
+    font-size: 36px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .emotion-7 svg {
+    font-size: 52px;
+  }
+}
+
+.emotion-9 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 12px;
+  font-size: 1.75rem;
+  color: white;
+}
+
+.emotion-9::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-9.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-9 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-9:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-9:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-9.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-10 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-11 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  color: unset;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
+}
+
+.emotion-11:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-12 {
+  fill: currentColor;
+  width: auto;
+}
+
+.emotion-14 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 2.253968253968254;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 40px;
+  max-width: 200px;
+}
+
+@media (min-width:900px) {
+  .emotion-14 {
+    max-height: 48px;
+    max-width: 240px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-14 {
+    max-height: 72px;
+    max-width: 304px;
+  }
+}
+
+.emotion-16 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: end;
+  gap: 8px;
+  padding-right: 8px;
+  justify-self: end;
+}
+
+@media (min-width:900px) {
+  .emotion-16 {
+    gap: 16px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-16 {
+    padding-right: 0;
+  }
+}
+
+.emotion-18 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-18:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-19 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 2em;
+  color: black;
+}
+
+.emotion-19::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-19.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-19 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-19:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-19:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-19.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+<nav
+    class="emotion-0 emotion-1"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic emotion-2"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular emotion-3 emotion-4"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl213"
+          class="emotion-5 emotion-6"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="emotion-7 emotion-8"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1e6y8q3-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -930,23 +4455,27 @@ exports[`Navbar should render WithoutItems 1`] = `
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </div>
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-g9hqhg-MuiTypography-root-MuiLink-root-Navbar"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-11"
           href="/"
         >
           <div
-            class="css-31ym2f-NavbarLogoWrapper ei6evl210"
+            class="emotion-12 emotion-13"
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="emotion-14 emotion-15"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -956,22 +4485,19 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-cl7riy-NavbarSpacer ei6evl29"
-        />
-        <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="emotion-16 emotion-17"
         >
           <a
-            aria-label="Login"
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-18"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-v0nm25-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-19"
               tabindex="0"
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -989,7 +4515,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </a>
@@ -1002,24 +4528,457 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 
 exports[`Navbar should render WithoutLogo 1`] = `
 <DocumentFragment>
-  <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+  .emotion-0 {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #fff;
+}
+
+.emotion-2 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  position: static;
+  background-color: transparent;
+  color: inherit;
+}
+
+.emotion-4 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  grid-auto-flow: column;
+  justify-items: center;
+  min-height: unset;
+  padding: 0;
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width:0px) {
+  @media (orientation: landscape) {
+    .emotion-4 {
+      min-height: 48px;
+    }
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    min-height: 64px;
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    grid-template-columns: 1fr max-content 1fr;
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    min-height: unset;
+    padding: 0;
+  }
+}
+
+.emotion-5 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: start;
+  gap: 16px;
+}
+
+.emotion-7 {
+  background-color: #e91e63;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 52px;
+  height: 52px;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    width: 60px;
+    height: 60px;
+  }
+
+  .emotion-7 svg {
+    font-size: 36px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .emotion-7 svg {
+    font-size: 52px;
+  }
+}
+
+.emotion-9 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 12px;
+  font-size: 1.75rem;
+  color: white;
+}
+
+.emotion-9::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-9.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-9 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-9:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-9:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-9.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-10 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-11 {
+  display: none;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+@media (min-width: 740px) {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-13 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  font-size: 1rem;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #000;
+}
+
+.emotion-13:hover {
+  text-decoration-color: inherit;
+}
+
+@media (min-width:900px) {
+  .emotion-13 {
+    font-size: 1.3rem;
+  }
+}
+
+.emotion-15 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  color: unset;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
+}
+
+.emotion-15:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-16 {
+  fill: currentColor;
+  width: auto;
+}
+
+.emotion-18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-self: end;
+  gap: 8px;
+  padding-right: 8px;
+  justify-self: end;
+}
+
+@media (min-width:900px) {
+  .emotion-18 {
+    gap: 16px;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-18 {
+    padding-right: 0;
+  }
+}
+
+.emotion-20 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-20:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-21 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 2em;
+  color: black;
+}
+
+.emotion-21::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-21.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-21 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-21:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-21:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-21.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+<nav
+    class="emotion-0 emotion-1"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic emotion-2"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular emotion-3 emotion-4"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl213"
+          class="emotion-5 emotion-6"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="emotion-7 emotion-8"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1e6y8q3-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -1041,44 +5000,50 @@ exports[`Navbar should render WithoutLogo 1`] = `
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </div>
+          <div
+            class="emotion-11 emotion-12"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/foo/"
+            >
+              Foo
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/bar"
+            >
+              Bar
+            </a>
+          </div>
         </div>
+        <a
+          aria-label="Startseite"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-15"
+          href="/"
+        >
+          <div
+            class="emotion-16 emotion-17"
+          />
+        </a>
         <div
-          class="css-lp67xt-NavbarLinks ei6evl214"
+          class="emotion-18 emotion-19"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
-            href="/foo/"
-          >
-            Foo
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
-            href="/bar"
-          >
-            Bar
-          </a>
-        </div>
-        <div
-          class="css-cl7riy-NavbarSpacer ei6evl29"
-        />
-        <div
-          class="css-1w9evey-NavbarActions ei6evl212"
-        >
-          <a
-            aria-label="Login"
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-20"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-v0nm25-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-21"
               tabindex="0"
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -1096,7 +5061,7 @@ exports[`Navbar should render WithoutLogo 1`] = `
                 />
               </svg>
               <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-10"
               />
             </button>
           </a>

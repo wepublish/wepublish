@@ -10,6 +10,7 @@ const author = {
   name: 'Foobar',
   jobTitle: 'Editor',
   url: 'https://example.com',
+  tags: [],
   bio: [
     {
       type: 'heading-one',

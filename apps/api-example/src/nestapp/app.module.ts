@@ -22,6 +22,7 @@ import {
   MembershipModule,
   NavigationModule,
   NeverChargePaymentProvider,
+  NovaMediaAdapter,
   PaymentProvider,
   PaymentsModule,
   PaymentMethodModule,
@@ -33,7 +34,9 @@ import {
   StatsModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  MemberPlanModule
+  MemberPlanModule,
+  ScriptsModule,
+  SystemInfoModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -239,6 +242,7 @@ import {ActionModule} from '@wepublish/action/api'
     ConsentModule,
     StatsModule,
     SettingModule,
+    ScriptsModule,
     EventModule,
     NavigationModule,
     AuthorModule,
@@ -256,20 +260,39 @@ import {ActionModule} from '@wepublish/action/api'
     }),
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
-    HealthModule
+    HealthModule,
+    SystemInfoModule
   ],
-  exports: [MediaAdapterService],
+  exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [
     {
       provide: MediaAdapterService,
-      useFactory: (config: ConfigService) => {
+      useFactory: async (config: ConfigService) => {
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
         const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL')
+        const token = config.getOrThrow('MEDIA_SERVER_TOKEN')
 
+        if (configFile.mediaServer?.type === 'nova') {
+          return new NovaMediaAdapter(
+            config.getOrThrow('MEDIA_SERVER_URL'),
+            token,
+            internalUrl ? internalUrl : undefined
+          )
+        }
+
+        console.warn('Running on deprecated karma media server migrate to nova media server!')
         return new KarmaMediaAdapter(
           new URL(config.getOrThrow('MEDIA_SERVER_URL')),
-          config.getOrThrow('MEDIA_SERVER_TOKEN'),
+          token,
           internalUrl ? new URL(internalUrl) : undefined
         )
+      },
+      inject: [ConfigService]
+    },
+    {
+      provide: 'SYSTEM_INFO_KEY',
+      useFactory: (config: ConfigService) => {
+        return config.get('SYSTEM_INFO_KEY')
       },
       inject: [ConfigService]
     }

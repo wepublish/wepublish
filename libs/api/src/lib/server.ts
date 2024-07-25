@@ -15,7 +15,6 @@ import {
 import {graphqlUploadExpress} from 'graphql-upload'
 import {setupMailProvider} from './mails'
 import {serverLogger, setLogger, logger} from '@wepublish/utils/api'
-import {StaticRouter} from './static'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -94,10 +93,6 @@ export class WepublishServer {
       path: '/v1',
       cors: corsOptions
     })
-
-    // Used for serving resources that are directly used by the websites, like scripts
-    const staticRouter = new StaticRouter(this.opts.prisma)
-    app.use('/static', staticRouter.getRouter())
 
     app.use((err: any, req: Request, res: Response, next: NextFunction) => {
       logger('server').error(err)

@@ -1,0 +1,3924 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Focus Teaser should render Article 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  grid-column: -1/1;
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+}
+
+.emotion-2 {
+  display: grid;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #A4EFEF;
+}
+
+@media (min-width:1333px) {
+  .emotion-2 {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+.emotion-4 {
+  display: grid;
+  color: #fff;
+  background-color: #000;
+  text-transform: uppercase;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  padding: 72px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-7 {
+  padding: 32px;
+}
+
+.emotion-7 .emotion-17 {
+  max-height: 50lvh;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    padding: 64px;
+  }
+
+  .emotion-7 .emotion-17 {
+    aspect-ratio: unset;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    padding: 80px;
+  }
+}
+
+.emotion-9 {
+  display: grid;
+  grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-9 .emotion-23 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-9 .emotion-25 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-9 {
+    grid-column-start: 1;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-11 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-12 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-14 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-14:empty {
+  min-height: 32px;
+}
+
+.emotion-16 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 400px;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-16:where(.emotion-10:hover .emotion-16) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-16 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-18 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #F5FF64;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+  grid-area: pretitle;
+}
+
+.emotion-18:where(.emotion-10:hover .emotion-18) {
+  background-color: #e91e63;
+}
+
+.emotion-20 {
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-20:where(.emotion-10:hover .emotion-20) {
+  background-color: #e91e63;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-20 {
+    font-size: 18px;
+  }
+}
+
+.emotion-22 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-22 {
+    font-size: 32px;
+  }
+}
+
+.emotion-24 {
+  font-weight: 300;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-24.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-26 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+.emotion-28 {
+  font-weight: 400;
+}
+
+.emotion-30 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-30 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-30 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-32 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-32 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-53 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-53 {
+    grid-column-start: 4;
+    grid-column-end: 7;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-74 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-74 {
+    grid-column-start: 7;
+    grid-column-end: 10;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-95 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-95 {
+    grid-column-start: 10;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<section
+    class="emotion-0 emotion-1"
+  >
+    <div
+      class="emotion-2 emotion-3"
+    >
+      <div
+        class="emotion-4 emotion-5"
+      >
+        <h1
+          class="MuiTypography-root MuiTypography-h3 emotion-6"
+        >
+          Foobar Title
+        </h1>
+      </div>
+      <div
+        class="emotion-7 emotion-8"
+      >
+        <article
+          class="emotion-9 emotion-10"
+          x="0"
+          y="0"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+            href="https://example.com"
+          >
+            <div
+              class="emotion-12 emotion-13"
+            >
+              <div
+                class="emotion-14 emotion-15"
+              >
+                <img
+                  alt="An image description"
+                  class="emotion-16 emotion-17"
+                  loading="lazy"
+                  sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                  srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                  title="An image title"
+                />
+              </div>
+              <div
+                class="emotion-18 emotion-19"
+              >
+                <div
+                  class="emotion-20 emotion-21"
+                >
+                  Pre Title
+                </div>
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+              >
+                Title
+              </h1>
+              <p
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+              >
+                Lead
+              </p>
+              <div
+                class="emotion-26 emotion-27"
+              >
+                <time
+                  class="emotion-28 emotion-29"
+                  datetime="2023-01-01T00:00:00.000Z"
+                >
+                  01.01.2023 
+                </time>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </div>
+    <div
+      class="emotion-30 emotion-31"
+    >
+      <article
+        class="emotion-32 emotion-10"
+        x="0"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-53 emotion-10"
+        x="3"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-74 emotion-10"
+        x="6"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-95 emotion-10"
+        x="9"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+    </div>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`Focus Teaser should render Event 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  grid-column: -1/1;
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+}
+
+.emotion-2 {
+  display: grid;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #A4EFEF;
+}
+
+@media (min-width:1333px) {
+  .emotion-2 {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+.emotion-4 {
+  display: grid;
+  color: #fff;
+  background-color: #000;
+  text-transform: uppercase;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  padding: 72px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-7 {
+  padding: 32px;
+}
+
+.emotion-7 .emotion-17 {
+  max-height: 50lvh;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    padding: 64px;
+  }
+
+  .emotion-7 .emotion-17 {
+    aspect-ratio: unset;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    padding: 80px;
+  }
+}
+
+.emotion-9 {
+  display: grid;
+  grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-9 .emotion-23 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-9 .emotion-25 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-9 {
+    grid-column-start: 1;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-11 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-12 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-14 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-14:empty {
+  min-height: 32px;
+}
+
+.emotion-16 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 400px;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-16:where(.emotion-10:hover .emotion-16) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-16 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-18 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #F5FF64;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+  grid-area: pretitle;
+}
+
+.emotion-18:where(.emotion-10:hover .emotion-18) {
+  background-color: #e91e63;
+}
+
+.emotion-20 {
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-20:where(.emotion-10:hover .emotion-20) {
+  background-color: #e91e63;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-20 {
+    font-size: 18px;
+  }
+}
+
+.emotion-22 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-22 {
+    font-size: 32px;
+  }
+}
+
+.emotion-24 {
+  font-weight: 300;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-24.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-26 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+.emotion-28 {
+  font-weight: 400;
+}
+
+.emotion-30 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-30 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-30 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-32 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-32 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-53 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-53 {
+    grid-column-start: 4;
+    grid-column-end: 7;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-74 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-74 {
+    grid-column-start: 7;
+    grid-column-end: 10;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-95 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-95 {
+    grid-column-start: 10;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<section
+    class="emotion-0 emotion-1"
+  >
+    <div
+      class="emotion-2 emotion-3"
+    >
+      <div
+        class="emotion-4 emotion-5"
+      >
+        <h1
+          class="MuiTypography-root MuiTypography-h3 emotion-6"
+        >
+          Foobar Title
+        </h1>
+      </div>
+      <div
+        class="emotion-7 emotion-8"
+      >
+        <article
+          class="emotion-9 emotion-10"
+          x="0"
+          y="0"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+            href="https://example.com"
+          >
+            <div
+              class="emotion-12 emotion-13"
+            >
+              <div
+                class="emotion-14 emotion-15"
+              >
+                <img
+                  alt="An image description"
+                  class="emotion-16 emotion-17"
+                  loading="lazy"
+                  sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                  srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                  title="An image title"
+                />
+              </div>
+              <div
+                class="emotion-18 emotion-19"
+              >
+                <div
+                  class="emotion-20 emotion-21"
+                >
+                  Pre Title
+                </div>
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+              >
+                Title
+              </h1>
+              <p
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+              >
+                Lead
+              </p>
+              <div
+                class="emotion-26 emotion-27"
+              >
+                <time
+                  class="emotion-28 emotion-29"
+                  datetime="2023-01-01T00:00:00.000Z"
+                >
+                  01.01.2023 
+                </time>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </div>
+    <div
+      class="emotion-30 emotion-31"
+    >
+      <article
+        class="emotion-32 emotion-10"
+        x="0"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-53 emotion-10"
+        x="3"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-74 emotion-10"
+        x="6"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-95 emotion-10"
+        x="9"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+    </div>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`Focus Teaser should render Page 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  grid-column: -1/1;
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+}
+
+.emotion-2 {
+  display: grid;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #A4EFEF;
+}
+
+@media (min-width:1333px) {
+  .emotion-2 {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+.emotion-4 {
+  display: grid;
+  color: #fff;
+  background-color: #000;
+  text-transform: uppercase;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  padding: 72px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-7 {
+  padding: 32px;
+}
+
+.emotion-7 .emotion-17 {
+  max-height: 50lvh;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    padding: 64px;
+  }
+
+  .emotion-7 .emotion-17 {
+    aspect-ratio: unset;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    padding: 80px;
+  }
+}
+
+.emotion-9 {
+  display: grid;
+  grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-9 .emotion-23 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-9 .emotion-25 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-9 {
+    grid-column-start: 1;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-11 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-12 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-14 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-14:empty {
+  min-height: 32px;
+}
+
+.emotion-16 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 400px;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-16:where(.emotion-10:hover .emotion-16) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-16 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-18 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #F5FF64;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+  grid-area: pretitle;
+}
+
+.emotion-18:where(.emotion-10:hover .emotion-18) {
+  background-color: #e91e63;
+}
+
+.emotion-20 {
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-20:where(.emotion-10:hover .emotion-20) {
+  background-color: #e91e63;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-20 {
+    font-size: 18px;
+  }
+}
+
+.emotion-22 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-22 {
+    font-size: 32px;
+  }
+}
+
+.emotion-24 {
+  font-weight: 300;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-24.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-26 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+.emotion-28 {
+  font-weight: 400;
+}
+
+.emotion-30 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-30 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-30 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-32 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-32 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-53 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-53 {
+    grid-column-start: 4;
+    grid-column-end: 7;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-74 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-74 {
+    grid-column-start: 7;
+    grid-column-end: 10;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-95 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-95 {
+    grid-column-start: 10;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<section
+    class="emotion-0 emotion-1"
+  >
+    <div
+      class="emotion-2 emotion-3"
+    >
+      <div
+        class="emotion-4 emotion-5"
+      >
+        <h1
+          class="MuiTypography-root MuiTypography-h3 emotion-6"
+        >
+          Foobar Title
+        </h1>
+      </div>
+      <div
+        class="emotion-7 emotion-8"
+      >
+        <article
+          class="emotion-9 emotion-10"
+          x="0"
+          y="0"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+            href="https://example.com"
+          >
+            <div
+              class="emotion-12 emotion-13"
+            >
+              <div
+                class="emotion-14 emotion-15"
+              >
+                <img
+                  alt="An image description"
+                  class="emotion-16 emotion-17"
+                  loading="lazy"
+                  sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                  srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                  title="An image title"
+                />
+              </div>
+              <div
+                class="emotion-18 emotion-19"
+              >
+                <div
+                  class="emotion-20 emotion-21"
+                >
+                  Pre Title
+                </div>
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+              >
+                Title
+              </h1>
+              <p
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+              >
+                Lead
+              </p>
+              <div
+                class="emotion-26 emotion-27"
+              >
+                <time
+                  class="emotion-28 emotion-29"
+                  datetime="2023-01-01T00:00:00.000Z"
+                >
+                  01.01.2023 
+                </time>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </div>
+    <div
+      class="emotion-30 emotion-31"
+    >
+      <article
+        class="emotion-32 emotion-10"
+        x="0"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-53 emotion-10"
+        x="3"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-74 emotion-10"
+        x="6"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-95 emotion-10"
+        x="9"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+    </div>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`Focus Teaser should render WithClassName 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  grid-column: -1/1;
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+}
+
+.emotion-2 {
+  display: grid;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #A4EFEF;
+}
+
+@media (min-width:1333px) {
+  .emotion-2 {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+.emotion-4 {
+  display: grid;
+  color: #fff;
+  background-color: #000;
+  text-transform: uppercase;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  padding: 72px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-7 {
+  padding: 32px;
+}
+
+.emotion-7 .emotion-17 {
+  max-height: 50lvh;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    padding: 64px;
+  }
+
+  .emotion-7 .emotion-17 {
+    aspect-ratio: unset;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    padding: 80px;
+  }
+}
+
+.emotion-9 {
+  display: grid;
+  grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-9 .emotion-23 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-9 .emotion-25 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-9 {
+    grid-column-start: 1;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-11 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-12 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-14 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-14:empty {
+  min-height: 32px;
+}
+
+.emotion-16 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 400px;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-16:where(.emotion-10:hover .emotion-16) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-16 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-18 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #F5FF64;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+  grid-area: pretitle;
+}
+
+.emotion-18:where(.emotion-10:hover .emotion-18) {
+  background-color: #e91e63;
+}
+
+.emotion-20 {
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-20:where(.emotion-10:hover .emotion-20) {
+  background-color: #e91e63;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-20 {
+    font-size: 18px;
+  }
+}
+
+.emotion-22 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-22 {
+    font-size: 32px;
+  }
+}
+
+.emotion-24 {
+  font-weight: 300;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-24.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-26 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+.emotion-28 {
+  font-weight: 400;
+}
+
+.emotion-30 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-30 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-30 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-32 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-32 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-53 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-53 {
+    grid-column-start: 4;
+    grid-column-end: 7;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-74 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-74 {
+    grid-column-start: 7;
+    grid-column-end: 10;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-95 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-95 {
+    grid-column-start: 10;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<section
+    class="extra-classname emotion-0 emotion-1"
+  >
+    <div
+      class="emotion-2 emotion-3"
+    >
+      <div
+        class="emotion-4 emotion-5"
+      >
+        <h1
+          class="MuiTypography-root MuiTypography-h3 emotion-6"
+        >
+          Foobar Title
+        </h1>
+      </div>
+      <div
+        class="emotion-7 emotion-8"
+      >
+        <article
+          class="emotion-9 emotion-10"
+          x="0"
+          y="0"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+            href="https://example.com"
+          >
+            <div
+              class="emotion-12 emotion-13"
+            >
+              <div
+                class="emotion-14 emotion-15"
+              >
+                <img
+                  alt="An image description"
+                  class="emotion-16 emotion-17"
+                  loading="lazy"
+                  sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                  srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                  title="An image title"
+                />
+              </div>
+              <div
+                class="emotion-18 emotion-19"
+              >
+                <div
+                  class="emotion-20 emotion-21"
+                >
+                  Pre Title
+                </div>
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+              >
+                Title
+              </h1>
+              <p
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+              >
+                Lead
+              </p>
+              <div
+                class="emotion-26 emotion-27"
+              >
+                <time
+                  class="emotion-28 emotion-29"
+                  datetime="2023-01-01T00:00:00.000Z"
+                >
+                  01.01.2023 
+                </time>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </div>
+    <div
+      class="emotion-30 emotion-31"
+    >
+      <article
+        class="emotion-32 emotion-10"
+        x="0"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-53 emotion-10"
+        x="3"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-74 emotion-10"
+        x="6"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-95 emotion-10"
+        x="9"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+    </div>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`Focus Teaser should render WithEmotion 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  grid-column: -1/1;
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+}
+
+.emotion-2 {
+  display: grid;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #A4EFEF;
+}
+
+@media (min-width:1333px) {
+  .emotion-2 {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+.emotion-4 {
+  display: grid;
+  color: #fff;
+  background-color: #000;
+  text-transform: uppercase;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  padding: 72px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-7 {
+  padding: 32px;
+}
+
+.emotion-7 .emotion-17 {
+  max-height: 50lvh;
+}
+
+@media (min-width:900px) {
+  .emotion-7 {
+    padding: 64px;
+  }
+
+  .emotion-7 .emotion-17 {
+    aspect-ratio: unset;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-7 {
+    padding: 80px;
+  }
+}
+
+.emotion-9 {
+  display: grid;
+  grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-9 .emotion-23 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-9 .emotion-25 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-9 {
+    grid-column-start: 1;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-11 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-12 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-14 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-14:empty {
+  min-height: 32px;
+}
+
+.emotion-16 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 400px;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-16:where(.emotion-10:hover .emotion-16) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-16 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-18 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #F5FF64;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+  grid-area: pretitle;
+}
+
+.emotion-18:where(.emotion-10:hover .emotion-18) {
+  background-color: #e91e63;
+}
+
+.emotion-20 {
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-20:where(.emotion-10:hover .emotion-20) {
+  background-color: #e91e63;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-20 {
+    font-size: 18px;
+  }
+}
+
+.emotion-22 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-22 {
+    font-size: 32px;
+  }
+}
+
+.emotion-24 {
+  font-weight: 300;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-24.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-26 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+.emotion-28 {
+  font-weight: 400;
+}
+
+.emotion-30 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-30 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-30 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-32 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-32 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-53 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-53 {
+    grid-column-start: 4;
+    grid-column-end: 7;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-74 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-74 {
+    grid-column-start: 7;
+    grid-column-end: 10;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-95 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-95 {
+    grid-column-start: 10;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<section
+    class="emotion-0 emotion-1"
+  >
+    <div
+      class="emotion-2 emotion-3"
+    >
+      <div
+        class="emotion-4 emotion-5"
+      >
+        <h1
+          class="MuiTypography-root MuiTypography-h3 emotion-6"
+        >
+          Foobar Title
+        </h1>
+      </div>
+      <div
+        class="emotion-7 emotion-8"
+      >
+        <article
+          class="emotion-9 emotion-10"
+          x="0"
+          y="0"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+            href="https://example.com"
+          >
+            <div
+              class="emotion-12 emotion-13"
+            >
+              <div
+                class="emotion-14 emotion-15"
+              >
+                <img
+                  alt="An image description"
+                  class="emotion-16 emotion-17"
+                  loading="lazy"
+                  sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                  srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                  title="An image title"
+                />
+              </div>
+              <div
+                class="emotion-18 emotion-19"
+              >
+                <div
+                  class="emotion-20 emotion-21"
+                >
+                  Pre Title
+                </div>
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+              >
+                Title
+              </h1>
+              <p
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+              >
+                Lead
+              </p>
+              <div
+                class="emotion-26 emotion-27"
+              >
+                <time
+                  class="emotion-28 emotion-29"
+                  datetime="2023-01-01T00:00:00.000Z"
+                >
+                  01.01.2023 
+                </time>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </div>
+    <div
+      class="emotion-30 emotion-31"
+    >
+      <article
+        class="emotion-32 emotion-10"
+        x="0"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-53 emotion-10"
+        x="3"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-74 emotion-10"
+        x="6"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-95 emotion-10"
+        x="9"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15"
+            >
+              <img
+                alt="An image description"
+                class="emotion-16 emotion-17"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-18 emotion-19"
+            >
+              <div
+                class="emotion-20 emotion-21"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-26 emotion-27"
+            >
+              <time
+                class="emotion-28 emotion-29"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+    </div>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`Focus Teaser should render WithLink 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  grid-column: -1/1;
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+}
+
+.emotion-2 {
+  display: grid;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #A4EFEF;
+}
+
+@media (min-width:1333px) {
+  .emotion-2 {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+.emotion-4 {
+  display: grid;
+  color: #fff;
+  background-color: #000;
+  text-transform: uppercase;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  padding: 72px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-7 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-8 {
+  padding: 32px;
+}
+
+.emotion-8 .emotion-18 {
+  max-height: 50lvh;
+}
+
+@media (min-width:900px) {
+  .emotion-8 {
+    padding: 64px;
+  }
+
+  .emotion-8 .emotion-18 {
+    aspect-ratio: unset;
+  }
+}
+
+@media (min-width:1333px) {
+  .emotion-8 {
+    padding: 80px;
+  }
+}
+
+.emotion-10 {
+  display: grid;
+  grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-10 .emotion-24 {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .emotion-10 .emotion-26 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-10 {
+    grid-column-start: 1;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-13 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-15 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-15:empty {
+  min-height: 32px;
+}
+
+.emotion-17 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-height: 400px;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-17:where(.emotion-11:hover .emotion-17) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-17 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-19 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #F5FF64;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+  grid-area: pretitle;
+}
+
+.emotion-19:where(.emotion-11:hover .emotion-19) {
+  background-color: #e91e63;
+}
+
+.emotion-21 {
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-21:where(.emotion-11:hover .emotion-21) {
+  background-color: #e91e63;
+  color: #fff;
+}
+
+@media (min-width:900px) {
+  .emotion-21 {
+    font-size: 18px;
+  }
+}
+
+.emotion-23 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-23 {
+    font-size: 32px;
+  }
+}
+
+.emotion-25 {
+  font-weight: 300;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-25.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-27 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+.emotion-29 {
+  font-weight: 400;
+}
+
+.emotion-31 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-31 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-31 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-33 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-33 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-54 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-54 {
+    grid-column-start: 4;
+    grid-column-end: 7;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-75 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-75 {
+    grid-column-start: 7;
+    grid-column-end: 10;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-96 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-96 {
+    grid-column-start: 10;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<section
+    class="emotion-0 emotion-1"
+  >
+    <div
+      class="emotion-2 emotion-3"
+    >
+      <div
+        class="emotion-4 emotion-5"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
+          href="https://example.com"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h3 emotion-7"
+          >
+            Foobar Title
+          </h1>
+        </a>
+      </div>
+      <div
+        class="emotion-8 emotion-9"
+      >
+        <article
+          class="emotion-10 emotion-11"
+          x="0"
+          y="0"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
+            href="https://example.com"
+          >
+            <div
+              class="emotion-13 emotion-14"
+            >
+              <div
+                class="emotion-15 emotion-16"
+              >
+                <img
+                  alt="An image description"
+                  class="emotion-17 emotion-18"
+                  loading="lazy"
+                  sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                  srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                  title="An image title"
+                />
+              </div>
+              <div
+                class="emotion-19 emotion-20"
+              >
+                <div
+                  class="emotion-21 emotion-22"
+                >
+                  Pre Title
+                </div>
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h4 emotion-23 emotion-24"
+              >
+                Title
+              </h1>
+              <p
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25 emotion-26"
+              >
+                Lead
+              </p>
+              <div
+                class="emotion-27 emotion-28"
+              >
+                <time
+                  class="emotion-29 emotion-30"
+                  datetime="2023-01-01T00:00:00.000Z"
+                >
+                  01.01.2023 
+                </time>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </div>
+    <div
+      class="emotion-31 emotion-32"
+    >
+      <article
+        class="emotion-33 emotion-11"
+        x="0"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-13 emotion-14"
+          >
+            <div
+              class="emotion-15 emotion-16"
+            >
+              <img
+                alt="An image description"
+                class="emotion-17 emotion-18"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-19 emotion-20"
+            >
+              <div
+                class="emotion-21 emotion-22"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-23 emotion-24"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25 emotion-26"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-27 emotion-28"
+            >
+              <time
+                class="emotion-29 emotion-30"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-54 emotion-11"
+        x="3"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-13 emotion-14"
+          >
+            <div
+              class="emotion-15 emotion-16"
+            >
+              <img
+                alt="An image description"
+                class="emotion-17 emotion-18"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-19 emotion-20"
+            >
+              <div
+                class="emotion-21 emotion-22"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-23 emotion-24"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25 emotion-26"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-27 emotion-28"
+            >
+              <time
+                class="emotion-29 emotion-30"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-75 emotion-11"
+        x="6"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-13 emotion-14"
+          >
+            <div
+              class="emotion-15 emotion-16"
+            >
+              <img
+                alt="An image description"
+                class="emotion-17 emotion-18"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-19 emotion-20"
+            >
+              <div
+                class="emotion-21 emotion-22"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-23 emotion-24"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25 emotion-26"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-27 emotion-28"
+            >
+              <time
+                class="emotion-29 emotion-30"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+      <article
+        class="emotion-96 emotion-11"
+        x="9"
+        y="0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
+          href="https://example.com"
+        >
+          <div
+            class="emotion-13 emotion-14"
+          >
+            <div
+              class="emotion-15 emotion-16"
+            >
+              <img
+                alt="An image description"
+                class="emotion-17 emotion-18"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title="An image title"
+              />
+            </div>
+            <div
+              class="emotion-19 emotion-20"
+            >
+              <div
+                class="emotion-21 emotion-22"
+              >
+                Pre Title
+              </div>
+            </div>
+            <h1
+              class="MuiTypography-root MuiTypography-h4 emotion-23 emotion-24"
+            >
+              Title
+            </h1>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25 emotion-26"
+            >
+              Lead
+            </p>
+            <div
+              class="emotion-27 emotion-28"
+            >
+              <time
+                class="emotion-29 emotion-30"
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 
+              </time>
+            </div>
+          </div>
+        </a>
+      </article>
+    </div>
+  </section>
+</DocumentFragment>
+`;

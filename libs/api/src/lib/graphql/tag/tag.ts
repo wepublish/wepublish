@@ -1,5 +1,6 @@
 import {Tag, TagType} from '@prisma/client'
 import {
+  GraphQLBoolean,
   GraphQLEnumType,
   GraphQLID,
   GraphQLInputObjectType,
@@ -12,13 +13,16 @@ import {
 import {Context} from '../../context'
 import {GraphQLPageInfo} from '../common'
 import {TagSort} from './tag.query'
+import {createProxyingResolver} from '../../utility'
 
 export const GraphQLTagType = new GraphQLEnumType({
   name: 'TagType',
   values: {
     Comment: {value: TagType.Comment},
     Event: {value: TagType.Event},
-    Author: {value: TagType.Author}
+    Author: {value: TagType.Author},
+    Article: {value: TagType.Article},
+    Page: {value: TagType.Page}
   }
 })
 
@@ -27,7 +31,14 @@ export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
   fields: {
     id: {type: new GraphQLNonNull(GraphQLID)},
     tag: {type: GraphQLString},
-    type: {type: GraphQLTagType}
+    type: {type: GraphQLTagType},
+    main: {type: new GraphQLNonNull(GraphQLBoolean)},
+    url: {
+      type: new GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver(async (tag, _, {urlAdapter}) => {
+        return await urlAdapter.getTagURL(tag)
+      })
+    }
   }
 })
 

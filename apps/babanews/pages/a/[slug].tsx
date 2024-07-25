@@ -11,6 +11,7 @@ import {
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {ComponentProps} from 'react'
 
 export const ArticleTagList = styled('div')`
   display: grid;
@@ -18,10 +19,10 @@ export const ArticleTagList = styled('div')`
   gap: ${({theme}) => theme.spacing(1)};
 `
 
-export default function ArticleBySlug() {
+export default function ArticleBySlugIdOrToken() {
   const {
     push,
-    query: {slug}
+    query: {slug, id, token}
   } = useRouter()
   const {
     elements: {H3}
@@ -34,14 +35,20 @@ export default function ArticleBySlug() {
     }
   })
 
+  const containerProps = {
+    slug,
+    id,
+    token
+  } as ComponentProps<typeof ArticleContainer>
+
   return (
     <>
-      <ArticleContainer slug={slug as string}>
+      <ArticleContainer {...containerProps}>
         <ArticleTagList>
           {data?.article?.tags.map((tag, index) => (
             <Chip
               key={index}
-              label={capitalize(tag)}
+              label={capitalize(tag.tag ?? '')}
               variant="outlined"
               onClick={() => push(`/a/tag/${tag}`)}
             />
@@ -54,7 +61,7 @@ export default function ArticleBySlug() {
           <ArticleWrapper>
             <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
             <ArticleListContainer
-              variables={{filter: {tags: data.article.tags}, take: 4}}
+              variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
               filter={articles => articles.filter(article => article.id !== data.article?.id)}
             />
           </ArticleWrapper>
@@ -98,7 +105,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         query: ApiV1.ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags
+            tags: article.data.article.tags.map((tag: ApiV1.Tag) => tag.id)
           },
           take: 4
         }

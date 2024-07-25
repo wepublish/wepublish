@@ -365,6 +365,7 @@
       "modalTitle": "Vraiment supprimer?"
     },
     "commentEditView": {
+      "featured": "En vedette",
       "actions": "Actions",
       "comment": "Texte Commentaire",
       "commentContextHeader": "Histoire des commentaires",
@@ -549,6 +550,7 @@
         "image": "Image",
         "location": "Location",
         "name": "Name",
+        "lead": "Lead",
         "postponed": "Postponed",
         "rescheduled": "Rescheduled",
         "scheduled": "Scheduled",
@@ -688,6 +690,8 @@
       "commentRating": "Rating System",
       "comments": "Commentaires",
       "commentTags": "Tags",
+      "articleTags": "Tags",
+      "pageTags": "Tags",
       "consents": "Consentement",
       "dashboard": "Dashboard",
       "events": "Events",
@@ -933,7 +937,6 @@
       "addAndSaveNewAnswer": "Ajouter une réponse",
       "answerPanelHeader": "Réponses possibles",
       "closesAtLabel": "Clôture à",
-      "defaultAnswer": "Réponse standard",
       "infoText": "Texte d'information",
       "loadingTitle": "Chargement du sondage...",
       "opensAtLabel": "Commence le",
@@ -1054,7 +1057,8 @@
         "areYouSureConfirmation": "Delete tag",
         "createTag": "New Tag",
         "placeholder": "Name of tag",
-        "title": "Tags"
+        "title": "Tags",
+        "markAsMain": "Use as main tag"
       }
     },
     "tokenList": {

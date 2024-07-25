@@ -41,7 +41,7 @@ export const getPagePreviewLink = async (
     expiresInMinutes: hours * 60
   })
 
-  return urlAdapter.getPagePreviewURL(token)
+  return await urlAdapter.getPagePreviewURL(token)
 }
 
 export const getAdminPages = (

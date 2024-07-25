@@ -176,6 +176,7 @@ const event = {
     {
       id: 'cldwtndha026601nui49kyxrk',
       tag: 'Concert',
+      main: false,
       __typename: 'Tag'
     }
   ],
@@ -219,7 +220,8 @@ const author = {
       __typename: 'AuthorLink'
     }
   ],
-  image
+  image,
+  tags: []
 } as FullAuthorFragment
 
 const poll = {
@@ -280,7 +282,20 @@ const article = {
   slug: 'slug',
   url: 'https://example.com',
   authors: [author, {...author, id: '1234'}],
-  tags: ['foo', 'bar'],
+  tags: [
+    {
+      id: '123',
+      tag: 'foo',
+      main: false,
+      __typename: 'Tag'
+    },
+    {
+      id: '123',
+      tag: 'bar',
+      main: false,
+      __typename: 'Tag'
+    }
+  ],
   breaking: false,
   publishedAt: new Date('2023-01-01').toISOString(),
   image,
@@ -2341,6 +2356,32 @@ export const BySlug = {
             query: ArticleDocument,
             variables: {
               slug: article.slug
+            }
+          },
+          result: {
+            data: {
+              article
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+export const ByToken = {
+  args: {
+    token: 'foobar'
+  },
+
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: ArticleDocument,
+            variables: {
+              token: 'foobar'
             }
           },
           result: {

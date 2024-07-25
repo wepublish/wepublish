@@ -1,4 +1,5 @@
-import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {Container, css, CssBaseline, NoSsr, styled, ThemeProvider} from '@mui/material'
+import {GoogleAnalytics} from '@next/third-parties/google'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -13,7 +14,6 @@ import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
-import {Hanken_Grotesk, Merriweather} from 'next/font/google'
 import Head from 'next/head'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
@@ -21,6 +21,12 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {Paywall} from '../src/components/paywall'
+import {TsriBreakBlock} from '../src/components/tsri-break-block'
+import {MitmachenButton, TsriNavbar} from '../src/components/tsri-navbar'
+import {TsriQuoteBlock} from '../src/components/tsri-quote-block'
+import {TsriRichText} from '../src/components/tsri-richtext'
+import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 
@@ -50,6 +56,7 @@ const Spacer = styled('div')`
 `
 
 const MainSpacer = styled(Container)`
+  position: relative;
   display: grid;
   gap: ${({theme}) => theme.spacing(5)};
 
@@ -76,31 +83,10 @@ const LogoWrapper = styled(Logo)`
   }
 `
 
-const NavBar = styled(NavbarContainer)`
-  grid-column: -1/1;
-  z-index: 11;
-`
-
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
-
-const hankenGrotesk = Hanken_Grotesk({
-  weight: ['100', '300', '400', '500', '700', '900'],
-  style: ['italic', 'normal'],
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true
-})
-
-const merriweather = Merriweather({
-  weight: ['300', '400', '700', '900'],
-  style: ['italic', 'normal'],
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true
-})
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
@@ -115,8 +101,19 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
+          Navbar={TsriNavbar}
           elements={{Link: NextWepublishLink}}
-          date={{format: dateFormatter}}>
+          blocks={{
+            Teaser: TsriTeaser,
+            Break: TsriBreakBlock,
+            Quote: TsriQuoteBlock,
+            RichText: TsriRichText
+          }}
+          date={{format: dateFormatter}}
+          meta={{siteTitle}}
+          thirdParty={{
+            stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
+          }}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
 
@@ -142,15 +139,20 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <meta name="theme-color" content="#ffffff" />
             </Head>
 
-            <Spacer className={[hankenGrotesk.className, merriweather.className].join(' ')}>
-              <NavBar
+            <Spacer>
+              <NavbarContainer
                 categorySlugs={[['categories', 'about-us']]}
                 slug="main"
                 headerSlug="header"
+                actions={<MitmachenButton />}
               />
 
               <main>
                 <MainSpacer maxWidth="lg">
+                  <NoSsr>
+                    <Paywall />
+                  </NoSsr>
+
                   <Component {...pageProps} />
                 </MainSpacer>
               </main>
@@ -163,13 +165,26 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             </Spacer>
 
             <Script
-              src={publicRuntimeConfig.env.API_URL! + '/static/head.js'}
-              strategy="beforeInteractive"
-            />
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
+              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
               strategy="afterInteractive"
             />
+
+            <Script
+              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
+              strategy="lazyOnload"
+            />
+
+            {publicRuntimeConfig.env.GA_ID && (
+              <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+            )}
+
+            {publicRuntimeConfig.env.SPARKLOOP_ID && (
+              <Script
+                src={`https://script.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
+                strategy="lazyOnload"
+                data-sparkloop
+              />
+            )}
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>

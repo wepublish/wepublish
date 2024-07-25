@@ -2,8 +2,138 @@
 
 exports[`Event should render Default 1`] = `
 <DocumentFragment>
-  <article
-    class="ec2zadl3 css-95dnd2-ContentWrapperStyled-EventWrapper e1wqte7t0"
+  .emotion-1 {
+  display: grid;
+  gap: 56px;
+  gap: 32px;
+}
+
+@media (min-width:900px) {
+  .emotion-1 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .emotion-1>* {
+    grid-column: 4/10;
+  }
+
+  .emotion-1>:is(.emotion-4, .ea1goei0, .e11xbw3q3) {
+    grid-column: 2/12;
+  }
+
+  .emotion-1>:is(
+              .e1je8zv30,
+                .e1xnbuxv0,
+                .ebuvkaa1,
+                .e5naayd1
+            ) {
+    grid-column: -1/1;
+  }
+}
+
+.emotion-3 {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.emotion-3 .emotion-8 {
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.emotion-5 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto;
+}
+
+.emotion-7 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  justify-self: center;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-template-columns: auto auto;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: -32px;
+}
+
+@media (min-width:900px) {
+  .emotion-9 {
+    grid-column: 2/12;
+  }
+}
+
+.emotion-11 {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 16px;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-13 {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-17 {
+  display: grid;
+  gap: 24px;
+  grid-auto-rows: min-content;
+}
+
+.emotion-19 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-22 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-22.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-22:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1 emotion-2"
   >
     <div
       data-testid="fake-head"
@@ -51,15 +181,19 @@ exports[`Event should render Default 1`] = `
       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <figure
-      class="css-i2ow2o-ImageBlockWrapper-Event eekavcu2"
+      class="emotion-3 emotion-4"
     >
       <div
-        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
+        class="emotion-5 emotion-6"
       >
         <img
           alt="DSC07717"
-          class="css-1oyo3gl-ImageWrapper-ImageBlock e1shv2yg0"
+          class="emotion-7 emotion-8"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -69,13 +203,13 @@ https://unsplash.it/200/100 200w"
       </div>
     </figure>
     <div
-      class="css-1m698ok-EventMeta ec2zadl2"
+      class="emotion-9 emotion-10"
     >
       <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
+        class="emotion-11 emotion-12"
       >
         <div
-          class="css-j7qr3l-EventStart ec2zadl0"
+          class="emotion-13 emotion-14"
         >
           <svg
             fill="currentColor"
@@ -102,7 +236,7 @@ https://unsplash.it/200/100 200w"
          25.02.2023 07:30
       </div>
       <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
+        class="emotion-11 emotion-12"
       >
         <svg
           fill="currentColor"
@@ -125,16 +259,16 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
+      class="emotion-17 emotion-18"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-19"
       >
         Cool concert
       </h1>
     </div>
     <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      class="emotion-20 emotion-21"
     >
       <div
         data-gramm="false"
@@ -143,7 +277,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -227,7 +361,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -311,7 +445,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -395,7 +529,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -486,8 +620,138 @@ https://unsplash.it/200/100 200w"
 
 exports[`Event should render WithClassName 1`] = `
 <DocumentFragment>
-  <article
-    class="extra-classname ec2zadl3 css-95dnd2-ContentWrapperStyled-EventWrapper e1wqte7t0"
+  .emotion-1 {
+  display: grid;
+  gap: 56px;
+  gap: 32px;
+}
+
+@media (min-width:900px) {
+  .emotion-1 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .emotion-1>* {
+    grid-column: 4/10;
+  }
+
+  .emotion-1>:is(.emotion-4, .ea1goei0, .e11xbw3q3) {
+    grid-column: 2/12;
+  }
+
+  .emotion-1>:is(
+              .e1je8zv30,
+                .e1xnbuxv0,
+                .ebuvkaa1,
+                .e5naayd1
+            ) {
+    grid-column: -1/1;
+  }
+}
+
+.emotion-3 {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.emotion-3 .emotion-8 {
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.emotion-5 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto;
+}
+
+.emotion-7 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  justify-self: center;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-template-columns: auto auto;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: -32px;
+}
+
+@media (min-width:900px) {
+  .emotion-9 {
+    grid-column: 2/12;
+  }
+}
+
+.emotion-11 {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 16px;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-13 {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-17 {
+  display: grid;
+  gap: 24px;
+  grid-auto-rows: min-content;
+}
+
+.emotion-19 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-22 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-22.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-22:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="extra-classname emotion-0 emotion-1 emotion-2"
   >
     <div
       data-testid="fake-head"
@@ -535,15 +799,19 @@ exports[`Event should render WithClassName 1`] = `
       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <figure
-      class="css-i2ow2o-ImageBlockWrapper-Event eekavcu2"
+      class="emotion-3 emotion-4"
     >
       <div
-        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
+        class="emotion-5 emotion-6"
       >
         <img
           alt="DSC07717"
-          class="css-1oyo3gl-ImageWrapper-ImageBlock e1shv2yg0"
+          class="emotion-7 emotion-8"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -553,13 +821,13 @@ https://unsplash.it/200/100 200w"
       </div>
     </figure>
     <div
-      class="css-1m698ok-EventMeta ec2zadl2"
+      class="emotion-9 emotion-10"
     >
       <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
+        class="emotion-11 emotion-12"
       >
         <div
-          class="css-j7qr3l-EventStart ec2zadl0"
+          class="emotion-13 emotion-14"
         >
           <svg
             fill="currentColor"
@@ -586,7 +854,7 @@ https://unsplash.it/200/100 200w"
          25.02.2023 07:30
       </div>
       <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
+        class="emotion-11 emotion-12"
       >
         <svg
           fill="currentColor"
@@ -609,16 +877,16 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
+      class="emotion-17 emotion-18"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-19"
       >
         Cool concert
       </h1>
     </div>
     <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      class="emotion-20 emotion-21"
     >
       <div
         data-gramm="false"
@@ -627,7 +895,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -711,7 +979,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -795,7 +1063,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -879,7 +1147,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -970,8 +1238,138 @@ https://unsplash.it/200/100 200w"
 
 exports[`Event should render WithEmotion 1`] = `
 <DocumentFragment>
-  <article
-    class="ec2zadl3 css-95dnd2-ContentWrapperStyled-EventWrapper e1wqte7t0"
+  .emotion-1 {
+  display: grid;
+  gap: 56px;
+  gap: 32px;
+}
+
+@media (min-width:900px) {
+  .emotion-1 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .emotion-1>* {
+    grid-column: 4/10;
+  }
+
+  .emotion-1>:is(.emotion-4, .ea1goei0, .e11xbw3q3) {
+    grid-column: 2/12;
+  }
+
+  .emotion-1>:is(
+              .e1je8zv30,
+                .e1xnbuxv0,
+                .ebuvkaa1,
+                .e5naayd1
+            ) {
+    grid-column: -1/1;
+  }
+}
+
+.emotion-3 {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.emotion-3 .emotion-8 {
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.emotion-5 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto;
+}
+
+.emotion-7 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  justify-self: center;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-template-columns: auto auto;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: -32px;
+}
+
+@media (min-width:900px) {
+  .emotion-9 {
+    grid-column: 2/12;
+  }
+}
+
+.emotion-11 {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 16px;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-13 {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-17 {
+  display: grid;
+  gap: 24px;
+  grid-auto-rows: min-content;
+}
+
+.emotion-19 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-22 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-22.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-22:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1 emotion-2"
   >
     <div
       data-testid="fake-head"
@@ -1019,15 +1417,19 @@ exports[`Event should render WithEmotion 1`] = `
       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <figure
-      class="css-i2ow2o-ImageBlockWrapper-Event eekavcu2"
+      class="emotion-3 emotion-4"
     >
       <div
-        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
+        class="emotion-5 emotion-6"
       >
         <img
           alt="DSC07717"
-          class="css-1oyo3gl-ImageWrapper-ImageBlock e1shv2yg0"
+          class="emotion-7 emotion-8"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1037,13 +1439,13 @@ https://unsplash.it/200/100 200w"
       </div>
     </figure>
     <div
-      class="css-1m698ok-EventMeta ec2zadl2"
+      class="emotion-9 emotion-10"
     >
       <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
+        class="emotion-11 emotion-12"
       >
         <div
-          class="css-j7qr3l-EventStart ec2zadl0"
+          class="emotion-13 emotion-14"
         >
           <svg
             fill="currentColor"
@@ -1070,7 +1472,7 @@ https://unsplash.it/200/100 200w"
          25.02.2023 07:30
       </div>
       <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
+        class="emotion-11 emotion-12"
       >
         <svg
           fill="currentColor"
@@ -1093,16 +1495,16 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
+      class="emotion-17 emotion-18"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-19"
       >
         Cool concert
       </h1>
     </div>
     <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      class="emotion-20 emotion-21"
     >
       <div
         data-gramm="false"
@@ -1111,7 +1513,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -1195,7 +1597,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -1279,7 +1681,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -1363,7 +1765,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -1454,18 +1856,61 @@ https://unsplash.it/200/100 200w"
 
 exports[`Event should render WithError 1`] = `
 <DocumentFragment>
-  <article
-    class="ec2zadl3 css-95dnd2-ContentWrapperStyled-EventWrapper e1wqte7t0"
+  .emotion-1 {
+  display: grid;
+  gap: 56px;
+  gap: 32px;
+}
+
+@media (min-width:900px) {
+  .emotion-1 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .emotion-1>* {
+    grid-column: 4/10;
+  }
+
+  .emotion-1>:is(.eekavcu2, .ea1goei0, .e11xbw3q3) {
+    grid-column: 2/12;
+  }
+
+  .emotion-1>:is(
+              .e1je8zv30,
+                .e1xnbuxv0,
+                .ebuvkaa1,
+                .e5naayd1
+            ) {
+    grid-column: -1/1;
+  }
+}
+
+.emotion-3 {
+  display: grid;
+  gap: 24px;
+  grid-auto-rows: min-content;
+}
+
+.emotion-5 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+<article
+    class="emotion-0 emotion-1 emotion-2"
   >
     <div
-      class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
+      class="emotion-3 emotion-4"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-5"
       />
     </div>
     <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      class="emotion-6 emotion-7"
     >
       <div
         data-gramm="false"
@@ -1480,18 +1925,61 @@ exports[`Event should render WithError 1`] = `
 
 exports[`Event should render WithLoading 1`] = `
 <DocumentFragment>
-  <article
-    class="ec2zadl3 css-95dnd2-ContentWrapperStyled-EventWrapper e1wqte7t0"
+  .emotion-1 {
+  display: grid;
+  gap: 56px;
+  gap: 32px;
+}
+
+@media (min-width:900px) {
+  .emotion-1 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .emotion-1>* {
+    grid-column: 4/10;
+  }
+
+  .emotion-1>:is(.eekavcu2, .ea1goei0, .e11xbw3q3) {
+    grid-column: 2/12;
+  }
+
+  .emotion-1>:is(
+              .e1je8zv30,
+                .e1xnbuxv0,
+                .ebuvkaa1,
+                .e5naayd1
+            ) {
+    grid-column: -1/1;
+  }
+}
+
+.emotion-3 {
+  display: grid;
+  gap: 24px;
+  grid-auto-rows: min-content;
+}
+
+.emotion-5 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+<article
+    class="emotion-0 emotion-1 emotion-2"
   >
     <div
-      class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
+      class="emotion-3 emotion-4"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-5"
       />
     </div>
     <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      class="emotion-6 emotion-7"
     >
       <div
         data-gramm="false"
@@ -1506,8 +1994,112 @@ exports[`Event should render WithLoading 1`] = `
 
 exports[`Event should render WithoutImage 1`] = `
 <DocumentFragment>
-  <article
-    class="ec2zadl3 css-95dnd2-ContentWrapperStyled-EventWrapper e1wqte7t0"
+  .emotion-1 {
+  display: grid;
+  gap: 56px;
+  gap: 32px;
+}
+
+@media (min-width:900px) {
+  .emotion-1 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .emotion-1>* {
+    grid-column: 4/10;
+  }
+
+  .emotion-1>:is(.eekavcu2, .ea1goei0, .e11xbw3q3) {
+    grid-column: 2/12;
+  }
+
+  .emotion-1>:is(
+              .e1je8zv30,
+                .e1xnbuxv0,
+                .ebuvkaa1,
+                .e5naayd1
+            ) {
+    grid-column: -1/1;
+  }
+}
+
+.emotion-3 {
+  display: grid;
+  grid-template-columns: auto auto;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: -32px;
+}
+
+@media (min-width:900px) {
+  .emotion-3 {
+    grid-column: 2/12;
+  }
+}
+
+.emotion-5 {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 16px;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-7 {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-11 {
+  display: grid;
+  gap: 24px;
+  grid-auto-rows: min-content;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-16 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-16.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-16:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1 emotion-2"
   >
     <div
       data-testid="fake-head"
@@ -1551,13 +2143,13 @@ exports[`Event should render WithoutImage 1`] = `
       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <div
-      class="css-1m698ok-EventMeta ec2zadl2"
+      class="emotion-3 emotion-4"
     >
       <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
+        class="emotion-5 emotion-6"
       >
         <div
-          class="css-j7qr3l-EventStart ec2zadl0"
+          class="emotion-7 emotion-8"
         >
           <svg
             fill="currentColor"
@@ -1584,7 +2176,7 @@ exports[`Event should render WithoutImage 1`] = `
          25.02.2023 07:30
       </div>
       <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
+        class="emotion-5 emotion-6"
       >
         <svg
           fill="currentColor"
@@ -1607,16 +2199,16 @@ exports[`Event should render WithoutImage 1`] = `
       </div>
     </div>
     <div
-      class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
+      class="emotion-11 emotion-12"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-13"
       >
         Cool concert
       </h1>
     </div>
     <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      class="emotion-14 emotion-15"
     >
       <div
         data-gramm="false"
@@ -1625,7 +2217,7 @@ exports[`Event should render WithoutImage 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           data-slate-node="element"
         >
           <span
@@ -1709,7 +2301,7 @@ exports[`Event should render WithoutImage 1`] = `
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           data-slate-node="element"
         >
           <span
@@ -1793,7 +2385,7 @@ exports[`Event should render WithoutImage 1`] = `
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           data-slate-node="element"
         >
           <span
@@ -1877,7 +2469,7 @@ exports[`Event should render WithoutImage 1`] = `
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           data-slate-node="element"
         >
           <span

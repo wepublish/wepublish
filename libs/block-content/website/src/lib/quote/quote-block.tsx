@@ -5,6 +5,10 @@ import {Block, QuoteBlock as QuoteBlockType} from '@wepublish/website/api'
 export const isQuoteBlock = (block: Block): block is QuoteBlockType =>
   block.__typename === 'QuoteBlock'
 
+const imageStyles = css`
+  max-width: 80px;
+`
+
 export const QuoteBlockWrapper = styled('blockquote')<{withImage: boolean}>`
   font-style: italic;
   display: grid;
@@ -15,13 +19,14 @@ export const QuoteBlockWrapper = styled('blockquote')<{withImage: boolean}>`
   border-top: 2px solid ${({theme}) => theme.palette.common.black};
   border-bottom: 2px solid ${({theme}) => theme.palette.common.black};
   margin: 0;
+  margin-left: calc(100% / 6);
 
   ${({theme, withImage}) =>
     withImage &&
     css`
       ${theme.breakpoints.up('sm')} {
         gap: ${theme.spacing(3)};
-        grid-template-columns: 80px auto;
+        grid-template-columns: auto auto;
       }
     `};
 
@@ -45,7 +50,7 @@ export const QuoteBlock = ({quote, author, image, className}: BuilderQuoteBlockP
 
   return (
     <QuoteBlockWrapper className={className} withImage={!!image}>
-      {image && <Image image={image} square />}
+      {image && <Image image={image} square css={imageStyles} />}
 
       <QuoteContent>
         <H4 component="p">{quote}</H4>

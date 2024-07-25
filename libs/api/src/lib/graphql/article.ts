@@ -33,6 +33,7 @@ import {GraphQLPublicComment} from './comment/comment'
 import {AuthSessionType} from '@wepublish/authentication/api'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 import {SortOrder} from '@wepublish/utils/api'
+import {GraphQLTag} from './tag/tag'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -138,7 +139,10 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     lead: {type: GraphQLString},
     seoTitle: {type: GraphQLString},
     slug: {type: GraphQLString},
-    tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
+    tags: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString))),
+      deprecationReason: 'Tags now live on the Article itself'
+    },
 
     properties: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataProperty)))
@@ -148,11 +152,11 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
 
     url: {
       type: new GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver((articleRevision, args, {urlAdapter}, info) => {
+      resolve: createProxyingResolver(async (articleRevision, args, {urlAdapter}, info) => {
         // The URLAdapter expects a public article to generate the public article URL.
         // The URL should never be created with values from the updatedAt, publishAt
         // and publishedAt dates, but they are required by the method.
-        return urlAdapter.getPublicArticleURL({
+        return await urlAdapter.getPublicArticleURL({
           ...articleRevision,
           id: info?.variableValues?.id || 'ID-DOES-NOT-EXIST',
           shared: true,
@@ -220,6 +224,23 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
       resolve: createProxyingResolver(({draft, pending, published}) => {
         return draft ?? pending ?? published
       })
+    },
+
+    tags: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
+      resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
+        const tags = await tag.findMany({
+          where: {
+            articles: {
+              some: {
+                articleId: id
+              }
+            }
+          }
+        })
+
+        return tags
+      })
     }
   }
 })
@@ -244,8 +265,12 @@ export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
       type: new GraphQLNonNull(GraphQLString),
       resolve: createProxyingResolver(async ({peerID, article}, _, {loaders, urlAdapter}) => {
         const peer = await loaders.peer.load(peerID)
-        if (!peer || !article) return ''
-        return urlAdapter.getPeeredArticleURL(peer, article)
+
+        if (!peer || !article) {
+          return ''
+        }
+
+        return await urlAdapter.getPeeredArticleURL(peer, article)
       })
     },
     article: {type: new GraphQLNonNull(GraphQLArticle)}
@@ -274,8 +299,8 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
 
       url: {
         type: new GraphQLNonNull(GraphQLString),
-        resolve: createProxyingResolver((article, _, {urlAdapter}) => {
-          return urlAdapter.getPublicArticleURL(article)
+        resolve: createProxyingResolver(async (article, _, {urlAdapter}) => {
+          return await urlAdapter.getPublicArticleURL(article)
         })
       },
       peeredArticleURL: {
@@ -286,7 +311,22 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
       title: {type: new GraphQLNonNull(GraphQLString)},
       lead: {type: GraphQLString},
       seoTitle: {type: GraphQLString},
-      tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
+      tags: {
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
+        resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
+          const tags = await tag.findMany({
+            where: {
+              articles: {
+                some: {
+                  articleId: id
+                }
+              }
+            }
+          })
+
+          return tags
+        })
+      },
 
       canonicalUrl: {type: GraphQLString},
 

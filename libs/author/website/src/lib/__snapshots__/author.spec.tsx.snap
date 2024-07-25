@@ -2,25 +2,166 @@
 
 exports[`Author should render Default 1`] = `
 <DocumentFragment>
-  <article
-    class="css-15it3wn-AuthorWrapper e18ssx8j0"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  max-width: 500px;
+}
+
+.emotion-6 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.emotion-8 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+}
+
+.emotion-8:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-14 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+  margin-bottom: 0.35em;
+}
+
+@media (min-width: 900px) {
+  .emotion-14 {
+    font-size: 32px;
+  }
+}
+
+.emotion-14:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-15 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-15:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-16 {
+  border-collapse: collapse;
+}
+
+.emotion-17 {
+  border-collapse: collapse;
+  border: 1px solid #000000;
+  padding: 8px;
+}
+
+.emotion-18 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-18.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-18:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-26 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-26:hover {
+  text-decoration-color: inherit;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-2"
       >
         Foobar
       </h1>
       <aside
-        class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h5 emotion-3"
       >
         Editor
       </aside>
     </header>
     <img
       alt="DSC07717"
-      class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
+      class="emotion-4 emotion-5"
       loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -28,10 +169,10 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <aside
-      class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+      class="emotion-6 emotion-7"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
         href="https://twitter.com"
         target="__blank"
         title="Twitter"
@@ -51,7 +192,7 @@ https://unsplash.it/200/100 200w"
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
         href="https://facebook.com"
         target="__blank"
         title="Facebook"
@@ -75,7 +216,7 @@ https://unsplash.it/200/100 200w"
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
         href="https://instagram.com"
         target="__blank"
         title="Instagram"
@@ -96,7 +237,7 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      class="emotion-11 emotion-12"
     >
       <div
         data-gramm="false"
@@ -106,7 +247,7 @@ https://unsplash.it/200/100 200w"
       >
         <div>
           <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-13"
             data-slate-node="element"
           >
             <span
@@ -122,7 +263,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-14"
           data-slate-node="element"
         >
           <span
@@ -136,7 +277,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
           data-slate-node="element"
         >
           <span
@@ -184,7 +325,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="css-o38l6f-tableStyles"
+          class="emotion-16"
         >
           <tbody
             data-slate-node="element"
@@ -193,11 +334,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -212,11 +353,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -235,11 +376,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -254,11 +395,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -276,7 +417,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
           data-slate-node="element"
         >
           <span
@@ -421,7 +562,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-26"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -456,25 +597,166 @@ https://unsplash.it/200/100 200w"
 
 exports[`Author should render WithClassName 1`] = `
 <DocumentFragment>
-  <article
-    class="extra-classname css-15it3wn-AuthorWrapper e18ssx8j0"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  max-width: 500px;
+}
+
+.emotion-6 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.emotion-8 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+}
+
+.emotion-8:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-14 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+  margin-bottom: 0.35em;
+}
+
+@media (min-width: 900px) {
+  .emotion-14 {
+    font-size: 32px;
+  }
+}
+
+.emotion-14:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-15 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-15:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-16 {
+  border-collapse: collapse;
+}
+
+.emotion-17 {
+  border-collapse: collapse;
+  border: 1px solid #000000;
+  padding: 8px;
+}
+
+.emotion-18 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-18.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-18:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-26 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-26:hover {
+  text-decoration-color: inherit;
+}
+
+<article
+    class="extra-classname emotion-0 emotion-1"
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-2"
       >
         Foobar
       </h1>
       <aside
-        class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h5 emotion-3"
       >
         Editor
       </aside>
     </header>
     <img
       alt="DSC07717"
-      class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
+      class="emotion-4 emotion-5"
       loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -482,10 +764,10 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <aside
-      class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+      class="emotion-6 emotion-7"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
         href="https://twitter.com"
         target="__blank"
         title="Twitter"
@@ -505,7 +787,7 @@ https://unsplash.it/200/100 200w"
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
         href="https://facebook.com"
         target="__blank"
         title="Facebook"
@@ -529,7 +811,7 @@ https://unsplash.it/200/100 200w"
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
         href="https://instagram.com"
         target="__blank"
         title="Instagram"
@@ -550,7 +832,7 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      class="emotion-11 emotion-12"
     >
       <div
         data-gramm="false"
@@ -560,7 +842,7 @@ https://unsplash.it/200/100 200w"
       >
         <div>
           <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-13"
             data-slate-node="element"
           >
             <span
@@ -576,7 +858,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-14"
           data-slate-node="element"
         >
           <span
@@ -590,7 +872,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
           data-slate-node="element"
         >
           <span
@@ -638,7 +920,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="css-o38l6f-tableStyles"
+          class="emotion-16"
         >
           <tbody
             data-slate-node="element"
@@ -647,11 +929,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -666,11 +948,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -689,11 +971,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -708,11 +990,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -730,7 +1012,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
           data-slate-node="element"
         >
           <span
@@ -875,7 +1157,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-26"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -910,25 +1192,166 @@ https://unsplash.it/200/100 200w"
 
 exports[`Author should render WithEmotion 1`] = `
 <DocumentFragment>
-  <article
-    class="css-15it3wn-AuthorWrapper e18ssx8j0"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  max-width: 500px;
+}
+
+.emotion-6 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.emotion-8 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+}
+
+.emotion-8:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-14 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+  margin-bottom: 0.35em;
+}
+
+@media (min-width: 900px) {
+  .emotion-14 {
+    font-size: 32px;
+  }
+}
+
+.emotion-14:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-15 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-15:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-16 {
+  border-collapse: collapse;
+}
+
+.emotion-17 {
+  border-collapse: collapse;
+  border: 1px solid #000000;
+  padding: 8px;
+}
+
+.emotion-18 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-18.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-18:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-26 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-26:hover {
+  text-decoration-color: inherit;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-2"
       >
         Foobar
       </h1>
       <aside
-        class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h5 emotion-3"
       >
         Editor
       </aside>
     </header>
     <img
       alt="DSC07717"
-      class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
+      class="emotion-4 emotion-5"
       loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -936,10 +1359,10 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <aside
-      class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+      class="emotion-6 emotion-7"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
         href="https://twitter.com"
         target="__blank"
         title="Twitter"
@@ -959,7 +1382,7 @@ https://unsplash.it/200/100 200w"
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
         href="https://facebook.com"
         target="__blank"
         title="Facebook"
@@ -983,7 +1406,7 @@ https://unsplash.it/200/100 200w"
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
         href="https://instagram.com"
         target="__blank"
         title="Instagram"
@@ -1004,7 +1427,7 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      class="emotion-11 emotion-12"
     >
       <div
         data-gramm="false"
@@ -1014,7 +1437,7 @@ https://unsplash.it/200/100 200w"
       >
         <div>
           <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-13"
             data-slate-node="element"
           >
             <span
@@ -1030,7 +1453,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-14"
           data-slate-node="element"
         >
           <span
@@ -1044,7 +1467,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
           data-slate-node="element"
         >
           <span
@@ -1092,7 +1515,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="css-o38l6f-tableStyles"
+          class="emotion-16"
         >
           <tbody
             data-slate-node="element"
@@ -1101,11 +1524,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -1120,11 +1543,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -1143,11 +1566,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -1162,11 +1585,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -1184,7 +1607,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
           data-slate-node="element"
         >
           <span
@@ -1329,7 +1752,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-26"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -1368,25 +1791,85 @@ exports[`Author should render WithLoading 1`] = `<DocumentFragment />`;
 
 exports[`Author should render WithoutBio 1`] = `
 <DocumentFragment>
-  <article
-    class="css-15it3wn-AuthorWrapper e18ssx8j0"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  max-width: 500px;
+}
+
+.emotion-6 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.emotion-8 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+}
+
+.emotion-8:hover {
+  text-decoration-color: inherit;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-2"
       >
         Foobar
       </h1>
       <aside
-        class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h5 emotion-3"
       >
         Editor
       </aside>
     </header>
     <img
       alt="DSC07717"
-      class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
+      class="emotion-4 emotion-5"
       loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1394,10 +1877,10 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <aside
-      class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+      class="emotion-6 emotion-7"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
         href="https://twitter.com"
         target="__blank"
         title="Twitter"
@@ -1417,7 +1900,7 @@ https://unsplash.it/200/100 200w"
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
         href="https://facebook.com"
         target="__blank"
         title="Facebook"
@@ -1441,7 +1924,7 @@ https://unsplash.it/200/100 200w"
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
         href="https://instagram.com"
         target="__blank"
         title="Instagram"
@@ -1462,7 +1945,7 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      class="emotion-11 emotion-12"
     >
       <div
         data-gramm="false"
@@ -1477,26 +1960,153 @@ https://unsplash.it/200/100 200w"
 
 exports[`Author should render WithoutImage 1`] = `
 <DocumentFragment>
-  <article
-    class="css-15it3wn-AuthorWrapper e18ssx8j0"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.emotion-4 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+}
+
+.emotion-6:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-11 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-12 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+  margin-bottom: 0.35em;
+}
+
+@media (min-width: 900px) {
+  .emotion-12 {
+    font-size: 32px;
+  }
+}
+
+.emotion-12:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-13:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-14 {
+  border-collapse: collapse;
+}
+
+.emotion-15 {
+  border-collapse: collapse;
+  border: 1px solid #000000;
+  padding: 8px;
+}
+
+.emotion-16 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-16.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-16:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-24 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-24:hover {
+  text-decoration-color: inherit;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-2"
       >
         Foobar
       </h1>
       <aside
-        class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h5 emotion-3"
       >
         Editor
       </aside>
     </header>
     <aside
-      class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+      class="emotion-4 emotion-5"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-6"
         href="https://twitter.com"
         target="__blank"
         title="Twitter"
@@ -1516,7 +2126,7 @@ exports[`Author should render WithoutImage 1`] = `
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-6"
         href="https://facebook.com"
         target="__blank"
         title="Facebook"
@@ -1540,7 +2150,7 @@ exports[`Author should render WithoutImage 1`] = `
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-6"
         href="https://instagram.com"
         target="__blank"
         title="Instagram"
@@ -1561,7 +2171,7 @@ exports[`Author should render WithoutImage 1`] = `
       </a>
     </aside>
     <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      class="emotion-9 emotion-10"
     >
       <div
         data-gramm="false"
@@ -1571,7 +2181,7 @@ exports[`Author should render WithoutImage 1`] = `
       >
         <div>
           <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-11"
             data-slate-node="element"
           >
             <span
@@ -1587,7 +2197,7 @@ exports[`Author should render WithoutImage 1`] = `
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-12"
           data-slate-node="element"
         >
           <span
@@ -1601,7 +2211,7 @@ exports[`Author should render WithoutImage 1`] = `
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-13"
           data-slate-node="element"
         >
           <span
@@ -1649,7 +2259,7 @@ exports[`Author should render WithoutImage 1`] = `
           </li>
         </ol>
         <table
-          class="css-o38l6f-tableStyles"
+          class="emotion-14"
         >
           <tbody
             data-slate-node="element"
@@ -1658,11 +2268,11 @@ exports[`Author should render WithoutImage 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-15"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
                   data-slate-node="element"
                 >
                   <span
@@ -1677,11 +2287,11 @@ exports[`Author should render WithoutImage 1`] = `
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-15"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
                   data-slate-node="element"
                 >
                   <span
@@ -1700,11 +2310,11 @@ exports[`Author should render WithoutImage 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-15"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
                   data-slate-node="element"
                 >
                   <span
@@ -1719,11 +2329,11 @@ exports[`Author should render WithoutImage 1`] = `
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-15"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
                   data-slate-node="element"
                 >
                   <span
@@ -1741,7 +2351,7 @@ exports[`Author should render WithoutImage 1`] = `
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           data-slate-node="element"
         >
           <span
@@ -1886,7 +2496,7 @@ exports[`Author should render WithoutImage 1`] = `
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-24"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -1921,20 +2531,153 @@ exports[`Author should render WithoutImage 1`] = `
 
 exports[`Author should render WithoutJobTitle 1`] = `
 <DocumentFragment>
-  <article
-    class="css-15it3wn-AuthorWrapper e18ssx8j0"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-3 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  max-width: 500px;
+}
+
+.emotion-5 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.emotion-7 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+}
+
+.emotion-7:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-12 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+  margin-bottom: 0.35em;
+}
+
+@media (min-width: 900px) {
+  .emotion-13 {
+    font-size: 32px;
+  }
+}
+
+.emotion-13:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-14 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-14:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-15 {
+  border-collapse: collapse;
+}
+
+.emotion-16 {
+  border-collapse: collapse;
+  border: 1px solid #000000;
+  padding: 8px;
+}
+
+.emotion-17 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-17.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-17:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-25 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-25:hover {
+  text-decoration-color: inherit;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-2"
       >
         Foobar
       </h1>
     </header>
     <img
       alt="DSC07717"
-      class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
+      class="emotion-3 emotion-4"
       loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1942,10 +2685,10 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <aside
-      class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+      class="emotion-5 emotion-6"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-7"
         href="https://twitter.com"
         target="__blank"
         title="Twitter"
@@ -1965,7 +2708,7 @@ https://unsplash.it/200/100 200w"
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-7"
         href="https://facebook.com"
         target="__blank"
         title="Facebook"
@@ -1989,7 +2732,7 @@ https://unsplash.it/200/100 200w"
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-7"
         href="https://instagram.com"
         target="__blank"
         title="Instagram"
@@ -2010,7 +2753,7 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      class="emotion-10 emotion-11"
     >
       <div
         data-gramm="false"
@@ -2020,7 +2763,7 @@ https://unsplash.it/200/100 200w"
       >
         <div>
           <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-12"
             data-slate-node="element"
           >
             <span
@@ -2036,7 +2779,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13"
           data-slate-node="element"
         >
           <span
@@ -2050,7 +2793,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-14"
           data-slate-node="element"
         >
           <span
@@ -2098,7 +2841,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="css-o38l6f-tableStyles"
+          class="emotion-15"
         >
           <tbody
             data-slate-node="element"
@@ -2107,11 +2850,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-16"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
                   data-slate-node="element"
                 >
                   <span
@@ -2126,11 +2869,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-16"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
                   data-slate-node="element"
                 >
                   <span
@@ -2149,11 +2892,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-16"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
                   data-slate-node="element"
                 >
                   <span
@@ -2168,11 +2911,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-16"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
                   data-slate-node="element"
                 >
                   <span
@@ -2190,7 +2933,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
           data-slate-node="element"
         >
           <span
@@ -2335,7 +3078,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-25"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -2370,25 +3113,141 @@ https://unsplash.it/200/100 200w"
 
 exports[`Author should render WithoutLinks 1`] = `
 <DocumentFragment>
-  <article
-    class="css-15it3wn-AuthorWrapper e18ssx8j0"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  max-width: 500px;
+}
+
+.emotion-8 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-9 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+  margin-bottom: 0.35em;
+}
+
+@media (min-width: 900px) {
+  .emotion-9 {
+    font-size: 32px;
+  }
+}
+
+.emotion-9:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-10 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-10:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-11 {
+  border-collapse: collapse;
+}
+
+.emotion-12 {
+  border-collapse: collapse;
+  border: 1px solid #000000;
+  padding: 8px;
+}
+
+.emotion-13 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-13.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-13:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-21 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-21:hover {
+  text-decoration-color: inherit;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-2"
       >
         Foobar
       </h1>
       <aside
-        class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h5 emotion-3"
       >
         Editor
       </aside>
     </header>
     <img
       alt="DSC07717"
-      class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
+      class="emotion-4 emotion-5"
       loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -2396,7 +3255,7 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      class="emotion-6 emotion-7"
     >
       <div
         data-gramm="false"
@@ -2406,7 +3265,7 @@ https://unsplash.it/200/100 200w"
       >
         <div>
           <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-8"
             data-slate-node="element"
           >
             <span
@@ -2422,7 +3281,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-9"
           data-slate-node="element"
         >
           <span
@@ -2436,7 +3295,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-10"
           data-slate-node="element"
         >
           <span
@@ -2484,7 +3343,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="css-o38l6f-tableStyles"
+          class="emotion-11"
         >
           <tbody
             data-slate-node="element"
@@ -2493,11 +3352,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-12"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-13"
                   data-slate-node="element"
                 >
                   <span
@@ -2512,11 +3371,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-12"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-13"
                   data-slate-node="element"
                 >
                   <span
@@ -2535,11 +3394,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-12"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-13"
                   data-slate-node="element"
                 >
                   <span
@@ -2554,11 +3413,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="emotion-12"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-13"
                   data-slate-node="element"
                 >
                   <span
@@ -2576,7 +3435,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-13"
           data-slate-node="element"
         >
           <span
@@ -2721,7 +3580,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-21"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"

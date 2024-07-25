@@ -2,38 +2,105 @@
 
 exports[`Typography should render Default 1`] = `
 <DocumentFragment>
-  <h1
-    class="MuiTypography-root MuiTypography-h1 css-1f1pdin-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 6rem;
+}
+
+<h1
+    class="MuiTypography-root MuiTypography-h1 emotion-0"
   >
     H1
   </h1>
-  <h2
-    class="MuiTypography-root MuiTypography-h2 css-10rkqji-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3.75rem;
+}
+
+<h2
+    class="MuiTypography-root MuiTypography-h2 emotion-0"
   >
     H2
   </h2>
-  <h3
-    class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+<h3
+    class="MuiTypography-root MuiTypography-h3 emotion-0"
   >
     H3
   </h3>
-  <h4
-    class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-0 {
+    font-size: 32px;
+  }
+}
+
+<h4
+    class="MuiTypography-root MuiTypography-h4 emotion-0"
   >
     H4
   </h4>
-  <h5
-    class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+<h5
+    class="MuiTypography-root MuiTypography-h5 emotion-0"
   >
     H5
   </h5>
-  <h6
-    class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+<h6
+    class="MuiTypography-root MuiTypography-h6 emotion-0"
   >
     H6
   </h6>
-  <p
-    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mcl2xa-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-0.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<p
+    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-0"
   >
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   </p>
@@ -42,38 +109,105 @@ exports[`Typography should render Default 1`] = `
 
 exports[`Typography should render Styling 1`] = `
 <DocumentFragment>
-  <h6
-    class="MuiTypography-root MuiTypography-h1 css-1f1pdin-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 6rem;
+}
+
+<h6
+    class="MuiTypography-root MuiTypography-h1 emotion-0"
   >
     H6 with styling of H1
   </h6>
-  <h5
-    class="MuiTypography-root MuiTypography-h2 css-10rkqji-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3.75rem;
+}
+
+<h5
+    class="MuiTypography-root MuiTypography-h2 emotion-0"
   >
     H5 with styling of H2
   </h5>
-  <h4
-    class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+<h4
+    class="MuiTypography-root MuiTypography-h3 emotion-0"
   >
     H4 with styling of H3
   </h4>
-  <h3
-    class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-0 {
+    font-size: 32px;
+  }
+}
+
+<h3
+    class="MuiTypography-root MuiTypography-h4 emotion-0"
   >
     H3 with styling of H4
   </h3>
-  <h2
-    class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+<h2
+    class="MuiTypography-root MuiTypography-h5 emotion-0"
   >
     H2 with styling of H5
   </h2>
-  <h1
-    class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+<h1
+    class="MuiTypography-root MuiTypography-h6 emotion-0"
   >
     H1 with styling of H6
   </h1>
-  <strong
-    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mcl2xa-MuiTypography-root"
+  .emotion-0 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-0.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<strong
+    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-0"
   >
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   </strong>

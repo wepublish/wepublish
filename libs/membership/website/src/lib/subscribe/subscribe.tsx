@@ -1,5 +1,5 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, InputAdornment, Slider, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, Slider, styled} from '@mui/material'
 import {
   RegistrationChallenge,
   RegistrationChallengeWrapper,
@@ -28,13 +28,15 @@ import {formatChf} from '../formatters/format-currency'
 import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
-import {sortBy} from 'ramda'
+import {replace, sortBy, toLower} from 'ramda'
 import {MembershipModal} from '../membership-modal/membership-modal'
+import {ApolloError} from '@apollo/client'
+import {ApiAlert} from '@wepublish/errors/website'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().nonempty(),
   paymentMethodId: z.string().nonempty(),
-  extraMoney: z.coerce.number().gte(0).optional(),
+  monthlyAmount: z.coerce.number().gte(0),
   autoRenew: z.boolean(),
   paymentPeriodicity: z.enum([
     PaymentPeriodicity.Monthly,
@@ -77,22 +79,48 @@ const buttonStyles = css`
   justify-self: center;
 `
 
-export const SubscribeExtraMoney = styled('div')`
+export const SubscribeAmount = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({theme}) => theme.spacing(1)};
   grid-template-columns: 1fr;
   align-items: center;
   padding: ${({theme}) => theme.spacing(3)};
   border: 1px solid ${({theme}) => theme.palette.divider};
   border-radius: ${({theme}) => theme.shape.borderRadius}px;
-
-  ${({theme}) => theme.breakpoints.up('sm')} {
-    grid-template-columns: 3fr minmax(300px, 1fr);
-  }
 `
+
+export const SubscribeAmountText = styled('p')`
+  text-align: center;
+`
+
+export const SubscribeCancelable = styled('p')`
+  text-align: center;
+  color: ${({theme}) => theme.palette.grey[500]};
+`
+
+export const SubscribeNarrowSection = styled(SubscribeSection)`
+  gap: ${({theme}) => theme.spacing(1)};
+`
+
+export const getPaymentText = (
+  autoRenew: boolean,
+  paymentPeriodicity: PaymentPeriodicity,
+  monthlyAmount: number,
+  locale: string
+) =>
+  autoRenew
+    ? `${formatRenewalPeriod(paymentPeriodicity)} für ${formatChf(
+        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        locale
+      )}`
+    : `${formatPaymentPeriod(paymentPeriodicity)} für ${formatChf(
+        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        locale
+      )}`
 
 export const Subscribe = <T extends BuilderUserFormFields>({
   defaults,
+  extraMoneyOffset = 0,
   memberPlans,
   challenge,
   userSubscriptions,
@@ -101,10 +129,11 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   schema = defaultRegisterSchema,
   className,
   onSubscribe,
-  onSubscribeWithRegister
+  onSubscribeWithRegister,
+  deactivateSubscriptionId
 }: BuilderSubscribeProps<T>) => {
   const {
-    meta: {locale},
+    meta: {locale, siteTitle},
     elements: {Alert, Button, TextField, H5, Link, Paragraph},
     MemberPlanPicker,
     PaymentMethodPicker,
@@ -138,7 +167,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     resolver: zodResolver(hasUser ? subscribeSchema : loggedOutSchema),
     defaultValues: {
       ...defaults,
-      extraMoney: 0,
+      monthlyAmount: 0,
       autoRenew: true,
       memberPlanId: defaults?.memberPlanSlug
         ? memberPlans.data?.memberPlans.nodes.find(
@@ -157,7 +186,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   const selectedPaymentMethodId = watch<'paymentMethodId'>('paymentMethodId')
   const selectedPaymentPeriodicity = watch<'paymentPeriodicity'>('paymentPeriodicity')
   const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId')
-  const extraMoney = watch<'extraMoney'>('extraMoney')
+  const monthlyAmount = watch<'monthlyAmount'>('monthlyAmount')
   const autoRenew = watch<'autoRenew'>('autoRenew')
 
   const sortedMemberPlans = useMemo(
@@ -191,20 +220,8 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     [selectedMemberPlan?.availablePaymentMethods]
   )
 
-  const monthlyAmount = useMemo(
-    () => (selectedMemberPlan?.amountPerMonthMin ?? 0) + Math.max(0, extraMoney ?? 0) * 100,
-    [selectedMemberPlan?.amountPerMonthMin, extraMoney]
-  )
-
-  const paymentText = autoRenew
-    ? `${formatRenewalPeriod(selectedPaymentPeriodicity)} für ${formatChf(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(selectedPaymentPeriodicity),
-        locale
-      )}`
-    : `${formatPaymentPeriod(selectedPaymentPeriodicity)} für ${formatChf(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(selectedPaymentPeriodicity),
-        locale
-      )}`
+  const paymentText = getPaymentText(autoRenew, selectedPaymentPeriodicity, monthlyAmount, locale)
+  const monthlyPaymentText = getPaymentText(true, PaymentPeriodicity.Monthly, monthlyAmount, locale)
 
   const onSubmit = handleSubmit(data => {
     const subscribeData: SubscribeMutationVariables = {
@@ -239,6 +256,15 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   })
 
   useEffect(() => {
+    if (selectedMemberPlan) {
+      setValue<'monthlyAmount'>(
+        'monthlyAmount',
+        selectedMemberPlan.amountPerMonthMin + extraMoneyOffset
+      )
+    }
+  }, [selectedMemberPlan, extraMoneyOffset, setValue])
+
+  useEffect(() => {
     if (challenge.data?.challenge.challengeID) {
       setValue<'challengeAnswer.challengeID'>(
         'challengeAnswer.challengeID',
@@ -271,6 +297,9 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity])
 
   const alreadyHasSubscription = useMemo(() => {
+    if (deactivateSubscriptionId) {
+      return
+    }
     return (
       userSubscriptions.data?.subscriptions.some(
         ({memberPlan, deactivation}) => memberPlan.id === selectedMemberPlanId && !deactivation
@@ -278,11 +307,14 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     )
   }, [userSubscriptions.data?.subscriptions, selectedMemberPlanId])
 
-  const hasOpenInvoices = useMemo(
-    () =>
-      userInvoices.data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt) ?? false,
-    [userInvoices.data?.invoices]
-  )
+  const hasOpenInvoices = useMemo(() => {
+    if (deactivateSubscriptionId) {
+      return
+    }
+    return (
+      userInvoices.data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt) ?? false
+    )
+  }, [userInvoices.data?.invoices])
 
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
@@ -317,54 +349,38 @@ export const Subscribe = <T extends BuilderUserFormFields>({
           )}
         />
 
-        {memberPlans.error && <Alert severity="error">{memberPlans.error.message}</Alert>}
+        {memberPlans.error && <ApiAlert error={memberPlans.error} severity="error" />}
       </SubscribeSection>
 
       <SubscribeSection>
-        <H5 component="h2">Bonus Unterstützung</H5>
-
         <Controller
-          name={'extraMoney'}
+          name={'monthlyAmount'}
           control={control}
           render={({field, fieldState: {error}}) => (
-            <SubscribeExtraMoney>
+            <SubscribeAmount>
+              <Paragraph component={SubscribeAmountText} gutterBottom={false}>
+                Ich unterstütze {siteTitle} {replace(/^./, toLower)(monthlyPaymentText)}
+              </Paragraph>
+
               <Slider
                 {...field}
-                min={0}
-                max={100}
-                valueLabelFormat={val => formatChf(val, locale)}
-                step={0.5}
+                min={selectedMemberPlan?.amountPerMonthMin}
+                max={(selectedMemberPlan?.amountPerMonthMin ?? 500) * 5}
+                valueLabelFormat={val => formatChf(val / 100, locale)}
+                step={100}
                 color="secondary"
               />
-
-              <TextField
-                {...field}
-                type={'number'}
-                fullWidth
-                label={'Monatliche Bonus-Unterstützung (optional)'}
-                error={!!error}
-                helperText={error?.message}
-                inputProps={{
-                  step: 'any',
-                  min: 0
-                }}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">CHF</InputAdornment>
-                }}
-              />
-            </SubscribeExtraMoney>
+            </SubscribeAmount>
           )}
         />
+
+        {!hasUser && <UserForm control={control} fields={fields} />}
       </SubscribeSection>
 
-      {!hasUser && (
-        <SubscribeSection>
-          <UserForm control={control} fields={fields} />
-        </SubscribeSection>
-      )}
-
       <SubscribeSection>
-        <H5 component="h2">Zahlungsmethode wählen</H5>
+        {allPaymentMethods && allPaymentMethods.length > 1 && (
+          <H5 component="h2">Zahlungsmethode wählen</H5>
+        )}
 
         <SubscribePayment>
           <Controller
@@ -391,22 +407,24 @@ export const Subscribe = <T extends BuilderUserFormFields>({
             )}
           />
 
-          <Controller
-            name={'autoRenew'}
-            control={control}
-            render={({field}) => (
-              <FormControlLabel
-                {...field}
-                control={
-                  <Checkbox
-                    checked={field.value}
-                    disabled={selectedAvailablePaymentMethod?.forceAutoRenewal}
-                  />
-                }
-                label="Automatisch erneuern"
-              />
-            )}
-          />
+          {!selectedAvailablePaymentMethod?.forceAutoRenewal && (
+            <Controller
+              name={'autoRenew'}
+              control={control}
+              render={({field}) => (
+                <FormControlLabel
+                  {...field}
+                  control={
+                    <Checkbox
+                      checked={field.value}
+                      disabled={selectedAvailablePaymentMethod?.forceAutoRenewal}
+                    />
+                  }
+                  label="Automatisch erneuern"
+                />
+              )}
+            />
+          )}
         </SubscribePayment>
       </SubscribeSection>
 
@@ -442,24 +460,35 @@ export const Subscribe = <T extends BuilderUserFormFields>({
             </RegistrationChallengeWrapper>
           )}
 
-          {challenge.error && <Alert severity="error">{challenge.error.message}</Alert>}
+          {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
         </SubscribeSection>
       )}
 
-      {error && <Alert severity="error">{error.message}</Alert>}
+      {error && <ApiAlert error={error as ApolloError} severity="error" />}
 
-      <Button
-        disabled={challenge.loading || userInvoices.loading || userSubscriptions.loading || loading}
-        type="submit"
-        css={buttonStyles}
-        onClick={e => {
-          if (hasOpenInvoices || alreadyHasSubscription) {
-            e.preventDefault()
-            setOpenConfirm(true)
+      <SubscribeNarrowSection>
+        <Button
+          size={'large'}
+          disabled={
+            challenge.loading || userInvoices.loading || userSubscriptions.loading || loading
           }
-        }}>
-        {paymentText} Abonnieren
-      </Button>
+          type="submit"
+          css={buttonStyles}
+          onClick={e => {
+            if (hasOpenInvoices || alreadyHasSubscription) {
+              e.preventDefault()
+              setOpenConfirm(true)
+            }
+          }}>
+          {paymentText} Abonnieren
+        </Button>
+
+        {autoRenew && (
+          <Paragraph component={SubscribeCancelable} gutterBottom={false}>
+            Jederzeit kündbar
+          </Paragraph>
+        )}
+      </SubscribeNarrowSection>
 
       <MembershipModal
         open={openConfirm}

@@ -73,6 +73,8 @@ fragment CommentWithoutNesting on Comment {
     ...FullOverriddenRating
   }
 
+  featured
+
   userRatings {
     ...FullCommentRating
   }

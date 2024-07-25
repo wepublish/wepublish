@@ -248,12 +248,19 @@ export function App() {
             />
             <Route path="articles/create" element={<ArticleEditor />} />
             <Route path="articles/edit/:id" element={<ArticleEditor />} />
-            {/* Peer Articles Routes */}
             <Route
-              path="peerarticles"
+              path="articles/peer"
               element={
                 <Base>
                   <PeerArticleList />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/tags"
+              element={
+                <Base>
+                  <TagList type={TagType.Article} />
                 </Base>
               }
             />
@@ -268,6 +275,14 @@ export function App() {
             />
             <Route path="pages/create" element={<PageEditor />} />
             <Route path="pages/edit/:id" element={<PageEditor />} />
+            <Route
+              path="pages/tags"
+              element={
+                <Base>
+                  <TagList type={TagType.Page} />
+                </Base>
+              }
+            />
             {/* BlockStyle Routes */}
             <Route
               path="block-content/styles"

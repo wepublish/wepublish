@@ -86,7 +86,8 @@ const anonymousComment = {
   children: [],
   calculatedRatings: [],
   overriddenRatings: [],
-  userRatings: []
+  userRatings: [],
+  url: ''
 } as CommentListQuery['comments'][number]
 
 const verifiedUserComment = {
@@ -125,7 +126,8 @@ const verifiedUserComment = {
   tags: [],
   userRatings: [],
   calculatedRatings: [],
-  overriddenRatings: []
+  overriddenRatings: [],
+  url: ''
 } as CommentListQuery['comments'][number]
 
 const nestedChildren = (id: string) => [
@@ -237,12 +239,21 @@ export const AnonymousCommentingOpen: StoryObj = {
   play: async ctx => {
     const {canvasElement, step} = ctx
     const canvas = within(canvasElement)
+    const fullScope = within(document.body)
     const submitButton = canvas.getByText('Jetzt Mitreden')
 
     await step('Open comment editor', async () => {
       await userEvent.click(submitButton)
-      await waitFor(() => canvas.getByLabelText('Titel'))
     })
+
+    // Use fullScope to find the modal elements
+    const commentAsGuestButton = await fullScope.findByText(/als gast kommentieren/i)
+
+    await step('Close modal', async () => {
+      await userEvent.click(commentAsGuestButton)
+    })
+
+    await waitFor(() => canvas.getByLabelText('Titel'))
   }
 }
 

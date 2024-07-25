@@ -1,10 +1,10 @@
 import {AppBar, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
+import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
-import {useUser} from '@wepublish/authentication/website'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -39,33 +39,30 @@ const useAppBarStyles = (isMenuOpen: boolean) => {
 
 export const NavbarInnerWrapper = styled(Toolbar)`
   display: grid;
-  grid-template-columns: auto 1fr auto 1fr auto;
+  grid-template-columns: max-content max-content 1fr;
   align-items: center;
   grid-auto-flow: column;
-  justify-content: space-between;
   justify-items: center;
   min-height: unset;
   padding: 0;
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
+      grid-template-columns: 1fr max-content 1fr;
       min-height: unset;
       padding: 0;
-      grid-auto-columns: 1fr;
     }
 
     ${theme.breakpoints.up('md')} {
       min-height: unset;
       padding: 0;
-      grid-auto-columns: 1fr;
     }
   `}
 `
 
 export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
-  grid-column: 2;
-  margin: 0 ${({theme}) => theme.spacing(1)};
   display: none;
+  gap: ${({theme}) => theme.spacing(2)};
   align-items: center;
   justify-content: flex-start;
   width: 100%;
@@ -88,7 +85,6 @@ const useNavbarLinkStyles = () => {
   return useMemo(
     () => css`
       font-size: 1rem;
-      margin: 0 ${theme.spacing(1)} 0 ${theme.spacing(2)};
       text-decoration: none;
       color: ${theme.palette.common.black};
 
@@ -101,8 +97,8 @@ const useNavbarLinkStyles = () => {
 }
 
 export const NavbarMain = styled('div')<{isMenuOpen?: boolean}>`
-  display: flex;
-  flex-flow: row wrap;
+  display: grid;
+  grid-template-columns: max-content 1fr;
   align-items: center;
   justify-self: start;
   gap: ${({theme}) => theme.spacing(2)};
@@ -119,8 +115,8 @@ export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
   flex-flow: row wrap;
   align-items: center;
   justify-self: end;
-  gap: ${({theme}) => theme.spacing(2)};
-  grid-column: 5;
+  gap: ${({theme}) => theme.spacing(1)};
+  padding-right: ${({theme}) => theme.spacing(1)};
   justify-self: end;
 
   ${({isMenuOpen}) =>
@@ -128,6 +124,14 @@ export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
     css`
       z-index: -1;
     `}
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    gap: ${({theme}) => theme.spacing(2)};
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    padding-right: 0;
+  }
 `
 
 export const NavbarIconButtonWrapper = styled('div')`
@@ -165,7 +169,6 @@ const useLogoLinkStyles = (isMenuOpen: boolean) => {
       display: grid;
       align-items: center;
       justify-items: center;
-      grid-column: 3;
       justify-self: center;
 
       ${isMenuOpen &&
@@ -182,9 +185,7 @@ export const NavbarLogoWrapper = styled('div')`
   width: auto;
 `
 
-export const NavbarSpacer = styled('div')`
-  grid-column: 4;
-`
+export const NavbarSpacer = styled('div')``
 
 const useImageStyles = () => {
   const theme = useTheme()
@@ -218,7 +219,7 @@ export function Navbar({
   loginUrl = '/login',
   profileUrl = '/profile',
   subscriptionsUrl = '/profile/subscription',
-  showSubscriptionsUrl = true
+  actions
 }: BuilderNavbarProps) {
   const {hasUser} = useUser()
   const [isMenuOpen, setMenuOpen] = useState(false)
@@ -267,42 +268,44 @@ export function Navbar({
                 {isMenuOpen && <MdClose />}
               </IconButton>
             </NavbarIconButtonWrapper>
+
+            {!!headerItems?.links.length && (
+              <NavbarLinks isMenuOpen={isMenuOpen}>
+                {headerItems.links.map((link, index) => (
+                  <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
+                    {link.label}
+                  </Link>
+                ))}
+              </NavbarLinks>
+            )}
           </NavbarMain>
 
-          {!!headerItems?.links.length && (
-            <NavbarLinks isMenuOpen={isMenuOpen}>
-              {headerItems.links.map((link, index) => (
-                <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
-                  {link.label}
-                </Link>
-              ))}
-            </NavbarLinks>
-          )}
-
-          {!!logo && (
-            <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
-              <NavbarLogoWrapper>
+          <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
+            <NavbarLogoWrapper>
+              {!!logo && (
                 <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
-              </NavbarLogoWrapper>
-            </Link>
-          )}
-
-          <NavbarSpacer />
+              )}
+            </NavbarLogoWrapper>
+          </Link>
 
           <NavbarActions isMenuOpen={isMenuOpen}>
-            {hasUser && showSubscriptionsUrl ? (
-              <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
+            {actions}
+
+            {hasUser && subscriptionsUrl && (
+              <Link href={subscriptionsUrl}>
                 <IconButton css={{fontSize: '2em', color: 'black'}}>
-                  <MdOutlinePayments />
+                  <MdOutlinePayments aria-label={'Subscriptions'} />
                 </IconButton>
               </Link>
-            ) : null}
+            )}
 
-            <Link href={hasUser ? profileUrl : loginUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
-              <IconButton css={{fontSize: '2em', color: 'black'}}>
-                <MdAccountCircle />
-              </IconButton>
-            </Link>
+            {(hasUser ? profileUrl : loginUrl) && (
+              <Link href={hasUser ? profileUrl : loginUrl}>
+                <IconButton className="login-button" css={{fontSize: '2em', color: 'black'}}>
+                  <MdAccountCircle aria-label={hasUser ? 'Profil' : 'Login'} />
+                </IconButton>
+              </Link>
+            )}
           </NavbarActions>
         </NavbarInnerWrapper>
       </AppBar>
@@ -310,6 +313,7 @@ export function Navbar({
       {isMenuOpen && Boolean(mainItems || categories?.length) && (
         <NavPaper
           profileUrl={profileUrl}
+          subscriptionsUrl={subscriptionsUrl}
           loginUrl={loginUrl}
           main={mainItems}
           categories={categories}
@@ -328,7 +332,7 @@ export const NavPaperWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
   position: absolute;
-  bottom: 0;
+  bottom: 1px; // Fixes a 1px gap between navbar and paper
   left: 0;
   right: 0;
   transform: translateY(100%);
@@ -433,11 +437,13 @@ const NavPaper = ({
   categories,
   loginUrl,
   profileUrl,
+  subscriptionsUrl,
   closeMenu,
   children
 }: PropsWithChildren<{
-  loginUrl: string
-  profileUrl: string
+  loginUrl?: string | null
+  profileUrl?: string | null
+  subscriptionsUrl?: string | null
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
   closeMenu: () => void
@@ -452,34 +458,34 @@ const NavPaper = ({
     <NavPaperWrapper>
       {children && <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>}
 
-      {!!main?.links.length && (
-        <NavPaperMainLinks>
-          {main.links.map((link, index) => {
-            const url = navigationLinkToUrl(link)
+      <NavPaperMainLinks>
+        {main?.links.map((link, index) => {
+          const url = navigationLinkToUrl(link)
 
-            return (
-              <Link href={url} key={index} color="inherit" underline="none" onClick={closeMenu}>
-                <H4 component="span" css={{fontWeight: '700'}}>
-                  {link.label}
-                </H4>
-              </Link>
-            )
-          })}
+          return (
+            <Link href={url} key={index} color="inherit" underline="none" onClick={closeMenu}>
+              <H4 component="span" css={{fontWeight: '700'}}>
+                {link.label}
+              </H4>
+            </Link>
+          )
+        })}
 
-          <NavPaperActions>
-            {!hasUser && (
-              <Button
-                LinkComponent={Link}
-                href={loginUrl}
-                variant="contained"
-                color="secondary"
-                onClick={closeMenu}>
-                Login
-              </Button>
-            )}
+        <NavPaperActions>
+          {!hasUser && loginUrl && (
+            <Button
+              LinkComponent={Link}
+              href={loginUrl}
+              variant="contained"
+              color="secondary"
+              onClick={closeMenu}>
+              Login
+            </Button>
+          )}
 
-            {hasUser && (
-              <>
+          {hasUser && (
+            <>
+              {profileUrl && (
                 <Button
                   LinkComponent={Link}
                   href={profileUrl}
@@ -488,7 +494,20 @@ const NavPaper = ({
                   onClick={closeMenu}>
                   Mein Konto
                 </Button>
+              )}
 
+              {subscriptionsUrl && (
+                <Button
+                  LinkComponent={Link}
+                  href={subscriptionsUrl}
+                  variant="contained"
+                  color="accent"
+                  onClick={closeMenu}>
+                  Meine Abos
+                </Button>
+              )}
+
+              {loginUrl && (
                 <Button
                   onClick={() => {
                     logout()
@@ -498,11 +517,11 @@ const NavPaper = ({
                   color="secondary">
                   Logout
                 </Button>
-              </>
-            )}
-          </NavPaperActions>
-        </NavPaperMainLinks>
-      )}
+              )}
+            </>
+          )}
+        </NavPaperActions>
+      </NavPaperMainLinks>
 
       {!!categories.length &&
         categories.map((categoryArray, arrayIndex) => (

@@ -6,7 +6,12 @@ import {css, styled} from '@mui/material'
 export const isTeaserListBlock = (block: Block): block is TeaserListBlockType =>
   block.__typename === 'TeaserListBlock'
 
-export const TeaserListBlockWrapper = styled('div')`
+export const TeaserListBlockWrapper = styled('section')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(3)};
+`
+
+export const TeaserListBlockTeasers = styled('div')`
   display: grid;
   column-gap: ${({theme}) => theme.spacing(2)};
   row-gap: ${({theme}) => theme.spacing(5)};
@@ -25,21 +30,31 @@ export const TeaserListBlockWrapper = styled('div')`
     `}
 `
 
-export const TeaserListBlock = ({teasers, blockStyle, className}: BuilderTeaserListBlockProps) => {
+export const TeaserListBlock = ({
+  title,
+  teasers,
+  blockStyle,
+  className
+}: BuilderTeaserListBlockProps) => {
   const {
+    elements: {H5},
     blocks: {Teaser}
   } = useWebsiteBuilder()
 
   return (
     <TeaserListBlockWrapper className={className}>
-      {teasers.map((teaser, index) => (
-        <Teaser
-          key={index}
-          teaser={teaser}
-          alignment={alignmentForTeaserBlock(index, 1)}
-          blockStyle={blockStyle}
-        />
-      ))}
+      {title && <H5 component={'h1'}>{title}</H5>}
+
+      <TeaserListBlockTeasers>
+        {teasers.map((teaser, index) => (
+          <Teaser
+            key={index}
+            teaser={teaser}
+            alignment={alignmentForTeaserBlock(index, 3)}
+            blockStyle={blockStyle}
+          />
+        ))}
+      </TeaserListBlockTeasers>
     </TeaserListBlockWrapper>
   )
 }

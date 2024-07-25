@@ -4,19 +4,19 @@ import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {isImageBlock} from '../image/image-block'
 import {isTitleBlock} from '../title/title-block'
-import {useMemo} from 'react'
+import {PropsWithChildren, useMemo} from 'react'
 
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       const titleBlock = teaser.page?.blocks?.find(isTitleBlock)
-      return teaser.title || titleBlock?.title || teaser.page?.title
+      return teaser.title || teaser.page?.title || titleBlock?.title
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       const titleBlock = teaser.article?.blocks?.find(isTitleBlock)
-      return teaser.title || titleBlock?.title || teaser.article?.title
+      return teaser.title || teaser.article?.title || titleBlock?.title
     }
 
     case 'EventTeaser':
@@ -31,9 +31,14 @@ export const selectTeaserPreTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PeerArticleTeaser':
     case 'ArticleTeaser':
-      return teaser.preTitle || teaser.article?.preTitle
-    case 'EventTeaser':
+      return (
+        teaser.preTitle ||
+        teaser.article?.preTitle ||
+        teaser.article?.tags?.find(({main}) => !!main)?.tag
+      )
     case 'PageTeaser':
+      return teaser.preTitle || teaser.page?.tags?.find(({main}) => !!main)?.tag
+    case 'EventTeaser':
     case 'CustomTeaser':
       return teaser.preTitle
   }
@@ -43,17 +48,21 @@ export const selectTeaserLead = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       const titleBlock = teaser.page?.blocks?.find(isTitleBlock)
-      return teaser.lead || titleBlock?.lead || teaser.page?.description
+      return teaser.lead || teaser.page?.description || titleBlock?.lead
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       const titleBlock = teaser.article?.blocks?.find(isTitleBlock)
-      return teaser.lead || titleBlock?.lead || teaser.article?.lead
+      return teaser.lead || teaser.article?.lead || titleBlock?.lead
     }
 
     case 'EventTeaser':
-      return teaser.lead ?? firstParagraphToPlaintext(teaser.event?.description)?.substring(0, 225)
+      return (
+        teaser.lead ||
+        teaser.event?.lead ||
+        firstParagraphToPlaintext(teaser.event?.description)?.substring(0, 225)
+      )
 
     case 'CustomTeaser':
       return teaser.lead
@@ -84,13 +93,13 @@ export const selectTeaserImage = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       const imageBlock = teaser.page?.blocks?.find(isImageBlock)
-      return teaser.image ?? imageBlock?.image ?? teaser?.page?.image
+      return teaser.image ?? teaser?.page?.image ?? imageBlock?.image
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       const imageBlock = teaser.article?.blocks?.find(isImageBlock)
-      return teaser.image ?? imageBlock?.image ?? teaser?.article?.image
+      return teaser.image ?? teaser?.article?.image ?? imageBlock?.image
     }
 
     case 'EventTeaser':
@@ -138,13 +147,46 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
   }
 }
 
+export const selectTeaserTags = (teaser: TeaserType) => {
+  switch (teaser.__typename) {
+    case 'PageTeaser': {
+      return teaser.page?.tags ?? []
+    }
+
+    case 'ArticleTeaser': {
+      return teaser.article?.tags ?? []
+    }
+
+    case 'EventTeaser':
+      return teaser.event?.tags ?? []
+
+    case 'PeerArticleTeaser':
+    case 'CustomTeaser':
+      return []
+  }
+
+  return []
+}
+
 export const TeaserWrapper = styled('article')<FlexAlignment>`
   display: grid;
 
-  ${({w}) =>
+  ${({theme, w}) =>
     w > 6 &&
     css`
       grid-column: 1 / -1;
+
+      ${theme.breakpoints.up('md')} {
+        ${TeaserTitle} {
+          font-size: ${theme.typography.h3.fontSize};
+          line-height: ${theme.typography.h3.lineHeight};
+        }
+
+        ${TeaserLead} {
+          font-size: ${theme.typography.h6.fontSize};
+          line-height: ${theme.typography.h6.lineHeight};
+        }
+      }
     `}
 
   ${({theme, h, w, x, y}) => css`
@@ -181,13 +223,14 @@ const useImageStyles = () => {
 
   return useMemo(
     () => css`
+      max-height: 400px;
       width: 100%;
       object-fit: cover;
       grid-column: 1/13;
       transition: transform 0.3s ease-in-out;
       aspect-ratio: 1.8;
 
-      ${TeaserWrapper}:hover & {
+      :where(${TeaserWrapper}:hover &) {
         transform: scale(1.1);
       }
 
@@ -199,11 +242,10 @@ const useImageStyles = () => {
   )
 }
 
-const teaserLinkStyles = () => css`
+export const TeaserContentWrapper = styled('div')`
   display: grid;
   grid-auto-rows: max-content;
   align-items: start;
-  text-decoration: none;
   grid-template-areas:
     'image'
     'pretitle'
@@ -216,9 +258,9 @@ export const TeaserTitle = styled('h1')`
   grid-area: title;
   margin-bottom: ${({theme}) => theme.spacing(1)};
 `
+
 export const TeaserLead = styled('p')`
   font-weight: 300;
-  font-size: 15px;
   grid-area: lead;
 `
 
@@ -233,7 +275,7 @@ export const TeaserPreTitleNoContent = styled('div')`
   width: 100%;
   margin-bottom: ${({theme}) => theme.spacing(1.5)};
 
-  ${TeaserWrapper}:hover & {
+  :where(${TeaserWrapper}:hover &) {
     background-color: ${({theme}) => theme.palette.primary.main};
   }
 `
@@ -246,22 +288,26 @@ export const TeaserPreTitleWrapper = styled('div')`
   margin-bottom: ${({theme}) => theme.spacing(1.5)};
   grid-area: pretitle;
 
-  ${TeaserWrapper}:hover & {
+  :where(${TeaserWrapper}:hover &) {
     background-color: ${({theme}) => theme.palette.primary.main};
   }
 `
 
-export const PreTitle = styled('div')`
-  transition: background-color 0.3s ease-in-out;
+export const TeaserPreTitle = styled('div')`
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: ${({theme}) => `${theme.spacing(0.5)} ${theme.spacing(2)}`};
   background-color: ${({theme}) => theme.palette.accent.main};
+  color: ${({theme}) => theme.palette.accent.contrastText};
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
   transform: translateY(-100%);
 
-  ${TeaserWrapper}:hover & {
+  :where(${TeaserWrapper}:hover &) {
     background-color: ${({theme}) => theme.palette.primary.main};
+    color: ${({theme}) => theme.palette.primary.contrastText};
   }
 
   ${({theme}) => theme.breakpoints.up('md')} {
@@ -279,6 +325,26 @@ export const TeaserTime = styled('time')`
   font-weight: 400;
 `
 
+const TeaserContent = ({
+  href,
+  className,
+  children
+}: PropsWithChildren<{href?: string; className?: string}>) => {
+  const {
+    elements: {Link}
+  } = useWebsiteBuilder()
+
+  if (href) {
+    return (
+      <Link color="inherit" underline="none" href={href}>
+        <TeaserContentWrapper className={className}>{children}</TeaserContentWrapper>
+      </Link>
+    )
+  }
+
+  return <TeaserContentWrapper className={className}>{children}</TeaserContentWrapper>
+}
+
 export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const title = teaser && selectTeaserTitle(teaser)
   const preTitle = teaser && selectTeaserPreTitle(teaser)
@@ -290,30 +356,27 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
   const {
     date,
-    elements: {Link, Image, Paragraph, H4}
+    elements: {Image, Paragraph, H4}
   } = useWebsiteBuilder()
 
-  const linkStyles = teaserLinkStyles()
   const imageStyles = useImageStyles()
 
   return (
     <TeaserWrapper {...alignment}>
-      <Link color="inherit" href={href ?? ''} className={className} css={linkStyles}>
+      <TeaserContent href={href} className={className}>
         <TeaserImageWrapper>
           {image && <Image image={image} css={imageStyles} />}
         </TeaserImageWrapper>
 
-        {preTitle ? (
+        {preTitle && (
           <TeaserPreTitleWrapper>
-            <PreTitle>{preTitle}</PreTitle>
+            <TeaserPreTitle>{preTitle}</TeaserPreTitle>
           </TeaserPreTitleWrapper>
-        ) : (
-          <TeaserPreTitleNoContent />
         )}
+        {!preTitle && <TeaserPreTitleNoContent />}
 
         <H4 component={TeaserTitle}>{title}</H4>
-
-        <Paragraph component={TeaserLead}>{lead}</Paragraph>
+        {lead && <Paragraph component={TeaserLead}>{lead}</Paragraph>}
 
         <TeaserMetadata>
           {authors && authors?.length ? <Authors>Von {authors?.join(', ')} </Authors> : null}
@@ -325,7 +388,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
             </TeaserTime>
           )}
         </TeaserMetadata>
-      </Link>
+      </TeaserContent>
     </TeaserWrapper>
   )
 }

@@ -2,30 +2,34 @@
 
 exports[`YouTube Video Block should render Default 1`] = `
 <DocumentFragment>
-  <div
-    class="css-1yzi1gx-YouTubeVideoBlockWrapper eap2o311"
+  .emotion-2 {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-1bkzc1-YouTubeVideoBlockPlayer eap2o310"
+      class="emotion-2 emotion-3"
       style="width: auto; height: auto;"
-    >
-      <div
-        style="width: 100%; height: 100%;"
-      >
-        <div />
-      </div>
-    </div>
+    />
   </div>
 </DocumentFragment>
 `;
 
 exports[`YouTube Video Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
-    class="extra-classname css-1yzi1gx-YouTubeVideoBlockWrapper eap2o311"
+  .emotion-2 {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+<div
+    class="extra-classname emotion-0 emotion-1"
   >
     <div
-      class="css-1bkzc1-YouTubeVideoBlockPlayer eap2o310"
+      class="emotion-2 emotion-3"
       style="width: auto; height: auto;"
     >
       <div

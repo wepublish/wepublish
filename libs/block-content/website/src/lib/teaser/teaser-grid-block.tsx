@@ -14,9 +14,10 @@ export const TeaserGridBlockWrapper = styled('div', {
   shouldForwardProp: propName => propName !== 'numColumns'
 })<Pick<TeaserGridBlockType, 'numColumns'>>`
   display: grid;
-  gap: ${({theme}) => theme.spacing(4)};
+  column-gap: ${({theme}) => theme.spacing(2)};
+  row-gap: ${({theme}) => theme.spacing(5)};
   grid-template-columns: 1fr;
-  align-items: stretch;
+  align-items: start;
 
   ${({theme, numColumns}) =>
     numColumns > 1 &&
@@ -48,7 +49,7 @@ export const isFilledTeaser = (teaser: Teaser | null | undefined): teaser is Tea
     }
 
     case 'CustomTeaser': {
-      return Boolean(teaser.contentUrl)
+      return true
     }
   }
 

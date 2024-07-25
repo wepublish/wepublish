@@ -2,16 +2,137 @@
 
 exports[`Break Block should render Default 1`] = `
 <DocumentFragment>
-  <div
-    class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+  .emotion-0 {
+  display: grid;
+  gap: 32px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 48px 24px;
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    padding: 80px 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  object-fit: cover;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    width: 80%;
+  }
+}
+
+.emotion-8 {
+  font-size: 40px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width:900px) {
+  .emotion-8 {
+    font-style: italic;
+    font-size: 45px;
+  }
+}
+
+@media (min-width: 900px) {
+  .emotion-8 {
+    font-size: 32px;
+  }
+}
+
+.emotion-10 {
+  max-width: 440px;
+}
+
+.emotion-10 p {
+  font-size: 16px;
+}
+
+@media (min-width:900px) {
+  .emotion-10 p {
+    font-size: 22px;
+  }
+}
+
+.emotion-12 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-12.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-12:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-13:last-child {
+  margin-bottom: 0;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -20,16 +141,15 @@ https://unsplash.it/200/100 200w"
       />
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h4 emotion-8 emotion-9"
       >
         Break block test
       </div>
       <div
-        class="css-t92hh8-RichTextBlockWrapper-BreakBlock eu4zjs90"
+        class="emotion-10 emotion-11"
       >
         <div
           data-gramm="false"
@@ -38,7 +158,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-12"
             data-slate-node="element"
           >
             <span
@@ -52,7 +172,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-13"
             data-slate-node="element"
           >
             <span
@@ -66,7 +186,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-13"
             data-slate-node="element"
           >
             <span
@@ -82,7 +202,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-12"
             data-slate-node="element"
           >
             <span
@@ -142,16 +262,154 @@ https://unsplash.it/200/100 200w"
 
 exports[`Break Block should render ImageRight 1`] = `
 <DocumentFragment>
-  <div
-    class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+  .emotion-0 {
+  display: grid;
+  gap: 32px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 48px 24px;
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    padding: 80px 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    -webkit-order: 1;
+    -ms-flex-order: 1;
+    order: 1;
+  }
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  object-fit: cover;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    width: 80%;
+  }
+}
+
+.emotion-6 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.emotion-8 {
+  font-size: 40px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width:900px) {
+  .emotion-8 {
+    font-style: italic;
+    font-size: 45px;
+  }
+}
+
+@media (min-width: 900px) {
+  .emotion-8 {
+    font-size: 32px;
+  }
+}
+
+.emotion-10 {
+  max-width: 440px;
+}
+
+.emotion-10 p {
+  font-size: 16px;
+}
+
+@media (min-width:900px) {
+  .emotion-10 p {
+    font-size: 22px;
+  }
+}
+
+.emotion-12 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-12.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-12:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-13:last-child {
+  margin-bottom: 0;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-17wr6dm-BreakBlockSegment e11xbw3q0"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -160,16 +418,15 @@ https://unsplash.it/200/100 200w"
       />
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="emotion-6 emotion-3"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h4 emotion-8 emotion-9"
       >
         Break block test
       </div>
       <div
-        class="css-t92hh8-RichTextBlockWrapper-BreakBlock eu4zjs90"
+        class="emotion-10 emotion-11"
       >
         <div
           data-gramm="false"
@@ -178,7 +435,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-12"
             data-slate-node="element"
           >
             <span
@@ -192,7 +449,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-13"
             data-slate-node="element"
           >
             <span
@@ -206,7 +463,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-13"
             data-slate-node="element"
           >
             <span
@@ -222,7 +479,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-12"
             data-slate-node="element"
           >
             <span
@@ -282,16 +539,270 @@ https://unsplash.it/200/100 200w"
 
 exports[`Break Block should render WithButton 1`] = `
 <DocumentFragment>
-  <div
-    class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+  .emotion-0 {
+  display: grid;
+  gap: 32px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 48px 24px;
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    padding: 80px 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  object-fit: cover;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    width: 80%;
+  }
+}
+
+.emotion-8 {
+  font-size: 40px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width:900px) {
+  .emotion-8 {
+    font-style: italic;
+    font-size: 45px;
+  }
+}
+
+@media (min-width: 900px) {
+  .emotion-8 {
+    font-size: 32px;
+  }
+}
+
+.emotion-10 {
+  max-width: 440px;
+}
+
+.emotion-10 p {
+  font-size: 16px;
+}
+
+@media (min-width:900px) {
+  .emotion-10 p {
+    font-size: 22px;
+  }
+}
+
+.emotion-12 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-12.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-12:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-13:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-16 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+  text-transform: none;
+  background-color: #000;
+  margin-top: 16px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 8px 24px;
+  border-radius: 32px;
+}
+
+.emotion-16:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-16::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-16.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-16 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-16:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-16:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-16:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-16.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-16.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-16:hover {
+  box-shadow: none;
+}
+
+.emotion-16:hover {
+  background-color: #000;
+}
+
+.emotion-17 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -300,16 +811,15 @@ https://unsplash.it/200/100 200w"
       />
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h4 emotion-8 emotion-9"
       >
         Break block test
       </div>
       <div
-        class="css-t92hh8-RichTextBlockWrapper-BreakBlock eu4zjs90"
+        class="emotion-10 emotion-11"
       >
         <div
           data-gramm="false"
@@ -318,7 +828,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-12"
             data-slate-node="element"
           >
             <span
@@ -332,7 +842,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-13"
             data-slate-node="element"
           >
             <span
@@ -346,7 +856,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-13"
             data-slate-node="element"
           >
             <span
@@ -362,7 +872,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-12"
             data-slate-node="element"
           >
             <span
@@ -416,14 +926,14 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1xpb1v5-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiButton-root-BreakBlock"
-        href="Link URL"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-16"
+        href="https://example.com"
         tabindex="0"
         target="_blank"
       >
         Link Text
         <span
-          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          class="MuiTouchRipple-root emotion-17"
         />
       </a>
     </div>
@@ -433,16 +943,137 @@ https://unsplash.it/200/100 200w"
 
 exports[`Break Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
-    class="extra-classname css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+  .emotion-0 {
+  display: grid;
+  gap: 32px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 48px 24px;
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    padding: 80px 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  object-fit: cover;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    width: 80%;
+  }
+}
+
+.emotion-8 {
+  font-size: 40px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width:900px) {
+  .emotion-8 {
+    font-style: italic;
+    font-size: 45px;
+  }
+}
+
+@media (min-width: 900px) {
+  .emotion-8 {
+    font-size: 32px;
+  }
+}
+
+.emotion-10 {
+  max-width: 440px;
+}
+
+.emotion-10 p {
+  font-size: 16px;
+}
+
+@media (min-width:900px) {
+  .emotion-10 p {
+    font-size: 22px;
+  }
+}
+
+.emotion-12 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-12.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-12:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-13:last-child {
+  margin-bottom: 0;
+}
+
+<div
+    class="extra-classname emotion-0 emotion-1"
   >
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -451,16 +1082,15 @@ https://unsplash.it/200/100 200w"
       />
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h4 emotion-8 emotion-9"
       >
         Break block test
       </div>
       <div
-        class="css-t92hh8-RichTextBlockWrapper-BreakBlock eu4zjs90"
+        class="emotion-10 emotion-11"
       >
         <div
           data-gramm="false"
@@ -469,7 +1099,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-12"
             data-slate-node="element"
           >
             <span
@@ -483,7 +1113,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-13"
             data-slate-node="element"
           >
             <span
@@ -497,7 +1127,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-13"
             data-slate-node="element"
           >
             <span
@@ -513,7 +1143,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-12"
             data-slate-node="element"
           >
             <span
@@ -573,16 +1203,137 @@ https://unsplash.it/200/100 200w"
 
 exports[`Break Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  <div
-    class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+  .emotion-0 {
+  display: grid;
+  gap: 32px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 48px 24px;
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    padding: 80px 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  object-fit: cover;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    width: 80%;
+  }
+}
+
+.emotion-8 {
+  font-size: 40px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width:900px) {
+  .emotion-8 {
+    font-style: italic;
+    font-size: 45px;
+  }
+}
+
+@media (min-width: 900px) {
+  .emotion-8 {
+    font-size: 32px;
+  }
+}
+
+.emotion-10 {
+  max-width: 440px;
+}
+
+.emotion-10 p {
+  font-size: 16px;
+}
+
+@media (min-width:900px) {
+  .emotion-10 p {
+    font-size: 22px;
+  }
+}
+
+.emotion-12 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-12.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-12:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-13:last-child {
+  margin-bottom: 0;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -591,16 +1342,15 @@ https://unsplash.it/200/100 200w"
       />
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h4 emotion-8 emotion-9"
       >
         Break block test
       </div>
       <div
-        class="css-t92hh8-RichTextBlockWrapper-BreakBlock eu4zjs90"
+        class="emotion-10 emotion-11"
       >
         <div
           data-gramm="false"
@@ -609,7 +1359,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-12"
             data-slate-node="element"
           >
             <span
@@ -623,7 +1373,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-13"
             data-slate-node="element"
           >
             <span
@@ -637,7 +1387,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-13"
             data-slate-node="element"
           >
             <span
@@ -653,7 +1403,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-12"
             data-slate-node="element"
           >
             <span
@@ -713,24 +1463,116 @@ https://unsplash.it/200/100 200w"
 
 exports[`Break Block should render WithoutImage 1`] = `
 <DocumentFragment>
-  <div
-    class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+  .emotion-0 {
+  display: grid;
+  gap: 32px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 48px 24px;
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    padding: 80px 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.emotion-4 {
+  font-size: 40px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3.75rem;
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    font-style: italic;
+    font-size: 84px;
+  }
+}
+
+.emotion-8 {
+  max-width: 440px;
+}
+
+.emotion-8 p {
+  font-size: 16px;
+}
+
+@media (min-width:900px) {
+  .emotion-8 p {
+    font-size: 22px;
+  }
+}
+
+.emotion-10 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-10.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-10:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-11 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-11:last-child {
+  margin-bottom: 0;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="MuiTypography-root MuiTypography-h2 css-dh9xz8-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h2 emotion-4 emotion-5"
       >
         Break block test
       </div>
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-t92hh8-RichTextBlockWrapper-BreakBlock eu4zjs90"
+        class="emotion-8 emotion-9"
       >
         <div
           data-gramm="false"
@@ -739,7 +1581,7 @@ exports[`Break Block should render WithoutImage 1`] = `
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-10"
             data-slate-node="element"
           >
             <span
@@ -753,7 +1595,7 @@ exports[`Break Block should render WithoutImage 1`] = `
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-11"
             data-slate-node="element"
           >
             <span
@@ -767,7 +1609,7 @@ exports[`Break Block should render WithoutImage 1`] = `
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-11"
             data-slate-node="element"
           >
             <span
@@ -783,7 +1625,7 @@ exports[`Break Block should render WithoutImage 1`] = `
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-10"
             data-slate-node="element"
           >
             <span
@@ -843,24 +1685,133 @@ exports[`Break Block should render WithoutImage 1`] = `
 
 exports[`Break Block should render WithoutImageRight 1`] = `
 <DocumentFragment>
-  <div
-    class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+  .emotion-0 {
+  display: grid;
+  gap: 32px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 48px 24px;
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    padding: 80px 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    -webkit-order: 1;
+    -ms-flex-order: 1;
+    order: 1;
+  }
+}
+
+.emotion-4 {
+  font-size: 40px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3.75rem;
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    font-style: italic;
+    font-size: 84px;
+  }
+}
+
+.emotion-6 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.emotion-8 {
+  max-width: 440px;
+}
+
+.emotion-8 p {
+  font-size: 16px;
+}
+
+@media (min-width:900px) {
+  .emotion-8 p {
+    font-size: 22px;
+  }
+}
+
+.emotion-10 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-10.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-10:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-11 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-11:last-child {
+  margin-bottom: 0;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-17wr6dm-BreakBlockSegment e11xbw3q0"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="MuiTypography-root MuiTypography-h2 css-dh9xz8-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h2 emotion-4 emotion-5"
       >
         Break block test
       </div>
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="emotion-6 emotion-3"
     >
       <div
-        class="css-t92hh8-RichTextBlockWrapper-BreakBlock eu4zjs90"
+        class="emotion-8 emotion-9"
       >
         <div
           data-gramm="false"
@@ -869,7 +1820,7 @@ exports[`Break Block should render WithoutImageRight 1`] = `
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-10"
             data-slate-node="element"
           >
             <span
@@ -883,7 +1834,7 @@ exports[`Break Block should render WithoutImageRight 1`] = `
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-11"
             data-slate-node="element"
           >
             <span
@@ -897,7 +1848,7 @@ exports[`Break Block should render WithoutImageRight 1`] = `
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-11"
             data-slate-node="element"
           >
             <span
@@ -913,7 +1864,7 @@ exports[`Break Block should render WithoutImageRight 1`] = `
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-10"
             data-slate-node="element"
           >
             <span

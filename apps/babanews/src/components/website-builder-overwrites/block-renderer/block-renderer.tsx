@@ -5,14 +5,11 @@ import {
   BreakBlock,
   BuilderBlockRendererProps,
   isBreakBlock,
-  isTeaserListBlock,
-  useWebsiteBuilder
+  isTeaserListBlock
 } from '@wepublish/website'
 import {cond} from 'ramda'
 import {useMemo} from 'react'
 
-import {FullWidthBanner} from '../../babanews/fullwidth-banner/fullwidth-banner'
-import {isFullWidthBanner} from '../../babanews/fullwidth-banner/is-fullwidth-banner'
 import {InstagramBanner} from '../../babanews/instagram-banner/instagram-banner'
 import {isInstagramBanner} from '../../babanews/instagram-banner/is-instagram-banner'
 import {Container} from '../../layout/container'
@@ -22,23 +19,10 @@ import {ListTeaser} from '../blocks/list-teaser'
 
 export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
   const theme = useTheme()
-  const {
-    blocks: {TeaserGrid}
-  } = useWebsiteBuilder()
 
   const extraBlockMap = useMemo(
     () =>
       cond([
-        [
-          isFullWidthBanner,
-          block => (
-            <FullWidthContainer>
-              <Container>
-                <FullWidthBanner {...block} />
-              </Container>
-            </FullWidthContainer>
-          )
-        ],
         [
           isInstagramBanner,
           block => (
@@ -77,7 +61,7 @@ export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
           )
         ]
       ]),
-    [TeaserGrid]
+    [theme.palette.accent.main, theme.palette.common.black]
   )
 
   return (

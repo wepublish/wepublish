@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {Typography} from '@mui/material'
-import {IntendedRouteStorageKey} from '@wepublish/utils/website'
+import {IntendedRouteStorageKey} from '@wepublish/website'
 import {
   ApiV1,
   AuthTokenStorageKey,
@@ -44,10 +44,10 @@ export default function Login({sessionToken}: LoginProps) {
 
   return (
     <LoginWrapper>
-      <H3 component="h1">Login für Abonnent*innen</H3>
+      <H3 component="h1">Login für Member</H3>
 
       <Typography variant="body1" paragraph>
-        (Falls du noch keinen Account hast, <Link href={'/signup'}>klicke hier.</Link>)
+        (Falls du noch keinen Account hast, <Link href={'/mitmachen'}>klicke hier.</Link>)
       </Typography>
 
       <LoginFormContainer />

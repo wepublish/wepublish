@@ -4,25 +4,26 @@ on:
   workflow_call:
     inputs:
       editor_tags:
-        required: true
+        required: false
         type: string
       api_tags:
-        required: true
+        required: false
         type: string
       migration_tags:
-        required: true
+        required: false
         type: string
       storybook_tags:
-        required: true
+        required: false
         type: string
-      website_tags:
-        required: true
+      media_tags:
+        required: false
         type: string
 
 jobs:
   build-and-push-docker-api:
     name: Build and push api
     runs-on: ubuntu-latest
+    if: inputs.api_tags != ''
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v1
@@ -46,6 +47,7 @@ jobs:
   build-and-push-docker-editor:
     name: Build and push editor
     runs-on: ubuntu-latest
+    if: inputs.editor_tags != ''
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v1
@@ -69,6 +71,7 @@ jobs:
   build-and-push-docker-migration:
     name: Build and push migration
     runs-on: ubuntu-latest
+    if: inputs.migration_tags != ''
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v1
@@ -89,9 +92,10 @@ jobs:
           push: true
           tags: |
             ${{ inputs.migration_tags }}
-  build-and-push-website:
-    name: Build and push website
+  build-and-push-docker-media:
+    name: Build and push media
     runs-on: ubuntu-latest
+    if: inputs.media_tags != ''
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v1
@@ -108,13 +112,14 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - uses: docker/build-push-action@v2
         with:
-          target: website
+          target: media
           push: true
           tags: |
-            ${{ inputs.website_tags }}
+            ${{ inputs.media_tags }}
   build-and-push-storybook:
     name: Build and push storybook
     runs-on: ubuntu-latest
+    if: inputs.storybook_tags != ''
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v1

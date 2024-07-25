@@ -134,6 +134,7 @@ export type Event = {
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
@@ -159,6 +160,7 @@ export type EventFromSource = {
   externalSourceName?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   imageUrl?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
@@ -372,6 +374,7 @@ export type MutationCreateEventArgs = {
   description?: InputMaybe<Scalars['RichText']>;
   endsAt?: InputMaybe<Scalars['DateTime']>;
   imageId?: InputMaybe<Scalars['String']>;
+  lead?: InputMaybe<Scalars['String']>;
   location?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   startsAt: Scalars['DateTime'];
@@ -473,6 +476,7 @@ export type MutationUpdateEventArgs = {
   endsAt?: InputMaybe<Scalars['DateTime']>;
   id: Scalars['String'];
   imageId?: InputMaybe<Scalars['String']>;
+  lead?: InputMaybe<Scalars['String']>;
   location?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   startsAt?: InputMaybe<Scalars['DateTime']>;

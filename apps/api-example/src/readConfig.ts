@@ -99,6 +99,14 @@ type noCharge = {
   offSessionPayments: boolean
 }
 
+type karmaMediaServer = {
+  type: 'karma'
+}
+
+type novaMediaServer = {
+  type: 'nova'
+}
+
 type PaymentProvider = Payrexx | PayrexxSubscription | Stripe | StripeCheckout | Bexio | noCharge
 
 type Challenge = {
@@ -121,6 +129,7 @@ type Config = {
   mailProvider: MailProvider
   OAuthProviders: OAuthProvider[]
   paymentProviders: PaymentProvider[]
+  mediaServer: karmaMediaServer | novaMediaServer
   challenge: Challenge
 }
 

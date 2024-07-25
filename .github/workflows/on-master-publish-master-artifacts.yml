@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   date_sha_tag:
     runs-on: ubuntu-latest
@@ -13,6 +17,18 @@ jobs:
     steps:
       - id: image_tag
         run: echo "::set-output name=tag::$(date +%s)-${{ github.sha }}"
+
+  setup-website-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up matrix
+        id: set-matrix
+        run: deployment/read_deployment_config.sh '.website.staging.deployment' true
 
   publish_master_docker:
     needs: date_sha_tag
@@ -30,12 +46,27 @@ jobs:
         ghcr.io/wepublish/editor:master-${{ needs.date_sha_tag.outputs.tag }}
         ghcr.io/wepublish/editor:master
         wepublishch/editor:master
+      media_tags: |
+        ghcr.io/wepublish/media:master-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/media:master
+        wepublishch/media:master
       storybook_tags: |
         ghcr.io/wepublish/storybook:master-${{ needs.date_sha_tag.outputs.tag }}
         ghcr.io/wepublish/storybook:master
         wepublishch/storybook:master
+    secrets: inherit
+
+  publish_master_docker_website:
+    name: Website
+    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker ]
+    if: ${{ needs.publish_master_docker.result == 'success' }}
+    uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
+    strategy:
+      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
+    with:
+      website_project: ${{ matrix.target }}
+      api_url: https://api-${{ matrix.target }}.wepublish.dev
+      environment: staging
       website_tags: |
-        ghcr.io/wepublish/website:master-${{ needs.date_sha_tag.outputs.tag }}
-        ghcr.io/wepublish/website:master
-        wepublishch/website:master
+        ghcr.io/wepublish/website-${{ matrix.target }}:master-${{ needs.date_sha_tag.outputs.tag }}
     secrets: inherit

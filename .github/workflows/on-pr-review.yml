@@ -15,7 +15,8 @@ env:
   WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   STORYBOOK_URL: https://storybook-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-  PROJECT_URL_SUFFIX: -review-${{ github.event.pull_request.number }}.wepublish.vercel.app
+  PROJECT_URL_SUFFIX: -${{ github.event.pull_request.number }}.reviews.wepublish.dev
+
 
 jobs:
   publish_docker_image:
@@ -30,8 +31,8 @@ jobs:
         ghcr.io/wepublish/migration:${{ github.sha }}
       storybook_tags: |
         ghcr.io/wepublish/storybook:${{ github.sha }}
-      website_tags: |
-        ghcr.io/wepublish/website:${{ github.sha }}
+      media_tags: |
+        ghcr.io/wepublish/media:${{ github.sha }}
     secrets: inherit
 
   helm_deployment_deps:
@@ -79,7 +80,7 @@ jobs:
             rootUser: ${S3_ACCESS_KEY_ID}
             rootPassword: ${S3_SECRET_ACCESS_KEY}
           disableWebUI: true
-          defaultBuckets: ${S3_BUCKET}
+          defaultBuckets: wepublish-staff,wepublish-transformed
           persistence:
             enabled: false
           service:
@@ -88,36 +89,6 @@ jobs:
           EOF
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm upgrade --install review-${{ github.event.pull_request.number }}-minio bitnami/minio -n reviews -f values.yaml
-
-      - name: Helm deploy media-server
-        run: |
-          cat > values.yaml <<EOF
-          deployment:
-            image: seccomch/wep-media-light:latest
-            env:
-              TOKEN: media-token
-              DEBUG: 'false'
-              NUM_CLUSTERS: '1'
-              AWS_S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
-              AWS_S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
-              AWS_S3_BUCKET: ${S3_BUCKET}
-              AWS_S3_REGION: 'us-east-1'
-              AWS_S3_ENDPOINT: 'http://review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local:9000'
-              AWS_STORAGE_CLASS: 'REDUCED_REDUNDANCY'
-              AWS_S3_FORCE_PATH_STYLE: 'true'
-            replicaCount: 1
-          service:
-            type: ClusterIP
-            port: 80
-          ingress:
-            enabled: true
-            host: media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-            path: /
-          pvc:
-            enabled: false
-          labels: { }
-          EOF
-          helm upgrade --install review-${{ github.event.pull_request.number }}-media-server karma-media-server --repo https://gitlab.com/api/v4/projects/38941346/packages/helm/stable -n reviews -f values.yaml --version 1.0.6
 
       - name: Helm deploy database
         run: |
@@ -189,6 +160,7 @@ jobs:
               JWT_SECRET_KEY: 'jwt-token'
               DEFAULT_FROM_ADDRESS: 'dev@wepublish.ch'
               DEFAULT_REPLY_TO_ADDRESS: 'dev@wepublish.ch'
+              SYSTEM_INFO_KEY: 'review'
             config:
               general:
                 apolloPlayground: true
@@ -274,60 +246,74 @@ jobs:
                 operandTypes: [ '+', '-' ]
                 mode: 'formula'
                 targetSymbol: '?'
+
+              mediaServer:
+                type: 'nova'
           editor:
             image: ghcr.io/wepublish/editor:${{ github.sha }}
             env:
               PEER_BY_DEFAULT: "true"
-          website:
-            image: ghcr.io/wepublish/website:${{ github.sha }}
-            enabled: true
           storybook:
             enabled: true
             image: ghcr.io/wepublish/storybook:${{ github.sha }}
             url: ${STORYBOOK_URL}
+          media:
+            image: ghcr.io/wepublish/media:${{ github.sha }}
+            env:
+              TOKEN: media-token
+              S3_ACCESS_KEY: accessKey
+              S3_SECRET_KEY: secretKey
+              S3_ENDPOINT: 'review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local'
+              S3_PORT: '9000'
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
           helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
 
-
-  find_vercel_apps:
-    name: Find Vercel apps
+  setup-website-matrix:
     runs-on: ubuntu-latest
     outputs:
-      projects: ${{ steps.projects.outputs.value }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - id: projects
-        run: |
-          echo "value=[\"babanews\", \"bajour\", \"tsri\", \"gruppetto\"]" >> $GITHUB_OUTPUT
-      - run: |
-          echo "${{ steps.projects.outputs.value }}"
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up matrix
+        id: set-matrix
+        run: deployment/read_deployment_config.sh '.website.review.deployment' true
 
-  deploy_to_vercel:
-    name: Deploy to Vercel
-    needs: [find_vercel_apps, helm_deployment]
+
+  publish_docker_website_image:
+    name: Build Docker Website
+    needs: [setup-website-matrix, helm_deployment]
     if: ${{ needs.helm_deployment.result == 'success' }}
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
-      matrix:
-        project: ${{fromJSON(needs.find_vercel_apps.outputs.projects)}}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: npm
-      - run: npm i -g vercel
-      - run: |
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${{ matrix.project }} --scope wepublish --yes
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes > deployment_url
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" alias set $(cat deployment_url) ${{ matrix.project }}${PROJECT_URL_SUFFIX} --scope wepublish --yes
+      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
+    with:
+      website_project: ${{ matrix.target }}
+      api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      environment: review
+      website_tags: |
+        ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.sha }}
+    secrets: inherit
+
+  helm_deployment_website:
+    name: Helm Deployment Website
+    needs: [publish_docker_website_image, setup-website-matrix]
+    if: ${{ needs.publish_docker_website_image.result == 'success' }}
+    uses: ./.github/workflows/on-demand-deploy-helm-website.yml
+    strategy:
+      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
+    with:
+      website_project: ${{ matrix.target }}
+      api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+    secrets: inherit
+
 
   notify:
     name: Notify
-    needs: [find_vercel_apps, deploy_to_vercel]
-    if: ${{ needs.deploy_to_vercel.result == 'success' }}
+    needs: [setup-website-matrix, helm_deployment_website]
+    if: ${{ needs.helm_deployment_website.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -337,11 +323,10 @@ jobs:
         with:
           node-version: '18'
           cache: npm
-
       - name: Create Deployment Text
         id: deploymentComment
         env:
-          PROJECTS: ${{ needs.find_vercel_apps.outputs.projects }}
+          PROJECTS: ${{needs.setup-website-matrix.outputs.matrix}}
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
@@ -370,4 +355,3 @@ jobs:
           cd ./config
           npm ci
           node ./notify-jira.js
-

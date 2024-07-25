@@ -2,12 +2,20 @@
 
 exports[`Embed Block should render Default 1`] = `
 <DocumentFragment>
-  <div
-    class="css-1tmmrj4-EmbedBlockWrapper e1t445oh1"
+  .emotion-2 {
+  width: 100%;
+  border: 0;
+  aspect-ratio: 1.78343949044586;
+  background: #aaa;
+  padding: 50px;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <iframe
       allowfullscreen=""
-      class="css-qsfbe7-EmbedBlockIframe-EmbedBlockIframe-styleCustomCss e1t445oh0"
+      class="emotion-2 emotion-3"
       id="iFrameResizer0"
       scrolling="no"
       src="https://www.example.com"
@@ -20,13 +28,47 @@ exports[`Embed Block should render Default 1`] = `
 
 exports[`Embed Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
-    class="extra-classname css-1tmmrj4-EmbedBlockWrapper e1t445oh1"
+  .emotion-2 {
+  width: 100%;
+  border: 0;
+  aspect-ratio: 1.78343949044586;
+  background: #aaa;
+  padding: 50px;
+}
+
+<div
+    class="extra-classname emotion-0 emotion-1"
   >
     <iframe
       allowfullscreen=""
-      class="css-qsfbe7-EmbedBlockIframe-EmbedBlockIframe-styleCustomCss e1t445oh0"
+      class="emotion-2 emotion-3"
       id="iFrameResizer1"
+      scrolling="no"
+      src="https://www.example.com"
+      style="overflow: hidden;"
+      title="Title"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Embed Block should render WithEmotion 1`] = `
+<DocumentFragment>
+  .emotion-2 {
+  width: 100%;
+  border: 0;
+  aspect-ratio: 1.78343949044586;
+  background: #aaa;
+  padding: 50px;
+}
+
+<div
+    class="emotion-0 emotion-1"
+  >
+    <iframe
+      allowfullscreen=""
+      class="emotion-2 emotion-3"
+      id="iFrameResizer2"
       scrolling="no"
       src="https://www.example.com"
       style="overflow: hidden;"

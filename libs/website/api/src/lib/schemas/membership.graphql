@@ -4,6 +4,9 @@ fragment FullPaymentMethod on PaymentMethod {
   name
   slug
   description
+  image {
+    ...FullImage
+  }
 }
 
 fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
@@ -121,6 +124,7 @@ mutation Subscribe(
   $subscriptionProperties: [PublicPropertiesInput!]
   $successURL: String
   $failureURL: String
+  $deactivateSubscriptionId: ID
 ) {
   createSubscription(
     memberPlanID: $memberPlanId
@@ -133,6 +137,7 @@ mutation Subscribe(
     subscriptionProperties: $subscriptionProperties
     successURL: $successURL
     failureURL: $failureURL
+    deactivateSubscriptionId: $deactivateSubscriptionId
   ) {
     ...FullPayment
   }

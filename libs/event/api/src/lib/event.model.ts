@@ -54,6 +54,9 @@ export class Event {
   name!: string
 
   @Field({nullable: true})
+  lead?: string
+
+  @Field({nullable: true})
   location?: string
 
   @Field(type => GraphQLRichText, {nullable: true})
@@ -123,7 +126,7 @@ export class EventListArgs {
 @ArgsType()
 export class CreateEventInput extends PickType(
   Event,
-  ['name', 'description', 'location', 'imageId', 'startsAt', 'endsAt'] as const,
+  ['name', 'lead', 'description', 'location', 'imageId', 'startsAt', 'endsAt'] as const,
   ArgsType
 ) {
   @Field(type => [String], {nullable: true})

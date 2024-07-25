@@ -7,13 +7,24 @@ exports[`Bildwurf Ad Block should render Default 1`] = `
     src="https://media.online.bildwurf.ch/js/code.min.js"
   />
   <div
-    class="css-1ege008-BildwurfBlockWrapper e14oxtci0"
-    id="bildwurf-injection-wrapper"
+    class="emotion-0 emotion-1"
   >
-    <ins
-      class="aso-zone"
-      data-zone="77348"
-    />
+    
+            
+    <div
+      id="bildwurf-injection-wrapper"
+    >
+      
+              
+      <ins
+        classname="aso-zone"
+        data-zone="77348"
+      />
+      
+            
+    </div>
+    
+          
   </div>
 </DocumentFragment>
 `;
@@ -25,13 +36,24 @@ exports[`Bildwurf Ad Block should render WithClassName 1`] = `
     src="https://media.online.bildwurf.ch/js/code.min.js"
   />
   <div
-    class="extra-classname css-1ege008-BildwurfBlockWrapper e14oxtci0"
-    id="bildwurf-injection-wrapper"
+    class="extra-classname emotion-0 emotion-1"
   >
-    <ins
-      class="aso-zone"
-      data-zone="77348"
-    />
+    
+            
+    <div
+      id="bildwurf-injection-wrapper"
+    >
+      
+              
+      <ins
+        classname="aso-zone"
+        data-zone="77348"
+      />
+      
+            
+    </div>
+    
+          
   </div>
 </DocumentFragment>
 `;

@@ -2,34 +2,40 @@
 
 exports[`Facebook Video Block should render Default 1`] = `
 <DocumentFragment>
-  <div
-    class="css-rbixsl-FacebookVideoBlockWrapper eet15gy1"
+  .emotion-0 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-1pe9yew-FacebookVideoBlockPlayer eet15gy0"
+      class="emotion-2 emotion-3"
       style="width: auto; height: auto;"
-    >
-      <div
-        class="fb-video"
-        data-allowfullscreen="true"
-        data-autoplay="false"
-        data-controls="true"
-        data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
-        id=":r0:"
-        style="width: 100%; height: 100%;"
-      />
-    </div>
+    />
   </div>
 </DocumentFragment>
 `;
 
 exports[`Facebook Video Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
-    class="extra-classname css-rbixsl-FacebookVideoBlockWrapper eet15gy1"
+  .emotion-0 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+<div
+    class="extra-classname emotion-0 emotion-1"
   >
     <div
-      class="css-1pe9yew-FacebookVideoBlockPlayer eet15gy0"
+      class="emotion-2 emotion-3"
       style="width: auto; height: auto;"
     >
       <div

@@ -2,20 +2,86 @@
 
 exports[`AuthorList should render Default 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
+  .emotion-0 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 32px;
+  justify-items: center;
+}
+
+.emotion-2 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  gap: 24px;
+  width: 240px;
+  text-align: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-2:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-3 {
+  display: grid;
+  width: 100%;
+}
+
+.emotion-5 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.emotion-9 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-10 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-10.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -24,31 +90,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -57,31 +127,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -90,31 +164,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -123,31 +201,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -156,31 +238,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -189,31 +275,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -222,31 +312,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -255,31 +349,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -288,31 +386,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -321,31 +423,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -354,15 +460,15 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
@@ -374,20 +480,86 @@ https://unsplash.it/200/200 200w"
 
 exports[`AuthorList should render WithClassName 1`] = `
 <DocumentFragment>
-  <article
-    class="extra-classname css-1d3do4s-AuthorListWrapper e17rhc8g0"
+  .emotion-0 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 32px;
+  justify-items: center;
+}
+
+.emotion-2 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  gap: 24px;
+  width: 240px;
+  text-align: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-2:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-3 {
+  display: grid;
+  width: 100%;
+}
+
+.emotion-5 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.emotion-9 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-10 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-10.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<article
+    class="extra-classname emotion-0 emotion-1"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -396,31 +568,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -429,31 +605,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -462,31 +642,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -495,31 +679,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -528,31 +716,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -561,31 +753,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -594,31 +790,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -627,31 +827,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -660,31 +864,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -693,31 +901,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -726,15 +938,15 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
@@ -746,20 +958,86 @@ https://unsplash.it/200/200 200w"
 
 exports[`AuthorList should render WithEmotion 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
+  .emotion-0 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 32px;
+  justify-items: center;
+}
+
+.emotion-2 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  gap: 24px;
+  width: 240px;
+  text-align: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-2:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-3 {
+  display: grid;
+  width: 100%;
+}
+
+.emotion-5 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.emotion-9 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-10 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-10.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -768,31 +1046,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -801,31 +1083,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -834,31 +1120,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -867,31 +1157,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -900,31 +1194,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -933,31 +1231,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -966,31 +1268,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -999,31 +1305,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1032,31 +1342,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1065,31 +1379,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1098,15 +1416,15 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
@@ -1118,36 +1436,116 @@ https://unsplash.it/200/200 200w"
 
 exports[`AuthorList should render WithError 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
+  .emotion-0 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 32px;
+  justify-items: center;
+}
+
+<article
+    class="emotion-0 emotion-1"
   />
 </DocumentFragment>
 `;
 
 exports[`AuthorList should render WithLoading 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
+  .emotion-0 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 32px;
+  justify-items: center;
+}
+
+<article
+    class="emotion-0 emotion-1"
   />
 </DocumentFragment>
 `;
 
 exports[`AuthorList should render WithoutImage 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
+  .emotion-0 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 32px;
+  justify-items: center;
+}
+
+.emotion-2 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  gap: 24px;
+  width: 240px;
+  text-align: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-2:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-3 {
+  display: grid;
+  width: 100%;
+}
+
+.emotion-5 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.emotion-9 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-10 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-10.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1156,75 +1554,79 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       />
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       />
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1233,31 +1635,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1266,75 +1672,79 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       />
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       />
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1343,31 +1753,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1376,53 +1790,57 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       />
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1431,15 +1849,15 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
@@ -1451,20 +1869,86 @@ https://unsplash.it/200/200 200w"
 
 exports[`AuthorList should render WithoutJobTitle 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
+  .emotion-0 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 32px;
+  justify-items: center;
+}
+
+.emotion-2 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  gap: 24px;
+  width: 240px;
+  text-align: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-2:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-3 {
+  display: grid;
+  width: 100%;
+}
+
+.emotion-5 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.emotion-9 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-10 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-10.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1473,31 +1957,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1506,26 +1994,30 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1534,26 +2026,30 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1562,31 +2058,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1595,31 +2095,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1628,26 +2132,30 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1656,31 +2164,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1689,26 +2201,30 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1717,31 +2233,35 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1750,26 +2270,30 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <div
-        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+        class="emotion-3 emotion-4"
       >
         <img
           alt="DSC07717"
-          class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1778,15 +2302,15 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
+        class="emotion-7 emotion-8"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>

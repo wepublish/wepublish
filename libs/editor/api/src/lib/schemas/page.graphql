@@ -1,5 +1,9 @@
 fragment MutationPage on Page {
   id
+  tags {
+    id
+    tag
+  }
 
   draft {
     publishedAt
@@ -29,6 +33,10 @@ fragment MutationPage on Page {
 
 fragment PageRef on Page {
   id
+  tags {
+    id
+    tag
+  }
 
   createdAt
   modifiedAt
@@ -68,14 +76,7 @@ query PageList(
   $order: SortOrder
   $sort: PageSort
 ) {
-  pages(
-    filter: $filter
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
+  pages(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...PageRef
     }
@@ -135,6 +136,12 @@ query Page($id: ID!) {
   page(id: $id) {
     id
 
+    tags {
+      id
+      tag
+      type
+    }
+
     draft {
       publishAt
     }
@@ -159,7 +166,6 @@ query Page($id: ID!) {
       image {
         ...ImageRef
       }
-      tags
       url
       properties {
         key

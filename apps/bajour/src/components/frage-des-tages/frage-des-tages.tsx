@@ -17,7 +17,11 @@ import {AuthorBox} from './author-box'
 import frageDesTagesLogo from './frage-des-tages.svg'
 import {InfoBox} from './info-box'
 
-const countComments = (comments: ApiV1.Comment[] | []): number => {
+interface CommentWithChildren extends ApiV1.Comment {
+  children: CommentWithChildren[]
+}
+
+const countComments = (comments: CommentWithChildren[] | []): number => {
   let total = comments.length
 
   for (const comment of comments) {
@@ -89,7 +93,7 @@ export const AuthorAndContext = styled('div')`
   ${({theme}) =>
     css`
       ${theme.breakpoints.up('sm')} {
-        gap: ${theme.spacing(6)};
+        gap: ${theme.spacing(4)};
         grid-template-columns: repeat(2, 1fr);
       }
     `}
@@ -98,7 +102,7 @@ export const AuthorAndContext = styled('div')`
 export const Comments = styled('div')`
   display: grid;
   grid-template-columns: 1fr;
-  gap: ${({theme}) => theme.spacing(6)};
+  gap: ${({theme}) => theme.spacing(4)};
 
   ${({theme}) =>
     css`
@@ -113,6 +117,7 @@ export const TopComments = styled('div')`
   font-weight: bold;
   text-transform: uppercase;
   margin: ${({theme}) => `${theme.spacing(2)} 0 ${theme.spacing(1)} 0`};
+  padding-left: ${({theme}) => `${theme.spacing(1)}`};
 `
 
 export const StyledComment = styled(Comment)`
@@ -140,7 +145,7 @@ const ReadMoreButton = styled(Button)`
 `
 
 export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps) => {
-  const article = (teasers[0] as ApiV1.ArticleTeaser).article
+  const article = (teasers[0] as ApiV1.ArticleTeaser | undefined)?.article
 
   const {data: commentsData} = ApiV1.useCommentListQuery({
     variables: {
@@ -153,7 +158,7 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
   const pollToPass = article?.blocks.find(isPollBlock)?.poll
 
   const numberOfComments = useMemo(() => {
-    return countComments(commentsData?.comments || [])
+    return countComments((commentsData?.comments as CommentWithChildren[]) || [])
   }, [commentsData?.comments])
 
   return (
@@ -172,16 +177,19 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
           </AuthorAndContext>
           <TopComments>Top antworten</TopComments>
           <Comments>
-            {commentsData?.comments.slice(0, 2).map(({text, title, user, createdAt, id}) => {
-              const dataToPass = {
-                text,
-                title,
-                user,
-                createdAt
-              } as BuilderCommentProps
+            {commentsData?.comments
+              .slice(0, 2)
+              .map(({text, title, user, createdAt, id, authorType}) => {
+                const dataToPass = {
+                  text,
+                  title,
+                  user,
+                  createdAt,
+                  authorType
+                } as BuilderCommentProps
 
-              return <StyledComment {...dataToPass} key={id} />
-            })}
+                return <StyledComment {...dataToPass} key={id} />
+              })}
           </Comments>
         </CommentsWrapper>
         <ReadMoreLink href={article?.url || ''}>

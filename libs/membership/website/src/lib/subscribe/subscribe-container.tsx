@@ -19,23 +19,32 @@ import {StripeElement, StripePayment} from '@wepublish/payment/website'
 import {useEffect, useMemo, useState} from 'react'
 import {OptionalKeysOf} from 'type-fest'
 
+/**
+ * If you pass the "deactivateSubscriptionId" prop, this specific subscription will be canceled when
+ * a new subscription is purchased. The subscription id is passed to the api that handles the
+ * deactivation. This is used for trial subscriptions or to replace legacy subscriptions like
+ * Payrexx Subscription. Other use cases are possible.
+ */
 export type SubscribeContainerProps<
   T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
 > = BuilderContainerProps &
-  Pick<BuilderSubscribeProps<T>, 'fields' | 'schema' | 'defaults'> & {
+  Pick<BuilderSubscribeProps<T>, 'fields' | 'schema' | 'defaults' | 'extraMoneyOffset'> & {
     successURL: string
     failureURL: string
     filter?: (memberPlans: MemberPlan[]) => MemberPlan[]
+    deactivateSubscriptionId?: string
   }
 
 export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVariables>>({
   className,
+  extraMoneyOffset,
   failureURL,
   successURL,
   defaults,
   fields,
   schema,
-  filter
+  filter,
+  deactivateSubscriptionId
 }: SubscribeContainerProps<T>) => {
   const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
@@ -110,6 +119,7 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
 
       <Subscribe
         className={className}
+        extraMoneyOffset={extraMoneyOffset}
         defaults={defaults}
         fields={fields}
         schema={schema}
@@ -122,7 +132,9 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
             variables: {
               ...formData,
               successURL,
-              failureURL
+              failureURL,
+              deactivateSubscriptionId:
+                (deactivateSubscriptionId as string | undefined) || undefined
             }
           })
         }}
@@ -143,6 +155,7 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
             }
           })
         }}
+        deactivateSubscriptionId={deactivateSubscriptionId as string | undefined}
       />
     </>
   )

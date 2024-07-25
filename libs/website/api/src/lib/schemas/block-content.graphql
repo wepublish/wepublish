@@ -1,56 +1,56 @@
 fragment BlockWithoutTeaser on Block {
   __typename
 
-  # ... on TitleBlock {
-  #   blockStyle
-  #   title
-  #   lead
-  # }
+  ... on TitleBlock {
+    blockStyle
+    title
+    lead
+  }
 
-  # ... on ImageBlock {
-  #   blockStyle
-  #   caption
-  #   linkUrl
-  #   image {
-  #     ...FullImage
-  #   }
-  # }
+  ... on ImageBlock {
+    blockStyle
+    caption
+    linkUrl
+    image {
+      ...FullImage
+    }
+  }
 
-  # ... on ImageGalleryBlock {
-  #   blockStyle
-  #   images {
-  #     caption
-  #     image {
-  #       ...FullImage
-  #     }
-  #   }
-  # }
+  ... on ImageGalleryBlock {
+    blockStyle
+    images {
+      caption
+      image {
+        ...FullImage
+      }
+    }
+  }
 
-  # ... on QuoteBlock {
-  #   blockStyle
-  #   quote
-  #   author
-  #   image {
-  #     ...FullImage
-  #   }
-  # }
+  ... on QuoteBlock {
+    blockStyle
+    quote
+    author
+    image {
+      ...FullImage
+    }
+  }
 
-  # ... on RichTextBlock {
-  #   blockStyle
-  #   richText
-  # }
+  ... on RichTextBlock {
+    blockStyle
+    richText
+  }
 
-  # ... on HTMLBlock {
-  #   blockStyle
-  #   html
-  # }
+  ... on HTMLBlock {
+    blockStyle
+    html
+  }
 
-  # ... on EventBlock {
-  #   blockStyle
-  #   events {
-  #     ...FullEvent
-  #   }
-  # }
+  ... on EventBlock {
+    blockStyle
+    events {
+      ...FullEvent
+    }
+  }
 
   ... on PollBlock {
     blockStyle
@@ -59,96 +59,96 @@ fragment BlockWithoutTeaser on Block {
     }
   }
 
-  # ... on ListicleBlock {
-  #   blockStyle
-  #   items {
-  #     title
-  #     richText
-  #     image {
-  #       ...FullImage
-  #     }
-  #   }
-  # }
+  ... on ListicleBlock {
+    blockStyle
+    items {
+      title
+      richText
+      image {
+        ...FullImage
+      }
+    }
+  }
 
-  # ... on LinkPageBreakBlock {
-  #   blockStyle
-  #   text
-  #   richText
-  #   layoutOption
-  #   hideButton
-  #   linkTarget
-  #   linkText
-  #   linkURL
-  #   styleOption
-  #   templateOption
-  #   image {
-  #     ...FullImage
-  #   }
-  # }
+  ... on LinkPageBreakBlock {
+    blockStyle
+    text
+    richText
+    layoutOption
+    hideButton
+    linkTarget
+    linkText
+    linkURL
+    styleOption
+    templateOption
+    image {
+      ...FullImage
+    }
+  }
 
-  # ... on FacebookPostBlock {
-  #   blockStyle
-  #   userID
-  #   postID
-  # }
+  ... on FacebookPostBlock {
+    blockStyle
+    userID
+    postID
+  }
 
-  # ... on FacebookVideoBlock {
-  #   blockStyle
-  #   userID
-  #   videoID
-  # }
+  ... on FacebookVideoBlock {
+    blockStyle
+    userID
+    videoID
+  }
 
-  # ... on InstagramPostBlock {
-  #   blockStyle
-  #   postID
-  # }
+  ... on InstagramPostBlock {
+    blockStyle
+    postID
+  }
 
-  # ... on TwitterTweetBlock {
-  #   blockStyle
-  #   userID
-  #   tweetID
-  # }
+  ... on TwitterTweetBlock {
+    blockStyle
+    userID
+    tweetID
+  }
 
-  # ... on VimeoVideoBlock {
-  #   blockStyle
-  #   videoID
-  # }
+  ... on VimeoVideoBlock {
+    blockStyle
+    videoID
+  }
 
-  # ... on YouTubeVideoBlock {
-  #   blockStyle
-  #   videoID
-  # }
+  ... on YouTubeVideoBlock {
+    blockStyle
+    videoID
+  }
 
-  # ... on SoundCloudTrackBlock {
-  #   blockStyle
-  #   trackID
-  # }
+  ... on SoundCloudTrackBlock {
+    blockStyle
+    trackID
+  }
 
-  # ... on PolisConversationBlock {
-  #   blockStyle
-  #   conversationID
-  # }
+  ... on PolisConversationBlock {
+    blockStyle
+    conversationID
+  }
 
-  # ... on TikTokVideoBlock {
-  #   blockStyle
-  #   userID
-  #   videoID
-  # }
+  ... on TikTokVideoBlock {
+    blockStyle
+    userID
+    videoID
+  }
 
-  # ... on BildwurfAdBlock {
-  #   blockStyle
-  #   zoneID
-  # }
+  ... on BildwurfAdBlock {
+    blockStyle
+    zoneID
+  }
 
-  # ... on EmbedBlock {
-  #   blockStyle
-  #   url
-  #   title
-  #   width
-  #   height
-  #   styleCustom
-  #   sandbox
-  # }
+  ... on EmbedBlock {
+    blockStyle
+    url
+    title
+    width
+    height
+    styleCustom
+    sandbox
+  }
 }
 
 fragment FullTeaser on Teaser {
@@ -167,7 +167,14 @@ fragment FullTeaser on Teaser {
       ...ArticleWithoutBlocks
 
       blocks {
-        ...BlockWithoutTeaser
+        __typename
+
+        ... on PollBlock {
+          blockStyle
+          poll {
+            ...FullPoll
+          }
+        }
       }
     }
   }
@@ -189,10 +196,6 @@ fragment FullTeaser on Teaser {
 
     article {
       ...ArticleWithoutBlocks
-
-      blocks {
-        ...BlockWithoutTeaser
-      }
     }
   }
 
@@ -209,10 +212,6 @@ fragment FullTeaser on Teaser {
 
     page {
       ...PageWithoutBlocks
-
-      blocks {
-        ...BlockWithoutTeaser
-      }
     }
   }
 
@@ -278,7 +277,11 @@ fragment FullBlock on Block {
   }
 
   ... on TeaserListBlock {
+    title
     blockStyle
+    filter {
+      tags
+    }
     teasers {
       ...FullTeaser
     }
