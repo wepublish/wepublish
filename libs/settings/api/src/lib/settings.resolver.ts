@@ -19,13 +19,13 @@ export class SettingsResolver {
   }
 
   @Query(returns => Setting, {
-    name: 'setting',
+    name: 'settingById',
     description: `
       Returns a single setting by id.
     `
   })
   @Permissions(CanGetSettings)
-  setting(@Args('id') id: string) {
+  settingById(@Args('id') id: string) {
     return this.settingsService.setting(id)
   }
 

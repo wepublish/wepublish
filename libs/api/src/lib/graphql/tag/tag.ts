@@ -67,3 +67,14 @@ export const GraphQLTagSort = new GraphQLEnumType({
     TAG: {value: TagSort.Tag}
   }
 })
+
+export const GraphQLTagResolver = {
+  __resolveReference: async (reference, {prisma}: Context) => {
+    const {id} = reference
+    const tag = await prisma.tag.findUnique({
+      where: {id}
+    })
+    if (!tag) throw new Error('Tag not found')
+    return tag
+  }
+}

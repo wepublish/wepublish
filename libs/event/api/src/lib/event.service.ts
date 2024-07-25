@@ -149,6 +149,21 @@ export class EventService {
       }
     })
   }
+
+  async getEventTagIds(eventId: string) {
+    return this.prisma.tag.findMany({
+      select: {
+        id: true
+      },
+      where: {
+        events: {
+          some: {
+            eventId
+          }
+        }
+      }
+    })
+  }
 }
 
 const validateEvent = ({

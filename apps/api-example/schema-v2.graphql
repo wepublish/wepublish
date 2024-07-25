@@ -2,105 +2,29 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
+directive @extends on INTERFACE | OBJECT
 
-enum ActionType {
-  ArticleCreated
-  AuthorCreated
-  CommentCreated
-  EventCreated
-  PageCreated
-  PollStarted
-  SubscriptionCreated
-  UserCreated
-}
+directive @external on FIELD_DEFINITION | OBJECT
 
-input ActiveMemberPlansFilter {
-  name: String
-  tags: [String!]
-}
+directive @inaccessible on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
+
+directive @key(fields: String!, resolvable: Boolean = true) repeatable on INTERFACE | OBJECT
+
+directive @link(import: [link__Import], url: String!) on SCHEMA
+
+directive @override(from: String!) on FIELD_DEFINITION
+
+directive @provides(fields: String!) on FIELD_DEFINITION
+
+directive @requires(fields: String!) on FIELD_DEFINITION
+
+directive @shareable on FIELD_DEFINITION | OBJECT
+
+directive @tag(name: String!) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
 type AllowedSettingVals {
   boolChoice: Boolean
   stringChoice: [String!]
-}
-
-type ArticleCreatedAction {
-  actionType: ActionType!
-  date: DateTime!
-  id: ID!
-}
-
-type ArticleNavigationLink implements BaseNavigationLink {
-  articleID: String!
-  createdAt: DateTime!
-  id: String!
-  label: String!
-  modifiedAt: DateTime!
-  type: String!
-}
-
-type ArticleTeaser {
-  articleID: ID!
-}
-
-type Author {
-  bio: RichText
-  createdAt: DateTime!
-  id: String!
-  imageID: String
-  jobTitle: String
-  links: [AuthorsLinks!]!
-  modifiedAt: DateTime!
-  name: String!
-  slug: String!
-}
-
-type AuthorCreatedAction {
-  actionType: ActionType!
-  author: Author!
-  date: DateTime!
-  id: ID!
-}
-
-input AuthorFilter {
-  name: String
-  tagIds: [String!]
-}
-
-enum AuthorSort {
-  CreatedAt
-  ModifiedAt
-  Name
-}
-
-type AuthorsLinks {
-  createdAt: DateTime!
-  id: String!
-  modifiedAt: DateTime!
-  title: String!
-  url: String!
-}
-
-input AuthorsLinksInput {
-  title: String!
-  url: String!
-}
-
-interface BaseNavigationLink {
-  createdAt: DateTime!
-  id: String!
-  label: String!
-  modifiedAt: DateTime!
-  type: String!
-}
-
-input BaseNavigationLinkInput {
-  articleID: String
-  label: String!
-  pageID: String
-  type: String!
-  url: String
 }
 
 type BlockStyle {
@@ -130,18 +54,6 @@ enum BlockType {
   Title
 }
 
-type CommentBlockFilter {
-  comments: [ID!]
-  item: ID
-  tags: [ID!]
-}
-
-type CommentCreatedAction {
-  actionType: ActionType!
-  date: DateTime!
-  id: ID!
-}
-
 type Consent {
   createdAt: DateTime!
   defaultValue: Boolean!
@@ -155,52 +67,6 @@ input ConsentFilter {
   defaultValue: Boolean
   name: String
   slug: String
-}
-
-input CreateAuthorInput {
-  bio: RichText
-  imageID: String
-  jobTitle: String
-  links: [AuthorsLinksInput!]!
-  name: String!
-  slug: String!
-  tagIds: [String!]!
-}
-
-input CreateMemberPlanInput {
-  active: Boolean!
-  amountPerMonthMin: Float!
-  description: String!
-  extendable: Boolean!
-  imageID: String
-  maxCount: Float
-  name: String!
-  slug: String!
-  tags: [String!]!
-}
-
-input CreateNavigationInput {
-  key: String!
-  links: [BaseNavigationLinkInput!]!
-  name: String!
-}
-
-input CreatePaymentMethodInput {
-  active: Boolean!
-  description: String!
-  name: String!
-  paymentProviderID: String!
-  slug: String!
-}
-
-input CreateUserRoleInput {
-  name: String!
-  permissionIDs: [String!]!
-}
-
-type CustomTeaser {
-  contentUrl: String
-  properties: [Property!]!
 }
 
 type DashboardInvoice {
@@ -232,27 +98,17 @@ type Event {
   endsAt: DateTime
   externalSourceId: String
   externalSourceName: String
-  id: String!
+  id: ID!
   image: Image
   imageId: String
   lead: String
   location: String
   modifiedAt: DateTime!
   name: String!
+  page: Page
   startsAt: DateTime!
   status: EventStatus!
-}
-
-type EventBlockFilter {
-  events: [ID!]
-  tags: [ID!]
-}
-
-type EventCreatedAction {
-  actionType: ActionType!
-  date: DateTime!
-  event: Event!
-  id: ID!
+  tags: [Tag!]
 }
 
 input EventFilter {
@@ -270,12 +126,13 @@ type EventFromSource {
   endsAt: DateTime
   externalSourceId: String
   externalSourceName: String
-  id: String!
+  id: ID!
   imageUrl: String
   lead: String
   location: String
   modifiedAt: DateTime!
   name: String!
+  page: Page
   startsAt: DateTime!
   status: EventStatus!
 }
@@ -294,66 +151,11 @@ enum EventStatus {
   Scheduled
 }
 
-type EventTeaser {
-  event: Event!
-  eventID: ID!
-}
-
-type ExternalNavigationLink implements BaseNavigationLink {
-  createdAt: DateTime!
-  id: String!
-  label: String!
-  modifiedAt: DateTime!
-  type: String!
-  url: String
-}
-
-type FlexAlignment {
-  h: Int!
-  i: String!
-  static: Boolean!
-  w: Int!
-  x: Int!
-  y: Int!
-}
-
-type FlexTeaser {
-  alignment: FlexAlignment!
-  teaser: Teaser!
-}
-
-type FocalPoint {
-  x: Float!
-  y: Float!
-}
-
-type GalleryImageEdge {
-  caption: String
-  image: Image!
-  imageID: ID!
-}
-
 """Setting Value"""
 scalar GraphQLSettingValueType
 
 type Image {
-  createdAt: DateTime!
-  description: RichText
-  extension: String!
-  fileSize: Int!
-  filename: String
-  focalPoint: FocalPoint
-  format: String!
-  height: Int!
-  id: String!
-  license: String
-  link: String
-  mimeType: String!
-  modifiedAt: DateTime!
-  source: String
-  tags: [String!]!
-  title: String
-  width: Int!
+  id: ID!
 }
 
 input ImportedEventFilter {
@@ -377,13 +179,6 @@ type ImportedEventsDocument {
   totalCount: Float!
 }
 
-type ListicleItem {
-  image: Image
-  imageID: ID
-  richText: RichText!
-  title: String!
-}
-
 type MailProviderModel {
   name: String!
 }
@@ -404,39 +199,11 @@ type MailTemplateWithUrlAndStatusModel {
 }
 
 type MemberPlan {
-  active: Boolean!
-  amountPerMonthMin: Float!
-  createdAt: DateTime!
-  description: String!
-  extendable: Boolean!
   id: ID!
-  imageID: String
-  maxCount: Float
-  modifiedAt: DateTime!
   name: String!
-  slug: String!
-  tags: [String!]!
-}
-
-type MemberPlanRef {
-  id: String!
-  name: String!
-}
-
-enum MemberPlanSort {
-  CreatedAt
-  ModifiedAt
-}
-
-input MemberPlansFilter {
-  active: Boolean
-  name: String
-  tags: [String!]
 }
 
 type Mutation {
-  createAuthor(author: CreateAuthorInput!): Author!
-
   """Creates a new block style."""
   createBlockStyle(blocks: [BlockType!]!, name: String!): BlockStyle!
 
@@ -445,12 +212,6 @@ type Mutation {
 
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
-  createMemberPlan(memberPlan: CreateMemberPlanInput!): MemberPlan!
-
-  """Creates a new navigation."""
-  createNavigation(navigation: CreateNavigationInput!): Navigation!
-  createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment!
-  createPaymentMethod(paymentMethod: CreatePaymentMethodInput!): PaymentMethod!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -461,10 +222,6 @@ type Mutation {
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
 
-  """Create a user role"""
-  createUserRole(userRole: CreateUserRoleInput!): UserRole!
-  deleteAuthor(id: ID!): Author!
-
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
 
@@ -473,11 +230,6 @@ type Mutation {
 
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
-  deleteMemberPlanById(id: ID!): MemberPlan!
-
-  """Deletes an existing navigation."""
-  deleteNavigation(id: ID!): Navigation!
-  deletePaymentMethodById(id: ID!): PaymentMethod!
 
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
@@ -488,16 +240,12 @@ type Mutation {
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
 
-  """Deletes a user role"""
-  deleteUserRole(id: ID!): UserRole!
-
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
   syncTemplates: Boolean
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
-  updateAuthor(author: UpdateAuthorInput!): Author!
 
   """Updates an existing block style."""
   updateBlockStyle(blocks: [BlockType!], id: String!, name: String): BlockStyle!
@@ -507,11 +255,6 @@ type Mutation {
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
-  updateMemberPlan(memberPlan: UpdateMemberPlanInput!): MemberPlan!
-
-  """Updates an existing navigation."""
-  updateNavigation(navigation: UpdateNavigationInput!): Navigation!
-  updatePaymentMethod(paymentMethod: UpdatePaymentMethodInput!): PaymentMethod!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -527,23 +270,9 @@ type Mutation {
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
-
-  """Updates a user role"""
-  updateUserRole(userRole: UpdateUserRoleInput!): UserRole!
 }
 
-type Navigation {
-  createdAt: DateTime!
-  id: String!
-  key: String!
-  links: [BaseNavigationLink!]!
-  modifiedAt: DateTime!
-  name: String!
-}
-
-type PageCreatedAction {
-  actionType: ActionType!
-  date: DateTime!
+type Page {
   id: ID!
 }
 
@@ -554,74 +283,14 @@ type PageInfo {
   startCursor: String
 }
 
-type PageNavigationLink implements BaseNavigationLink {
-  createdAt: DateTime!
-  id: String!
-  label: String!
-  modifiedAt: DateTime!
-  pageID: String!
-  type: String!
-}
-
-type PageTeaser {
-  pageID: ID!
-}
-
-type PaginatedAuthors {
-  nodes: [Author!]!
-  pageInfo: PageInfo!
-  totalCount: Float!
-}
-
 type PaginatedEvents {
   nodes: [Event!]!
   pageInfo: PageInfo!
   totalCount: Float!
 }
 
-type PaginatedUserRoles {
-  nodes: [UserRole!]!
-  pageInfo: PageInfo!
-  totalCount: Float!
-}
-
-type Payment {
-  createdAt: DateTime!
-  id: ID!
-  intentData: String
-  intentID: String
-  intentSecret: String
-  invoiceID: ID!
-  modifiedAt: DateTime!
-  paymentData: String
-  paymentMethodID: ID!
-  state: PaymentState!
-}
-
-input PaymentFilter {
-  intentID: String
-}
-
-input PaymentFromInvoiceInput {
-  failureURL: String!
-  invoiceID: ID!
-  paymentMethodID: ID!
-  successURL: String!
-}
-
 type PaymentMethod {
-  active: Boolean!
-  createdAt: DateTime!
-  description: String!
   id: ID!
-  modifiedAt: DateTime!
-  name: String!
-  paymentProviderID: String!
-  slug: String!
-}
-
-type PaymentMethodRef {
-  id: String!
   name: String!
 }
 
@@ -630,32 +299,6 @@ enum PaymentPeriodicity {
   monthly
   quarterly
   yearly
-}
-
-enum PaymentSort {
-  CreatedAt
-  ModifiedAt
-}
-
-enum PaymentState {
-  canceled
-  created
-  declined
-  paid
-  processing
-  requiresUserAction
-  submitted
-}
-
-type PaymentsResult {
-  nodes: [Payment!]!
-  pageInfo: PageInfo!
-  totalCount: Float!
-}
-
-type PeerArticleTeaser {
-  articleID: ID!
-  peerID: ID!
 }
 
 type PeriodicJob {
@@ -670,28 +313,7 @@ type PeriodicJob {
   tries: Float!
 }
 
-type PermissionObject {
-  deprecated: Boolean!
-  description: String!
-  id: String!
-}
-
-type PollStartedAction {
-  actionType: ActionType!
-  date: DateTime!
-  id: ID!
-}
-
-type Property {
-  key: String!
-  public: Boolean!
-  value: String!
-}
-
 type Query {
-  """Returns latest user actions"""
-  actions: [Action!]!
-
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
 
@@ -705,48 +327,16 @@ type Query {
   consents(filter: ConsentFilter): [Consent!]!
 
   """Returns a event by id."""
-  event(id: String!): Event!
+  event(id: ID!): Event!
 
   "\n      Returns a list of Importable Event Providers\n    "
   eventProviders: [String!]!
 
   """Returns a paginated list of events based on the filters given."""
-  events(cursorId: String, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
+  events(cursorId: ID, filter: EventFilter, order: SortOrder = Descending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
-  getActiveMemberPlans(cursorId: String, filter: ActiveMemberPlansFilter, order: SortOrder, skip: Int = 0, sort: MemberPlanSort, take: Int = 10): [MemberPlan!]!
-  getAuthorBySlug(slug: String!): Author!
-  getAuthors(cursorId: String, filter: AuthorFilter, order: SortOrder = Ascending, skip: Int = 0, sortedField: AuthorSort, take: Int = 10): PaginatedAuthors!
-  getAuthorsById(id: ID!): Author!
-  getMemberPlanById(id: ID!): MemberPlan!
-  getMemberPlanBySlug(slug: String!): MemberPlan!
-  getMemberPlans(cursorId: String, filter: MemberPlansFilter, order: SortOrder, skip: Int = 0, sort: MemberPlanSort, take: Int = 10): [MemberPlan!]!
-
-  """Returns a navigation by id."""
-  getNavigationById(id: ID!): Navigation!
-
-  """Returns a navigation by key."""
-  getNavigationByKey(key: String!): Navigation!
-
-  """Returns a list of navigations."""
-  getNavigations: [Navigation!]!
-  getPaymentById(id: ID!): Payment!
-  getPaymentMethodById(id: ID!): PaymentMethod!
-  getPaymentMethods: [PaymentMethod!]!
-  getPayments(cursorId: String, filter: PaymentFilter, order: SortOrder, skip: Int = 0, sort: PaymentSort, take: Int = 10): PaymentsResult!
-
-  """Returns permissions list"""
-  getPermissions: [PermissionObject!]!
-
-  """Returns a user role"""
-  getUserRoleById(id: ID!): UserRole!
-
-  """Returns a list of user roles"""
-  getUserRoles(cursorId: String, filter: UserRoleFilter, skip: Int = 0, take: Int = 10): PaginatedUserRoles!
-
-  """Returns an image by id."""
-  image(id: String!): Image!
 
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): EventFromSource!
@@ -767,7 +357,7 @@ type Query {
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
   """Returns all payment methods"""
-  paymentMethods: [PaymentMethodRef!]!
+  paymentMethods: [PaymentMethod!]!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
   provider: MailProviderModel!
 
@@ -778,7 +368,7 @@ type Query {
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
   "\n      Returns a single setting by id.\n    "
-  setting(id: String!): Setting!
+  settingById(id: String!): Setting!
 
   "\n      Returns all settings.\n    "
   settingsList(filter: SettingFilter): [Setting!]!
@@ -854,12 +444,6 @@ type Stats {
   firstArticleDate: DateTime
 }
 
-type SubscriptionCreatedAction {
-  actionType: ActionType!
-  date: DateTime!
-  id: ID!
-}
-
 enum SubscriptionDeactivationReason {
   invoiceNotPaid
   none
@@ -881,9 +465,9 @@ type SubscriptionFlowModel {
   default: Boolean!
   id: String!
   intervals: [SubscriptionInterval!]!
-  memberPlan: MemberPlanRef
+  memberPlan: MemberPlan
   numberOfSubscriptions: Int!
-  paymentMethods: [PaymentMethodRef!]!
+  paymentMethods: [PaymentMethod!]!
   periodicities: [PaymentPeriodicity!]!
 }
 
@@ -899,59 +483,27 @@ type SystemMailModel {
   mailTemplate: MailTemplateRef
 }
 
-union Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | PeerArticleTeaser
-
-type TeaserListBlockFilter {
-  tags: [ID!]
-}
-
-input UpdateAuthorInput {
-  bio: RichText
-  id: String!
-  imageID: String
-  jobTitle: String
-  links: [AuthorsLinksInput!]
-  name: String
-  slug: String
-  tagIds: [String!]
-}
-
-input UpdateMemberPlanInput {
-  active: Boolean!
-  amountPerMonthMin: Float!
-  description: String!
-  extendable: Boolean!
+type Tag {
   id: ID!
-  imageID: String
-  maxCount: Float
-  name: String!
-  slug: String!
-  tags: [String!]!
 }
 
-input UpdateNavigationInput {
+type UserConsent {
+  consent: Consent!
+  createdAt: DateTime!
   id: String!
-  key: String!
-  links: [BaseNavigationLinkInput!]!
-  name: String!
+  modifiedAt: DateTime!
+  user: UserV2!
+  value: Boolean!
 }
 
-input UpdatePaymentMethodInput {
-  active: Boolean
-  description: String
-  id: ID!
-  name: String
-  paymentProviderID: String
-  slug: String
+enum UserEvent {
+  ACCOUNT_CREATION
+  LOGIN_LINK
+  PASSWORD_RESET
+  TEST_MAIL
 }
 
-input UpdateUserRoleInput {
-  id: String!
-  name: String
-  permissionIDs: [String!]
-}
-
-type User {
+type UserV2 {
   active: Boolean!
   createdAt: DateTime!
   email: String!
@@ -967,41 +519,8 @@ type User {
   userImageID: String
 }
 
-type UserConsent {
-  consent: Consent!
-  createdAt: DateTime!
-  id: String!
-  modifiedAt: DateTime!
-  user: User!
-  value: Boolean!
-}
-
-type UserCreatedAction {
-  actionType: ActionType!
-  date: DateTime!
-  id: ID!
-}
-
-enum UserEvent {
-  ACCOUNT_CREATION
-  LOGIN_LINK
-  PASSWORD_RESET
-  TEST_MAIL
-}
-
-type UserRole {
-  description: String
-  id: String!
-  name: String!
-  permissionIDs: [String!]!
-  permissions: [PermissionObject!]
-  systemRole: Boolean!
-}
-
-input UserRoleFilter {
-  name: String
-}
-
 type VersionInformation {
   version: String!
 }
+
+scalar link__Import
