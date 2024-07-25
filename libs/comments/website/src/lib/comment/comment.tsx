@@ -14,6 +14,7 @@ const avatarStyles = css`
 export const CommentWrapper = styled('article')`
   display: grid;
   grid-template-rows: max-content auto;
+  gap: ${({theme}) => theme.spacing(1.5)};
 
   &:target {
     border: 2px solid ${({theme}) => theme.palette.primary.main};
@@ -56,21 +57,17 @@ export const CommentFlair = styled('div')`
   font-weight: 300;
 `
 
-export const Source = styled('p')`
-  margin: 0;
-`
-
 export const CommentFlairLink = styled('a')`
   text-decoration: none;
   color: ${({theme}) => theme.palette.primary.main};
 `
 
-export const CommentContent = styled('div')`
-  padding-top: ${({theme}) => theme.spacing(1)};
-`
+export const CommentContent = styled('div')``
 
 export const CommentTitle = styled('h1')`
-  font-weight: 600;
+  && {
+    font-weight: 600;
+  }
 `
 
 export const Comment = ({
@@ -85,8 +82,7 @@ export const Comment = ({
   source,
   children,
   createdAt,
-  showContent = true,
-  tags
+  showContent = true
 }: BuilderCommentProps) => {
   const {
     elements: {Paragraph, Image},
@@ -94,7 +90,7 @@ export const Comment = ({
     date
   } = useWebsiteBuilder()
 
-  const sourceFlairDate = source || user?.flair || date.format(new Date(createdAt))
+  const flair = user?.flair || source
   const image = user?.image ?? guestUserImage
   const isVerified = authorType === CommentAuthorType.VerifiedUser
   const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
@@ -116,22 +112,22 @@ export const Comment = ({
             )}
           </CommentName>
 
-          <CommentFlair>
-            {isValidUrl(sourceFlairDate) ? (
-              <CommentFlairLink href={sourceFlairDate} target="_blank" rel="noopener noreferrer">
-                {sourceFlairDate}
+          {source && isValidUrl(source) && (
+            <CommentFlair>
+              <CommentFlairLink href={source} target="_blank" rel="noopener noreferrer">
+                {flair}
               </CommentFlairLink>
-            ) : (
-              sourceFlairDate
-            )}
-          </CommentFlair>
+            </CommentFlair>
+          )}
+          {!isValidUrl(source ?? '') && flair && <CommentFlair>{flair}</CommentFlair>}
+          {!flair && createdAt && <CommentFlair>{date.format(new Date(createdAt))}</CommentFlair>}
         </CommentHeaderContent>
       </CommentHeader>
 
       {showContent && (
         <CommentContent>
           {title && (
-            <Paragraph gutterBottom={false} component={CommentTitle}>
+            <Paragraph component={CommentTitle} gutterBottom={false}>
               {title}
             </Paragraph>
           )}

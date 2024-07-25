@@ -1,5 +1,4 @@
-export function isValidUrl(input: string | undefined | null): boolean {
-  if (!input) return false
+export function isValidUrl(input: string): boolean {
   try {
     new URL(input)
     return true

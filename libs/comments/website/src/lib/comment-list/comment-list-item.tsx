@@ -10,25 +10,13 @@ import {useMemo} from 'react'
 
 export const CommentListItemChildren = styled('aside')`
   display: grid;
-  position: relative;
   gap: ${({theme}) => theme.spacing(3)};
   padding: ${({theme}) => theme.spacing(3)};
   padding-right: 0;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: ${({theme}) => theme.spacing(2)};
-    bottom: ${({theme}) => theme.spacing(2)};
-    left: ${({theme}) => theme.spacing(1)};
-    height: 100%;
-    width: 2px;
-    background-color: currentColor;
-  }
+  border-left: 2px solid currentColor;
 `
 
 export const CommentListItemActions = styled('div')`
-  padding-top: ${({theme}) => theme.spacing(1)};
   display: flex;
   flex-flow: row wrap;
   gap: ${({theme}) => theme.spacing(1)};
@@ -73,7 +61,7 @@ export const CommentListItem = ({
   ratingSystem,
   className,
   signUpUrl,
-  commentDepth,
+  commentDepth = 0,
   maxCommentDepth,
   ...comment
 }: BuilderCommentListItemProps) => {
@@ -94,7 +82,7 @@ export const CommentListItem = ({
     hasLoggedInUser &&
     loggedInUser?.id === comment.user?.id &&
     (userCanEdit || comment.state === CommentState.PendingUserChanges)
-  const maxDepthHit = maxCommentDepth !== undefined && commentDepth > maxCommentDepth
+  const maxDepthHit = maxCommentDepth != null && commentDepth >= maxCommentDepth
   const canReply = (anonymousCanComment || hasLoggedInUser) && !maxDepthHit
 
   const showReply = getStateForEditor(openEditorsState)('add', id)

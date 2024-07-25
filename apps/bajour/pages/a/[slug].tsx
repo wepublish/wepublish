@@ -113,6 +113,7 @@ export default function ArticleBySlugIdOrToken() {
                   id={data.article.id}
                   type={ApiV1.CommentItemType.Article}
                   variables={{sort: ApiV1.CommentSort.Rating, order: ApiV1.SortOrder.Descending}}
+                  maxCommentDepth={1}
                 />
               </ArticleWrapper>
             )}

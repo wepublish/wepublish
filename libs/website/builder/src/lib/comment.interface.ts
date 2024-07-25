@@ -67,6 +67,7 @@ export type BuilderCommentListProps = Pick<
   openEditorsStateDispatch: Dispatch<BuilderCommentListActions>
 
   signUpUrl: string
+  maxCommentDepth?: number
 }
 
 export type BuilderCommentListItemShareProps = {
@@ -79,7 +80,7 @@ export type BuilderCommentListItemProps = Comment & {
   className?: string
   ratingSystem: FullCommentRatingSystem
   signUpUrl: string
-  commentDepth: number
+  commentDepth?: number
   maxCommentDepth?: number
 } & Pick<
     BuilderCommentListProps,

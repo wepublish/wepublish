@@ -302,6 +302,30 @@ export const Nested: StoryObj = {
   }
 }
 
+export const MaxNesting: StoryObj = {
+  ...Editing,
+  args: {
+    ...Editing.args,
+    commentDepth: 0,
+    maxCommentDepth: 1,
+    children: [
+      {
+        ...verifiedUserComment,
+        challenge: {
+          data: {challenge}
+        },
+        maxCommentLength: 2000,
+        children: []
+      },
+      {
+        ...anonymousComment,
+        maxCommentLength: 2000,
+        children: []
+      }
+    ]
+  }
+}
+
 export const WithClassName: StoryObj = {
   ...Default,
   args: {
