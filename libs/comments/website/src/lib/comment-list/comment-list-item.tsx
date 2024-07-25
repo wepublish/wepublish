@@ -116,24 +116,15 @@ export const CommentListItem = ({
       )}
 
       <CommentListItemActions>
-        <CommentListItemActionsButtons>
-          {canReply && (
-            <Button
-              startIcon={<MdReply />}
-              variant="outlined"
-              size="small"
-              css={buttonStyles}
-              onClick={() => {
-                dispatch({
-                  type: 'add',
-                  action: 'open',
-                  commentId: id
-                })
-              }}>
-              Antworten
-            </Button>
-          )}
+        <CommentRatings
+          commentId={id}
+          ratingSystem={ratingSystem}
+          userRatings={userRatings}
+          overriddenRatings={overriddenRatings}
+          calculatedRatings={calculatedRatings}
+        />
 
+        <CommentListItemActionsButtons>
           {canEdit && (
             <Button
               startIcon={<MdEdit />}
@@ -151,15 +142,24 @@ export const CommentListItem = ({
           )}
 
           <CommentListItemShare url={comment.url} title="share" />
-        </CommentListItemActionsButtons>
 
-        <CommentRatings
-          commentId={id}
-          ratingSystem={ratingSystem}
-          userRatings={userRatings}
-          overriddenRatings={overriddenRatings}
-          calculatedRatings={calculatedRatings}
-        />
+          {canReply && (
+            <Button
+              startIcon={<MdReply />}
+              variant="outlined"
+              size="small"
+              css={buttonStyles}
+              onClick={() => {
+                dispatch({
+                  type: 'add',
+                  action: 'open',
+                  commentId: id
+                })
+              }}>
+              Antworten
+            </Button>
+          )}
+        </CommentListItemActionsButtons>
       </CommentListItemActions>
 
       {showReply && (
