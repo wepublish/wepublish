@@ -125,6 +125,8 @@ export const CommentListItem = ({
         />
 
         <CommentListItemActionsButtons>
+          <CommentListItemShare url={comment.url} title="share" />
+
           {canEdit && (
             <Button
               startIcon={<MdEdit />}
@@ -140,8 +142,6 @@ export const CommentListItem = ({
               Editieren
             </Button>
           )}
-
-          <CommentListItemShare url={comment.url} title="share" />
 
           {canReply && (
             <Button

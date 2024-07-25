@@ -93,6 +93,7 @@ export const CommentListItemShare = ({url, title, className}: BuilderCommentList
       <CommentListItemShareIcon size="small" onClick={handleClick} aria-describedby={id}>
         <MdShare />
       </CommentListItemShareIcon>
+
       <Popover
         id={id}
         open={popoverOpen}
