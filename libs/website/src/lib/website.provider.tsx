@@ -35,7 +35,12 @@ import {
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
-  YouTubeVideoBlock
+  YouTubeVideoBlock,
+  TeaserSlider,
+  ImageSlider,
+  ContextBox,
+  FocusTeaser,
+  Banner
 } from '@wepublish/block-content/website'
 import {
   Comment,
@@ -209,6 +214,13 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           TwitterTweet: TwitterTweetBlock,
           VimeoVideo: VimeoVideoBlock,
           YouTubeVideo: YouTubeVideoBlock
+        }}
+        blockStyles={{
+          Banner,
+          ContextBox,
+          FocusTeaser,
+          ImageSlider,
+          TeaserSlider
         }}
         richtext={{RenderElement, RenderLeaf}}
         date={{

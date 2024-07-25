@@ -59,7 +59,8 @@ const eventTeaser = {
           }
         ]
       }
-    ]
+    ],
+    tags: []
   }
 } as EventTeaser
 
@@ -136,6 +137,7 @@ export const Article = {
 export const Page = {
   ...Article,
   args: {
+    ...Article.args,
     teasers: [pageTeaser, pageTeaser, pageTeaser]
   }
 }
@@ -143,6 +145,7 @@ export const Page = {
 export const Event = {
   ...Article,
   args: {
+    ...Article.args,
     teasers: [eventTeaser, eventTeaser, eventTeaser]
   }
 }

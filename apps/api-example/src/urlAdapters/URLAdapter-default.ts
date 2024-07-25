@@ -38,14 +38,14 @@ export class DefaultURLAdapter implements URLAdapter {
 
   async getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer) {
     if (comment.itemType === CommentItemType.article) {
-      return `${this.getPublicArticleURL(item as PublicArticle)}#${comment.id}`
+      return `${await this.getPublicArticleURL(item as PublicArticle)}#${comment.id}`
     }
 
     if (comment.itemType === CommentItemType.peerArticle) {
-      return `${this.getPeeredArticleURL(peer, item as PublicArticle)}#${comment.id}`
+      return `${await this.getPeeredArticleURL(peer, item as PublicArticle)}#${comment.id}`
     }
 
-    return `${this.getPublicPageURL(item as PublicPage)}#${comment.id}`
+    return `${await this.getPublicPageURL(item as PublicPage)}#${comment.id}`
   }
 
   async getArticlePreviewURL(token: string) {

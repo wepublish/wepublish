@@ -1,0 +1,21 @@
+{
+  "website": {
+    "production": {
+      "deployment": true,
+      "env": {
+        "GA_ID": "G-FL5CRKBXV4"
+      },
+      "secret_env": []
+    },
+    "staging": {
+      "deployment": true,
+      "env": {},
+      "secret_env": []
+    },
+    "review": {
+      "deployment": true,
+      "env": {},
+      "secret_env": []
+    }
+  }
+}

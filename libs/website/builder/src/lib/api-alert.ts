@@ -1,6 +1,6 @@
 import {ApolloError} from '@apollo/client/errors'
 import {AlertProps} from '@wepublish/ui'
 
-export interface BuilderApiAlertProps extends AlertProps {
+export type BuilderApiAlertProps = Omit<AlertProps, 'children'> & {
   error: ApolloError
 }

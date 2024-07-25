@@ -50,4 +50,54 @@ jobs:
           helm get all review-$PR_NUM-minio -n reviews && helm uninstall review-$PR_NUM-minio -n reviews
           # Delete PVCs associated with the PR
           kubectl get pvc -n reviews | grep "\-$PR_NUM\-" | awk '{print $1}' | xargs -r kubectl delete pvc -n reviews
-  
+
+  cleanup-website-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up matrix
+        id: set-matrix
+        run: deployment/read_deployment_config.sh '.website.review.deployment' true
+  uninstall_website:
+    name: Uninstall website
+    if: ${{ needs.cleanup-website-matrix.result == 'success' }}
+    strategy:
+      matrix: ${{fromJson(needs.cleanup-website-matrix.outputs.matrix)}}
+    needs: [cleanup-website-matrix]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: '3.4.1'
+
+      - name: Authenticate kubectl
+        uses: 'google-github-actions/auth@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+
+      - name: Prepare kubectl
+        uses: 'google-github-actions/get-gke-credentials@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          cluster_name: development
+          location: europe-west6
+
+      - name: Delete review environment
+        run: |
+          HELM_NAME=review-${{ github.event.pull_request.number }}-${{ matrix.target }}-website
+          
+          # Delete Helm releases if they exist
+          helm get all $HELM_NAME -n reviews && helm uninstall $HELM_NAME -n reviews

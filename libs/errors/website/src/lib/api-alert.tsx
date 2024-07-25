@@ -5,26 +5,19 @@ import {BuilderApiAlertProps, useWebsiteBuilder} from '@wepublish/website/builde
 
 /**
  * This function is intended to replace with standard i18n translation functions.
- * @param errorCode
  */
-export function translateApolloErrorCode(errorCode?: ErrorCode): string | undefined {
-  if (!errorCode) return
+export function translateApolloErrorCode(errorCode: ErrorCode): string | undefined {
   switch (errorCode) {
     case ErrorCode.EmailAlreadyInUse:
       return 'Es besteht bereits ein Konto mit dieser E-mail.'
     case ErrorCode.ChallengeFailed:
       return 'Die Rechenaufgabe des Spam-Schutz wurde nicht korrekt gelöst. Bitte versuch es nochmals.'
-    default:
-      return undefined
   }
 }
 
 /**
  * This component wraps the Website Builders Alert component to explicitly handle Apollo errors coming from the api.
  * The component retrieves the apollo error code from the apollo error and assigns an appropriate message for the user.
- * @param error
- * @param props
- * @constructor
  */
 export function ApiAlert({error, ...props}: BuilderApiAlertProps) {
   const {
@@ -36,7 +29,9 @@ export function ApiAlert({error, ...props}: BuilderApiAlertProps) {
   }, [error])
 
   const errorMessage = useMemo<string>(() => {
-    return translateApolloErrorCode(apolloErrorCode) || error.message
+    return apolloErrorCode
+      ? translateApolloErrorCode(apolloErrorCode) ?? error.message
+      : error.message
   }, [apolloErrorCode, error])
 
   return (
@@ -45,7 +40,7 @@ export function ApiAlert({error, ...props}: BuilderApiAlertProps) {
 
       {apolloErrorCode === ErrorCode.EmailAlreadyInUse && (
         <>
-          <span>&nbsp;</span>
+          {' '}
           <Link href={'/login'}>{'Bitte einloggen'}</Link>
         </>
       )}

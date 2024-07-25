@@ -122,7 +122,8 @@ const anonymousComment = {
   children: [],
   calculatedRatings: [],
   overriddenRatings: [],
-  userRatings: []
+  userRatings: [],
+  url: ''
 } as CommentListQuery['comments'][number]
 
 const verifiedUserComment = {
@@ -161,7 +162,8 @@ const verifiedUserComment = {
   tags: [],
   calculatedRatings: [],
   overriddenRatings: [],
-  userRatings: []
+  userRatings: [],
+  url: ''
 } as CommentListQuery['comments'][number]
 
 const nestedChildren = (id: string) => [

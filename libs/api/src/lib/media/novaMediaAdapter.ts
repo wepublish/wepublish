@@ -32,7 +32,8 @@ export class NovaMediaAdapter implements MediaAdapter {
     const response = await fetch(this.internalURL, {
       method: 'POST',
       headers: {authorization: `Bearer ${this.token}`},
-      body: form
+      body: form,
+      signal: AbortSignal.timeout(50000)
     })
 
     const json = await response.json()
@@ -143,7 +144,7 @@ export class NovaMediaAdapter implements MediaAdapter {
       queryParameters.push(`sharpen=1`)
     }
 
-    queryParameters.push(`quality=${transformations?.quality ?? 80}`)
+    queryParameters.push(`quality=${transformations?.quality * 100 ?? 80}`)
 
     return `${this.url}/${image.id}?${queryParameters.join('&')}`
   }

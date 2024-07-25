@@ -3,16 +3,20 @@ import {useArticleQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren} from 'react'
 
-type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
+type IdSlugOrToken =
+  | {id: string; token?: never; slug?: never}
+  | {id?: never; token?: never; slug: string}
+  | {id?: never; token: string; slug?: never}
 
-export type ArticleContainerProps = PropsWithChildren<IdOrSlug & BuilderContainerProps>
+export type ArticleContainerProps = PropsWithChildren<IdSlugOrToken & BuilderContainerProps>
 
-export function ArticleContainer({id, slug, className, children}: ArticleContainerProps) {
+export function ArticleContainer({id, slug, token, className, children}: ArticleContainerProps) {
   const {Article} = useWebsiteBuilder()
   const {data, loading, error} = useArticleQuery({
     variables: {
       id,
-      slug
+      slug,
+      token
     }
   })
 

@@ -50,7 +50,7 @@ export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlo
 
         {(caption || image?.source) && (
           <figcaption>
-            {caption} {image?.source ? <>(Quelle: {image?.source})</> : null}
+            {caption} {image?.source ? <>(Bild: {image?.source})</> : null}
           </figcaption>
         )}
       </ImageBlockInnerWrapper>

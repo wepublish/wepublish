@@ -11,6 +11,7 @@ import {
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {ComponentProps} from 'react'
 
 export const ArticleTagList = styled('div')`
   display: grid;
@@ -18,10 +19,10 @@ export const ArticleTagList = styled('div')`
   gap: ${({theme}) => theme.spacing(1)};
 `
 
-export default function ArticleBySlug() {
+export default function ArticleBySlugIdOrToken() {
   const {
     push,
-    query: {slug}
+    query: {slug, id, token}
   } = useRouter()
   const {
     elements: {H3}
@@ -34,9 +35,15 @@ export default function ArticleBySlug() {
     }
   })
 
+  const containerProps = {
+    slug,
+    id,
+    token
+  } as ComponentProps<typeof ArticleContainer>
+
   return (
     <>
-      <ArticleContainer slug={slug as string}>
+      <ArticleContainer {...containerProps}>
         <ArticleTagList>
           {data?.article?.tags.map((tag, index) => (
             <Chip

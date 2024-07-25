@@ -1,0 +1,19 @@
+{
+  "website": {
+    "production": {
+      "deployment": false,
+      "env": {},
+      "secret_env": []
+    },
+    "staging": {
+      "deployment": false,
+      "env": {},
+      "secret_env": []
+    },
+    "review": {
+      "deployment": false,
+      "env": {},
+      "secret_env": []
+    }
+  }
+}

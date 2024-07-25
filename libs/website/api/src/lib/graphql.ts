@@ -2145,6 +2145,7 @@ export type FullArticleFragment = { __typename?: 'Article', id: string, publishe
 export type ArticleQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['Slug']>;
   id?: InputMaybe<Scalars['ID']>;
+  token?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -2521,6 +2522,7 @@ export type FullPageFragment = { __typename?: 'Page', id: string, slug: string, 
 export type PageQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['Slug']>;
   id?: InputMaybe<Scalars['ID']>;
+  token?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -3523,8 +3525,8 @@ export const FullSessionWithTokenFragmentDoc = gql`
 }
     ${FullUserFragmentDoc}`;
 export const ArticleDocument = gql`
-    query Article($slug: Slug, $id: ID) {
-  article(slug: $slug, id: $id) {
+    query Article($slug: Slug, $id: ID, $token: String) {
+  article(slug: $slug, id: $id, token: $token) {
     ...FullArticle
   }
 }
@@ -3544,6 +3546,7 @@ export const ArticleDocument = gql`
  *   variables: {
  *      slug: // value for 'slug'
  *      id: // value for 'id'
+ *      token: // value for 'token'
  *   },
  * });
  */
@@ -4517,8 +4520,8 @@ export type NavigationQueryHookResult = ReturnType<typeof useNavigationQuery>;
 export type NavigationLazyQueryHookResult = ReturnType<typeof useNavigationLazyQuery>;
 export type NavigationQueryResult = Apollo.QueryResult<NavigationQuery, NavigationQueryVariables>;
 export const PageDocument = gql`
-    query Page($slug: Slug, $id: ID) {
-  page(slug: $slug, id: $id) {
+    query Page($slug: Slug, $id: ID, $token: String) {
+  page(slug: $slug, id: $id, token: $token) {
     ...FullPage
   }
 }
@@ -4538,6 +4541,7 @@ export const PageDocument = gql`
  *   variables: {
  *      slug: // value for 'slug'
  *      id: // value for 'id'
+ *      token: // value for 'token'
  *   },
  * });
  */

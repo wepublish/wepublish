@@ -76,6 +76,7 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -128,7 +129,6 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -176,10 +176,12 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
 }
 
 .emotion-30 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -193,6 +195,7 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
 
 .emotion-30:where(.emotion-3:hover .emotion-30) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -672,6 +675,7 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -724,7 +728,6 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -772,10 +775,12 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 }
 
 .emotion-30 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -789,6 +794,7 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 
 .emotion-30:where(.emotion-3:hover .emotion-30) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {
@@ -1268,6 +1274,7 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 400px;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1320,7 +1327,6 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1368,10 +1374,12 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 }
 
 .emotion-30 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
+  transition-property: color,background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: 4px 16px;
   background-color: #F5FF64;
+  color: rgba(0, 0, 0, 0.87);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -1385,6 +1393,7 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 
 .emotion-30:where(.emotion-3:hover .emotion-30) {
   background-color: #e91e63;
+  color: #fff;
 }
 
 @media (min-width:900px) {

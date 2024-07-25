@@ -109,7 +109,7 @@ export const InfoBox = memo(function InfoBox({richText, className}: InfoBoxProps
         <IconWrapper>
           <MdInfoOutline size="24" />
         </IconWrapper>
-        <AllAbout>Darum geht’s:</AllAbout>
+        <AllAbout>Darum geht’s</AllAbout>
       </InfoBoxInfo>
 
       <InfoBoxContent>

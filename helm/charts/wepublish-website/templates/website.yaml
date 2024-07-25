@@ -1,0 +1,92 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helm.fullname" . }}-website
+  labels:
+    app.kubernetes.io/name: {{ include "helm.fullname" . }}-website
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- with .Values.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "helm.name" . }}-website
+    app.kubernetes.io/instance: {{ .Release.Name }}
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}-website
+  labels:
+    app.kubernetes.io/name: {{ include "helm.name" . }}-website
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- with .Values.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.website.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "helm.name" . }}-website
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "helm.name" . }}-website
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{- if .Values.deployment.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.deployment.imagePullSecret }}
+      {{- end }}
+      containers:
+        - name: {{ include "helm.fullname" . }}
+          image: {{ .Values.website.image }}
+          imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
+          ports:
+            - name: http
+              containerPort: 4000
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ include "helm.fullname" . }}-env-{{ .Release.Revision }}
+            {{- if .Values.website.envFromSecretRefName }}
+            - secretRef:
+                name: {{ .Values.website.envFromSecretRefName }}
+            {{- end }}
+          {{- with .Values.website.properties }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "helm.fullname" . }}-env-{{ .Release.Revision }}
+  labels:
+    app.kubernetes.io/name: {{ include "helm.fullname" . }}-env-{{ .Release.Revision }}
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- with .Values.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+type: Opaque
+data:
+  {{- range $name, $value := merge .Values.website.env .Values.deployment.env }}
+  {{ $name }}: "{{ $value | b64enc }}"
+  {{- end }}
