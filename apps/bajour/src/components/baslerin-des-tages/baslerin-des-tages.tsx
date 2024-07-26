@@ -10,14 +10,20 @@ interface BaslerinDesTagesProps {
 
 const Headings = styled('div')(({theme}) => ({
   borderBottom: '1em solid #feddd2',
-  paddingBottom: '0.5em',
   marginLeft: '3em',
-  display: 'flex',
-  justifyContent: 'space-between',
+  gridColumn: '1/3',
   [theme.breakpoints.up('lg')]: {
     gridColumnStart: 2,
     paddingBottom: '3em',
     marginLeft: '1em'
+  }
+}))
+
+const HeadingsInner = styled('div')(({theme}) => ({
+  [theme.breakpoints.up('lg')]: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    maxWidth: '500px'
   }
 }))
 
@@ -31,10 +37,12 @@ const Heading = styled('h1')(({theme}) => ({
 
 const Content = styled('section')(({theme}) => ({
   marginLeft: '3em',
+  marginRight: '2em',
   marginTop: '1em',
-  gridColumn: '2/3',
+  gridColumn: '1/3',
   [theme.breakpoints.up('lg')]: {
-    marginLeft: '1em'
+    marginLeft: '1em',
+    gridColumn: '2/3'
   }
 }))
 
@@ -46,26 +54,32 @@ const HeadingLarge = styled(Heading)(({theme}) => ({
 
 const BaslerinDesTagesWrapper = styled('article')(({theme}) => ({
   overflowX: 'hidden',
-  [theme.breakpoints.up('lg')]: {
-    display: 'grid',
-    gridGap: '1em',
-    gridTemplateColumns: '1fr 2fr',
-    gridTemplateRows: 'minmax(min-content, auto) 1fr'
-  }
 }))
 
-const OnlyMobile = styled('div')(({theme}) => ({
-  display: 'block',
+const MobileGrid = styled('div')(({theme}) => ({
+  display: 'grid',
+  gridTemplateColumns: '50% 50%',
+  gridAutoRows: 'max-content',
+  gridGap: '1em',
   [theme.breakpoints.up('lg')]: {
     display: 'none'
   }
 }))
 
-const OnlyDesktop = styled('div')(({theme}) => ({
+const DesktopGrid = styled('div')(({theme}) => ({
   display: 'none',
   [theme.breakpoints.up('lg')]: {
-    display: 'block'
+    display: 'grid',
+    gridTemplateColumns: '33% 67%',
+    gridAutoRows: 'max-content',
+    gridGap: '1em',
+    paddingLeft: '3em'
   }
+}))
+
+const DateWeekdayContainer = styled('div')(({theme}) => ({
+  display: 'flex',
+  flexDirection: 'column'
 }))
 
 const DateDisplay = styled('span')(({theme}) => ({
@@ -89,7 +103,7 @@ const Title = styled('span')(({theme}) => ({
   marginBottom: '1em'
 }))
 
-const ImageWrapperMobile = styled(OnlyMobile)(({theme}) => ({
+const ImageWrapperMobile = styled('div')(({theme}) => ({
   display: 'grid',
   gridTemplateColumns: '50vw repeat(6, 25vw)',
   gridTemplateRows: '1fr 1fr',
@@ -98,7 +112,7 @@ const ImageWrapperMobile = styled(OnlyMobile)(({theme}) => ({
   marginLeft: '1em'
 }))
 
-const ImageWrapperDesktop = styled(OnlyDesktop)(({theme}) => ({
+const ImageWrapperDesktop = styled('div')(({theme}) => ({
   display: 'none',
   gridTemplateColumns: 'repeat(6, 10vw)',
   gridTemplateRows: '1fr',
@@ -109,6 +123,28 @@ const ImageWrapperDesktop = styled(OnlyDesktop)(({theme}) => ({
     display: 'grid'
   }
 }))
+
+function ContentBlock(props: {titleBlock: ApiV1.TitleBlock , textBlock: ApiV1.RichTextBlock}): JSX.Element {
+  return (
+    <>
+      <Content>
+        <div style={{marginBottom: '1em'}}>
+          {props.titleBlock.lead ? (
+            <Title>{props.titleBlock.lead}</Title>
+          ) : (
+            <>
+              <span>ist</span> <Title>{props.titleBlock.title}</Title>
+              <span>, weil ...</span>
+            </>
+          )}
+        </div>
+        <div style={{maxWidth: '500px'}}>
+          <RichTextBlock richText={props.textBlock.richText} />
+        </div>
+      </Content>
+    </>
+  )
+}
 
 export function BaslerinDesTages({slug}: BaslerinDesTagesProps) {
   const {
@@ -150,57 +186,61 @@ export function BaslerinDesTages({slug}: BaslerinDesTagesProps) {
 
   return (
     <BaslerinDesTagesWrapper>
-      <OnlyDesktop css={{gridRow: '1/4', marginTop: '3em'}}>
-        <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
-      </OnlyDesktop>
-      <Headings>
-        <div>
-          <HeadingLarge>Basler*in</HeadingLarge>
-          <Heading>des Tages</Heading>
-        </div>
-        <OnlyDesktop>
-          <DateDisplay>{publicationDate}</DateDisplay>
-          <WeekdayDisplay>{publicationDay}</WeekdayDisplay>
-        </OnlyDesktop>
-      </Headings>
+      <DesktopGrid>
+        <Image style={{gridRow: '1/4'}} image={imageBlock.image} square css={{borderRadius: '15%'}} />
 
-      <ImageWrapperMobile>
-        <Image image={imageBlock.image} square css={{borderRadius: '15%', gridRow: '1/3'}} />
-        <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
-        <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
-        <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
-        <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
-        <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
-        <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
+        <Headings>
+          <HeadingsInner>
+            <div>
+              <HeadingLarge>Basler*in</HeadingLarge>
+              <Heading>des Tages</Heading>
+            </div>
+            <DateWeekdayContainer>
+              <DateDisplay>{publicationDate}</DateDisplay>
+              <WeekdayDisplay>{publicationDay}</WeekdayDisplay>
+            </DateWeekdayContainer>
+          </HeadingsInner>
+        </Headings>
 
-        <OnlyMobile css={{gridColumnStart: '2'}}>
-          <DateDisplay>{publicationDate}</DateDisplay>
-          <WeekdayDisplay>{publicationDay}</WeekdayDisplay>
-        </OnlyMobile>
-      </ImageWrapperMobile>
+        <ImageWrapperDesktop>
+          <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
+          <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
+          <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
+          <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
+          <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
+          <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
+        </ImageWrapperDesktop>
 
-      <ImageWrapperDesktop>
-        <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
-        <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
-        <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
-        <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
-        <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
-        <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
-      </ImageWrapperDesktop>
+        <ContentBlock titleBlock={titleBlock} textBlock={textBlock} />
+      </DesktopGrid>
+      
+      <MobileGrid>
+        <Headings>
+          <HeadingsInner>
+            <div>
+              <HeadingLarge>Basler*in</HeadingLarge>
+              <Heading>des Tages</Heading>
+            </div>
+          </HeadingsInner>
+        </Headings>
 
-      <Content>
-        {titleBlock.lead ? (
-          <Title>{titleBlock.lead}</Title>
-        ) : (
-          <>
-            <span>ist</span> <Title>{titleBlock.title}</Title>
-            <span>, weil ...</span>
-          </>
-        )}
-      </Content>
-      <Content>
-        <RichTextBlock richText={textBlock.richText} />
-      </Content>
+        <ImageWrapperMobile>
+          <Image image={imageBlock.image} square css={{borderRadius: '15%', gridRow: '1/3'}} />
+          <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
+          <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
+          <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
+          <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
+          <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
+          <Image image={imageBlock.image} square css={{borderRadius: '15%'}} />
+
+          <DateWeekdayContainer>
+            <DateDisplay>{publicationDate}</DateDisplay>
+            <WeekdayDisplay>{publicationDay}</WeekdayDisplay>
+          </DateWeekdayContainer>
+        </ImageWrapperMobile>
+
+        <ContentBlock titleBlock={titleBlock} textBlock={textBlock} />
+      </MobileGrid>
     </BaslerinDesTagesWrapper>
   )
 }
