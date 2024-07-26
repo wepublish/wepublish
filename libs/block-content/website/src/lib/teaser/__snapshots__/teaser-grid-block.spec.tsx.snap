@@ -273,11 +273,10 @@ exports[`Teaser Grid Block should render OneColumn 1`] = `
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title="An image title"
             />
           </div>
@@ -335,11 +334,10 @@ https://unsplash.it/200/200 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title="An image title"
             />
           </div>
@@ -390,11 +388,10 @@ https://unsplash.it/200/200 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title="An image title"
             />
           </div>
@@ -667,11 +664,10 @@ exports[`Teaser Grid Block should render ThreeColumns 1`] = `
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title="An image title"
             />
           </div>
@@ -729,11 +725,10 @@ https://unsplash.it/200/200 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title="An image title"
             />
           </div>
@@ -784,11 +779,10 @@ https://unsplash.it/200/200 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title="An image title"
             />
           </div>
@@ -1061,11 +1055,10 @@ exports[`Teaser Grid Block should render WithClassName 1`] = `
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title="An image title"
             />
           </div>
@@ -1123,11 +1116,10 @@ https://unsplash.it/200/200 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title="An image title"
             />
           </div>
@@ -1178,11 +1170,10 @@ https://unsplash.it/200/200 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title="An image title"
             />
           </div>
@@ -1455,11 +1446,10 @@ exports[`Teaser Grid Block should render WithEmotion 1`] = `
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title="An image title"
             />
           </div>
@@ -1517,11 +1507,10 @@ https://unsplash.it/200/200 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title="An image title"
             />
           </div>
@@ -1572,11 +1561,10 @@ https://unsplash.it/200/200 200w"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset=""
               title="An image title"
             />
           </div>
