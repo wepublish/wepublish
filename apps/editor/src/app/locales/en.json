@@ -371,7 +371,8 @@
       "tags": "Tags",
       "title": "Title",
       "userPanelHeader": "Author of the comment",
-      "variousPanelHeader": "Tags & Source"
+      "variousPanelHeader": "Tags & Source",
+      "featuredHelpText": "The comment shows at the top of the comment list."
     },
     "commentHistory": {
       "addComment": "Create new comment",

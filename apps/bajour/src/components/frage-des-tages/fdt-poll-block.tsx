@@ -1,15 +1,14 @@
 import {css, styled} from '@mui/material'
 import {ApiV1, PollBlockProvider, useAsyncAction} from '@wepublish/website'
-import Image from 'next/image'
 import {useRouter} from 'next/router'
 import {useCallback, useEffect, useState} from 'react'
 
 import {CommentListContainer} from '../website-builder-overwrites/blocks/comment-list-container/comment-list-container-fdt'
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
 import {AuthorBox} from './author-box'
-import frageDesTagesLogo from './frage-des-tages.svg'
-import {InfoBox} from './info-box'
 import {TopComments} from './frage-des-tages'
+import {ReactComponent as FrageDesTagesLogo} from './frage-des-tages.svg'
+import {InfoBox} from './info-box'
 
 export const FrageDesTagesContainer = styled('div')`
   padding: ${({theme}) => `${theme.spacing(1.5)}`};
@@ -53,6 +52,9 @@ export const PollWrapper = styled('div')`
 `
 
 export const CommentsWrapper = styled('div')`
+  display: flex;
+  flex-flow: column;
+  gap: ${({theme}) => theme.spacing(1)};
   grid-column: 1/13;
 
   ${({theme}) =>
@@ -77,7 +79,7 @@ export const AuthorAndContext = styled('div')`
     `}
 `
 
-export const FDTLogo = styled(Image)`
+export const FDTLogo = styled(FrageDesTagesLogo)`
   grid-column: 10 / 13;
 
   ${({theme}) =>
@@ -105,7 +107,7 @@ const PollBlockStyled = styled(PollBlock)`
     border-width: 1px;
     text-align: left;
     font-size: 16px;
-    justify-content: flex-start;
+    justify-content: start;
     padding: ${({theme}) => `${theme.spacing(1)} ${theme.spacing(1.5)}`};
 
     &:hover {
@@ -147,7 +149,7 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
         })
       })()
     }
-  }, [router.query])
+  }, [callAction, router.query.answerId, vote])
 
   useEffect(() => {
     autoVote()
@@ -157,10 +159,12 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
     <PollBlockProvider>
       <FrageDesTagesContainer>
         <FrageDesTagesWrapper>
-          <FDTLogo src={frageDesTagesLogo} width={110} height={70} alt="frage-des-tages-logo" />
+          <FDTLogo width={110} aria-label="Frage des Tages Logo" />
+
           <PollWrapper>
             <PollBlockStyled poll={poll} />
           </PollWrapper>
+
           <CommentsWrapper>
             <AuthorAndContext>
               <div>{author ? <StyledAuthorBox author={author} /> : null}</div>
@@ -168,7 +172,9 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
                 <StyledInfoBox richText={poll?.infoText || []} />
               </div>
             </AuthorAndContext>
+
             <TopComments>Top antworten</TopComments>
+
             <CommentListContainer
               id={articleData?.article?.id || ''}
               variables={{
@@ -176,6 +182,7 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
                 order: ApiV1.SortOrder.Descending
               }}
               type={ApiV1.CommentItemType.Article}
+              maxCommentDepth={1}
             />
           </CommentsWrapper>
         </FrageDesTagesWrapper>

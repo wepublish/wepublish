@@ -37,7 +37,8 @@ export const CommentList = ({
   onEditComment,
   openEditorsState,
   openEditorsStateDispatch: dispatch,
-  signUpUrl
+  signUpUrl,
+  maxCommentDepth
 }: BuilderCommentListProps) => {
   const {
     CommentEditor,
@@ -75,8 +76,7 @@ export const CommentList = ({
           maxCommentLength={maxCommentLength}
           children={(comment.children as Comment[]) ?? []}
           signUpUrl={signUpUrl}
-          commentDepth={0}
-          maxCommentDepth={0}
+          maxCommentDepth={maxCommentDepth}
         />
       ))}
 

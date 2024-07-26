@@ -14,10 +14,7 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
   ${CommentListItemChildren} {
     background-color: ${({theme}) => theme.palette.common.white};
     padding-top: ${({theme}) => theme.spacing(1)};
-
-    &::before {
-      background-color: ${({theme}) => theme.palette.secondary.light};
-    }
+    border-color: ${({theme}) => theme.palette.secondary.light};
 
     ${CommentWrapper} {
       background-color: ${({theme}) => theme.palette.common.white};
@@ -25,7 +22,6 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
     }
 
     ${CommentHeader} {
-      padding: ${({theme}) => theme.spacing(1.5)};
       background-color: ${({theme}) => theme.palette.common.white};
       border-top-right-radius: ${({theme}) => theme.spacing(2.5)};
       border-top-left-radius: ${({theme}) => theme.spacing(2.5)};
@@ -43,10 +39,6 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
       border-bottom-right-radius: ${({theme}) => theme.spacing(2.5)};
       border-bottom-left-radius: ${({theme}) => theme.spacing(2.5)};
     }
-  }
-
-  ${CommentWrapper} {
-    gap: 0;
   }
 
   ${CommentContent} {

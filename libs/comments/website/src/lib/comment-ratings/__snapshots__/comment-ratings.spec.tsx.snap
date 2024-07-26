@@ -8,15 +8,15 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
 
 .emotion-2 {
   display: grid;
-  grid-template-columns: auto max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  -webkit-justify-content: end;
-  justify-content: end;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
   gap: 8px;
 }
 
@@ -844,15 +844,15 @@ exports[`CommentRatings should render Default 1`] = `
 
 .emotion-2 {
   display: grid;
-  grid-template-columns: auto max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  -webkit-justify-content: end;
-  justify-content: end;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
   gap: 8px;
 }
 
@@ -1632,15 +1632,15 @@ exports[`CommentRatings should render OverridenRatings 1`] = `
 
 .emotion-2 {
   display: grid;
-  grid-template-columns: auto max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  -webkit-justify-content: end;
-  justify-content: end;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
   gap: 8px;
 }
 
@@ -2574,15 +2574,15 @@ exports[`CommentRatings should render ReadOnly 1`] = `
 
 .emotion-2 {
   display: grid;
-  grid-template-columns: auto max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  -webkit-justify-content: end;
-  justify-content: end;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
   gap: 8px;
 }
 
@@ -3077,15 +3077,15 @@ exports[`CommentRatings should render Single 1`] = `
 
 .emotion-2 {
   display: grid;
-  grid-template-columns: auto max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  -webkit-justify-content: end;
-  justify-content: end;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
   gap: 8px;
 }
 
@@ -3383,15 +3383,15 @@ exports[`CommentRatings should render UserRatings 1`] = `
 
 .emotion-2 {
   display: grid;
-  grid-template-columns: auto max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  -webkit-justify-content: end;
-  justify-content: end;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
   gap: 8px;
 }
 

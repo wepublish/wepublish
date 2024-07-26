@@ -5,6 +5,7 @@ import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
 import {BestOfWePublishWrapper} from '../src/components/best-of-wepublish/best-of-wepublish'
+import {isFrageDesTages} from '../src/components/frage-des-tages/is-frage-des-tages'
 
 const Homepage = styled(PageContainer)`
   grid-column: -1/1;
@@ -58,7 +59,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
 
-  await Promise.all([
+  const [page] = await Promise.all([
     client.query({
       query: ApiV1.PageDocument,
       variables: {
@@ -70,8 +71,41 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
     client.query({
       query: ApiV1.PeerProfileDocument
+    }),
+    client.query({
+      query: ApiV1.SettingListDocument
     })
   ])
+
+  const fdTTeaser = page.data?.page?.blocks.find((block: ApiV1.Block) => {
+    return isFrageDesTages(block)
+  }) as ApiV1.TeaserListBlock | undefined
+
+  if (fdTTeaser && fdTTeaser.teasers[0]) {
+    let id: string | undefined
+
+    switch (fdTTeaser.teasers[0].__typename) {
+      case 'ArticleTeaser': {
+        id = fdTTeaser.teasers[0].article?.id
+        break
+      }
+      case 'PageTeaser': {
+        id = fdTTeaser.teasers[0].page?.id
+        break
+      }
+    }
+
+    if (id) {
+      await client.query({
+        query: ApiV1.CommentListDocument,
+        variables: {
+          sort: ApiV1.CommentSort.Rating,
+          order: ApiV1.SortOrder.Descending,
+          itemId: id
+        }
+      })
+    }
+  }
 
   const props = ApiV1.addClientCacheToV1Props(client, {})
 

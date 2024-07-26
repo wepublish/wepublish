@@ -16,7 +16,7 @@ exports[`Page should render Default 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-496, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -1056,7 +1056,7 @@ exports[`Page should render Default 1`] = `
 .emotion-472 {
   display: grid;
   grid-template-rows: max-content auto;
-  gap: 16px;
+  gap: 12px;
 }
 
 .emotion-472:target {
@@ -1117,14 +1117,7 @@ exports[`Page should render Default 1`] = `
   font-weight: 300;
 }
 
-.emotion-488 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: #e91e63;
-}
-
-.emotion-492 {
-  font-weight: 600;
+.emotion-490 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -1132,18 +1125,22 @@ exports[`Page should render Default 1`] = `
   font-size: 1rem;
 }
 
-.emotion-492.MuiTypography-gutterBottom {
+.emotion-490.emotion-490 {
+  font-weight: 600;
+}
+
+.emotion-490.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-497 {
+.emotion-495 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-499 {
+.emotion-497 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -1158,11 +1155,11 @@ exports[`Page should render Default 1`] = `
   container-type: inline-size;
 }
 
-.emotion-499:hover {
+.emotion-497:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-500 {
+.emotion-498 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -1172,12 +1169,12 @@ exports[`Page should render Default 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-500 {
+  .emotion-498 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-506 {
+.emotion-504 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1189,7 +1186,7 @@ exports[`Page should render Default 1`] = `
   gap: 8px;
 }
 
-.emotion-508 {
+.emotion-506 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -1203,7 +1200,7 @@ exports[`Page should render Default 1`] = `
   align-items: center;
 }
 
-.emotion-510 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -3207,22 +3204,15 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-486 emotion-487"
             >
-              <a
-                class="emotion-488 emotion-489"
-                href="Source"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Flair
-              </a>
+              Flair
             </div>
           </div>
         </header>
         <div
-          class="emotion-490 emotion-491"
+          class="emotion-488 emotion-489"
         >
           <h1
-            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
+            class="MuiTypography-root MuiTypography-body1 emotion-490 emotion-491"
           >
             de Finibus Bonorum et Malorum
           </h1>
@@ -3255,17 +3245,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-497 emotion-498"
+      class="emotion-495 emotion-496"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-497"
         href="https://example.com"
       >
         <article
-          class="emotion-500 emotion-501"
+          class="emotion-498 emotion-499"
         >
           <div
-            class="emotion-502 emotion-503"
+            class="emotion-500 emotion-501"
           >
             <img
               alt="DSC07717"
@@ -3283,13 +3273,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-506 emotion-507"
+            class="emotion-504 emotion-505"
           >
             <div
-              class="emotion-508 emotion-509"
+              class="emotion-506 emotion-507"
             >
               <div
-                class="emotion-510 emotion-511"
+                class="emotion-508 emotion-509"
               >
                 <svg
                   fill="currentColor"
@@ -3446,7 +3436,7 @@ exports[`Page should render WithChildren 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-496, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -4486,7 +4476,7 @@ exports[`Page should render WithChildren 1`] = `
 .emotion-472 {
   display: grid;
   grid-template-rows: max-content auto;
-  gap: 16px;
+  gap: 12px;
 }
 
 .emotion-472:target {
@@ -4547,14 +4537,7 @@ exports[`Page should render WithChildren 1`] = `
   font-weight: 300;
 }
 
-.emotion-488 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: #e91e63;
-}
-
-.emotion-492 {
-  font-weight: 600;
+.emotion-490 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -4562,18 +4545,22 @@ exports[`Page should render WithChildren 1`] = `
   font-size: 1rem;
 }
 
-.emotion-492.MuiTypography-gutterBottom {
+.emotion-490.emotion-490 {
+  font-weight: 600;
+}
+
+.emotion-490.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-497 {
+.emotion-495 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-499 {
+.emotion-497 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -4588,11 +4575,11 @@ exports[`Page should render WithChildren 1`] = `
   container-type: inline-size;
 }
 
-.emotion-499:hover {
+.emotion-497:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-500 {
+.emotion-498 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -4602,12 +4589,12 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-500 {
+  .emotion-498 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-506 {
+.emotion-504 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4619,7 +4606,7 @@ exports[`Page should render WithChildren 1`] = `
   gap: 8px;
 }
 
-.emotion-508 {
+.emotion-506 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -4633,7 +4620,7 @@ exports[`Page should render WithChildren 1`] = `
   align-items: center;
 }
 
-.emotion-510 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -6664,22 +6651,15 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-486 emotion-487"
             >
-              <a
-                class="emotion-488 emotion-489"
-                href="Source"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Flair
-              </a>
+              Flair
             </div>
           </div>
         </header>
         <div
-          class="emotion-490 emotion-491"
+          class="emotion-488 emotion-489"
         >
           <h1
-            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
+            class="MuiTypography-root MuiTypography-body1 emotion-490 emotion-491"
           >
             de Finibus Bonorum et Malorum
           </h1>
@@ -6712,17 +6692,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-497 emotion-498"
+      class="emotion-495 emotion-496"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-497"
         href="https://example.com"
       >
         <article
-          class="emotion-500 emotion-501"
+          class="emotion-498 emotion-499"
         >
           <div
-            class="emotion-502 emotion-503"
+            class="emotion-500 emotion-501"
           >
             <img
               alt="DSC07717"
@@ -6740,13 +6720,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-506 emotion-507"
+            class="emotion-504 emotion-505"
           >
             <div
-              class="emotion-508 emotion-509"
+              class="emotion-506 emotion-507"
             >
               <div
-                class="emotion-510 emotion-511"
+                class="emotion-508 emotion-509"
               >
                 <svg
                   fill="currentColor"
@@ -6906,7 +6886,7 @@ exports[`Page should render WithClassName 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-496, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -7946,7 +7926,7 @@ exports[`Page should render WithClassName 1`] = `
 .emotion-472 {
   display: grid;
   grid-template-rows: max-content auto;
-  gap: 16px;
+  gap: 12px;
 }
 
 .emotion-472:target {
@@ -8007,14 +7987,7 @@ exports[`Page should render WithClassName 1`] = `
   font-weight: 300;
 }
 
-.emotion-488 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: #e91e63;
-}
-
-.emotion-492 {
-  font-weight: 600;
+.emotion-490 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -8022,18 +7995,22 @@ exports[`Page should render WithClassName 1`] = `
   font-size: 1rem;
 }
 
-.emotion-492.MuiTypography-gutterBottom {
+.emotion-490.emotion-490 {
+  font-weight: 600;
+}
+
+.emotion-490.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-497 {
+.emotion-495 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-499 {
+.emotion-497 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -8048,11 +8025,11 @@ exports[`Page should render WithClassName 1`] = `
   container-type: inline-size;
 }
 
-.emotion-499:hover {
+.emotion-497:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-500 {
+.emotion-498 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -8062,12 +8039,12 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-500 {
+  .emotion-498 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-506 {
+.emotion-504 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -8079,7 +8056,7 @@ exports[`Page should render WithClassName 1`] = `
   gap: 8px;
 }
 
-.emotion-508 {
+.emotion-506 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -8093,7 +8070,7 @@ exports[`Page should render WithClassName 1`] = `
   align-items: center;
 }
 
-.emotion-510 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -10124,22 +10101,15 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-486 emotion-487"
             >
-              <a
-                class="emotion-488 emotion-489"
-                href="Source"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Flair
-              </a>
+              Flair
             </div>
           </div>
         </header>
         <div
-          class="emotion-490 emotion-491"
+          class="emotion-488 emotion-489"
         >
           <h1
-            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
+            class="MuiTypography-root MuiTypography-body1 emotion-490 emotion-491"
           >
             de Finibus Bonorum et Malorum
           </h1>
@@ -10172,17 +10142,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-497 emotion-498"
+      class="emotion-495 emotion-496"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-497"
         href="https://example.com"
       >
         <article
-          class="emotion-500 emotion-501"
+          class="emotion-498 emotion-499"
         >
           <div
-            class="emotion-502 emotion-503"
+            class="emotion-500 emotion-501"
           >
             <img
               alt="DSC07717"
@@ -10200,13 +10170,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-506 emotion-507"
+            class="emotion-504 emotion-505"
           >
             <div
-              class="emotion-508 emotion-509"
+              class="emotion-506 emotion-507"
             >
               <div
-                class="emotion-510 emotion-511"
+                class="emotion-508 emotion-509"
               >
                 <svg
                   fill="currentColor"
@@ -10363,7 +10333,7 @@ exports[`Page should render WithEmotion 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-496, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -11403,7 +11373,7 @@ exports[`Page should render WithEmotion 1`] = `
 .emotion-472 {
   display: grid;
   grid-template-rows: max-content auto;
-  gap: 16px;
+  gap: 12px;
 }
 
 .emotion-472:target {
@@ -11464,14 +11434,7 @@ exports[`Page should render WithEmotion 1`] = `
   font-weight: 300;
 }
 
-.emotion-488 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: #e91e63;
-}
-
-.emotion-492 {
-  font-weight: 600;
+.emotion-490 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -11479,18 +11442,22 @@ exports[`Page should render WithEmotion 1`] = `
   font-size: 1rem;
 }
 
-.emotion-492.MuiTypography-gutterBottom {
+.emotion-490.emotion-490 {
+  font-weight: 600;
+}
+
+.emotion-490.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-497 {
+.emotion-495 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-499 {
+.emotion-497 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -11505,11 +11472,11 @@ exports[`Page should render WithEmotion 1`] = `
   container-type: inline-size;
 }
 
-.emotion-499:hover {
+.emotion-497:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-500 {
+.emotion-498 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -11519,12 +11486,12 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-500 {
+  .emotion-498 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-506 {
+.emotion-504 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -11536,7 +11503,7 @@ exports[`Page should render WithEmotion 1`] = `
   gap: 8px;
 }
 
-.emotion-508 {
+.emotion-506 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -11550,7 +11517,7 @@ exports[`Page should render WithEmotion 1`] = `
   align-items: center;
 }
 
-.emotion-510 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -13581,22 +13548,15 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-486 emotion-487"
             >
-              <a
-                class="emotion-488 emotion-489"
-                href="Source"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Flair
-              </a>
+              Flair
             </div>
           </div>
         </header>
         <div
-          class="emotion-490 emotion-491"
+          class="emotion-488 emotion-489"
         >
           <h1
-            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
+            class="MuiTypography-root MuiTypography-body1 emotion-490 emotion-491"
           >
             de Finibus Bonorum et Malorum
           </h1>
@@ -13629,17 +13589,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-497 emotion-498"
+      class="emotion-495 emotion-496"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-497"
         href="https://example.com"
       >
         <article
-          class="emotion-500 emotion-501"
+          class="emotion-498 emotion-499"
         >
           <div
-            class="emotion-502 emotion-503"
+            class="emotion-500 emotion-501"
           >
             <img
               alt="DSC07717"
@@ -13657,13 +13617,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-506 emotion-507"
+            class="emotion-504 emotion-505"
           >
             <div
-              class="emotion-508 emotion-509"
+              class="emotion-506 emotion-507"
             >
               <div
-                class="emotion-510 emotion-511"
+                class="emotion-508 emotion-509"
               >
                 <svg
                   fill="currentColor"
@@ -13892,7 +13852,7 @@ exports[`Page should render WithoutDescription 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-496, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -14932,7 +14892,7 @@ exports[`Page should render WithoutDescription 1`] = `
 .emotion-472 {
   display: grid;
   grid-template-rows: max-content auto;
-  gap: 16px;
+  gap: 12px;
 }
 
 .emotion-472:target {
@@ -14993,14 +14953,7 @@ exports[`Page should render WithoutDescription 1`] = `
   font-weight: 300;
 }
 
-.emotion-488 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: #e91e63;
-}
-
-.emotion-492 {
-  font-weight: 600;
+.emotion-490 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -15008,18 +14961,22 @@ exports[`Page should render WithoutDescription 1`] = `
   font-size: 1rem;
 }
 
-.emotion-492.MuiTypography-gutterBottom {
+.emotion-490.emotion-490 {
+  font-weight: 600;
+}
+
+.emotion-490.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-497 {
+.emotion-495 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-499 {
+.emotion-497 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -15034,11 +14991,11 @@ exports[`Page should render WithoutDescription 1`] = `
   container-type: inline-size;
 }
 
-.emotion-499:hover {
+.emotion-497:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-500 {
+.emotion-498 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -15048,12 +15005,12 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-500 {
+  .emotion-498 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-506 {
+.emotion-504 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -15065,7 +15022,7 @@ exports[`Page should render WithoutDescription 1`] = `
   gap: 8px;
 }
 
-.emotion-508 {
+.emotion-506 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -15079,7 +15036,7 @@ exports[`Page should render WithoutDescription 1`] = `
   align-items: center;
 }
 
-.emotion-510 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -17110,22 +17067,15 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-486 emotion-487"
             >
-              <a
-                class="emotion-488 emotion-489"
-                href="Source"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Flair
-              </a>
+              Flair
             </div>
           </div>
         </header>
         <div
-          class="emotion-490 emotion-491"
+          class="emotion-488 emotion-489"
         >
           <h1
-            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
+            class="MuiTypography-root MuiTypography-body1 emotion-490 emotion-491"
           >
             de Finibus Bonorum et Malorum
           </h1>
@@ -17158,17 +17108,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-497 emotion-498"
+      class="emotion-495 emotion-496"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-497"
         href="https://example.com"
       >
         <article
-          class="emotion-500 emotion-501"
+          class="emotion-498 emotion-499"
         >
           <div
-            class="emotion-502 emotion-503"
+            class="emotion-500 emotion-501"
           >
             <img
               alt="DSC07717"
@@ -17186,13 +17136,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-506 emotion-507"
+            class="emotion-504 emotion-505"
           >
             <div
-              class="emotion-508 emotion-509"
+              class="emotion-506 emotion-507"
             >
               <div
-                class="emotion-510 emotion-511"
+                class="emotion-508 emotion-509"
               >
                 <svg
                   fill="currentColor"
@@ -17349,7 +17299,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-496, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -18389,7 +18339,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 .emotion-472 {
   display: grid;
   grid-template-rows: max-content auto;
-  gap: 16px;
+  gap: 12px;
 }
 
 .emotion-472:target {
@@ -18450,14 +18400,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   font-weight: 300;
 }
 
-.emotion-488 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: #e91e63;
-}
-
-.emotion-492 {
-  font-weight: 600;
+.emotion-490 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -18465,18 +18408,22 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   font-size: 1rem;
 }
 
-.emotion-492.MuiTypography-gutterBottom {
+.emotion-490.emotion-490 {
+  font-weight: 600;
+}
+
+.emotion-490.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-497 {
+.emotion-495 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-499 {
+.emotion-497 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -18491,11 +18438,11 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   container-type: inline-size;
 }
 
-.emotion-499:hover {
+.emotion-497:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-500 {
+.emotion-498 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -18505,12 +18452,12 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-500 {
+  .emotion-498 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-506 {
+.emotion-504 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -18522,7 +18469,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   gap: 8px;
 }
 
-.emotion-508 {
+.emotion-506 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -18536,7 +18483,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   align-items: center;
 }
 
-.emotion-510 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -20567,22 +20514,15 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-486 emotion-487"
             >
-              <a
-                class="emotion-488 emotion-489"
-                href="Source"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Flair
-              </a>
+              Flair
             </div>
           </div>
         </header>
         <div
-          class="emotion-490 emotion-491"
+          class="emotion-488 emotion-489"
         >
           <h1
-            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
+            class="MuiTypography-root MuiTypography-body1 emotion-490 emotion-491"
           >
             de Finibus Bonorum et Malorum
           </h1>
@@ -20615,17 +20555,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-497 emotion-498"
+      class="emotion-495 emotion-496"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-497"
         href="https://example.com"
       >
         <article
-          class="emotion-500 emotion-501"
+          class="emotion-498 emotion-499"
         >
           <div
-            class="emotion-502 emotion-503"
+            class="emotion-500 emotion-501"
           >
             <img
               alt="DSC07717"
@@ -20643,13 +20583,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-506 emotion-507"
+            class="emotion-504 emotion-505"
           >
             <div
-              class="emotion-508 emotion-509"
+              class="emotion-506 emotion-507"
             >
               <div
-                class="emotion-510 emotion-511"
+                class="emotion-508 emotion-509"
               >
                 <svg
                   fill="currentColor"
@@ -20806,7 +20746,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
     grid-column: 4/10;
   }
 
-  .emotion-1>:is(.emotion-24, .emotion-498, .emotion-84) {
+  .emotion-1>:is(.emotion-24, .emotion-496, .emotion-84) {
     grid-column: 2/12;
   }
 
@@ -21846,7 +21786,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 .emotion-472 {
   display: grid;
   grid-template-rows: max-content auto;
-  gap: 16px;
+  gap: 12px;
 }
 
 .emotion-472:target {
@@ -21907,14 +21847,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   font-weight: 300;
 }
 
-.emotion-488 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: #e91e63;
-}
-
-.emotion-492 {
-  font-weight: 600;
+.emotion-490 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -21922,18 +21855,22 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   font-size: 1rem;
 }
 
-.emotion-492.MuiTypography-gutterBottom {
+.emotion-490.emotion-490 {
+  font-weight: 600;
+}
+
+.emotion-490.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-497 {
+.emotion-495 {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 }
 
-.emotion-499 {
+.emotion-497 {
   margin: 0;
   font: inherit;
   color: #e91e63;
@@ -21948,11 +21885,11 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   container-type: inline-size;
 }
 
-.emotion-499:hover {
+.emotion-497:hover {
   text-decoration-color: inherit;
 }
 
-.emotion-500 {
+.emotion-498 {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
@@ -21962,12 +21899,12 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 @container (min-width: 400px) {
-  .emotion-500 {
+  .emotion-498 {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 }
 
-.emotion-506 {
+.emotion-504 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -21979,7 +21916,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   gap: 8px;
 }
 
-.emotion-508 {
+.emotion-506 {
   display: grid;
   grid-template-columns: auto auto auto;
   gap: 8px;
@@ -21993,7 +21930,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   align-items: center;
 }
 
-.emotion-510 {
+.emotion-508 {
   display: grid;
   grid-template-columns: auto auto;
   gap: 8px;
@@ -24016,22 +23953,15 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-486 emotion-487"
             >
-              <a
-                class="emotion-488 emotion-489"
-                href="Source"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Flair
-              </a>
+              Flair
             </div>
           </div>
         </header>
         <div
-          class="emotion-490 emotion-491"
+          class="emotion-488 emotion-489"
         >
           <h1
-            class="MuiTypography-root MuiTypography-body1 emotion-492 emotion-493"
+            class="MuiTypography-root MuiTypography-body1 emotion-490 emotion-491"
           >
             de Finibus Bonorum et Malorum
           </h1>
@@ -24064,17 +23994,17 @@ https://unsplash.it/200/200 200w"
       </article>
     </article>
     <aside
-      class="emotion-497 emotion-498"
+      class="emotion-495 emotion-496"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-499"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-497"
         href="https://example.com"
       >
         <article
-          class="emotion-500 emotion-501"
+          class="emotion-498 emotion-499"
         >
           <div
-            class="emotion-502 emotion-503"
+            class="emotion-500 emotion-501"
           >
             <img
               alt="DSC07717"
@@ -24092,13 +24022,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-506 emotion-507"
+            class="emotion-504 emotion-505"
           >
             <div
-              class="emotion-508 emotion-509"
+              class="emotion-506 emotion-507"
             >
               <div
-                class="emotion-510 emotion-511"
+                class="emotion-508 emotion-509"
               >
                 <svg
                   fill="currentColor"

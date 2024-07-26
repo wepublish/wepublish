@@ -371,7 +371,8 @@
       "tags": "Tags",
       "title": "Titel",
       "userPanelHeader": "Verfasser:in des Kommentars",
-      "variousPanelHeader": "Tags & Quelle"
+      "variousPanelHeader": "Tags & Quelle",
+      "featuredHelpText": "Der Kommentar erscheint zu oberst in der Liste der Kommentare."
     },
     "commentHistory": {
       "addComment": "Neuen Kommentar erstellen",
