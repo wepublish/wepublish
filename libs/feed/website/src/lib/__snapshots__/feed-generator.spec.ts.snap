@@ -23,7 +23,7 @@ exports[`should generate the RSS feed 1`] = `
             <content:encoded><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content:encoded>
             <category>foo</category>
             <category>bar</category>
-            <enclosure length="0" type="image//500/281" __typename="Image" id="ljh9FHAvHAs0AxC" mimeType="image/jpg" format="jpg" createdAt="2023-04-18T12:38:56.369Z" modifiedAt="2023-04-18T12:38:56.371Z" filename="DSC07717" extension=".JPG" width="4000" height="6000" fileSize="8667448" tags="" focalPoint="[object Object]" url="https://unsplash.it/500/281" bigURL="https://unsplash.it/800/400" largeURL="https://unsplash.it/500/300" mediumURL="https://unsplash.it/300/200" smallURL="https://unsplash.it/200/100" squareBigURL="https://unsplash.it/800/800" squareLargeURL="https://unsplash.it/500/500" squareMediumURL="https://unsplash.it/300/300" squareSmallURL="https://unsplash.it/200/200"/>
+            <enclosure length="0" type="image//500/281" __typename="Image" id="ljh9FHAvHAs0AxC" mimeType="image/jpg" format="jpg" createdAt="2023-04-18T12:38:56.369Z" modifiedAt="2023-04-18T12:38:56.371Z" filename="DSC07717" extension=".JPG" width="4000" height="6000" fileSize="8667448" tags="" focalPoint="[object Object]" url="https://unsplash.it/500/281" xl="https://unsplash.it/1200/400" l="https://unsplash.it/1000/400" m="https://unsplash.it/800/400" s="https://unsplash.it/500/300" xs="https://unsplash.it/300/200" xxs="https://unsplash.it/200/100" xlSquare="https://unsplash.it/1200/1200" lSquare="https://unsplash.it/1000/1000" mSquare="https://unsplash.it/800/800" sSquare="https://unsplash.it/500/500" xsSquare="https://unsplash.it/300/300" xxsSquare="https://unsplash.it/200/200"/>
         </item>
         <item>
             <title><![CDATA[Title]]></title>
@@ -34,7 +34,7 @@ exports[`should generate the RSS feed 1`] = `
             <content:encoded><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content:encoded>
             <category>foo</category>
             <category>bar</category>
-            <enclosure length="0" type="image//500/281" __typename="Image" id="ljh9FHAvHAs0AxC" mimeType="image/jpg" format="jpg" createdAt="2023-04-18T12:38:56.369Z" modifiedAt="2023-04-18T12:38:56.371Z" filename="DSC07717" extension=".JPG" width="4000" height="6000" fileSize="8667448" tags="" focalPoint="[object Object]" url="https://unsplash.it/500/281" bigURL="https://unsplash.it/800/400" largeURL="https://unsplash.it/500/300" mediumURL="https://unsplash.it/300/200" smallURL="https://unsplash.it/200/100" squareBigURL="https://unsplash.it/800/800" squareLargeURL="https://unsplash.it/500/500" squareMediumURL="https://unsplash.it/300/300" squareSmallURL="https://unsplash.it/200/200"/>
+            <enclosure length="0" type="image//500/281" __typename="Image" id="ljh9FHAvHAs0AxC" mimeType="image/jpg" format="jpg" createdAt="2023-04-18T12:38:56.369Z" modifiedAt="2023-04-18T12:38:56.371Z" filename="DSC07717" extension=".JPG" width="4000" height="6000" fileSize="8667448" tags="" focalPoint="[object Object]" url="https://unsplash.it/500/281" xl="https://unsplash.it/1200/400" l="https://unsplash.it/1000/400" m="https://unsplash.it/800/400" s="https://unsplash.it/500/300" xs="https://unsplash.it/300/200" xxs="https://unsplash.it/200/100" xlSquare="https://unsplash.it/1200/1200" lSquare="https://unsplash.it/1000/1000" mSquare="https://unsplash.it/800/800" sSquare="https://unsplash.it/500/500" xsSquare="https://unsplash.it/300/300" xxsSquare="https://unsplash.it/200/200"/>
         </item>
     </channel>
 </rss>"
@@ -130,14 +130,18 @@ exports[`should generate the json feed 1`] = `
                 },
                 "title": null,
                 "url": "https://unsplash.it/500/281",
-                "bigURL": "https://unsplash.it/800/400",
-                "largeURL": "https://unsplash.it/500/300",
-                "mediumURL": "https://unsplash.it/300/200",
-                "smallURL": "https://unsplash.it/200/100",
-                "squareBigURL": "https://unsplash.it/800/800",
-                "squareLargeURL": "https://unsplash.it/500/500",
-                "squareMediumURL": "https://unsplash.it/300/300",
-                "squareSmallURL": "https://unsplash.it/200/200"
+                "xl": "https://unsplash.it/1200/400",
+                "l": "https://unsplash.it/1000/400",
+                "m": "https://unsplash.it/800/400",
+                "s": "https://unsplash.it/500/300",
+                "xs": "https://unsplash.it/300/200",
+                "xxs": "https://unsplash.it/200/100",
+                "xlSquare": "https://unsplash.it/1200/1200",
+                "lSquare": "https://unsplash.it/1000/1000",
+                "mSquare": "https://unsplash.it/800/800",
+                "sSquare": "https://unsplash.it/500/500",
+                "xsSquare": "https://unsplash.it/300/300",
+                "xxsSquare": "https://unsplash.it/200/200"
             },
             "date_modified": "2023-01-01T00:00:00.000Z",
             "author": {
@@ -177,14 +181,18 @@ exports[`should generate the json feed 1`] = `
                 },
                 "title": null,
                 "url": "https://unsplash.it/500/281",
-                "bigURL": "https://unsplash.it/800/400",
-                "largeURL": "https://unsplash.it/500/300",
-                "mediumURL": "https://unsplash.it/300/200",
-                "smallURL": "https://unsplash.it/200/100",
-                "squareBigURL": "https://unsplash.it/800/800",
-                "squareLargeURL": "https://unsplash.it/500/500",
-                "squareMediumURL": "https://unsplash.it/300/300",
-                "squareSmallURL": "https://unsplash.it/200/200"
+                "xl": "https://unsplash.it/1200/400",
+                "l": "https://unsplash.it/1000/400",
+                "m": "https://unsplash.it/800/400",
+                "s": "https://unsplash.it/500/300",
+                "xs": "https://unsplash.it/300/200",
+                "xxs": "https://unsplash.it/200/100",
+                "xlSquare": "https://unsplash.it/1200/1200",
+                "lSquare": "https://unsplash.it/1000/1000",
+                "mSquare": "https://unsplash.it/800/800",
+                "sSquare": "https://unsplash.it/500/500",
+                "xsSquare": "https://unsplash.it/300/300",
+                "xxsSquare": "https://unsplash.it/200/200"
             },
             "date_modified": "2023-01-01T00:00:00.000Z",
             "author": {
@@ -241,7 +249,6 @@ Feed {
       "guid": "clgp1hfio50331801rejmrk6sj3",
       "image": {
         "__typename": "Image",
-        "bigURL": "https://unsplash.it/800/400",
         "createdAt": "2023-04-18T12:38:56.369Z",
         "description": null,
         "extension": ".JPG",
@@ -254,22 +261,27 @@ Feed {
         "format": "jpg",
         "height": 6000,
         "id": "ljh9FHAvHAs0AxC",
-        "largeURL": "https://unsplash.it/500/300",
+        "l": "https://unsplash.it/1000/400",
+        "lSquare": "https://unsplash.it/1000/1000",
         "license": null,
         "link": null,
-        "mediumURL": "https://unsplash.it/300/200",
+        "m": "https://unsplash.it/800/400",
+        "mSquare": "https://unsplash.it/800/800",
         "mimeType": "image/jpg",
         "modifiedAt": "2023-04-18T12:38:56.371Z",
-        "smallURL": "https://unsplash.it/200/100",
+        "s": "https://unsplash.it/500/300",
+        "sSquare": "https://unsplash.it/500/500",
         "source": null,
-        "squareBigURL": "https://unsplash.it/800/800",
-        "squareLargeURL": "https://unsplash.it/500/500",
-        "squareMediumURL": "https://unsplash.it/300/300",
-        "squareSmallURL": "https://unsplash.it/200/200",
         "tags": [],
         "title": null,
         "url": "https://unsplash.it/500/281",
         "width": 4000,
+        "xl": "https://unsplash.it/1200/400",
+        "xlSquare": "https://unsplash.it/1200/1200",
+        "xs": "https://unsplash.it/300/200",
+        "xsSquare": "https://unsplash.it/300/300",
+        "xxs": "https://unsplash.it/200/100",
+        "xxsSquare": "https://unsplash.it/200/200",
       },
       "link": "https://example.com",
       "title": "Title",
@@ -301,7 +313,6 @@ Feed {
       "guid": "clgp1hfio50331801rejmrk6sj3",
       "image": {
         "__typename": "Image",
-        "bigURL": "https://unsplash.it/800/400",
         "createdAt": "2023-04-18T12:38:56.369Z",
         "description": null,
         "extension": ".JPG",
@@ -314,22 +325,27 @@ Feed {
         "format": "jpg",
         "height": 6000,
         "id": "ljh9FHAvHAs0AxC",
-        "largeURL": "https://unsplash.it/500/300",
+        "l": "https://unsplash.it/1000/400",
+        "lSquare": "https://unsplash.it/1000/1000",
         "license": null,
         "link": null,
-        "mediumURL": "https://unsplash.it/300/200",
+        "m": "https://unsplash.it/800/400",
+        "mSquare": "https://unsplash.it/800/800",
         "mimeType": "image/jpg",
         "modifiedAt": "2023-04-18T12:38:56.371Z",
-        "smallURL": "https://unsplash.it/200/100",
+        "s": "https://unsplash.it/500/300",
+        "sSquare": "https://unsplash.it/500/500",
         "source": null,
-        "squareBigURL": "https://unsplash.it/800/800",
-        "squareLargeURL": "https://unsplash.it/500/500",
-        "squareMediumURL": "https://unsplash.it/300/300",
-        "squareSmallURL": "https://unsplash.it/200/200",
         "tags": [],
         "title": null,
         "url": "https://unsplash.it/500/281",
         "width": 4000,
+        "xl": "https://unsplash.it/1200/400",
+        "xlSquare": "https://unsplash.it/1200/1200",
+        "xs": "https://unsplash.it/300/200",
+        "xsSquare": "https://unsplash.it/300/300",
+        "xxs": "https://unsplash.it/200/100",
+        "xxsSquare": "https://unsplash.it/200/200",
       },
       "link": "https://example.com",
       "title": "Title",
