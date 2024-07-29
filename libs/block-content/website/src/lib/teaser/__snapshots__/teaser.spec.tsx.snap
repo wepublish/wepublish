@@ -198,7 +198,12 @@ exports[`Teaser Article should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -440,7 +445,12 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -682,7 +692,12 @@ exports[`Teaser Article should render WithoutArticlePreTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -920,7 +935,12 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -1157,7 +1177,12 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -1395,7 +1420,12 @@ exports[`Teaser Article should render WithoutDate 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -1631,7 +1661,12 @@ exports[`Teaser Article should render WithoutImage 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -2080,7 +2115,12 @@ exports[`Teaser Article should render WithoutLead 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -2322,7 +2362,12 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -2564,7 +2609,12 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -2798,7 +2848,12 @@ exports[`Teaser Custom should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -3020,7 +3075,12 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -3404,7 +3464,12 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -3620,7 +3685,12 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -3844,7 +3914,12 @@ exports[`Teaser Event should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -4077,7 +4152,12 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -4310,7 +4390,12 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -4528,7 +4613,12 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -4756,7 +4846,12 @@ exports[`Teaser Event should render WithoutImage 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -5162,7 +5257,12 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -5389,7 +5489,12 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -5618,7 +5723,12 @@ exports[`Teaser Page should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -5840,7 +5950,12 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -6062,7 +6177,12 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -6284,7 +6404,12 @@ exports[`Teaser Page should render WithoutImage 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -6506,7 +6631,12 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -6728,7 +6858,12 @@ exports[`Teaser Page should render WithoutLead 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -6950,7 +7085,12 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -7172,7 +7312,12 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -7402,7 +7547,12 @@ exports[`Teaser PeerArticle should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -7644,7 +7794,12 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -7882,7 +8037,12 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -8119,7 +8279,12 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -8357,7 +8522,12 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -8593,7 +8763,12 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -9042,7 +9217,12 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -9284,7 +9464,12 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -9514,7 +9699,12 @@ exports[`Teaser should render WithClassName 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -9732,7 +9922,12 @@ exports[`Teaser should render WithEmotion 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
@@ -9929,7 +10124,12 @@ exports[`Teaser should render WithoutPreTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-            srcset=""
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
             title="An image title"
           />
         </div>
