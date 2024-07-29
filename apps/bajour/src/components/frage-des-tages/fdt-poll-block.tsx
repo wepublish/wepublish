@@ -1,5 +1,5 @@
 import {css, styled} from '@mui/material'
-import {ApiV1, PollBlockProvider, useAsyncAction, usePollBlock} from '@wepublish/website'
+import {ApiV1, PollBlockProvider, usePollBlock} from '@wepublish/website'
 import {useRouter} from 'next/router'
 import {useCallback, useEffect, useState} from 'react'
 
@@ -126,7 +126,6 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
-  const callAction = useAsyncAction(setLoading, setError)
   const {vote} = usePollBlock()
 
   const {data: articleData} = ApiV1.useArticleQuery({
@@ -143,17 +142,15 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
     if (!answerId || !poll?.id) {
       return
     }
-    callAction(async () => {
-      await vote(
-        {
-          variables: {
-            answerId
-          }
-        },
-        poll.id
-      )
-    })()
-  }, [callAction, router.query.answerId, vote])
+    await vote(
+      {
+        variables: {
+          answerId
+        }
+      },
+      poll.id
+    )
+  }, [router.query.answerId])
 
   useEffect(() => {
     autoVote()

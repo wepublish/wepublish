@@ -22,7 +22,7 @@ export function PollBlockProvider({children}: PropsWithChildren) {
   const [fetchUserVote] = useUserPollVoteLazyQuery()
   const [voteMutation] = usePollVoteMutation({
     onCompleted(data, clientOptions) {
-      if (data.voteOnPoll && !hasUser) {
+      if (data.voteOnPoll) {
         setAnonymousVote(data.voteOnPoll.pollId, data.voteOnPoll.answerId)
       }
     }
@@ -40,18 +40,18 @@ export function PollBlockProvider({children}: PropsWithChildren) {
     options: MutationFunctionOptions<PollVoteMutation, PollVoteMutationVariables>,
     pollId: string
   ): Promise<FetchResult<PollVoteMutation> | undefined> {
-    // if user provided, API handels the voting permissions
+    // user already voted on that poll
+    if (getAnonymousVote(pollId)) {
+      return
+    }
+
+    // if user provided, vote on poll is allowed
     if (hasUser) {
       return await voteMutation(options)
     }
 
     // user is not allowed to vote anonymously
     if (!canVoteAnonymously) {
-      return
-    }
-
-    // anonymous user already voted on that poll
-    if (getAnonymousVote(pollId)) {
       return
     }
 
