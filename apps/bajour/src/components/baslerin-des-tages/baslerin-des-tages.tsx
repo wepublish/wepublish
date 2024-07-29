@@ -53,7 +53,7 @@ const HeadingLarge = styled(Heading)(({theme}) => ({
 }))
 
 const BaslerinDesTagesWrapper = styled('article')(({theme}) => ({
-  overflowX: 'hidden',
+  overflowX: 'hidden'
 }))
 
 const MobileGrid = styled('div')(({theme}) => ({
@@ -124,7 +124,10 @@ const ImageWrapperDesktop = styled('div')(({theme}) => ({
   }
 }))
 
-function ContentBlock(props: {titleBlock: ApiV1.TitleBlock , textBlock: ApiV1.RichTextBlock}): JSX.Element {
+function ContentBlock(props: {
+  titleBlock: ApiV1.TitleBlock
+  textBlock: ApiV1.RichTextBlock
+}): JSX.Element {
   return (
     <>
       <Content>
@@ -157,6 +160,10 @@ export function BaslerinDesTages({slug}: BaslerinDesTagesProps) {
     }
   })
 
+  if (loading) {
+    return <p>Loading...</p>
+  }
+
   if (error) {
     return <p>Error loading article.</p>
   }
@@ -187,7 +194,12 @@ export function BaslerinDesTages({slug}: BaslerinDesTagesProps) {
   return (
     <BaslerinDesTagesWrapper>
       <DesktopGrid>
-        <Image style={{gridRow: '1/4'}} image={imageBlock.image} square css={{borderRadius: '15%'}} />
+        <Image
+          style={{gridRow: '1/4'}}
+          image={imageBlock.image}
+          square
+          css={{borderRadius: '15%'}}
+        />
 
         <Headings>
           <HeadingsInner>
@@ -213,7 +225,7 @@ export function BaslerinDesTages({slug}: BaslerinDesTagesProps) {
 
         <ContentBlock titleBlock={titleBlock} textBlock={textBlock} />
       </DesktopGrid>
-      
+
       <MobileGrid>
         <Headings>
           <HeadingsInner>
