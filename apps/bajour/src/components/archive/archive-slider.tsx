@@ -16,7 +16,7 @@ type ArchiveSliderProps = {
   setTeaser: (teaser: ApiV1.Teaser) => void
 }
 
-const SliderContainer = styled('div')`
+const SliderWrapper = styled('div')`
   width: 100%;
   max-width: 100vw;
   overflow: hidden;
@@ -111,7 +111,7 @@ export const ArchiveSlider = ({teasers, setTeaser}: ArchiveSliderProps) => {
   })
 
   return (
-    <SliderContainer ref={sliderRef} className="keen-slider">
+    <SliderWrapper ref={sliderRef} className="keen-slider">
       {teasers.map(
         (teaser, index) =>
           teaser && (
@@ -126,7 +126,7 @@ export const ArchiveSlider = ({teasers, setTeaser}: ArchiveSliderProps) => {
             />
           )
       )}
-    </SliderContainer>
+    </SliderWrapper>
   )
 }
 

@@ -1,16 +1,25 @@
 import {css, Theme, useTheme} from '@mui/material'
 import {
+  ApiV1,
   BlockRenderer,
   BreakBlockWrapper,
   BuilderBlockRendererProps,
+  FocusTeaserWrapper,
   isFocusTeaserBlockStyle,
   isTeaserSliderBlockStyle,
   SliderBall,
+  SliderWrapper,
   TeaserTitle
 } from '@wepublish/website'
-import {cond} from 'ramda'
+import {anyPass, cond} from 'ramda'
 import {useMemo} from 'react'
 
+import {
+  AdTeaserBlockStyle,
+  isFirstAdTeaser,
+  isSecondAdTeaser,
+  isThirdAdTeaser
+} from './block-styles/ad'
 import {HighlightBlockStyle, isHighlightTeasers} from './block-styles/highlight'
 import {HotAndTrendingBlockStyle, isHotAndTrendingTeasers} from './block-styles/hot-and-trending'
 import {MainSpacer} from './main-spacer'
@@ -28,11 +37,8 @@ import {
 } from './mannschaft-break-block'
 
 const seamlessBackground = (theme: Theme) => css`
-  margin-top: -${theme.spacing(7)};
-  margin-bottom: -${theme.spacing(7)};
-
-  &:has(+ * > ${BreakBlockWrapper}) {
-    margin-bottom: 0;
+  &:has(+ * > :is(${BreakBlockWrapper}, ${SliderWrapper}, ${FocusTeaserWrapper})) {
+    margin-bottom: -${theme.spacing(7)};
   }
 
   &:last-child {
@@ -47,6 +53,10 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
     () =>
       cond([
         [isHotAndTrendingTeasers, block => <HotAndTrendingBlockStyle {...block} />],
+        [
+          anyPass([isFirstAdTeaser, isSecondAdTeaser, isThirdAdTeaser]),
+          (block: ApiV1.TeaserListBlock) => <AdTeaserBlockStyle {...block} />
+        ],
         [isHighlightTeasers, block => <HighlightBlockStyle {...block} />]
       ]),
     []
@@ -58,6 +68,7 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isFocusTeaserBlockStyle,
           () => css`
+            ${seamlessBackground(theme)}
             padding-top: ${theme.spacing(6)};
             padding-bottom: ${theme.spacing(6)};
             color: ${theme.palette.primary.contrastText};
@@ -67,6 +78,7 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isTeaserSliderBlockStyle,
           () => css`
+            ${seamlessBackground(theme)}
             padding-top: ${theme.spacing(6)};
             padding-bottom: ${theme.spacing(6)};
             color: ${theme.palette.primary.contrastText};

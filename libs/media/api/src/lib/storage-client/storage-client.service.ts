@@ -1,11 +1,13 @@
-import {Inject, Injectable, Logger} from '@nestjs/common'
+import {Inject, Injectable, Logger, Scope} from '@nestjs/common'
 import {Client, ClientOptions} from 'minio'
 
 export const STORAGE_CLIENT_MODULE_OPTIONS = Symbol('STORAGE_CLIENT_MODULE_OPTIONS')
 
 export type StorageClientConfig = ClientOptions
 
-@Injectable()
+@Injectable({
+  scope: Scope.REQUEST
+})
 export class StorageClient {
   private readonly logger = new Logger('StorageClient')
 

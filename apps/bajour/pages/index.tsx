@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {ContentWidthProvider, SliderContainer} from '@wepublish/website'
+import {ContentWidthProvider, SliderWrapper} from '@wepublish/website'
 import {ApiV1, PageContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
@@ -23,7 +23,7 @@ const Homepage = styled(PageContainer)`
   ${({theme}) => theme.breakpoints.up('md')} {
     gap: ${({theme}) => theme.spacing(5)};
 
-    ${SliderContainer} {
+    ${SliderWrapper} {
       padding-left: calc(100% / 12);
       padding-right: calc(100% / 12);
     }
