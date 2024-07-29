@@ -8,7 +8,7 @@ import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/buil
 import {
   useSlidesPerView,
   useSlidesPadding,
-  SliderContainer,
+  SliderWrapper,
   SliderInnerContainer,
   SlidesContainer,
   SliderBallContainer,
@@ -44,7 +44,7 @@ export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => 
 
   return (
     !!images.length && (
-      <SliderContainer>
+      <SliderWrapper>
         <SliderInnerContainer>
           <SlidesContainer ref={ref} className="keen-slider">
             {images.map((image, index) => (
@@ -67,7 +67,7 @@ export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => 
             </SliderBallContainer>
           )}
         </SliderInnerContainer>
-      </SliderContainer>
+      </SliderWrapper>
     )
   )
 }
