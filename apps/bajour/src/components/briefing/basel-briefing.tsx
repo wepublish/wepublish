@@ -25,11 +25,13 @@ const baselBg = {
   mimeType: 'image/jpg',
   tags: [],
   url: BaselBg.src,
-  bigURL: BaselBg.src,
-  largeURL: BaselBg.src,
-  mediumURL: BaselBg.src,
-  smallURL: BaselBg.src
-}
+  xl: BaselBg.src,
+  l: BaselBg.src,
+  m: BaselBg.src,
+  s: BaselBg.src,
+  xs: BaselBg.src,
+  xxs: BaselBg.src
+} satisfies ApiV1.FullImageFragment
 
 const fcbBg = {
   id: '1234',
@@ -43,11 +45,13 @@ const fcbBg = {
   mimeType: 'image/jpg',
   tags: [],
   url: FcbBg.src,
-  bigURL: FcbBg.src,
-  largeURL: FcbBg.src,
-  mediumURL: FcbBg.src,
-  smallURL: FcbBg.src
-}
+  xl: FcbBg.src,
+  l: FcbBg.src,
+  m: FcbBg.src,
+  s: FcbBg.src,
+  xs: FcbBg.src,
+  xxs: FcbBg.src
+} satisfies ApiV1.FullImageFragment
 
 const fasnachtBg = {
   id: '1234',
@@ -61,11 +65,13 @@ const fasnachtBg = {
   mimeType: 'image/jpg',
   tags: [],
   url: FasnachtBg.src,
-  bigURL: FasnachtBg.src,
-  largeURL: FasnachtBg.src,
-  mediumURL: FasnachtBg.src,
-  smallURL: FasnachtBg.src
-}
+  xl: FasnachtBg.src,
+  l: FasnachtBg.src,
+  m: FasnachtBg.src,
+  s: FasnachtBg.src,
+  xs: FasnachtBg.src,
+  xxs: FasnachtBg.src
+} satisfies ApiV1.FullImageFragment
 
 const getValuesBasedOnBriefing = (briefing: BriefingType) => {
   switch (briefing) {

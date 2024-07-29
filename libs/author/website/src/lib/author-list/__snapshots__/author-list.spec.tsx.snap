@@ -84,7 +84,12 @@ exports[`AuthorList should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -120,7 +125,12 @@ exports[`AuthorList should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -156,7 +166,12 @@ exports[`AuthorList should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -192,7 +207,12 @@ exports[`AuthorList should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -228,7 +248,12 @@ exports[`AuthorList should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -264,7 +289,12 @@ exports[`AuthorList should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -300,7 +330,12 @@ exports[`AuthorList should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -336,7 +371,12 @@ exports[`AuthorList should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -372,7 +412,12 @@ exports[`AuthorList should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -408,7 +453,12 @@ exports[`AuthorList should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -444,7 +494,12 @@ exports[`AuthorList should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -551,7 +606,12 @@ exports[`AuthorList should render WithClassName 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -587,7 +647,12 @@ exports[`AuthorList should render WithClassName 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -623,7 +688,12 @@ exports[`AuthorList should render WithClassName 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -659,7 +729,12 @@ exports[`AuthorList should render WithClassName 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -695,7 +770,12 @@ exports[`AuthorList should render WithClassName 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -731,7 +811,12 @@ exports[`AuthorList should render WithClassName 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -767,7 +852,12 @@ exports[`AuthorList should render WithClassName 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -803,7 +893,12 @@ exports[`AuthorList should render WithClassName 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -839,7 +934,12 @@ exports[`AuthorList should render WithClassName 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -875,7 +975,12 @@ exports[`AuthorList should render WithClassName 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -911,7 +1016,12 @@ exports[`AuthorList should render WithClassName 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1018,7 +1128,12 @@ exports[`AuthorList should render WithEmotion 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1054,7 +1169,12 @@ exports[`AuthorList should render WithEmotion 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1090,7 +1210,12 @@ exports[`AuthorList should render WithEmotion 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1126,7 +1251,12 @@ exports[`AuthorList should render WithEmotion 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1162,7 +1292,12 @@ exports[`AuthorList should render WithEmotion 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1198,7 +1333,12 @@ exports[`AuthorList should render WithEmotion 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1234,7 +1374,12 @@ exports[`AuthorList should render WithEmotion 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1270,7 +1415,12 @@ exports[`AuthorList should render WithEmotion 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1306,7 +1456,12 @@ exports[`AuthorList should render WithEmotion 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1342,7 +1497,12 @@ exports[`AuthorList should render WithEmotion 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1378,7 +1538,12 @@ exports[`AuthorList should render WithEmotion 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1515,7 +1680,12 @@ exports[`AuthorList should render WithoutImage 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1595,7 +1765,12 @@ exports[`AuthorList should render WithoutImage 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1631,7 +1806,12 @@ exports[`AuthorList should render WithoutImage 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1657,100 +1837,6 @@ exports[`AuthorList should render WithoutImage 1`] = `
       <div
         class="emotion-3 emotion-4"
       />
-      <div
-        class="emotion-7 emotion-8"
-      >
-        <h6
-          class="MuiTypography-root MuiTypography-h6 emotion-9"
-        >
-          Example Name
-        </h6>
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-10"
-        >
-          Co-Geschäftsleitung & Chefredaktor
-        </p>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <div
-        class="emotion-3 emotion-4"
-      />
-      <div
-        class="emotion-7 emotion-8"
-      >
-        <h6
-          class="MuiTypography-root MuiTypography-h6 emotion-9"
-        >
-          Example Name
-        </h6>
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-10"
-        >
-          Co-Geschäftsleitung & Chefredaktor
-        </p>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <div
-        class="emotion-3 emotion-4"
-      >
-        <img
-          alt="DSC07717"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset=""
-          title=""
-        />
-      </div>
-      <div
-        class="emotion-7 emotion-8"
-      >
-        <h6
-          class="MuiTypography-root MuiTypography-h6 emotion-9"
-        >
-          Example Name
-        </h6>
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-10"
-        >
-          Co-Geschäftsleitung & Chefredaktor
-        </p>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <div
-        class="emotion-3 emotion-4"
-      >
-        <img
-          alt="DSC07717"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset=""
-          title=""
-        />
-      </div>
       <div
         class="emotion-7 emotion-8"
       >
@@ -1805,7 +1891,116 @@ exports[`AuthorList should render WithoutImage 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="emotion-7 emotion-8"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
+      href="https://example.com"
+    >
+      <div
+        class="emotion-3 emotion-4"
+      >
+        <img
+          alt="DSC07717"
+          class="emotion-5 emotion-6"
+          loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="emotion-7 emotion-8"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
+      href="https://example.com"
+    >
+      <div
+        class="emotion-3 emotion-4"
+      />
+      <div
+        class="emotion-7 emotion-8"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
+      href="https://example.com"
+    >
+      <div
+        class="emotion-3 emotion-4"
+      >
+        <img
+          alt="DSC07717"
+          class="emotion-5 emotion-6"
+          loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1912,7 +2107,12 @@ exports[`AuthorList should render WithoutJobTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1948,7 +2148,12 @@ exports[`AuthorList should render WithoutJobTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -1979,7 +2184,12 @@ exports[`AuthorList should render WithoutJobTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -2010,43 +2220,12 @@ exports[`AuthorList should render WithoutJobTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
-          title=""
-        />
-      </div>
-      <div
-        class="emotion-7 emotion-8"
-      >
-        <h6
-          class="MuiTypography-root MuiTypography-h6 emotion-9"
-        >
-          Example Name
-        </h6>
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-10"
-        >
-          Co-Geschäftsleitung & Chefredaktor
-        </p>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <div
-        class="emotion-3 emotion-4"
-      >
-        <img
-          alt="DSC07717"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -2082,38 +2261,12 @@ exports[`AuthorList should render WithoutJobTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
-          title=""
-        />
-      </div>
-      <div
-        class="emotion-7 emotion-8"
-      >
-        <h6
-          class="MuiTypography-root MuiTypography-h6 emotion-9"
-        >
-          Example Name
-        </h6>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <div
-        class="emotion-3 emotion-4"
-      >
-        <img
-          alt="DSC07717"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -2149,7 +2302,12 @@ exports[`AuthorList should render WithoutJobTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -2180,7 +2338,12 @@ exports[`AuthorList should render WithoutJobTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -2216,7 +2379,12 @@ exports[`AuthorList should render WithoutJobTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
@@ -2247,7 +2415,89 @@ exports[`AuthorList should render WithoutJobTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset=""
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="emotion-7 emotion-8"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 emotion-10"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
+      href="https://example.com"
+    >
+      <div
+        class="emotion-3 emotion-4"
+      >
+        <img
+          alt="DSC07717"
+          class="emotion-5 emotion-6"
+          loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="emotion-7 emotion-8"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 emotion-9"
+        >
+          Example Name
+        </h6>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
+      href="https://example.com"
+    >
+      <div
+        class="emotion-3 emotion-4"
+      >
+        <img
+          alt="DSC07717"
+          class="emotion-5 emotion-6"
+          loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
           title=""
         />
       </div>
