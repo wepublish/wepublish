@@ -156,8 +156,8 @@ export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
 export const GraphQLMemberPlanSort = new GraphQLEnumType({
   name: 'MemberPlanSort',
   values: {
-    CREATED_AT: {value: MemberPlanSort.CreatedAt},
-    MODIFIED_AT: {value: MemberPlanSort.ModifiedAt}
+    CreatedAt: {value: MemberPlanSort.CreatedAt},
+    ModifiedAt: {value: MemberPlanSort.ModifiedAt}
   }
 })
 

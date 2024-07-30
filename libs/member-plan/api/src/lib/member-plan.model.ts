@@ -5,11 +5,16 @@ import {
   InputType,
   ArgsType,
   registerEnumType,
-  OmitType
+  OmitType,
+  Int,
+  Directive
 } from '@nestjs/graphql'
 import {ListingArgsType} from '@wepublish/utils/api'
+import {GraphQLRichText} from '@wepublish/richtext/api'
+import {Image} from '@wepublish/image/api'
 
 @ObjectType()
+@Directive('@key(fields: "id")')
 export class MemberPlan {
   @Field(() => ID)
   id!: string
@@ -29,26 +34,26 @@ export class MemberPlan {
   @Field(() => [String])
   tags!: string[]
 
-  @Field()
+  @Field(() => GraphQLRichText)
   description!: string
 
   @Field()
   active!: boolean
 
-  @Field()
+  @Field(() => Int)
   amountPerMonthMin!: number
 
   @Field()
   extendable!: boolean
 
-  @Field({nullable: true})
+  @Field(() => Int, {nullable: true})
   maxCount?: number
 
   @Field({nullable: true})
   imageID?: string
 
-  // @Field({nullable: true})
-  // image?: any; // Adjust the type accordingly
+  @Field({nullable: true})
+  image?: Image
 
   // @Field(() => [AvailablePaymentMethod])
   // availablePaymentMethods!: AvailablePaymentMethod[];

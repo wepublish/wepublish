@@ -1,6 +1,8 @@
-import {Field, ID, InputType, ObjectType, ArgsType} from '@nestjs/graphql'
+import {Field, ID, InputType, ObjectType, ArgsType, Directive} from '@nestjs/graphql'
+import {GraphQLSlug} from '@wepublish/utils/api'
 
 @ObjectType()
+@Directive('@key(fields: "id")')
 export class PaymentMethod {
   @Field(() => ID)
   id!: string
@@ -14,7 +16,7 @@ export class PaymentMethod {
   @Field()
   name!: string
 
-  @Field()
+  @Field(() => GraphQLSlug)
   slug!: string
 
   @Field()

@@ -23,6 +23,7 @@ import {GraphQLTagResolver} from './graphql/tag/tag'
 import {GraphQLImageResolver} from './graphql/image'
 import {GraphQLObjectType, GraphQLUnionType} from 'graphql'
 import {GraphQLEventResolver} from './graphql/event/event'
+import {GraphQLArticleResolver} from './graphql/article'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -89,6 +90,9 @@ export class WepublishServer {
       extend type Event @key(fields: "id")
       extend type PaymentMethod @key(fields: "id")
       extend type MemberPlan @key(fields: "id")
+      extend type Author @key(fields: "id")
+      extend type Article @key(fields: "id")
+      extend type Payment @key(fields: "id")
     `
     const typeDefs = [graphQLJSSchemaToAST(GraphQLWepublishPublicSchema), federatedTypeDefs]
     const resolvers = {
@@ -129,7 +133,8 @@ export class WepublishServer {
       Page: GraphQLPublicPageResolver,
       Tag: GraphQLTagResolver,
       Image: GraphQLImageResolver,
-      Event: GraphQLEventResolver
+      Event: GraphQLEventResolver,
+      Article: GraphQLArticleResolver
     }
     for (const type in federatedResolvers) {
       resolvers[type] = {...resolvers[type], ...federatedResolvers[type]}

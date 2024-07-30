@@ -48,7 +48,6 @@ import {
   GraphQLPublicMemberPlanConnection
 } from './memberPlan'
 import {GraphQLPublicNavigation} from './navigation'
-import {getNavigations} from './navigation/navigation.public-queries'
 import {
   GraphQLPublicPage,
   GraphQLPublicPageConnection,
@@ -103,12 +102,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
         return id ? loaders.navigationByID.load(id) : loaders.navigationByKey.load(key)
       }
-    },
-
-    navigations: {
-      type: new GraphQLList(new GraphQLNonNull(GraphQLPublicNavigation)),
-      description: 'This query returns all navigations.',
-      resolve: (root, _, {prisma: {navigation}}) => getNavigations(navigation)
     },
 
     // Author

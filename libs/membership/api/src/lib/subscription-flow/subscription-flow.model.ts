@@ -6,10 +6,11 @@ import {
   PartialType,
   OmitType,
   registerEnumType,
-  PickType,
-  ID
+  PickType
 } from '@nestjs/graphql'
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
+import {PaymentMethod} from '@wepublish/payment-method/api'
+import {MemberPlan} from '@wepublish/member-plan/api'
 
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'
@@ -22,24 +23,6 @@ registerEnumType(SubscriptionEvent, {
 @ObjectType()
 export class MailTemplateRef {
   @Field()
-  id!: string
-
-  @Field()
-  name!: string
-}
-
-@ObjectType()
-class MemberPlan {
-  @Field(() => ID)
-  id!: string
-
-  @Field()
-  name!: string
-}
-
-@ObjectType()
-export class PaymentMethod {
-  @Field(() => ID)
   id!: string
 
   @Field()

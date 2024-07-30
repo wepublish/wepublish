@@ -9,7 +9,10 @@ import {
 } from '@nestjs/graphql'
 import {Image} from '@wepublish/image/api'
 import {Event} from '@wepublish/event/api'
-import {Property} from '@wepublish/property/api'
+import {PublicProperties} from '@wepublish/property/api'
+import {Page} from '@wepublish/page/api'
+import {Article} from '@wepublish/article/api'
+import {Peer} from '@wepublish/peer/api'
 
 export enum TeaserType {
   Article = 'article',
@@ -53,42 +56,35 @@ export abstract class AbstractTeaser {
 
 @ObjectType()
 export class ArticleTeaser extends AbstractTeaser {
-  @Field(() => ID)
   articleID!: string
 
-  // @Field(() => Article)
-  // article!: Article;
+  @Field(() => Article)
+  article!: Article
 }
 
 @ObjectType()
 export class PeerArticleTeaser extends AbstractTeaser {
-  @Field(() => ID)
   peerID!: string
 
-  // @Field(() => Peer)
-  // peer!: Peer;
+  @Field(() => Peer)
+  peer!: Peer
 
-  @Field(() => ID)
   articleID!: string
 
-  // @Field(() => Article)
-  // article!: Article;
+  @Field(() => Article)
+  article!: Article
 }
 
 @ObjectType()
 export class PageTeaser extends AbstractTeaser {
-  @Field(() => ID)
   pageID!: string
 
-  // @Field(() => Page)
-  // page!: Page;
+  @Field(() => Page)
+  page!: Page
 }
 
 @ObjectType()
 export class EventTeaser extends AbstractTeaser {
-  @Field(() => ID)
-  eventID!: string
-
   @Field(() => Event)
   event!: Event
 }
@@ -98,8 +94,8 @@ export class CustomTeaser extends AbstractTeaser {
   @Field(() => String, {nullable: true})
   contentUrl?: string
 
-  @Field(() => [Property])
-  properties!: Property[]
+  @Field(() => [PublicProperties])
+  properties!: PublicProperties[]
 }
 
 export const Teaser = createUnionType({

@@ -1,4 +1,4 @@
-import {Field, ID, InputType, ObjectType, OmitType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {Image} from '@wepublish/image/api'
 
 // Objects
@@ -8,7 +8,6 @@ export class GalleryImageEdge {
   @Field(() => String, {nullable: true})
   caption?: string
 
-  @Field(() => ID)
   imageID!: string
 
   @Field(() => Image)

@@ -6,8 +6,12 @@ import {
   ArgsType,
   OmitType,
   registerEnumType,
-  ID
+  ID,
+  createUnionType,
+  Directive
 } from '@nestjs/graphql'
+import {Article} from '@wepublish/article/api'
+import {Page} from '@wepublish/page/api'
 
 export enum NavigationLinkType {
   Page = 'page',
@@ -19,52 +23,10 @@ registerEnumType(NavigationLinkType, {
   name: 'NavigationLinkType'
 })
 
-@ObjectType()
-export class Navigation {
-  @Field(() => String)
-  id!: string
-
-  @Field()
-  createdAt!: Date
-
-  @Field()
-  modifiedAt!: Date
-
-  @Field()
-  key!: string
-
-  @Field(() => [BaseNavigationLink])
-  links!: BaseNavigationLink[]
-
-  @Field()
-  name!: string
-}
-
 @InterfaceType({
-  isAbstract: true,
-  resolveType(value) {
-    switch (value.type) {
-      case NavigationLinkType.Article:
-        return ArticleNavigationLink
-      case NavigationLinkType.Page:
-        return PageNavigationLink
-      case NavigationLinkType.External:
-        return ExternalNavigationLink
-      default:
-        return null
-    }
-  }
+  isAbstract: true
 })
 abstract class BaseNavigationLink {
-  @Field(() => String)
-  id!: string
-
-  @Field()
-  createdAt!: Date
-
-  @Field()
-  modifiedAt!: Date
-
   @Field()
   label!: string
 
@@ -72,19 +34,23 @@ abstract class BaseNavigationLink {
   type!: string
 }
 
-@ObjectType({implements: BaseNavigationLink})
+@ObjectType({implements: [BaseNavigationLink]})
 export class ArticleNavigationLink extends BaseNavigationLink {
-  @Field(() => String)
   articleID!: string
+
+  @Field(() => Article, {nullable: true})
+  article!: Article
 }
 
-@ObjectType({implements: BaseNavigationLink})
+@ObjectType({implements: [BaseNavigationLink]})
 export class PageNavigationLink extends BaseNavigationLink {
-  @Field(() => String)
   pageID!: string
+
+  @Field(() => Page, {nullable: true})
+  page!: Page
 }
 
-@ObjectType({implements: BaseNavigationLink})
+@ObjectType({implements: [BaseNavigationLink]})
 export class ExternalNavigationLink extends BaseNavigationLink {
   @Field({nullable: true})
   url?: string
@@ -120,8 +86,44 @@ export class NavigationIdArgs {
   id!: string
 }
 
-@InputType()
-class BaseNavigationLinkInput extends NavigationLinkInput {}
+export const NavigationLink = createUnionType({
+  name: 'NavigationLink',
+  types: () => [ArticleNavigationLink, PageNavigationLink, ExternalNavigationLink],
+  resolveType(value) {
+    switch (value.type) {
+      case NavigationLinkType.Article:
+        return ArticleNavigationLink
+      case NavigationLinkType.Page:
+        return PageNavigationLink
+      case NavigationLinkType.External:
+        return ExternalNavigationLink
+      default:
+        return null
+    }
+  }
+})
+
+@ObjectType()
+@Directive('@key(fields: "id")')
+export class Navigation {
+  @Field(() => ID)
+  id!: string
+
+  @Field()
+  createdAt!: Date
+
+  @Field()
+  modifiedAt!: Date
+
+  @Field()
+  key!: string
+
+  @Field(() => [NavigationLink])
+  links!: (typeof NavigationLink)[]
+
+  @Field()
+  name!: string
+}
 
 @InputType()
 export class UpdateNavigationInput extends OmitType(
@@ -129,8 +131,8 @@ export class UpdateNavigationInput extends OmitType(
   ['createdAt', 'modifiedAt', 'links'],
   InputType
 ) {
-  @Field(() => [BaseNavigationLinkInput])
-  links!: BaseNavigationLinkInput[]
+  @Field(() => [NavigationLinkInput])
+  links!: NavigationLinkInput[]
 }
 
 @InputType()

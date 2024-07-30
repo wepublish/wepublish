@@ -46,7 +46,7 @@ import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 import {readConfig} from '../readConfig'
 import {EventModule} from '@wepublish/event/api'
-import {BlockStylesModule} from '@wepublish/block-content/api'
+import {BlockModule, BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {UserRoleModule} from '@wepublish/user-role/api'
 import {ActionModule} from '@wepublish/action/api'
@@ -251,6 +251,7 @@ import {ActionModule} from '@wepublish/action/api'
     UserRoleModule,
     MemberPlanModule,
     BlockStylesModule,
+    BlockModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
         agendaBasel,

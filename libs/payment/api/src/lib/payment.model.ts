@@ -1,10 +1,19 @@
-import {InputType, ObjectType, Field, ID, ArgsType, registerEnumType} from '@nestjs/graphql'
+import {
+  InputType,
+  ObjectType,
+  Field,
+  ID,
+  ArgsType,
+  registerEnumType,
+  Directive
+} from '@nestjs/graphql'
 import {PaymentState} from '@prisma/client'
 import {ListingArgsType, PaginatedType} from '@wepublish/utils/api'
 
 registerEnumType(PaymentState, {name: 'PaymentState'})
 
 @ObjectType()
+@Directive('@key(fields: "id")')
 export class Payment {
   @Field(() => ID)
   id!: string

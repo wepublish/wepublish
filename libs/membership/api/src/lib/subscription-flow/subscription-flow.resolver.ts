@@ -9,7 +9,6 @@ import {
 } from '@wepublish/permissions/api'
 import {SubscriptionFlowService} from './subscription-flow.service'
 import {
-  PaymentMethod,
   SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
@@ -17,6 +16,7 @@ import {
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {PrismaClient} from '@prisma/client'
+import {PaymentMethod} from '@wepublish/payment-method/api'
 
 @Resolver(() => SubscriptionFlowModel)
 export class SubscriptionFlowResolver {

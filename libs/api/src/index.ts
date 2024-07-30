@@ -9,8 +9,6 @@ export * from './lib/graphql/page'
 export * from './lib/graphql/peer'
 export * from './lib/graphql/token'
 
-export * from './lib/graphql/slug'
-
 export * from './lib/graphql/schema'
 export * from './lib/graphql/permissions'
 
@@ -25,7 +23,7 @@ export * from './lib/db/comment'
 export * from './lib/db/page'
 export * from './lib/db/common'
 export * from './lib/db/peer'
-export * from './lib/db/memberPlan'
+// export * from './lib/db/memberPlan'
 export * from './lib/db/invoice'
 export * from './lib/db/payment'
 export * from './lib/db/mailLog'

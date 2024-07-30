@@ -37,7 +37,7 @@ export class NavigationResolver {
   }
 
   @Query(() => [Navigation], {description: `Returns a list of navigations.`})
-  getNavigations() {
+  navigations() {
     return this.navigationService.getNavigations()
   }
 

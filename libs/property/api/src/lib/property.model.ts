@@ -13,9 +13,12 @@ export class Property {
   public!: boolean
 }
 
+@ObjectType()
+export class PublicProperties extends OmitType(Property, ['public'], ObjectType) {}
+
 // Input Types
 @InputType()
-export class PropertyInput extends Property {}
+export class PropertyInput extends OmitType(Property, [], InputType) {}
 
 @InputType()
-export class PublicProperty extends OmitType(PropertyInput, ['public']) {}
+export class PublicPropertyInput extends OmitType(Property, ['public'], InputType) {}

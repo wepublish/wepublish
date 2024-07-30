@@ -5,9 +5,6 @@ import {Teaser, TeaserInput} from './teaser'
 
 @ObjectType()
 export class FlexAlignment {
-  @Field(() => String)
-  i!: string
-
   @Field(() => Int)
   x!: number
 
@@ -19,9 +16,6 @@ export class FlexAlignment {
 
   @Field(() => Int)
   h!: number
-
-  @Field()
-  static!: boolean
 }
 
 @ObjectType()
@@ -45,7 +39,13 @@ export class TeaserGridFlexBlock {
 // Inputs
 
 @InputType()
-export class FlexAlignmentInput extends FlexAlignment {}
+export class FlexAlignmentInput extends FlexAlignment {
+  @Field(() => String)
+  i!: string
+
+  @Field()
+  static!: boolean
+}
 
 @InputType()
 export class FlexTeaserInput {
