@@ -34,7 +34,7 @@ export class AppController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
     @Res() res: Response,
-    @Param('imageId') imageId: string,
+    @Query('imageId') imageId: string,
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: true,
