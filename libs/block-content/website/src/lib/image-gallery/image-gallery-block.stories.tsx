@@ -24,10 +24,18 @@ const image = (index: number) =>
     title: 'An image title',
     filename: 'An image filename',
     url: `https://unsplash.it/500/500?${index}`,
-    bigURL: `https://unsplash.it/800/800?${index}`,
-    largeURL: `https://unsplash.it/500/500?${index}`,
-    mediumURL: `https://unsplash.it/300/300?${index}`,
-    smallURL: `https://unsplash.it/200/200?${index}`
+    xl: `https://unsplash.it/1200/400?${index}`,
+    l: `https://unsplash.it/1000/400?${index}`,
+    m: `https://unsplash.it/800/400?${index}`,
+    s: `https://unsplash.it/500/300?${index}`,
+    xs: `https://unsplash.it/300/200?${index}`,
+    xxs: `https://unsplash.it/200/100?${index}`,
+    xlSquare: `https://unsplash.it/1200/1200?${index}`,
+    lSquare: `https://unsplash.it/1000/1000?${index}`,
+    mSquare: `https://unsplash.it/800/800?${index}`,
+    sSquare: `https://unsplash.it/500/500?${index}`,
+    xsSquare: `https://unsplash.it/300/300?${index}`,
+    xxsSquare: `https://unsplash.it/200/200?${index}`
   } as FullImageFragment)
 
 export const Default = {

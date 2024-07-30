@@ -12,24 +12,30 @@ declare module 'react' {
 
 type ImageItem<Size extends number> = {size: Size; url: string | null | undefined}
 type ImageItems = [
-  bigUrl: ImageItem<800>,
-  largeUrl: ImageItem<500>,
-  mediumUrl: ImageItem<300>,
-  smallUrl: ImageItem<200>
+  xl: ImageItem<1200>,
+  l: ImageItem<1000>,
+  m: ImageItem<800>,
+  s: ImageItem<500>,
+  xs: ImageItem<300>,
+  xxs: ImageItem<200>
 ]
 
 export const imageToImageItems = (image: FullImageFragment): ImageItems => [
-  {url: image.bigURL, size: 800},
-  {url: image.largeURL, size: 500},
-  {url: image.mediumURL, size: 300},
-  {url: image.smallURL, size: 200}
+  {url: image.xl, size: 1200},
+  {url: image.l, size: 1000},
+  {url: image.m, size: 800},
+  {url: image.s, size: 500},
+  {url: image.xs, size: 300},
+  {url: image.xxs, size: 200}
 ]
 
 export const imageToSquareImageItems = (image: FullImageFragment): ImageItems => [
-  {url: image.squareBigURL, size: 800},
-  {url: image.squareLargeURL, size: 500},
-  {url: image.squareMediumURL, size: 300},
-  {url: image.squareSmallURL, size: 200}
+  {url: image.xlSquare, size: 1200},
+  {url: image.lSquare, size: 1000},
+  {url: image.mSquare, size: 800},
+  {url: image.sSquare, size: 500},
+  {url: image.xsSquare, size: 300},
+  {url: image.xxsSquare, size: 200}
 ]
 
 export const ImageWrapper = styled('img')<{aspectRatio: number}>`

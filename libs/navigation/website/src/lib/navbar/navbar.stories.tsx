@@ -191,19 +191,19 @@ const logo = {
     x: 0.5,
     y: 0.5
   },
-  url: 'https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png',
-  bigURL: 'https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png',
-  largeURL: 'https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png',
-  mediumURL: 'https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png',
-  smallURL: 'https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png',
-  squareBigURL:
-    'http://localhost:4100/U1R8wgTK8k8E576/t/w_800,h_800,o_png,q_1,f_0.500:0.500/banff2.png',
-  squareLargeURL:
-    'http://localhost:4100/U1R8wgTK8k8E576/t/w_500,h_500,o_png,q_1,f_0.500:0.500/banff2.png',
-  squareMediumURL:
-    'http://localhost:4100/U1R8wgTK8k8E576/t/w_300,h_300,o_png,q_1,f_0.500:0.500/banff2.png',
-  squareSmallURL:
-    'http://localhost:4100/U1R8wgTK8k8E576/t/w_200,h_200,o_png,q_1,f_0.500:0.500/banff2.png'
+  url: 'https://unsplash.it/500/400',
+  xl: 'https://unsplash.it/1200/400',
+  l: 'https://unsplash.it/1000/400',
+  m: 'https://unsplash.it/800/400',
+  s: 'https://unsplash.it/500/300',
+  xs: 'https://unsplash.it/300/200',
+  xxs: 'https://unsplash.it/200/100',
+  xlSquare: 'https://unsplash.it/1200/1200',
+  lSquare: 'https://unsplash.it/1000/1000',
+  mSquare: 'https://unsplash.it/800/800',
+  sSquare: 'https://unsplash.it/500/500',
+  xsSquare: 'https://unsplash.it/300/300',
+  xxsSquare: 'https://unsplash.it/200/200'
 }
 
 export default {

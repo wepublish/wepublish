@@ -382,24 +382,31 @@ export const CommentEditor = ({
           <CloseLogin onClick={handleClose}>
             <MdClose />
           </CloseLogin>
-          {showInitialModal ? (
+
+          {showInitialModal && (
             <InitialModalWrapper>
               <H3 css={headingStyles}>Du bist nicht eingeloggt</H3>
+
               <InitialModalContent>
                 <Button onClick={handleGuestComment} variant="outlined" css={initialButtonsStyles}>
                   als gast kommentieren
                 </Button>
+
                 <Button onClick={handleLoginRegister} css={initialButtonsStyles}>
                   anmelden/registieren
                 </Button>
               </InitialModalContent>
             </InitialModalWrapper>
-          ) : (
+          )}
+
+          {!showInitialModal && (
             <LoginWrapper>
               <LoginFormContainer afterLoginCallback={handleAfterLoginCallback} />
+
               <Register>
                 <Button css={buttonStyles} onClick={registerRedirect}>
                   <MdLogin aria-label="Register" css={iconStyles} />
+
                   <Link href={signUpUrl} css={aStyles}>
                     Jetzt registrieren
                   </Link>

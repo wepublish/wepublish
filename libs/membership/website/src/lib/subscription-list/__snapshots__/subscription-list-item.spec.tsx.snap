@@ -76,8 +76,12 @@ exports[`Subscription Item should render DeactivatedCancelled 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -335,8 +339,12 @@ exports[`Subscription Item should render DeactivatedUnknown 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -616,8 +624,12 @@ exports[`Subscription Item should render DeactivatedUnpaid 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -1110,8 +1122,12 @@ exports[`Subscription Item should render Default 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -1577,8 +1593,12 @@ exports[`Subscription Item should render RenewBianual 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -2044,8 +2064,12 @@ exports[`Subscription Item should render RenewBianualManually 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -2511,8 +2535,12 @@ exports[`Subscription Item should render RenewMonthly 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -2978,8 +3006,12 @@ exports[`Subscription Item should render RenewMonthlyManually 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -3445,8 +3477,12 @@ exports[`Subscription Item should render RenewQuarterly 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -3912,8 +3948,12 @@ exports[`Subscription Item should render RenewQuarterlyManually 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -4379,8 +4419,12 @@ exports[`Subscription Item should render RenewYearly 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -4846,8 +4890,12 @@ exports[`Subscription Item should render RenewYearlyManually 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -5313,8 +5361,12 @@ exports[`Subscription Item should render Unpaid 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -5783,8 +5835,12 @@ exports[`Subscription Item should render WithClassName 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -6250,8 +6306,12 @@ exports[`Subscription Item should render WithEmotion 1`] = `
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-      srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+      srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -6433,7 +6493,7 @@ exports[`Subscription Item should render WithExtendError 1`] = `
 - First value
 + Second value
 
-@@ -157,10 +157,35 @@
+@@ -161,10 +161,35 @@
               Details & Zahlungen
             </a>
           </li>
@@ -6476,7 +6536,7 @@ exports[`Subscription Item should render WithExtendLoading 1`] = `
 - First value
 + Second value
 
-@@ -160,28 +160,24 @@
+@@ -164,28 +164,24 @@
         </ul>
         <div
           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
@@ -6518,7 +6578,7 @@ exports[`Subscription Item should render WithPayError 1`] = `
 - First value
 + Second value
 
-@@ -150,10 +150,35 @@
+@@ -154,10 +154,35 @@
               Details & Zahlungen
             </a>
           </li>
@@ -6561,7 +6621,7 @@ exports[`Subscription Item should render WithPayLoading 1`] = `
 - First value
 + Second value
 
-@@ -153,28 +153,24 @@
+@@ -157,28 +157,24 @@
         </ul>
         <div
           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"

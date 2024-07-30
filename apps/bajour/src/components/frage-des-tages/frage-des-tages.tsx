@@ -7,14 +7,13 @@ import {
   Comment,
   isPollBlock
 } from '@wepublish/website'
-import Image from 'next/image'
 import Link from 'next/link'
 import {useMemo} from 'react'
 import {MdForum} from 'react-icons/md'
 
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
 import {AuthorBox} from './author-box'
-import frageDesTagesLogo from './frage-des-tages.svg'
+import {ReactComponent as FrageDesTagesLogo} from './frage-des-tages.svg'
 import {InfoBox} from './info-box'
 
 interface CommentWithChildren extends ApiV1.Comment {
@@ -75,6 +74,9 @@ export const PollWrapper = styled('div')`
 `
 
 export const CommentsWrapper = styled('div')`
+  display: flex;
+  flex-flow: column;
+  gap: ${({theme}) => theme.spacing(1)};
   grid-column: 1/13;
 
   ${({theme}) =>
@@ -102,6 +104,7 @@ export const AuthorAndContext = styled('div')`
 export const Comments = styled('div')`
   display: grid;
   grid-template-columns: 1fr;
+  align-items: start;
   gap: ${({theme}) => theme.spacing(4)};
 
   ${({theme}) =>
@@ -116,26 +119,27 @@ export const TopComments = styled('div')`
   font-size: 1rem;
   font-weight: bold;
   text-transform: uppercase;
-  margin: ${({theme}) => `${theme.spacing(2)} 0 ${theme.spacing(1)} 0`};
   padding-left: ${({theme}) => `${theme.spacing(1)}`};
+  margin-top: ${({theme}) => theme.spacing(1)};
 `
 
 export const StyledComment = styled(Comment)`
   background-color: ${({theme}) => theme.palette.common.white};
   padding: ${({theme}) => theme.spacing(1.5)};
-  border-radius: ${({theme}) => theme.spacing(2.5)};
+  border-radius: 20px;
 
   span {
     font-weight: 300;
   }
 `
 
-export const FDTLogo = styled(Image)`
-  grid-column: 12 / 13;
+export const FDTLogo = styled(FrageDesTagesLogo)`
+  grid-column: -1 / 1;
+  justify-self: end;
 `
 
 export const ReadMoreLink = styled(Link)`
-  grid-column: 11/13;
+  grid-column: -1/1;
   justify-self: self-end;
 `
 
@@ -164,10 +168,12 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
   return (
     <FrageDesTagesContainer>
       <FrageDesTagesWrapper className={className}>
-        <FDTLogo src={frageDesTagesLogo} width={110} height={70} alt="frage-des-tages-logo" />
+        <FDTLogo width={110} aria-label="Frage des Tages Logo" />
+
         <PollWrapper>
           <PollBlock poll={pollToPass} />
         </PollWrapper>
+
         <CommentsWrapper>
           <AuthorAndContext>
             <div>{article?.authors[0] ? <AuthorBox author={article?.authors[0]} /> : null}</div>
@@ -175,6 +181,7 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
               <InfoBox richText={pollToPass?.infoText || []} />
             </div>
           </AuthorAndContext>
+
           <TopComments>Top antworten</TopComments>
           <Comments>
             {commentsData?.comments
@@ -192,6 +199,7 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
               })}
           </Comments>
         </CommentsWrapper>
+
         <ReadMoreLink href={article?.url || ''}>
           <ReadMoreButton
             endIcon={<MdForum />}
