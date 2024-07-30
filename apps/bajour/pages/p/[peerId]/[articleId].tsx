@@ -33,6 +33,7 @@ export function PeerArticleById() {
           id={articleId as string}
           type={ApiV1.CommentItemType.PeerArticle}
           peerId={peerId as string}
+          maxCommentDepth={1}
         />
       </ArticleWrapper>
     </Container>

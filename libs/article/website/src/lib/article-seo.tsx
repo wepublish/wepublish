@@ -28,14 +28,9 @@ export const getArticleSEO = (article: Article) => {
     firstParagraphToPlaintext(firstRichText?.richText)
   const description = article.lead || firstParagraphToPlaintext(firstRichText?.richText)
 
-  const image =
-    (article.socialMediaImage as FullImageFragment)?.largeURL ??
-    article.socialMediaImage?.url ??
-    (article.image as FullImageFragment)?.largeURL ??
-    article.image?.url ??
-    (firstImageBlock?.image as FullImageFragment)?.largeURL ??
-    firstImageBlock?.image?.url
-
+  const image = (article.socialMediaImage ?? article.image ?? firstImageBlock?.image) as
+    | FullImageFragment
+    | undefined
   const title = article.seoTitle || article.title || firstTitle?.title || article.socialMediaTitle
   const socialMediaTitle =
     article.socialMediaTitle || article.seoTitle || article.title || firstTitle?.title
@@ -64,7 +59,7 @@ export const getArticleSEO = (article: Article) => {
       author: {
         '@context': 'https://schema.org',
         '@type': 'Person',
-        image: (firstAuthor?.image as FullImageFragment)?.largeURL ?? firstAuthor?.image?.url,
+        image: (firstAuthor?.image as FullImageFragment)?.s ?? firstAuthor?.image?.url,
         jobTitle: firstAuthor?.jobTitle,
         name: firstAuthor?.name,
         url: firstAuthor?.url
@@ -110,9 +105,30 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
         <meta key={'og:url'} property="og:url" content={seo.url} />
         <link key={'canonical'} rel="canonical" href={seo.url} />
 
-        {seo.image && <meta key={'og:image'} property="og:image" content={seo.image} />}
+        {seo.image && (
+          <>
+            <meta key={'og:image:xxs'} property="og:image" content={seo.image.xxs ?? ''} />
+            <meta key={'og:image:width:xxs'} property="og:image:width" content="200" />
+
+            <meta key={'og:image:xs'} property="og:image" content={seo.image.xs ?? ''} />
+            <meta key={'og:image:width:xs'} property="og:image:width" content="300" />
+
+            <meta key={'og:image:s'} property="og:image" content={seo.image.s ?? ''} />
+            <meta key={'og:image:width:s'} property="og:image:width" content="500" />
+
+            <meta key={'og:image:m'} property="og:image" content={seo.image.m ?? ''} />
+            <meta key={'og:image:width:m'} property="og:image:width" content="800" />
+
+            <meta key={'og:image:l'} property="og:image" content={seo.image.l ?? ''} />
+            <meta key={'og:image:width:l'} property="og:image:width" content="1000" />
+
+            <meta key={'og:image:xl'} property="og:image" content={seo.image.xl ?? ''} />
+            <meta key={'og:image:width:xl'} property="og:image:width" content="1200" />
+          </>
+        )}
 
         <meta key={'twitter:card'} name="twitter:card" content="summary_large_image" />
+        <meta key={'max-image-preview'} name="robots" content="max-image-preview:large" />
 
         <meta
           key={`og:article:published_time`}

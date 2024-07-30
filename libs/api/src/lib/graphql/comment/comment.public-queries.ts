@@ -121,12 +121,8 @@ export const getPublicCommentsForItemById = async (
     tags: tags || []
   }))
 
-  const topComments = commentsWithRating.filter(comment =>
-    comment.tags.some(({tag}) => tag.tag === 'Top Kommentar')
-  )
-  let otherComments = commentsWithRating.filter(
-    comment => !comment.tags.some(({tag}) => tag.tag === 'Top Kommentar')
-  )
+  const topComments = commentsWithRating.filter(comment => comment.featured)
+  let otherComments = commentsWithRating.filter(comment => !comment.featured)
 
   if (sort === PublicCommentSort.Rating) {
     const isAscending = order === SortOrder.Ascending

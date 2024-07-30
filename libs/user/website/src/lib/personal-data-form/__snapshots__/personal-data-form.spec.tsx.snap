@@ -1114,8 +1114,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -1691,7 +1695,7 @@ exports[`Registration Form should render Filled 1`] = `
 - First value
 + Second value
 
-@@ -114,11 +114,11 @@
+@@ -118,11 +118,11 @@
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rd:"
@@ -1704,7 +1708,7 @@ exports[`Registration Form should render Filled 1`] = `
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
             >
-@@ -151,11 +151,11 @@
+@@ -155,11 +155,11 @@
               autocomplete="name"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":re:"
@@ -1717,7 +1721,7 @@ exports[`Registration Form should render Filled 1`] = `
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
             >
-@@ -264,11 +264,11 @@
+@@ -268,11 +268,11 @@
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rh:"
@@ -1730,7 +1734,7 @@ exports[`Registration Form should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -301,11 +301,11 @@
+@@ -305,11 +305,11 @@
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":ri:"
@@ -1743,7 +1747,7 @@ exports[`Registration Form should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -338,11 +338,11 @@
+@@ -342,11 +342,11 @@
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rj:"
@@ -1756,7 +1760,7 @@ exports[`Registration Form should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -375,11 +375,11 @@
+@@ -379,11 +379,11 @@
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rk:"
@@ -1769,7 +1773,7 @@ exports[`Registration Form should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -404,12 +404,12 @@
+@@ -408,12 +408,12 @@
           </p>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1784,7 +1788,7 @@ exports[`Registration Form should render Filled 1`] = `
             >
               Passwort
             </label>
-@@ -421,11 +421,11 @@
+@@ -425,11 +425,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rl:"
@@ -1797,7 +1801,7 @@ exports[`Registration Form should render Filled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
-@@ -458,11 +458,11 @@
+@@ -462,11 +462,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -1810,7 +1814,7 @@ exports[`Registration Form should render Filled 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -471,12 +471,12 @@
+@@ -475,12 +475,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1825,7 +1829,7 @@ exports[`Registration Form should render Filled 1`] = `
             >
               Passwort wiederholen
             </label>
-@@ -488,11 +488,11 @@
+@@ -492,11 +492,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rm:"
@@ -1838,7 +1842,7 @@ exports[`Registration Form should render Filled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
-@@ -525,11 +525,11 @@
+@@ -529,11 +529,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -6544,7 +6548,7 @@ exports[`Registration Form should render WithImageActionError 1`] = `
 - First value
 + Second value
 
-@@ -577,10 +577,35 @@
+@@ -581,10 +581,35 @@
               </fieldset>
             </div>
           </div>
@@ -6587,7 +6591,7 @@ exports[`Registration Form should render WithImageActionLoading 1`] = `
 - First value
 + Second value
 
-@@ -578,16 +578,14 @@
+@@ -582,16 +582,14 @@
             </div>
           </div>
         </div>
@@ -7736,8 +7740,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -8323,7 +8331,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
 - First value
 + Second value
 
-@@ -114,11 +114,11 @@
+@@ -118,11 +118,11 @@
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r4c:"
@@ -8336,7 +8344,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
             >
-@@ -151,11 +151,11 @@
+@@ -155,11 +155,11 @@
               autocomplete="name"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r4d:"
@@ -8349,7 +8357,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
             >
-@@ -264,11 +264,11 @@
+@@ -268,11 +268,11 @@
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4g:"
@@ -8362,7 +8370,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -301,11 +301,11 @@
+@@ -305,11 +305,11 @@
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4h:"
@@ -8375,7 +8383,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -338,11 +338,11 @@
+@@ -342,11 +342,11 @@
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4i:"
@@ -8388,7 +8396,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -375,11 +375,11 @@
+@@ -379,11 +379,11 @@
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4j:"
@@ -8401,7 +8409,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -404,12 +404,12 @@
+@@ -408,12 +408,12 @@
           </p>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -8416,7 +8424,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
             >
               Passwort
             </label>
-@@ -421,11 +421,11 @@
+@@ -425,11 +425,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4k:"
@@ -8429,7 +8437,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
-@@ -458,11 +458,11 @@
+@@ -462,11 +462,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -8442,7 +8450,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -471,12 +471,12 @@
+@@ -475,12 +475,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -8457,7 +8465,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
             >
               Passwort wiederholen
             </label>
-@@ -488,11 +488,11 @@
+@@ -492,11 +492,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4l:"
@@ -8470,7 +8478,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
-@@ -525,11 +525,11 @@
+@@ -529,11 +529,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -8483,7 +8491,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
                     Passwort wiederholen
                   </span>
                 </legend>
-@@ -573,12 +573,37 @@
+@@ -577,12 +577,37 @@
                   <span>
                     Email (nicht bearbeitbar)
                   </span>
@@ -8528,7 +8536,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
 - First value
 + Second value
 
-@@ -114,11 +114,11 @@
+@@ -118,11 +118,11 @@
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r4o:"
@@ -8541,7 +8549,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
             >
-@@ -151,11 +151,11 @@
+@@ -155,11 +155,11 @@
               autocomplete="name"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r4p:"
@@ -8554,7 +8562,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
             >
-@@ -264,11 +264,11 @@
+@@ -268,11 +268,11 @@
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4s:"
@@ -8567,7 +8575,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -301,11 +301,11 @@
+@@ -305,11 +305,11 @@
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4t:"
@@ -8580,7 +8588,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -338,11 +338,11 @@
+@@ -342,11 +342,11 @@
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4u:"
@@ -8593,7 +8601,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -375,11 +375,11 @@
+@@ -379,11 +379,11 @@
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4v:"
@@ -8606,7 +8614,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -404,12 +404,12 @@
+@@ -408,12 +408,12 @@
           </p>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -8621,7 +8629,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
             >
               Passwort
             </label>
-@@ -421,11 +421,11 @@
+@@ -425,11 +425,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r50:"
@@ -8634,7 +8642,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
-@@ -458,11 +458,11 @@
+@@ -462,11 +462,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -8647,7 +8655,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -471,12 +471,12 @@
+@@ -475,12 +475,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -8662,7 +8670,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
             >
               Passwort wiederholen
             </label>
-@@ -488,11 +488,11 @@
+@@ -492,11 +492,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r51:"
@@ -8675,7 +8683,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
-@@ -525,11 +525,11 @@
+@@ -529,11 +529,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"

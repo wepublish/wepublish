@@ -36,7 +36,7 @@ export type CommentListContainerProps = {
   id: string
   signUpUrl?: string
 } & BuilderContainerProps &
-  Pick<BuilderCommentListProps, 'variables' | 'onVariablesChange'> &
+  Pick<BuilderCommentListProps, 'maxCommentDepth' | 'variables' | 'onVariablesChange'> &
   (PeerArticleComments | ArticleOrPageComments)
 
 export function CommentListContainer({
@@ -46,7 +46,8 @@ export function CommentListContainer({
   type,
   peerId,
   onVariablesChange,
-  signUpUrl = '/signup'
+  signUpUrl = '/signup',
+  maxCommentDepth
 }: CommentListContainerProps) {
   const {CommentList} = useWebsiteBuilder()
   const {hasUser} = useUser()
@@ -163,6 +164,7 @@ export function CommentListContainer({
             ?.value
         }
         signUpUrl={signUpUrl}
+        maxCommentDepth={maxCommentDepth}
       />
     </CommentRatingsProvider>
   )
