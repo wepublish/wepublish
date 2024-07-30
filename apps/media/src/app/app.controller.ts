@@ -34,35 +34,6 @@ export class AppController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
     @Res() res: Response,
-    @UploadedFile(
-      new ParseFilePipe({
-        fileIsRequired: true,
-        validators: [new SupportedImagesValidator()]
-      })
-    )
-    uploadedFile: Express.Multer.File
-  ) {
-    const imageId = uuidv4()
-    console.log(imageId)
-    const metadata = await this.media.saveImage(imageId, uploadedFile.buffer)
-
-    res.status(201).send({
-      id: imageId,
-      filename: `${imageId}.webp`,
-      fileSize: metadata.size,
-      mimeType: `image/${metadata.format}`,
-      format: metadata.format,
-      extension: `.${metadata.format}`,
-      width: metadata.width,
-      height: metadata.height
-    })
-  }
-
-  @UseGuards(TokenAuthGuard)
-  @Post('/migrateImage')
-  @UseInterceptors(FileInterceptor('file'))
-  async migrateImage(
-    @Res() res: Response,
     @Param('imageId') imageId: string,
     @UploadedFile(
       new ParseFilePipe({
@@ -72,7 +43,9 @@ export class AppController {
     )
     uploadedFile: Express.Multer.File
   ) {
-    console.log(imageId)
+    if (!imageId) {
+      imageId = uuidv4()
+    }
     const metadata = await this.media.saveImage(imageId, uploadedFile.buffer)
 
     res.status(201).send({
