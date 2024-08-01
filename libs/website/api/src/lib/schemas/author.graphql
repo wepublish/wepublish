@@ -19,7 +19,10 @@ fragment FullAuthor on Author {
 
   image {
     ...FullImage
-  }
+  },
+  hideOnArticle
+  hideOnTeaser
+  hideOnTeam
 }
 
 query Author($id: ID, $slug: Slug) {

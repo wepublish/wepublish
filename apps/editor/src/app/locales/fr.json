@@ -1266,6 +1266,12 @@
         "event": "Event",
         "custom": "Custom"
       }
+    },
+    "authorEditPanel": {
+      "hideAuthor": "Masquer les auteurs",
+      "hideOnTeam": "Masquer sur la page de l'équipe",
+      "hideOnArticle": "Masquer sur les articles",
+      "hideOnTeaser": "Masquer sur les teasers"
     }
   }
 }
