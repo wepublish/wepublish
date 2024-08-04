@@ -45,7 +45,7 @@ export const FrageDesTagesContainer = styled('div')`
 
 export const FrageDesTagesWrapper = styled('div')`
   display: grid;
-  column-gap: ${({theme}) => theme.spacing(2)};
+  column-gap: 0;
   row-gap: ${({theme}) => theme.spacing(3)};
   grid-template-columns: 1fr;
   align-items: stretch;
@@ -58,6 +58,7 @@ export const FrageDesTagesWrapper = styled('div')`
       ${theme.breakpoints.up('sm')} {
         padding: ${theme.spacing(4)} ${theme.spacing(5)};
         grid-template-columns: repeat(12, 1fr);
+        column-gap: ${theme.spacing(2)};
       }
     `}
 `
