@@ -1,9 +1,9 @@
-import {ArticleWrapper, Image} from '@wepublish/website'
-import {Author} from '@wepublish/website/api'
-import {useMemo} from 'react'
 import {styled} from '@mui/material'
-import {TsriRichText} from './tsri-richtext'
 import {Link} from '@wepublish/ui'
+import {ArticleWrapper, BuilderAuthor, Image} from '@wepublish/website'
+import {useMemo} from 'react'
+
+import {TsriRichText} from './tsri-richtext'
 
 const TsriAdvertiserContainer = styled(Link)`
   display: grid;
@@ -34,21 +34,21 @@ const TsriAdvertiserContent = styled('div')``
 const SPONSOR_TAG = 'sponsor'
 const PROMO_TAG = 'promo'
 
-function isPromo(author: Author): boolean {
+function isPromo(author: BuilderAuthor): boolean {
   return !!author.tags?.find(tag => tag.tag === PROMO_TAG)
 }
 
-function isSponsor(author: Author): boolean {
+function isSponsor(author: BuilderAuthor): boolean {
   return !!author.tags?.find(tag => tag.tag === SPONSOR_TAG)
 }
 
-function getFirstLink(author: Author): string {
+function getFirstLink(author: BuilderAuthor): string {
   const links = author.links
   return links?.length ? links[0].url : ''
 }
 
-export default function TsriAdHeader({authors}: {authors?: Author[]}) {
-  const advertisers: Author[] | undefined = useMemo(() => {
+export default function TsriAdHeader({authors}: {authors?: BuilderAuthor[]}) {
+  const advertisers: BuilderAuthor[] | undefined = useMemo(() => {
     return authors?.filter(author => isSponsor(author) || isPromo(author))
   }, [authors])
 
