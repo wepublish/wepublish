@@ -44,7 +44,7 @@ export function Paywall() {
   const theme = useTheme()
   const router = useRouter()
 
-  // Hide paywall for logged in users, on the registration and login
+  // Hide paywall for logged-in users, on the registration and login
   // page, and if it was hidden within the last 24 hours
   useEffect(() => {
     const path = router.asPath
@@ -54,8 +54,7 @@ export function Paywall() {
 
     if (
       !isLoggedIn &&
-      path !== '/mitmachen' &&
-      path !== '/login' &&
+      path.startsWith('/a/') &&
       differenceInHours(currentTime, lastClosedTime) > 24
     ) {
       setDisplay(true)
