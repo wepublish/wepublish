@@ -1,4 +1,4 @@
-import {createTheme, responsiveFontSizes, Theme, ThemeOptions} from '@mui/material'
+import {createTheme, Theme, ThemeOptions} from '@mui/material'
 import {theme as WePTheme} from '@wepublish/ui'
 import {Hanken_Grotesk} from 'next/font/google'
 import {PartialDeep} from 'type-fest'
