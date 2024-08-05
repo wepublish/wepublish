@@ -151,11 +151,36 @@ enum EventStatus {
   Scheduled
 }
 
+type FocalPoint {
+  x: Float!
+  y: Float!
+}
+
 """Setting Value"""
 scalar GraphQLSettingValueType
 
 type Image {
   id: ID!
+}
+
+type ImageV2 {
+  createdAt: DateTime!
+  description: RichText
+  extension: String!
+  fileSize: Int!
+  filename: String
+  focalPoint: FocalPoint
+  format: String!
+  height: Int!
+  id: ID!
+  license: String
+  link: String
+  mimeType: String!
+  modifiedAt: DateTime!
+  source: String
+  tags: [String!]!
+  title: String
+  width: Int!
 }
 
 input ImportedEventFilter {
@@ -337,6 +362,9 @@ type Query {
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  """Returns an image by id."""
+  getImage(id: String!): ImageV2!
 
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): EventFromSource!
