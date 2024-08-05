@@ -336,6 +336,8 @@
   },
   "optionalDependencies": {
     "@img/sharp-darwin-arm64": "^0.33.4",
-    "@img/sharp-linux-x64": "^0.33.4"
+    "@img/sharp-linux-x64": "^0.33.4",
+    "@nx/nx-darwin-arm64": "18.0.4",
+    "@nx/nx-linux-x64-gnu": "18.0.4"
   }
 }
