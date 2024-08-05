@@ -1,6 +1,7 @@
 import axios from 'axios'
 import cheerio from 'cheerio'
-import {BlockType, BlockWithoutJSON} from '@wepublish/api'
+import {BlockType, BlockWithoutJSON, RichTextNode} from '@wepublish/api'
+import {htmlToSlate} from 'slate-serializers'
 
 interface WordPressPost {
   id: number
@@ -46,23 +47,28 @@ const fetchPosts = async (page: number, perPage: number): Promise<WordPressPost[
   return response.data
 }
 
-const htmlToSlate = (embedded: WordPressPost['_embedded'], html: string): BlockWithoutJSON[] => {
+const migratePost = (post: WordPressPost): MigratedArticle => {
+  const {title, content, date, slug, link, _embedded} = post
+
+  let htmlContent: RichTextNode | undefined
   let src: string | undefined
   let lastBlock: undefined | BlockWithoutJSON
-  const $ = cheerio.load(html)
+  const $ = cheerio.load(content.rendered)
   const blocks: BlockWithoutJSON[] = []
 
-  if (embedded?.['wp:featuredmedia']?.length) {
+  if (_embedded?.['wp:featuredmedia']?.length) {
     blocks.push({
       type: BlockType.Image,
-      imageID: embedded?.['wp:featuredmedia'][0].source_url,
-      caption: embedded?.['wp:featuredmedia'][0].alt_text
+      imageID: _embedded?.['wp:featuredmedia'][0].source_url,
+      caption: _embedded?.['wp:featuredmedia'][0].alt_text
     })
   }
 
   $('body')
     .children()
     .each((i, el: any) => {
+      // console.log(`${i}: ${el.tagName}`)
+      // console.log($.html(el))
       switch (el.tagName) {
         // case 'img':
         case 'figure':
@@ -90,6 +96,8 @@ const htmlToSlate = (embedded: WordPressPost['_embedded'], html: string): BlockW
             })
           }
           break
+        case 'hr':
+          break
         case 'p':
         case 'blockquote':
         case 'h1':
@@ -99,28 +107,24 @@ const htmlToSlate = (embedded: WordPressPost['_embedded'], html: string): BlockW
         case 'h5':
         case 'h6':
         default:
+          htmlContent = htmlToSlate($.html(el).toString())[0] as unknown as RichTextNode
           if (lastBlock?.type === BlockType.RichText) {
-            lastBlock.richText.push(el)
+            lastBlock.richText.push(htmlContent)
           } else {
-            blocks.push({type: BlockType.RichText, richText: [el]})
+            blocks.push({type: BlockType.RichText, richText: [htmlContent]})
           }
           break
       }
       lastBlock = blocks[blocks.length - 1]
     })
 
-  return blocks
-}
-
-const migratePost = (post: WordPressPost): MigratedArticle => {
-  const {title, content, date, slug, link, _embedded} = post
   return {
     title: title.rendered,
     date,
     slug,
     link,
     authors: _embedded?.author?.map(a => a.name) ?? [],
-    content: htmlToSlate(_embedded, content.rendered)
+    content: blocks
   }
 }
 
@@ -134,10 +138,9 @@ const migratePosts = async () => {
 
     for (const post of batch) {
       const migratedPost = migratePost(post)
-      console.log(migratedPost)
+      console.log(JSON.stringify(migratedPost, undefined, '  '))
     }
 
-    break
     page += 1
   }
 }
