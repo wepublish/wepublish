@@ -516,19 +516,7 @@ type Tag {
 }
 
 type User {
-  active: Boolean!
-  createdAt: DateTime!
-  email: String!
-  emailVerifiedAt: DateTime
-  firstName: String
   id: String!
-  lastLogin: DateTime
-  modifiedAt: DateTime!
-  name: String!
-  password: String!
-  preferredName: String
-  roleIDs: [String!]!
-  userImageID: String
 }
 
 type UserConsent {

@@ -15,15 +15,14 @@ import {
   UpdateEventInput
 } from './event.model'
 import {EventService} from './event.service'
-import {Image, ImageDataloaderService} from '@wepublish/image/api'
+import {Image} from '@wepublish/image/api'
 import {EventDataloaderService} from './event-dataloader.service'
 
 @Resolver(() => Event)
 export class EventResolver {
   constructor(
     private eventService: EventService,
-    private eventDataloader: EventDataloaderService,
-    private imageDataloader: ImageDataloaderService
+    private eventDataloader: EventDataloaderService
   ) {}
 
   @Query(returns => PaginatedEvents, {

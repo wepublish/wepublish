@@ -1,50 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`EventService create 1`] = `undefined`;
-
-exports[`EventService create 2`] = `
-{
-  "id": "1234",
-  "image": {
-    "filename": "123.webp",
-    "id": "123",
-  },
-  "imageId": "123",
-  "name": "Foo",
-}
-`;
-
-exports[`EventService delete 1`] = `undefined`;
-
-exports[`EventService delete 2`] = `
-{
-  "id": "1234",
-  "image": {
-    "filename": "123.webp",
-    "id": "123",
-  },
-  "imageId": "123",
-  "name": "Foo",
-}
-`;
-
-exports[`EventService event 1`] = `
+exports[`EventResolver create 1`] = `
 [
-  "123",
+  {
+    "description": [],
+    "endsAt": 2023-01-01T00:00:00.000Z,
+    "imageId": "123",
+    "location": "Foobar",
+    "name": "Foo",
+    "startsAt": 2023-01-01T00:00:00.000Z,
+    "tagIds": [
+      "1234",
+    ],
+  },
 ]
 `;
 
-exports[`EventService event 2`] = `
+exports[`EventResolver create 2`] = `
+{
+  "id": "1234",
+  "image": {
+    "id": "123",
+  },
+  "imageId": "123",
+  "name": "Foo",
+}
+`;
+
+exports[`EventResolver delete 1`] = `
 [
   "1234",
 ]
 `;
 
-exports[`EventService event 3`] = `
+exports[`EventResolver delete 2`] = `
 {
   "id": "1234",
   "image": {
-    "filename": "123.webp",
+    "id": "123",
+  },
+  "imageId": "123",
+  "name": "Foo",
+}
+`;
+
+exports[`EventResolver event 1`] = `undefined`;
+
+exports[`EventResolver event 2`] = `
+[
+  "1234",
+]
+`;
+
+exports[`EventResolver event 3`] = `
+{
+  "id": "1234",
+  "image": {
     "id": "123",
   },
   "imageId": "123",
@@ -52,9 +63,28 @@ exports[`EventService event 3`] = `
 }
 `;
 
-exports[`EventService events 1`] = `undefined`;
+exports[`EventResolver events 1`] = `
+[
+  {
+    "filter": {
+      "from": 2023-01-01T00:00:00.000Z,
+      "location": "Foobar",
+      "name": "Foo",
+      "tags": [
+        "123",
+      ],
+      "to": 2023-01-01T00:00:00.000Z,
+      "upcomingOnly": true,
+    },
+    "order": "Ascending",
+    "skip": 1,
+    "sort": "EndsAt",
+    "take": 5,
+  },
+]
+`;
 
-exports[`EventService events 2`] = `
+exports[`EventResolver events 2`] = `
 {
   "nodes": [
     {
@@ -74,13 +104,19 @@ exports[`EventService events 2`] = `
 }
 `;
 
-exports[`EventService update 1`] = `undefined`;
+exports[`EventResolver update 1`] = `
+[
+  {
+    "id": "1234",
+    "name": "Bar",
+  },
+]
+`;
 
-exports[`EventService update 2`] = `
+exports[`EventResolver update 2`] = `
 {
   "id": "1234",
   "image": {
-    "filename": "123.webp",
     "id": "123",
   },
   "imageId": "123",
