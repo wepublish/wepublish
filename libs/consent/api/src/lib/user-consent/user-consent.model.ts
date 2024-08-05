@@ -16,6 +16,8 @@ export class UserConsent {
   @Field(type => Consent)
   consent!: Consent
 
+  userId!: string
+
   @Field(type => User)
   user!: User
 

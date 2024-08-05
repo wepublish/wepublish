@@ -36,10 +36,8 @@ exports[`UserConsentService should filter user consents 1`] = `
     "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
     "modifiedAt": "2023-03-17T12:08:17.278Z",
     "user": {
-      "email": "asdf@asdf.pl",
-      "firstName": null,
+      "__typename": "User",
       "id": "clfb7nce50264cvrxlliyxung",
-      "name": "ssss",
     },
     "value": true,
   },
@@ -53,10 +51,8 @@ exports[`UserConsentService should filter user consents 1`] = `
     "id": "216d312d-f26f-4692-ad51-1591ca425d97",
     "modifiedAt": "2023-03-17T11:40:21.092Z",
     "user": {
-      "email": "editor@wepublish.ch",
-      "firstName": null,
+      "__typename": "User",
       "id": "clesor2a50105kgrxh0kyxmxy",
-      "name": "Editor User",
     },
     "value": false,
   },
@@ -67,7 +63,6 @@ exports[`UserConsentService should filter user consents 2`] = `
 {
   "include": {
     "consent": true,
-    "user": true,
   },
   "orderBy": {
     "createdAt": "desc",
@@ -94,10 +89,8 @@ exports[`UserConsentService should get a single user consent by id 1`] = `
     "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
     "modifiedAt": "2023-03-17T12:08:17.278Z",
     "user": {
-      "email": "asdf@asdf.pl",
-      "firstName": null,
+      "__typename": "User",
       "id": "clfb7nce50264cvrxlliyxung",
-      "name": "ssss",
     },
     "value": true,
   },
@@ -108,7 +101,6 @@ exports[`UserConsentService should get a single user consent by id 2`] = `
 {
   "include": {
     "consent": true,
-    "user": true,
   },
   "where": {
     "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
@@ -128,10 +120,8 @@ exports[`UserConsentService should get user consents 1`] = `
     "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
     "modifiedAt": "2023-03-17T12:08:17.278Z",
     "user": {
-      "email": "asdf@asdf.pl",
-      "firstName": null,
+      "__typename": "User",
       "id": "clfb7nce50264cvrxlliyxung",
-      "name": "ssss",
     },
     "value": true,
   },
@@ -145,10 +135,8 @@ exports[`UserConsentService should get user consents 1`] = `
     "id": "216d312d-f26f-4692-ad51-1591ca425d97",
     "modifiedAt": "2023-03-17T11:40:21.092Z",
     "user": {
-      "email": "editor@wepublish.ch",
-      "firstName": null,
+      "__typename": "User",
       "id": "clesor2a50105kgrxh0kyxmxy",
-      "name": "Editor User",
     },
     "value": false,
   },
@@ -159,7 +147,6 @@ exports[`UserConsentService should get user consents 2`] = `
 {
   "include": {
     "consent": true,
-    "user": true,
   },
   "orderBy": {
     "createdAt": "desc",
