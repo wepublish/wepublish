@@ -487,23 +487,7 @@ type Tag {
   id: ID!
 }
 
-type UserConsent {
-  consent: Consent!
-  createdAt: DateTime!
-  id: String!
-  modifiedAt: DateTime!
-  user: UserV2!
-  value: Boolean!
-}
-
-enum UserEvent {
-  ACCOUNT_CREATION
-  LOGIN_LINK
-  PASSWORD_RESET
-  TEST_MAIL
-}
-
-type UserV2 {
+type User {
   active: Boolean!
   createdAt: DateTime!
   email: String!
@@ -517,6 +501,22 @@ type UserV2 {
   preferredName: String
   roleIDs: [String!]!
   userImageID: String
+}
+
+type UserConsent {
+  consent: Consent!
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  user: User!
+  value: Boolean!
+}
+
+enum UserEvent {
+  ACCOUNT_CREATION
+  LOGIN_LINK
+  PASSWORD_RESET
+  TEST_MAIL
 }
 
 type VersionInformation {

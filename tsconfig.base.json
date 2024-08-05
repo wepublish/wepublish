@@ -12,73 +12,198 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2017", "dom"],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@wepublish/analytics": ["libs/analytics/src/index.ts"],
-      "@wepublish/api": ["libs/api/src/index.ts"],
-      "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
-      "@wepublish/article/website": ["libs/article/website/src/index.ts"],
-      "@wepublish/authentication/api": ["libs/authentication/api/src/index.ts"],
-      "@wepublish/authentication/website": ["libs/authentication/website/src/index.ts"],
-      "@wepublish/author/website": ["libs/author/website/src/index.ts"],
-      "@wepublish/block-content/api": ["libs/block-content/api/src/index.ts"],
-      "@wepublish/block-content/website": ["libs/block-content/website/src/index.ts"],
-      "@wepublish/comments/website": ["libs/comments/website/src/index.ts"],
-      "@wepublish/consent/api": ["libs/consent/api/src/index.ts"],
-      "@wepublish/consent/editor": ["libs/consent/editor/src/index.ts"],
-      "@wepublish/content/website": ["libs/content/website/src/index.ts"],
-      "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
-      "@wepublish/editor/api-v2": ["libs/editor/api-v2/src/index.ts"],
-      "@wepublish/event/api": ["libs/event/api/src/index.ts"],
-      "@wepublish/event/import/api": ["libs/event/import/api/src/index.ts"],
-      "@wepublish/event/import/editor": ["libs/event/import/editor/src/index.ts"],
-      "@wepublish/event/website": ["libs/event/website/src/index.ts"],
-      "@wepublish/feed/website": ["libs/feed/website/src/index.ts"],
-      "@wepublish/health": ["libs/health/api/src/index.ts"],
-      "@wepublish/image/api": ["libs/image/api/src/index.ts"],
-      "@wepublish/image/website": ["libs/image/website/src/index.ts"],
-      "@wepublish/jobs": ["libs/jobs/src/index.ts"],
-      "@wepublish/mail/api": ["libs/mail/api/src/index.ts"],
-      "@wepublish/media/api": ["libs/media/api/src/index.ts"],
-      "@wepublish/membership/api": ["libs/membership/api/src/index.ts"],
-      "@wepublish/membership/editor": ["libs/membership/editor/src/index.ts"],
-      "@wepublish/membership/website": ["libs/membership/website/src/index.ts"],
-      "@wepublish/navigation/website": ["libs/navigation/website/src/index.ts"],
-      "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
-      "@wepublish/page/website": ["libs/page/website/src/index.ts"],
-      "@wepublish/payment/api": ["libs/payment/api/src/index.ts"],
-      "@wepublish/payment/website": ["libs/payment/website/src/index.ts"],
-      "@wepublish/peering/website": ["libs/peering/website/src/index.ts"],
-      "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],
-      "@wepublish/richtext": ["libs/richtext/src/index.ts"],
-      "@wepublish/richtext/api": ["libs/richtext/api/src/index.ts"],
-      "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
-      "@wepublish/scripts/api": ["libs/scripts/api/src/index.ts"],
-      "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
-      "@wepublish/settings/editor": ["libs/settings/editor/src/index.ts"],
-      "@wepublish/stats/api": ["libs/stats/api/src/index.ts"],
-      "@wepublish/storybook": ["libs/storybook/src/index.ts"],
-      "@wepublish/system-info": ["libs/system-info/api/src/index.ts"],
-      "@wepublish/testing": ["libs/testing/src/index.ts"],
-      "@wepublish/ui": ["libs/ui/src/index.ts"],
-      "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],
-      "@wepublish/user/api": ["libs/user/api/src/index.ts"],
-      "@wepublish/user/website": ["libs/user/website/src/index.ts"],
-      "@wepublish/user/website/server": ["libs/user/website/src/server.ts"],
-      "@wepublish/utils": ["libs/utils/src/index.ts"],
-      "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
-      "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
-      "@wepublish/website": ["libs/website/src/index.ts"],
-      "@wepublish/website/api": ["libs/website/api/src/index.ts"],
-      "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],
-      "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
-      "@wepublish/website/server": ["libs/website/src/server.ts"],
-      "@wepublish/errors": ["libs/errors/src/index.ts"],
-      "@wepublish/errors/website": ["libs/errors/website/src/index.ts"]
+      "@wepublish/analytics": [
+        "libs/analytics/src/index.ts"
+      ],
+      "@wepublish/api": [
+        "libs/api/src/index.ts"
+      ],
+      "@wepublish/api/seed": [
+        "libs/api/prisma/seed.ts"
+      ],
+      "@wepublish/article/website": [
+        "libs/article/website/src/index.ts"
+      ],
+      "@wepublish/authentication/api": [
+        "libs/authentication/api/src/index.ts"
+      ],
+      "@wepublish/authentication/website": [
+        "libs/authentication/website/src/index.ts"
+      ],
+      "@wepublish/author/website": [
+        "libs/author/website/src/index.ts"
+      ],
+      "@wepublish/block-content/api": [
+        "libs/block-content/api/src/index.ts"
+      ],
+      "@wepublish/block-content/website": [
+        "libs/block-content/website/src/index.ts"
+      ],
+      "@wepublish/comments/website": [
+        "libs/comments/website/src/index.ts"
+      ],
+      "@wepublish/consent/api": [
+        "libs/consent/api/src/index.ts"
+      ],
+      "@wepublish/consent/editor": [
+        "libs/consent/editor/src/index.ts"
+      ],
+      "@wepublish/content/website": [
+        "libs/content/website/src/index.ts"
+      ],
+      "@wepublish/editor/api": [
+        "libs/editor/api/src/index.ts"
+      ],
+      "@wepublish/editor/api-v2": [
+        "libs/editor/api-v2/src/index.ts"
+      ],
+      "@wepublish/event/api": [
+        "libs/event/api/src/index.ts"
+      ],
+      "@wepublish/event/import/api": [
+        "libs/event/import/api/src/index.ts"
+      ],
+      "@wepublish/event/import/editor": [
+        "libs/event/import/editor/src/index.ts"
+      ],
+      "@wepublish/event/website": [
+        "libs/event/website/src/index.ts"
+      ],
+      "@wepublish/feed/website": [
+        "libs/feed/website/src/index.ts"
+      ],
+      "@wepublish/health": [
+        "libs/health/api/src/index.ts"
+      ],
+      "@wepublish/image/api": [
+        "libs/image/api/src/index.ts"
+      ],
+      "@wepublish/image/website": [
+        "libs/image/website/src/index.ts"
+      ],
+      "@wepublish/jobs": [
+        "libs/jobs/src/index.ts"
+      ],
+      "@wepublish/mail/api": [
+        "libs/mail/api/src/index.ts"
+      ],
+      "@wepublish/media/api": [
+        "libs/media/api/src/index.ts"
+      ],
+      "@wepublish/membership/api": [
+        "libs/membership/api/src/index.ts"
+      ],
+      "@wepublish/membership/editor": [
+        "libs/membership/editor/src/index.ts"
+      ],
+      "@wepublish/membership/website": [
+        "libs/membership/website/src/index.ts"
+      ],
+      "@wepublish/navigation/website": [
+        "libs/navigation/website/src/index.ts"
+      ],
+      "@wepublish/nest-modules": [
+        "libs/nest-modules/src/index.ts"
+      ],
+      "@wepublish/page/website": [
+        "libs/page/website/src/index.ts"
+      ],
+      "@wepublish/payment/api": [
+        "libs/payment/api/src/index.ts"
+      ],
+      "@wepublish/payment/website": [
+        "libs/payment/website/src/index.ts"
+      ],
+      "@wepublish/peering/website": [
+        "libs/peering/website/src/index.ts"
+      ],
+      "@wepublish/permissions/api": [
+        "libs/permissions/api/src/index.ts"
+      ],
+      "@wepublish/richtext": [
+        "libs/richtext/src/index.ts"
+      ],
+      "@wepublish/richtext/api": [
+        "libs/richtext/api/src/index.ts"
+      ],
+      "@wepublish/richtext/website": [
+        "libs/richtext/website/src/index.ts"
+      ],
+      "@wepublish/scripts/api": [
+        "libs/scripts/api/src/index.ts"
+      ],
+      "@wepublish/settings/api": [
+        "libs/settings/api/src/index.ts"
+      ],
+      "@wepublish/settings/editor": [
+        "libs/settings/editor/src/index.ts"
+      ],
+      "@wepublish/stats/api": [
+        "libs/stats/api/src/index.ts"
+      ],
+      "@wepublish/storybook": [
+        "libs/storybook/src/index.ts"
+      ],
+      "@wepublish/system-info": [
+        "libs/system-info/api/src/index.ts"
+      ],
+      "@wepublish/testing": [
+        "libs/testing/src/index.ts"
+      ],
+      "@wepublish/ui": [
+        "libs/ui/src/index.ts"
+      ],
+      "@wepublish/ui/editor": [
+        "libs/ui/editor/src/index.ts"
+      ],
+      "@wepublish/user/api": [
+        "libs/user/api/src/index.ts"
+      ],
+      "@wepublish/user/website": [
+        "libs/user/website/src/index.ts"
+      ],
+      "@wepublish/user/website/server": [
+        "libs/user/website/src/server.ts"
+      ],
+      "@wepublish/utils": [
+        "libs/utils/src/index.ts"
+      ],
+      "@wepublish/utils/api": [
+        "libs/utils/api/src/index.ts"
+      ],
+      "@wepublish/utils/website": [
+        "libs/utils/website/src/index.ts"
+      ],
+      "@wepublish/website": [
+        "libs/website/src/index.ts"
+      ],
+      "@wepublish/website/api": [
+        "libs/website/api/src/index.ts"
+      ],
+      "@wepublish/website/builder": [
+        "libs/website/builder/src/index.ts"
+      ],
+      "@wepublish/website/server": [
+        "libs/website/src/server.ts"
+      ],
+      "@wepublish/errors": [
+        "libs/errors/src/index.ts"
+      ],
+      "@wepublish/errors/website": [
+        "libs/errors/website/src/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

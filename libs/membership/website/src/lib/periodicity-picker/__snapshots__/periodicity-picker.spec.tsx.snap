@@ -339,22 +339,22 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         id=":r0:"
       >
         <option
-          value="MONTHLY"
+          value="monthly"
         >
           Monatlich
         </option>
         <option
-          value="QUARTERLY"
+          value="quarterly"
         >
           Vierteljährlich
         </option>
         <option
-          value="BIANNUAL"
+          value="biannual"
         >
           Halbjährlich
         </option>
         <option
-          value="YEARLY"
+          value="yearly"
         >
           Jährlich
         </option>
@@ -726,22 +726,22 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         id=":r1:"
       >
         <option
-          value="MONTHLY"
+          value="monthly"
         >
           Monatlich
         </option>
         <option
-          value="QUARTERLY"
+          value="quarterly"
         >
           Vierteljährlich
         </option>
         <option
-          value="BIANNUAL"
+          value="biannual"
         >
           Halbjährlich
         </option>
         <option
-          value="YEARLY"
+          value="yearly"
         >
           Jährlich
         </option>
@@ -1115,22 +1115,22 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         id=":r3:"
       >
         <option
-          value="MONTHLY"
+          value="monthly"
         >
           Monatlich
         </option>
         <option
-          value="QUARTERLY"
+          value="quarterly"
         >
           Vierteljährlich
         </option>
         <option
-          value="BIANNUAL"
+          value="biannual"
         >
           Halbjährlich
         </option>
         <option
-          value="YEARLY"
+          value="yearly"
         >
           Jährlich
         </option>
@@ -1503,22 +1503,22 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         id=":r4:"
       >
         <option
-          value="MONTHLY"
+          value="monthly"
         >
           Monatlich
         </option>
         <option
-          value="QUARTERLY"
+          value="quarterly"
         >
           Vierteljährlich
         </option>
         <option
-          value="BIANNUAL"
+          value="biannual"
         >
           Halbjährlich
         </option>
         <option
-          value="YEARLY"
+          value="yearly"
         >
           Jährlich
         </option>
@@ -1890,22 +1890,22 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         id=":r5:"
       >
         <option
-          value="MONTHLY"
+          value="monthly"
         >
           Monatlich
         </option>
         <option
-          value="QUARTERLY"
+          value="quarterly"
         >
           Vierteljährlich
         </option>
         <option
-          value="BIANNUAL"
+          value="biannual"
         >
           Halbjährlich
         </option>
         <option
-          value="YEARLY"
+          value="yearly"
         >
           Jährlich
         </option>
@@ -2277,22 +2277,22 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         id=":r6:"
       >
         <option
-          value="MONTHLY"
+          value="monthly"
         >
           Monatlich
         </option>
         <option
-          value="QUARTERLY"
+          value="quarterly"
         >
           Vierteljährlich
         </option>
         <option
-          value="BIANNUAL"
+          value="biannual"
         >
           Halbjährlich
         </option>
         <option
-          value="YEARLY"
+          value="yearly"
         >
           Jährlich
         </option>

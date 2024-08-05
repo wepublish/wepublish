@@ -2717,22 +2717,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -3055,7 +3055,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               name="firstName"
 -               type="text"
 -               value=""
--             />
+              />
 -             <fieldset
 -               aria-hidden="true"
 -               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -3065,7 +3065,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               >
 -                 <span>
 -                   Vorname
--                 </span>
+            </span>
 -               </legend>
 -             </fieldset>
 -           </div>
@@ -3092,7 +3092,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               name="name"
 -               type="text"
 -               value=""
-              />
+-             />
 -             <fieldset
 -               aria-hidden="true"
 -               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -3102,12 +3102,12 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               >
 -                 <span>
 -                   Nachname
-            </span>
+          </span>
 -               </legend>
 -             </fieldset>
--           </div>
--         </div>
--         <div
+        </div>
+      </div>
+      <div
 -           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
 -         >
 -           <label
@@ -3206,15 +3206,15 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               >
 -                 <span>
 -                   Passwort
-          </span>
+-                 </span>
 -               </legend>
 -             </fieldset>
-        </div>
-      </div>
+-           </div>
+-         </div>
 -         <div
 -           class="css-sweuoc-UserAddressWrapper e1mcs0cc0"
 -         >
-      <div
+-           <div
 -             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1706pe8-MuiFormControl-root-MuiTextField-root"
 -           >
 -             <label
@@ -3371,33 +3371,37 @@ exports[`Subscribe Container should render Filled 1`] = `
         <h2
           class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
-@@ -949,119 +682,11 @@
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
-            >
-              Automatisch erneuern
+@@ -953,115 +686,129 @@
             </span>
--         </label>
--       </div>
--     </div>
--     <div
+          </label>
+        </div>
+      </div>
+      <div
 -       class="css-qtq6nf-SubscribeSection eu4qtxp5"
 -     >
 -       <h2
 -         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
--       >
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
++       role="alert"
+      >
 -         Spam-Schutz
 -       </h2>
--       <div
+        <div
 -         class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
 -       >
 -         <div
 -           class="css-195vnh3-RegistrationChallenge elv4f70"
--         >
--           <svg
++         class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
+        >
+          <svg
 -             viewBox="0,0,200,200"
 -             xmlns="http://www.w3.org/2000/svg"
--           >
++           aria-hidden="true"
++           class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
++           data-testid="ErrorOutlineIcon"
++           focusable="false"
++           viewBox="0 0 24 24"
+          >
 -             <rect
 -               fill="transparent"
 -               height="100%"
@@ -3417,7 +3421,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               d="M120.01 97.20L120.07 93.78L143.99 93.68L144.08 97.24L119.94 97.12ZM120.02 109.14L120.06 105.70L144.10 105.72L144.06 109.15L119.92 109.03Z"
 -               fill="#da9e62"
 -             />
--             <path
+            <path
 -               d="M2 185 C113 113,88 106,196 22"
 -               fill="none"
 -               stroke="#914ad8"
@@ -3447,10 +3451,11 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             <path
 -               d="M59.54 107.59L59.54 104.07L72.37 104.02L72.48 107.65L59.54 107.59Z"
 -               fill="#7ce396"
--             />
--           </svg>
--         </div>
--         <div
++             d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+            />
+          </svg>
+        </div>
+        <div
 -           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
 -         >
 -           <label
@@ -3460,7 +3465,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             id=":rp:-label"
 -           >
 -             Captcha
-          </label>
+-           </label>
 -           <div
 -             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl css-1ljpo10-MuiInputBase-root-MuiOutlinedInput-root"
 -           >
@@ -3475,7 +3480,8 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             <fieldset
 -               aria-hidden="true"
 -               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
--             >
++         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
+        >
 -               <legend
 -                 class="css-yjsfm1"
 -               >
@@ -3486,6 +3492,104 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             </fieldset>
 -           </div>
 -         </div>
++         No more mocked responses for the query: mutation Subscribe($memberPlanId: ID, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: ID, $paymentMethodSlug: Slug, $subscriptionProperties: [PublicPropertiesInput!], $successURL: String, $failureURL: String, $deactivateSubscriptionId: ID) {
++   createSubscription(
++     memberPlanID: $memberPlanId
++     memberPlanSlug: $memberPlanSlug
++     autoRenew: $autoRenew
++     paymentPeriodicity: $paymentPeriodicity
++     monthlyAmount: $monthlyAmount
++     paymentMethodID: $paymentMethodId
++     paymentMethodSlug: $paymentMethodSlug
++     subscriptionProperties: $subscriptionProperties
++     successURL: $successURL
++     failureURL: $failureURL
++     deactivateSubscriptionId: $deactivateSubscriptionId
++   ) {
++     ...FullPayment
++     __typename
++   }
++ }
++
++ fragment FullPayment on Payment {
++   id
++   intentSecret
++   state
++   paymentMethod {
++     ...FullPaymentMethod
++     __typename
++   }
++   __typename
++ }
++
++ fragment FullPaymentMethod on PaymentMethod {
++   id
++   paymentProviderID
++   name
++   slug
++   description
++   image {
++     ...FullImage
++     __typename
++   }
++   __typename
++ }
++
++ fragment FullImage on Image {
++   id
++   createdAt
++   modifiedAt
++   filename
++   format
++   mimeType
++   extension
++   width
++   height
++   fileSize
++   title
++   description
++   tags
++   source
++   link
++   license
++   focalPoint {
++     x
++     y
++     __typename
++   }
++   ...ImageURLs
++   __typename
++ }
++
++ fragment ImageURLs on Image {
++   url
++   xl: transformURL(input: {width: 1200, output: PNG, quality: 1})
++   l: transformURL(input: {width: 1000, output: PNG, quality: 1})
++   m: transformURL(input: {width: 800, output: PNG, quality: 1})
++   s: transformURL(input: {width: 500, output: PNG, quality: 1})
++   xs: transformURL(input: {width: 300, output: PNG, quality: 1})
++   xxs: transformURL(input: {width: 200, output: PNG, quality: 1})
++   xlSquare: transformURL(
++     input: {width: 1200, height: 1200, output: PNG, quality: 1}
++   )
++   lSquare: transformURL(
++     input: {width: 1000, height: 1000, output: PNG, quality: 1}
++   )
++   mSquare: transformURL(input: {width: 800, height: 800, output: PNG, quality: 1})
++   sSquare: transformURL(input: {width: 500, height: 500, output: PNG, quality: 1})
++   xsSquare: transformURL(
++     input: {width: 300, height: 300, output: PNG, quality: 1}
++   )
++   xxsSquare: transformURL(
++     input: {width: 200, height: 200, output: PNG, quality: 1}
++   )
++   __typename
++ }
++ Expected variables: {"monthlyAmount":500,"memberPlanId":"123","paymentMethodId":"12345","paymentPeriodicity":"monthly","autoRenew":true,"successURL":"/","failureURL":"/"}
++
++ Failed to match 1 mock for this query. The mocked response had the following variables:
++   {"monthlyAmount":500,"memberPlanId":"123","paymentMethodId":"12345","paymentPeriodicity":"MONTHLY","autoRenew":true,"successURL":"/","failureURL":"/"}
++
         </div>
       </div>
       <div
@@ -5364,22 +5468,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -8221,22 +8325,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -11077,22 +11181,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -14007,22 +14111,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>

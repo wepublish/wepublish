@@ -30,7 +30,7 @@ exports[`Events create can be created 1`] = `
   8015 Barfoo City",
       "name": "Test Event",
       "startsAt": 2020-11-25T20:00:00.000Z,
-      "status": "SCHEDULED",
+      "status": "Scheduled",
       "tags": ArrayContaining [
         ObjectContaining {
           "id": Any<String>,
@@ -61,7 +61,7 @@ exports[`Events create can be created with bare minimum 1`] = `
       "location": null,
       "name": "Test Event",
       "startsAt": 2020-11-25T20:00:00.000Z,
-      "status": "SCHEDULED",
+      "status": "Scheduled",
       "tags": [],
     },
   },

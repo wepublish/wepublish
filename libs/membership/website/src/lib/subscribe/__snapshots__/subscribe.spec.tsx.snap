@@ -2658,22 +2658,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -5572,22 +5572,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -7711,22 +7711,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -9742,22 +9742,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -12292,22 +12292,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -15328,22 +15328,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -18424,22 +18424,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -21239,22 +21239,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -23975,22 +23975,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -24692,7 +24692,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -               >
 -                 <img
 -                   alt="DSC07717"
--                   class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
+-                   class="css-1vebh8h-ImageWrapper e1shv2yg0"
 -                   loading="lazy"
 -                   sizes="(max-width: 400px) 200w,
 - (max-width: 600px) 300w,
@@ -24761,7 +24761,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -               >
 -                 <img
 -                   alt="DSC07717"
--                   class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
+-                   class="css-1vebh8h-ImageWrapper e1shv2yg0"
 -                   loading="lazy"
 -                   sizes="(max-width: 400px) 200w,
 - (max-width: 600px) 300w,
@@ -24830,7 +24830,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -               >
 -                 <img
 -                   alt="DSC07717"
--                   class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
+-                   class="css-1vebh8h-ImageWrapper e1shv2yg0"
 -                   loading="lazy"
 -                   sizes="(max-width: 400px) 200w,
 - (max-width: 600px) 300w,
@@ -24873,22 +24873,22 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -               name="paymentPeriodicity"
 -             >
 -               <option
--                 value="MONTHLY"
+-                 value="monthly"
 -               >
 -                 Monatlich
 -               </option>
 -               <option
--                 value="QUARTERLY"
+-                 value="quarterly"
 -               >
 -                 Vierteljährlich
 -               </option>
 -               <option
--                 value="BIANNUAL"
+-                 value="biannual"
 -               >
 -                 Halbjährlich
 -               </option>
 -               <option
--                 value="YEARLY"
+-                 value="yearly"
 -               >
 -                 Jährlich
 -               </option>
@@ -25014,7 +25014,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnPaymentMethodChange 1`] = 
                 >
                   <img
                     alt="DSC07717"
-                    class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
+                    class="css-1vebh8h-ImageWrapper e1shv2yg0"
                     loading="lazy"
 @@ -592,11 +592,11 @@
               <label
@@ -25053,7 +25053,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnPaymentMethodChange 1`] = 
                 >
                   <img
                     alt="DSC07717"
-                    class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
+                    class="css-1vebh8h-ImageWrapper e1shv2yg0"
                     loading="lazy"
 @@ -655,113 +655,13 @@
                   />
@@ -25084,22 +25084,22 @@ exports[`Subscribe should render ResetPaymentOptionsOnPaymentMethodChange 1`] = 
 -               name="paymentPeriodicity"
 -             >
 -               <option
--                 value="MONTHLY"
+-                 value="monthly"
 -               >
 -                 Monatlich
 -               </option>
 -               <option
--                 value="QUARTERLY"
+-                 value="quarterly"
 -               >
 -                 Vierteljährlich
 -               </option>
 -               <option
--                 value="BIANNUAL"
+-                 value="biannual"
 -               >
 -                 Halbjährlich
 -               </option>
 -               <option
--                 value="YEARLY"
+-                 value="yearly"
 -               >
 -                 Jährlich
 -               </option>
@@ -28010,22 +28010,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -30930,22 +30930,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -33846,22 +33846,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -37034,22 +37034,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -39547,22 +39547,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>
@@ -41576,22 +41576,22 @@ https://unsplash.it/200/100 200w"
               name="paymentPeriodicity"
             >
               <option
-                value="MONTHLY"
+                value="monthly"
               >
                 Monatlich
               </option>
               <option
-                value="QUARTERLY"
+                value="quarterly"
               >
                 Vierteljährlich
               </option>
               <option
-                value="BIANNUAL"
+                value="biannual"
               >
                 Halbjährlich
               </option>
               <option
-                value="YEARLY"
+                value="yearly"
               >
                 Jährlich
               </option>

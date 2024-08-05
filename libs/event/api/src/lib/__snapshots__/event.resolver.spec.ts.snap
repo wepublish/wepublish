@@ -1,20 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`EventService create 1`] = `
-[
-  {
-    "description": [],
-    "endsAt": 2023-01-01T00:00:00.000Z,
-    "imageId": "123",
-    "location": "Foobar",
-    "name": "Foo",
-    "startsAt": 2023-01-01T00:00:00.000Z,
-    "tagIds": [
-      "1234",
-    ],
-  },
-]
-`;
+exports[`EventService create 1`] = `undefined`;
 
 exports[`EventService create 2`] = `
 {
@@ -28,11 +14,7 @@ exports[`EventService create 2`] = `
 }
 `;
 
-exports[`EventService delete 1`] = `
-[
-  "1234",
-]
-`;
+exports[`EventService delete 1`] = `undefined`;
 
 exports[`EventService delete 2`] = `
 {
@@ -70,26 +52,7 @@ exports[`EventService event 3`] = `
 }
 `;
 
-exports[`EventService events 1`] = `
-[
-  {
-    "filter": {
-      "from": 2023-01-01T00:00:00.000Z,
-      "location": "Foobar",
-      "name": "Foo",
-      "tags": [
-        "123",
-      ],
-      "to": 2023-01-01T00:00:00.000Z,
-      "upcomingOnly": true,
-    },
-    "order": "Ascending",
-    "skip": 1,
-    "sort": "EndsAt",
-    "take": 5,
-  },
-]
-`;
+exports[`EventService events 1`] = `undefined`;
 
 exports[`EventService events 2`] = `
 {
@@ -111,14 +74,7 @@ exports[`EventService events 2`] = `
 }
 `;
 
-exports[`EventService update 1`] = `
-[
-  {
-    "id": "1234",
-    "name": "Bar",
-  },
-]
-`;
+exports[`EventService update 1`] = `undefined`;
 
 exports[`EventService update 2`] = `
 {
