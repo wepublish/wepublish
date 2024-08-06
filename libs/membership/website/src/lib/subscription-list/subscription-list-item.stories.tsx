@@ -1,4 +1,5 @@
 import {
+  Currency,
   Exact,
   FullImageFragment,
   FullSubscriptionFragment,
@@ -112,7 +113,8 @@ const subscription = {
   memberPlan: {
     image,
     name: 'Foobar Memberplan',
-    extendable: true
+    extendable: true,
+    currency: Currency.Chf
   },
   extendable: true
 } as Exact<FullSubscriptionFragment>
@@ -319,6 +321,20 @@ export const WithExtendError: StoryObj = {
     }
   },
   play: clickExtend
+}
+
+export const WithCurrency: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    subscription: {
+      ...subscription,
+      memberPlan: {
+        ...subscription.memberPlan,
+        currency: Currency.Eur
+      }
+    }
+  }
 }
 
 export const WithClassName: StoryObj = {

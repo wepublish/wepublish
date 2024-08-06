@@ -1,16 +1,20 @@
 import {Radio, useRadioGroup} from '@mui/material'
 import {
   BuilderMemberPlanItemProps,
-  formatChf,
+  formatCurrency,
   MemberPlanItemContent,
   MemberPlanItemName,
   MemberPlanItemPrice,
-  MemberPlanItemWrapper
+  MemberPlanItemWrapper,
+  useWebsiteBuilder
 } from '@wepublish/website'
 import {forwardRef} from 'react'
 
 export const YearlyMemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberPlanItemProps>(
-  ({className, id, name, amountPerMonthMin, ...props}, ref) => {
+  ({className, id, name, currency, amountPerMonthMin, ...props}, ref) => {
+    const {
+      meta: {locale}
+    } = useWebsiteBuilder()
     const radioGroup = useRadioGroup()
     const isChecked = props.checked ?? radioGroup?.value === id
 
@@ -20,7 +24,8 @@ export const YearlyMemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberP
           <MemberPlanItemName>{name}</MemberPlanItemName>
 
           <MemberPlanItemPrice>
-            Ab {formatChf(Math.ceil((amountPerMonthMin / 100) * 12))} pro Jahr
+            Ab {formatCurrency(Math.ceil((amountPerMonthMin / 100) * 12), currency, locale)} pro
+            Jahr
           </MemberPlanItemPrice>
         </MemberPlanItemContent>
 

@@ -3,6 +3,7 @@ import {StoryObj} from '@storybook/react'
 import {
   Challenge,
   ChallengeDocument,
+  Currency,
   Exact,
   FullImageFragment,
   FullInvoiceFragment,
@@ -138,7 +139,8 @@ const memberPlan = {
   slug: '',
   description: text,
   tags: [],
-  extendable: true
+  extendable: true,
+  currency: Currency.Chf
 } as Exact<FullMemberPlanFragment>
 
 const memberPlan2 = {
@@ -146,7 +148,8 @@ const memberPlan2 = {
   id: '2',
   name: 'Barfoo Memberplan',
   amountPerMonthMin: 800,
-  availablePaymentMethods: [memberPlan.availablePaymentMethods[1]]
+  availablePaymentMethods: [memberPlan.availablePaymentMethods[1]],
+  currency: Currency.Eur
 } as Exact<FullMemberPlanFragment>
 
 const memberPlan3 = {

@@ -150,6 +150,10 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
 
     let transaction: Transaction
     try {
+      if (!customerID) {
+        throw new Error('No customerID given')
+      }
+
       transaction = await this.transactionClient.chargePreAuthorizedTransaction(+customerID, {
         amount,
         referenceId: paymentID

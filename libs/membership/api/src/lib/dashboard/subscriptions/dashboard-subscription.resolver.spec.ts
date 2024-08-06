@@ -3,7 +3,7 @@ import {INestApplication, Module} from '@nestjs/common'
 import request from 'supertest'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {PrismaClient, Prisma, Subscription} from '@prisma/client'
+import {PrismaClient, Prisma, Subscription, Currency} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {DashboardSubscriptionResolver} from './dashboard-subscription.resolver'
 import {DashboardSubscriptionService} from './dashboard-subscription.service'
@@ -140,7 +140,8 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Foo',
               slug: 'foo',
-              description: []
+              description: [],
+              currency: Currency.CHF
             }
           }
         },
@@ -181,7 +182,8 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Bar',
               slug: 'bar',
-              description: []
+              description: [],
+              currency: Currency.CHF
             }
           }
         },
@@ -260,7 +262,8 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Foo',
               slug: 'foo',
-              description: []
+              description: [],
+              currency: Currency.CHF
             }
           }
         },
@@ -321,7 +324,8 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Bar',
               slug: 'bar',
-              description: []
+              description: [],
+              currency: Currency.CHF
             }
           }
         },
@@ -397,7 +401,8 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Foo',
               slug: 'foo',
-              description: []
+              description: [],
+              currency: Currency.CHF
             }
           }
         },
@@ -458,7 +463,8 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Bar',
               slug: 'bar',
-              description: []
+              description: [],
+              currency: Currency.CHF
             }
           }
         },

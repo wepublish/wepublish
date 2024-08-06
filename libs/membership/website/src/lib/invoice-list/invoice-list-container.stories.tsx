@@ -1,6 +1,7 @@
 import {Meta, StoryObj} from '@storybook/react'
 import {
   CheckInvoiceStatusDocument,
+  Currency,
   Exact,
   FullImageFragment,
   FullInvoiceFragment,
@@ -76,7 +77,8 @@ const subscription = {
     slug: '',
     description: [],
     tags: [],
-    extendable: true
+    extendable: true,
+    currency: Currency.Chf
   },
   properties: [],
   deactivation: null,
