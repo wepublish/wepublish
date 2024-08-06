@@ -3,6 +3,7 @@ import {styled} from '@mui/material'
 import {CommentAuthorType} from '@wepublish/website/api'
 import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdPerson, MdVerified} from 'react-icons/md'
+import {isValidUrl} from '@wepublish/utils'
 
 const avatarStyles = css`
   width: 46px;
@@ -12,7 +13,8 @@ const avatarStyles = css`
 
 export const CommentWrapper = styled('article')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  grid-template-rows: max-content auto;
+  gap: ${({theme}) => theme.spacing(1.5)};
 
   &:target {
     border: 2px solid ${({theme}) => theme.palette.primary.main};
@@ -26,7 +28,6 @@ export const CommentHeader = styled('header')`
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: ${({theme}) => theme.spacing(2)};
-  align-items: center;
 `
 
 export const CommentHeaderContent = styled('div')``
@@ -42,6 +43,7 @@ export const CommentName = styled('div')`
 
 export const CommentAuthor = styled('div')`
   font-size: ${({theme}) => theme.typography.body1};
+  font-weight: ${({theme}) => theme.typography.fontWeightBold};
 `
 
 export const CommentVerifiedBadge = styled('div')`
@@ -50,15 +52,9 @@ export const CommentVerifiedBadge = styled('div')`
   color: ${({theme}) => theme.palette.info.main};
 `
 
-export const CommentFlair = styled('div')<{isGuest: boolean}>`
+export const CommentFlair = styled('div')`
   font-size: 0.75em;
   font-weight: 300;
-
-  ${({isGuest, theme}) =>
-    isGuest &&
-    css`
-      color: ${theme.palette.primary.main};
-    `}
 `
 
 export const CommentFlairLink = styled('a')`
@@ -68,18 +64,10 @@ export const CommentFlairLink = styled('a')`
 
 export const CommentContent = styled('div')``
 
-export const CommentChildren = styled('aside')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
-  border-left: 2px solid currentColor;
-  padding: ${({theme}) => theme.spacing(3)};
-  padding-right: 0;
-`
-
-export const CommentActions = styled('div')`
-  display: flex;
-  flex-flow: row wrap;
-  gap: ${({theme}) => theme.spacing(1)};
+export const CommentTitle = styled('h1')`
+  && {
+    font-weight: 600;
+  }
 `
 
 export const Comment = ({
@@ -102,10 +90,9 @@ export const Comment = ({
     date
   } = useWebsiteBuilder()
 
+  const flair = user?.flair || source
   const image = user?.image ?? guestUserImage
   const isVerified = authorType === CommentAuthorType.VerifiedUser
-  const isGuest = authorType === CommentAuthorType.GuestUser
-  const flair = user?.flair || source
   const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
 
   return (
@@ -125,27 +112,23 @@ export const Comment = ({
             )}
           </CommentName>
 
-          {source && (
-            <CommentFlair isGuest={isGuest}>
+          {source && isValidUrl(source) && (
+            <CommentFlair>
               <CommentFlairLink href={source} target="_blank" rel="noopener noreferrer">
                 {flair}
               </CommentFlairLink>
             </CommentFlair>
           )}
-
-          {user?.flair && !source && <CommentFlair isGuest={isGuest}>{user?.flair}</CommentFlair>}
-
-          {!flair && createdAt && (
-            <CommentFlair isGuest={isGuest}>{date.format(new Date(createdAt))}</CommentFlair>
-          )}
+          {!isValidUrl(source ?? '') && flair && <CommentFlair>{flair}</CommentFlair>}
+          {!flair && createdAt && <CommentFlair>{date.format(new Date(createdAt))}</CommentFlair>}
         </CommentHeaderContent>
       </CommentHeader>
 
       {showContent && (
         <CommentContent>
           {title && (
-            <Paragraph component="h1" gutterBottom={false}>
-              <strong>{title}</strong>
+            <Paragraph component={CommentTitle} gutterBottom={false}>
+              {title}
             </Paragraph>
           )}
 

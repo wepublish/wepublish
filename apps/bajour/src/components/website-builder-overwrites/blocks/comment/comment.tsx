@@ -11,8 +11,6 @@ import {
 } from '@wepublish/website'
 
 const bajourTags = {
-  QuelleAlsLink: 'Quelle als Link',
-  TopKommentar: 'Top Kommentar',
   QuelleHervorheben: 'Quelle hervorheben',
   Moderation: 'Moderation'
 }

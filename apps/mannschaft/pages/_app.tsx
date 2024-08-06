@@ -24,11 +24,13 @@ import {CookieOrPay} from '../src/cookie-or-pay/cookie-or-pay'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {MainSpacer} from '../src/main-spacer'
 import {MannschaftBlockRenderer} from '../src/mannschaft-block-renderer'
+import {MannschaftBreakBlock} from '../src/mannschaft-break-block'
+import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
 import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import theme from '../src/theme'
-import {MannschaftBreakBlock} from '../src/mannschaft-break-block'
-import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
+import {useState} from 'react'
+import {AdConfig} from 'react-ad-manager'
 
 setDefaultOptions({
   locale: de
@@ -87,6 +89,7 @@ type CustomAppProps = AppProps<{
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
   const siteTitle = 'Mannschaft'
+  const [showAds, setShowAds] = useState(false)
 
   return (
     <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
@@ -129,6 +132,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
               <meta name="msapplication-TileColor" content="#ffffff" />
               <meta name="theme-color" content="#ffffff" />
+
+              <AdConfig collapseEmptyDivs={'collapse'} />
             </Head>
 
             <Spacer>
@@ -151,7 +156,11 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               </FooterContainer>
             </Spacer>
 
-            <CookieOrPay />
+            <CookieOrPay
+              onCookie={() => {
+                setShowAds(true)
+              }}
+            />
 
             <Script
               src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
@@ -162,6 +171,13 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
               strategy="lazyOnload"
             />
+
+            {showAds && (
+              <Script
+                strategy="lazyOnload"
+                src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
+              />
+            )}
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>

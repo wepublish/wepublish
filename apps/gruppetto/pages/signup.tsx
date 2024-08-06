@@ -1,9 +1,15 @@
 import {styled, Typography} from '@mui/material'
-import {ApiV1, RegistrationFormContainer, useUser, useWebsiteBuilder} from '@wepublish/website'
+import {
+  ApiV1,
+  IntendedRouteStorageKey,
+  RegistrationFormContainer,
+  useUser,
+  useWebsiteBuilder
+} from '@wepublish/website'
+import {deleteCookie, getCookie} from 'cookies-next'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
-import {useEffect} from 'react'
 
 const SignupWrapper = styled('div')`
   display: grid;
@@ -17,11 +23,13 @@ export default function SignUp() {
     elements: {H3, Link}
   } = useWebsiteBuilder()
 
-  useEffect(() => {
-    if (hasUser) {
-      router.replace('/')
-    }
-  }, [router, hasUser])
+  if (hasUser && typeof window !== 'undefined') {
+    const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString()
+    deleteCookie(IntendedRouteStorageKey)
+    const route = intendedRoute ?? '/profile'
+
+    router.replace(route)
+  }
 
   return (
     <SignupWrapper>

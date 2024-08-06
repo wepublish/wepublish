@@ -50,7 +50,11 @@ export default function ArticleBySlugIdOrToken() {
 
           <ArticleWrapper>
             <H3 component={'h2'}>Kommentare</H3>
-            <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
+            <CommentListContainer
+              id={data.article.id}
+              type={ApiV1.CommentItemType.Article}
+              signUpUrl="/mitmachen"
+            />
           </ArticleWrapper>
         </>
       )}

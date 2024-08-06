@@ -17,13 +17,9 @@ export const getPageSEO = (page: Page) => {
     page.socialMediaDescription ||
     page.description ||
     firstParagraphToPlaintext(firstRichText?.richText)
-  const image =
-    (page.socialMediaImage as FullImageFragment)?.largeURL ??
-    page.socialMediaImage?.url ??
-    (page.image as FullImageFragment)?.largeURL ??
-    page.image?.url ??
-    (firstImageBlock?.image as FullImageFragment)?.largeURL ??
-    firstImageBlock?.image?.url
+  const image = (page.socialMediaImage ?? page.image ?? firstImageBlock?.image) as
+    | FullImageFragment
+    | undefined
 
   const title = page.title || firstTitle?.title || page.socialMediaTitle
   const socialMediaTitle = page.socialMediaTitle || page.title || firstTitle?.title
@@ -86,9 +82,30 @@ export const PageSEO = ({page}: BuilderPageSEOProps) => {
         <meta key={'og:url'} property="og:url" content={seo.url} />
         <link key={'canonical'} rel="canonical" href={seo.url} />
 
-        {seo.image && <meta key={'og:image'} property="og:image" content={seo.image} />}
+        {seo.image && (
+          <>
+            <meta key={'og:image:xxs'} property="og:image" content={seo.image.xxs ?? ''} />
+            <meta key={'og:image:width:xxs'} property="og:image:width" content="200" />
+
+            <meta key={'og:image:xs'} property="og:image" content={seo.image.xs ?? ''} />
+            <meta key={'og:image:width:xs'} property="og:image:width" content="300" />
+
+            <meta key={'og:image:s'} property="og:image" content={seo.image.s ?? ''} />
+            <meta key={'og:image:width:s'} property="og:image:width" content="500" />
+
+            <meta key={'og:image:m'} property="og:image" content={seo.image.m ?? ''} />
+            <meta key={'og:image:width:m'} property="og:image:width" content="800" />
+
+            <meta key={'og:image:l'} property="og:image" content={seo.image.l ?? ''} />
+            <meta key={'og:image:width:l'} property="og:image:width" content="1000" />
+
+            <meta key={'og:image:xl'} property="og:image" content={seo.image.xl ?? ''} />
+            <meta key={'og:image:width:xl'} property="og:image:width" content="1200" />
+          </>
+        )}
 
         <meta key={'twitter:card'} name="twitter:card" content="summary_large_image" />
+        <meta key={'max-image-preview'} name="robots" content="max-image-preview:large" />
       </Head>
 
       <Script type="application/ld+json">{JSON.stringify(seo.schema)}</Script>

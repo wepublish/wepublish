@@ -19,7 +19,7 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website/builder'
 
-export const SliderContainer = styled('section')`
+export const SliderWrapper = styled('section')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
 `
@@ -153,7 +153,7 @@ export const TeaserSlider = ({
 
   return (
     !!filledTeasers.length && (
-      <SliderContainer className={className}>
+      <SliderWrapper className={className}>
         <SliderTitle>
           {(props as BuilderTeaserListBlockProps).title && (
             <H5 component={'h1'}>{(props as BuilderTeaserListBlockProps).title}</H5>
@@ -186,7 +186,7 @@ export const TeaserSlider = ({
             </SliderBallContainer>
           )}
         </SliderInnerContainer>
-      </SliderContainer>
+      </SliderWrapper>
     )
   )
 }

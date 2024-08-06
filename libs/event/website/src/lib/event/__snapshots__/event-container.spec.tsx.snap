@@ -166,19 +166,67 @@ exports[`Event Container should render Default 1`] = `
         rel="canonical"
       />
       <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
         content="https://unsplash.it/500/300"
         property="og:image"
       />
       <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/800/400"
+        property="og:image"
+      />
+      <meta
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/1000/400"
+        property="og:image"
+      />
+      <meta
+        content="1000"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/1200/400"
+        property="og:image"
+      />
+      <meta
+        content="1200"
+        property="og:image:width"
+      />
+      <meta
         content="summary_large_image"
         name="twitter:card"
+      />
+      <meta
+        content="max-image-preview:large"
+        name="robots"
       />
     </div>
     <script
       data-testid="fake-script"
       type="application/ld+json"
     >
-      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/500","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200","format":"jpg","mimeType":"image/jpg"},"name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <figure
       class="emotion-3 emotion-4"
@@ -193,8 +241,12 @@ exports[`Event Container should render Default 1`] = `
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -784,19 +836,67 @@ exports[`Event Container should render WithClassName 1`] = `
         rel="canonical"
       />
       <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
         content="https://unsplash.it/500/300"
         property="og:image"
       />
       <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/800/400"
+        property="og:image"
+      />
+      <meta
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/1000/400"
+        property="og:image"
+      />
+      <meta
+        content="1000"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/1200/400"
+        property="og:image"
+      />
+      <meta
+        content="1200"
+        property="og:image:width"
+      />
+      <meta
         content="summary_large_image"
         name="twitter:card"
+      />
+      <meta
+        content="max-image-preview:large"
+        name="robots"
       />
     </div>
     <script
       data-testid="fake-script"
       type="application/ld+json"
     >
-      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/500","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200","format":"jpg","mimeType":"image/jpg"},"name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <figure
       class="emotion-3 emotion-4"
@@ -811,8 +911,12 @@ exports[`Event Container should render WithClassName 1`] = `
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -1402,19 +1506,67 @@ exports[`Event Container should render WithEmotion 1`] = `
         rel="canonical"
       />
       <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
         content="https://unsplash.it/500/300"
         property="og:image"
       />
       <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/800/400"
+        property="og:image"
+      />
+      <meta
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/1000/400"
+        property="og:image"
+      />
+      <meta
+        content="1000"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/1200/400"
+        property="og:image"
+      />
+      <meta
+        content="1200"
+        property="og:image:width"
+      />
+      <meta
         content="summary_large_image"
         name="twitter:card"
+      />
+      <meta
+        content="max-image-preview:large"
+        name="robots"
       />
     </div>
     <script
       data-testid="fake-script"
       type="application/ld+json"
     >
-      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/500","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200","format":"jpg","mimeType":"image/jpg"},"name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <figure
       class="emotion-3 emotion-4"
@@ -1429,8 +1581,12 @@ exports[`Event Container should render WithEmotion 1`] = `
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-          srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"

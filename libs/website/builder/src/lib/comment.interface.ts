@@ -65,6 +65,9 @@ export type BuilderCommentListProps = Pick<
 
   openEditorsState: BuilderCommentListState
   openEditorsStateDispatch: Dispatch<BuilderCommentListActions>
+
+  signUpUrl: string
+  maxCommentDepth?: number
 }
 
 export type BuilderCommentListItemShareProps = {
@@ -76,6 +79,9 @@ export type BuilderCommentListItemShareProps = {
 export type BuilderCommentListItemProps = Comment & {
   className?: string
   ratingSystem: FullCommentRatingSystem
+  signUpUrl: string
+  commentDepth?: number
+  maxCommentDepth?: number
 } & Pick<
     BuilderCommentListProps,
     | 'anonymousCanComment'
@@ -135,6 +141,10 @@ export type BuilderCommentEditorProps = {
   maxCommentLength: number
   loading: boolean
   error?: ApolloError
+  canReply: boolean
+  parentUrl?: string
+  signUpUrl?: string
+  anonymousCanComment?: boolean
 } & (CreateCommentProps | EditCommentProps)
 
 export type BuilderCommentRatingsProps = {

@@ -15,11 +15,6 @@ const StyledMannschaftPage = styled(Page)`
     grid-template-columns: minmax(auto, ${({theme}) => theme.breakpoints.values['lg']}px);
     justify-content: center;
   }
-
-  & > :last-child {
-    // Makes it gapless with footer
-    margin-bottom: -${({theme}) => theme.spacing(3)};
-  }
 `
 
 export const MannschaftPage = (props: BuilderPageProps) => {

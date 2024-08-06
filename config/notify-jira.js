@@ -12,7 +12,7 @@ const config = {
 }
 
 function getJiraCommentBody() {
-    const {BRANCH_NAME, PR_NUMBER, API_URL, EDITOR_URL, WEBSITE_URL, MEDIA_SERVER_URL} = process.env
+    const {BRANCH_NAME, PR_NUMBER, API_URL, EDITOR_URL, WEBSITE_URL, MEDIA_SERVER_URL, PROJECTS, PROJECT_URL_SUFFIX} = process.env
 
     const urls = [
         {
@@ -36,6 +36,14 @@ function getJiraCommentBody() {
             url: MEDIA_SERVER_URL
         }
     ]
+
+    const projects = JSON.parse(PROJECTS);
+    for (const project of projects.target) {
+        urls.push({
+            name: `${project}`,
+            url: `https://${project}${PROJECT_URL_SUFFIX}`
+        })
+    }
 
     return {
         version: 1,
