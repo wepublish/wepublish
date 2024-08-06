@@ -1,6 +1,5 @@
 import {getSessionTokenProps, ssrAuthLink, useUserCountry} from '@wepublish/utils/website'
 import {ApiV1, AuthTokenStorageKey, SubscribeContainer} from '@wepublish/website'
-import {Currency} from '@wepublish/website/api'
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
@@ -25,7 +24,7 @@ export default function Mitmachen() {
       filter={memberPlans =>
         memberPlans.filter(memberPlan => {
           if (userCountry === 'CH') {
-            return memberPlan.currency === Currency.Chf
+            return memberPlan.currency === ApiV1.Currency.Chf
           }
 
           return memberPlan.currency === Currency.Eur
