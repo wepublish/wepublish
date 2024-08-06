@@ -2,6 +2,7 @@ import {ApolloServer} from 'apollo-server-express'
 import {createGraphQLTestClientWithPrisma} from '../utility'
 import {CreateSubscription, RenewSubscription, SubscriptionInput} from '../api/private'
 import {
+  Currency,
   Invoice,
   MemberPlan,
   PaymentMethod,
@@ -71,7 +72,8 @@ beforeAll(async () => {
             paymentMethodIDs: [paymentMethod.id],
             paymentPeriodicities: ['biannual', 'monthly', 'quarterly', 'yearly']
           }
-        }
+        },
+        currency: Currency.CHF
       }
     })
 

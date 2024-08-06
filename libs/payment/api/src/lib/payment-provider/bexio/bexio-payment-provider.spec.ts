@@ -1,5 +1,5 @@
 import {BexioPaymentProvider} from './bexio-payment-provider'
-import {PaymentPeriodicity, PaymentState, PrismaClient} from '@prisma/client'
+import {Currency, PaymentPeriodicity, PaymentState, PrismaClient} from '@prisma/client'
 import {CreatePaymentIntentProps} from '../payment-provider'
 
 jest.mock('axios')
@@ -156,7 +156,8 @@ describe('BexioPaymentProvider', () => {
           modifiedAt: new Date()
         },
         paymentID: '123',
-        saveCustomer: true
+        saveCustomer: true,
+        currency: Currency.EUR
       }
       await expect(async () => {
         const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
@@ -184,7 +185,8 @@ describe('BexioPaymentProvider', () => {
         modifiedAt: new Date()
       },
       paymentID: '123',
-      saveCustomer: true
+      saveCustomer: true,
+      currency: Currency.CHF
     }
     await expect(async () => {
       const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
@@ -231,7 +233,8 @@ describe('BexioPaymentProvider', () => {
         modifiedAt: new Date()
       },
       paymentID: '123',
-      saveCustomer: true
+      saveCustomer: true,
+      currency: Currency.EUR
     }
     const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
     await bexioPaymentProvider.createIntent(props)
@@ -280,7 +283,8 @@ describe('BexioPaymentProvider', () => {
         modifiedAt: new Date()
       },
       paymentID: '123',
-      saveCustomer: true
+      saveCustomer: true,
+      currency: Currency.CHF
     }
     const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
     const res = await bexioPaymentProvider.createIntent(props)

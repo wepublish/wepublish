@@ -496,7 +496,7 @@ exports[`SubscriptionList Container should render Pay 1`] = `
 - First value
 + Second value
 
-@@ -1,10 +1,171 @@
+@@ -1,10 +1,172 @@
   <DocumentFragment>
     <article
       class="css-1lcio32-SubscriptionListWrapper e12e7g630"
@@ -635,6 +635,7 @@ exports[`SubscriptionList Container should render Pay 1`] = `
 +     __typename
 +   }
 +   amountPerMonthMin
++   currency
 +   availablePaymentMethods {
 +     ...FullAvailablePaymentMethod
 +     __typename

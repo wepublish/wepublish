@@ -1009,7 +1009,7 @@ export async function contextFromRequest(
         throw new Error('paymentProvider not found')
       }
 
-      const memberPlan = await this.prisma.memberPlan.findFirst({
+      const memberPlan = await prisma.memberPlan.findFirst({
         where: {
           Subscription: {
             some: {

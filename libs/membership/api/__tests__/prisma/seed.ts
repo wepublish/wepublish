@@ -1,4 +1,10 @@
-import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
+import {
+  Currency,
+  MailTemplate,
+  PaymentPeriodicity,
+  PrismaClient,
+  SubscriptionEvent
+} from '@prisma/client'
 import {seed as rootSeed} from '../../../../api/prisma/seed'
 import {hashPassword} from '../../../../api/src/lib/db/user'
 
@@ -42,7 +48,7 @@ async function seed() {
     }
   })
 
-  const mailTemplates = []
+  const mailTemplates = [] as MailTemplate[]
   for (let i = 0; i < 10; i++) {
     const template = await prisma.mailTemplate.upsert({
       where: {
@@ -56,6 +62,7 @@ async function seed() {
         remoteMissing: false
       }
     })
+
     mailTemplates.push(template)
   }
 
@@ -84,7 +91,8 @@ async function seed() {
       tags: [],
       description: {},
       active: true,
-      amountPerMonthMin: 1
+      amountPerMonthMin: 1,
+      currency: Currency.CHF
     }
   })
 

@@ -545,7 +545,8 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Foo',
               slug: 'foo',
-              description: []
+              description: [],
+              currency: Currency.CHF
             }
           }
         },
