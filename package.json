@@ -203,7 +203,9 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.17",
+    "@apollo/gateway": "^2.8.1",
     "@apollo/server": "^4.9.1",
+    "@apollo/subgraph": "^2.2.3",
     "@dnd-kit/core": "^6.0.7",
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
@@ -334,6 +336,8 @@
   },
   "optionalDependencies": {
     "@img/sharp-darwin-arm64": "^0.33.4",
-    "@img/sharp-linux-x64": "^0.33.4"
+    "@img/sharp-linux-x64": "^0.33.4",
+    "@nx/nx-darwin-arm64": "18.2.4",
+    "@nx/nx-linux-x64-gnu": "18.2.4"
   }
 }

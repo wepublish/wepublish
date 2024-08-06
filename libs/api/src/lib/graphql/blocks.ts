@@ -143,7 +143,6 @@ export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context
   }),
   isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Article)
 })
-
 export const GraphQLPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser, Context>({
   name: 'PeerArticleTeaser',
   fields: () => ({
@@ -1103,27 +1102,29 @@ export const GraphQLEventBlock = new GraphQLObjectType<EventBlock, Context>({
     filter: {type: new GraphQLNonNull(GraphQLEventBlockFilter)},
     events: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLEvent))),
-      resolve: ({filter}, _, {prisma}) =>
-        prisma.event.findMany({
-          where: {
-            OR: [
-              {
-                tags: {
-                  some: {
-                    tagId: {
-                      in: filter.tags ?? []
+      resolve: async ({filter}, _, {prisma}) =>
+        (
+          await prisma.event.findMany({
+            where: {
+              OR: [
+                {
+                  tags: {
+                    some: {
+                      tagId: {
+                        in: filter.tags ?? []
+                      }
                     }
                   }
+                },
+                {
+                  id: {
+                    in: filter.events ?? []
+                  }
                 }
-              },
-              {
-                id: {
-                  in: filter.events ?? []
-                }
-              }
-            ]
-          }
-        })
+              ]
+            }
+          })
+        ).map(event => ({__typename: 'Event', id: event.id}))
     }
   },
   isTypeOf: createProxyingIsTypeOf(value => {

@@ -43,7 +43,7 @@ const settingsListQuery = `
 
 const settingQuery = `
   query setting($id: String!) {
-    setting(id: $id) {
+    settingById(id: $id) {
       id
       name
       value
@@ -183,7 +183,7 @@ describe('SettingsResolver', () => {
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.setting).toMatchObject({
+        expect(res.body.data.settingById).toMatchObject({
           id: expect.any(String),
           name: 'ALLOW_COMMENT_EDITING',
           value: true

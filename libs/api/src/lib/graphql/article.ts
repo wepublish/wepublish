@@ -354,7 +354,6 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
           if (hideAuthor) {
             return []
           }
-
           return (await loaders.authorsByID.loadMany(authors.map(({authorId}) => authorId))).filter(
             Boolean
           )

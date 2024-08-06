@@ -9,7 +9,7 @@ import {ImageDataloaderService} from './image-dataloader.service'
 
 const imageQuery = `
   query Image($id: String!) {
-    image(id: $id) {
+    getImage(id: $id) {
       id
       filename
     }
@@ -72,7 +72,7 @@ describe('ImageService', () => {
       .expect(200)
       .expect(res => {
         expect(imageDataloaderServiceMock.load?.mock.calls[0]).toMatchSnapshot()
-        expect(res.body.data.image).toMatchSnapshot()
+        expect(res.body.data.getImage).toMatchSnapshot()
       })
   })
 })

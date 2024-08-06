@@ -115,12 +115,12 @@ fragment MailTemplateRef on MailTemplateRef {
   name
 }
 
-fragment MemberPlanRef on MemberPlanRef {
+fragment MemberPlanRef on MemberPlan {
   id
   name
 }
 
-fragment PaymentMethodRef on PaymentMethodRef {
+fragment PaymentMethodRef on PaymentMethod {
   id
   name
 }

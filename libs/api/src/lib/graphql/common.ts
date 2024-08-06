@@ -13,8 +13,8 @@ import {DateFilterComparison} from '../db/common'
 export const GraphQLSortOrder = new GraphQLEnumType({
   name: 'SortOrder',
   values: {
-    ASCENDING: {value: SortOrder.Ascending},
-    DESCENDING: {value: SortOrder.Descending}
+    Ascending: {value: SortOrder.Ascending},
+    Descending: {value: SortOrder.Descending}
   }
 })
 

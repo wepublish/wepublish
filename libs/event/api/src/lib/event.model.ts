@@ -1,6 +1,8 @@
 import {
   ArgsType,
+  Directive,
   Field,
+  ID,
   InputType,
   Int,
   ObjectType,
@@ -13,6 +15,7 @@ import {Image} from '@wepublish/image/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {PaginatedType, SortOrder} from '@wepublish/utils/api'
 import {Node} from 'slate'
+import {Page} from './page.model'
 
 export enum EventSort {
   CreatedAt = 'CreatedAt',
@@ -34,8 +37,9 @@ registerEnumType(EventStatus, {
 })
 
 @ObjectType()
+@Directive('@key(fields: "id")')
 export class Event {
-  @Field()
+  @Field(() => ID)
   id!: string
 
   @Field()
@@ -76,10 +80,19 @@ export class Event {
 
   @Field({nullable: true})
   externalSourceName?: string
+
+  @Field({nullable: true})
+  page?: Page
 }
 
 @ObjectType()
 export class PaginatedEvents extends PaginatedType(Event) {}
+
+@ArgsType()
+export class EventId {
+  @Field(() => ID)
+  id!: string
+}
 
 @InputType()
 export class EventFilter {
@@ -119,7 +132,7 @@ export class EventListArgs {
   @Field(type => Int, {nullable: true, defaultValue: 0})
   skip?: number
 
-  @Field({nullable: true})
+  @Field(() => ID, {nullable: true})
   cursorId?: string
 }
 
@@ -136,5 +149,14 @@ export class CreateEventInput extends PickType(
 @ArgsType()
 export class UpdateEventInput extends PartialType(CreateEventInput, ArgsType) {
   @Field()
+  id!: string
+}
+
+@ObjectType()
+@Directive('@extends')
+@Directive('@key(fields: "id")')
+export class Tag {
+  @Field(() => ID)
+  @Directive('@external')
   id!: string
 }

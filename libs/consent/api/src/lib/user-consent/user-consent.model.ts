@@ -1,5 +1,4 @@
 import {ArgsType, Field, ObjectType} from '@nestjs/graphql'
-import {User as UserType} from '@prisma/client'
 import {User} from '@wepublish/user/api'
 import {Consent} from '../consent/consent.model'
 
@@ -17,8 +16,10 @@ export class UserConsent {
   @Field(type => Consent)
   consent!: Consent
 
+  userId!: string
+
   @Field(type => User)
-  user!: UserType
+  user!: User
 
   @Field()
   value!: boolean

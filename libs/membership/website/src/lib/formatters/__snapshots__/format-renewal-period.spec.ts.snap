@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`formatRenewalPeriod should format renewal period for BIANNUAL 1`] = `"Halbjährlich"`;
+exports[`formatRenewalPeriod should format renewal period for biannual 1`] = `"Halbjährlich"`;
 
-exports[`formatRenewalPeriod should format renewal period for MONTHLY 1`] = `"Monatlich"`;
+exports[`formatRenewalPeriod should format renewal period for monthly 1`] = `"Monatlich"`;
 
-exports[`formatRenewalPeriod should format renewal period for QUARTERLY 1`] = `"Vierteljährlich"`;
+exports[`formatRenewalPeriod should format renewal period for quarterly 1`] = `"Vierteljährlich"`;
 
-exports[`formatRenewalPeriod should format renewal period for YEARLY 1`] = `"Jährlich"`;
+exports[`formatRenewalPeriod should format renewal period for yearly 1`] = `"Jährlich"`;

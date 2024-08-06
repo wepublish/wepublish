@@ -8,20 +8,21 @@ import {
 import {
   CreateEventInput,
   Event,
+  EventId,
   EventListArgs,
   PaginatedEvents,
+  Tag,
   UpdateEventInput
 } from './event.model'
 import {EventService} from './event.service'
-import {Image, ImageDataloaderService} from '@wepublish/image/api'
+import {Image} from '@wepublish/image/api'
 import {EventDataloaderService} from './event-dataloader.service'
 
 @Resolver(() => Event)
 export class EventResolver {
   constructor(
     private eventService: EventService,
-    private eventDataloader: EventDataloaderService,
-    private imageDataloader: ImageDataloaderService
+    private eventDataloader: EventDataloaderService
   ) {}
 
   @Query(returns => PaginatedEvents, {
@@ -32,7 +33,7 @@ export class EventResolver {
   }
 
   @Query(returns => Event, {description: `Returns a event by id.`})
-  public event(@Args('id') id: string) {
+  public event(@Args() {id}: EventId) {
     return this.eventDataloader.load(id)
   }
 
@@ -62,6 +63,13 @@ export class EventResolver {
       return null
     }
 
-    return this.imageDataloader.load(imageId)
+    return {__typename: 'Image', id: imageId}
+  }
+
+  @ResolveField(() => [Tag], {nullable: true})
+  async tags(@Parent() parent: Event) {
+    const {id: eventId} = parent
+    const tagIds = await this.eventService.getEventTagIds(eventId)
+    return tagIds.map(({id}) => ({__typename: 'Tag', id}))
   }
 }

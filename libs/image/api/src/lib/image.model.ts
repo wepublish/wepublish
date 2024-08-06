@@ -1,5 +1,5 @@
-import {Field, Float, Int, ObjectType} from '@nestjs/graphql'
 import {GraphQLRichText} from '@wepublish/richtext/api'
+import {Field, Float, ObjectType, ID, Directive, Int} from '@nestjs/graphql'
 
 @ObjectType()
 export class FocalPoint {
@@ -11,8 +11,18 @@ export class FocalPoint {
 }
 
 @ObjectType()
+@Directive('@extends')
+@Directive('@key(fields: "id")')
 export class Image {
-  @Field()
+  @Field(() => ID)
+  @Directive('@external')
+  id!: string
+}
+
+@ObjectType()
+@Directive('@key(fields: "id")')
+export class ImageV2 {
+  @Field(() => ID)
   id!: string
 
   @Field()
