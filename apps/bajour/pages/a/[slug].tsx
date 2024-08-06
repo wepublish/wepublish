@@ -97,11 +97,12 @@ export default function ArticleBySlugIdOrToken() {
               />
             </ArticleWrapper>
 
-            {data?.article?.authors.map(a => (
-              <AuthorWrapper key={a.id}>
-                <BajourAuthorChip key={a.id} author={a} />
-              </AuthorWrapper>
-            ))}
+            {!isFDT &&
+              data?.article?.authors.map(a => (
+                <AuthorWrapper key={a.id}>
+                  <BajourAuthorChip key={a.id} author={a} />
+                </AuthorWrapper>
+              ))}
 
             {!isFDT && (
               <ArticleWrapper>
