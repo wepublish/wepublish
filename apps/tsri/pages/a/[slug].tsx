@@ -11,6 +11,7 @@ import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
+import TsriAdHeader from '../../src/components/tsri-ad-header'
 
 export default function ArticleBySlugIdOrToken() {
   const {
@@ -35,6 +36,8 @@ export default function ArticleBySlugIdOrToken() {
 
   return (
     <>
+      <TsriAdHeader authors={data?.article?.authors} />
+
       <ArticleContainer {...containerProps} />
 
       {data?.article && (
