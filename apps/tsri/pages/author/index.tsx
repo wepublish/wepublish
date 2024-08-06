@@ -11,11 +11,7 @@ const pageSchema = z.object({
   page: z.coerce.number().gte(1).optional()
 })
 
-type AuthorListProps = {
-  tagId: string | undefined
-}
-
-export default function AuthorList({tagId}: AuthorListProps) {
+export default function AuthorList() {
   const {
     elements: {Pagination}
   } = useWebsiteBuilder()
@@ -31,10 +27,10 @@ export default function AuthorList({tagId}: AuthorListProps) {
         take,
         skip: ((page ?? 1) - 1) * take,
         filter: {
-          tagIds: tagId ? [tagId] : []
+          hideOnTeam: false
         }
       } satisfies ApiV1.AuthorListQueryVariables),
-    [page, tagId]
+    [page]
   )
 
   const {data} = ApiV1.useAuthorListQuery({
@@ -81,15 +77,6 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
-  const tagResult = await client.query({
-    query: ApiV1.TagDocument,
-    variables: {
-      tag: 'show-on-website',
-      type: ApiV1.TagType.Author
-    }
-  })
-
-  const tagId = tagResult.data?.tags?.nodes?.[0]?.id ?? null
 
   await Promise.all([
     client.query({
@@ -100,7 +87,7 @@ export const getStaticProps: GetStaticProps = async () => {
         sort: ApiV1.AuthorSort.Name,
         order: ApiV1.SortOrder.Ascending,
         filter: {
-          tagIds: tagId ? [tagId] : []
+          hideOnTeam: false
         }
       } satisfies ApiV1.AuthorListQueryVariables
     }),
@@ -112,9 +99,7 @@ export const getStaticProps: GetStaticProps = async () => {
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {
-    tagId
-  })
+  const props = ApiV1.addClientCacheToV1Props(client, {})
 
   return {
     props,
