@@ -123,7 +123,7 @@ export class EventListArgs {
   @Field(type => EventSort, {nullable: true, defaultValue: EventSort.StartsAt})
   sort?: EventSort
 
-  @Field(type => SortOrder, {nullable: true, defaultValue: SortOrder.Descending})
+  @Field(type => SortOrder, {nullable: true, defaultValue: SortOrder.Ascending})
   order?: SortOrder
 
   @Field(type => Int, {nullable: true, defaultValue: 10})

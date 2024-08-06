@@ -20,6 +20,7 @@ export class UserConsentService {
         createdAt: 'desc'
       },
       include: {
+        user: true,
         consent: true
       }
     })
@@ -33,6 +34,7 @@ export class UserConsentService {
         id
       },
       include: {
+        user: true,
         consent: true
       }
     })

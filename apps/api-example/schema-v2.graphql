@@ -358,7 +358,7 @@ type Query {
   eventProviders: [String!]!
 
   """Returns a paginated list of events based on the filters given."""
-  events(cursorId: ID, filter: EventFilter, order: SortOrder = Descending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
+  events(cursorId: ID, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
@@ -516,7 +516,19 @@ type Tag {
 }
 
 type User {
+  active: Boolean!
+  createdAt: DateTime!
+  email: String!
+  emailVerifiedAt: DateTime
+  firstName: String
   id: String!
+  lastLogin: DateTime
+  modifiedAt: DateTime!
+  name: String!
+  password: String!
+  preferredName: String
+  roleIDs: [String!]!
+  userImageID: String
 }
 
 type UserConsent {

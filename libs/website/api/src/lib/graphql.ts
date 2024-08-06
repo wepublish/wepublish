@@ -580,6 +580,27 @@ export type ImageTransformation = {
   width?: InputMaybe<Scalars['Int']>;
 };
 
+export type ImageV2 = {
+  __typename?: 'ImageV2';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  extension: Scalars['String'];
+  fileSize: Scalars['Int'];
+  filename?: Maybe<Scalars['String']>;
+  focalPoint?: Maybe<FocalPoint>;
+  format: Scalars['String'];
+  height: Scalars['Int'];
+  id: Scalars['ID'];
+  license?: Maybe<Scalars['String']>;
+  link?: Maybe<Scalars['String']>;
+  mimeType: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  source?: Maybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  width: Scalars['Int'];
+};
+
 export type ImportedEventFilter = {
   from?: InputMaybe<Scalars['String']>;
   location?: InputMaybe<Scalars['String']>;
@@ -1421,6 +1442,8 @@ export type Query = {
    * Excludes cancelled or manually set as paid invoices.
    */
   expectedRevenue: Array<DashboardInvoice>;
+  /** Returns an image by id. */
+  getImage: ImageV2;
   /** Returns a more detailed version of a single importable event, by id and source. */
   importedEvent: EventFromSource;
   /** Returns a list of imported events from external sources, transformed to match our model. */
@@ -1580,6 +1603,11 @@ export type QueryEventsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryGetImageArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -2032,17 +2060,25 @@ export type UploadImageInput = {
 
 export type User = {
   __typename?: 'User';
+  active: Scalars['Boolean'];
   address?: Maybe<UserAddress>;
+  createdAt: Scalars['DateTime'];
   email: Scalars['String'];
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   firstName?: Maybe<Scalars['String']>;
   flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
+  lastLogin?: Maybe<Scalars['DateTime']>;
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   oauth2Accounts: Array<OAuth2Account>;
+  password: Scalars['String'];
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
   preferredName?: Maybe<Scalars['String']>;
   properties: Array<PublicProperties>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
 };
 
 export type UserAddress = {
@@ -2070,7 +2106,7 @@ export type UserConsent = {
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
-  user: UserV2;
+  user: User;
   value: Scalars['Boolean'];
 };
 
@@ -2096,23 +2132,6 @@ export type UserSession = {
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
   token: Scalars['String'];
-};
-
-export type UserV2 = {
-  __typename?: 'UserV2';
-  active: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
-  email: Scalars['String'];
-  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
-  firstName?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  lastLogin?: Maybe<Scalars['DateTime']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  password: Scalars['String'];
-  preferredName?: Maybe<Scalars['String']>;
-  roleIDs: Array<Scalars['String']>;
-  userImageID?: Maybe<Scalars['String']>;
 };
 
 export type VersionInformation = {
