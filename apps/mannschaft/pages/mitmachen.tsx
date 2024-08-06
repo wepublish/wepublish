@@ -1,5 +1,6 @@
-import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
+import {getSessionTokenProps, ssrAuthLink, useUserCountry} from '@wepublish/utils/website'
 import {ApiV1, AuthTokenStorageKey, SubscribeContainer} from '@wepublish/website'
+import {Currency} from '@wepublish/website/api'
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
@@ -12,6 +13,7 @@ export default function Mitmachen() {
 
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
   const thisLocation = typeof window !== 'undefined' ? location.href : ''
+  const userCountry = useUserCountry() ?? 'CH'
 
   return (
     <SubscribeContainer
@@ -20,6 +22,15 @@ export default function Mitmachen() {
         firstName: firstName as string | undefined,
         name: lastName as string | undefined
       }}
+      filter={memberPlans =>
+        memberPlans.filter(memberPlan => {
+          if (userCountry === 'CH') {
+            return memberPlan.currency === Currency.Chf
+          }
+
+          return memberPlan.currency === Currency.Eur
+        })
+      }
       successURL={`${locationOrigin}/profile/subscription`}
       failureURL={thisLocation}
     />
