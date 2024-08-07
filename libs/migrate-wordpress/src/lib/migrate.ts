@@ -15,6 +15,7 @@ import {convertHtmlToSlate} from './convert-html-to-slate'
 import {extractEmbed} from './embeds'
 import {createImage} from './image-upload'
 import {URL} from 'url'
+import {decode} from 'html-entities'
 
 type WordpressAuthor = {
   id: number
@@ -29,6 +30,7 @@ interface WordPressPost {
   id: number
   title: {rendered: string}
   content: {rendered: string}
+  excerpt: {rendered: string}
   date_gmt: string
   modified_gmt: string
   slug: string
@@ -100,11 +102,18 @@ const ensureImage = async (input: WordpressImage) => {
   }
 }
 
+const prepareLead = (excerpt: string) => {
+  const $ = cheerio.load(excerpt)
+  $('a').remove()
+  return decode($.text())
+}
+
 const specialTags = ['iframe', 'figure', 'img', 'blockquote']
 
 const migratePost = async (post: WordPressPost) => {
   const {
-    title: {rendered: title},
+    title: {rendered: encodedTitle},
+    excerpt: {rendered: excerpt},
     content: {rendered: content},
     date_gmt,
     modified_gmt,
@@ -112,6 +121,9 @@ const migratePost = async (post: WordPressPost) => {
     link,
     _embedded
   } = post
+
+  const title = decode(encodedTitle)
+  const lead = prepareLead(excerpt)
 
   console.log()
   console.log('========================================================================')
@@ -140,12 +152,20 @@ const migratePost = async (post: WordPressPost) => {
     authors.push(await ensureAuthor(author))
   }
 
+  // Title
+  blocks.push({
+    title: {
+      title,
+      lead
+    }
+  })
+
+  // Featured image
   if (_embedded?.['wp:featuredmedia']?.length) {
     const featuredImage = await ensureImage({
       url: _embedded?.['wp:featuredmedia'][0].source_url,
       alt: _embedded?.['wp:featuredmedia'][0].alt_text
     })
-
     blocks.push({
       image: {
         imageID: featuredImage.id
@@ -233,6 +253,7 @@ const migratePost = async (post: WordPressPost) => {
     socialMediaAuthorIDs: [],
     tags: [],
     title,
+    lead,
     slug,
     blocks: blocks.map(block => {
       if (block.richText) {
