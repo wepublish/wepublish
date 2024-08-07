@@ -105,7 +105,8 @@ export class MediaService {
 
     const transformationsKey = getTransformationKey(transformations)
     const transformedImage = sharpInstance.webp({
-      quality: transformations.quality
+      quality: transformations.quality,
+      effort: 0
     })
 
     metadata = await transformedImage.metadata()
