@@ -12,6 +12,7 @@ import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 import {styled} from '@mui/material'
 import {H2} from '@wepublish/ui'
+import TsriAdHeader from '../../src/components/tsri-ad-header'
 
 const AfterArticleTitle = styled(H2)`
   ${({theme}) => theme.breakpoints.down('sm')} {
@@ -39,6 +40,8 @@ export default function ArticleBySlugIdOrToken() {
 
   return (
     <>
+      <TsriAdHeader authors={data?.article?.authors} />
+
       <ArticleContainer {...containerProps} />
 
       {data?.article && (

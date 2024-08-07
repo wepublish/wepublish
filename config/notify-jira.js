@@ -12,7 +12,7 @@ const config = {
 }
 
 function getJiraCommentBody() {
-    const {BRANCH_NAME, PR_NUMBER, API_URL, EDITOR_URL, WEBSITE_URL, MEDIA_SERVER_URL, PROJECTS} = process.env
+    const {BRANCH_NAME, PR_NUMBER, API_URL, EDITOR_URL, WEBSITE_URL, MEDIA_SERVER_URL, PROJECTS, PROJECT_URL_SUFFIX} = process.env
 
     const urls = [
         {

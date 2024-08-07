@@ -138,7 +138,9 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
-      return teaser.article?.authors.map(author => author.name)
+      return teaser.article?.authors
+        .filter(author => !author.hideOnTeaser)
+        .map(author => author.name)
     }
 
     case 'EventTeaser':

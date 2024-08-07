@@ -43,6 +43,9 @@ export function Article({className, data, children, loading, error}: BuilderArti
     date
   } = useWebsiteBuilder()
 
+  const article = data?.article
+  const authors = article?.authors.filter(author => !author.hideOnArticle) || []
+
   return (
     <ArticleWrapper className={className}>
       {data?.article && <ArticleSEO article={data.article as ArticleType} />}
@@ -50,15 +53,15 @@ export function Article({className, data, children, loading, error}: BuilderArti
       <Blocks blocks={(data?.article?.blocks as Block[]) ?? []} type="Article" />
 
       <ArticleInfoWrapper>
-        {!!data?.article?.authors.length && (
+        {!!authors.length && (
           <ArticleAuthors>
-            {data.article.authors.map(author => (
+            {authors.map(author => (
               <AuthorChip key={author.id} author={author} />
             ))}
 
-            {data.article.publishedAt && (
-              <ArticleDate suppressHydrationWarning dateTime={data.article.publishedAt}>
-                {date.format(new Date(data.article.publishedAt), false)}
+            {article?.publishedAt && (
+              <ArticleDate suppressHydrationWarning dateTime={article.publishedAt}>
+                {date.format(new Date(article.publishedAt), false)}
               </ArticleDate>
             )}
           </ArticleAuthors>

@@ -6,7 +6,8 @@ import {
   GraphQLList,
   GraphQLInt,
   GraphQLInputObjectType,
-  GraphQLEnumType
+  GraphQLEnumType,
+  GraphQLBoolean
 } from 'graphql'
 
 import {Author, AuthorSort} from '../db/author'
@@ -68,7 +69,10 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
 
         return tags
       })
-    }
+    },
+    hideOnArticle: {type: GraphQLBoolean},
+    hideOnTeaser: {type: GraphQLBoolean},
+    hideOnTeam: {type: GraphQLBoolean}
   }
 })
 
@@ -76,7 +80,8 @@ export const GraphQLAuthorFilter = new GraphQLInputObjectType({
   name: 'AuthorFilter',
   fields: {
     name: {type: GraphQLString},
-    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
+    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    hideOnTeam: {type: GraphQLBoolean}
   }
 })
 
@@ -115,6 +120,9 @@ export const GraphQLAuthorInput = new GraphQLInputObjectType({
     bio: {type: GraphQLRichText},
     jobTitle: {type: GraphQLString},
     imageID: {type: GraphQLID},
-    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
+    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    hideOnArticle: {type: GraphQLBoolean},
+    hideOnTeaser: {type: GraphQLBoolean},
+    hideOnTeam: {type: GraphQLBoolean}
   }
 })

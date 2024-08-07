@@ -37,4 +37,5 @@ export enum AuthorSort {
 export interface AuthorFilter {
   name?: string
   tagIds?: string[]
+  hideOnTeam?: boolean
 }
