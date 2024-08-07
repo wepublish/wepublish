@@ -54,10 +54,7 @@ export class MediaService {
   }
 
   private async transformImage(imageId: string, transformations: TransformationsDto) {
-    const imageStream = await this.storage.getFile(
-      this.config.uploadBucket,
-      `images/${imageId}.webp`
-    )
+    const imageStream = await this.storage.getFile(this.config.uploadBucket, `images/${imageId}`)
 
     const sharpInstance = imageStream.pipe(
       sharp({
@@ -122,23 +119,17 @@ export class MediaService {
   }
 
   public async saveImage(imageId: string, image: Buffer) {
-    const sharpInstance = sharp(image, {
+    await this.storage.saveFile(this.config.uploadBucket, `images/${imageId}`, image)
+    return sharp(image, {
       animated: true
-    })
-    const metadata = await sharpInstance.metadata()
-    await this.storage.saveFile(
-      this.config.uploadBucket,
-      `images/${imageId}.${metadata.format}`,
-      image
-    )
-    return metadata
+    }).metadata()
   }
 
   public async hasImage(imageId: string): Promise<boolean> {
-    return await this.storage.hasFile(this.config.uploadBucket, `images/${imageId}.webp`)
+    return await this.storage.hasFile(this.config.uploadBucket, `images/${imageId}`)
   }
 
   public async deleteImage(imageId: string) {
-    return await this.storage.deleteFile(this.config.uploadBucket, `images/${imageId}.webp`)
+    return await this.storage.deleteFile(this.config.uploadBucket, `images/${imageId}`)
   }
 }
