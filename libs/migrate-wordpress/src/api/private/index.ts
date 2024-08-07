@@ -2856,6 +2856,7 @@ export type ArticleRefFragment = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -2910,6 +2911,7 @@ export type ArticleListQuery = {
         image?: {
           __typename?: 'Image'
           id: string
+          link?: string | null
           filename?: string | null
           extension: string
           title?: string | null
@@ -2969,6 +2971,7 @@ export type PeerArticleListQuery = {
           logo?: {
             __typename?: 'Image'
             id: string
+            link?: string | null
             filename?: string | null
             extension: string
             title?: string | null
@@ -2987,6 +2990,7 @@ export type PeerArticleListQuery = {
           callToActionImage?: {
             __typename?: 'Image'
             id: string
+            link?: string | null
             filename?: string | null
             extension: string
             title?: string | null
@@ -3029,6 +3033,7 @@ export type PeerArticleListQuery = {
           image?: {
             __typename?: 'Image'
             id: string
+            link?: string | null
             filename?: string | null
             extension: string
             title?: string | null
@@ -3287,6 +3292,7 @@ export type ArticleQuery = {
       image?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -3310,6 +3316,7 @@ export type ArticleQuery = {
         image?: {
           __typename?: 'Image'
           id: string
+          link?: string | null
           filename?: string | null
           extension: string
           title?: string | null
@@ -3333,6 +3340,7 @@ export type ArticleQuery = {
         image?: {
           __typename?: 'Image'
           id: string
+          link?: string | null
           filename?: string | null
           extension: string
           title?: string | null
@@ -3352,6 +3360,7 @@ export type ArticleQuery = {
       socialMediaImage?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -3389,6 +3398,7 @@ export type ArticleQuery = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -3413,6 +3423,7 @@ export type ArticleQuery = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -3446,6 +3457,7 @@ export type ArticleQuery = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -3472,6 +3484,7 @@ export type ArticleQuery = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -3503,6 +3516,7 @@ export type ArticleQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -3543,6 +3557,7 @@ export type ArticleQuery = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -3571,6 +3586,7 @@ export type ArticleQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -3599,6 +3615,7 @@ export type ArticleQuery = {
                     image?: {
                       __typename?: 'Image'
                       id: string
+                      link?: string | null
                       filename?: string | null
                       extension: string
                       title?: string | null
@@ -3626,6 +3643,7 @@ export type ArticleQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -3664,6 +3682,7 @@ export type ArticleQuery = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -3692,6 +3711,7 @@ export type ArticleQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -3726,6 +3746,7 @@ export type ArticleQuery = {
                       logo?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -3744,6 +3765,7 @@ export type ArticleQuery = {
                       callToActionImage?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -3786,6 +3808,7 @@ export type ArticleQuery = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -3826,6 +3849,7 @@ export type AuthorRefFragment = {
   image?: {
     __typename?: 'Image'
     id: string
+    link?: string | null
     filename?: string | null
     extension: string
     title?: string | null
@@ -3853,6 +3877,7 @@ export type FullAuthorFragment = {
   image?: {
     __typename?: 'Image'
     id: string
+    link?: string | null
     filename?: string | null
     extension: string
     title?: string | null
@@ -3892,6 +3917,7 @@ export type AuthorListQuery = {
       image?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -3934,6 +3960,7 @@ export type AuthorQuery = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -3968,6 +3995,7 @@ export type CreateAuthorMutation = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -4003,6 +4031,7 @@ export type UpdateAuthorMutation = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -4037,6 +4066,7 @@ export type DeleteAuthorMutation = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -4073,6 +4103,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
   image?: {
     __typename?: 'Image'
     id: string
+    link?: string | null
     filename?: string | null
     extension: string
     title?: string | null
@@ -4113,6 +4144,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
       image?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -4143,6 +4175,7 @@ type FullTeaser_EventTeaser_Fragment = {
   image?: {
     __typename?: 'Image'
     id: string
+    link?: string | null
     filename?: string | null
     extension: string
     title?: string | null
@@ -4171,6 +4204,7 @@ type FullTeaser_EventTeaser_Fragment = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -4199,6 +4233,7 @@ type FullTeaser_PageTeaser_Fragment = {
   image?: {
     __typename?: 'Image'
     id: string
+    link?: string | null
     filename?: string | null
     extension: string
     title?: string | null
@@ -4237,6 +4272,7 @@ type FullTeaser_PageTeaser_Fragment = {
       image?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -4266,6 +4302,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
   image?: {
     __typename?: 'Image'
     id: string
+    link?: string | null
     filename?: string | null
     extension: string
     title?: string | null
@@ -4300,6 +4337,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
       logo?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -4318,6 +4356,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
       callToActionImage?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -4360,6 +4399,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
       image?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -4422,6 +4462,7 @@ type FullBlock_ImageBlock_Fragment = {
   image?: {
     __typename?: 'Image'
     id: string
+    link?: string | null
     filename?: string | null
     extension: string
     title?: string | null
@@ -4447,6 +4488,7 @@ type FullBlock_ImageGalleryBlock_Fragment = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -4483,6 +4525,7 @@ type FullBlock_ListicleBlock_Fragment = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -4512,6 +4555,7 @@ type FullBlock_QuoteBlock_Fragment = {
   image?: {
     __typename?: 'Image'
     id: string
+    link?: string | null
     filename?: string | null
     extension: string
     title?: string | null
@@ -4546,6 +4590,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
         image?: {
           __typename?: 'Image'
           id: string
+          link?: string | null
           filename?: string | null
           extension: string
           title?: string | null
@@ -4586,6 +4631,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -4614,6 +4660,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
         image?: {
           __typename?: 'Image'
           id: string
+          link?: string | null
           filename?: string | null
           extension: string
           title?: string | null
@@ -4642,6 +4689,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
           image?: {
             __typename?: 'Image'
             id: string
+            link?: string | null
             filename?: string | null
             extension: string
             title?: string | null
@@ -4669,6 +4717,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
         image?: {
           __typename?: 'Image'
           id: string
+          link?: string | null
           filename?: string | null
           extension: string
           title?: string | null
@@ -4707,6 +4756,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -4735,6 +4785,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
         image?: {
           __typename?: 'Image'
           id: string
+          link?: string | null
           filename?: string | null
           extension: string
           title?: string | null
@@ -4769,6 +4820,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
             logo?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -4787,6 +4839,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
             callToActionImage?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -4829,6 +4882,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -4971,6 +5025,7 @@ export type FullCommentFragment = {
   guestUserImage?: {
     __typename?: 'Image'
     id: string
+    link?: string | null
     filename?: string | null
     extension: string
     title?: string | null
@@ -5090,6 +5145,7 @@ export type CommentListQuery = {
       guestUserImage?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -5210,6 +5266,7 @@ export type CommentQuery = {
     guestUserImage?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -5369,6 +5426,7 @@ export type UpdateCommentMutation = {
     guestUserImage?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -5485,6 +5543,7 @@ export type CreateCommentMutation = {
     guestUserImage?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -5598,6 +5657,7 @@ export type EventRefFragment = {
   image?: {
     __typename?: 'Image'
     id: string
+    link?: string | null
     filename?: string | null
     extension: string
     title?: string | null
@@ -5643,6 +5703,7 @@ export type EventListQuery = {
       image?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -5689,6 +5750,7 @@ export type EventQuery = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -5734,6 +5796,7 @@ export type CreateEventMutation = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -5781,6 +5844,7 @@ export type UpdateEventMutation = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -5819,6 +5883,7 @@ export type DeleteEventMutation = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -5853,6 +5918,7 @@ export type ImageUrLsFragment = {
 export type ImageRefFragment = {
   __typename?: 'Image'
   id: string
+  link?: string | null
   filename?: string | null
   extension: string
   title?: string | null
@@ -5910,6 +5976,7 @@ export type ImageListQuery = {
     nodes: Array<{
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -5978,6 +6045,7 @@ export type UploadImageMutation = {
   uploadImage?: {
     __typename?: 'Image'
     id: string
+    link?: string | null
     filename?: string | null
     extension: string
     title?: string | null
@@ -6098,6 +6166,7 @@ export type FullNavigationFragment = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -6143,6 +6212,7 @@ export type FullNavigationFragment = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -6202,6 +6272,7 @@ export type NavigationListQuery = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -6247,6 +6318,7 @@ export type NavigationListQuery = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -6309,6 +6381,7 @@ export type NavigationQuery = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -6354,6 +6427,7 @@ export type NavigationQuery = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -6416,6 +6490,7 @@ export type CreateNavigationMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -6461,6 +6536,7 @@ export type CreateNavigationMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -6524,6 +6600,7 @@ export type UpdateNavigationMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -6569,6 +6646,7 @@ export type UpdateNavigationMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -6631,6 +6709,7 @@ export type DeleteNavigationMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -6676,6 +6755,7 @@ export type DeleteNavigationMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -6725,6 +6805,7 @@ export type MutationPageFragment = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -6763,6 +6844,7 @@ export type MutationPageFragment = {
           image?: {
             __typename?: 'Image'
             id: string
+            link?: string | null
             filename?: string | null
             extension: string
             title?: string | null
@@ -6787,6 +6869,7 @@ export type MutationPageFragment = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -6820,6 +6903,7 @@ export type MutationPageFragment = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -6846,6 +6930,7 @@ export type MutationPageFragment = {
           image?: {
             __typename?: 'Image'
             id: string
+            link?: string | null
             filename?: string | null
             extension: string
             title?: string | null
@@ -6877,6 +6962,7 @@ export type MutationPageFragment = {
                 image?: {
                   __typename?: 'Image'
                   id: string
+                  link?: string | null
                   filename?: string | null
                   extension: string
                   title?: string | null
@@ -6917,6 +7003,7 @@ export type MutationPageFragment = {
                     image?: {
                       __typename?: 'Image'
                       id: string
+                      link?: string | null
                       filename?: string | null
                       extension: string
                       title?: string | null
@@ -6945,6 +7032,7 @@ export type MutationPageFragment = {
                 image?: {
                   __typename?: 'Image'
                   id: string
+                  link?: string | null
                   filename?: string | null
                   extension: string
                   title?: string | null
@@ -6973,6 +7061,7 @@ export type MutationPageFragment = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -7000,6 +7089,7 @@ export type MutationPageFragment = {
                 image?: {
                   __typename?: 'Image'
                   id: string
+                  link?: string | null
                   filename?: string | null
                   extension: string
                   title?: string | null
@@ -7038,6 +7128,7 @@ export type MutationPageFragment = {
                     image?: {
                       __typename?: 'Image'
                       id: string
+                      link?: string | null
                       filename?: string | null
                       extension: string
                       title?: string | null
@@ -7066,6 +7157,7 @@ export type MutationPageFragment = {
                 image?: {
                   __typename?: 'Image'
                   id: string
+                  link?: string | null
                   filename?: string | null
                   extension: string
                   title?: string | null
@@ -7100,6 +7192,7 @@ export type MutationPageFragment = {
                     logo?: {
                       __typename?: 'Image'
                       id: string
+                      link?: string | null
                       filename?: string | null
                       extension: string
                       title?: string | null
@@ -7118,6 +7211,7 @@ export type MutationPageFragment = {
                     callToActionImage?: {
                       __typename?: 'Image'
                       id: string
+                      link?: string | null
                       filename?: string | null
                       extension: string
                       title?: string | null
@@ -7160,6 +7254,7 @@ export type MutationPageFragment = {
                     image?: {
                       __typename?: 'Image'
                       id: string
+                      link?: string | null
                       filename?: string | null
                       extension: string
                       title?: string | null
@@ -7215,6 +7310,7 @@ export type PageRefFragment = {
     image?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -7267,6 +7363,7 @@ export type PageListQuery = {
         image?: {
           __typename?: 'Image'
           id: string
+          link?: string | null
           filename?: string | null
           extension: string
           title?: string | null
@@ -7327,6 +7424,7 @@ export type CreatePageMutation = {
       image?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -7365,6 +7463,7 @@ export type CreatePageMutation = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -7389,6 +7488,7 @@ export type CreatePageMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -7422,6 +7522,7 @@ export type CreatePageMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -7448,6 +7549,7 @@ export type CreatePageMutation = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -7479,6 +7581,7 @@ export type CreatePageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -7519,6 +7622,7 @@ export type CreatePageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -7547,6 +7651,7 @@ export type CreatePageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -7575,6 +7680,7 @@ export type CreatePageMutation = {
                     image?: {
                       __typename?: 'Image'
                       id: string
+                      link?: string | null
                       filename?: string | null
                       extension: string
                       title?: string | null
@@ -7602,6 +7708,7 @@ export type CreatePageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -7640,6 +7747,7 @@ export type CreatePageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -7668,6 +7776,7 @@ export type CreatePageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -7702,6 +7811,7 @@ export type CreatePageMutation = {
                       logo?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -7720,6 +7830,7 @@ export type CreatePageMutation = {
                       callToActionImage?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -7762,6 +7873,7 @@ export type CreatePageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -7829,6 +7941,7 @@ export type UpdatePageMutation = {
       image?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -7867,6 +7980,7 @@ export type UpdatePageMutation = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -7891,6 +8005,7 @@ export type UpdatePageMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -7924,6 +8039,7 @@ export type UpdatePageMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -7950,6 +8066,7 @@ export type UpdatePageMutation = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -7981,6 +8098,7 @@ export type UpdatePageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -8021,6 +8139,7 @@ export type UpdatePageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -8049,6 +8168,7 @@ export type UpdatePageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -8077,6 +8197,7 @@ export type UpdatePageMutation = {
                     image?: {
                       __typename?: 'Image'
                       id: string
+                      link?: string | null
                       filename?: string | null
                       extension: string
                       title?: string | null
@@ -8104,6 +8225,7 @@ export type UpdatePageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -8142,6 +8264,7 @@ export type UpdatePageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -8170,6 +8293,7 @@ export type UpdatePageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -8204,6 +8328,7 @@ export type UpdatePageMutation = {
                       logo?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -8222,6 +8347,7 @@ export type UpdatePageMutation = {
                       callToActionImage?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -8264,6 +8390,7 @@ export type UpdatePageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -8333,6 +8460,7 @@ export type PublishPageMutation = {
       image?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -8371,6 +8499,7 @@ export type PublishPageMutation = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -8395,6 +8524,7 @@ export type PublishPageMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -8428,6 +8558,7 @@ export type PublishPageMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -8454,6 +8585,7 @@ export type PublishPageMutation = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -8485,6 +8617,7 @@ export type PublishPageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -8525,6 +8658,7 @@ export type PublishPageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -8553,6 +8687,7 @@ export type PublishPageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -8581,6 +8716,7 @@ export type PublishPageMutation = {
                     image?: {
                       __typename?: 'Image'
                       id: string
+                      link?: string | null
                       filename?: string | null
                       extension: string
                       title?: string | null
@@ -8608,6 +8744,7 @@ export type PublishPageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -8646,6 +8783,7 @@ export type PublishPageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -8674,6 +8812,7 @@ export type PublishPageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -8708,6 +8847,7 @@ export type PublishPageMutation = {
                       logo?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -8726,6 +8866,7 @@ export type PublishPageMutation = {
                       callToActionImage?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -8768,6 +8909,7 @@ export type PublishPageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -8834,6 +8976,7 @@ export type UnpublishPageMutation = {
       image?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -8872,6 +9015,7 @@ export type UnpublishPageMutation = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -8896,6 +9040,7 @@ export type UnpublishPageMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -8929,6 +9074,7 @@ export type UnpublishPageMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -8955,6 +9101,7 @@ export type UnpublishPageMutation = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -8986,6 +9133,7 @@ export type UnpublishPageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -9026,6 +9174,7 @@ export type UnpublishPageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -9054,6 +9203,7 @@ export type UnpublishPageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -9082,6 +9232,7 @@ export type UnpublishPageMutation = {
                     image?: {
                       __typename?: 'Image'
                       id: string
+                      link?: string | null
                       filename?: string | null
                       extension: string
                       title?: string | null
@@ -9109,6 +9260,7 @@ export type UnpublishPageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -9147,6 +9299,7 @@ export type UnpublishPageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -9175,6 +9328,7 @@ export type UnpublishPageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -9209,6 +9363,7 @@ export type UnpublishPageMutation = {
                       logo?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -9227,6 +9382,7 @@ export type UnpublishPageMutation = {
                       callToActionImage?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -9269,6 +9425,7 @@ export type UnpublishPageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -9335,6 +9492,7 @@ export type DeletePageMutation = {
       image?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -9373,6 +9531,7 @@ export type DeletePageMutation = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -9397,6 +9556,7 @@ export type DeletePageMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -9430,6 +9590,7 @@ export type DeletePageMutation = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -9456,6 +9617,7 @@ export type DeletePageMutation = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -9487,6 +9649,7 @@ export type DeletePageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -9527,6 +9690,7 @@ export type DeletePageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -9555,6 +9719,7 @@ export type DeletePageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -9583,6 +9748,7 @@ export type DeletePageMutation = {
                     image?: {
                       __typename?: 'Image'
                       id: string
+                      link?: string | null
                       filename?: string | null
                       extension: string
                       title?: string | null
@@ -9610,6 +9776,7 @@ export type DeletePageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -9648,6 +9815,7 @@ export type DeletePageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -9676,6 +9844,7 @@ export type DeletePageMutation = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -9710,6 +9879,7 @@ export type DeletePageMutation = {
                       logo?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -9728,6 +9898,7 @@ export type DeletePageMutation = {
                       callToActionImage?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -9770,6 +9941,7 @@ export type DeletePageMutation = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -9829,6 +10001,7 @@ export type PageQuery = {
       image?: {
         __typename?: 'Image'
         id: string
+        link?: string | null
         filename?: string | null
         extension: string
         title?: string | null
@@ -9867,6 +10040,7 @@ export type PageQuery = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -9891,6 +10065,7 @@ export type PageQuery = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -9924,6 +10099,7 @@ export type PageQuery = {
               image?: {
                 __typename?: 'Image'
                 id: string
+                link?: string | null
                 filename?: string | null
                 extension: string
                 title?: string | null
@@ -9950,6 +10126,7 @@ export type PageQuery = {
             image?: {
               __typename?: 'Image'
               id: string
+              link?: string | null
               filename?: string | null
               extension: string
               title?: string | null
@@ -9981,6 +10158,7 @@ export type PageQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -10021,6 +10199,7 @@ export type PageQuery = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -10049,6 +10228,7 @@ export type PageQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -10077,6 +10257,7 @@ export type PageQuery = {
                     image?: {
                       __typename?: 'Image'
                       id: string
+                      link?: string | null
                       filename?: string | null
                       extension: string
                       title?: string | null
@@ -10104,6 +10285,7 @@ export type PageQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -10142,6 +10324,7 @@ export type PageQuery = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -10170,6 +10353,7 @@ export type PageQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    link?: string | null
                     filename?: string | null
                     extension: string
                     title?: string | null
@@ -10204,6 +10388,7 @@ export type PageQuery = {
                       logo?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -10222,6 +10407,7 @@ export type PageQuery = {
                       callToActionImage?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -10264,6 +10450,7 @@ export type PageQuery = {
                       image?: {
                         __typename?: 'Image'
                         id: string
+                        link?: string | null
                         filename?: string | null
                         extension: string
                         title?: string | null
@@ -10309,6 +10496,7 @@ export type FullPeerProfileFragment = {
   logo?: {
     __typename?: 'Image'
     id: string
+    link?: string | null
     filename?: string | null
     extension: string
     title?: string | null
@@ -10327,6 +10515,7 @@ export type FullPeerProfileFragment = {
   callToActionImage?: {
     __typename?: 'Image'
     id: string
+    link?: string | null
     filename?: string | null
     extension: string
     title?: string | null
@@ -10372,6 +10561,7 @@ export type PeerWithProfileFragment = {
     logo?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -10390,6 +10580,7 @@ export type PeerWithProfileFragment = {
     callToActionImage?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -10424,6 +10615,7 @@ export type PeerProfileQuery = {
     logo?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -10442,6 +10634,7 @@ export type PeerProfileQuery = {
     callToActionImage?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -10478,6 +10671,7 @@ export type UpdatePeerProfileMutation = {
     logo?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -10496,6 +10690,7 @@ export type UpdatePeerProfileMutation = {
     callToActionImage?: {
       __typename?: 'Image'
       id: string
+      link?: string | null
       filename?: string | null
       extension: string
       title?: string | null
@@ -11149,6 +11344,7 @@ export const ImageUrLs = gql`
 export const ImageRef = gql`
   fragment ImageRef on Image {
     id
+    link
     filename
     extension
     title

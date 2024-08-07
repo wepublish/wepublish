@@ -1,11 +1,11 @@
 import axios from 'axios'
 import cheerio from 'cheerio'
-import {Image} from '@wepublish/api'
 import {
   createArticle,
   createAuthor,
   deleteArticle,
   getAuthorBySlug,
+  getImagesByTitle,
   publishArticle
 } from './private-api'
 import {getArticleBySlug} from './public-api'
@@ -13,6 +13,8 @@ import {BlockInput} from '../api/private'
 import {Node} from 'slate'
 import {convertHtmlToSlate} from './convert-html-to-slate'
 import {extractEmbed} from './embeds'
+import {createImage} from './image-upload'
+import {URL} from 'url'
 
 type WordpressAuthor = {
   id: number
@@ -75,12 +77,26 @@ const ensureAuthor = async (author: WordpressAuthor): Promise<{id: string}> => {
   })
 }
 
-const createImage = async (image: WordpressImage): Promise<Image> => {
-  console.log('  create image')
+const ensureImage = async (input: WordpressImage) => {
+  const {url, alt} = input
+
+  const existingImage = (await getImagesByTitle(alt)).nodes.find(image => image.link === url)
+  if (existingImage) {
+    console.log('  image exists', url)
+    return existingImage
+  }
+
+  console.log('  create image', url)
+  const image = await createImage({
+    downloadUrl: url,
+    filename: new URL(url).pathname.split('/').pop() as string,
+    title: alt,
+    link: url
+  })
+
   return {
-    id: image.url,
-    title: image.alt
-  } as Image
+    id: image.id!
+  }
 }
 
 const specialTags = ['iframe', 'figure', 'img', 'blockquote']
@@ -123,7 +139,7 @@ const migratePost = async (post: WordPressPost) => {
   }
 
   if (_embedded?.['wp:featuredmedia']?.length) {
-    const featuredImage = await createImage({
+    const featuredImage = await ensureImage({
       url: _embedded?.['wp:featuredmedia'][0].source_url,
       alt: _embedded?.['wp:featuredmedia'][0].alt_text
     })
@@ -155,9 +171,9 @@ const migratePost = async (post: WordPressPost) => {
       switch (specialEl.tagName) {
         case 'img':
         case 'figure':
-          image = await createImage({
-            url: $(specialEl).find('img').attr('data-src') ?? '',
-            alt: ''
+          image = await ensureImage({
+            url: $(specialEl).find('img').attr('data-src')!,
+            alt: $(specialEl).find('img').attr('alt')!
           })
           blocks.push({
             image: {
@@ -206,7 +222,6 @@ const migratePost = async (post: WordPressPost) => {
     .map(b => JSON.stringify(b))
     .forEach(b => console.log(`    ${b}`))
 
-  // console.log(JSON.stringify(blocks, undefined, '  '));
   const article = await createArticle({
     authorIDs: authors.map(a => a.id),
     breaking: false,
