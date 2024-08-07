@@ -103,10 +103,13 @@ export class MediaService {
       quality: transformations.quality
     })
 
+    const metadata = await transformedImage.metadata()
     await this.storage.saveFile(
       this.config.transformationBucket,
       `images/${imageId}/${transformationsKey}.webp`,
-      transformedImage.clone()
+      transformedImage.clone(),
+      metadata.size,
+      {ContentType: `image/${metadata.format}`}
     )
 
     return Promise.all([
@@ -119,10 +122,15 @@ export class MediaService {
   }
 
   public async saveImage(imageId: string, image: Buffer) {
-    await this.storage.saveFile(this.config.uploadBucket, `images/${imageId}`, image)
-    return sharp(image, {
-      animated: true
-    }).metadata()
+    let metadata = await sharp(image).metadata()
+    await this.storage.saveFile(
+      this.config.uploadBucket,
+      `images/${imageId}`,
+      image,
+      metadata.size,
+      {ContentType: `image/${metadata.format}`}
+    )
+    return metadata
   }
 
   public async hasImage(imageId: string): Promise<boolean> {
