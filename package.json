@@ -208,6 +208,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
+    "@graphcms/html-to-slate-ast": "^0.14.1",
     "@graphql-tools/delegate": "^10.0.3",
     "@graphql-tools/schema": "^10.0.0",
     "@graphql-tools/wrap": "^10.0.1",
