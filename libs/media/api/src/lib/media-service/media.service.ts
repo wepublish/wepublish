@@ -34,7 +34,7 @@ export class MediaService {
     const transformationsKey = getTransformationKey(transformations)
     const isAlreadyTransformed = await this.storage.hasFile(
       this.config.transformationBucket,
-      `images/${imageId}/${transformationsKey}.webp`
+      `images/${imageId}/${transformationsKey}`
     )
 
     if (!isAlreadyTransformed) {
@@ -44,11 +44,11 @@ export class MediaService {
     return await Promise.all([
       this.storage.getFile(
         this.config.transformationBucket,
-        `images/${imageId}/${transformationsKey}.webp`
+        `images/${imageId}/${transformationsKey}`
       ),
       this.storage.getFileInformation(
         this.config.transformationBucket,
-        `images/${imageId}/${transformationsKey}.webp`
+        `images/${imageId}/${transformationsKey}`
       )
     ])
   }
@@ -106,7 +106,7 @@ export class MediaService {
     const metadata = await transformedImage.metadata()
     await this.storage.saveFile(
       this.config.transformationBucket,
-      `images/${imageId}/${transformationsKey}.webp`,
+      `images/${imageId}/${transformationsKey}`,
       transformedImage.clone(),
       metadata.size,
       {ContentType: `image/${metadata.format}`}
@@ -116,25 +116,17 @@ export class MediaService {
       transformedImage,
       this.storage.getFileInformation(
         this.config.transformationBucket,
-        `images/${imageId}/${transformationsKey}.webp`
+        `images/${imageId}/${transformationsKey}`
       )
     ])
   }
 
   public async saveImage(imageId: string, image: Buffer) {
-    const sharpInstance = sharp(image, {
-      animated: true
-    })
-    const webp = await sharpInstance
-      .webp({
-        quality: 80
-      })
-      .toBuffer()
-    const metadata = await sharp(webp).metadata()
+    const metadata = await sharp(image).metadata()
     await this.storage.saveFile(
       this.config.uploadBucket,
       `images/${imageId}`,
-      webp,
+      image,
       metadata.size,
       {ContentType: `image/${metadata.format}`}
     )
