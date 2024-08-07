@@ -122,11 +122,19 @@ export class MediaService {
   }
 
   public async saveImage(imageId: string, image: Buffer) {
-    const metadata = await sharp(image).metadata()
+    const sharpInstance = sharp(image, {
+      animated: true
+    })
+    const webp = await sharpInstance
+      .webp({
+        quality: 80
+      })
+      .toBuffer()
+    const metadata = await sharp(webp).metadata()
     await this.storage.saveFile(
       this.config.uploadBucket,
       `images/${imageId}`,
-      image,
+      webp,
       metadata.size,
       {ContentType: `image/${metadata.format}`}
     )
