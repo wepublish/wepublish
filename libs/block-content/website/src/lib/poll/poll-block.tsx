@@ -134,11 +134,14 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
                   loading: true
                 })
 
-                const result = await vote({
-                  variables: {
-                    answerId: answer.id
-                  }
-                })
+                const result = await vote(
+                  {
+                    variables: {
+                      answerId: answer.id
+                    }
+                  },
+                  poll?.id
+                )
 
                 setVoteResult({
                   ...result,
