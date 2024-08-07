@@ -1,5 +1,10 @@
 import {ApolloError} from '@apollo/client'
-import {EventRefFragment, TagType, useEventListLazyQuery} from '@wepublish/editor/api'
+import {
+  ContentTagFilter,
+  EventRefFragment,
+  TagType,
+  useEventListLazyQuery
+} from '@wepublish/editor/api'
 import {useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
@@ -41,7 +46,7 @@ export type SelectEventPanelProps = {
 }
 
 export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEventPanelProps) {
-  const [tagFilter, setTagFilter] = useState(selectedFilter.tags)
+  const [tagFilter, setTagFilter] = useState<ContentTagFilter>({ids: selectedFilter.tags})
   const [eventFilter, setEventFilter] = useState(selectedFilter.events)
   const [allowCherryPicking, toggleCherryPicking] = useReducer(
     cherryPicking => !cherryPicking,
@@ -64,7 +69,7 @@ export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEven
         data?.events?.nodes.filter(({id}) => eventFilter?.includes(id)) ?? []
       )
     } else {
-      onSelect({tags: tagFilter || []}, data?.events?.nodes ?? [])
+      onSelect({tags: tagFilter.ids || []}, data?.events?.nodes ?? [])
     }
   }
 
@@ -105,13 +110,13 @@ export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEven
               defaultTags={[]}
               name="tags"
               tagType={TagType.Event}
-              setSelectedTags={setTagFilter}
-              selectedTags={tagFilter}
+              setSelectedTags={tags => setTagFilter({ids: tags})}
+              selectedTags={tagFilter.ids}
             />
           </Form.Group>
         </div>
 
-        {!allowCherryPicking && !!tagFilter?.length && (
+        {!allowCherryPicking && !!tagFilter?.ids?.length && (
           <Message showIcon type="info" style={{marginTop: '12px'}}>
             {t('blocks.event.eventsFilterByTagInformation')}
           </Message>

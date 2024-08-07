@@ -591,7 +591,9 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
             const articles = await getArticles(
               {
                 published: true,
-                tags: filter.tags
+                tags: {
+                  ids: filter.tags
+                }
               },
               ArticleSort.PublishedAt,
               SortOrder.Descending,
@@ -699,7 +701,7 @@ export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBloc
           if (teaserType === TeaserType.Article) {
             const articles = await getPublishedArticles(
               {
-                tags: filter.tags
+                tags: {ids: filter.tags}
               },
               ArticleSort.PublishedAt,
               SortOrder.Descending,

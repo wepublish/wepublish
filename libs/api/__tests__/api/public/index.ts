@@ -66,7 +66,7 @@ export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['ID']>>;
   includeHidden?: InputMaybe<Scalars['Boolean']>;
   shared?: InputMaybe<Scalars['Boolean']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<ContentTagFilter>;
 };
 
 export type ArticleNavigationLink = BaseNavigationLink & {
@@ -275,6 +275,11 @@ export type CommentUpdateInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type ContentTagFilter = {
+  ids?: InputMaybe<Array<Scalars['ID']>>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+};
+
 export type CustomTeaser = {
   __typename?: 'CustomTeaser';
   contentUrl?: Maybe<Scalars['String']>;
@@ -339,7 +344,7 @@ export type EventFilter = {
   from?: InputMaybe<Scalars['DateTime']>;
   location?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['ID']>>;
+  tags?: InputMaybe<ContentTagFilter>;
   to?: InputMaybe<Scalars['DateTime']>;
   upcomingOnly?: InputMaybe<Scalars['Boolean']>;
 };
@@ -1025,7 +1030,7 @@ export type PublicPropertiesInput = {
 };
 
 export type PublishedPageFilter = {
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<ContentTagFilter>;
 };
 
 export enum PublishedPageSort {
@@ -1554,7 +1559,7 @@ export type OverriddenRating = {
 export type ArticleRefFragment = { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, preTitle?: string | null, title: string, lead?: string | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
 export type ArticleListQueryVariables = Exact<{
-  filter?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+  filter?: InputMaybe<ArticleFilter>;
   cursor?: InputMaybe<Scalars['ID']>;
   take?: InputMaybe<Scalars['Int']>;
 }>;
@@ -1720,7 +1725,7 @@ export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: s
 export type PageRefFragment = { __typename?: 'Page', id: string, publishedAt: string, updatedAt: string, title: string, description?: string | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
 export type PageListQueryVariables = Exact<{
-  filter?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+  filter?: InputMaybe<PublishedPageFilter>;
   cursor?: InputMaybe<Scalars['ID']>;
   take?: InputMaybe<Scalars['Int']>;
 }>;
@@ -2123,8 +2128,8 @@ export const FullUser = gql`
 }
     `;
 export const ArticleList = gql`
-    query ArticleList($filter: [String!], $cursor: ID, $take: Int) {
-  articles(take: $take, cursor: $cursor, filter: {tags: $filter}) {
+    query ArticleList($filter: ArticleFilter, $cursor: ID, $take: Int) {
+  articles(take: $take, cursor: $cursor, filter: $filter) {
     nodes {
       ...ArticleRef
     }
@@ -2285,8 +2290,8 @@ export const Event = gql`
 }
     ${EventRef}`;
 export const PageList = gql`
-    query PageList($filter: [String!], $cursor: ID, $take: Int) {
-  pages(take: $take, cursor: $cursor, filter: {tags: $filter}) {
+    query PageList($filter: PublishedPageFilter, $cursor: ID, $take: Int) {
+  pages(take: $take, cursor: $cursor, filter: $filter) {
     nodes {
       ...PageRef
     }

@@ -43,7 +43,7 @@ export default function ArticleBySlugIdOrToken() {
             <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
 
             <ArticleListContainer
-              variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
+              variables={{filter: {tags: {ids: data.article.tags.map(tag => tag.id)}}, take: 4}}
               filter={articles => articles.filter(article => article.id !== data.article?.id)}
             />
           </ArticleWrapper>

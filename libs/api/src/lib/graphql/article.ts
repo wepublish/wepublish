@@ -33,7 +33,7 @@ import {GraphQLPublicComment} from './comment/comment'
 import {AuthSessionType} from '@wepublish/authentication/api'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 import {SortOrder} from '@wepublish/utils/api'
-import {GraphQLTag} from './tag/tag'
+import {GraphQLContentTagFilter, GraphQLTag} from './tag/tag'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -47,7 +47,7 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
     published: {type: GraphQLBoolean},
     pending: {type: GraphQLBoolean},
     authors: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    tags: {type: GraphQLContentTagFilter},
     includeHidden: {type: GraphQLBoolean},
     shared: {type: GraphQLBoolean}
   }
@@ -57,7 +57,7 @@ export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
   fields: {
     authors: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    tags: {type: GraphQLContentTagFilter},
     includeHidden: {type: GraphQLBoolean},
     shared: {type: GraphQLBoolean}
   }

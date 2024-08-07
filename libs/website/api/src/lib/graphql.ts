@@ -68,7 +68,7 @@ export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['ID']>>;
   includeHidden?: InputMaybe<Scalars['Boolean']>;
   shared?: InputMaybe<Scalars['Boolean']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<ContentTagFilter>;
 };
 
 export type ArticleNavigationLink = BaseNavigationLink & {
@@ -277,6 +277,11 @@ export type CommentUpdateInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type ContentTagFilter = {
+  ids?: InputMaybe<Array<Scalars['ID']>>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+};
+
 export type CustomTeaser = {
   __typename?: 'CustomTeaser';
   contentUrl?: Maybe<Scalars['String']>;
@@ -341,7 +346,7 @@ export type EventFilter = {
   from?: InputMaybe<Scalars['DateTime']>;
   location?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['ID']>>;
+  tags?: InputMaybe<ContentTagFilter>;
   to?: InputMaybe<Scalars['DateTime']>;
   upcomingOnly?: InputMaybe<Scalars['Boolean']>;
 };
@@ -1027,7 +1032,7 @@ export type PublicPropertiesInput = {
 };
 
 export type PublishedPageFilter = {
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<ContentTagFilter>;
 };
 
 export enum PublishedPageSort {

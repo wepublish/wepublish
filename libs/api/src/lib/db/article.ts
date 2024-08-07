@@ -84,7 +84,10 @@ export interface ArticleFilter {
   readonly pending?: boolean
   readonly shared?: boolean
   readonly authors?: string[]
-  readonly tags?: string[]
+  readonly tags?: {
+    ids?: string[]
+    tags?: string[]
+  }
   readonly includeHidden?: boolean
 }
 
