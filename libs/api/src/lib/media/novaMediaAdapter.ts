@@ -144,7 +144,7 @@ export class NovaMediaAdapter implements MediaAdapter {
       queryParameters.push(`sharpen=1`)
     }
 
-    queryParameters.push(`quality=${transformations?.quality ? transformations.quality * 100 : 80}`)
+    queryParameters.push(`quality=${transformations?.quality ? transformations.quality * 100 : 65}`)
 
     return `${this.url}/${image.id}?${queryParameters.join('&')}`
   }
