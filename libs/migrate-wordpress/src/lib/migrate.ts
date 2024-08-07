@@ -12,6 +12,7 @@ import {getArticleBySlug} from './public-api'
 import {BlockInput} from '../api/private'
 import {Node} from 'slate'
 import {convertHtmlToSlate} from './convert-html-to-slate'
+import {extractEmbed} from './embeds'
 
 type WordpressAuthor = {
   id: number
@@ -62,11 +63,11 @@ const ensureAuthor = async (author: WordpressAuthor): Promise<{id: string}> => {
 
   const existingAuthor = await getAuthorBySlug(author.slug)
   if (existingAuthor) {
-    console.log('author exists', slug)
+    console.log('  author exists', slug)
     return existingAuthor
   }
 
-  console.log('author create', slug)
+  console.log('  author create', slug)
   return await createAuthor({
     name,
     slug,
@@ -75,12 +76,14 @@ const ensureAuthor = async (author: WordpressAuthor): Promise<{id: string}> => {
 }
 
 const createImage = async (image: WordpressImage): Promise<Image> => {
-  console.log('create image')
+  console.log('  create image')
   return {
     id: image.url,
     title: image.alt
   } as Image
 }
+
+const specialTags = ['iframe', 'figure', 'img', 'blockquote']
 
 const migratePost = async (post: WordPressPost) => {
   const {
@@ -92,11 +95,16 @@ const migratePost = async (post: WordPressPost) => {
     _embedded
   } = post
 
+  console.log()
+  console.log('========================================================================')
+  console.log()
+  console.log('Migrating article')
+  console.log({title, slug, link})
   const existingArticle = await getArticleBySlug(slug)
   if (existingArticle) {
-    console.log('article exists', slug)
+    console.log('  article exists', slug)
     if (deleteBeforeMigrate) {
-      console.log('article delete', slug)
+      console.log('  article delete', slug)
       await deleteArticle(existingArticle.id)
     } else {
       return existingArticle
@@ -104,7 +112,6 @@ const migratePost = async (post: WordPressPost) => {
   }
 
   let htmlContent: Node[] | undefined
-  let src: string | undefined
   let lastBlock: undefined | BlockInput
   const $ = cheerio.load(content)
   const blocks: BlockInput[] = []
@@ -131,67 +138,75 @@ const migratePost = async (post: WordPressPost) => {
   const nodes = $('body').children()
 
   for (const el of nodes) {
-    let image
+    let image, specialEl
     // console.log(`${i}: ${el.tagName}`)
     // console.log($.html(el))
-    switch (el.tagName) {
-      // case 'img':
-      case 'figure':
-        image = await createImage({
-          url: $(el).find('img').attr('data-src') ?? '',
-          alt: ''
-        })
-        blocks.push({
-          image: {
-            imageID: image.id
+
+    if (specialTags.includes(el.tagName)) {
+      specialEl = el
+    } else {
+      specialEl = specialTags.map(tag => $(el).find(tag)[0]).find(e => e)
+    }
+    // console.log({tag: el.tagName, specialTag: specialEl});
+
+    // console.log(`${i}: ${el.tagName}`)
+    // console.log($.html(el))
+    if (specialEl) {
+      switch (specialEl.tagName) {
+        case 'img':
+        case 'figure':
+          image = await createImage({
+            url: $(specialEl).find('img').attr('data-src') ?? '',
+            alt: ''
+          })
+          blocks.push({
+            image: {
+              imageID: image.id
+            }
+          })
+          break
+        case 'iframe':
+          if ($(specialEl).attr('src')) {
+            blocks.push(extractEmbed($(specialEl).attr('src')!))
           }
-        })
-        break
-      case 'iframe':
-        src = $(el).attr('src')
-        if (src?.includes('youtube.com') || src?.includes('youtu.be')) {
-          blocks.push({
-            youTubeVideo: {
-              videoID: src
-            }
-          })
-        } else if (src?.includes('vimeo.com')) {
-          blocks.push({
-            vimeoVideo: {
-              videoID: src
-            }
-          })
-        } else {
-          blocks.push({
-            embed: {
-              url: src
-            }
-          })
-        }
-        break
-      case 'hr':
-        break
-      case 'p':
-      case 'blockquote':
-      case 'h1':
-      case 'h2':
-      case 'h3':
-      case 'h4':
-      case 'h5':
-      case 'h6':
-      default:
-        htmlContent = (await convertHtmlToSlate($.html(el).toString())) as unknown as Node[]
-        if (lastBlock?.richText) {
-          lastBlock?.richText.richText.push(...htmlContent)
-        } else {
-          blocks.push({richText: {richText: htmlContent}})
-        }
-        break
+          break
+        case 'hr':
+          break
+        case 'blockquote':
+          blocks.push(extractEmbed($(specialEl).html()!))
+          break
+        case 'p':
+        case 'h1':
+        case 'h2':
+        case 'h3':
+        case 'h4':
+        case 'h5':
+        case 'h6':
+      }
+    } else {
+      htmlContent = (await convertHtmlToSlate($.html(el).toString())) as unknown as Node[]
+      if (lastBlock?.richText) {
+        lastBlock?.richText.richText.push(...htmlContent)
+      } else {
+        blocks.push({richText: {richText: htmlContent}})
+      }
     }
     lastBlock = blocks[blocks.length - 1]
   }
 
-  console.log('article create', slug)
+  console.log('  article create', slug)
+  blocks
+    .map(block => {
+      if (block.richText) {
+        return {richtext: {richtext: '<content>'}}
+      } else {
+        return block
+      }
+    })
+    .map(b => JSON.stringify(b))
+    .forEach(b => console.log(`    ${b}`))
+
+  // console.log(JSON.stringify(blocks, undefined, '  '));
   const article = await createArticle({
     authorIDs: authors.map(a => a.id),
     breaking: false,
@@ -202,11 +217,24 @@ const migratePost = async (post: WordPressPost) => {
     tags: [],
     title,
     slug,
-    blocks
+    blocks: blocks.map(block => {
+      if (block.richText) {
+        return {
+          richText: {
+            richText: [
+              {
+                type: 'paragraph',
+                children: block.richText.richText
+              }
+            ]
+          }
+        }
+      }
+      return block
+    })
   })
 
   await publishArticle(article.id)
-  console.log(article)
   return article
 }
 
