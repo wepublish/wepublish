@@ -122,7 +122,7 @@ export class MediaService {
   }
 
   public async saveImage(imageId: string, image: Buffer) {
-    let metadata = await sharp(image).metadata()
+    const metadata = await sharp(image).metadata()
     await this.storage.saveFile(
       this.config.uploadBucket,
       `images/${imageId}`,
