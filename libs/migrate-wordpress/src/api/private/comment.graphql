@@ -1,0 +1,169 @@
+fragment CommentRevision on CommentRevision {
+  text
+  title
+  lead
+  createdAt
+}
+
+fragment FullParentComment on Comment {
+  id
+  state
+  rejectionReason
+  user {
+    ...FullUser
+  }
+  guestUsername
+  revisions {
+    ...CommentRevision
+  }
+  createdAt
+  modifiedAt
+}
+
+fragment FullCommentUser on User {
+  id
+  name
+  firstName
+  preferredName
+  flair
+  email
+}
+
+fragment FullComment on Comment {
+  id
+  state
+  rejectionReason
+  guestUsername
+  guestUserImage {
+    ...ImageRef
+  }
+  user {
+    ...FullUser
+  }
+  revisions {
+    ...CommentRevision
+  }
+  source
+  user {
+    ...FullCommentUser
+  }
+  createdAt
+  modifiedAt
+  itemID
+  itemType
+  parentComment {
+    ...FullParentComment
+  }
+
+  tags {
+    id
+    tag
+  }
+
+  overriddenRatings {
+    answerId
+    value
+  }
+
+  featured
+}
+
+query CommentList(
+  $filter: CommentFilter
+  $cursor: ID
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: CommentSort
+) {
+  comments(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...FullComment
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Comment($id: ID!) {
+  comment(id: $id) {
+    ...FullComment
+  }
+}
+
+mutation ApproveComment($id: ID!) {
+  approveComment(id: $id) {
+    state
+  }
+}
+
+mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason) {
+  rejectComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+
+mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+
+mutation updateComment(
+  $id: ID!
+  $revision: CommentRevisionUpdateInput
+  $userID: ID
+  $guestUsername: String
+  $guestUserImageID: ID
+  $featured: Boolean
+  $source: String
+  $tagIds: [ID!]
+  $ratingOverrides: [CommentRatingOverrideUpdateInput!]
+) {
+  updateComment(
+    id: $id
+    revision: $revision
+    userID: $userID
+    guestUsername: $guestUsername
+    guestUserImageID: $guestUserImageID
+    featured: $featured
+    source: $source
+    tagIds: $tagIds
+    ratingOverrides: $ratingOverrides
+  ) {
+    ...FullComment
+  }
+}
+
+mutation createComment(
+  $itemID: ID!
+  $itemType: CommentItemType!
+  $parentID: ID
+  $text: RichText
+  $tagIds: [ID!]
+) {
+  createComment(
+    itemID: $itemID
+    itemType: $itemType
+    parentID: $parentID
+    text: $text
+    tagIds: $tagIds
+  ) {
+    ...FullComment
+  }
+}
+
+mutation DeleteComment($deleteCommentId: ID!) {
+  deleteComment(id: $deleteCommentId) {
+    id
+  }
+}

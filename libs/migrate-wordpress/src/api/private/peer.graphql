@@ -1,0 +1,72 @@
+fragment FullPeerProfile on PeerProfile {
+  name
+  hostURL
+  themeColor
+  themeFontColor
+  logo {
+    ...ImageRef
+  }
+  callToActionText
+  callToActionURL
+  callToActionImage {
+    ...ImageRef
+  }
+  callToActionImageURL
+}
+
+fragment PeerRef on Peer {
+  id
+  name
+  isDisabled
+  slug
+  hostURL
+}
+
+fragment PeerWithProfile on Peer {
+  ...PeerRef
+  profile {
+    ...FullPeerProfile
+  }
+}
+
+query PeerProfile {
+  peerProfile {
+    ...FullPeerProfile
+  }
+}
+
+mutation UpdatePeerProfile($input: PeerProfileInput!) {
+  updatePeerProfile(input: $input) {
+    ...FullPeerProfile
+  }
+}
+
+query PeerList {
+  peers {
+    ...PeerRef
+  }
+}
+
+query Peer($id: ID!) {
+  peer(id: $id) {
+    ...PeerRef
+  }
+}
+
+mutation CreatePeer($input: CreatePeerInput!) {
+  createPeer(input: $input) {
+    ...PeerRef
+  }
+}
+
+mutation UpdatePeer($id: ID!, $input: UpdatePeerInput!) {
+  updatePeer(id: $id, input: $input) {
+    ...PeerRef
+  }
+}
+
+mutation DeletePeer($id: ID!) {
+  deletePeer(id: $id) {
+    ...PeerRef
+  }
+}

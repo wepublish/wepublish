@@ -1,0 +1,62 @@
+fragment FullPermission on Permission {
+  id
+  description
+  deprecated
+}
+
+fragment FullUserRole on UserRole {
+  id
+  name
+  description
+  systemRole
+  permissions {
+    ...FullPermission
+  }
+}
+
+query UserRoleList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+  userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+    nodes {
+      ...FullUserRole
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query PermissionList {
+  permissions {
+    ...FullPermission
+  }
+}
+
+query UserRole($id: ID!) {
+  userRole(id: $id) {
+    ...FullUserRole
+  }
+}
+
+mutation CreateUserRole($input: UserRoleInput!) {
+  createUserRole(input: $input) {
+    ...FullUserRole
+  }
+}
+
+mutation UpdateUserRole($id: ID!, $input: UserRoleInput!) {
+  updateUserRole(id: $id, input: $input) {
+    ...FullUserRole
+  }
+}
+
+mutation DeleteUserRole($id: ID!) {
+  deleteUserRole(id: $id) {
+    ...FullUserRole
+  }
+}

@@ -1,0 +1,55 @@
+fragment FullNavigation on Navigation {
+  id
+  key
+  name
+  links {
+    __typename
+
+    ... on PageNavigationLink {
+      label
+      page {
+        ...PageRef
+      }
+    }
+    ... on ArticleNavigationLink {
+      label
+      article {
+        ...ArticleRef
+      }
+    }
+    ... on ExternalNavigationLink {
+      label
+      url
+    }
+  }
+}
+
+query NavigationList {
+  navigations {
+    ...FullNavigation
+  }
+}
+
+query Navigation($id: ID!) {
+  navigation(id: $id) {
+    ...FullNavigation
+  }
+}
+
+mutation CreateNavigation($input: NavigationInput!) {
+  createNavigation(input: $input) {
+    ...FullNavigation
+  }
+}
+
+mutation UpdateNavigation($id: ID!, $input: NavigationInput!) {
+  updateNavigation(id: $id, input: $input) {
+    ...FullNavigation
+  }
+}
+
+mutation DeleteNavigation($id: ID!) {
+  deleteNavigation(id: $id) {
+    ...FullNavigation
+  }
+}

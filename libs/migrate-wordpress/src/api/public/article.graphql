@@ -1,0 +1,40 @@
+fragment ArticleRef on Article {
+    id
+    publishedAt
+    updatedAt
+    tags {
+        id
+        tag
+    }
+    preTitle
+    title
+    lead
+    image {
+        ...ImageRef
+    }
+}
+
+query ArticleList($filter: [String!], $cursor: ID, $take: Int) {
+    articles(take: $take, cursor: $cursor, filter: {tags: $filter}) {
+        nodes {
+            ...ArticleRef
+        }
+
+        pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+        }
+
+        totalCount
+    }
+}
+
+query Article($slug: Slug!) {
+    article(slug: $slug) {
+        id
+    }
+}
+
+
