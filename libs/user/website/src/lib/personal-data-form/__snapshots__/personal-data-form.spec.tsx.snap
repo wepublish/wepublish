@@ -1351,7 +1351,7 @@ https://unsplash.it/200/100 200w"
             for=":r5:"
             id=":r5:-label"
           >
-            Adresse
+            Strasse und Hausnummer
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-47"
@@ -1373,7 +1373,7 @@ https://unsplash.it/200/100 200w"
                 class="emotion-24"
               >
                 <span>
-                  Adresse
+                  Strasse und Hausnummer
                 </span>
               </legend>
             </fieldset>
@@ -2443,7 +2443,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
             for=":r15:"
             id=":r15:-label"
           >
-            Adresse
+            Strasse und Hausnummer
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-14"
@@ -2465,7 +2465,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="emotion-9"
               >
                 <span>
-                  Adresse
+                  Strasse und Hausnummer
                 </span>
               </legend>
             </fieldset>
@@ -7977,7 +7977,7 @@ https://unsplash.it/200/100 200w"
             for=":r44:"
             id=":r44:-label"
           >
-            Adresse
+            Strasse und Hausnummer
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-47"
@@ -7999,7 +7999,7 @@ https://unsplash.it/200/100 200w"
                 class="emotion-24"
               >
                 <span>
-                  Adresse
+                  Strasse und Hausnummer
                 </span>
               </legend>
             </fieldset>
