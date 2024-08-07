@@ -5,6 +5,8 @@ import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
+  TitleBlock,
+  TitleBlockTitle,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
@@ -83,6 +85,14 @@ const LogoWrapper = styled(Logo)`
   }
 `
 
+const TsriTitle = styled(TitleBlock)`
+  ${TitleBlockTitle} {
+    ${({theme}) => theme.breakpoints.down('sm')} {
+      font-size: 2rem;
+    }
+  }
+`
+
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
@@ -107,7 +117,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             Teaser: TsriTeaser,
             Break: TsriBreakBlock,
             Quote: TsriQuoteBlock,
-            RichText: TsriRichText
+            RichText: TsriRichText,
+            Title: TsriTitle
           }}
           date={{format: dateFormatter}}
           meta={{siteTitle}}
