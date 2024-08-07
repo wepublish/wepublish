@@ -2,6 +2,7 @@ import {Inject, Injectable} from '@nestjs/common'
 import sharp from 'sharp'
 import {TransformationsDto} from './transformations.dto'
 import {StorageClient} from '../storage-client/storage-client.service'
+import {TransformGuard} from './transform.guard'
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol('MEDIA_SERVICE_MODULE_OPTIONS')
 
@@ -61,6 +62,10 @@ export class MediaService {
         animated: true
       })
     )
+    let metadata = await sharpInstance.metadata()
+
+    const transformGuard = new TransformGuard()
+    transformGuard.checkDimensions(metadata, transformations)
 
     if (transformations.extend) {
       sharpInstance.extend(transformations.extend)
@@ -103,7 +108,9 @@ export class MediaService {
       quality: transformations.quality
     })
 
-    const metadata = await transformedImage.metadata()
+    metadata = await transformedImage.metadata()
+    transformGuard.checkImageSize(metadata)
+
     await this.storage.saveFile(
       this.config.transformationBucket,
       `images/${imageId}/${transformationsKey}`,
