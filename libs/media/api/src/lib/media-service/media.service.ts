@@ -125,17 +125,13 @@ export class MediaService {
     const sharpInstance = sharp(image, {
       animated: true
     })
-
+    const metadata = await sharpInstance.metadata()
     await this.storage.saveFile(
       this.config.uploadBucket,
-      `images/${imageId}.webp`,
-      sharpInstance.webp({
-        quality: 100,
-        nearLossless: true
-      })
+      `images/${imageId}.${metadata.format}`,
+      image
     )
-
-    return await sharpInstance.metadata()
+    return metadata
   }
 
   public async hasImage(imageId: string): Promise<boolean> {
