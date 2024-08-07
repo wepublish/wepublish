@@ -1,12 +1,11 @@
 import sharp from 'sharp'
-import {TransformationsDto} from '@wepublish/media/api'
+import {TransformationsDto} from './transformations.dto'
 import {BadRequestException} from '@nestjs/common'
 
 const M_PIXEL_LIMIT = 10
 const IMAGE_SIZE_LIMIT = 1
 
 export class TransformGuard {
-  constructor() {}
   checkDimensions(metadata: sharp.Metadata, transformations: TransformationsDto) {
     const totalHeight =
       (metadata.height ?? 0) +
