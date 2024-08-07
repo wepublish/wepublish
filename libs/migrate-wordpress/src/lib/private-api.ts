@@ -67,14 +67,14 @@ export async function deleteArticle(id: string) {
   ).deleteArticle
 }
 
-export async function publishArticle(id: string) {
+export async function publishArticle(id: string, publishDate: Date, lastModifiedDate: Date) {
   return await privateClient.request<PublishArticleMutation, PublishArticleMutationVariables>(
     PublishArticle,
     {
       id,
-      publishAt: new Date().toISOString(),
-      publishedAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      publishAt: publishDate.toISOString(),
+      publishedAt: publishDate.toISOString(),
+      updatedAt: lastModifiedDate.toISOString()
     }
   )
 }

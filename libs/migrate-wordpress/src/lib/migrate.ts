@@ -29,7 +29,8 @@ interface WordPressPost {
   id: number
   title: {rendered: string}
   content: {rendered: string}
-  date: string
+  date_gmt: string
+  modified_gmt: string
   slug: string
   link: string
   _embedded?: {
@@ -105,7 +106,8 @@ const migratePost = async (post: WordPressPost) => {
   const {
     title: {rendered: title},
     content: {rendered: content},
-    date,
+    date_gmt,
+    modified_gmt,
     slug,
     link,
     _embedded
@@ -249,7 +251,7 @@ const migratePost = async (post: WordPressPost) => {
     })
   })
 
-  await publishArticle(article.id)
+  await publishArticle(article.id, new Date(date_gmt + 'Z'), new Date(modified_gmt + 'Z'))
   return article
 }
 
