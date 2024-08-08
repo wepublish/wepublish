@@ -129,7 +129,10 @@ export class MediaService {
     await this.storage.saveFile(
       this.config.uploadBucket,
       `images/${imageId}.webp`,
-      sharpInstance.avif({quality: 80})
+      sharpInstance.webp({
+        quality: 100,
+        nearLossless: true
+      })
     )
 
     return await sharpInstance.metadata()
