@@ -10,6 +10,5 @@ export type BuilderImageWidths = 200 | 300 | 500 | 800 | 1000 | 1200
 
 export type BuilderImageProps = {
   image: FullImageFragment
-  maxWidth?: BuilderImageWidths
 } & BuilderImageProviderProps &
   Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'srcSet' | 'alt' | 'title' | 'width' | 'height'>
