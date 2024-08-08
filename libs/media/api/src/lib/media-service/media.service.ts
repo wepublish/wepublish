@@ -65,7 +65,7 @@ export class MediaService {
     let metadata = await sharpInstance.metadata()
 
     const transformGuard = new TransformGuard()
-    transformGuard.checkDimensions(metadata, transformations)
+    const effort = transformGuard.checkDimensions(metadata, transformations)
     transformGuard.checkQuality(transformations)
 
     if (transformations.extend) {
@@ -107,7 +107,7 @@ export class MediaService {
     const transformationsKey = getTransformationKey(transformations)
     const transformedImage = sharpInstance.webp({
       quality: transformations.quality,
-      effort: 0
+      effort: effort
     })
 
     metadata = await transformedImage.metadata()

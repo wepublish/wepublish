@@ -12,6 +12,11 @@ export class TransformGuard {
     return (height * width) / 1000 / 1000
   }
 
+  private calculateEffort(mPixel: number): number {
+    const effort = Math.ceil(4 - mPixel / (M_PIXEL_LIMIT / 5))
+    return effort < 0 ? 0 : effort
+  }
+
   private resizeDimensions(
     originalWidth: number,
     originalHeight: number,
@@ -25,7 +30,7 @@ export class TransformGuard {
     return {newWidth, newHeight}
   }
 
-  public checkDimensions(metadata: sharp.Metadata, transformations: TransformationsDto) {
+  public checkDimensions(metadata: sharp.Metadata, transformations: TransformationsDto): number {
     // Ensure that original picture is not more than M_PIXEL_LIMIT
     if (!transformations.extend && !transformations.resize) {
       const originalMP = this.calculateMegaPixel(metadata.height ?? 0, metadata.width ?? 0)
@@ -36,8 +41,9 @@ export class TransformGuard {
           M_PIXEL_LIMIT
         )
         transformations.resize = {width: newWidth, height: newHeight}
+        return this.calculateEffort(this.calculateMegaPixel(newHeight, newWidth))
       }
-      return
+      return this.calculateEffort(originalMP)
     }
 
     const height = transformations.resize?.height ? transformations.resize?.height : metadata.height
@@ -54,7 +60,9 @@ export class TransformGuard {
     if (mPixel > M_PIXEL_LIMIT) {
       throw new BadRequestException(`Transformation exceeds pixel limit!`)
     }
+    return this.calculateEffort(mPixel)
   }
+
   public checkImageSize(metadata: sharp.Metadata) {
     const mByte = (metadata.size ?? 0) / 1000 / 1000
     if (mByte > IMAGE_SIZE_LIMIT) {
