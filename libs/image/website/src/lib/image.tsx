@@ -48,8 +48,8 @@ export const ImageWrapper = styled('img')<{aspectRatio: number}>`
   object-fit: contain;
 `
 
-export function Image({image, maxWidth, ...props}: BuilderImageProps) {
-  const {square, fetchPriority, loading} = useImageProps(props)
+export function Image({image, ...props}: BuilderImageProps) {
+  const {maxWidth, square, fetchPriority, loading} = useImageProps(props)
   const images = square ? imageToSquareImageItems(image) : imageToImageItems(image)
 
   const imageArray = images.reduce((array, img) => {
