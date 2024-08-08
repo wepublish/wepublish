@@ -1,6 +1,6 @@
 import {styled} from '@mui/material'
 import {FullImageFragment} from '@wepublish/website/api'
-import {BuilderImageProps} from '@wepublish/website/builder'
+import {BuilderImageProps, BuilderImageWidths} from '@wepublish/website/builder'
 import {useImageProps} from './image.context'
 
 declare module 'react' {
@@ -10,7 +10,7 @@ declare module 'react' {
   }
 }
 
-type ImageItem<Size extends number> = {size: Size; url: string | null | undefined}
+type ImageItem<Size extends BuilderImageWidths> = {size: Size; url: string | null | undefined}
 type ImageItems = [
   xl: ImageItem<1200>,
   l: ImageItem<1000>,
@@ -48,7 +48,7 @@ export const ImageWrapper = styled('img')<{aspectRatio: number}>`
   object-fit: contain;
 `
 
-export function Image({image, ...props}: BuilderImageProps) {
+export function Image({image, maxWidth, ...props}: BuilderImageProps) {
   const {square, fetchPriority, loading} = useImageProps(props)
   const images = square ? imageToSquareImageItems(image) : imageToImageItems(image)
 
@@ -61,6 +61,10 @@ export function Image({image, ...props}: BuilderImageProps) {
   }, [] as string[])
 
   const imageSizes = [...images].reverse().reduce((array, img, index) => {
+    if (maxWidth && img.size > maxWidth) {
+      return array
+    }
+
     if (index === images.length - 1) {
       array.push(`${img.size}w`)
     } else {
