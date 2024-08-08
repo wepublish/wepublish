@@ -40,7 +40,7 @@ export class TransformGuard {
       return
     }
 
-    let height = transformations.resize?.height ? transformations.resize?.height : metadata.height
+    const height = transformations.resize?.height ? transformations.resize?.height : metadata.height
 
     const totalHeight =
       (height ?? 0) + (transformations.extend?.top ?? 0) + (transformations.extend?.bottom ?? 0)
