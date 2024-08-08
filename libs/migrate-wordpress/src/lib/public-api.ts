@@ -1,7 +1,7 @@
 import {Article, ArticleQuery, ArticleQueryVariables} from '../api/public'
 import {GraphQLClient} from 'graphql-request'
 
-const publicGraphqlEndpoint = 'http://localhost:4000/v1'
+const publicGraphqlEndpoint = process.env['WEPUBLISH_API_URL'] + '/v1'
 export const publicClient = new GraphQLClient(publicGraphqlEndpoint, {
   headers: {
     'Content-Type': 'application/json'

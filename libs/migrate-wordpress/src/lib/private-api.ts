@@ -20,8 +20,8 @@ import {
 } from '../api/private'
 import {GraphQLClient} from 'graphql-request'
 
-export const privateToken = 'DDqxIRefm7VxG3ue1czEPbnW66U6FcxJ'
-export const privateGraphqlEndpoint = 'http://localhost:4000/v1/admin'
+export const privateToken = process.env['TOKEN']
+export const privateGraphqlEndpoint = process.env['WEPUBLISH_API_URL'] + '/v1/admin'
 export const privateClient = new GraphQLClient(privateGraphqlEndpoint, {
   headers: {
     'Content-Type': 'application/json',

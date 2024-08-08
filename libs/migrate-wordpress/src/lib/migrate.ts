@@ -51,13 +51,13 @@ type WordpressImage = {
   alt: string
 }
 
-const WP_API_URL = 'https://mannschaft.com/wp-json/wp/v2/posts'
+const WORDPRESS_URL = process.env['WORDPRESS_URL'] + '/wp-json/wp/v2/posts'
 const BATCH_SIZE = 10
 
 const deleteBeforeMigrate = true
 
 const fetchPosts = async (page: number, perPage: number): Promise<WordPressPost[]> => {
-  const response = await axios.get(WP_API_URL, {
+  const response = await axios.get(WORDPRESS_URL, {
     params: {page, per_page: perPage, _embed: true}
   })
   return response.data
