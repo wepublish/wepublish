@@ -4,6 +4,8 @@ import {BadRequestException} from '@nestjs/common'
 
 const M_PIXEL_LIMIT = 20
 const IMAGE_SIZE_LIMIT = 10
+const MAX_IMAGE_QUALITY = 80
+const DEFAULT_IMAGE_QUALITY = 65
 
 export class TransformGuard {
   private calculateMegaPixel(height: number, width: number) {
@@ -23,7 +25,7 @@ export class TransformGuard {
     return {newWidth, newHeight}
   }
 
-  checkDimensions(metadata: sharp.Metadata, transformations: TransformationsDto) {
+  public checkDimensions(metadata: sharp.Metadata, transformations: TransformationsDto) {
     // Ensure that original picture is not more than M_PIXEL_LIMIT
     if (!transformations.extend && !transformations.resize) {
       const originalMP = this.calculateMegaPixel(metadata.height ?? 0, metadata.width ?? 0)
@@ -53,10 +55,20 @@ export class TransformGuard {
       throw new BadRequestException(`Transformation exceeds pixel limit!`)
     }
   }
-  checkImageSize(metadata: sharp.Metadata) {
+  public checkImageSize(metadata: sharp.Metadata) {
     const mByte = (metadata.size ?? 0) / 1000 / 1000
     if (mByte > IMAGE_SIZE_LIMIT) {
       throw new BadRequestException(`Transformation exceeds image size limit!`)
+    }
+  }
+
+  public checkQuality(transformations: TransformationsDto) {
+    if (transformations.quality) {
+      if (transformations.quality > MAX_IMAGE_QUALITY) {
+        throw new BadRequestException(`Transformation exceeds quality limit!`)
+      }
+    } else {
+      transformations.quality = DEFAULT_IMAGE_QUALITY
     }
   }
 }

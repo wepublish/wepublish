@@ -66,6 +66,7 @@ export class MediaService {
 
     const transformGuard = new TransformGuard()
     transformGuard.checkDimensions(metadata, transformations)
+    transformGuard.checkQuality(transformations)
 
     if (transformations.extend) {
       sharpInstance.extend(transformations.extend)
