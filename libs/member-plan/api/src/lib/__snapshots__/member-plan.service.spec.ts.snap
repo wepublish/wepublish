@@ -1,0 +1,131 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MemberPlanService should create a member plan 1`] = `
+[
+  {
+    "data": {
+      "active": true,
+      "amountPerMonthMin": 15,
+      "description": "A new plan",
+      "extendable": true,
+      "imageID": "image3",
+      "maxCount": 150,
+      "name": "New Plan",
+      "slug": "new-plan",
+      "tags": [
+        "tag1",
+        "tag2",
+      ],
+    },
+    "include": {
+      "availablePaymentMethods": true,
+    },
+  },
+]
+`;
+
+exports[`MemberPlanService should delete a member plan by id 1`] = `
+[
+  {
+    "include": {
+      "availablePaymentMethods": true,
+    },
+    "where": {
+      "id": "1",
+    },
+  },
+]
+`;
+
+exports[`MemberPlanService should get a member plan by slug 1`] = `
+[
+  {
+    "where": {
+      "slug": "basic-plan",
+    },
+  },
+]
+`;
+
+exports[`MemberPlanService should get active member plans 1`] = `
+[
+  {
+    "cursor": undefined,
+    "include": {
+      "availablePaymentMethods": true,
+    },
+    "orderBy": {
+      "createdAt": "asc",
+    },
+    "skip": 0,
+    "take": 1,
+    "where": {
+      "AND": [
+        {},
+        {
+          "active": true,
+        },
+        {
+          "tags": {
+            "hasSome": [
+              "tag1",
+            ],
+          },
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`MemberPlanService should get member plans with filters 1`] = `
+[
+  {
+    "cursor": undefined,
+    "include": {
+      "availablePaymentMethods": true,
+    },
+    "orderBy": {
+      "createdAt": "asc",
+    },
+    "skip": 0,
+    "take": 2,
+    "where": {
+      "AND": [
+        {
+          "name": "Plan",
+        },
+        {},
+        {},
+      ],
+    },
+  },
+]
+`;
+
+exports[`MemberPlanService should update a member plan 1`] = `
+[
+  {
+    "data": {
+      "active": true,
+      "amountPerMonthMin": 12,
+      "description": "An updated plan",
+      "extendable": true,
+      "imageID": "image4",
+      "maxCount": 120,
+      "name": "Updated Plan",
+      "slug": "updated-plan",
+      "tags": [
+        "tag1",
+        "tag2",
+      ],
+    },
+    "include": {
+      "availablePaymentMethods": true,
+    },
+    "where": {
+      "id": "1",
+    },
+  },
+]
+`;

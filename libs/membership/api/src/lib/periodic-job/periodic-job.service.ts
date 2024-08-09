@@ -14,7 +14,7 @@ import {
   User
 } from '@prisma/client'
 import {MailContext, MailController, mailLogType} from '@wepublish/mail/api'
-import {PaymentsService} from '@wepublish/payment/api'
+import {PaymentService} from '@wepublish/payment/api'
 import {add, addDays, differenceInDays, endOfDay, set, startOfDay, sub, subMinutes} from 'date-fns'
 import {inspect} from 'util'
 import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
@@ -39,7 +39,7 @@ export class PeriodicJobService {
     private readonly prismaService: PrismaClient,
     private readonly mailContext: MailContext,
     private readonly subscriptionController: SubscriptionService,
-    private readonly payments: PaymentsService
+    private readonly payments: PaymentService
   ) {}
 
   getJobLog(take: number, skip?: number) {
@@ -292,7 +292,7 @@ export class PeriodicJobService {
       deactivationEvent
     )
 
-    const paymentProvider = await this.payments.findPaymentProviderByPaymentMethodeId(
+    const paymentProvider = await this.payments.findPaymentProviderByPaymentMethodId(
       subscriptionToCreateInvoice.paymentMethodID
     )
     if (paymentProvider) {
@@ -394,7 +394,7 @@ export class PeriodicJobService {
       throw new NotFoundException('No subscription deactivation found!')
     }
 
-    const paymentProvider = await this.payments.findPaymentProviderByPaymentMethodeId(
+    const paymentProvider = await this.payments.findPaymentProviderByPaymentMethodId(
       unpaidInvoice.subscription.paymentMethodID
     )
 

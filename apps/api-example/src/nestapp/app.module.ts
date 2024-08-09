@@ -1,4 +1,4 @@
-import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
+import {ApolloDriverConfig, ApolloFederationDriver} from '@nestjs/apollo'
 import {Global, Module} from '@nestjs/common'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {GraphQLModule} from '@nestjs/graphql'
@@ -6,31 +6,35 @@ import {ScheduleModule} from '@nestjs/schedule'
 import {
   AgendaBaselService,
   AuthenticationModule,
+  AuthorModule,
   BexioPaymentProvider,
   ConsentModule,
-  StatsModule,
   DashboardModule,
   EventsImportModule,
   GraphQLRichText,
+  HealthModule,
+  KarmaMediaAdapter,
   KulturZueriService,
   MailchimpMailProvider,
   MailgunMailProvider,
   MailsModule,
   MediaAdapterService,
   MembershipModule,
+  NavigationModule,
+  NeverChargePaymentProvider,
   NovaMediaAdapter,
   PaymentProvider,
   PaymentsModule,
+  PaymentMethodModule,
+  PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   PermissionModule,
   SettingModule,
+  StatsModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  PayrexxFactory,
-  HealthModule,
-  NeverChargePaymentProvider,
-  KarmaMediaAdapter,
+  MemberPlanModule,
   ScriptsModule,
   SystemInfoModule
 } from '@wepublish/api'
@@ -42,14 +46,16 @@ import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 import {readConfig} from '../readConfig'
 import {EventModule} from '@wepublish/event/api'
-import {BlockStylesModule} from '@wepublish/block-content/api'
+import {BlockModule, BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
+import {UserRoleModule} from '@wepublish/user-role/api'
+import {ActionModule} from '@wepublish/action/api'
 
 @Global()
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
+      driver: ApolloFederationDriver,
       resolvers: {RichText: GraphQLRichText},
       autoSchemaFile: './apps/api-example/schema-v2.graphql',
       sortSchema: true,
@@ -238,7 +244,14 @@ import {PrismaClient} from '@prisma/client'
     SettingModule,
     ScriptsModule,
     EventModule,
+    NavigationModule,
+    AuthorModule,
+    PaymentMethodModule,
+    ActionModule,
+    UserRoleModule,
+    MemberPlanModule,
     BlockStylesModule,
+    BlockModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
         agendaBasel,

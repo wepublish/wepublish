@@ -1,6 +1,8 @@
 import {
   ArgsType,
+  Directive,
   Field,
+  ID,
   InputType,
   Int,
   ObjectType,
@@ -34,8 +36,9 @@ registerEnumType(EventStatus, {
 })
 
 @ObjectType()
+@Directive('@key(fields: "id")')
 export class Event {
-  @Field()
+  @Field(() => ID)
   id!: string
 
   @Field()
@@ -81,6 +84,12 @@ export class Event {
 @ObjectType()
 export class PaginatedEvents extends PaginatedType(Event) {}
 
+@ArgsType()
+export class EventId {
+  @Field(() => ID)
+  id!: string
+}
+
 @InputType()
 export class EventFilter {
   @Field({nullable: true})
@@ -110,7 +119,7 @@ export class EventListArgs {
   @Field(type => EventSort, {nullable: true, defaultValue: EventSort.StartsAt})
   sort?: EventSort
 
-  @Field(type => SortOrder, {nullable: true, defaultValue: SortOrder.Ascending})
+  @Field(type => SortOrder, {nullable: true, defaultValue: SortOrder.Descending})
   order?: SortOrder
 
   @Field(type => Int, {nullable: true, defaultValue: 10})
@@ -119,7 +128,7 @@ export class EventListArgs {
   @Field(type => Int, {nullable: true, defaultValue: 0})
   skip?: number
 
-  @Field({nullable: true})
+  @Field(() => ID, {nullable: true})
   cursorId?: string
 }
 
@@ -136,5 +145,14 @@ export class CreateEventInput extends PickType(
 @ArgsType()
 export class UpdateEventInput extends PartialType(CreateEventInput, ArgsType) {
   @Field()
+  id!: string
+}
+
+@ObjectType()
+@Directive('@extends')
+@Directive('@key(fields: "id")')
+export class Tag {
+  @Field(() => ID)
+  @Directive('@external')
   id!: string
 }
