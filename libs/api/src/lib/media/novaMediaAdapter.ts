@@ -98,7 +98,7 @@ export class NovaMediaAdapter implements MediaAdapter {
   ): Promise<string> {
     const queryParameters = [] as string[]
 
-    if (transformations?.width || transformations?.height) {
+    if (image.focalPoint && (transformations?.width || transformations?.height)) {
       const xFocalPoint =
         image.focalPoint.x > 0.6 ? 'right' : image.focalPoint.x < 0.4 ? 'left' : ''
 
@@ -144,7 +144,8 @@ export class NovaMediaAdapter implements MediaAdapter {
       queryParameters.push(`sharpen=1`)
     }
 
-    queryParameters.push(`quality=${transformations?.quality ? transformations.quality * 100 : 65}`)
+    // Max quality is 80 so 1 => 80
+    queryParameters.push(`quality=${transformations?.quality ? transformations.quality * 80 : 65}`)
 
     return `${this.url}/${image.id}?${queryParameters.join('&')}`
   }
