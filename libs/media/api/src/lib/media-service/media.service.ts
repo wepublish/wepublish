@@ -2,6 +2,7 @@ import {Inject, Injectable} from '@nestjs/common'
 import sharp from 'sharp'
 import {TransformationsDto} from './transformations.dto'
 import {StorageClient} from '../storage-client/storage-client.service'
+import {TransformGuard} from './transform.guard'
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol('MEDIA_SERVICE_MODULE_OPTIONS')
 
@@ -34,7 +35,7 @@ export class MediaService {
     const transformationsKey = getTransformationKey(transformations)
     const isAlreadyTransformed = await this.storage.hasFile(
       this.config.transformationBucket,
-      `images/${imageId}/${transformationsKey}.webp`
+      `images/${imageId}/${transformationsKey}`
     )
 
     if (!isAlreadyTransformed) {
@@ -44,26 +45,28 @@ export class MediaService {
     return await Promise.all([
       this.storage.getFile(
         this.config.transformationBucket,
-        `images/${imageId}/${transformationsKey}.webp`
+        `images/${imageId}/${transformationsKey}`
       ),
       this.storage.getFileInformation(
         this.config.transformationBucket,
-        `images/${imageId}/${transformationsKey}.webp`
+        `images/${imageId}/${transformationsKey}`
       )
     ])
   }
 
   private async transformImage(imageId: string, transformations: TransformationsDto) {
-    const imageStream = await this.storage.getFile(
-      this.config.uploadBucket,
-      `images/${imageId}.webp`
-    )
+    const imageStream = await this.storage.getFile(this.config.uploadBucket, `images/${imageId}`)
 
     const sharpInstance = imageStream.pipe(
       sharp({
         animated: true
       })
     )
+    let metadata = await sharpInstance.metadata()
+
+    const transformGuard = new TransformGuard()
+    const effort = transformGuard.checkDimensions(metadata, transformations)
+    transformGuard.checkQuality(transformations)
 
     if (transformations.extend) {
       sharpInstance.extend(transformations.extend)
@@ -103,46 +106,47 @@ export class MediaService {
 
     const transformationsKey = getTransformationKey(transformations)
     const transformedImage = sharpInstance.webp({
-      quality: transformations.quality
+      quality: transformations.quality,
+      effort: effort
     })
+
+    metadata = await transformedImage.metadata()
+    transformGuard.checkImageSize(metadata)
 
     await this.storage.saveFile(
       this.config.transformationBucket,
-      `images/${imageId}/${transformationsKey}.webp`,
-      transformedImage.clone()
+      `images/${imageId}/${transformationsKey}`,
+      transformedImage.clone(),
+      metadata.size,
+      {ContentType: `image/${metadata.format}`}
     )
 
     return Promise.all([
       transformedImage,
       this.storage.getFileInformation(
         this.config.transformationBucket,
-        `images/${imageId}/${transformationsKey}.webp`
+        `images/${imageId}/${transformationsKey}`
       )
     ])
   }
 
   public async saveImage(imageId: string, image: Buffer) {
-    const sharpInstance = sharp(image, {
-      animated: true
-    })
-
+    const metadata = await sharp(image).metadata()
     await this.storage.saveFile(
       this.config.uploadBucket,
-      `images/${imageId}.webp`,
-      sharpInstance.webp({
-        quality: 100,
-        nearLossless: true
-      })
+      `images/${imageId}`,
+      image,
+      metadata.size,
+      {ContentType: `image/${metadata.format}`}
     )
-
-    return await sharpInstance.metadata()
+    return metadata
   }
 
   public async hasImage(imageId: string): Promise<boolean> {
-    return await this.storage.hasFile(this.config.uploadBucket, `images/${imageId}.webp`)
+    return await this.storage.hasFile(this.config.uploadBucket, `images/${imageId}`)
   }
 
   public async deleteImage(imageId: string) {
-    return await this.storage.deleteFile(this.config.uploadBucket, `images/${imageId}.webp`)
+    return await this.storage.deleteFile(this.config.uploadBucket, `images/${imageId}`)
   }
 }
