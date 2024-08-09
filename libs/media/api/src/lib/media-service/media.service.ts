@@ -148,6 +148,18 @@ export class MediaService {
   }
 
   public async deleteImage(imageId: string) {
+    // Delete Transformations
+    const objects = await this.storage.listFiles(
+      this.config.transformationBucket,
+      `images/${imageId}`,
+      true
+    )
+    this.storage.deleteFiles(
+      this.config.transformationBucket,
+      objects.map(file => file.name || '')
+    )
+
+    // Delete main image
     return await this.storage.deleteFile(this.config.uploadBucket, `images/${imageId}`)
   }
 }

@@ -1,5 +1,5 @@
 import {Inject, Injectable, Logger, Scope} from '@nestjs/common'
-import {Client, ClientOptions} from 'minio'
+import {Client, ClientOptions, BucketItem} from 'minio'
 
 export const STORAGE_CLIENT_MODULE_OPTIONS = Symbol('STORAGE_CLIENT_MODULE_OPTIONS')
 
@@ -40,5 +40,23 @@ export class StorageClient {
 
   public deleteFile(...params: Parameters<Client['removeObject']>) {
     return this.client.removeObject(...params)
+  }
+  public async listFiles(...params: Parameters<Client['listObjects']>): Promise<BucketItem[]> {
+    const data: BucketItem[] = []
+    return new Promise((resolve, reject) => {
+      const stream = this.client.listObjects(...params)
+      stream.on('data', function (obj) {
+        data.push(obj)
+      })
+      stream.on('end', function () {
+        resolve(data)
+      })
+      stream.on('error', function (err) {
+        reject(err)
+      })
+    })
+  }
+  public deleteFiles(...params: Parameters<Client['removeObjects']>) {
+    return this.client.removeObjects(...params)
   }
 }
