@@ -111,7 +111,7 @@ export class MediaService {
       effort: effort
     })
 
-    metadata = await transformedImage.metadata()
+    metadata = await sharp(await transformedImage.clone().toBuffer()).metadata()
     transformGuard.checkImageSize(metadata)
 
     await this.storage.saveFile(
