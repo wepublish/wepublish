@@ -59,7 +59,8 @@ export class MediaService {
 
     const sharpInstance = imageStream.pipe(
       sharp({
-        animated: true
+        animated: true,
+        failOn: 'error'
       })
     )
     let metadata = await sharpInstance.metadata()
