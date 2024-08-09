@@ -14,8 +14,8 @@ fragment ArticleRef on Article {
   }
 }
 
-query ArticleList($filter: [String!], $cursor: ID, $take: Int) {
-  articles(take: $take, cursor: $cursor, filter: {tags: $filter}) {
+query ArticleList($filter: ArticleFilter, $cursor: ID, $take: Int) {
+  articles(take: $take, cursor: $cursor, filter: $filter) {
     nodes {
       ...ArticleRef
     }

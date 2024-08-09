@@ -27,7 +27,7 @@ import {
 
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
-import {GraphQLTag} from './tag/tag'
+import {GraphQLContentTagFilter, GraphQLTag} from './tag/tag'
 
 export const GraphQLPageFilter = new GraphQLInputObjectType({
   name: 'PageFilter',
@@ -39,14 +39,14 @@ export const GraphQLPageFilter = new GraphQLInputObjectType({
     publicationDateTo: {type: GraphQLDateFilter},
     published: {type: GraphQLBoolean},
     pending: {type: GraphQLBoolean},
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
+    tags: {type: GraphQLContentTagFilter}
   }
 })
 
 export const GraphQLPublishedPageFilter = new GraphQLInputObjectType({
   name: 'PublishedPageFilter',
   fields: {
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
+    tags: {type: GraphQLContentTagFilter}
   }
 })
 

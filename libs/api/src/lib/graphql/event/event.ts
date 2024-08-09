@@ -17,7 +17,7 @@ import {createProxyingResolver} from '../../utility'
 import {GraphQLPageInfo} from '../common'
 import {GraphQLImage} from '../image'
 import {GraphQLRichText} from '@wepublish/richtext/api'
-import {GraphQLTag} from '../tag/tag'
+import {GraphQLContentTagFilter, GraphQLTag} from '../tag/tag'
 import {EventSort} from './event.query'
 
 export const GraphQLEventStatus = new GraphQLEnumType({
@@ -93,7 +93,7 @@ export const GraphQLEventFilter = new GraphQLInputObjectType({
     upcomingOnly: {type: GraphQLBoolean},
     from: {type: GraphQLDateTime},
     to: {type: GraphQLDateTime},
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    tags: {type: GraphQLContentTagFilter},
     name: {type: GraphQLString},
     location: {type: GraphQLString}
   }

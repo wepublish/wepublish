@@ -30,7 +30,7 @@ export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
       take,
       skip: ((page ?? 1) - 1) * take,
       filter: {
-        tags: [tagId]
+        tags: {ids: [tagId]}
       }
     }),
     [page, tagId]

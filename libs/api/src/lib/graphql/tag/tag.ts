@@ -51,6 +51,16 @@ export const GraphQLTagConnection = new GraphQLObjectType({
   }
 })
 
+// this is used to filter on all types of content (articles, pages, events etc.) by either tag ids or tag names
+export const GraphQLContentTagFilter = new GraphQLInputObjectType({
+  name: 'ContentTagFilter',
+  fields: {
+    ids: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
+  }
+})
+
+// this is used to filter the tags either by content type or tag name.
 export const GraphQLTagFilter = new GraphQLInputObjectType({
   name: 'TagFilter',
   fields: {

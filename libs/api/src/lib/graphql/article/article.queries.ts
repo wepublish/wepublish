@@ -186,17 +186,38 @@ const createSharedFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhere
 }
 
 const createTagsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
-  if (filter?.tags?.length) {
-    const hasTags = {
+  const tagIds = filter?.tags?.ids
+  let hasTags = undefined satisfies Prisma.TaggedArticlesListRelationFilter
+
+  // filter by tag ids
+  if (tagIds?.length) {
+    hasTags = {
       some: {
         tag: {
           id: {
-            in: filter.tags
+            in: tagIds
           }
         }
       }
-    } satisfies Prisma.TaggedArticlesListRelationFilter
+    }
+  }
 
+  // filter by tag names
+  const tagNames = filter?.tags?.tags
+  if (tagNames?.length) {
+    hasTags = {
+      some: {
+        tag: {
+          tag: {
+            in: tagNames
+          }
+        }
+      }
+    }
+  }
+
+  // return filter
+  if (hasTags) {
     return {
       OR: [
         {
@@ -206,6 +227,7 @@ const createTagsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereIn
     }
   }
 
+  // no filter
   return {}
 }
 

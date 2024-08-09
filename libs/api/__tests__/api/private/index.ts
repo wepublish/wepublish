@@ -69,7 +69,7 @@ export type ArticleFilter = {
   publicationDateTo?: InputMaybe<DateFilter>;
   published?: InputMaybe<Scalars['Boolean']>;
   shared?: InputMaybe<Scalars['Boolean']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<ContentTagFilter>;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -418,6 +418,11 @@ export enum CommentState {
   Rejected = 'Rejected'
 }
 
+export type ContentTagFilter = {
+  ids?: InputMaybe<Array<Scalars['ID']>>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+};
+
 export type CreatePeerInput = {
   hostURL: Scalars['String'];
   name: Scalars['String'];
@@ -547,7 +552,7 @@ export type EventFilter = {
   from?: InputMaybe<Scalars['DateTime']>;
   location?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['ID']>>;
+  tags?: InputMaybe<ContentTagFilter>;
   to?: InputMaybe<Scalars['DateTime']>;
   upcomingOnly?: InputMaybe<Scalars['Boolean']>;
 };
@@ -1596,7 +1601,7 @@ export type PageFilter = {
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
   published?: InputMaybe<Scalars['Boolean']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<ContentTagFilter>;
   title?: InputMaybe<Scalars['String']>;
 };
 
