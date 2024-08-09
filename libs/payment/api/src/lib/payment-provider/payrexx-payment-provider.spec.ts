@@ -5,6 +5,7 @@ import {IntentState, InvoiceWithItems} from './payment-provider'
 import express from 'express'
 import Mock = jest.Mock
 import {PartialDeep} from 'type-fest'
+import {Currency} from '@prisma/client'
 
 function mockInstance<Type = unknown>(implementation?: PartialDeep<Type>) {
   return new (jest.fn().mockImplementation(() => implementation) as Mock<Type>)() as Type
@@ -142,6 +143,7 @@ describe('PayrexxPaymentProvider', () => {
         paymentID: '456',
         successURL: 'https://success',
         failureURL: 'https://failure',
+        currency: Currency.EUR,
         saveCustomer: false
       })
 
@@ -170,7 +172,8 @@ describe('PayrexxPaymentProvider', () => {
         paymentID: '456',
         successURL: 'https://success',
         failureURL: 'https://failure',
-        saveCustomer: false
+        saveCustomer: false,
+        currency: Currency.CHF
       })
 
       expect(payrexx.gatewayClient.createGateway).not.toBeCalled()
@@ -203,7 +206,8 @@ describe('PayrexxPaymentProvider', () => {
         paymentID: '456',
         successURL: 'https://success',
         failureURL: 'https://failure',
-        saveCustomer: false
+        saveCustomer: false,
+        currency: Currency.EUR
       })
 
       expect(payrexx.gatewayClient.createGateway).toBeCalled()

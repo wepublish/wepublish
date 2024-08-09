@@ -98,6 +98,7 @@ function checkMemberPlanIntegrity(
   extendable: boolean
 ): void {
   const hasForceAutoRenew = !!availablePaymentMethods.find(apm => apm.forceAutoRenewal)
+
   if (!extendable && hasForceAutoRenew) {
     throw new InvalidMemberPlanSettings()
   }

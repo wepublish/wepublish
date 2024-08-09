@@ -345,12 +345,14 @@ export class MemberContext implements MemberContextInterface {
         'PaymentMethod %s does not support off session payments',
         paymentMethodID
       )
+
       return false
     }
 
     const paymentMethod = paymentMethods.find(method => method.id === paymentMethodID)
     if (!paymentMethod) {
       logger('memberContext').error('PaymentMethod %s does not exist', paymentMethodID)
+
       return false
     }
 
@@ -363,6 +365,7 @@ export class MemberContext implements MemberContextInterface {
         'PaymentProvider %s does not exist',
         paymentMethod.paymentProviderID
       )
+
       return false
     }
 
@@ -374,9 +377,29 @@ export class MemberContext implements MemberContextInterface {
       }
     })
 
+    const memberPlan = await this.prisma.memberPlan.findFirst({
+      where: {
+        Subscription: {
+          some: {
+            id: invoice.subscriptionID
+          }
+        }
+      }
+    })
+
+    if (!memberPlan) {
+      logger('memberContext').error(
+        'Memberplan of subscription %s does not exist',
+        invoice.subscriptionID
+      )
+
+      return false
+    }
+
     const intent = await paymentProvider.createIntent({
       paymentID: payment.id,
       invoice,
+      currency: memberPlan.currency,
       saveCustomer: false,
       customerID: customer.customerID
     })
@@ -399,17 +422,21 @@ export class MemberContext implements MemberContextInterface {
         logger('memberContext').error('Invoice %s has no associated subscriptionID', invoice.id)
         return false
       }
+
       const subscription = await this.prisma.subscription.findUnique({
         where: {id: invoice.subscriptionID}
       })
+
       if (!subscription) {
         logger('memberContext').error('No subscription found with ID %s', invoice.subscriptionID)
         return false
       }
+
       const remoteTemplate = await this.getSubscriptionTemplateIdentifier(
         subscription,
         SubscriptionEvent.RENEWAL_FAILED
       )
+
       if (remoteTemplate) {
         await this.mailContext.sendMail({
           externalMailTemplateId: remoteTemplate,

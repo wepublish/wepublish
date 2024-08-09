@@ -58,7 +58,7 @@ export type BuilderMemberPlanPickerProps = {
   value?: string
 }
 
-export type BuilderMemberPlanItemProps = Pick<MemberPlan, 'amountPerMonthMin'> &
+export type BuilderMemberPlanItemProps = Pick<MemberPlan, 'amountPerMonthMin' | 'currency'> &
   RadioProps & {className?: string}
 
 export type BuilderPeriodicityPickerProps = {

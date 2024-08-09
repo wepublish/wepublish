@@ -1,7 +1,7 @@
 import {css} from '@emotion/react'
 import {action} from '@storybook/addon-actions'
 import {Meta, StoryObj} from '@storybook/react'
-import {Exact, FullImageFragment, FullMemberPlanFragment} from '@wepublish/website/api'
+import {Currency, Exact, FullImageFragment, FullMemberPlanFragment} from '@wepublish/website/api'
 import {useState} from 'react'
 import {Node} from 'slate'
 import {MemberPlanPicker} from './memberplan-picker'
@@ -83,12 +83,18 @@ const memberPlan = {
   id: '123',
   slug: '',
   description: text,
-  tags: []
+  tags: [],
+  currency: Currency.Chf,
+  extendable: true
 } as Exact<FullMemberPlanFragment>
 
 export const Default: StoryObj<typeof MemberPlanPicker> = {
   args: {
-    memberPlans: [memberPlan, {...memberPlan, id: '2'}, {...memberPlan, id: '3'}],
+    memberPlans: [
+      memberPlan,
+      {...memberPlan, id: '2', currency: Currency.Eur},
+      {...memberPlan, id: '3'}
+    ],
     onChange: action('onChange')
   }
 }

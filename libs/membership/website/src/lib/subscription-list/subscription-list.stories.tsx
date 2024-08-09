@@ -4,6 +4,7 @@ import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {SubscriptionList} from './subscription-list'
 import {
+  Currency,
   Exact,
   FullImageFragment,
   FullInvoiceFragment,
@@ -65,7 +66,8 @@ const subscription = {
   memberPlan: {
     image,
     name: 'Foobar Memberplan',
-    extendable: true
+    extendable: true,
+    currency: Currency.Chf
   },
   extendable: true
 } as Exact<FullSubscriptionFragment>

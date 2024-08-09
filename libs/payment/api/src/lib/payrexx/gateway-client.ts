@@ -1,3 +1,4 @@
+import {Currency} from '@prisma/client'
 import {PayrexxClient} from './payrexx-client'
 import {Transaction} from './transaction-client'
 
@@ -11,7 +12,7 @@ export type CreateGatewayRequestData = {
   failedRedirectUrl: string
   cancelRedirectUrl: string
   vatRate: number
-  currency: string
+  currency: Currency
   preAuthorization?: boolean
   chargeOnAuthorization?: boolean
 }
@@ -31,7 +32,7 @@ export type Gateway = {
   psp: number[]
   pm: string[]
   amount: number
-  currency: string
+  currency: Currency
   vatRate: number
   sku: string
   applicationFee: number
@@ -46,6 +47,7 @@ export class GatewayClient {
 
   async createGateway(requestData: CreateGatewayRequestData) {
     const response = await this.client.post<CreateGatewayResponseData>('Gateway', requestData)
+
     if (response.status === 'error') {
       throw new Error(`Payrexx request has error status with message: ${response.message}`)
     }

@@ -6,7 +6,8 @@ import {
 } from '@wepublish/website/builder'
 import {useMemo, useState} from 'react'
 import {MdAttachMoney, MdCalendarMonth, MdOutlineInfo, MdOutlineWarning} from 'react-icons/md'
-import {formatChf} from '../formatters/format-currency'
+import {formatCurrency} from '../formatters/format-currency'
+import {Currency} from '@wepublish/website/api'
 
 export const InvoiceListItemWrapper = styled('div')`
   display: grid;
@@ -119,7 +120,8 @@ export function InvoiceListItem({
           </InvoiceListItemMetaItem>
 
           <InvoiceListItemMetaItem>
-            <MdAttachMoney /> Betrag von {formatChf(total / 100, locale)}
+            <MdAttachMoney /> Betrag von{' '}
+            {formatCurrency(total / 100, subscription?.memberPlan.currency ?? Currency.Chf, locale)}
           </InvoiceListItemMetaItem>
         </InvoiceListItemMeta>
 

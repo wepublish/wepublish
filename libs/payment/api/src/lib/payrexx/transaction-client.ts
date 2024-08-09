@@ -49,6 +49,7 @@ export class TransactionClient {
       'Transaction/' + preAuthorizedTransactionId,
       requestData
     )
+
     if (response.status === 'error') {
       throw new Error(`Payrexx request has error status with message: ${response.message}`)
     }

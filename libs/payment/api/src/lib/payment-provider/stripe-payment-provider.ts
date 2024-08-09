@@ -115,7 +115,8 @@ export class StripePaymentProvider extends BasePaymentProvider {
     customerID,
     invoice,
     saveCustomer,
-    paymentID
+    paymentID,
+    currency
   }: CreatePaymentIntentProps): Promise<Intent> {
     let paymentMethodID: string | null = null
 
@@ -157,7 +158,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
               payment_method_types: ['card']
             }
           : {}),
-        currency: 'chf',
+        currency: currency.toLowerCase(),
         // description: props.invoice.description, TODO: convert to text
         ...(saveCustomer ? {setup_future_usage: 'off_session'} : {}),
         metadata: {

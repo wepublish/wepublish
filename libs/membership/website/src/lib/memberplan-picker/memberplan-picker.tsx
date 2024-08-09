@@ -66,6 +66,7 @@ export const MemberPlanPicker = forwardRef<HTMLButtonElement, BuilderMemberPlanP
                       key={memberPlan.id}
                       checked={memberPlan.id === value}
                       name={memberPlan.name}
+                      currency={memberPlan.currency}
                       amountPerMonthMin={memberPlan.amountPerMonthMin}
                     />
                   }

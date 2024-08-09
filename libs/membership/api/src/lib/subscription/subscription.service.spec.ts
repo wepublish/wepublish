@@ -1,4 +1,5 @@
 import {
+  Currency,
   PaymentPeriodicity,
   PrismaClient,
   Subscription,
@@ -62,7 +63,8 @@ describe('SubscriptionController', () => {
             slug: 'memberplan',
             description: 'memberplan',
             active: true,
-            amountPerMonthMin: 100
+            amountPerMonthMin: 100,
+            currency: Currency.CHF
           }
         }
       },

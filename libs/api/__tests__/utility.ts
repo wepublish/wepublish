@@ -1,4 +1,12 @@
-import {CommentItemType, Event, Peer, PrismaClient, Subscription, Tag} from '@prisma/client'
+import {
+  CommentItemType,
+  Currency,
+  Event,
+  Peer,
+  PrismaClient,
+  Subscription,
+  Tag
+} from '@prisma/client'
 import {ApolloServer} from 'apollo-server-express'
 import * as crypto from 'crypto'
 import {URL} from 'url'
@@ -160,7 +168,7 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
         psp: [1],
         pm: ['1'],
         amount: 1,
-        currency: 'chf',
+        currency: Currency.CHF,
         vatRate: 7.7,
         sku: 'sku',
         applicationFee: 10,
