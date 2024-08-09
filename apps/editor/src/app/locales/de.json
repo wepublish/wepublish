@@ -1313,6 +1313,12 @@
         "event": "Event",
         "custom": "Benutzerdefinierte"
       }
+    },
+    "authorEditPanel": {
+      "hideAuthor": "Autor:innen ausblenden",
+      "hideOnTeam": "Auf der Team-Seite ausblenden",
+      "hideOnArticle": "Auf den Artikeln ausblenden",
+      "hideOnTeaser": "Auf den Teasern ausblenden"
     }
   }
 }

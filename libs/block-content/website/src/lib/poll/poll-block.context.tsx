@@ -13,8 +13,9 @@ export type PollBlockContextProps = Partial<{
   getAnonymousVote: (pollId: string) => string | null
   fetchUserVote: LazyQueryExecFunction<UserPollVoteQuery, UserPollVoteQueryVariables>
   vote: (
-    options: MutationFunctionOptions<PollVoteMutation, PollVoteMutationVariables>
-  ) => Promise<FetchResult<PollVoteMutation>>
+    options: MutationFunctionOptions<PollVoteMutation, PollVoteMutationVariables>,
+    pollId: string
+  ) => Promise<FetchResult<PollVoteMutation> | undefined>
 }>
 
 export const PollBlockContext = createContext<PollBlockContextProps>({})

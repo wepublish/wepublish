@@ -1,8 +1,7 @@
 import {css} from '@emotion/react'
 import {styled} from '@mui/material'
-import {CommentAuthorType} from '@wepublish/website/api'
 import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {MdPerson, MdVerified} from 'react-icons/md'
+import {MdPerson} from 'react-icons/md'
 import {isValidUrl} from '@wepublish/utils'
 
 const avatarStyles = css`
@@ -92,7 +91,6 @@ export const Comment = ({
 
   const flair = user?.flair || source
   const image = user?.image ?? guestUserImage
-  const isVerified = authorType === CommentAuthorType.VerifiedUser
   const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
 
   return (
@@ -105,11 +103,11 @@ export const Comment = ({
           <CommentName>
             <CommentAuthor>{name}</CommentAuthor>
 
-            {isVerified && (
+            {/*
               <CommentVerifiedBadge>
                 <MdVerified title="Member" />
               </CommentVerifiedBadge>
-            )}
+            */}
           </CommentName>
 
           {source && isValidUrl(source) && (

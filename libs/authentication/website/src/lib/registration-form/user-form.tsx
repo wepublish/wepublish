@@ -164,7 +164,7 @@ export function UserForm<T extends BuilderUserFormFields>({
                 value={field.value ?? ''}
                 css={theme => addressStyles(theme as Theme)}
                 fullWidth
-                label={'Adresse'}
+                label={'Strasse und Hausnummer'}
                 error={!!error}
                 helperText={error?.message}
                 autoComplete="address"

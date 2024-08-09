@@ -176,7 +176,7 @@ exports[`Registration Form Container should render Filled 1`] = `
               for=":r4:"
               id=":r4:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
 @@ -205,18 +208,18 @@
                 autocomplete="address"
@@ -196,7 +196,7 @@ exports[`Registration Form Container should render Filled 1`] = `
 +                 class="css-14lo706"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
 @@ -225,12 +228,12 @@
@@ -1360,7 +1360,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             for=":rd:"
             id=":rd:-label"
           >
-            Adresse
+            Strasse und Hausnummer
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-18"
@@ -1382,7 +1382,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
                 class="emotion-9"
               >
                 <span>
-                  Adresse
+                  Strasse und Hausnummer
                 </span>
               </legend>
             </fieldset>
@@ -2520,7 +2520,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             for=":rl:"
             id=":rl:-label"
           >
-            Adresse
+            Strasse und Hausnummer
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-18"
@@ -2542,7 +2542,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
                 class="emotion-9"
               >
                 <span>
-                  Adresse
+                  Strasse und Hausnummer
                 </span>
               </legend>
             </fieldset>
@@ -3754,7 +3754,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             for=":ru:"
             id=":ru:-label"
           >
-            Adresse
+            Strasse und Hausnummer
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-18"
@@ -3776,7 +3776,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
                 class="emotion-9"
               >
                 <span>
-                  Adresse
+                  Strasse und Hausnummer
                 </span>
               </legend>
             </fieldset>
@@ -4175,7 +4175,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
               for=":r17:"
               id=":r17:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
 @@ -205,18 +205,18 @@
                 autocomplete="address"
@@ -4195,7 +4195,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 +                 class="css-14lo706"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
 @@ -225,12 +225,12 @@

@@ -183,7 +183,7 @@ const fillRepeatPassword: StoryObj['play'] = async ({canvasElement, step}) => {
 const fillStreetName: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const input = canvas.getByLabelText('Adresse', {
+  const input = canvas.getByLabelText('Strasse und Hausnummer', {
     selector: 'input'
   })
 
