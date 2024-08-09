@@ -13,6 +13,9 @@ fragment FullAuthor on Author {
     url
   }
   bio
+  hideOnTeam
+  hideOnTeaser
+  hideOnArticle
   ...AuthorRef
 }
 

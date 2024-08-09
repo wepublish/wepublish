@@ -68,13 +68,11 @@ export const Moderation = styled('span')`
 
 export const AuthorBox = memo(function AuthorBox({author, className}: AuthorBoxProps) {
   const {
-    elements: {Image},
-    blocks: {RichText}
+    elements: {Image}
   } = useWebsiteBuilder()
 
   const image = author?.image
   const name = author?.name
-  const bio = author?.bio
 
   return (
     <AuthorWrapper className={className}>
@@ -88,10 +86,6 @@ export const AuthorBox = memo(function AuthorBox({author, className}: AuthorBoxP
           <Moderation>Moderation</Moderation>
         </AuthorHeaderContent>
       </AuthorHeader>
-
-      <AuthorContent>
-        <RichText richText={bio ?? []} />
-      </AuthorContent>
     </AuthorWrapper>
   )
 })

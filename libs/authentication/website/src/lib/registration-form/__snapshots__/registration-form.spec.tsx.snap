@@ -980,7 +980,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             for=":r4:"
             id=":r4:-label"
           >
-            Adresse
+            Strasse und Hausnummer
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-18"
@@ -1002,7 +1002,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
                 class="emotion-9"
               >
                 <span>
-                  Adresse
+                  Strasse und Hausnummer
                 </span>
               </legend>
             </fieldset>
@@ -1401,7 +1401,7 @@ exports[`Registration Form should render Filled 1`] = `
               for=":rd:"
               id=":rd:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
 @@ -205,18 +205,18 @@
                 autocomplete="address"
@@ -1421,7 +1421,7 @@ exports[`Registration Form should render Filled 1`] = `
 +                 class="css-14lo706"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
 @@ -225,12 +225,12 @@
@@ -1742,7 +1742,7 @@ exports[`Registration Form should render Invalid 1`] = `
               for=":rm:"
               id=":rm:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
             <div
 -             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1qurb5e-MuiInputBase-root-MuiOutlinedInput-root"
@@ -1758,7 +1758,7 @@ exports[`Registration Form should render Invalid 1`] = `
                 name="address.streetAddress"
                 type="text"
 @@ -220,27 +249,34 @@
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
               </fieldset>
@@ -2555,7 +2555,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
             for=":rt:"
             id=":rt:-label"
           >
-            Adresse
+            Strasse und Hausnummer
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-12"
@@ -2577,7 +2577,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="emotion-9"
               >
                 <span>
-                  Adresse
+                  Strasse und Hausnummer
                 </span>
               </legend>
             </fieldset>
@@ -2899,7 +2899,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
               for=":r14:"
               id=":r14:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
 @@ -101,18 +101,18 @@
                 autocomplete="address"
@@ -2919,7 +2919,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
 +                 class="css-14lo706"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
 @@ -121,12 +121,12 @@
@@ -3164,7 +3164,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
               for=":r1b:"
               id=":r1b:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
             <div
 -             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1qurb5e-MuiInputBase-root-MuiOutlinedInput-root"
@@ -3180,7 +3180,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
                 name="address.streetAddress"
                 type="text"
 @@ -116,27 +131,34 @@
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
               </fieldset>
@@ -8623,7 +8623,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             for=":r31:"
             id=":r31:-label"
           >
-            Adresse
+            Strasse und Hausnummer
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-18"
@@ -8645,7 +8645,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
                 class="emotion-9"
               >
                 <span>
-                  Adresse
+                  Strasse und Hausnummer
                 </span>
               </legend>
             </fieldset>
@@ -9760,7 +9760,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             for=":r39:"
             id=":r39:-label"
           >
-            Adresse
+            Strasse und Hausnummer
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-18"
@@ -9782,7 +9782,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
                 class="emotion-9"
               >
                 <span>
-                  Adresse
+                  Strasse und Hausnummer
                 </span>
               </legend>
             </fieldset>
@@ -11122,7 +11122,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             for=":r3l:"
             id=":r3l:-label"
           >
-            Adresse
+            Strasse und Hausnummer
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-18"
@@ -11144,7 +11144,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
                 class="emotion-9"
               >
                 <span>
-                  Adresse
+                  Strasse und Hausnummer
                 </span>
               </legend>
             </fieldset>
@@ -12381,7 +12381,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             for=":r3u:"
             id=":r3u:-label"
           >
-            Adresse
+            Strasse und Hausnummer
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-18"
@@ -12403,7 +12403,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
                 class="emotion-9"
               >
                 <span>
-                  Adresse
+                  Strasse und Hausnummer
                 </span>
               </legend>
             </fieldset>

@@ -278,7 +278,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                   css={addressStyles(theme)}
                   fullWidth
                   autoComplete="address"
-                  label={'Adresse'}
+                  label={'Strasse und Hausnummer'}
                   error={!!error}
                   helperText={error?.message}
                 />

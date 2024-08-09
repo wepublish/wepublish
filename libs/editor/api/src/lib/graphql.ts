@@ -174,6 +174,9 @@ export type Author = {
   __typename?: 'Author';
   bio?: Maybe<Scalars['RichText']>;
   createdAt: Scalars['DateTime'];
+  hideOnArticle?: Maybe<Scalars['Boolean']>;
+  hideOnTeam?: Maybe<Scalars['Boolean']>;
+  hideOnTeaser?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   jobTitle?: Maybe<Scalars['String']>;
@@ -199,12 +202,16 @@ export type AuthorCreatedAction = {
 };
 
 export type AuthorFilter = {
+  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   tagIds?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export type AuthorInput = {
   bio?: InputMaybe<Scalars['RichText']>;
+  hideOnArticle?: InputMaybe<Scalars['Boolean']>;
+  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
+  hideOnTeaser?: InputMaybe<Scalars['Boolean']>;
   imageID?: InputMaybe<Scalars['ID']>;
   jobTitle?: InputMaybe<Scalars['String']>;
   links?: InputMaybe<Array<AuthorLinkInput>>;
@@ -3034,7 +3041,7 @@ export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSess
 
 export type AuthorRefFragment = { __typename?: 'Author', id: string, name: string, jobTitle?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
-export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
 export type AuthorListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>;
@@ -3046,21 +3053,21 @@ export type AuthorListQueryVariables = Exact<{
 }>;
 
 
-export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type AuthorQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type CreateAuthorMutationVariables = Exact<{
   input: AuthorInput;
 }>;
 
 
-export type CreateAuthorMutation = { __typename?: 'Mutation', createAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type CreateAuthorMutation = { __typename?: 'Mutation', createAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type UpdateAuthorMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -3068,14 +3075,14 @@ export type UpdateAuthorMutationVariables = Exact<{
 }>;
 
 
-export type UpdateAuthorMutation = { __typename?: 'Mutation', updateAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type UpdateAuthorMutation = { __typename?: 'Mutation', updateAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type DeleteAuthorMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 type FullTeaser_ArticleTeaser_Fragment = { __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null };
 
@@ -4163,6 +4170,9 @@ export const FullAuthorFragmentDoc = gql`
     tag
   }
   createdAt
+  hideOnArticle
+  hideOnTeaser
+  hideOnTeam
   ...AuthorRef
 }
     ${AuthorRefFragmentDoc}`;

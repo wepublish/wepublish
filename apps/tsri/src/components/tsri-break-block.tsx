@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {BreakBlock, HeadingWithoutImage} from '@wepublish/website'
+import {BreakBlock, HeadingWithImage, HeadingWithoutImage} from '@wepublish/website'
 
 export const TsriBreakBlock = styled(BreakBlock)`
   background-color: ${({theme}) => theme.palette.accent.main};
@@ -10,7 +10,13 @@ export const TsriBreakBlock = styled(BreakBlock)`
     padding: ${({theme}) => theme.spacing(10)};
   }
 
-  ${HeadingWithoutImage} {
-    font-size: ${({theme}) => theme.typography.h3.fontSize};
+  ${HeadingWithoutImage}, ${HeadingWithImage} {
+    font-size: 2rem;
+  }
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    ${HeadingWithoutImage}, ${HeadingWithImage} {
+      font-size: ${({theme}) => theme.typography.h3.fontSize};
+    }
   }
 `
