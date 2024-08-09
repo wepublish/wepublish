@@ -30,9 +30,20 @@ export class TransformGuard {
     return {newWidth, newHeight}
   }
 
+  private dimensionAutoResizeCheck(t: TransformationsDto) {
+    return (
+      !t.extend?.right &&
+      !t.extend?.left &&
+      !t.extend?.top &&
+      !t.extend?.bottom &&
+      !t.resize?.width &&
+      !t.resize?.height
+    )
+  }
+
   public checkDimensions(metadata: sharp.Metadata, transformations: TransformationsDto): number {
     // Ensure that original picture is not more than M_PIXEL_LIMIT
-    if (!transformations.extend && !transformations.resize) {
+    if (this.dimensionAutoResizeCheck(transformations)) {
       const originalMP = this.calculateMegaPixel(metadata.height ?? 0, metadata.width ?? 0)
       if (originalMP > M_PIXEL_LIMIT) {
         const {newWidth, newHeight} = this.resizeDimensions(
