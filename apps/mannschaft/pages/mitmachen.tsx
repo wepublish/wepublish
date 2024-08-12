@@ -27,7 +27,7 @@ export default function Mitmachen() {
             return memberPlan.currency === ApiV1.Currency.Chf
           }
 
-          return memberPlan.currency === Currency.Eur
+          return memberPlan.currency === ApiV1.Currency.Eur
         })
       }
       successURL={`${locationOrigin}/profile/subscription`}
