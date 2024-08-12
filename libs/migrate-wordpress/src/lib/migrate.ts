@@ -58,9 +58,28 @@ const WORDPRESS_URL = process.env['WORDPRESS_URL'] + '/wp-json/wp/v2/posts'
 
 const deleteBeforeMigrate = true
 
+const fetchAuth = () => {
+  if (process.env['WORDPRESS_USERNAME'] && process.env['WORDPRESS_PASSWORD']) {
+    return {
+      username: process.env['WORDPRESS_USERNAME'],
+      password: process.env['WORDPRESS_PASSWORD']
+    }
+  }
+  return undefined
+}
+
 const fetchPosts = async (page: number, perPage: number): Promise<WordPressPost[]> => {
   const response = await axios.get(WORDPRESS_URL, {
+    auth: fetchAuth(),
     params: {page, per_page: perPage, _embed: true}
+  })
+  return response.data
+}
+
+const fetchPost = async (id: string): Promise<WordPressPost> => {
+  const response = await axios.get(WORDPRESS_URL + '/' + id, {
+    auth: fetchAuth(),
+    params: {_embed: true}
   })
   return response.data
 }
@@ -129,7 +148,7 @@ const extractBlockquote = (content: string): BlockInput => {
   return embedBlock
 }
 
-const specialTags = ['.woocommerce-info', 'iframe', 'figure', 'img', 'blockquote']
+const specialTags = ['.woocommerce-info', 'iframe', 'figure', 'blockquote']
 
 const migratePost = async (post: WordPressPost) => {
   const {
@@ -220,7 +239,6 @@ const migratePost = async (post: WordPressPost) => {
           })
           break
         case 'figure':
-          console.log($.html(el).toString())
           image = await ensureImage({
             url: $(specialEl).find('img').attr('data-src')!,
             alt: $(specialEl).find('img').attr('alt')!
@@ -316,4 +334,9 @@ export const migratePosts = async () => {
       await migratePost(post)
     }
   }
+}
+
+export const migratePostById = async (id: string) => {
+  const post = await fetchPost(id)
+  await migratePost(post)
 }

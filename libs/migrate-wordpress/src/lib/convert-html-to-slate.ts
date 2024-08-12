@@ -50,7 +50,7 @@ const ELEMENT_TAGS: Record<HTMLElement['nodeName'], (el: HTMLElement) => Attribu
       ? el.getAttribute('alt')
       : el.getAttribute('title')
       ? el.getAttribute('title')
-      : '(Image)'
+      : ''
     return {
       text: title
     }
