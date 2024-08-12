@@ -55,7 +55,6 @@ type WordpressImage = {
 }
 
 const WORDPRESS_URL = process.env['WORDPRESS_URL'] + '/wp-json/wp/v2/posts'
-const BATCH_SIZE = 1
 
 const deleteBeforeMigrate = true
 
@@ -130,7 +129,7 @@ const extractBlockquote = (content: string): BlockInput => {
   return embedBlock
 }
 
-const specialTags = ['iframe', 'figure', 'img', 'blockquote']
+const specialTags = ['.woocommerce-info', 'iframe', 'figure', 'img', 'blockquote']
 
 const migratePost = async (post: WordPressPost) => {
   const {
@@ -207,7 +206,21 @@ const migratePost = async (post: WordPressPost) => {
     if (specialEl) {
       switch (specialEl.tagName) {
         case 'img':
+          console.log('img...')
+          console.log($.html(el).toString())
+          console.log($(specialEl).attr('data-src'))
+          image = await ensureImage({
+            url: $(specialEl).attr('data-src')!,
+            alt: $(specialEl).attr('alt')!
+          })
+          blocks.push({
+            image: {
+              imageID: image.id
+            }
+          })
+          break
         case 'figure':
+          console.log($.html(el).toString())
           image = await ensureImage({
             url: $(specialEl).find('img').attr('data-src')!,
             alt: $(specialEl).find('img').attr('alt')!
@@ -226,6 +239,7 @@ const migratePost = async (post: WordPressPost) => {
         case 'blockquote':
           blocks.push(extractBlockquote($(specialEl).html()!))
           break
+        case 'div':
         case 'p':
         case 'h1':
         case 'h2':
@@ -233,6 +247,7 @@ const migratePost = async (post: WordPressPost) => {
         case 'h4':
         case 'h5':
         case 'h6':
+          break
       }
     } else {
       slateContent = (await convertHtmlToSlate($.html(el).toString())) as unknown as Node[]
@@ -290,16 +305,15 @@ const migratePost = async (post: WordPressPost) => {
 }
 
 export const migratePosts = async () => {
-  let page = 1
-  for (;;) {
-    const batch = await fetchPosts(page, BATCH_SIZE)
+  const MAX_PAGES = process.env['MAX_PAGES'] ?? 1
+  const BATCH_SIZE = process.env['BATCH_SIZE'] ?? 1
+  for (let page = 1; !MAX_PAGES || page <= +MAX_PAGES; page++) {
+    console.log(`Fetching page ${page}`)
+    const batch = await fetchPosts(page, +BATCH_SIZE)
     if (batch.length === 0) break
 
     for (const post of batch) {
       await migratePost(post)
     }
-    return
-
-    page += 1
   }
 }
