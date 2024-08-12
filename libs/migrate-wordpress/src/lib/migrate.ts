@@ -24,6 +24,9 @@ type WordpressAuthor = {
   description: string
   link: string
   slug: string
+  avatar_urls: {
+    96: string
+  }
 }
 
 interface WordPressPost {
@@ -52,7 +55,7 @@ type WordpressImage = {
 }
 
 const WORDPRESS_URL = process.env['WORDPRESS_URL'] + '/wp-json/wp/v2/posts'
-const BATCH_SIZE = 10
+const BATCH_SIZE = 1
 
 const deleteBeforeMigrate = true
 
@@ -64,7 +67,7 @@ const fetchPosts = async (page: number, perPage: number): Promise<WordPressPost[
 }
 
 const ensureAuthor = async (author: WordpressAuthor): Promise<{id: string}> => {
-  const {slug, link, url, name, description} = author
+  const {slug, link, url, name, description, avatar_urls} = author
 
   const existingAuthor = await getAuthorBySlug(author.slug)
   if (existingAuthor) {
@@ -72,18 +75,25 @@ const ensureAuthor = async (author: WordpressAuthor): Promise<{id: string}> => {
     return existingAuthor
   }
 
+  const image = await ensureImage({
+    url: avatar_urls['96'],
+    alt: name
+  })
+
   console.log('  author create', slug)
   return await createAuthor({
     name,
     slug,
-    links: [{title: 'Link', url: link}]
+    links: [{title: 'Link', url: link}],
+    imageID: image.id
   })
 }
 
 const ensureImage = async (input: WordpressImage) => {
   const {url, alt} = input
 
-  const existingImage = (await getImagesByTitle(alt)).nodes.find(image => image.link === url)
+  const foundImages = (await getImagesByTitle(alt)).nodes
+  const existingImage = foundImages.find(image => image.link === url)
   if (existingImage) {
     console.log('  image exists', url)
     return existingImage
