@@ -118,6 +118,18 @@ const prepareLead = (excerpt: string) => {
   return decode($.text())
 }
 
+const extractBlockquote = (content: string): BlockInput => {
+  const embedBlock = extractEmbed(content)
+  if (JSON.stringify(embedBlock) === '{"embed":{}}') {
+    return {
+      quote: {
+        quote: cheerio.load(content).text()
+      }
+    }
+  }
+  return embedBlock
+}
+
 const specialTags = ['iframe', 'figure', 'img', 'blockquote']
 
 const migratePost = async (post: WordPressPost) => {
@@ -151,7 +163,7 @@ const migratePost = async (post: WordPressPost) => {
     }
   }
 
-  let htmlContent: Node[] | undefined
+  let slateContent: Node[] | undefined
   let lastBlock: undefined | BlockInput
   const $ = cheerio.load(content)
   const blocks: BlockInput[] = []
@@ -187,18 +199,11 @@ const migratePost = async (post: WordPressPost) => {
 
   for (const el of nodes) {
     let image, specialEl
-    // console.log(`${i}: ${el.tagName}`)
-    // console.log($.html(el))
-
     if (specialTags.includes(el.tagName)) {
       specialEl = el
     } else {
       specialEl = specialTags.map(tag => $(el).find(tag)[0]).find(e => e)
     }
-    // console.log({tag: el.tagName, specialTag: specialEl});
-
-    // console.log(`${i}: ${el.tagName}`)
-    // console.log($.html(el))
     if (specialEl) {
       switch (specialEl.tagName) {
         case 'img':
@@ -218,10 +223,8 @@ const migratePost = async (post: WordPressPost) => {
             blocks.push(extractEmbed($(specialEl).attr('src')!))
           }
           break
-        case 'hr':
-          break
         case 'blockquote':
-          blocks.push(extractEmbed($(specialEl).html()!))
+          blocks.push(extractBlockquote($(specialEl).html()!))
           break
         case 'p':
         case 'h1':
@@ -232,11 +235,11 @@ const migratePost = async (post: WordPressPost) => {
         case 'h6':
       }
     } else {
-      htmlContent = (await convertHtmlToSlate($.html(el).toString())) as unknown as Node[]
+      slateContent = (await convertHtmlToSlate($.html(el).toString())) as unknown as Node[]
       if (lastBlock?.richText) {
-        lastBlock?.richText.richText.push(...htmlContent)
+        lastBlock?.richText.richText.push(...slateContent)
       } else {
-        blocks.push({richText: {richText: htmlContent}})
+        blocks.push({richText: {richText: slateContent}})
       }
     }
     lastBlock = blocks[blocks.length - 1]
