@@ -121,7 +121,11 @@
         "value": "Value",
         "yes": "Yes",
         "hidden": "Hide",
-        "setAsHidden": "Hidden articles are excluded by default but can still be queried on demand."
+        "setAsHidden": "Hidden articles are excluded by default but can still be queried on demand.",
+        "light": "Light",
+        "style": "Style",
+        "text": "Text",
+        "default": "Default"
       }
     },
     "articleList": {

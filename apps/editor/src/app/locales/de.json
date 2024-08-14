@@ -121,7 +121,11 @@
         "value": "Wert",
         "yes": "Ja",
         "hidden": "Ausblenden",
-        "setAsHidden": "Ausgeblendete Artikel werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden."
+        "setAsHidden": "Ausgeblendete Artikel werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden.",
+        "light": "Light",
+        "style": "Style",
+        "text": "Text",
+        "default": "Default"
       }
     },
     "articleList": {
