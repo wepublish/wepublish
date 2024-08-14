@@ -1411,6 +1411,12 @@
         "event": "Event",
         "custom": "Custom"
       }
+    },
+    "authorEditPanel": {
+      "hideAuthor": "Hide authors",
+      "hideOnTeam": "Hide on team page",
+      "hideOnArticle": "Hide on articles",
+      "hideOnTeaser": "Hide on teasers"
     }
   }
 }

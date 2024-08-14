@@ -432,6 +432,9 @@ type AuthorFactoryDefineInput = {
     slug?: string;
     jobTitle?: string | null;
     bio?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue;
+    hideOnArticle?: boolean;
+    hideOnTeaser?: boolean;
+    hideOnTeam?: boolean;
     links?: Prisma.AuthorsLinksCreateNestedManyWithoutAuthorInput;
     image?: AuthorimageFactory | Prisma.ImageCreateNestedOneWithoutAuthorInput;
     articlesAsAuthor?: Prisma.ArticleRevisionAuthorCreateNestedManyWithoutAuthorInput;

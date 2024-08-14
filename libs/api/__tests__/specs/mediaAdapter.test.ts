@@ -51,7 +51,7 @@ const TEST_TRANSFORMATION: ImageTransformation = {
   width: '1024px',
   rotation: ImageRotation.Rotate0,
   output: ImageOutput.JPEG,
-  quality: 100
+  quality: 80
 }
 
 let karmaMediaAdapter: KarmaMediaAdapter

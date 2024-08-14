@@ -50,7 +50,7 @@ export class AppController {
 
     res.status(201).send({
       id: imageId,
-      filename: `${imageId}.webp`,
+      filename: `${imageId}`,
       fileSize: metadata.size,
       mimeType: `image/${metadata.format}`,
       format: metadata.format,

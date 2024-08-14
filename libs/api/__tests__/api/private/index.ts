@@ -172,6 +172,9 @@ export type Author = {
   __typename?: 'Author';
   bio?: Maybe<Scalars['RichText']>;
   createdAt: Scalars['DateTime'];
+  hideOnArticle?: Maybe<Scalars['Boolean']>;
+  hideOnTeam?: Maybe<Scalars['Boolean']>;
+  hideOnTeaser?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   jobTitle?: Maybe<Scalars['String']>;
@@ -197,12 +200,16 @@ export type AuthorCreatedAction = {
 };
 
 export type AuthorFilter = {
+  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   tagIds?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export type AuthorInput = {
   bio?: InputMaybe<Scalars['RichText']>;
+  hideOnArticle?: InputMaybe<Scalars['Boolean']>;
+  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
+  hideOnTeaser?: InputMaybe<Scalars['Boolean']>;
   imageID?: InputMaybe<Scalars['ID']>;
   jobTitle?: InputMaybe<Scalars['String']>;
   links?: InputMaybe<Array<AuthorLinkInput>>;

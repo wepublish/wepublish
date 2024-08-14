@@ -171,6 +171,10 @@ model Author {
 
   tags TaggedAuthors[]
 
+  hideOnArticle Boolean @default(false)
+  hideOnTeaser  Boolean @default(false)
+  hideOnTeam    Boolean @default(false)
+
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([name])

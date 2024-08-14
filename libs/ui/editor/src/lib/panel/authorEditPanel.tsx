@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import {
   AuthorLink,
   AuthorListDocument,
@@ -24,7 +23,8 @@ import {
   Panel,
   PanelGroup,
   Schema,
-  toaster
+  toaster,
+  Toggle
 } from 'rsuite'
 import {RichTextBlock, RichTextBlockValue, createDefaultValue} from '../blocks'
 import {generateID, getOperationNameFromDocument} from '../utility'
@@ -41,21 +41,26 @@ import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageEditPanel} from './imageEditPanel'
 import FormControl from 'rsuite/FormControl'
+import {styled} from '@mui/material'
 
-const {ControlLabel, Group, Control} = RForm
+const {ControlLabel: RControlLabel, Group, Control} = RForm
 
 const InputGroup = styled(RInputGroup)`
   width: 230px;
   margin-left: 5px;
 `
 
-const Controls = styled.div`
+const Controls = styled('div')`
   display: flex;
   flex-direction: row;
 `
 
 const Form = styled(RForm)`
   height: 100%;
+`
+
+const ControlLabel = styled(RControlLabel)`
+  padding-top: ${({theme}) => theme.spacing(2)};
 `
 
 export interface AuthorEditPanelProps {
@@ -72,6 +77,9 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [jobTitle, setJobTitle] = useState('')
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [bio, setBio] = useState<RichTextBlockValue['richText']>(createDefaultValue())
+  const [hideOnArticle, setHideOnArticle] = useState<boolean | undefined | null>(undefined)
+  const [hideOnTeaser, setHideOnTeaser] = useState<boolean | undefined | null>(undefined)
+  const [hideOnTeam, setHideOnTeam] = useState<boolean | undefined | null>(undefined)
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([
     {id: generateID(), value: {title: '', url: ''}}
   ])
@@ -110,6 +118,9 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       setJobTitle(data.author.jobTitle ?? '')
       setImage(data.author.image)
       setBio(data.author.bio ? data.author.bio : createDefaultValue())
+      setHideOnArticle(data.author.hideOnArticle)
+      setHideOnTeam(data.author.hideOnTeam)
+      setHideOnTeaser(data.author.hideOnTeaser)
       setLinks(
         data.author.links
           ? data.author.links.map(link => ({
@@ -150,7 +161,10 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             imageID: image?.id || null,
             links: links.map(({value}) => value),
             bio,
-            tagIds
+            tagIds,
+            hideOnArticle,
+            hideOnTeaser,
+            hideOnTeam
           }
         }
       })
@@ -166,7 +180,10 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             imageID: image?.id,
             links: links.map(({value}) => value),
             bio,
-            tagIds
+            tagIds,
+            hideOnArticle,
+            hideOnTeaser,
+            hideOnTeam
           }
         }
       })
@@ -250,6 +267,17 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                 removeImage={() => setImage(undefined)}
               />
             </Panel>
+
+            <Panel header={t('authors.panels.bioInformation')}>
+              <div className="richTextFrame">
+                <RichTextBlock
+                  disabled={isDisabled}
+                  value={bio}
+                  onChange={value => setBio(value)}
+                />
+              </div>
+            </Panel>
+
             <Panel header={t('authors.panels.links')} className="authorLinks">
               <ListInput
                 disabled={isDisabled}
@@ -296,14 +324,19 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                 accepter={SelectTags}
               />
             </Panel>
-            <Panel header={t('authors.panels.bioInformation')}>
-              <div className="richTextFrame">
-                <RichTextBlock
-                  disabled={isDisabled}
-                  value={bio}
-                  onChange={value => setBio(value)}
-                />
-              </div>
+
+            {/* hide author in different places */}
+            <Panel header={t('authorEditPanel.hideAuthor')}>
+              <Group controlId="hideAuthorToggles">
+                <RControlLabel>{t('authorEditPanel.hideOnArticle')}</RControlLabel>
+                <Toggle checked={!!hideOnArticle} onChange={value => setHideOnArticle(value)} />
+
+                <ControlLabel>{t('authorEditPanel.hideOnTeaser')}</ControlLabel>
+                <Toggle checked={!!hideOnTeaser} onChange={value => setHideOnTeaser(value)} />
+
+                <ControlLabel>{t('authorEditPanel.hideOnTeam')}</ControlLabel>
+                <Toggle checked={!!hideOnTeam} onChange={value => setHideOnTeam(value)} />
+              </Group>
             </Panel>
           </PanelGroup>
         </Drawer.Body>

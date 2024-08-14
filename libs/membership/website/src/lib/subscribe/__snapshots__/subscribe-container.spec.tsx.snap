@@ -2334,7 +2334,7 @@ https://unsplash.it/200/100 200w"
               for=":r4:"
               id=":r4:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
             <div
               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-85"
@@ -2356,7 +2356,7 @@ https://unsplash.it/200/100 200w"
                   class="emotion-76"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
               </fieldset>
@@ -3223,7 +3223,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               for=":rh:"
 -               id=":rh:-label"
 -             >
--               Adresse
+-               Strasse und Hausnummer
 -             </label>
 -             <div
 -               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1qurb5e-MuiInputBase-root-MuiOutlinedInput-root"
@@ -3245,7 +3245,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -                   class="css-yjsfm1"
 -                 >
 -                   <span>
--                     Adresse
+-                     Strasse und Hausnummer
 -                   </span>
 -                 </legend>
 -               </fieldset>
@@ -7838,7 +7838,7 @@ https://unsplash.it/200/100 200w"
               for=":r12:"
               id=":r12:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
             <div
               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-85"
@@ -7860,7 +7860,7 @@ https://unsplash.it/200/100 200w"
                   class="emotion-76"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
               </fieldset>
@@ -10694,7 +10694,7 @@ https://unsplash.it/200/100 200w"
               for=":r1e:"
               id=":r1e:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
             <div
               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-85"
@@ -10716,7 +10716,7 @@ https://unsplash.it/200/100 200w"
                   class="emotion-76"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
               </fieldset>
@@ -13624,7 +13624,7 @@ https://unsplash.it/200/100 200w"
               for=":r1r:"
               id=":r1r:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
             <div
               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-85"
@@ -13646,7 +13646,7 @@ https://unsplash.it/200/100 200w"
                   class="emotion-76"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
               </fieldset>
@@ -15657,7 +15657,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-37:focus::-ms-input-
               for=":r28:"
               id=":r28:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
             <div
               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-30"
@@ -15679,7 +15679,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-37:focus::-ms-input-
                   class="emotion-21"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
               </fieldset>
