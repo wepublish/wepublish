@@ -127,7 +127,11 @@
         "value": "Valeur",
         "yes": "Oui",
         "hidden": "Cacher",
-        "setAsHidden": "Les articles cachés sont exclus par défaut mais peuvent toujours être interrogés sur demande."
+        "setAsHidden": "Les articles cachés sont exclus par défaut mais peuvent toujours être interrogés sur demande.",
+        "light": "Light",
+        "style": "Style",
+        "text": "Texte",
+        "default": "Default"
       }
     },
     "articleList": {
