@@ -4,8 +4,8 @@ export type Challenge = {
   validUntil: Date
 }
 export type ChallengeValidationProps = {
-  challengeID: string
-  solution: number
+  challengeID?: string
+  solution: number | string
 }
 
 export type ChallengeValidationReturn = {

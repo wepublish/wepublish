@@ -16,10 +16,14 @@ export class CfTurnstile implements ChallengeProvider {
     }
   }
   async validateChallenge(props: ChallengeValidationProps): Promise<ChallengeValidationReturn> {
-    const token = props.challengeID
+    if (props.challengeID) {
+      throw new Error('Turnstile does not support challengeID pass only solution!')
+    }
+
+    const token = props.solution
     const formData = new FormData()
     formData.append('secret', this.turnstile_secret_key)
-    formData.append('response', token)
+    formData.append('response', `${token}`)
 
     const url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
     const result = await fetch(url, {
