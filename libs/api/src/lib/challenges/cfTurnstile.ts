@@ -40,7 +40,7 @@ export class CfTurnstile implements ChallengeProvider {
     }
     return {
       result: 'invalid',
-      message: 'The provided Turnstile token was not valid!',
+      message: 'The provided Turnstile token is not valid!',
       valid: false
     }
   }
