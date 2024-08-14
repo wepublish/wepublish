@@ -2,6 +2,7 @@ import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
   ChallengeProvider,
+  CfTurnstile,
   MailProvider,
   MediaAdapter,
   Oauth2Provider,
@@ -17,7 +18,6 @@ import {Application} from 'express'
 import {DefaultURLAdapter} from '../urlAdapters'
 import {readConfig} from '../readConfig'
 import {MannschaftURLAdapter} from '../urlAdapters/URLAdapter-mannschaft'
-import {CfTurnstile} from '../../../../libs/api/src/lib/challenges/cfTurnstile'
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 type RunServerProps = {

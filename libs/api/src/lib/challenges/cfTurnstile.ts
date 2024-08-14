@@ -3,7 +3,7 @@ import {
   ChallengeProvider,
   ChallengeValidationProps,
   ChallengeValidationReturn
-} from '@wepublish/api'
+} from './challengeProvider'
 
 export class CfTurnstile implements ChallengeProvider {
   constructor(private turnstile_secret_key: string) {}
@@ -17,7 +17,7 @@ export class CfTurnstile implements ChallengeProvider {
   }
   async validateChallenge(props: ChallengeValidationProps): Promise<ChallengeValidationReturn> {
     const token = props.challengeID
-    let formData = new FormData()
+    const formData = new FormData()
     formData.append('secret', this.turnstile_secret_key)
     formData.append('response', token)
 
