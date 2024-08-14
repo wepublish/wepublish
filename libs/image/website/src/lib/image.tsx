@@ -53,6 +53,10 @@ export function Image({image, ...props}: BuilderImageProps) {
   const images = square ? imageToSquareImageItems(image) : imageToImageItems(image)
 
   const imageArray = images.reduce((array, img) => {
+    if (maxWidth && img.size > maxWidth) {
+      return array
+    }
+
     if (img.url) {
       array.push(`${img.url} ${img.size}w`)
     }
@@ -61,10 +65,6 @@ export function Image({image, ...props}: BuilderImageProps) {
   }, [] as string[])
 
   const imageSizes = [...images].reverse().reduce((array, img, index) => {
-    if (maxWidth && img.size > maxWidth) {
-      return array
-    }
-
     if (index === images.length - 1) {
       array.push(`${img.size}w`)
     } else {
