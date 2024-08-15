@@ -38,20 +38,30 @@ interface WordPressPost {
   modified_gmt: string
   slug: string
   link: string
+  wps_subtitle: string
+  tags: number[]
+  categories: number[]
   _embedded?: {
     'wp:featuredmedia'?: [
       {
         source_url: string
         alt_text: string
+        title: {
+          rendered: string
+        }
+        caption: {
+          rendered: string
+        }
       }
     ]
     author: WordpressAuthor[]
   }
 }
 
-type WordpressImage = {
+type ImageInput = {
   url: string
-  alt: string
+  title: string
+  description?: string
 }
 
 const WORDPRESS_URL = process.env['WORDPRESS_URL'] + '/wp-json/wp/v2/posts'
@@ -95,7 +105,7 @@ const ensureAuthor = async (author: WordpressAuthor): Promise<{id: string}> => {
 
   const image = await ensureImage({
     url: avatar_urls['96'],
-    alt: name
+    title: name
   })
 
   console.log('  author create', slug)
@@ -107,10 +117,10 @@ const ensureAuthor = async (author: WordpressAuthor): Promise<{id: string}> => {
   })
 }
 
-const ensureImage = async (input: WordpressImage) => {
-  const {url, alt} = input
+const ensureImage = async (input: ImageInput) => {
+  const {url, title, description} = input
 
-  const foundImages = (await getImagesByTitle(alt)).nodes
+  const foundImages = (await getImagesByTitle(title)).nodes
   const existingImage = foundImages.find(image => image.link === url)
   if (existingImage) {
     console.log('  image exists', url)
@@ -121,17 +131,20 @@ const ensureImage = async (input: WordpressImage) => {
   const image = await createImage({
     downloadUrl: url,
     filename: new URL(url).pathname.split('/').pop() as string,
-    title: alt,
-    link: url
+    title,
+    link: url,
+    description
   })
 
   return {
-    id: image.id!
+    id: image.id!,
+    title,
+    description
   }
 }
 
-const prepareLead = (excerpt: string) => {
-  const $ = cheerio.load(excerpt)
+const removeLinks = (html: string) => {
+  const $ = cheerio.load(html)
   $('a').remove()
   return decode($.text())
 }
@@ -157,13 +170,15 @@ const migratePost = async (post: WordPressPost) => {
     content: {rendered: content},
     date_gmt,
     modified_gmt,
+    wps_subtitle: subtitle,
     slug,
     link,
     _embedded
   } = post
 
+  let featuredImage
   const title = decode(encodedTitle)
-  const lead = prepareLead(excerpt)
+  const lead = removeLinks(excerpt)
 
   console.log()
   console.log('========================================================================')
@@ -196,19 +211,22 @@ const migratePost = async (post: WordPressPost) => {
   blocks.push({
     title: {
       title,
-      lead
+      lead: subtitle
     }
   })
 
   // Featured image
   if (_embedded?.['wp:featuredmedia']?.length) {
-    const featuredImage = await ensureImage({
-      url: _embedded?.['wp:featuredmedia'][0].source_url,
-      alt: _embedded?.['wp:featuredmedia'][0].alt_text
+    const featuredMedia = _embedded?.['wp:featuredmedia'][0]
+    featuredImage = await ensureImage({
+      url: featuredMedia.source_url,
+      title: featuredMedia.title.rendered,
+      description: removeLinks(featuredMedia.caption.rendered)
     })
     blocks.push({
       image: {
-        imageID: featuredImage.id
+        imageID: featuredImage.id,
+        caption: featuredImage.description
       }
     })
   }
@@ -230,22 +248,26 @@ const migratePost = async (post: WordPressPost) => {
           console.log($(specialEl).attr('data-src'))
           image = await ensureImage({
             url: $(specialEl).attr('data-src')!,
-            alt: $(specialEl).attr('alt')!
+            title: $(specialEl).attr('alt')!,
+            description: $(specialEl).attr('alt')!
           })
           blocks.push({
             image: {
-              imageID: image.id
+              imageID: image.id,
+              caption: image.description
             }
           })
           break
         case 'figure':
           image = await ensureImage({
             url: $(specialEl).find('img').attr('data-src')!,
-            alt: $(specialEl).find('img').attr('alt')!
+            title: $(specialEl).find('img').attr('alt')!,
+            description: $(specialEl).find('figcaption').text()!
           })
           blocks.push({
             image: {
-              imageID: image.id
+              imageID: image.id,
+              caption: image.description
             }
           })
           break
@@ -301,6 +323,8 @@ const migratePost = async (post: WordPressPost) => {
     title,
     lead,
     slug,
+    // preTitle: subtitle,
+    imageID: featuredImage ? featuredImage.id : undefined,
     blocks: blocks.map(block => {
       if (block.richText) {
         return {
