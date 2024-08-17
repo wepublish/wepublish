@@ -49,10 +49,12 @@ export default function ArticleBySlugIdOrToken() {
             />
           </ArticleWrapper>
 
-          <ArticleWrapper>
-            <H3 component={'h2'}>Kommentare</H3>
-            <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
-          </ArticleWrapper>
+          {!data.article.disableComments && (
+            <ArticleWrapper>
+              <H3 component={'h2'}>Kommentare</H3>
+              <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
+            </ArticleWrapper>
+          )}
         </>
       )}
     </>

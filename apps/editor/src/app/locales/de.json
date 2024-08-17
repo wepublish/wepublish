@@ -122,6 +122,7 @@
         "yes": "Ja",
         "hidden": "Ausblenden",
         "setAsHidden": "Ausgeblendete Artikel werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden.",
+        "disableComments": "Kommentare für diesen Artikel deaktivieren",
         "light": "Light",
         "style": "Style",
         "text": "Text",

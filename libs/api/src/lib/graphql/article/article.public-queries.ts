@@ -1,6 +1,11 @@
 import {PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
-import {ArticleFilter, ArticleSort, PublicArticle} from '../../db/article'
+import {
+  ArticleFilter,
+  ArticleSort,
+  articleWithRevisionsToPublicArticle,
+  PublicArticle
+} from '../../db/article'
 import {AuthSessionType} from '@wepublish/authentication/api'
 import {SortOrder, logger} from '@wepublish/utils/api'
 import {getArticles} from './article.queries'
@@ -26,7 +31,7 @@ export const getPublishedArticles = async (
 
   return {
     ...data,
-    nodes: data.nodes.map(({id, shared, published}) => ({shared, ...published, id}))
+    nodes: data.nodes.map(articleWithRevisionsToPublicArticle)
   }
 }
 
@@ -87,13 +92,7 @@ export const getPublishedArticleByIdOrSlug = async (
       }
     })
 
-    article = fullArticle
-      ? ({
-          ...(fullArticle?.published ?? fullArticle.pending),
-          id: fullArticle.id,
-          shared: fullArticle?.shared
-        } as PublicArticle)
-      : null
+    article = fullArticle ? articleWithRevisionsToPublicArticle(fullArticle) : null
   }
 
   if (!article && token) {
@@ -103,9 +102,11 @@ export const getPublishedArticleByIdOrSlug = async (
 
       article = privateArticle?.draft
         ? ({
+            ...privateArticle,
             ...privateArticle.draft,
             id: privateArticle.id,
             shared: privateArticle.shared,
+            disableComments: privateArticle?.disableComments,
             updatedAt: new Date(),
             publishedAt: new Date()
           } as PublicArticle)
@@ -118,6 +119,8 @@ export const getPublishedArticleByIdOrSlug = async (
   if (session?.type === AuthSessionType.Token) {
     return article?.shared ? article : null
   }
+
+  console.log('query', article.slug, article.disableComments)
 
   return article
 }

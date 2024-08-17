@@ -117,8 +117,9 @@ model Article {
   draftId String?          @unique
   draft   ArticleRevision? @relation("draftArticleRevision", fields: [draftId], references: [id], onDelete: SetNull)
 
-  shared Boolean
-  hidden Boolean @default(false)
+  shared          Boolean
+  hidden          Boolean @default(false)
+  disableComments Boolean @default(false)
 
   navigations NavigationLink[]
   tags        TaggedArticles[]

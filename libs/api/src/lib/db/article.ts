@@ -42,6 +42,7 @@ export interface Article extends ArticleData {
   readonly shared: boolean
   readonly createdAt: Date
   readonly modifiedAt: Date
+  readonly disableComments?: boolean | null
 
   readonly draft: ArticleRevision | null
   readonly published: ArticleRevision | null
@@ -71,6 +72,7 @@ export interface PublicArticle extends ArticleData {
 
   readonly blocks: ArticleBlock[]
   readonly peeredArticleURL?: string
+  readonly disableComments?: boolean | null
 }
 
 export interface ArticleFilter {
@@ -117,10 +119,11 @@ export type ArticleWithRevisions = PrismaArticle & {
 export const articleWithRevisionsToPublicArticle = ({
   id,
   shared,
+  disableComments,
   published,
   pending
 }: Omit<ArticleWithRevisions, 'draft'>): PublicArticle => {
-  const returnValue = {shared, ...(published || pending!), id}
+  const returnValue = {shared, disableComments, ...(published || pending!), id}
 
   return {
     ...returnValue,
