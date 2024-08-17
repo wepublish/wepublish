@@ -3,7 +3,16 @@ import {TeaserType} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {TFunction} from 'i18next'
-import {Button, Drawer, Form, Input, Panel as RPanel, Toggle as RToggle} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  Form,
+  Input,
+  Panel as RPanel,
+  Radio,
+  RadioGroup,
+  Toggle as RToggle
+} from 'rsuite'
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -12,6 +21,7 @@ import {Teaser} from '../blocks/types'
 import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+import {TeaserStyle} from '@wepublish/website/api'
 
 const {Group, ControlLabel, Control} = Form
 
@@ -124,6 +134,18 @@ export function TeaserEditPanel({
         {previewForTeaser(initialTeaser, t)}
         <RPanel header={t('articleEditor.panels.displayOptions')}>
           <Form fluid>
+            <Group controlId="articleStyle">
+              <ControlLabel>{t('articleEditor.panels.style')}</ControlLabel>
+              <RadioGroup
+                inline
+                value={style}
+                onChange={teaserStyle => setStyle(teaserStyle as TeaserStyle)}>
+                <Radio value={TeaserStyle.Default}>{t('articleEditor.panels.default')}</Radio>
+                <Radio value={TeaserStyle.Light}>{t('articleEditor.panels.light')}</Radio>
+                <Radio value={TeaserStyle.Text}>{t('articleEditor.panels.text')}</Radio>
+              </RadioGroup>
+            </Group>
+
             <Group controlId="articlePreTitle">
               <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
               <Control
