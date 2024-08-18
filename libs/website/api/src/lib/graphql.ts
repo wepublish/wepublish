@@ -715,7 +715,7 @@ export type MutationRateCommentArgs = {
 
 export type MutationRegisterMemberArgs = {
   address?: InputMaybe<UserAddressInput>;
-  birthday?: InputMaybe<Scalars['Date']>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
   challengeAnswer: ChallengeInput;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
@@ -728,7 +728,7 @@ export type MutationRegisterMemberArgs = {
 export type MutationRegisterMemberAndReceivePaymentArgs = {
   address?: InputMaybe<UserAddressInput>;
   autoRenew: Scalars['Boolean'];
-  birthday?: InputMaybe<Scalars['Date']>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
   challengeAnswer: ChallengeInput;
   email: Scalars['String'];
   failureURL?: InputMaybe<Scalars['String']>;
@@ -1489,7 +1489,7 @@ export type UploadImageInput = {
 export type User = {
   __typename?: 'User';
   address?: Maybe<UserAddress>;
-  birthday?: Maybe<Scalars['Date']>;
+  birthday?: Maybe<Scalars['DateTime']>;
   email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
   flair?: Maybe<Scalars['String']>;
@@ -1523,7 +1523,7 @@ export type UserAddressInput = {
 
 export type UserInput = {
   address?: InputMaybe<UserAddressInput>;
-  birthday?: InputMaybe<Scalars['Date']>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
   flair?: InputMaybe<Scalars['String']>;
@@ -2074,7 +2074,7 @@ export type RegisterMutationVariables = Exact<{
   name: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
   preferredName?: InputMaybe<Scalars['String']>;
-  birthday?: InputMaybe<Scalars['Date']>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
   address?: InputMaybe<UserAddressInput>;
   email: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
@@ -4482,7 +4482,7 @@ export type LoginWithJwtMutationHookResult = ReturnType<typeof useLoginWithJwtMu
 export type LoginWithJwtMutationResult = Apollo.MutationResult<LoginWithJwtMutation>;
 export type LoginWithJwtMutationOptions = Apollo.BaseMutationOptions<LoginWithJwtMutation, LoginWithJwtMutationVariables>;
 export const RegisterDocument = gql`
-    mutation Register($name: String!, $firstName: String, $preferredName: String, $birthday: Date, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
+    mutation Register($name: String!, $firstName: String, $preferredName: String, $birthday: DateTime, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
   registerMember(
     name: $name
     firstName: $firstName

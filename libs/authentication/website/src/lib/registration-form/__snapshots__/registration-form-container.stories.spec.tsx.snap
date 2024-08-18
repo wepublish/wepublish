@@ -401,7 +401,7 @@ exports[`Registration Form Container should render Filled 1`] = `
 +       <div
 +         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
 +       >
-+         No more mocked responses for the query: mutation Register($name: String!, $firstName: String, $preferredName: String, $birthday: Date, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
++         No more mocked responses for the query: mutation Register($name: String!, $firstName: String, $preferredName: String, $birthday: DateTime, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
 +   registerMember(
 +     name: $name
 +     firstName: $firstName
@@ -4898,7 +4898,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 +       <div
 +         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
 +       >
-+         No more mocked responses for the query: mutation Register($name: String!, $firstName: String, $preferredName: String, $birthday: Date, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
++         No more mocked responses for the query: mutation Register($name: String!, $firstName: String, $preferredName: String, $birthday: DateTime, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
 +   registerMember(
 +     name: $name
 +     firstName: $firstName

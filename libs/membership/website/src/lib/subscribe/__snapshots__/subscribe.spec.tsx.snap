@@ -15456,7 +15456,7 @@ https://unsplash.it/200/100 200w"
               id=":r2u:"
               inputmode="text"
               name="birthday"
-              placeholder="DD-MM-YYYY"
+              placeholder="MMMM DD, YYYY"
               type="text"
               value=""
             />
@@ -16124,27 +16124,52 @@ exports[`Subscribe should render OnlyBirthdayFilled 1`] = `
             >
               Geburtstag
             </label>
-@@ -395,17 +395,17 @@
+@@ -395,17 +395,42 @@
                 id=":r37:"
                 inputmode="text"
                 name="birthday"
-                placeholder="DD-MM-YYYY"
+                placeholder="MMMM DD, YYYY"
                 type="text"
 -               value=""
-+               value="09-08-1994"
-              />
++               value="Sep 08, 1994"
++             />
++             <div
++               class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1azk567-MuiInputAdornment-root"
++             >
++               <button
++                 class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium clearButton css-78trlr-MuiButtonBase-root-MuiIconButton-root"
++                 tabindex="0"
++                 title="Clear value"
++                 type="button"
++               >
++                 <svg
++                   aria-hidden="true"
++                   class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
++                   data-testid="ClearIcon"
++                   focusable="false"
++                   viewBox="0 0 24 24"
++                 >
++                   <path
++                     d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                    />
++                 </svg>
++                 <span
++                   class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
++                 />
++               </button>
++             </div>
               <div
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
 -                 aria-label="Choose date"
-+                 aria-label="Choose date, selected date is Aug 9, 1994"
++                 aria-label="Choose date, selected date is Sep 8, 1994"
                   class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root"
                   tabindex="0"
                   type="button"
                 >
                   <svg
-@@ -427,11 +427,11 @@
+@@ -427,11 +452,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -16157,7 +16182,7 @@ exports[`Subscribe should render OnlyBirthdayFilled 1`] = `
                     Geburtstag
                   </span>
                 </legend>
-@@ -912,12 +912,12 @@
+@@ -912,12 +937,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -16172,7 +16197,7 @@ exports[`Subscribe should render OnlyBirthdayFilled 1`] = `
             >
               Captcha
             </label>
-@@ -928,18 +928,18 @@
+@@ -928,18 +953,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r3c:"
@@ -16265,7 +16290,7 @@ exports[`Subscribe should render OnlyBirthdayInvalid 1`] = `
                 id=":r3f:"
                 name="email"
                 type="email"
-@@ -371,10 +379,16 @@
+@@ -371,27 +379,34 @@
                     Email
                   </span>
                 </legend>
@@ -16282,7 +16307,45 @@ exports[`Subscribe should render OnlyBirthdayInvalid 1`] = `
             class="MuiFormControl-root MuiTextField-root css-z3c6am-MuiFormControl-root-MuiTextField-root"
           >
             <label
-@@ -912,22 +926,23 @@
+-             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
++             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
+              data-shrink="false"
+              for=":r3g:"
+              id=":r3g:-label"
+            >
+              Geburtstag
+            </label>
+            <div
+-             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-16ik6gb-MuiInputBase-root-MuiOutlinedInput-root"
++             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-formControl MuiInputBase-adornedEnd css-16ik6gb-MuiInputBase-root-MuiOutlinedInput-root"
+            >
+              <input
+-               aria-invalid="false"
++               aria-describedby=":r3g:-helper-text"
++               aria-invalid="true"
+                autocomplete="off"
+                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
+                id=":r3g:"
+                inputmode="text"
+                name="birthday"
+@@ -435,10 +450,16 @@
+                    Geburtstag
+                  </span>
+                </legend>
+              </fieldset>
+            </div>
++           <p
++             class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1612nlz-MuiFormHelperText-root"
++             id=":r3g:-helper-text"
++           >
++             Invalid date
++           </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="css-qtq6nf-SubscribeSection eu4qtxp5"
+@@ -912,22 +933,23 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -16309,7 +16372,7 @@ exports[`Subscribe should render OnlyBirthdayInvalid 1`] = `
                 name="challengeAnswer.challengeSolution"
                 type="text"
                 value=""
-@@ -943,10 +958,16 @@
+@@ -943,10 +965,16 @@
                     Captcha
                   </span>
                 </legend>

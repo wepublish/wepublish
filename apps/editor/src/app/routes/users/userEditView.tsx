@@ -22,13 +22,13 @@ import {
   useAuthorisation,
   UserSubscriptionsList
 } from '@wepublish/ui/editor'
-import {format} from 'date-fns'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   CheckPicker,
   Col,
+  DatePicker,
   Drawer,
   Form,
   Grid as RGrid,
@@ -38,8 +38,7 @@ import {
   Row,
   Schema,
   toaster,
-  Toggle as RToggle,
-  DatePicker
+  Toggle as RToggle
 } from 'rsuite'
 
 const Grid = styled(RGrid)`
@@ -249,9 +248,9 @@ function UserEditView() {
               firstName: firstName || undefined,
               preferredName,
               flair,
-              birthday: birthday ? format(birthday, 'yyyy-MM-dd') : null,
+              birthday: birthday?.toISOString(),
               email,
-              emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
+              emailVerifiedAt: emailVerifiedAt?.toISOString(),
               active,
               userImageID: userImage?.id || null,
               roleIDs: roles.map(role => role.id),
@@ -298,7 +297,7 @@ function UserEditView() {
               firstName,
               preferredName,
               flair,
-              birthday: birthday ? format(birthday, 'yyyy-MM-dd') : null,
+              birthday: birthday?.toISOString(),
               email,
               emailVerifiedAt: null,
               active,

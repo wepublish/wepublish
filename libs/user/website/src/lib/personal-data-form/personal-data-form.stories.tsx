@@ -69,7 +69,7 @@ const Render = () => {
   return (
     <PersonalDataForm
       {...props}
-      initialUser={mockUser}
+      user={mockUser}
       onUpdate={async data => {
         args.onUpdate(data)
         updateArgs({

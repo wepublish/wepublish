@@ -76,7 +76,7 @@ import {
 
 import {mailLogType} from '@wepublish/mail/api'
 import {sub} from 'date-fns'
-import {GraphQLDate} from 'graphql-scalars'
+import {GraphQLDateTime} from 'graphql-scalars'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -191,7 +191,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         address: {type: GraphQLUserAddressInput},
         password: {type: GraphQLString},
         birthday: {
-          type: GraphQLDate
+          type: GraphQLDateTime
         },
         challengeAnswer: {
           type: new GraphQLNonNull(GraphQLChallengeInput)
@@ -267,7 +267,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         name: {type: new GraphQLNonNull(GraphQLString)},
         birthday: {
-          type: GraphQLDate
+          type: GraphQLDateTime
         },
         firstName: {type: GraphQLString},
         preferredName: {type: GraphQLString},

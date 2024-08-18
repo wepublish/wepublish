@@ -2742,7 +2742,7 @@ export type User = {
   __typename?: 'User';
   active: Scalars['Boolean'];
   address?: Maybe<UserAddress>;
-  birthday?: Maybe<Scalars['Date']>;
+  birthday?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
@@ -2802,7 +2802,7 @@ export type UserFilter = {
 export type UserInput = {
   active: Scalars['Boolean'];
   address?: InputMaybe<UserAddressInput>;
-  birthday?: InputMaybe<Scalars['Date']>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
   email: Scalars['String'];
   emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
   firstName?: InputMaybe<Scalars['String']>;

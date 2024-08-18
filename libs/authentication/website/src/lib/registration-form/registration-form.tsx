@@ -58,26 +58,26 @@ export function zodAlwaysRefine<T extends z.ZodTypeAny>(zodType: T) {
 }
 
 export const requiredRegisterSchema = z.object({
-  name: z.string().nonempty(),
-  email: z.string().email().nonempty(),
+  name: z.string().min(1),
+  email: z.string().email().min(1),
   challengeAnswer: z.object({
-    challengeSolution: z.string().nonempty(),
-    challengeID: z.string().nonempty()
+    challengeSolution: z.string().min(1),
+    challengeID: z.string().min(1)
   })
 })
 
 export const defaultRegisterSchema = z.object({
   preferredName: z.string().optional(),
-  firstName: z.string().nonempty(),
+  firstName: z.string().min(1),
   address: z.object({
-    streetAddress: z.string().nonempty(),
-    zipCode: z.string().nonempty(),
-    city: z.string().nonempty(),
-    country: z.string().nonempty()
+    streetAddress: z.string().min(1),
+    zipCode: z.string().min(1),
+    city: z.string().min(1),
+    country: z.string().min(1)
   }),
   password: z.string().min(8),
   passwordRepeated: z.string().min(8),
-  birthday: z.date().max(new Date()).optional()
+  birthday: z.coerce.date().max(new Date())
 })
 
 export function RegistrationForm<T extends Exclude<BuilderUserFormFields, 'flair'>>({

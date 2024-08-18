@@ -3643,7 +3643,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
               id=":r1h:"
               inputmode="text"
               name="birthday"
-              placeholder="DD-MM-YYYY"
+              placeholder="MMMM DD, YYYY"
               type="text"
               value=""
             />
@@ -3776,27 +3776,52 @@ exports[`Registration Form should render OnlyBirthdayFilled 1`] = `
             >
               Geburtstag
             </label>
-@@ -66,17 +66,17 @@
+@@ -66,17 +66,42 @@
                 id=":r1l:"
                 inputmode="text"
                 name="birthday"
-                placeholder="DD-MM-YYYY"
+                placeholder="MMMM DD, YYYY"
                 type="text"
 -               value=""
-+               value="09-08-1994"
-              />
++               value="Sep 08, 1994"
++             />
++             <div
++               class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1azk567-MuiInputAdornment-root"
++             >
++               <button
++                 class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium clearButton css-78trlr-MuiButtonBase-root-MuiIconButton-root"
++                 tabindex="0"
++                 title="Clear value"
++                 type="button"
++               >
++                 <svg
++                   aria-hidden="true"
++                   class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
++                   data-testid="ClearIcon"
++                   focusable="false"
++                   viewBox="0 0 24 24"
++                 >
++                   <path
++                     d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
++                   />
++                 </svg>
++                 <span
++                   class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                  />
++               </button>
++             </div>
               <div
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
 -                 aria-label="Choose date"
-+                 aria-label="Choose date, selected date is Aug 9, 1994"
++                 aria-label="Choose date, selected date is Sep 8, 1994"
                   class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root"
                   tabindex="0"
                   type="button"
                 >
                   <svg
-@@ -98,11 +98,11 @@
+@@ -98,11 +123,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -7654,7 +7679,7 @@ exports[`Registration Form should render WithCustomValidation 1`] = `
 +             class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1612nlz-MuiFormHelperText-root"
 +             id=":r2r:-helper-text"
 +           >
-+             String must contain at least 16 character(s)
++             Required
 +           </p>
           </div>
           <div

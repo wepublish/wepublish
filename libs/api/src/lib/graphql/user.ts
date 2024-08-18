@@ -18,7 +18,7 @@ import {
 } from './common'
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
-import {GraphQLDate, GraphQLDateTime} from 'graphql-scalars'
+import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLPublicPayment} from './payment'
 import {Subscription, User} from '@prisma/client'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity} from './memberPlan'
@@ -114,7 +114,7 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
     firstName: {type: GraphQLString},
     email: {type: new GraphQLNonNull(GraphQLString)},
     emailVerifiedAt: {type: GraphQLDateTime},
-    birthday: {type: GraphQLDate},
+    birthday: {type: GraphQLDateTime},
 
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddress},
@@ -177,9 +177,9 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
     name: {type: new GraphQLNonNull(GraphQLString)},
     firstName: {type: GraphQLString},
     birthday: {
-      type: GraphQLDate,
+      type: GraphQLDateTime,
       resolve: createProxyingResolver(({birthday, id}, _, {session}) =>
-        birthday && isMeBySession(id, session) ? birthday : ''
+        birthday && isMeBySession(id, session) ? birthday : null
       )
     },
     email: {
@@ -277,7 +277,7 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
     emailVerifiedAt: {type: GraphQLDateTime},
 
     birthday: {
-      type: GraphQLDate
+      type: GraphQLDateTime
     },
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},
@@ -305,7 +305,7 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
     address: {type: GraphQLUserAddressInput},
     flair: {type: GraphQLString},
     birthday: {
-      type: GraphQLDate
+      type: GraphQLDateTime
     },
     uploadImageInput: {type: GraphQLUploadImageInput}
   }

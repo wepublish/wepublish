@@ -36,7 +36,7 @@ type AddressShape = z.ZodObject<{
 }>
 
 export type PersonalDataFormFields = UpdateUserMutationVariables['input'] &
-  Partial<UpdatePasswordMutationVariables> & {image?: Image}
+  Partial<UpdatePasswordMutationVariables>
 
 export type BuilderPersonalDataFormFields =
   | Exclude<BuilderUserFormFields, 'passwordRepeated'>
@@ -50,15 +50,15 @@ export type BuilderPersonalDataFormProps<
     Partial<{
       password: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
       passwordRepeated: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
-      preferredName: z.ZodString | z.ZodOptional<z.ZodString>
-      firstName: z.ZodString | z.ZodOptional<z.ZodString>
-      lastName: z.ZodString | z.ZodOptional<z.ZodString>
-      flair: z.ZodString | z.ZodOptional<z.ZodString>
+      preferredName: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
+      firstName: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
+      lastName: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
+      flair: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
       address: AddressShape | z.ZodOptional<AddressShape>
       birthday: z.ZodDate | z.ZodOptional<z.ZodDate>
     }>
   >
-  initialUser: User
+  user: User
   className?: string
   onUpdate?: (
     data: UpdateUserMutationVariables['input'] & Partial<UpdatePasswordMutationVariables>

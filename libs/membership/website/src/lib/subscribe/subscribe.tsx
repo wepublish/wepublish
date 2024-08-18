@@ -35,8 +35,8 @@ import {ApolloError} from '@apollo/client'
 import {ApiAlert} from '@wepublish/errors/website'
 
 const subscribeSchema = z.object({
-  memberPlanId: z.string().nonempty(),
-  paymentMethodId: z.string().nonempty(),
+  memberPlanId: z.string().min(1),
+  paymentMethodId: z.string().min(1),
   monthlyAmount: z.coerce.number().gte(0),
   autoRenew: z.boolean(),
   paymentPeriodicity: z.enum([

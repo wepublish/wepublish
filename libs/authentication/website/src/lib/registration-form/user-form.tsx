@@ -159,11 +159,15 @@ export function UserForm<T extends BuilderUserFormFields>({
           render={({field, fieldState: {error}}) => (
             <DatePicker
               {...field}
-              value={field.value ?? null}
+              value={field.value ? new Date(field.value) : null}
+              onClose={field.onBlur}
               label={'Geburtstag'}
-              format="dd-MM-yyyy"
+              format="PP"
+              openTo="year"
+              views={['year', 'month', 'day']}
               disableFuture
               slotProps={{
+                field: {clearable: true, ref: field.ref},
                 textField: {
                   error: !!error,
                   helperText: error?.message

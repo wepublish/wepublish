@@ -1,11 +1,6 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import {InputAdornment, Theme, css, styled, useTheme} from '@mui/material'
-import {
-  defaultRegisterSchema,
-  requiredRegisterSchema,
-  UserForm,
-  zodAlwaysRefine
-} from '@wepublish/authentication/website'
+import {requiredRegisterSchema, UserForm, zodAlwaysRefine} from '@wepublish/authentication/website'
 import {
   BuilderPersonalDataFormFields,
   BuilderPersonalDataFormProps,
@@ -87,29 +82,25 @@ const requiredSchema = requiredRegisterSchema.omit({
   email: true
 })
 
-const defaultSchema = defaultRegisterSchema.merge(
-  z.object({
-    password: z.string().min(8).optional().or(z.literal('')),
-    passwordRepeated: z.string().min(8).optional().or(z.literal('')),
-    flair: z.string().optional(),
-    uploadImageInput: z.object({
-      description: z.string().optional(),
-      file: z.any(),
-      filename: z.string().optional(),
-      focalPoint: z.object({x: z.string(), y: z.string()}),
-      license: z.string().optional(),
-      link: z.string().optional(),
-      source: z.string().optional(),
-      tags: z.array(z.string()).optional(),
-      title: z.string().optional()
-    })
-  })
-)
+const defaultSchema = z.object({
+  firstName: z.string().optional().or(z.literal('')),
+  preferredName: z.string().optional().or(z.literal('')),
+  flair: z.string().optional().or(z.literal('')),
+  birthday: z.coerce.date().max(new Date()).optional(),
+  address: z.object({
+    streetAddress: z.string().min(1),
+    zipCode: z.string().min(1),
+    city: z.string().min(1),
+    country: z.string().min(1)
+  }),
+  password: z.string().min(8).optional().or(z.literal('')),
+  passwordRepeated: z.string().min(8).optional().or(z.literal(''))
+})
 
 export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   fields = ['firstName', 'name', 'flair', 'address', 'password', 'preferredName', 'image'] as T[],
   className,
-  initialUser,
+  user,
   schema = defaultSchema,
   onUpdate,
   onImageUpload,
@@ -139,7 +130,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
       zodAlwaysRefine(
         requiredSchema.merge(
           schema.pick({
-            ...fieldsToDisplay,
+            ...(fieldsToDisplay as any),
             passwordRepeated: fieldsToDisplay.password
           })
         )
@@ -154,19 +145,17 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
     resolver: zodResolver(validationSchema),
     defaultValues: {
       address: {
-        city: initialUser.address?.city || '',
-        country: initialUser.address?.country || '',
-        streetAddress: initialUser.address?.streetAddress || '',
-        zipCode: initialUser.address?.zipCode || ''
+        city: user.address?.city || '',
+        country: user.address?.country || '',
+        streetAddress: user.address?.streetAddress || '',
+        zipCode: user.address?.zipCode || ''
       },
-      email: initialUser.email || '',
-      firstName: initialUser.firstName || '',
-      preferredName: initialUser.preferredName || '',
-      name: initialUser.name || '',
-      flair: initialUser.flair || '',
-      password: '',
-      passwordRepeated: '',
-      uploadImageInput: initialUser.image || {}
+      email: user.email,
+      firstName: user.firstName || '',
+      preferredName: user.preferredName || '',
+      name: user.name,
+      flair: user.flair || '',
+      birthday: user.birthday
     },
     mode: 'onTouched',
     reValidateMode: 'onChange'
@@ -185,17 +174,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
       <PersonalDataInputForm>
         {fieldsToDisplay.image && (
           <PersonalDataImageInputWrapper>
-            <Controller
-              name={'uploadImageInput'}
-              control={control}
-              render={({field}) => (
-                <ImageUpload
-                  {...field}
-                  image={initialUser.image}
-                  onUpload={callAction(onImageUpload)}
-                />
-              )}
-            />
+            <ImageUpload image={user.image} onUpload={callAction(onImageUpload)} />
           </PersonalDataImageInputWrapper>
         )}
 
@@ -289,7 +268,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
           {mediaEmail && (
             <RequestEmail>
               <Link
-                href={`mailto:${mediaEmail}?subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${initialUser.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}>
+                href={`mailto:${mediaEmail}?subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${user.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}>
                 Klicke hier um deine Email zu ändern
               </Link>
             </RequestEmail>

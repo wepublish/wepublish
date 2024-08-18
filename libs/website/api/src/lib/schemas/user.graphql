@@ -95,7 +95,7 @@ mutation Register(
   $name: String!
   $firstName: String
   $preferredName: String
-  $birthday: Date
+  $birthday: DateTime
   $address: UserAddressInput
   $email: String!
   $password: String
