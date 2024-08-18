@@ -1385,6 +1385,7 @@ exports[`Article should render Default 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -1535,8 +1536,8 @@ exports[`Article should render Default 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -5571,6 +5572,7 @@ exports[`Article should render WithChildren 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -5721,8 +5723,8 @@ exports[`Article should render WithChildren 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -9787,6 +9789,7 @@ exports[`Article should render WithClassName 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -9937,8 +9940,8 @@ exports[`Article should render WithClassName 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -14000,6 +14003,7 @@ exports[`Article should render WithEmotion 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -14150,8 +14154,8 @@ exports[`Article should render WithEmotion 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -18226,6 +18230,7 @@ exports[`Article should render WithoutAuthors 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -18376,8 +18381,8 @@ exports[`Article should render WithoutAuthors 1`] = `
 .emotion-518 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -22191,6 +22196,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -22341,8 +22347,8 @@ exports[`Article should render WithoutImageMetadata 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -26404,6 +26410,7 @@ exports[`Article should render WithoutLead 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -26554,8 +26561,8 @@ exports[`Article should render WithoutLead 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -30613,6 +30620,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -30763,8 +30771,8 @@ exports[`Article should render WithoutSocialMedia 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 

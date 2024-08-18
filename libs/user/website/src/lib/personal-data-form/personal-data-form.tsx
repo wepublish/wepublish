@@ -1,8 +1,15 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import {InputAdornment, Theme, css, styled, useTheme} from '@mui/material'
 import {
+  defaultRegisterSchema,
+  requiredRegisterSchema,
+  UserForm,
+  zodAlwaysRefine
+} from '@wepublish/authentication/website'
+import {
   BuilderPersonalDataFormFields,
   BuilderPersonalDataFormProps,
+  BuilderUserFormFields,
   PersonalDataFormFields,
   useAsyncAction,
   useWebsiteBuilder
@@ -10,8 +17,11 @@ import {
 import {useMemo, useReducer, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {MdVisibility, MdVisibilityOff} from 'react-icons/md'
-import {OptionalKeysOf} from 'type-fest'
 import {z} from 'zod'
+
+const fullWidth = css`
+  grid-column: 1 / -1;
+`
 
 export const PersonalDataFormWrapper = styled('form')`
   display: grid;
@@ -28,7 +38,7 @@ export const PersonalDataInputForm = styled('div')`
   }
 `
 
-export const PersonalDataAddressWrapper = styled('div')`
+export const PersonalDataImageInputWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
   grid-template-columns: repeat(2, 1fr);
@@ -37,23 +47,6 @@ export const PersonalDataAddressWrapper = styled('div')`
     grid-column-start: 1;
     grid-column-end: 3;
     grid-template-columns: repeat(3, 1fr);
-  }
-`
-
-const addressStyles = (theme: Theme) => css`
-  grid-column-start: 1;
-  grid-column-end: 3;
-
-  ${theme.breakpoints.up('md')} {
-    grid-column-start: 1;
-    grid-column-end: 4;
-  }
-`
-
-const countryStyles = (theme: Theme) => css`
-  ${theme.breakpoints.down('md')} {
-    grid-column-start: 1;
-    grid-column-end: 3;
   }
 `
 
@@ -66,8 +59,7 @@ export const PersonalDataPasswordWrapper = styled('div')`
   gap: ${({theme}) => theme.spacing(3)};
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    grid-column-start: 1;
-    grid-column-end: 3;
+    ${fullWidth}
   }
 `
 
@@ -78,7 +70,8 @@ const passwordNoteStyles = (theme: Theme) => css`
 `
 
 export const PersonalDataEmailWrapper = styled('div')`
-  grid-column: 1 / -1;
+  ${fullWidth}
+
   display: grid;
   gap: ${({theme}) => theme.spacing(1)};
 `
@@ -89,35 +82,29 @@ const buttonStyles = css`
 
 const RequestEmail = styled('div')``
 
-const requiredSchema = z.object({
-  email: z.string().email().nonempty(),
-  name: z.string().nonempty()
+const requiredSchema = requiredRegisterSchema.omit({
+  challengeAnswer: true,
+  email: true
 })
 
-const defaultSchema = z.object({
-  firstName: z.string().optional(),
-  preferredName: z.string().optional(),
-  flair: z.string().optional(),
-  address: z.object({
-    streetAddress: z.string().nonempty(),
-    zipCode: z.string().nonempty(),
-    city: z.string().nonempty(),
-    country: z.string().nonempty()
-  }),
-  password: z.string().min(8).optional().or(z.literal('')),
-  passwordRepeated: z.string().min(8).optional().or(z.literal('')),
-  uploadImageInput: z.object({
-    description: z.string().optional(),
-    file: z.any(),
-    filename: z.string().optional(),
-    focalPoint: z.object({x: z.string(), y: z.string()}),
-    license: z.string().optional(),
-    link: z.string().optional(),
-    source: z.string().optional(),
-    tags: z.array(z.string()).optional(),
-    title: z.string().optional()
+const defaultSchema = defaultRegisterSchema.merge(
+  z.object({
+    password: z.string().min(8).optional().or(z.literal('')),
+    passwordRepeated: z.string().min(8).optional().or(z.literal('')),
+    flair: z.string().optional(),
+    uploadImageInput: z.object({
+      description: z.string().optional(),
+      file: z.any(),
+      filename: z.string().optional(),
+      focalPoint: z.object({x: z.string(), y: z.string()}),
+      license: z.string().optional(),
+      link: z.string().optional(),
+      source: z.string().optional(),
+      tags: z.array(z.string()).optional(),
+      title: z.string().optional()
+    })
   })
-})
+)
 
 export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   fields = ['firstName', 'name', 'flair', 'address', 'password', 'preferredName', 'image'] as T[],
@@ -142,24 +129,24 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
     () =>
       fields.reduce(
         (obj, field) => ({...obj, [field]: true}),
-        {} as Record<OptionalKeysOf<PersonalDataFormFields>, true>
+        {} as Record<BuilderPersonalDataFormFields, true>
       ),
     [fields]
   )
 
   const validationSchema = useMemo(
     () =>
-      requiredSchema
-        .merge(
+      zodAlwaysRefine(
+        requiredSchema.merge(
           schema.pick({
             ...fieldsToDisplay,
-            passwordRepeated: true
+            passwordRepeated: fieldsToDisplay.password
           })
         )
-        .refine(data => data.password === data.passwordRepeated, {
-          message: 'Passwörter stimmen nicht überein.',
-          path: ['passwordRepeated']
-        }),
+      ).refine(data => data.password === data.passwordRepeated, {
+        message: 'Passwörter stimmen nicht überein.',
+        path: ['passwordRepeated']
+      }),
     [fieldsToDisplay, schema]
   )
 
@@ -187,11 +174,17 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
 
   const onSubmit = handleSubmit(data => onUpdate && callAction(onUpdate)(data))
 
+  const userformFields = fields.filter(field => {
+    const blacklist = ['password', 'passwordRepeated'] as BuilderUserFormFields[]
+
+    return !blacklist.includes(field as BuilderUserFormFields)
+  }) as BuilderUserFormFields[]
+
   return (
     <PersonalDataFormWrapper className={className} onSubmit={onSubmit}>
       <PersonalDataInputForm>
         {fieldsToDisplay.image && (
-          <PersonalDataAddressWrapper>
+          <PersonalDataImageInputWrapper>
             <Controller
               name={'uploadImageInput'}
               control={control}
@@ -203,135 +196,10 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                 />
               )}
             />
-          </PersonalDataAddressWrapper>
+          </PersonalDataImageInputWrapper>
         )}
 
-        {fieldsToDisplay.firstName && (
-          <Controller
-            name={'firstName'}
-            control={control}
-            render={({field, fieldState: {error}}) => (
-              <TextField
-                {...field}
-                label={'Vorname'}
-                autoComplete="firstname"
-                error={!!error}
-                helperText={error?.message}
-              />
-            )}
-          />
-        )}
-
-        <Controller
-          name={'name'}
-          control={control}
-          render={({field, fieldState: {error}}) => (
-            <TextField
-              {...field}
-              label={'Nachname'}
-              autoComplete="name"
-              error={!!error}
-              helperText={error?.message}
-            />
-          )}
-        />
-
-        {fieldsToDisplay.preferredName && (
-          <Controller
-            name={'preferredName'}
-            control={control}
-            render={({field, fieldState: {error}}) => (
-              <TextField
-                {...field}
-                label={'Bevorzugter Name'}
-                autoComplete="preferred-name"
-                error={!!error}
-                helperText={error?.message}
-              />
-            )}
-          />
-        )}
-
-        {fieldsToDisplay.flair && (
-          <Controller
-            name={'flair'}
-            control={control}
-            render={({field, fieldState: {error}}) => (
-              <TextField
-                {...field}
-                label={'Funktion / Beruf'}
-                error={!!error}
-                helperText={error?.message}
-              />
-            )}
-          />
-        )}
-
-        {fieldsToDisplay.address && (
-          <PersonalDataAddressWrapper>
-            <Controller
-              name={'address.streetAddress'}
-              control={control}
-              render={({field, fieldState: {error}}) => (
-                <TextField
-                  {...field}
-                  css={addressStyles(theme)}
-                  fullWidth
-                  autoComplete="address"
-                  label={'Strasse und Hausnummer'}
-                  error={!!error}
-                  helperText={error?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name={'address.zipCode'}
-              control={control}
-              render={({field, fieldState: {error}}) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  autoComplete="zip"
-                  label={'PLZ'}
-                  error={!!error}
-                  helperText={error?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name={'address.city'}
-              control={control}
-              render={({field, fieldState: {error}}) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  autoComplete="city"
-                  label={'Ort / Stadt'}
-                  error={!!error}
-                  helperText={error?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name={'address.country'}
-              control={control}
-              render={({field, fieldState: {error}}) => (
-                <TextField
-                  {...field}
-                  css={countryStyles(theme)}
-                  fullWidth
-                  autoComplete="country"
-                  label={'Land'}
-                  error={!!error}
-                  helperText={error?.message}
-                />
-              )}
-            />
-          </PersonalDataAddressWrapper>
-        )}
+        <UserForm control={control} hideEmail fields={userformFields} css={fullWidth} />
 
         {fieldsToDisplay.password && (
           <PersonalDataPasswordWrapper>
@@ -346,6 +214,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
 
                   <TextField
                     {...field}
+                    value={field.value ?? ''}
                     type={showPassword ? 'text' : 'password'}
                     fullWidth
                     autoComplete="new-password"
@@ -375,6 +244,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
               render={({field, fieldState: {error}}) => (
                 <TextField
                   {...field}
+                  value={field.value ?? ''}
                   type={showRepeatPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   fullWidth

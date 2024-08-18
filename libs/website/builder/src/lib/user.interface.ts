@@ -10,12 +10,16 @@ import {OptionalKeysOf} from 'type-fest'
 import z from 'zod'
 import {Control} from 'react-hook-form'
 
-export type BuilderUserFormFields = OptionalKeysOf<RegisterMutationVariables>
+export type BuilderUserFormFields =
+  | OptionalKeysOf<RegisterMutationVariables>
+  | 'passwordRepeated'
+  | 'flair'
 
 export type BuilderUserFormProps<T extends BuilderUserFormFields> = {
   fields: T[]
   className?: string
   control: Control<any>
+  hideEmail?: boolean
 }
 
 export type BuilderImageUploadProps = {
@@ -34,9 +38,9 @@ type AddressShape = z.ZodObject<{
 export type PersonalDataFormFields = UpdateUserMutationVariables['input'] &
   Partial<UpdatePasswordMutationVariables> & {image?: Image}
 
-export type BuilderPersonalDataFormFields = OptionalKeysOf<
-  Omit<PersonalDataFormFields, 'uploadImageInput' | 'passwordRepeated'>
->
+export type BuilderPersonalDataFormFields =
+  | Exclude<BuilderUserFormFields, 'passwordRepeated'>
+  | 'image'
 
 export type BuilderPersonalDataFormProps<
   T extends BuilderPersonalDataFormFields = BuilderPersonalDataFormFields
@@ -51,6 +55,7 @@ export type BuilderPersonalDataFormProps<
       lastName: z.ZodString | z.ZodOptional<z.ZodString>
       flair: z.ZodString | z.ZodOptional<z.ZodString>
       address: AddressShape | z.ZodOptional<AddressShape>
+      birthday: z.ZodDate | z.ZodOptional<z.ZodDate>
     }>
   >
   initialUser: User

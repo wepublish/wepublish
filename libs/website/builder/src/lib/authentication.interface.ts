@@ -6,8 +6,8 @@ import {
   RegisterMutation,
   RegisterMutationVariables
 } from '@wepublish/website/api'
-import {OptionalKeysOf} from 'type-fest'
 import z from 'zod'
+import {BuilderUserFormFields} from './user.interface'
 
 export type BuilderLoginFormProps = {
   className?: string
@@ -29,20 +29,21 @@ type AddressShape = z.ZodObject<{
   country: z.ZodString | z.ZodOptional<z.ZodString>
 }>
 
-export type BuilderRegistrationFormProps<
-  T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
-> = {
-  fields?: T[]
-  schema?: z.ZodObject<
-    Partial<{
-      password: z.ZodString | z.ZodOptional<z.ZodString>
-      preferredName: z.ZodString | z.ZodOptional<z.ZodString>
-      firstName: z.ZodString | z.ZodOptional<z.ZodString>
-      address: AddressShape | z.ZodOptional<AddressShape>
-    }>
-  >
-  challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>
-  register: Pick<MutationResult<RegisterMutation>, 'data' | 'loading' | 'error'>
-  className?: string
-  onRegister?: (data: RegisterMutationVariables) => void
-}
+export type BuilderRegistrationFormProps<T extends BuilderUserFormFields = BuilderUserFormFields> =
+  {
+    fields?: T[]
+    schema?: z.ZodObject<
+      Partial<{
+        password: z.ZodString | z.ZodOptional<z.ZodString>
+        passwordRepeated: z.ZodString | z.ZodOptional<z.ZodString>
+        preferredName: z.ZodString | z.ZodOptional<z.ZodString>
+        firstName: z.ZodString | z.ZodOptional<z.ZodString>
+        address: AddressShape | z.ZodOptional<AddressShape>
+        birthday: z.ZodDate | z.ZodOptional<z.ZodDate>
+      }>
+    >
+    challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>
+    register: Pick<MutationResult<RegisterMutation>, 'data' | 'loading' | 'error'>
+    className?: string
+    onRegister?: (data: RegisterMutationVariables) => void
+  }

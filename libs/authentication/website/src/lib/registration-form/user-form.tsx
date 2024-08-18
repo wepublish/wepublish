@@ -1,4 +1,5 @@
 import {IconButton, InputAdornment, Theme, css, styled} from '@mui/material'
+import {DatePicker} from '@mui/x-date-pickers'
 import {
   BuilderUserFormFields,
   BuilderUserFormProps,
@@ -29,6 +30,17 @@ export const UserAddressWrapper = styled('div')`
   }
 `
 
+export const UserPasswordWrapper = styled('div')`
+  display: flex;
+  flex: 1 0 50%;
+  flex-flow: row;
+  gap: ${({theme}) => theme.spacing(3)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-column: 1 / -1;
+  }
+`
+
 const addressStyles = (theme: Theme) => css`
   grid-column: 1 / -1;
 `
@@ -42,7 +54,8 @@ const countryStyles = (theme: Theme) => css`
 export function UserForm<T extends BuilderUserFormFields>({
   fields,
   className,
-  control
+  control,
+  hideEmail
 }: BuilderUserFormProps<T>) {
   const [showPassword, togglePassword] = useReducer(state => !state, false)
 
@@ -90,6 +103,21 @@ export function UserForm<T extends BuilderUserFormFields>({
         />
       )}
 
+      {fieldsToDisplay.flair && (
+        <Controller
+          name={'flair'}
+          control={control}
+          render={({field, fieldState: {error}}) => (
+            <TextField
+              {...field}
+              label={'Funktion / Beruf'}
+              error={!!error}
+              helperText={error?.message}
+            />
+          )}
+        />
+      )}
+
       <Controller
         name={'name'}
         control={control}
@@ -105,52 +133,109 @@ export function UserForm<T extends BuilderUserFormFields>({
         )}
       />
 
-      <Controller
-        name={'email'}
-        control={control}
-        render={({field, fieldState: {error}}) => (
-          <TextField
-            {...field}
-            value={field.value ?? ''}
-            autoComplete="email"
-            type={'email'}
-            fullWidth
-            label={'Email'}
-            error={!!error}
-            helperText={error?.message}
-          />
-        )}
-      />
-
-      {fieldsToDisplay.password && (
+      {!hideEmail && (
         <Controller
-          name={'password'}
+          name={'email'}
           control={control}
           render={({field, fieldState: {error}}) => (
             <TextField
               {...field}
               value={field.value ?? ''}
-              autoComplete="new-password"
-              type={showPassword ? 'text' : 'password'}
+              autoComplete="email"
+              type={'email'}
               fullWidth
-              label={'Passwort'}
+              label={'Email'}
               error={!!error}
               helperText={error?.message}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={togglePassword}
-                      onMouseDown={event => event.preventDefault()}
-                      edge="end">
-                      {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
-                    </IconButton>
-                  </InputAdornment>
-                )
+            />
+          )}
+        />
+      )}
+
+      {fieldsToDisplay.birthday && (
+        <Controller
+          name={'birthday'}
+          control={control}
+          render={({field, fieldState: {error}}) => (
+            <DatePicker
+              {...field}
+              value={field.value ?? null}
+              label={'Geburtstag'}
+              format="dd-MM-yyyy"
+              disableFuture
+              slotProps={{
+                textField: {
+                  error: !!error,
+                  helperText: error?.message
+                }
               }}
             />
           )}
         />
+      )}
+
+      {fieldsToDisplay.password && (
+        <UserPasswordWrapper>
+          <Controller
+            name={'password'}
+            control={control}
+            render={({field, fieldState: {error}}) => (
+              <TextField
+                {...field}
+                value={field.value ?? ''}
+                autoComplete="new-password"
+                type={showPassword ? 'text' : 'password'}
+                fullWidth
+                label={'Passwort'}
+                error={!!error}
+                helperText={error?.message}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={togglePassword}
+                        onMouseDown={event => event.preventDefault()}
+                        edge="end">
+                        {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+              />
+            )}
+          />
+
+          {fieldsToDisplay.passwordRepeated && (
+            <Controller
+              name={'passwordRepeated'}
+              control={control}
+              render={({field, fieldState: {error}}) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="new-password"
+                  fullWidth
+                  label={'Passwort wiederholen'}
+                  error={!!error}
+                  helperText={error?.message}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={togglePassword}
+                          onMouseDown={event => event.preventDefault()}
+                          edge="end">
+                          {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                />
+              )}
+            />
+          )}
+        </UserPasswordWrapper>
       )}
 
       {fieldsToDisplay.address && (

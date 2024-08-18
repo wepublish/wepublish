@@ -13,8 +13,8 @@ import {
   Subscription,
   SubscriptionsQuery
 } from '@wepublish/website/api'
-import {OptionalKeysOf} from 'type-fest'
 import {BuilderRegistrationFormProps} from './authentication.interface'
+import {BuilderUserFormFields} from './user.interface'
 
 export type BuilderSubscriptionListItemProps = Subscription & {
   className?: string
@@ -77,9 +77,7 @@ export type BuilderPaymentMethodPickerProps = {
   value?: string
 }
 
-export type BuilderSubscribeProps<
-  T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
-> = {
+export type BuilderSubscribeProps<T extends BuilderUserFormFields = BuilderUserFormFields> = {
   challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>
   userSubscriptions: Pick<QueryResult<SubscriptionsQuery>, 'data' | 'loading' | 'error'>
   userInvoices: Pick<QueryResult<InvoicesQuery>, 'data' | 'loading' | 'error'>

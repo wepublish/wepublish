@@ -46,7 +46,7 @@ COPY . .
 RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
     npm ci && \
-    npm install -g pkg && \
+    npm install -g pkg  && \
     npx nx build api-example && \
     cp docker/api_build_package.json package.json && \
     pkg package.json
@@ -129,7 +129,7 @@ RUN groupadd -r wepublish && \
     npm install prisma bcrypt && \
     perl -i -0777 -pe 's/generator fabbrica \{\n  provider = "prisma-fabbrica"\n  output   = "\.\.\/\.\.\/testing\/src\/__generated__\/fabbrica"\n\}//gs' prisma/schema.prisma && \
     npx prisma generate \
-USER wepublish
+    USER wepublish
 CMD ["bash", "./start.sh"]
 
 
@@ -155,11 +155,11 @@ MAINTAINER WePublish Foundation
 WORKDIR /wepublish
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 RUN groupadd -r wepublish && \
-        useradd -r -g wepublish -d /wepublish wepublish && \
-        apt-get update && \
-        apt-get install -y libjemalloc-dev && \
-        apt-get clean && \
-        rm -rf /var/lib/apt/lists/*
+    useradd -r -g wepublish -d /wepublish wepublish && \
+    apt-get update && \
+    apt-get install -y libjemalloc-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 COPY --from=build-media /app/dist/apps/media/ .
 COPY --from=build-media --chown=wepublish:wepublish /app/node_modules ./node_modules
 USER wepublish

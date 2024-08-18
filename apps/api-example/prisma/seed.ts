@@ -817,15 +817,11 @@ async function seed() {
     const tags = Array.from({length: 5}, () => faker.word.noun().toLowerCase())
     const polls = await seedPoll(prisma)
     const navigations = await seedNavigations(prisma, tags)
-    const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
-    const authors = await seedAuthors(prisma, [womanProfilePhoto.id, manProfilePhoto.id])
-    const events = await seedEvents(
-      prisma,
-      teaserImages.map(({id}) => id)
-    )
+    const authors = await seedAuthors(prisma, [])
+    const events = await seedEvents(prisma, [])
     const articles = await seedArticles(
       prisma,
-      teaserImages.map(({id}) => id),
+      [],
       authors.map(({id}) => id),
       tags,
       polls.map(({id}) => id),
@@ -834,11 +830,11 @@ async function seed() {
     const comments = await seedComments(
       prisma,
       articles.map(({id}) => id),
-      [womanProfilePhoto.id, manProfilePhoto.id]
+      []
     )
     const pages = await seedPages(
       prisma,
-      teaserImages.map(({id}) => id),
+      [],
       articles.map(({id}) => id)
     )
 

@@ -22,6 +22,7 @@ import {
   useAuthorisation,
   UserSubscriptionsList
 } from '@wepublish/ui/editor'
+import {format} from 'date-fns'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useLocation, useNavigate, useParams} from 'react-router-dom'
@@ -37,7 +38,8 @@ import {
   Row,
   Schema,
   toaster,
-  Toggle as RToggle
+  Toggle as RToggle,
+  DatePicker
 } from 'rsuite'
 
 const Grid = styled(RGrid)`
@@ -107,6 +109,7 @@ function UserEditView() {
   const [name, setName] = useState('')
   const [firstName, setFirstName] = useState<string | undefined | null>()
   const [preferredName, setPreferredName] = useState<string | undefined>()
+  const [birthday, setBirthday] = useState<Date>()
   const [flair, setFlair] = useState<string | undefined>()
   const [email, setEmail] = useState('')
   const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null)
@@ -151,6 +154,8 @@ function UserEditView() {
     setName(tmpUser.name)
     setPreferredName(tmpUser.preferredName ?? undefined)
     setFlair(tmpUser.flair || undefined)
+    console.log(tmpUser)
+    setBirthday(tmpUser.birthday ? new Date(tmpUser.birthday) : undefined)
     setEmail(tmpUser.email)
     setMetadataProperties(
       tmpUser?.properties
@@ -244,6 +249,7 @@ function UserEditView() {
               firstName: firstName || undefined,
               preferredName,
               flair,
+              birthday: birthday ? format(birthday, 'yyyy-MM-dd') : null,
               email,
               emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
               active,
@@ -292,6 +298,7 @@ function UserEditView() {
               firstName,
               preferredName,
               flair,
+              birthday: birthday ? format(birthday, 'yyyy-MM-dd') : null,
               email,
               emailVerifiedAt: null,
               active,
@@ -460,6 +467,26 @@ function UserEditView() {
                     </Col>
                     {/* flair */}
                     <Col xs={12}>
+                      <Form.Group controlId="birthday">
+                        <Form.ControlLabel>{t('userCreateOrEditView.birthday')}</Form.ControlLabel>
+                        <Form.Control
+                          name="birthday"
+                          autoComplete="birthday"
+                          block
+                          oneTap
+                          isoWeek
+                          limitEndYear={0}
+                          value={birthday}
+                          disabled={isDisabled}
+                          onChange={value => {
+                            setBirthday(value as Date)
+                          }}
+                          accepter={DatePicker}
+                        />
+                      </Form.Group>
+                    </Col>
+                    {/* flair */}
+                    <Col xs={12}>
                       <Form.Group controlId="flair">
                         <Form.ControlLabel>{t('userCreateOrEditView.flair')}</Form.ControlLabel>
                         <Form.Control
@@ -502,7 +529,7 @@ function UserEditView() {
                       </Form.Group>
                     </Col>
                     {/* street 2 */}
-                    <Col xs={12}>
+                    <Col xs={24}>
                       <Form.Group controlId="streetAddress2">
                         <Form.ControlLabel>
                           {t('userCreateOrEditView.streetAddress2')}

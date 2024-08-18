@@ -22,6 +22,7 @@ export default function Mitmachen() {
       }}
       successURL={`${locationOrigin}/profile/subscription`}
       failureURL={thisLocation}
+      fields={['firstName', 'address', 'birthday', 'password', 'passwordRepeated']}
     />
   )
 }

@@ -69,7 +69,7 @@ export default function EventList() {
   }, [data?.events?.totalCount])
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <>
       <Filter>
         <DateTimePicker
           label="Von"
@@ -137,7 +137,7 @@ export default function EventList() {
           }
         />
       )}
-    </LocalizationProvider>
+    </>
   )
 }
 

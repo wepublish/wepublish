@@ -6,7 +6,8 @@ import {
   UserForm,
   defaultRegisterSchema,
   requiredRegisterSchema,
-  useUser
+  useUser,
+  zodAlwaysRefine
 } from '@wepublish/authentication/website'
 import {
   MemberPlan,
@@ -118,14 +119,14 @@ export const getPaymentText = (
         locale
       )}`
 
-export const Subscribe = <T extends BuilderUserFormFields>({
+export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
   extraMoneyOffset = 0,
   memberPlans,
   challenge,
   userSubscriptions,
   userInvoices,
-  fields = ['firstName', 'password', 'address'] as T[],
+  fields = ['firstName', 'password', 'passwordRepeated', 'address'] as T[],
   schema = defaultRegisterSchema,
   className,
   onSubscribe,
@@ -149,22 +150,34 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     () =>
       fields.reduce(
         (obj, field) => ({...obj, [field]: true}),
-        {} as Record<BuilderUserFormFields, true>
+        {} as Record<Exclude<BuilderUserFormFields, 'flair'>, true>
       ),
     [fields]
   )
 
-  const loggedOutSchema = useMemo(
-    () => requiredRegisterSchema.merge(schema.pick(fieldsToDisplay).merge(subscribeSchema)),
-    [fieldsToDisplay, schema]
-  )
+  /**
+   * Done like this to avoid type errors due to z.ZodObject vs z.ZodEffect<z.ZodObject>.
+   * [Fixed with Zod 4](https://github.com/colinhacks/zod/issues/2474)
+   */
+  const loggedOutSchema = useMemo(() => {
+    const result = requiredRegisterSchema.merge(schema.pick(fieldsToDisplay).merge(subscribeSchema))
+
+    if (fieldsToDisplay.passwordRepeated) {
+      return zodAlwaysRefine(result).refine(data => data.password === data.passwordRepeated, {
+        message: 'Passwörter stimmen nicht überein.',
+        path: ['passwordRepeated']
+      })
+    }
+
+    return result
+  }, [fieldsToDisplay, schema])
 
   const loggedInSchema = subscribeSchema
 
   const {control, handleSubmit, watch, setValue, resetField} = useForm<
     z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
   >({
-    resolver: zodResolver(hasUser ? subscribeSchema : loggedOutSchema),
+    resolver: zodResolver(loggedOutSchema),
     defaultValues: {
       ...defaults,
       monthlyAmount: 0,
@@ -236,10 +249,11 @@ export const Subscribe = <T extends BuilderUserFormFields>({
       return callAction(onSubscribe)(subscribeData)
     }
 
-    const {address, challengeAnswer, email, password, name, firstName, preferredName} =
+    const {address, challengeAnswer, email, birthday, password, name, firstName, preferredName} =
       data as z.infer<typeof loggedOutSchema>
 
     const registerData = {
+      birthday,
       email,
       password,
       name,
@@ -300,21 +314,23 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     if (deactivateSubscriptionId) {
       return
     }
+
     return (
       userSubscriptions.data?.subscriptions.some(
         ({memberPlan, deactivation}) => memberPlan.id === selectedMemberPlanId && !deactivation
       ) ?? false
     )
-  }, [userSubscriptions.data?.subscriptions, selectedMemberPlanId])
+  }, [deactivateSubscriptionId, userSubscriptions.data?.subscriptions, selectedMemberPlanId])
 
   const hasOpenInvoices = useMemo(() => {
     if (deactivateSubscriptionId) {
       return
     }
+
     return (
       userInvoices.data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt) ?? false
     )
-  }, [userInvoices.data?.invoices])
+  }, [deactivateSubscriptionId, userInvoices.data?.invoices])
 
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
