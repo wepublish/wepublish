@@ -15,7 +15,7 @@ export const getMe = (authenticate: Context['authenticate']) => {
   return session?.type === AuthSessionType.User ? session.user : null
 }
 
-export const getUserById = async (
+export const getUserById = (
   id: string,
   authenticate: Context['authenticate'],
   user: PrismaClient['user']
@@ -26,15 +26,6 @@ export const getUserById = async (
   if (!id) {
     throw new UserInputError('You must provide `id`')
   }
-
-  console.log(
-    await user.findUnique({
-      where: {
-        id
-      },
-      select: unselectPassword
-    })
-  )
 
   return user.findUnique({
     where: {
