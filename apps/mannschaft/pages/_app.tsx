@@ -15,6 +15,8 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
+import {useState} from 'react'
+import {AdConfig} from 'react-ad-manager'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
@@ -29,8 +31,6 @@ import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
 import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import theme from '../src/theme'
-import {useState} from 'react'
-import {AdConfig} from 'react-ad-manager'
 
 setDefaultOptions({
   locale: de

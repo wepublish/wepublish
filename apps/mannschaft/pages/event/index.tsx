@@ -1,6 +1,5 @@
 import {Checkbox, FormControlLabel, FormGroup, styled} from '@mui/material'
-import {DateTimePicker, LocalizationProvider} from '@mui/x-date-pickers'
-import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
+import {DateTimePicker} from '@mui/x-date-pickers'
 import {ApiV1, EventListContainer, useWebsiteBuilder} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'

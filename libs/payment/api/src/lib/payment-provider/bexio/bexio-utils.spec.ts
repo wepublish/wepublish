@@ -39,6 +39,7 @@ const mockUser: User = {
   id: 'user-1',
   createdAt: new Date('2023-01-01T00:00:00.000Z'),
   modifiedAt: new Date('2023-01-01T01:00:00.000Z'),
+  birthday: new Date(),
   email: 'test@example.com',
   emailVerifiedAt: new Date('2023-01-01T02:00:00.000Z'),
   name: 'Test User',
