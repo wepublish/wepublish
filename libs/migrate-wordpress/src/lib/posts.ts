@@ -281,20 +281,50 @@ const migratePost = async (post: WordpressPost) => {
   return article
 }
 
-export const migratePosts = async () => {
-  const MAX_PAGES = process.env['MAX_PAGES'] ?? 1
+export const migratePosts = async (limit?: number) => {
+  console.log('Migrating general article', {limit})
   const BATCH_SIZE = process.env['BATCH_SIZE'] ?? 1
-  for (let page = 1; !MAX_PAGES || page <= +MAX_PAGES; page++) {
+  let postsMigrated = 0
+  for (let page = 1; ; page++) {
     console.log(`Fetching page ${page}`)
-    const batch = await fetchPosts(page, +BATCH_SIZE)
+    const batch = await fetchPosts({
+      page,
+      perPage: +BATCH_SIZE
+    })
     if (batch.length === 0) break
 
     for (const post of batch) {
+      if (limit !== undefined && postsMigrated >= limit) {
+        return
+      }
       await migratePost(post)
+      postsMigrated++
     }
   }
 }
 
+export const migratePostsFromCategory = async (categoryId: number, limit?: number) => {
+  console.log('Migrating category articles', {categoryId, limit})
+  const BATCH_SIZE = process.env['BATCH_SIZE'] ?? 1
+  let postsMigrated = 0
+  for (let page = 1; ; page++) {
+    console.log(`Fetching page ${page}`)
+    const batch = await fetchPosts({
+      categoryId,
+      page,
+      perPage: +BATCH_SIZE
+    })
+    if (batch.length === 0) break
+
+    for (const post of batch) {
+      if (limit !== undefined && postsMigrated >= limit) {
+        return
+      }
+      await migratePost(post)
+      postsMigrated++
+    }
+  }
+}
 export const migratePostById = async (id: string) => {
   const post = await fetchPost(id)
   await migratePost(post)

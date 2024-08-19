@@ -1,5 +1,6 @@
 import {createTag, getTagByName} from './private-api'
-import {fetchTagsForPost, WordpressTag} from './wordpress-api'
+import {fetchCategoriesForPost, fetchTagsForPost, WordpressTag} from './wordpress-api'
+import {decode} from 'html-entities'
 
 const ensureTag = async ({name: tag}: WordpressTag): Promise<{id: string}> => {
   const existingTag = await getTagByName(tag)
@@ -12,10 +13,13 @@ const ensureTag = async ({name: tag}: WordpressTag): Promise<{id: string}> => {
 }
 
 export const ensureTagsForPost = async (postId: number) => {
-  const batch = await fetchTagsForPost(postId.toString())
+  const categories = await fetchCategoriesForPost(postId)
+  const tags = await fetchTagsForPost(postId.toString())
+  const postTags = [...tags, ...categories].map(tag => ({...tag, name: decode(tag.name)}))
+
   const wepTagIds = []
-  for (const post of batch) {
-    wepTagIds.push((await ensureTag(post)).id)
+  for (const tag of postTags) {
+    wepTagIds.push((await ensureTag(tag)).id)
   }
   return wepTagIds
 }
