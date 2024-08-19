@@ -1,4 +1,3 @@
-import axios from 'axios'
 import cheerio from 'cheerio'
 import {
   createArticle,
@@ -16,47 +15,8 @@ import {extractEmbed} from './embeds'
 import {createImage} from './image-upload'
 import {URL} from 'url'
 import {decode} from 'html-entities'
-
-type WordpressAuthor = {
-  id: number
-  name: string
-  url: string
-  description: string
-  link: string
-  slug: string
-  avatar_urls: {
-    96: string
-  }
-}
-
-interface WordPressPost {
-  id: number
-  title: {rendered: string}
-  content: {rendered: string}
-  excerpt: {rendered: string}
-  date_gmt: string
-  modified_gmt: string
-  slug: string
-  link: string
-  wps_subtitle: string
-  tags: number[]
-  categories: number[]
-  _embedded?: {
-    'wp:featuredmedia'?: [
-      {
-        source_url: string
-        alt_text: string
-        title: {
-          rendered: string
-        }
-        caption: {
-          rendered: string
-        }
-      }
-    ]
-    author: WordpressAuthor[]
-  }
-}
+import {fetchPost, fetchPosts, WordpressAuthor, WordpressPost} from './wordpress-api'
+import {ensureTagsForPost} from './tags'
 
 type ImageInput = {
   url: string
@@ -64,35 +24,7 @@ type ImageInput = {
   description?: string
 }
 
-const WORDPRESS_URL = process.env['WORDPRESS_URL'] + '/wp-json/wp/v2/posts'
-
 const deleteBeforeMigrate = true
-
-const fetchAuth = () => {
-  if (process.env['WORDPRESS_USERNAME'] && process.env['WORDPRESS_PASSWORD']) {
-    return {
-      username: process.env['WORDPRESS_USERNAME'],
-      password: process.env['WORDPRESS_PASSWORD']
-    }
-  }
-  return undefined
-}
-
-const fetchPosts = async (page: number, perPage: number): Promise<WordPressPost[]> => {
-  const response = await axios.get(WORDPRESS_URL, {
-    auth: fetchAuth(),
-    params: {page, per_page: perPage, _embed: true}
-  })
-  return response.data
-}
-
-const fetchPost = async (id: string): Promise<WordPressPost> => {
-  const response = await axios.get(WORDPRESS_URL + '/' + id, {
-    auth: fetchAuth(),
-    params: {_embed: true}
-  })
-  return response.data
-}
 
 const ensureAuthor = async (author: WordpressAuthor): Promise<{id: string}> => {
   const {slug, link, url, name, description, avatar_urls} = author
@@ -163,7 +95,7 @@ const extractBlockquote = (content: string): BlockInput => {
 
 const specialTags = ['.woocommerce-info', 'iframe', 'figure', 'blockquote']
 
-const migratePost = async (post: WordPressPost) => {
+const migratePost = async (post: WordpressPost) => {
   const {
     title: {rendered: encodedTitle},
     excerpt: {rendered: excerpt},
@@ -206,6 +138,9 @@ const migratePost = async (post: WordPressPost) => {
   for (const author of _embedded?.author ?? []) {
     authors.push(await ensureAuthor(author))
   }
+
+  // Tags
+  const tagIds = await ensureTagsForPost(post.id)
 
   // Title
   blocks.push({
@@ -319,7 +254,7 @@ const migratePost = async (post: WordPressPost) => {
     properties: [],
     shared: false,
     socialMediaAuthorIDs: [],
-    tags: [],
+    tags: tagIds,
     title,
     lead,
     slug,

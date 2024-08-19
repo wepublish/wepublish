@@ -9,6 +9,9 @@ import {
   CreateAuthor,
   CreateAuthorMutation,
   CreateAuthorMutationVariables,
+  CreateTag,
+  CreateTagMutation,
+  CreateTagMutationVariables,
   DeleteArticle,
   DeleteArticleMutation,
   DeleteArticleMutationVariables,
@@ -16,7 +19,11 @@ import {
   ImageListQuery,
   PublishArticle,
   PublishArticleMutation,
-  PublishArticleMutationVariables
+  PublishArticleMutationVariables,
+  TagList,
+  TagListQuery,
+  TagListQueryVariables,
+  TagType
 } from '../api/private'
 import {GraphQLClient} from 'graphql-request'
 
@@ -86,4 +93,23 @@ export async function getImagesByTitle(title: string) {
       offset: 100
     })
   ).images
+}
+
+export async function getTagByName(name: string) {
+  return (
+    await privateClient.request<TagListQuery, TagListQueryVariables>(TagList, {
+      filter: {
+        tag: name
+      }
+    })
+  ).tags?.nodes.find(({tag}) => tag === name)
+}
+
+export async function createTag({tag}: Pick<CreateTagMutationVariables, 'tag'>) {
+  return (
+    await privateClient.request<CreateTagMutation, CreateTagMutationVariables>(CreateTag, {
+      tag,
+      type: TagType.Article
+    })
+  ).createTag!
 }
