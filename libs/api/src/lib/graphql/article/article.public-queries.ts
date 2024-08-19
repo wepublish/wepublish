@@ -120,7 +120,5 @@ export const getPublishedArticleByIdOrSlug = async (
     return article?.shared ? article : null
   }
 
-  console.log('query', article.slug, article.disableComments)
-
   return article
 }
