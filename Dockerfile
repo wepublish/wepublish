@@ -45,7 +45,7 @@ WORKDIR /wepublish
 COPY . .
 RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
-    npm ci && \
+    npm ci --verbose && \
     npm install -g pkg && \
     npx nx build api-example && \
     cp docker/api_build_package.json package.json && \
