@@ -93,8 +93,6 @@ const extractBlockquote = (content: string): BlockInput => {
   return embedBlock
 }
 
-const specialTags = ['.woocommerce-info', 'iframe', 'figure', 'blockquote']
-
 const migratePost = async (post: WordpressPost) => {
   const {
     title: {rendered: encodedTitle},
@@ -167,24 +165,23 @@ const migratePost = async (post: WordpressPost) => {
   }
 
   const nodes = $('body').children()
+  const specialTags = ['.woocommerce-info', 'iframe', 'figure', 'blockquote', '.content-box']
 
   for (const el of nodes) {
-    let image, specialEl
-    if (specialTags.includes(el.tagName)) {
-      specialEl = el
-    } else {
-      specialEl = specialTags.map(tag => $(el).find(tag)[0]).find(e => e)
-    }
+    const $wrapper = $(el).wrap('<div></div>').parent()
+    const specialEl = $wrapper.find(specialTags.join(', '))[0]
+    const $specialEl = $(specialEl)
+    let image
     if (specialEl) {
       switch (specialEl.tagName) {
         case 'img':
           console.error('img...')
           console.error($.html(el).toString())
-          console.error($(specialEl).attr('data-src'))
+          console.error($specialEl.attr('data-src'))
           image = await ensureImage({
-            url: $(specialEl).attr('data-src')!,
-            title: $(specialEl).attr('alt')!,
-            description: $(specialEl).attr('alt')!
+            url: $specialEl.attr('data-src')!,
+            title: $specialEl.attr('alt')!,
+            description: $specialEl.attr('alt')!
           })
           blocks.push({
             image: {
@@ -195,9 +192,9 @@ const migratePost = async (post: WordpressPost) => {
           break
         case 'figure':
           image = await ensureImage({
-            url: $(specialEl).find('img').attr('data-src')!,
-            title: $(specialEl).find('img').attr('alt')!,
-            description: $(specialEl).find('figcaption').text()!
+            url: $specialEl.find('img').attr('data-src')!,
+            title: $specialEl.find('img').attr('alt')!,
+            description: $specialEl.find('figcaption').text()!
           })
           blocks.push({
             image: {
@@ -207,12 +204,12 @@ const migratePost = async (post: WordpressPost) => {
           })
           break
         case 'iframe':
-          if ($(specialEl).attr('src')) {
+          if ($specialEl.attr('src')) {
             blocks.push(extractEmbed($.html(specialEl).toString()))
           }
           break
         case 'blockquote':
-          blocks.push(extractBlockquote($(specialEl).html()!))
+          blocks.push(extractBlockquote($specialEl.html()!))
           break
         case 'div':
         case 'p':
@@ -223,6 +220,29 @@ const migratePost = async (post: WordpressPost) => {
         case 'h5':
         case 'h6':
           break
+      }
+
+      if ($specialEl.filter('.content-box').length) {
+        const $imageTag = $specialEl.find('img')
+        let image
+        if ($imageTag.length) {
+          image = await ensureImage({
+            url: $imageTag.attr('data-src')!,
+            title: $imageTag.attr('alt')!
+          })
+          $imageTag.parentsUntil('.content-box').remove()
+        }
+        const title = $specialEl.find(':first-child').filter('h1, h2, h3').first().remove()
+        const richText = (await convertHtmlToSlate($specialEl.html()!)) as unknown as Node[]
+
+        blocks.push({
+          linkPageBreak: {
+            imageID: image ? image.id : undefined,
+            text: title.text() ?? '',
+            richText,
+            hideButton: true
+          }
+        })
       }
     } else {
       slateContent = (await convertHtmlToSlate($.html(el).toString())) as unknown as Node[]
