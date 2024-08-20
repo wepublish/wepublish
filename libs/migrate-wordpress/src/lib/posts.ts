@@ -164,12 +164,14 @@ const migratePost = async (post: WordpressPost) => {
     })
   }
 
-  const nodes = $('body').children()
+  const nodes = $('body > *')
   const specialTags = ['.woocommerce-info', 'iframe', 'figure', 'blockquote', '.content-box']
 
   for (const el of nodes) {
+    const $el = $(el)
     const $wrapper = $(el).wrap('<div></div>').parent()
     const specialEl = $wrapper.find(specialTags.join(', '))[0]
+    $el.unwrap()
     const $specialEl = $(specialEl)
     let image
     if (specialEl) {
@@ -245,11 +247,21 @@ const migratePost = async (post: WordpressPost) => {
         })
       }
     } else {
-      slateContent = (await convertHtmlToSlate($.html(el).toString())) as unknown as Node[]
-      if (lastBlock?.richText) {
-        lastBlock?.richText.richText.push(...slateContent)
+      if ($el.filter('p').length && $el.prev('hr').length && $el.next('hr').length) {
+        const richText = (await convertHtmlToSlate($el.html()!)) as unknown as Node[]
+        blocks.push({
+          linkPageBreak: {
+            richText,
+            hideButton: true
+          }
+        })
       } else {
-        blocks.push({richText: {richText: slateContent}})
+        slateContent = (await convertHtmlToSlate($.html(el).toString())) as unknown as Node[]
+        if (lastBlock?.richText) {
+          lastBlock?.richText.richText.push(...slateContent)
+        } else {
+          blocks.push({richText: {richText: slateContent}})
+        }
       }
     }
     lastBlock = blocks[blocks.length - 1]
