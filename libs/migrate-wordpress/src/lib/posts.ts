@@ -178,9 +178,9 @@ const migratePost = async (post: WordpressPost) => {
     if (specialEl) {
       switch (specialEl.tagName) {
         case 'img':
-          console.log('img...')
-          console.log($.html(el).toString())
-          console.log($(specialEl).attr('data-src'))
+          console.error('img...')
+          console.error($.html(el).toString())
+          console.error($(specialEl).attr('data-src'))
           image = await ensureImage({
             url: $(specialEl).attr('data-src')!,
             title: $(specialEl).attr('alt')!,
@@ -264,12 +264,7 @@ const migratePost = async (post: WordpressPost) => {
       if (block.richText) {
         return {
           richText: {
-            richText: [
-              {
-                type: 'paragraph',
-                children: block.richText.richText
-              }
-            ]
+            richText: block.richText.richText
           }
         }
       }
