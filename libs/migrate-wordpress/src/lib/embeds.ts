@@ -1,4 +1,5 @@
 import {BlockInput} from '../api/private'
+import cheerio from 'cheerio'
 
 export function extractEmbed(input: string): BlockInput {
   const facebookPostMatch = input.match(/facebook.com\/(.+)\/posts\/([0-9]+)/)
@@ -10,6 +11,7 @@ export function extractEmbed(input: string): BlockInput {
   const polisMatch = input.match(/pol.is\/([0-9a-zA-Z-_]+)/)
   const tikTokMatch = input.match(/tiktok\.com\/@([0-9a-zA-Z-_.]+)\/video\/([0-9]+)/)
   const bildwurfAdMatch = input.match(/data-zone="([0-9a-zA-Z-_]+)"/)
+  console.log(input)
 
   if (facebookPostMatch) {
     const [, userID, postID] = facebookPostMatch
@@ -39,39 +41,36 @@ export function extractEmbed(input: string): BlockInput {
     const [, zoneID] = bildwurfAdMatch
     return {bildwurfAd: {zoneID}}
   } else {
-    return {embed: {}}
-    // if (input) {
-    //   const parser = new DOMParser()
-    //   const element = parser.parseFromString(input, 'text/html')
-    //   const iframe = element.getElementsByTagName('iframe')[0]
-    //
-    //   if (iframe) {
-    //     const soundCloudMatch = iframe.src.match(/api.soundcloud.com\/tracks\/([0-9]+)/)
-    //     if (soundCloudMatch) {
-    //       const [, trackID] = soundCloudMatch
-    //       return {soundCloudTrack: {trackID}}
-    //     } else {
-    //       // add iframe attributes if set in input
-    //       return {
-    //         embed: {
-    //           url: iframe.src,
-    //           title: iframe.title,
-    //           width: iframe.width ? parseInt(iframe.width) : undefined,
-    //           height: iframe.height ? parseInt(iframe.height) : undefined,
-    //           styleCustom: !!iframe.style && !!iframe.style.cssText ? iframe.style.cssText : '',
-    //           // sandbox: iframe.sandbox ? flattenDOMTokenList(iframe.sandbox) : undefined
-    //         }
-    //       }
-    //     }
-    //   } else {
-    //     try {
-    //       return {embed: {url: new URL(input).toString()}}
-    //     } catch {
-    //       return {embed: {}}
-    //     }
-    //   }
-    // } else {
-    //   return {embed: {}}
-    // }
+    if (input) {
+      const $ = cheerio.load(input)
+      const iframe = $('iframe')
+
+      if (iframe && iframe.attr('src')) {
+        const source = iframe.attr('src')!
+        const soundCloudMatch = source.match(/api.soundcloud.com\/tracks\/([0-9]+)/)
+        if (soundCloudMatch) {
+          const [, trackID] = soundCloudMatch
+          return {soundCloudTrack: {trackID}}
+        } else {
+          // add iframe attributes if set in input
+          return {
+            embed: {
+              url: source,
+              title: iframe.attr('title'),
+              width: iframe.attr('width') ? parseInt(iframe.attr('width')!) : undefined,
+              height: iframe.attr('height') ? parseInt(iframe.attr('height')!) : undefined
+            }
+          }
+        }
+      } else {
+        try {
+          return {embed: {url: new URL(input).toString()}}
+        } catch {
+          return {embed: {}}
+        }
+      }
+    } else {
+      return {embed: {}}
+    }
   }
 }

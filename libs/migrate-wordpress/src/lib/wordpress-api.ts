@@ -97,7 +97,7 @@ export const fetchPosts = async ({
   return response.data
 }
 
-export const fetchPost = async (id: string): Promise<WordpressPost> => {
+export const fetchPost = async (id: number): Promise<WordpressPost> => {
   const response = await request({
     method: 'get',
     path: '/posts/' + id,

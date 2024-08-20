@@ -208,7 +208,7 @@ const migratePost = async (post: WordpressPost) => {
           break
         case 'iframe':
           if ($(specialEl).attr('src')) {
-            blocks.push(extractEmbed($(specialEl).attr('src')!))
+            blocks.push(extractEmbed($.html(specialEl).toString()))
           }
           break
         case 'blockquote':
@@ -282,7 +282,7 @@ const migratePost = async (post: WordpressPost) => {
 }
 
 export const migratePosts = async (limit?: number) => {
-  console.log('Migrating general article', {limit})
+  console.log('Migrating general articles', {limit})
   const BATCH_SIZE = process.env['BATCH_SIZE'] ?? 1
   let postsMigrated = 0
   for (let page = 1; ; page++) {
@@ -325,7 +325,9 @@ export const migratePostsFromCategory = async (categoryId: number, limit?: numbe
     }
   }
 }
-export const migratePostById = async (id: string) => {
-  const post = await fetchPost(id)
-  await migratePost(post)
+export const migratePostById = async (...ids: number[]) => {
+  for (const id of ids) {
+    const post = await fetchPost(id)
+    await migratePost(post)
+  }
 }
