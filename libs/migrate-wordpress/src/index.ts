@@ -1,6 +1,8 @@
 import {migratePostById, migratePosts, migratePostsFromCategory} from './lib/posts'
 
 async function migrate() {
+  await migratePostById(203279)
+  return
   await migratePostById(202906, 201384, 202940, 202666)
   await migratePosts(30)
   await migratePostsFromCategory(4371, 20)
