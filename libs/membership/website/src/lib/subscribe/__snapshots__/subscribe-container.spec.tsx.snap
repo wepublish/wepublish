@@ -2334,7 +2334,7 @@ https://unsplash.it/200/100 200w"
               for=":r4:"
               id=":r4:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
             <div
               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-85"
@@ -2356,7 +2356,7 @@ https://unsplash.it/200/100 200w"
                   class="emotion-76"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
               </fieldset>
@@ -3020,16 +3020,12 @@ exports[`Subscribe Container should render Filled 1`] = `
         >
           <div
             class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
-@@ -290,350 +357,16 @@
-                name="monthlyAmount"
-                step="100"
-                style="border: 0px; height: 100%; margin: -1px; overflow: hidden; padding: 0px; position: absolute; white-space: nowrap; width: 100%; direction: ltr;"
-                type="range"
+@@ -294,346 +361,12 @@
                 value="500"
--             />
--           </span>
--         </span>
--       </div>
+              />
+            </span>
+          </span>
+        </div>
 -       <div
 -         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
 -       >
@@ -3055,7 +3051,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               name="firstName"
 -               type="text"
 -               value=""
-              />
+-             />
 -             <fieldset
 -               aria-hidden="true"
 -               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -3065,12 +3061,12 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               >
 -                 <span>
 -                   Vorname
-            </span>
+-                 </span>
 -               </legend>
 -             </fieldset>
--           </div>
+      </div>
 -         </div>
--         <div
+      <div
 -           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
 -         >
 -           <label
@@ -3102,12 +3098,12 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               >
 -                 <span>
 -                   Nachname
-          </span>
+-                 </span>
 -               </legend>
 -             </fieldset>
-        </div>
-      </div>
-      <div
+-           </div>
+-         </div>
+-         <div
 -           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
 -         >
 -           <label
@@ -3223,7 +3219,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               for=":rh:"
 -               id=":rh:-label"
 -             >
--               Adresse
+-               Strasse und Hausnummer
 -             </label>
 -             <div
 -               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1qurb5e-MuiInputBase-root-MuiOutlinedInput-root"
@@ -3245,7 +3241,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -                   class="css-yjsfm1"
 -                 >
 -                   <span>
--                     Adresse
+-                     Strasse und Hausnummer
 -                   </span>
 -                 </legend>
 -               </fieldset>
@@ -3371,7 +3367,7 @@ exports[`Subscribe Container should render Filled 1`] = `
         <h2
           class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
-@@ -953,115 +686,129 @@
+@@ -953,115 +686,133 @@
             </span>
           </label>
         </div>
@@ -3381,15 +3377,15 @@ exports[`Subscribe Container should render Filled 1`] = `
 -     >
 -       <h2
 -         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
+-       >
+-         Spam-Schutz
+-       </h2>
+-       <div
+-         class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
 +       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
 +       role="alert"
       >
--         Spam-Schutz
--       </h2>
         <div
--         class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
--       >
--         <div
 -           class="css-195vnh3-RegistrationChallenge elv4f70"
 +         class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
         >
@@ -3417,11 +3413,11 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               fill="none"
 -               stroke="#68cced"
 -             />
--             <path
+            <path
 -               d="M120.01 97.20L120.07 93.78L143.99 93.68L144.08 97.24L119.94 97.12ZM120.02 109.14L120.06 105.70L144.10 105.72L144.06 109.15L119.92 109.03Z"
 -               fill="#da9e62"
 -             />
-            <path
+-             <path
 -               d="M2 185 C113 113,88 106,196 22"
 -               fill="none"
 -               stroke="#914ad8"
@@ -3447,17 +3443,18 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             <path
 -               d="M166.04 108.77L162.14 108.90L162.04 108.80Q161.72 106.63 162.20 104.87L162.13 104.80L162.17 104.84Q162.65 103.08 163.49 101.60L163.54 101.65L163.55 101.66Q164.41 100.20 165.50 98.91L165.46 98.86L165.42 98.82Q166.53 97.56 167.48 96.30L167.41 96.22L167.59 96.40Q168.54 95.14 169.18 93.85L169.01 93.68L169.14 93.81Q169.76 92.50 169.76 90.99L169.64 90.87L169.72 90.94Q169.78 88.77 168.41 87.17L168.42 87.18L168.44 87.20Q166.94 85.48 164.25 85.48L164.31 85.54L164.28 85.50Q162.49 85.56 160.84 86.43L160.78 86.37L160.71 86.31Q159.08 87.19 157.79 88.70L157.88 88.79L155.15 86.29L155.18 86.31Q156.95 84.28 159.25 82.97L159.35 83.07L159.22 82.93Q161.58 81.68 164.60 81.68L164.70 81.78L164.67 81.75Q168.97 81.68 171.57 84.06L171.54 84.03L171.59 84.08Q174.18 86.44 174.18 90.64L174.26 90.73L174.25 90.71Q174.21 92.52 173.54 94.03L173.47 93.97L173.45 93.95Q172.92 95.60 171.94 96.94L171.91 96.91L171.87 96.87Q170.91 98.24 169.82 99.56L169.78 99.51L169.84 99.58Q168.72 100.86 167.79 102.26L167.74 102.20L167.80 102.27Q166.78 103.57 166.28 105.17L166.44 105.33L166.27 105.16Q165.82 106.81 166.04 108.77L166.15 108.87ZM160.87 117.09L160.83 117.06L160.79 117.02Q160.85 115.45 161.80 114.47L161.84 114.50L161.82 114.49Q162.83 113.57 164.23 113.57L164.26 113.60L164.15 113.48Q165.65 113.58 166.63 114.56L166.49 114.43L166.56 114.50Q167.62 115.55 167.62 117.18L167.61 117.17L167.59 117.15Q167.50 118.57 166.52 119.55L166.53 119.56L166.49 119.52Q165.60 120.59 164.20 120.59L164.29 120.68L164.12 120.51Q162.87 120.67 161.92 119.69L161.78 119.54L161.92 119.68Q160.80 118.54 160.80 117.02Z"
 -               fill="#6dedcd"
--             />
++             d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+            />
 -             <path
 -               d="M59.54 107.59L59.54 104.07L72.37 104.02L72.48 107.65L59.54 107.59Z"
 -               fill="#7ce396"
-+             d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-            />
+-             />
           </svg>
         </div>
         <div
 -           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
--         >
++         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
+        >
 -           <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="false"
@@ -3480,8 +3477,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             <fieldset
 -               aria-hidden="true"
 -               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-+         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
-        >
+-             >
 -               <legend
 -                 class="css-yjsfm1"
 -               >
@@ -3563,25 +3559,29 @@ exports[`Subscribe Container should render Filled 1`] = `
 +
 + fragment ImageURLs on Image {
 +   url
-+   xl: transformURL(input: {width: 1200, output: PNG, quality: 1})
-+   l: transformURL(input: {width: 1000, output: PNG, quality: 1})
-+   m: transformURL(input: {width: 800, output: PNG, quality: 1})
-+   s: transformURL(input: {width: 500, output: PNG, quality: 1})
-+   xs: transformURL(input: {width: 300, output: PNG, quality: 1})
-+   xxs: transformURL(input: {width: 200, output: PNG, quality: 1})
++   xl: transformURL(input: {width: 1200, output: PNG, quality: 0.8})
++   l: transformURL(input: {width: 1000, output: PNG, quality: 0.8})
++   m: transformURL(input: {width: 800, output: PNG, quality: 0.8})
++   s: transformURL(input: {width: 500, output: PNG, quality: 0.8})
++   xs: transformURL(input: {width: 300, output: PNG, quality: 0.8})
++   xxs: transformURL(input: {width: 200, output: PNG, quality: 0.8})
 +   xlSquare: transformURL(
-+     input: {width: 1200, height: 1200, output: PNG, quality: 1}
++     input: {width: 1200, height: 1200, output: PNG, quality: 0.8}
 +   )
 +   lSquare: transformURL(
-+     input: {width: 1000, height: 1000, output: PNG, quality: 1}
++     input: {width: 1000, height: 1000, output: PNG, quality: 0.8}
 +   )
-+   mSquare: transformURL(input: {width: 800, height: 800, output: PNG, quality: 1})
-+   sSquare: transformURL(input: {width: 500, height: 500, output: PNG, quality: 1})
++   mSquare: transformURL(
++     input: {width: 800, height: 800, output: PNG, quality: 0.8}
++   )
++   sSquare: transformURL(
++     input: {width: 500, height: 500, output: PNG, quality: 0.8}
++   )
 +   xsSquare: transformURL(
-+     input: {width: 300, height: 300, output: PNG, quality: 1}
++     input: {width: 300, height: 300, output: PNG, quality: 0.8}
 +   )
 +   xxsSquare: transformURL(
-+     input: {width: 200, height: 200, output: PNG, quality: 1}
++     input: {width: 200, height: 200, output: PNG, quality: 0.8}
 +   )
 +   __typename
 + }
@@ -7942,7 +7942,7 @@ https://unsplash.it/200/100 200w"
               for=":r12:"
               id=":r12:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
             <div
               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-85"
@@ -7964,7 +7964,7 @@ https://unsplash.it/200/100 200w"
                   class="emotion-76"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
               </fieldset>
@@ -10798,7 +10798,7 @@ https://unsplash.it/200/100 200w"
               for=":r1e:"
               id=":r1e:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
             <div
               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-85"
@@ -10820,7 +10820,7 @@ https://unsplash.it/200/100 200w"
                   class="emotion-76"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
               </fieldset>
@@ -13728,7 +13728,7 @@ https://unsplash.it/200/100 200w"
               for=":r1r:"
               id=":r1r:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
             <div
               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-85"
@@ -13750,7 +13750,7 @@ https://unsplash.it/200/100 200w"
                   class="emotion-76"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
               </fieldset>
@@ -15761,7 +15761,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-37:focus::-ms-input-
               for=":r28:"
               id=":r28:-label"
             >
-              Adresse
+              Strasse und Hausnummer
             </label>
             <div
               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-30"
@@ -15783,7 +15783,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-37:focus::-ms-input-
                   class="emotion-21"
                 >
                   <span>
-                    Adresse
+                    Strasse und Hausnummer
                   </span>
                 </legend>
               </fieldset>

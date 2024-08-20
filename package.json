@@ -203,6 +203,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.17",
+    "@apollo/federation-internals": "^2.8.4",
     "@apollo/gateway": "^2.8.1",
     "@apollo/server": "^4.9.1",
     "@apollo/subgraph": "^2.2.3",
@@ -285,7 +286,7 @@
     "mandrill-api": "^1.0.45",
     "mapped-replacer": "^1.2.1",
     "matomo-tracker": "^3.0.0-beta.0",
-    "minio": "^7.1.3",
+    "minio": "^8.0.1",
     "nanoid": "^2.1.7",
     "nestjs-zod": "^3.0.0",
     "next": "~13.4.12",

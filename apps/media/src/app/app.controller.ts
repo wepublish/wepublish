@@ -29,6 +29,11 @@ import {v4 as uuidv4} from 'uuid'
 export class AppController {
   constructor(private readonly media: MediaService) {}
 
+  @Get('/health')
+  async healthCheck(@Res() res: Response) {
+    res.status(200).send({status: 'ok'})
+  }
+
   @UseGuards(TokenAuthGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file'))
@@ -50,7 +55,7 @@ export class AppController {
 
     res.status(201).send({
       id: imageId,
-      filename: `${imageId}.webp`,
+      filename: `${imageId}`,
       fileSize: metadata.size,
       mimeType: `image/${metadata.format}`,
       format: metadata.format,

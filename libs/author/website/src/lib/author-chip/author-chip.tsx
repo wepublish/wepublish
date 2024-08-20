@@ -43,7 +43,7 @@ export function AuthorChip({className, author}: BuilderAuthorChipProps) {
     <AuthorChipWrapper className={className}>
       {author.image && (
         <AuthorChipImageWrapper>
-          <Image image={author.image} square css={imageStyles} />
+          <Image image={author.image} square css={imageStyles} maxWidth={200} />
         </AuthorChipImageWrapper>
       )}
 

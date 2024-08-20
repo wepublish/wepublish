@@ -107,7 +107,7 @@ exports[`Event Container should render Default 1`] = `
   grid-auto-rows: min-content;
 }
 
-.emotion-19 {
+.emotion-20 {
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
   font-weight: 600;
@@ -115,7 +115,7 @@ exports[`Event Container should render Default 1`] = `
   font-size: 3rem;
 }
 
-.emotion-22 {
+.emotion-23 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -124,11 +124,11 @@ exports[`Event Container should render Default 1`] = `
   margin-bottom: 0.35em;
 }
 
-.emotion-22.MuiTypography-gutterBottom {
+.emotion-23.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-22:last-child {
+.emotion-23:last-child {
   margin-bottom: 0;
 }
 
@@ -314,13 +314,13 @@ https://unsplash.it/200/100 200w"
       class="emotion-17 emotion-18"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 emotion-19"
+        class="MuiTypography-root MuiTypography-h3 emotion-19 emotion-20"
       >
         Cool concert
       </h1>
     </div>
     <div
-      class="emotion-20 emotion-21"
+      class="emotion-21 emotion-22"
     >
       <div
         data-gramm="false"
@@ -329,7 +329,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -413,7 +413,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -497,7 +497,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -581,7 +581,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -777,7 +777,7 @@ exports[`Event Container should render WithClassName 1`] = `
   grid-auto-rows: min-content;
 }
 
-.emotion-19 {
+.emotion-20 {
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
   font-weight: 600;
@@ -785,7 +785,7 @@ exports[`Event Container should render WithClassName 1`] = `
   font-size: 3rem;
 }
 
-.emotion-22 {
+.emotion-23 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -794,11 +794,11 @@ exports[`Event Container should render WithClassName 1`] = `
   margin-bottom: 0.35em;
 }
 
-.emotion-22.MuiTypography-gutterBottom {
+.emotion-23.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-22:last-child {
+.emotion-23:last-child {
   margin-bottom: 0;
 }
 
@@ -984,13 +984,13 @@ https://unsplash.it/200/100 200w"
       class="emotion-17 emotion-18"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 emotion-19"
+        class="MuiTypography-root MuiTypography-h3 emotion-19 emotion-20"
       >
         Cool concert
       </h1>
     </div>
     <div
-      class="emotion-20 emotion-21"
+      class="emotion-21 emotion-22"
     >
       <div
         data-gramm="false"
@@ -999,7 +999,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1083,7 +1083,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1167,7 +1167,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1251,7 +1251,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1447,7 +1447,7 @@ exports[`Event Container should render WithEmotion 1`] = `
   grid-auto-rows: min-content;
 }
 
-.emotion-19 {
+.emotion-20 {
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
   font-weight: 600;
@@ -1455,7 +1455,7 @@ exports[`Event Container should render WithEmotion 1`] = `
   font-size: 3rem;
 }
 
-.emotion-22 {
+.emotion-23 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -1464,11 +1464,11 @@ exports[`Event Container should render WithEmotion 1`] = `
   margin-bottom: 0.35em;
 }
 
-.emotion-22.MuiTypography-gutterBottom {
+.emotion-23.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-22:last-child {
+.emotion-23:last-child {
   margin-bottom: 0;
 }
 
@@ -1654,13 +1654,13 @@ https://unsplash.it/200/100 200w"
       class="emotion-17 emotion-18"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 emotion-19"
+        class="MuiTypography-root MuiTypography-h3 emotion-19 emotion-20"
       >
         Cool concert
       </h1>
     </div>
     <div
-      class="emotion-20 emotion-21"
+      class="emotion-21 emotion-22"
     >
       <div
         data-gramm="false"
@@ -1669,7 +1669,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1753,7 +1753,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1837,7 +1837,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1921,7 +1921,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
