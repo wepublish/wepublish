@@ -381,7 +381,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               <Slider
                 {...field}
                 min={selectedMemberPlan?.amountPerMonthMin}
-                max={(selectedMemberPlan?.amountPerMonthMin ?? 500) * 5}
+                max={(selectedMemberPlan?.amountPerMonthMin || 500) * 5}
                 valueLabelFormat={val => formatChf(val / 100, locale)}
                 step={100}
                 color="secondary"

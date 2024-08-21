@@ -25,6 +25,7 @@ import {
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useLocation, useNavigate, useParams} from 'react-router-dom'
+import {userCountryNames} from '@wepublish/user'
 import {
   CheckPicker,
   Col,
@@ -38,7 +39,8 @@ import {
   Row,
   Schema,
   toaster,
-  Toggle as RToggle
+  Toggle as RToggle,
+  SelectPicker
 } from 'rsuite'
 
 const Grid = styled(RGrid)`
@@ -153,7 +155,6 @@ function UserEditView() {
     setName(tmpUser.name)
     setPreferredName(tmpUser.preferredName ?? undefined)
     setFlair(tmpUser.flair || undefined)
-    console.log(tmpUser)
     setBirthday(tmpUser.birthday ? new Date(tmpUser.birthday) : undefined)
     setEmail(tmpUser.email)
     setMetadataProperties(
@@ -231,7 +232,8 @@ function UserEditView() {
     email: StringType()
       .isRequired(t('errorMessages.noEmailErrorMessage'))
       .isEmail(t('errorMessages.invalidEmailErrorMessage')),
-    password: validatePassword
+    password: validatePassword,
+    country: StringType().isOneOf(userCountryNames, t('errorMessages.invalidCountry'))
   })
 
   /**
@@ -360,7 +362,7 @@ function UserEditView() {
         onSubmit={validationPassed => validationPassed && createOrUpdateUser()}
         fluid
         model={validationModel}
-        formValue={{name, email, password}}>
+        formValue={{name, email, password, country: address?.country}}>
         <SingleViewTitle
           loading={false}
           title={titleView()}
@@ -575,11 +577,18 @@ function UserEditView() {
                     <Col xs={24}>
                       <Form.Group controlId="country">
                         <Form.ControlLabel>{t('userCreateOrEditView.country')}</Form.ControlLabel>
+
                         <Form.Control
                           name="country"
-                          value={address?.country || ''}
+                          accepter={SelectPicker}
+                          block
+                          cleanable
+                          searchable
+                          data={userCountryNames.map(item => ({label: item, value: item}))}
+                          placeholder={address?.country ?? undefined}
+                          value={address?.country ?? ''}
                           disabled={isDisabled}
-                          onChange={(value: string) =>
+                          onChange={value =>
                             updateAddressObject(address, setAddress, 'country', value)
                           }
                         />

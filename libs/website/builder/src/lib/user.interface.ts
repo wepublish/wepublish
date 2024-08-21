@@ -9,6 +9,7 @@ import {ChangeEvent} from 'react'
 import {OptionalKeysOf} from 'type-fest'
 import z from 'zod'
 import {Control} from 'react-hook-form'
+import {AddressShape} from './authentication.interface'
 
 export type BuilderUserFormFields =
   | OptionalKeysOf<RegisterMutationVariables>
@@ -27,13 +28,6 @@ export type BuilderImageUploadProps = {
   onUpload: (image: ChangeEvent<HTMLInputElement> | null) => void
   className?: string
 }
-
-type AddressShape = z.ZodObject<{
-  streetAddress: z.ZodString | z.ZodOptional<z.ZodString>
-  zipCode: z.ZodString | z.ZodOptional<z.ZodString>
-  city: z.ZodString | z.ZodOptional<z.ZodString>
-  country: z.ZodString | z.ZodOptional<z.ZodString>
-}>
 
 export type PersonalDataFormFields = UpdateUserMutationVariables['input'] &
   Partial<UpdatePasswordMutationVariables>

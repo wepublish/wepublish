@@ -32,6 +32,8 @@
       "@wepublish/content/website": ["libs/content/website/src/index.ts"],
       "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
       "@wepublish/editor/api-v2": ["libs/editor/api-v2/src/index.ts"],
+      "@wepublish/errors": ["libs/errors/src/index.ts"],
+      "@wepublish/errors/website": ["libs/errors/website/src/index.ts"],
       "@wepublish/event/api": ["libs/event/api/src/index.ts"],
       "@wepublish/event/import/api": ["libs/event/import/api/src/index.ts"],
       "@wepublish/event/import/editor": ["libs/event/import/editor/src/index.ts"],
@@ -65,9 +67,9 @@
       "@wepublish/testing": ["libs/testing/src/index.ts"],
       "@wepublish/ui": ["libs/ui/src/index.ts"],
       "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],
+      "@wepublish/user": ["libs/user/src/index.ts"],
       "@wepublish/user/api": ["libs/user/api/src/index.ts"],
       "@wepublish/user/website": ["libs/user/website/src/index.ts"],
-      "@wepublish/user/website/server": ["libs/user/website/src/server.ts"],
       "@wepublish/utils": ["libs/utils/src/index.ts"],
       "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
@@ -75,9 +77,7 @@
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
-      "@wepublish/website/server": ["libs/website/src/server.ts"],
-      "@wepublish/errors": ["libs/errors/src/index.ts"],
-      "@wepublish/errors/website": ["libs/errors/website/src/index.ts"]
+      "@wepublish/website/server": ["libs/website/src/server.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
