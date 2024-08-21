@@ -12,7 +12,12 @@ import {
   UseInterceptors
 } from '@nestjs/common'
 import {FileInterceptor} from '@nestjs/platform-express'
-import {MediaService, TokenAuthGuard, TransformationsDto} from '@wepublish/media/api'
+import {
+  MediaService,
+  SupportedImagesValidator,
+  TokenAuthGuard,
+  TransformationsDto
+} from '@wepublish/media/api'
 import {Response} from 'express'
 import 'multer'
 import {v4 as uuidv4} from 'uuid'
