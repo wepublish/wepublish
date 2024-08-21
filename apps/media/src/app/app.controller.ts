@@ -2,7 +2,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   ParseFilePipe,
   Post,
@@ -13,12 +12,7 @@ import {
   UseInterceptors
 } from '@nestjs/common'
 import {FileInterceptor} from '@nestjs/platform-express'
-import {
-  MediaService,
-  TokenAuthGuard,
-  TransformationsDto,
-  SupportedImagesValidator
-} from '@wepublish/media/api'
+import {MediaService, TokenAuthGuard, TransformationsDto} from '@wepublish/media/api'
 import {Response} from 'express'
 import 'multer'
 import {v4 as uuidv4} from 'uuid'
@@ -71,12 +65,6 @@ export class AppController {
     @Param('imageId') imageId: string,
     @Query() transformations: TransformationsDto
   ) {
-    const hasImage = await this.media.hasImage(imageId)
-
-    if (!hasImage) {
-      throw new NotFoundException()
-    }
-
     const [file, etag] = await this.media.getImage(imageId, transformations)
     res.setHeader('Content-Type', 'image/webp')
 

@@ -1,4 +1,4 @@
-import {Inject, Injectable} from '@nestjs/common'
+import {Inject, Injectable, NotFoundException} from '@nestjs/common'
 import sharp from 'sharp'
 import {TransformationsDto} from './transformations.dto'
 import {StorageClient} from '../storage-client/storage-client.service'
@@ -70,7 +70,15 @@ export class MediaService {
   }
 
   private async transformImage(imageId: string, transformations: TransformationsDto) {
-    const imageStream = await this.storage.getFile(this.config.uploadBucket, `images/${imageId}`)
+    let imageStream: Readable
+    try {
+      imageStream = await this.storage.getFile(this.config.uploadBucket, `images/${imageId}`)
+    } catch (e: any) {
+      if (e.code == 'NoSuchKey') {
+        throw new NotFoundException()
+      }
+      throw e
+    }
 
     const sharpInstance = imageStream.pipe(
       sharp({
