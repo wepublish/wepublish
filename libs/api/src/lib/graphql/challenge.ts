@@ -2,7 +2,7 @@ import {GraphQLObjectType, GraphQLString} from 'graphql'
 import {Context} from '../context'
 import {GraphQLDate} from 'graphql-scalars'
 import {GraphQLEnumType} from 'graphql/index'
-import {CaptchaType} from '@wepublish/api'
+import {CaptchaType} from './../../lib/challenges/challengeProvider'
 
 export const GraphQLCaptchaType = new GraphQLEnumType({
   name: 'CaptchaType',
