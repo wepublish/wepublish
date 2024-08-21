@@ -1,5 +1,4 @@
 import {styled} from '@mui/material'
-import {DateFilterComparison, useArticleListQuery} from '@wepublish/editor/api'
 import {ApiV1, ArticleList, isRichTextBlock, RichTextBlock} from '@wepublish/website'
 import {useWebsiteBuilder} from '@wepublish/website'
 import {format} from 'date-fns'
@@ -15,6 +14,18 @@ import {
   TitleLine
 } from '../website-builder-overwrites/blocks/teaser-overwrite.style'
 import {ColTeaser} from '../website-builder-overwrites/blocks/col-teaser'
+import {
+  DateFilterComparison,
+  TagType,
+  useAddLikeMutation,
+  useArticleListQuery,
+  useRemoveLikeMutation,
+  useTagQuery
+} from '@wepublish/website/api'
+import {useState} from 'react'
+import {MdFavorite, MdFavoriteBorder} from 'react-icons/md'
+import {useBajourStorage} from './bajour-storage'
+import {LikeButton} from './like-button'
 
 interface BaslerinDesTagesProps {
   article: ApiV1.ArticleQuery
@@ -130,6 +141,7 @@ const ArticleListDesktop = styled(ArticleList)`
   margin-left: 1em;
   ${({theme}) => theme.breakpoints.up('lg')} {
     display: block;
+    overflow-x: hidden;
   }
   ${BajourTeaserGrid} {
     padding: 0;
@@ -193,19 +205,67 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
     elements: {Image}
   } = useWebsiteBuilder()
 
-  const {data, loading, error} = useArticleListQuery({
+  const [likes, setLikes] = useState(article.article?.likes)
+
+  const {add, remove, exists} = useBajourStorage('liked-articles')
+
+  const {data: tagData, loading: tagLoading} = useTagQuery({
+    variables: {
+      tag: 'baslerin-des-tages',
+      type: TagType.Article
+    }
+  })
+
+  const {
+    data: articleData,
+    loading: articleLoading,
+    error: articleError
+  } = useArticleListQuery({
+    skip: !tagData?.tags?.nodes.length,
     variables: {
       take: 6,
       order: ApiV1.SortOrder.Descending,
       filter: {
-        tags: ['clzjla7wl0002alld2zlpdhdg'],
+        tags: [tagData?.tags?.nodes.at(0)?.id!],
         publicationDateFrom: {
-          comparison: DateFilterComparison.LowerOrEqual,
-          date: '2000-01-01'
+          comparison: DateFilterComparison.Lower,
+          date: article.article?.publishedAt
         }
       }
     }
   })
+
+  const [addLikeMutation, {}] = useAddLikeMutation({
+    variables: {
+      input: {
+        articleId: article.article?.id!
+      }
+    }
+  })
+
+  const like = async () => {
+    if (article.article) {
+      const {data} = await addLikeMutation()
+      setLikes(data?.addLike)
+      add(article.article.id)
+    }
+  }
+
+  const [removeLikeMutation, {}] = useRemoveLikeMutation({
+    variables: {
+      input: {
+        articleId: article.article?.id!
+      }
+    }
+  })
+
+  const unlike = async () => {
+    if (article.article) {
+      const {data} = await removeLikeMutation()
+      setLikes(data?.removeLike)
+      remove(article.article.id)
+    }
+  }
 
   const textBlock = (article.article?.blocks as ApiV1.Block[]).find(isRichTextBlock)
 
@@ -240,13 +300,28 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
           </HeadingsInner>
         </Headings>
 
-        <ArticleListDesktop data={data} loading={loading} error={error} />
-
-        <ContentBlock
-          preTitle={article.article?.preTitle}
-          title={article.article.title}
-          textBlock={textBlock}
+        <ArticleListDesktop
+          data={articleData}
+          loading={articleLoading || tagLoading}
+          error={articleError}
         />
+
+        <div>
+          <ContentBlock
+            preTitle={article.article?.preTitle}
+            title={article.article.title}
+            textBlock={textBlock}
+          />
+
+          <Content>
+            <LikeButton
+              isLiked={exists(article.article.id)}
+              likes={likes}
+              onLike={like}
+              onUnlike={unlike}
+            />
+          </Content>
+        </div>
       </DesktopGrid>
 
       <MobileGrid>
@@ -261,7 +336,7 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
 
         <ImageWrapperMobile>
           <Image image={article.article.image} square css={{borderRadius: '15%', gridRow: '1/3'}} />
-          <ArticleList data={data} loading={loading} error={error} />
+          <ArticleList data={articleData} loading={articleLoading} error={articleError} />
 
           <DateWeekdayContainer>
             <DateDisplay>{publicationDate}</DateDisplay>
@@ -273,6 +348,13 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
           preTitle={article.article?.preTitle}
           title={article.article.title}
           textBlock={textBlock}
+        />
+
+        <LikeButton
+          isLiked={exists(article.article.id)}
+          likes={likes}
+          onLike={like}
+          onUnlike={unlike}
         />
       </MobileGrid>
     </BaslerinDesTagesWrapper>

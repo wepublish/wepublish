@@ -156,6 +156,7 @@ type ArticleRevisionFactoryDefineInput = {
     hideAuthor?: boolean;
     socialMediaTitle?: string | null;
     socialMediaDescription?: string | null;
+    likes?: number;
     revision?: number;
     createdAt?: Date;
     modifiedAt?: Date | null;

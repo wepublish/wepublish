@@ -31,6 +31,8 @@ fragment ArticleWithoutBlocks on Article {
     ...FullImage
   }
 
+  likes
+
   properties {
     ...FullProperty
   }

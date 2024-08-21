@@ -56,6 +56,8 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
 export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
   fields: {
+    publicationDateFrom: {type: GraphQLDateFilter},
+    publicationDateTo: {type: GraphQLDateFilter},
     authors: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     includeHidden: {type: GraphQLBoolean},
@@ -200,6 +202,8 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
         return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
       })
     },
+
+    likes: {type: GraphQLInt},
 
     blocks: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlock)))}
   }
@@ -385,6 +389,8 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
           return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
         })
       },
+
+      likes: {type: new GraphQLNonNull(GraphQLInt)},
 
       blocks: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicBlock)))},
 
