@@ -14,16 +14,7 @@ import {
   TitleLine
 } from '../website-builder-overwrites/blocks/teaser-overwrite.style'
 import {ColTeaser} from '../website-builder-overwrites/blocks/col-teaser'
-import {
-  DateFilterComparison,
-  TagType,
-  useAddLikeMutation,
-  useArticleListQuery,
-  useRemoveLikeMutation,
-  useTagQuery
-} from '@wepublish/website/api'
-import {useState} from 'react'
-import {MdFavorite, MdFavoriteBorder} from 'react-icons/md'
+import {useEffect, useState} from 'react'
 import {useBajourStorage} from './bajour-storage'
 import {LikeButton} from './like-button'
 
@@ -205,14 +196,20 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
     elements: {Image}
   } = useWebsiteBuilder()
 
-  const [likes, setLikes] = useState(article.article?.likes)
-
   const {add, remove, exists} = useBajourStorage('liked-articles')
+  const [likes, setLikes] = useState(article.article?.likes)
+  const [isLiked, setIsLiked] = useState(false)
 
-  const {data: tagData, loading: tagLoading} = useTagQuery({
+  useEffect(() => {
+    if (article.article?.id) {
+      setIsLiked(exists(article.article.id))
+    }
+  }, [article.article?.id, exists])
+
+  const {data: tagData, loading: tagLoading} = ApiV1.useTagQuery({
     variables: {
       tag: 'baslerin-des-tages',
-      type: TagType.Article
+      type: ApiV1.TagType.Article
     }
   })
 
@@ -220,25 +217,25 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
     data: articleData,
     loading: articleLoading,
     error: articleError
-  } = useArticleListQuery({
+  } = ApiV1.useArticleListQuery({
     skip: !tagData?.tags?.nodes.length,
     variables: {
       take: 6,
       order: ApiV1.SortOrder.Descending,
       filter: {
-        tags: [tagData?.tags?.nodes.at(0)?.id!],
+        tags: [tagData?.tags?.nodes.at(0)?.id ?? ''],
         publicationDateFrom: {
-          comparison: DateFilterComparison.Lower,
+          comparison: ApiV1.DateFilterComparison.Lower,
           date: article.article?.publishedAt
         }
       }
     }
   })
 
-  const [addLikeMutation, {}] = useAddLikeMutation({
+  const [addLikeMutation] = ApiV1.useAddLikeMutation({
     variables: {
       input: {
-        articleId: article.article?.id!
+        articleId: article.article?.id ?? ''
       }
     }
   })
@@ -248,13 +245,14 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
       const {data} = await addLikeMutation()
       setLikes(data?.addLike)
       add(article.article.id)
+      setIsLiked(true)
     }
   }
 
-  const [removeLikeMutation, {}] = useRemoveLikeMutation({
+  const [removeLikeMutation] = ApiV1.useRemoveLikeMutation({
     variables: {
       input: {
-        articleId: article.article?.id!
+        articleId: article.article?.id ?? ''
       }
     }
   })
@@ -264,6 +262,7 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
       const {data} = await removeLikeMutation()
       setLikes(data?.removeLike)
       remove(article.article.id)
+      setIsLiked(false)
     }
   }
 
@@ -314,12 +313,7 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
           />
 
           <Content>
-            <LikeButton
-              isLiked={exists(article.article.id)}
-              likes={likes}
-              onLike={like}
-              onUnlike={unlike}
-            />
+            <LikeButton isLiked={isLiked} likes={likes} onLike={like} onUnlike={unlike} />
           </Content>
         </div>
       </DesktopGrid>
@@ -350,12 +344,7 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
           textBlock={textBlock}
         />
 
-        <LikeButton
-          isLiked={exists(article.article.id)}
-          likes={likes}
-          onLike={like}
-          onUnlike={unlike}
-        />
+        <LikeButton isLiked={isLiked} likes={likes} onLike={like} onUnlike={unlike} />
       </MobileGrid>
     </BaslerinDesTagesWrapper>
   )
