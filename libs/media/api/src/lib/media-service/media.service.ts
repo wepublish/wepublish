@@ -74,6 +74,10 @@ export class MediaService {
     }
 
     if (transformations.resize) {
+      // Prevent animated image from enlarging (DOS prevention)
+      if (transformGuard.isAnimatedImage(metadata)) {
+        transformations.resize.withoutEnlargement = true
+      }
       sharpInstance.resize(transformations.resize)
     }
 
