@@ -119,11 +119,13 @@ const Title = styled('span')`
 
 const ImageWrapperMobile = styled('div')`
   display: grid;
-  grid-template-columns: 50vw repeat(6, 25vw);
+  grid-template-columns: 45vw 55vw;
   grid-template-rows: 1fr 1fr;
   gap: 0.8em;
   margin-top: 1em;
   margin-left: 1em;
+  overflow-x: hidden;
+  width: 100vw;
 `
 
 const ArticleListDesktop = styled(ArticleList)`
@@ -136,7 +138,7 @@ const ArticleListDesktop = styled(ArticleList)`
   }
   ${BajourTeaserGrid} {
     padding: 0;
-    grid-template-columns: repeat(5, 10vw);
+    grid-template-columns: repeat(6, 10vw);
     height: 10vw;
 
     & > * {
@@ -165,6 +167,33 @@ const ArticleListDesktop = styled(ArticleList)`
 
       ${TeaserPreTitleStyled}, ${AuthorsAndDate}, ${ReadMoreButton}, ${TeaserLeadStyled}, ${TitleLine} {
         display: none;
+      }
+    }
+  }
+`
+
+const ArticleListMobile = styled(ArticleListDesktop)`
+  display: block;
+  overflow-x: hidden;
+  grid-template-columns: 1/7;
+  margin: 0;
+  ${BajourTeaserGrid} {
+    grid-template-columns: repeat(6, 20vw);
+    gap: 3vw;
+    height: 15vw;
+
+    ${ColTeaser} {
+      margin: 0;
+      height: 20vw;
+
+      ${TeaserImgStyled} {
+        height: 20vw;
+        border-radius: 15px;
+      }
+
+      ${TeaserContentStyled} {
+        background: transparent;
+        grid-column: 2/23;
       }
     }
   }
@@ -330,7 +359,7 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
 
         <ImageWrapperMobile>
           <Image image={article.article.image} square css={{borderRadius: '15%', gridRow: '1/3'}} />
-          <ArticleList data={articleData} loading={articleLoading} error={articleError} />
+          <ArticleListMobile data={articleData} loading={articleLoading} error={articleError} />
 
           <DateWeekdayContainer>
             <DateDisplay>{publicationDate}</DateDisplay>
@@ -344,7 +373,9 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
           textBlock={textBlock}
         />
 
-        <LikeButton isLiked={isLiked} likes={likes} onLike={like} onUnlike={unlike} />
+        <Content>
+          <LikeButton isLiked={isLiked} likes={likes} onLike={like} onUnlike={unlike} />
+        </Content>
       </MobileGrid>
     </BaslerinDesTagesWrapper>
   )
