@@ -3,6 +3,8 @@ import {TransformationsDto} from './transformations.dto'
 import {BadRequestException} from '@nestjs/common'
 
 const M_PIXEL_LIMIT = 20
+// WebP Max
+const M_PIXEL_LIMIT_ANIMATED = 268
 const IMAGE_SIZE_LIMIT = 10
 const MAX_IMAGE_QUALITY = 80
 const DEFAULT_IMAGE_QUALITY = 65
@@ -41,15 +43,25 @@ export class TransformGuard {
     )
   }
 
+  private isAnimatedImage(metadata: sharp.Metadata) {
+    return metadata.pages && metadata.pages > 1
+  }
+
   public checkDimensions(metadata: sharp.Metadata, transformations: TransformationsDto): number {
+    let mpLimit = M_PIXEL_LIMIT
+    if (this.isAnimatedImage(metadata)) {
+      mpLimit = M_PIXEL_LIMIT_ANIMATED
+    }
+
     // Ensure that original picture is not more than M_PIXEL_LIMIT
     if (this.dimensionAutoResizeCheck(transformations)) {
       const originalMP = this.calculateMegaPixel(metadata.height ?? 0, metadata.width ?? 0)
-      if (originalMP > M_PIXEL_LIMIT) {
+
+      if (originalMP > mpLimit) {
         const {newWidth, newHeight} = this.resizeDimensions(
           metadata.width ?? 0,
           metadata.height ?? 0,
-          M_PIXEL_LIMIT
+          mpLimit
         )
         transformations.resize = {width: newWidth, height: newHeight}
         return this.calculateEffort(this.calculateMegaPixel(newHeight, newWidth))
@@ -68,7 +80,7 @@ export class TransformGuard {
       (width ?? 0) + (transformations.extend?.left ?? 0) + (transformations.extend?.right ?? 0)
 
     const mPixel = this.calculateMegaPixel(totalHeight, totalWidth)
-    if (mPixel > M_PIXEL_LIMIT) {
+    if (mPixel > mpLimit) {
       throw new BadRequestException(`Transformation exceeds pixel limit!`)
     }
     return this.calculateEffort(mPixel)
