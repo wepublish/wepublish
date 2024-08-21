@@ -4,7 +4,7 @@ import {BadRequestException} from '@nestjs/common'
 
 const M_PIXEL_LIMIT = 20
 // WebP Max
-const M_PIXEL_LIMIT_ANIMATED = 268
+const M_PIXEL_LIMIT_ANIMATED = 40
 const IMAGE_SIZE_LIMIT = 10
 const MAX_IMAGE_QUALITY = 80
 const DEFAULT_IMAGE_QUALITY = 65
@@ -43,7 +43,7 @@ export class TransformGuard {
     )
   }
 
-  private isAnimatedImage(metadata: sharp.Metadata) {
+  public isAnimatedImage(metadata: sharp.Metadata) {
     return metadata.pages && metadata.pages > 1
   }
 
