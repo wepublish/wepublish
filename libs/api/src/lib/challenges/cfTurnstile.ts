@@ -1,4 +1,5 @@
 import {
+  CaptchaType,
   Challenge,
   ChallengeProvider,
   ChallengeValidationProps,
@@ -10,7 +11,8 @@ export class CfTurnstile implements ChallengeProvider {
 
   async generateChallenge(testing = false): Promise<Challenge> {
     return {
-      challengeID: 'not supported is turnstile!',
+      type: CaptchaType.CfTurnstile,
+      challengeID: null,
       challenge: null,
       validUntil: null
     }

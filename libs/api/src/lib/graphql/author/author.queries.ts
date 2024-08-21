@@ -56,9 +56,7 @@ const createTagIdsFilter = (filter?: Partial<AuthorFilter>): Prisma.AuthorWhereI
 
 const createHideOnTeamFilter = (filter?: Partial<AuthorFilter>): Prisma.AuthorWhereInput => {
   if (filter != null) {
-    return {
-      hideOnTeam: filter?.hideOnTeam
-    }
+    return {}
   }
   return {}
 }

@@ -1,4 +1,5 @@
 import {
+  CaptchaType,
   Challenge,
   ChallengeProvider,
   ChallengeValidationProps,
@@ -76,6 +77,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
       }
     }
     return {
+      type: CaptchaType.Algebraic,
       challengeID,
       challenge: image,
       validUntil: new Date(time + this.challengeValidTime)
