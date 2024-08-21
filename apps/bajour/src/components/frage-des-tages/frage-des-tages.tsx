@@ -187,13 +187,14 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
           <Comments>
             {commentsData?.comments
               .slice(0, 2)
-              .map(({text, title, user, createdAt, id, authorType}) => {
+              .map(({text, title, user, createdAt, id, authorType, guestUsername}) => {
                 const dataToPass = {
                   text,
                   title,
                   user,
                   createdAt,
-                  authorType
+                  authorType,
+                  guestUsername
                 } as BuilderCommentProps
 
                 return <StyledComment {...dataToPass} key={id} />

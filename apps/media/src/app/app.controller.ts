@@ -29,6 +29,11 @@ import {v4 as uuidv4} from 'uuid'
 export class AppController {
   constructor(private readonly media: MediaService) {}
 
+  @Get('/health')
+  async healthCheck(@Res() res: Response) {
+    res.status(200).send({status: 'ok'})
+  }
+
   @UseGuards(TokenAuthGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file'))

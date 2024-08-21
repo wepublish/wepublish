@@ -1,6 +1,7 @@
 import {Meta} from '@storybook/react'
 import {FullImageFragment} from '@wepublish/website/api'
 import {Image} from './image'
+import {css} from '@emotion/react'
 
 export default {
   component: Image,
@@ -60,5 +61,31 @@ export const WithoutTitle = {
   args: {
     image: {...image, title: undefined},
     caption: 'Image caption'
+  }
+}
+
+export const WithMaxWidth = {
+  ...Default,
+  args: {
+    ...Default.args,
+    maxWidth: 200
+  }
+}
+
+export const WithClassName = {
+  ...Default,
+  args: {
+    ...Default.args,
+    className: 'extra-classname'
+  }
+}
+
+export const WithEmotion = {
+  ...Default,
+  args: {
+    ...Default.args,
+    css: css`
+      background-color: #eee;
+    `
   }
 }
