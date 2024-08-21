@@ -63,7 +63,7 @@ export class TransformGuard {
           metadata.height ?? 0,
           mpLimit
         )
-        transformations.resize = {width: newWidth, height: newHeight}
+        transformations.resize = {width: newWidth, height: newHeight, withoutEnlargement: true}
         return this.calculateEffort(this.calculateMegaPixel(newHeight, newWidth))
       }
       return this.calculateEffort(originalMP)
