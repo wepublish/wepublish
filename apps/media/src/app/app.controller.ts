@@ -79,7 +79,7 @@ export class AppController {
       const remoteEtag = await this.media.getRemoteEtag(
         `images/${imageId}/${getTransformationKey(transformations)}`
       )
-      if (remoteEtag === etagClient) {
+      if (`"${remoteEtag}"` === etagClient) {
         res.status(304).end()
         return
       }

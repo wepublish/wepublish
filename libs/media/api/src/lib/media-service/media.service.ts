@@ -36,7 +36,7 @@ export class MediaService {
   private generateETag(buffer: Buffer): string {
     const hash = createHash('md5')
     hash.update(buffer)
-    return `${hash.digest('hex')}`
+    return `"${hash.digest('hex')}"`
   }
 
   private bufferStream(stream: Readable): Promise<Buffer> {
