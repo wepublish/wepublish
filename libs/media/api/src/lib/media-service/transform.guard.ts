@@ -4,7 +4,7 @@ import {BadRequestException} from '@nestjs/common'
 
 const M_PIXEL_LIMIT = 20
 // WebP Max
-const M_PIXEL_LIMIT_ANIMATED = 40
+const M_PIXEL_LIMIT_ANIMATED = 60
 const IMAGE_SIZE_LIMIT = 10
 const MAX_IMAGE_QUALITY = 80
 const DEFAULT_IMAGE_QUALITY = 65
@@ -48,8 +48,14 @@ export class TransformGuard {
   }
 
   public checkDimensions(metadata: sharp.Metadata, transformations: TransformationsDto): number {
+    const originalHeight = metadata.height
+    const resizeHeight = transformations.resize?.height
+    const originalWidth = metadata.width
+    const resizeWidth = transformations.resize?.width
+    const hasAnimation = this.isAnimatedImage(metadata)
+
     let mpLimit = M_PIXEL_LIMIT
-    if (this.isAnimatedImage(metadata)) {
+    if (hasAnimation) {
       mpLimit = M_PIXEL_LIMIT_ANIMATED
     }
 
@@ -69,12 +75,21 @@ export class TransformGuard {
       return this.calculateEffort(originalMP)
     }
 
-    const height = transformations.resize?.height ? transformations.resize?.height : metadata.height
+    let height = resizeHeight ? resizeHeight : originalHeight
+    let width = resizeWidth ? resizeWidth : originalWidth
+
+    // If withoutEnlargement is set or animation and dimension is larger than original set it to original dimension
+    if (transformations?.resize?.withoutEnlargement || hasAnimation) {
+      if (originalHeight && resizeHeight && resizeHeight > originalHeight) {
+        height = originalHeight
+      }
+      if (originalWidth && resizeWidth && resizeWidth > originalWidth) {
+        width = originalWidth
+      }
+    }
 
     const totalHeight =
       (height ?? 0) + (transformations.extend?.top ?? 0) + (transformations.extend?.bottom ?? 0)
-
-    const width = transformations.resize?.width ? transformations.resize?.width : metadata.width
 
     const totalWidth =
       (width ?? 0) + (transformations.extend?.left ?? 0) + (transformations.extend?.right ?? 0)
