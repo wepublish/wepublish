@@ -13,7 +13,7 @@ export type MediaServiceConfig = {
   transformationBucket: string
 }
 
-const getTransformationKey = (transformations: TransformationsDto) => {
+export const getTransformationKey = (transformations: TransformationsDto) => {
   return JSON.stringify(transformations, (_key, value) =>
     value instanceof Object && !(value instanceof Array)
       ? Object.keys(value)
@@ -36,7 +36,7 @@ export class MediaService {
   private generateETag(buffer: Buffer): string {
     const hash = createHash('md5')
     hash.update(buffer)
-    return `"${hash.digest('hex')}"`
+    return `${hash.digest('hex')}`
   }
 
   private bufferStream(stream: Readable): Promise<Buffer> {
@@ -46,6 +46,9 @@ export class MediaService {
       stream.on('end', () => resolve(Buffer.concat(chunks)))
       stream.on('error', reject)
     })
+  }
+  public async getRemoteEtag(image: string) {
+    return (await this.storage.getFileInformation(this.config.transformationBucket, image)).etag
   }
 
   public async getImage(imageId: string, transformations: TransformationsDto) {

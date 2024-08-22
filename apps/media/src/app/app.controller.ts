@@ -7,12 +7,14 @@ import {
   Post,
   Query,
   Res,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common'
 import {FileInterceptor} from '@nestjs/platform-express'
 import {
+  getTransformationKey,
   MediaService,
   SupportedImagesValidator,
   TokenAuthGuard,
@@ -67,9 +69,22 @@ export class AppController {
   @Get(':imageId')
   async transformImage(
     @Res() res: Response,
+    @Req() req: Request,
     @Param('imageId') imageId: string,
     @Query() transformations: TransformationsDto
   ) {
+    // Handle etag
+    const etagClient = req.headers['if-none-match']
+    if (etagClient) {
+      const remoteEtag = await this.media.getRemoteEtag(
+        `images/${imageId}/${getTransformationKey(transformations)}`
+      )
+      if (remoteEtag === etagClient) {
+        res.status(304).end()
+        return
+      }
+    }
+
     const [file, etag] = await this.media.getImage(imageId, transformations)
     res.setHeader('Content-Type', 'image/webp')
 
