@@ -2,6 +2,7 @@ export * from './lib/utility'
 export * from './lib/listView/list-view'
 export * from './lib/listView/pagination'
 export * from './lib/listView/paginated-query-container'
+export * from './lib/listView/use-list-checkbxoes'
 
 export * from './lib/atoms'
 export * from './lib/blocks'

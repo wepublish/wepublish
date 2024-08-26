@@ -12,10 +12,12 @@ import {
   Pagination,
   QueryState,
   Table,
-  TableWrapper
+  TableWrapper,
+  useListCheckboxes
 } from '@wepublish/ui/editor'
+import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Table as RTable} from 'rsuite'
+import {Checkbox, Table as RTable} from 'rsuite'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
@@ -28,6 +30,13 @@ type PollVotesListProps = {
 export function PollVoteList({listQueryState, listQuery, pollQuery}: PollVotesListProps) {
   const {sortField, setSortField, sortOrder, setSortOrder, filter, setFilter} = listQueryState
   const {t} = useTranslation()
+  const ids = useMemo(
+    () => listQuery?.data?.pollVotes?.nodes?.map(n => n.id),
+    [listQuery?.data?.pollVotes?.nodes.length]
+  )
+  const {selectedItems, allSelected, someSelected, onChangeItem, onChangeAll} = useListCheckboxes({
+    ids
+  })
 
   return (
     <>
@@ -54,6 +63,29 @@ export function PollVoteList({listQueryState, listQuery, pollQuery}: PollVotesLi
             setSortOrder(sortType!)
             setSortField(sortColumn)
           }}>
+          <Column width={80}>
+            <HeaderCell>
+              <Checkbox
+                inline
+                onChange={onChangeAll}
+                indeterminate={someSelected}
+                checked={allSelected}
+              />
+            </HeaderCell>
+            <RCell>
+              {({id}: FullPollVoteWithAnswerFragment) => {
+                return (
+                  <Checkbox
+                    inline
+                    value={id}
+                    onChange={onChangeItem}
+                    checked={selectedItems.includes(id)}
+                  />
+                )
+              }}
+            </RCell>
+          </Column>
+
           <Column width={250} align="left" resizable sortable>
             <HeaderCell>{t('pollVoteList.overview.createdAt')}</HeaderCell>
             <RCell dataKey="createdAt">
