@@ -13,7 +13,7 @@ import {
   QueryState,
   Table,
   TableWrapper,
-  useListCheckboxes
+  useSelectableList
 } from '@wepublish/ui/editor'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -34,7 +34,7 @@ export function PollVoteList({listQueryState, listQuery, pollQuery}: PollVotesLi
     () => listQuery?.data?.pollVotes?.nodes?.map(n => n.id),
     [listQuery?.data?.pollVotes?.nodes.length]
   )
-  const {selectedItems, allSelected, someSelected, onChangeItem, onChangeAll} = useListCheckboxes({
+  const {selectedItems, allSelected, someSelected, toggleItem, toggleAll} = useSelectableList({
     ids
   })
 
@@ -67,7 +67,7 @@ export function PollVoteList({listQueryState, listQuery, pollQuery}: PollVotesLi
             <HeaderCell>
               <Checkbox
                 inline
-                onChange={onChangeAll}
+                onChange={toggleAll}
                 indeterminate={someSelected}
                 checked={allSelected}
               />
@@ -78,7 +78,7 @@ export function PollVoteList({listQueryState, listQuery, pollQuery}: PollVotesLi
                   <Checkbox
                     inline
                     value={id}
-                    onChange={onChangeItem}
+                    onChange={toggleItem}
                     checked={selectedItems.includes(id)}
                   />
                 )
