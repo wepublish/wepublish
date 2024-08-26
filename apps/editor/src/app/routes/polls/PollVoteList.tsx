@@ -36,7 +36,7 @@ export function PollVoteList({listQueryState, listQuery, pollQuery}: PollVotesLi
           <h2>{pollQuery?.data?.poll?.question || t('pollList.noQuestion')}</h2>
         </ListViewHeader>
         <ListFilters
-          fields={['dates', 'answerIds']}
+          fields={['dates', 'answerIds', 'fingerprint']}
           filter={filter ?? {}}
           isLoading={listQuery?.loading}
           onSetFilter={filter => setFilter(filter)}
@@ -56,7 +56,13 @@ export function PollVoteList({listQueryState, listQuery, pollQuery}: PollVotesLi
           }}>
           <Column width={250} align="left" resizable sortable>
             <HeaderCell>{t('pollVoteList.overview.createdAt')}</HeaderCell>
-            <RCell dataKey="createdAt">{({createdAt}: FullPollVoteFragment) => createdAt}</RCell>
+            <RCell dataKey="createdAt">
+              {({createdAt}: FullPollVoteFragment) =>
+                `${new Date(createdAt).toLocaleDateString()} ${new Date(
+                  createdAt
+                ).toLocaleTimeString()}`
+              }
+            </RCell>
           </Column>
           <Column width={250} align="left" resizable>
             <HeaderCell>{t('pollVoteList.overview.answerId')}</HeaderCell>

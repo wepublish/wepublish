@@ -92,6 +92,7 @@ type Field =
   | 'location'
   | 'includeHidden'
   | 'answerIds'
+  | 'fingerprint'
 
 export type ImportableEventFilter = {
   startsAt?: InputMaybe<Scalars['String']>
@@ -381,6 +382,16 @@ export function ListViewFilters({
           </Group>
         )}
 
+        {fields.includes('fingerprint') && (
+          <Group style={formInputStyle}>
+            <Input
+              value={filter.fingerprint || ''}
+              placeholder={t('pollVoteList.filter.fingerpint')}
+              onChange={value => updateFilter({fingerprint: value})}
+            />
+          </Group>
+        )}
+
         {fields.includes('name') && (
           <Group style={formInputStyle}>
             <Input
@@ -511,9 +522,18 @@ export function ListViewFilters({
               placement="auto"
               onChange={value => {
                 if (value && value[0] && value[1]) {
+                  const [from, to] = value
+                  from.setHours(0)
+                  from.setMinutes(0)
+                  from.setSeconds(0)
+                  from.setMilliseconds(0)
+                  to.setHours(23)
+                  to.setMinutes(59)
+                  to.setSeconds(59)
+                  to.setMilliseconds(999)
                   updateFilter({
-                    from: value[0]?.toISOString(),
-                    to: value[1]?.toISOString()
+                    from: from.toISOString(),
+                    to: to.toISOString()
                   })
                 }
               }}

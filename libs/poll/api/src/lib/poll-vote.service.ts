@@ -115,11 +115,24 @@ const createToFilter = (filter?: Partial<PollVoteFilter>): Prisma.PollVoteWhereI
   return {}
 }
 
+const createFingerprintFilter = (filter?: Partial<PollVoteFilter>): Prisma.PollVoteWhereInput => {
+  if (filter?.fingerprint) {
+    return {
+      fingerprint: {
+        contains: filter.fingerprint
+      }
+    }
+  }
+
+  return {}
+}
+
 const createPollVoteFilter = (filter?: Partial<PollVoteFilter>): Prisma.PollVoteWhereInput => ({
   AND: [
     createPollFilter(filter),
     createAnswersFilter(filter),
     createFromFilter(filter),
-    createToFilter(filter)
+    createToFilter(filter),
+    createFingerprintFilter(filter)
   ]
 })

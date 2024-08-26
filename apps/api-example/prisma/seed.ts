@@ -905,6 +905,4 @@ async function seed() {
   }
 }
 
-console.log(process.argv)
-
 seed()
