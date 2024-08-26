@@ -473,6 +473,13 @@ export type PaginatedEvents = {
   totalCount: Scalars['Float'];
 };
 
+export type PaginatedPollVotes = {
+  __typename?: 'PaginatedPollVotes';
+  nodes: Array<PollVote>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float'];
+};
+
 export type PaymentMethodRef = {
   __typename?: 'PaymentMethodRef';
   id: Scalars['String'];
@@ -498,6 +505,37 @@ export type PeriodicJob = {
   successfullyFinished?: Maybe<Scalars['DateTime']>;
   tries: Scalars['Float'];
 };
+
+export type PollAnswerInVote = {
+  __typename?: 'PollAnswerInVote';
+  answer: Scalars['String'];
+  id: Scalars['ID'];
+};
+
+export type PollVote = {
+  __typename?: 'PollVote';
+  answer: PollAnswerInVote;
+  answerId: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  disabled: Scalars['String'];
+  fingerprint?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  pollId: Scalars['ID'];
+  userId?: Maybe<Scalars['ID']>;
+};
+
+export type PollVoteFilter = {
+  answerIds?: InputMaybe<Array<Scalars['String']>>;
+  fingerprint?: InputMaybe<Scalars['String']>;
+  from?: InputMaybe<Scalars['DateTime']>;
+  pollId?: InputMaybe<Scalars['String']>;
+  to?: InputMaybe<Scalars['DateTime']>;
+  userId?: InputMaybe<Scalars['String']>;
+};
+
+export enum PollVoteSort {
+  CreatedAt = 'CreatedAt'
+}
 
 export type Query = {
   __typename?: 'Query';
@@ -578,6 +616,8 @@ export type Query = {
   /** Returns all payment methods */
   paymentMethods: Array<PaymentMethodRef>;
   periodicJobLog: Array<PeriodicJob>;
+  /** Returns a paginated list of poll votes */
+  pollVotes: PaginatedPollVotes;
   provider: MailProviderModel;
   /**
    *
@@ -689,6 +729,16 @@ export type QueryNewSubscribersArgs = {
 
 export type QueryPeriodicJobLogArgs = {
   skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPollVotesArgs = {
+  cursorId?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<PollVoteFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<PollVoteSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
@@ -1041,6 +1091,22 @@ export type PeriodicJobLogsQueryVariables = Exact<{
 
 export type PeriodicJobLogsQuery = { __typename?: 'Query', periodicJobLog: Array<{ __typename?: 'PeriodicJob', id: string, date: string, error?: string | null, executionTime?: string | null, finishedWithError?: string | null, modifiedAt: string, successfullyFinished?: string | null, tries: number, createdAt: string }> };
 
+export type FullPollVoteFragment = { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null };
+
+export type FullPollVoteWithAnswerFragment = { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } };
+
+export type PollVoteListQueryVariables = Exact<{
+  filter?: InputMaybe<PollVoteFilter>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<PollVoteSort>;
+}>;
+
+
+export type PollVoteListQuery = { __typename?: 'Query', pollVotes: { __typename?: 'PaginatedPollVotes', totalCount: number, nodes: Array<{ __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
 export type SettingsListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1236,6 +1302,25 @@ export const FullPeriodicJobFragmentDoc = gql`
   createdAt
 }
     `;
+export const FullPollVoteFragmentDoc = gql`
+    fragment FullPollVote on PollVote {
+  id
+  createdAt
+  pollId
+  answerId
+  userId
+  fingerprint
+}
+    `;
+export const FullPollVoteWithAnswerFragmentDoc = gql`
+    fragment FullPollVoteWithAnswer on PollVote {
+  ...FullPollVote
+  answer {
+    id
+    answer
+  }
+}
+    ${FullPollVoteFragmentDoc}`;
 export const MemberPlanRefFragmentDoc = gql`
     fragment MemberPlanRef on MemberPlanRef {
   id
@@ -2061,6 +2146,62 @@ export function usePeriodicJobLogsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type PeriodicJobLogsQueryHookResult = ReturnType<typeof usePeriodicJobLogsQuery>;
 export type PeriodicJobLogsLazyQueryHookResult = ReturnType<typeof usePeriodicJobLogsLazyQuery>;
 export type PeriodicJobLogsQueryResult = Apollo.QueryResult<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>;
+export const PollVoteListDocument = gql`
+    query PollVoteList($filter: PollVoteFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PollVoteSort) {
+  pollVotes(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullPollVoteWithAnswer
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${FullPollVoteWithAnswerFragmentDoc}`;
+
+/**
+ * __usePollVoteListQuery__
+ *
+ * To run a query within a React component, call `usePollVoteListQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePollVoteListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePollVoteListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function usePollVoteListQuery(baseOptions?: Apollo.QueryHookOptions<PollVoteListQuery, PollVoteListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PollVoteListQuery, PollVoteListQueryVariables>(PollVoteListDocument, options);
+      }
+export function usePollVoteListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PollVoteListQuery, PollVoteListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PollVoteListQuery, PollVoteListQueryVariables>(PollVoteListDocument, options);
+        }
+export type PollVoteListQueryHookResult = ReturnType<typeof usePollVoteListQuery>;
+export type PollVoteListLazyQueryHookResult = ReturnType<typeof usePollVoteListLazyQuery>;
+export type PollVoteListQueryResult = Apollo.QueryResult<PollVoteListQuery, PollVoteListQueryVariables>;
 export const SettingsListDocument = gql`
     query SettingsList {
   settingsList {

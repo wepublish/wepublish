@@ -313,14 +313,20 @@ type PeriodicJob {
   tries: Float!
 }
 
+type PollAnswerInVote {
+  answer: String!
+  id: ID!
+}
+
 type PollVote {
-  answerId: String!
+  answer: PollAnswerInVote!
+  answerId: ID!
   createdAt: DateTime!
   disabled: String!
   fingerprint: String
-  id: String!
-  pollId: String!
-  userId: String
+  id: ID!
+  pollId: ID!
+  userId: ID
 }
 
 input PollVoteFilter {
@@ -387,7 +393,7 @@ type Query {
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
 
   """Returns a paginated list of poll votes"""
-  pollVotes(cursorId: String, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
+  pollVotes(cursorId: ID, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
   provider: MailProviderModel!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "

@@ -1,0 +1,40 @@
+fragment FullPollVote on PollVote {
+    id
+    createdAt
+    pollId
+    answerId
+    userId
+    fingerprint
+}
+
+fragment FullPollVoteWithAnswer on PollVote {
+    ...FullPollVote
+    answer {
+        id
+        answer
+    }
+}
+
+query PollVoteList (
+    $filter: PollVoteFilter
+    $cursor: ID
+    $take: Int
+    $skip: Int
+    $order: SortOrder
+    $sort: PollVoteSort
+) {
+    pollVotes(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+        nodes {
+            ...FullPollVoteWithAnswer
+        }
+
+        pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+        }
+
+        totalCount
+    }
+}
