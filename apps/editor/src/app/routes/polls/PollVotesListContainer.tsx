@@ -9,21 +9,20 @@ import {
 import {
   createCheckedPermissionComponent,
   createOptionalMapper,
-  usePaginatedContainer
+  usePaginatedQueryContainer
 } from '@wepublish/ui/editor'
 import {useMemo} from 'react'
 import {useParams} from 'react-router-dom'
 
-import {SortType} from '../../utility'
 import {PollVoteList} from './PollVoteList'
 
 function PollVoteListContainer() {
   const {pollId} = useParams()
-  const {state, variables} = usePaginatedContainer<PollVoteListQueryResult>({
+  const {state, variables} = usePaginatedQueryContainer<PollVoteListQueryResult>({
     filter: {pollId},
     limit: 100,
-    sortMapper: createOptionalMapper<string, PollVoteSort>({createdAt: PollVoteSort.CreatedAt}),
-    orderMapper: createOptionalMapper<SortType, SortOrderV2>({
+    sortMapper: createOptionalMapper({createdAt: PollVoteSort.CreatedAt}),
+    orderMapper: createOptionalMapper({
       desc: SortOrderV2.Descending,
       asc: SortOrderV2.Ascending
     })

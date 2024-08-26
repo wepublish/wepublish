@@ -48,7 +48,7 @@ export function PollVoteList({listQueryState, listQuery, pollQuery}: PollVotesLi
           fillHeight
           loading={listQuery.loading}
           data={listQuery?.data?.pollVotes.nodes}
-          sortColumn={sortField}
+          sortColumn={sortField ?? 'createdAt'}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType!)
