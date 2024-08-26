@@ -14,8 +14,7 @@ import {
   TitleLine
 } from '../website-builder-overwrites/blocks/teaser-overwrite.style'
 import {ColTeaser} from '../website-builder-overwrites/blocks/col-teaser'
-import {useEffect, useState} from 'react'
-import {useBajourStorage} from './bajour-storage'
+import {useState} from 'react'
 import {LikeButton} from './like-button'
 import {useLikeStatus} from './use-like-status'
 
