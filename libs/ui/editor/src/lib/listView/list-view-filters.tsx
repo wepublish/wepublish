@@ -6,7 +6,9 @@ import {
   EventFilter,
   FullUserRoleFragment,
   PageFilter,
+  PollAnswerWithVoteCount,
   usePeerListLazyQuery,
+  usePollLazyQuery,
   UserFilter,
   useUserRoleListLazyQuery
 } from '@wepublish/editor/api'
@@ -24,7 +26,12 @@ import {
 } from 'rsuite'
 
 import {AuthorCheckPicker} from '../panel/authorCheckPicker'
-import {InputMaybe, Scalars, useEventProvidersLazyQuery} from '@wepublish/editor/api-v2'
+import {
+  InputMaybe,
+  PollVoteFilter,
+  Scalars,
+  useEventProvidersLazyQuery
+} from '@wepublish/editor/api-v2'
 import {getApiClientV2} from '@wepublish/editor/api-v2'
 
 const {Group} = RForm
@@ -84,6 +91,7 @@ type Field =
   | 'name'
   | 'location'
   | 'includeHidden'
+  | 'answerIds'
 
 export type ImportableEventFilter = {
   startsAt?: InputMaybe<Scalars['String']>
@@ -91,7 +99,12 @@ export type ImportableEventFilter = {
   providers?: InputMaybe<Array<InputMaybe<Scalars['String']>>>
 }
 
-type Filter = ArticleFilter & PageFilter & UserFilter & EventFilter & ImportableEventFilter
+type Filter = ArticleFilter &
+  PageFilter &
+  UserFilter &
+  EventFilter &
+  ImportableEventFilter &
+  PollVoteFilter
 
 export interface ListViewFiltersProps {
   fields: Field[]
@@ -115,6 +128,7 @@ export function ListViewFilters({
   const {t} = useTranslation()
   const [resetFilterKey, setResetFilterkey] = useState<string>(new Date().getTime().toString())
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
+  const [answers, setAnswers] = useState<PollAnswerWithVoteCount[]>([])
 
   const [providersFetch, {data: providersData}] = useEventProvidersLazyQuery({
     client,
@@ -132,7 +146,12 @@ export function ListViewFilters({
     fetchPolicy: 'network-only'
   })
 
+  const [pollFetch, {data: pollData}] = usePollLazyQuery({
+    fetchPolicy: 'network-only'
+  })
+
   // check whether or not we need to get some data based on which filters are required
+  const isAnswerFilter = fields.includes('answerIds')
   const isProviderFilter = fields.includes('providers')
   const isUserRoleFilter = fields.includes('userRole')
   const isPeerFilter = fields.includes('peer') && !!setPeerFilter
@@ -156,6 +175,16 @@ export function ListViewFilters({
     }
   }, [isProviderFilter, providersFetch])
 
+  useEffect(() => {
+    if (isAnswerFilter && filter.pollId) {
+      pollFetch({
+        variables: {
+          pollId: filter.pollId
+        }
+      })
+    }
+  }, [isAnswerFilter, pollFetch, filter])
+
   /**
    * Setup user roles, whenever user role data object changes
    */
@@ -165,6 +194,15 @@ export function ListViewFilters({
     }
   }, [userRoleData?.userRoles])
 
+  /**
+   * Setup poll
+   */
+  useEffect(() => {
+    if (pollData?.poll?.answers) {
+      setAnswers(pollData?.poll?.answers)
+    }
+  }, [pollData?.poll?.answers])
+
   const allPeers = peerListData?.peers
 
   /**
@@ -172,14 +210,36 @@ export function ListViewFilters({
    */
   function isAnyFilterSet(): boolean {
     for (const [filterKey, filterValue] of Object.entries(filter)) {
-      if (filterKey && filterValue) return true
+      if (
+        filterKey &&
+        fields.includes(mapFilterFieldToField(filterKey as keyof Filter) as Field) &&
+        filterValue
+      ) {
+        return true
+      }
     }
-
     return false
   }
 
+  function mapFilterFieldToField(name: keyof Filter): Field | null {
+    if (name === 'from' || name === 'to') {
+      return 'dates'
+    } else if (fields.includes(name as Field)) {
+      return name as Field
+    } else {
+      return null
+    }
+  }
+
   function resetFilter(): void {
-    onSetFilter({})
+    const cleanFilter: Record<string, any> = {}
+    for (const filterKey in filter) {
+      const possibleField = mapFilterFieldToField(filterKey as keyof Filter)
+      if (!possibleField || !fields.includes(possibleField)) {
+        cleanFilter[filterKey] = filter[filterKey as keyof Filter]
+      }
+    }
+    onSetFilter(cleanFilter)
     setResetFilterkey(new Date().getTime().toString())
   }
 
@@ -190,7 +250,9 @@ export function ListViewFilters({
     if (value.userRole && !value.userRole.length) {
       value = {userRole: null}
     }
-
+    if (value.answerIds && !value.answerIds.length) {
+      value = {answerIds: null}
+    }
     const newFilter = {
       ...filter,
       ...value
@@ -252,6 +314,29 @@ export function ListViewFilters({
                 onSetFilter({userRole: []})
               }}
               placeholder={t('userCreateOrEditView.userRoles')}
+            />
+          </Group>
+        )}
+
+        {fields.includes('answerIds') && (
+          <Group style={formInputStyle}>
+            <CheckPicker
+              data-testid="answerIds-combobox"
+              name="answerIds"
+              block
+              value={filter?.answerIds || []}
+              data={answers.map(answer => ({
+                value: answer.id,
+                label: answer.answer
+              }))}
+              placement="auto"
+              onChange={value => {
+                updateFilter({
+                  answerIds:
+                    answers.filter(answer => value.includes(answer.id)).map(r => r.id) || null
+                })
+              }}
+              placeholder={t('pollEditView.answerPanelHeader')}
             />
           </Group>
         )}
