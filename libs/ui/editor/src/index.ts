@@ -1,5 +1,7 @@
 export * from './lib/utility'
 export * from './lib/listView/list-view'
+export * from './lib/listView/pagination'
+export * from './lib/listView/paginated-state-container'
 
 export * from './lib/atoms'
 export * from './lib/blocks'
