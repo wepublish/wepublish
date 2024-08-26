@@ -17,6 +17,7 @@ import {ColTeaser} from '../website-builder-overwrites/blocks/col-teaser'
 import {useEffect, useState} from 'react'
 import {useBajourStorage} from './bajour-storage'
 import {LikeButton} from './like-button'
+import {useLikeStatus} from './use-like-status'
 
 interface BaslerinDesTagesProps {
   article: ApiV1.ArticleQuery
@@ -225,16 +226,6 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
     elements: {Image}
   } = useWebsiteBuilder()
 
-  const {add, remove, exists} = useBajourStorage('liked-articles')
-  const [likes, setLikes] = useState(article.article?.likes)
-  const [isLiked, setIsLiked] = useState(false)
-
-  useEffect(() => {
-    if (article.article?.id) {
-      setIsLiked(exists(article.article.id))
-    }
-  }, [article.article?.id, exists])
-
   const {data: tagData, loading: tagLoading} = ApiV1.useTagQuery({
     variables: {
       tag: 'baslerin-des-tages',
@@ -269,15 +260,6 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
     }
   })
 
-  const like = async () => {
-    if (article.article) {
-      const {data} = await addLikeMutation()
-      setLikes(data?.addLike)
-      add(article.article.id)
-      setIsLiked(true)
-    }
-  }
-
   const [removeLikeMutation] = ApiV1.useRemoveLikeMutation({
     variables: {
       input: {
@@ -286,12 +268,18 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
     }
   })
 
-  const unlike = async () => {
-    if (article.article) {
-      const {data} = await removeLikeMutation()
-      setLikes(data?.removeLike)
-      remove(article.article.id)
-      setIsLiked(false)
+  const [likes, setLikes] = useState(article.article?.likes || 0)
+  const {isLiked, updateLikeStatus} = useLikeStatus(article.article?.id ?? '')
+
+  const handleLike = async () => {
+    if (isLiked) {
+      await removeLikeMutation()
+      setLikes(prev => prev - 1)
+      updateLikeStatus(false)
+    } else {
+      await addLikeMutation()
+      setLikes(prev => prev + 1)
+      updateLikeStatus(true)
     }
   }
 
@@ -342,7 +330,7 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
           />
 
           <Content>
-            <LikeButton isLiked={isLiked} likes={likes} onLike={like} onUnlike={unlike} />
+            <LikeButton isLiked={isLiked} likes={likes} onLike={handleLike} />
           </Content>
         </div>
       </DesktopGrid>
@@ -374,7 +362,7 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
         />
 
         <Content>
-          <LikeButton isLiked={isLiked} likes={likes} onLike={like} onUnlike={unlike} />
+          <LikeButton isLiked={isLiked} likes={likes} onLike={handleLike} />
         </Content>
       </MobileGrid>
     </BaslerinDesTagesWrapper>

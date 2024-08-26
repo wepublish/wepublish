@@ -82,7 +82,9 @@ export default function ArticleBySlugIdOrToken() {
       Article={isFDT ? FdTArticle : Article}
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
-        {isBaslerinDesTages && data && <BaslerinDesTages article={data} />}
+        {isBaslerinDesTages && data && (
+          <BaslerinDesTages key={data.article && data.article.id} article={data} />
+        )}
         {!isBaslerinDesTages && <ArticleContainer {...containerProps} />}
 
         {!isBaslerinDesTages && <BriefingNewsletter />}

@@ -5,7 +5,6 @@ interface LikeButtonProps {
   isLiked: boolean
   likes: number | undefined
   onLike: () => void
-  onUnlike: () => void
 }
 
 const Button = styled('div')`
@@ -20,11 +19,11 @@ const Button = styled('div')`
   }
 `
 
-export const LikeButton = ({isLiked, likes, onLike, onUnlike}: LikeButtonProps) => {
+export const LikeButton = ({isLiked, likes, onLike}: LikeButtonProps) => {
   return (
     <Button>
       {isLiked ? (
-        <MdFavorite className="icon" onClick={onUnlike} style={{color: 'red'}} />
+        <MdFavorite className="icon" onClick={onLike} style={{color: 'red'}} />
       ) : (
         <MdFavoriteBorder className="icon" onClick={onLike} />
       )}
