@@ -464,7 +464,7 @@ function UserEditView() {
                         />
                       </Form.Group>
                     </Col>
-                    {/* flair */}
+                    {/* birthday */}
                     <Col xs={12}>
                       <Form.Group controlId="birthday">
                         <Form.ControlLabel>{t('userCreateOrEditView.birthday')}</Form.ControlLabel>
