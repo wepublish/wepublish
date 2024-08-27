@@ -8,9 +8,11 @@ import {
   SxProps,
   Theme
 } from '@mui/material'
-import {ApiV1, useUser, useWebsiteBuilder} from '@wepublish/website'
+import {useWebsiteBuilder} from '@wepublish/website'
 import {useRouter} from 'next/router'
 import {useCallback, useEffect, useRef, useState} from 'react'
+
+import {useHasSubscription} from '../paywall/has-subscription'
 
 export type CookieOrPayProps = {
   onCookie?: () => void
@@ -65,13 +67,10 @@ export const CookieOrPayText = styled('div')`
 `
 
 export const CookieOrPay = ({onPay, onCookie}: CookieOrPayProps) => {
-  const {hasUser} = useUser()
   const {asPath} = useRouter()
   const [display, setDisplay] = useState(false)
   const hasNotified = useRef(false)
-  const {data: subscriptions} = ApiV1.useSubscriptionsQuery({
-    skip: !hasUser
-  })
+  const hasSubscription = useHasSubscription()
   const {
     elements: {H5, Paragraph, Button, Link, UnorderedList, ListItem}
   } = useWebsiteBuilder()
@@ -84,7 +83,7 @@ export const CookieOrPay = ({onPay, onCookie}: CookieOrPayProps) => {
   }, [])
 
   useEffect(() => {
-    if (hasUser && subscriptions?.subscriptions.length) {
+    if (hasSubscription) {
       return onNotify(() => onPay?.())
     } else if (localStorage.getItem(CookieOrPayKey)) {
       return onNotify(() => onCookie?.())
@@ -92,7 +91,7 @@ export const CookieOrPay = ({onPay, onCookie}: CookieOrPayProps) => {
 
     const excludedPages = ['/mitmachen', '/login', '/signup', '/datenschutz', '/profile']
     setDisplay(!excludedPages.some(str => asPath.startsWith(str)))
-  }, [hasUser, subscriptions, onPay, onCookie, asPath, onNotify])
+  }, [hasSubscription, onPay, onCookie, asPath, onNotify])
 
   return (
     <Modal open={display} component="section" slots={{backdrop: CookieOrPayBackdrop}}>

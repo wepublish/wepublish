@@ -147,7 +147,9 @@ export class NovaMediaAdapter implements MediaAdapter {
     }
 
     // Max quality is 80 so 1 => 80
-    queryParameters.push(`quality=${transformations?.quality ? transformations.quality * 80 : 65}`)
+    queryParameters.push(
+      `quality=${transformations?.quality ? Math.ceil(transformations.quality * 80) : 65}`
+    )
 
     return encodeURI(`${this.url}/${image.id}?${queryParameters.join('&')}`)
   }

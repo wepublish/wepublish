@@ -3,6 +3,8 @@ import {TransformationsDto} from './transformations.dto'
 import {BadRequestException} from '@nestjs/common'
 
 const M_PIXEL_LIMIT = 20
+// WebP Max
+const M_PIXEL_LIMIT_ANIMATED = 60
 const IMAGE_SIZE_LIMIT = 10
 const MAX_IMAGE_QUALITY = 80
 const DEFAULT_IMAGE_QUALITY = 65
@@ -41,34 +43,59 @@ export class TransformGuard {
     )
   }
 
+  public isAnimatedImage(metadata: sharp.Metadata) {
+    return metadata.pages && metadata.pages > 1
+  }
+
   public checkDimensions(metadata: sharp.Metadata, transformations: TransformationsDto): number {
+    const originalHeight = metadata.height
+    const resizeHeight = transformations.resize?.height
+    const originalWidth = metadata.width
+    const resizeWidth = transformations.resize?.width
+    const hasAnimation = this.isAnimatedImage(metadata)
+
+    let mpLimit = M_PIXEL_LIMIT
+    if (hasAnimation) {
+      mpLimit = M_PIXEL_LIMIT_ANIMATED
+    }
+
     // Ensure that original picture is not more than M_PIXEL_LIMIT
     if (this.dimensionAutoResizeCheck(transformations)) {
       const originalMP = this.calculateMegaPixel(metadata.height ?? 0, metadata.width ?? 0)
-      if (originalMP > M_PIXEL_LIMIT) {
+
+      if (originalMP > mpLimit) {
         const {newWidth, newHeight} = this.resizeDimensions(
           metadata.width ?? 0,
           metadata.height ?? 0,
-          M_PIXEL_LIMIT
+          mpLimit
         )
-        transformations.resize = {width: newWidth, height: newHeight}
+        transformations.resize = {width: newWidth, height: newHeight, withoutEnlargement: true}
         return this.calculateEffort(this.calculateMegaPixel(newHeight, newWidth))
       }
       return this.calculateEffort(originalMP)
     }
 
-    const height = transformations.resize?.height ? transformations.resize?.height : metadata.height
+    let height = resizeHeight ? resizeHeight : originalHeight
+    let width = resizeWidth ? resizeWidth : originalWidth
+
+    // If withoutEnlargement is set or animation and dimension is larger than original set it to original dimension
+    if (transformations?.resize?.withoutEnlargement || hasAnimation) {
+      if (originalHeight && resizeHeight && resizeHeight > originalHeight) {
+        height = originalHeight
+      }
+      if (originalWidth && resizeWidth && resizeWidth > originalWidth) {
+        width = originalWidth
+      }
+    }
 
     const totalHeight =
       (height ?? 0) + (transformations.extend?.top ?? 0) + (transformations.extend?.bottom ?? 0)
-
-    const width = transformations.resize?.width ? transformations.resize?.width : metadata.width
 
     const totalWidth =
       (width ?? 0) + (transformations.extend?.left ?? 0) + (transformations.extend?.right ?? 0)
 
     const mPixel = this.calculateMegaPixel(totalHeight, totalWidth)
-    if (mPixel > M_PIXEL_LIMIT) {
+    if (mPixel > mpLimit) {
       throw new BadRequestException(`Transformation exceeds pixel limit!`)
     }
     return this.calculateEffort(mPixel)
