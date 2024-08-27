@@ -144,17 +144,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       throw new Error(`Payrexx Subscription Id not found on subscription ${props.subscription.id}`)
     }
 
-    const currency = (
-      await this.prisma.memberPlan.findFirst({
-        where: {
-          Subscription: {
-            some: {
-              id: props.subscription.id
-            }
-          }
-        }
-      })
-    )?.currency
+    const currency = props.subscription.currency
 
     if (!currency) {
       throw new Error(
@@ -272,7 +262,8 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           description: `Abo ${memberPlan.name}`,
           paidAt: new Date(),
           canceledAt: null,
-          scheduledDeactivationAt: add(new Date(), {days: 10})
+          scheduledDeactivationAt: add(new Date(), {days: 10}),
+          currency: subscription.currency
         }
       })
 

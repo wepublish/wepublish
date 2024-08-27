@@ -280,6 +280,7 @@ export class MemberContext implements MemberContextInterface {
           mail: user.email,
           dueAt: startDate,
           scheduledDeactivationAt: deactivationDate,
+          currency: subscription.currency,
           items: {
             create: {
               name: 'Membership',
@@ -377,29 +378,10 @@ export class MemberContext implements MemberContextInterface {
       }
     })
 
-    const memberPlan = await this.prisma.memberPlan.findFirst({
-      where: {
-        Subscription: {
-          some: {
-            id: invoice.subscriptionID
-          }
-        }
-      }
-    })
-
-    if (!memberPlan) {
-      logger('memberContext').error(
-        'Memberplan of subscription %s does not exist',
-        invoice.subscriptionID
-      )
-
-      return false
-    }
-
     const intent = await paymentProvider.createIntent({
       paymentID: payment.id,
       invoice,
-      currency: memberPlan.currency,
+      currency: invoice.currency,
       saveCustomer: false,
       customerID: customer.customerID
     })
@@ -697,7 +679,8 @@ export class MemberContext implements MemberContextInterface {
           }
         },
         autoRenew,
-        extendable
+        extendable,
+        currency: memberPlan.currency
       },
       include: {
         deactivation: true,

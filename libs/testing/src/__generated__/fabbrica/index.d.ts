@@ -62,9 +62,9 @@ import type { CommentRejectionReason } from "@prisma/client";
 import type { CommentState } from "@prisma/client";
 import type { CommentAuthorType } from "@prisma/client";
 import type { RatingSystemType } from "@prisma/client";
+import type { Currency } from "@prisma/client";
 import type { MailLogState } from "@prisma/client";
 import type { PaymentPeriodicity } from "@prisma/client";
-import type { Currency } from "@prisma/client";
 import type { PaymentState } from "@prisma/client";
 import type { SubscriptionDeactivationReason } from "@prisma/client";
 import type { TagType } from "@prisma/client";
@@ -993,6 +993,7 @@ type InvoiceFactoryDefineInput = {
     canceledAt?: Date | null;
     scheduledDeactivationAt?: Date;
     manuallySetAsPaidByUserId?: string | null;
+    currency?: Currency;
     items?: Prisma.InvoiceItemCreateNestedManyWithoutInvoicesInput;
     subscription?: InvoicesubscriptionFactory | Prisma.SubscriptionCreateNestedOneWithoutInvoicesInput;
     subscriptionPeriods?: Prisma.SubscriptionPeriodCreateNestedManyWithoutInvoiceInput;
@@ -1779,6 +1780,7 @@ type SubscriptionFactoryDefineInput = {
     startsAt?: Date;
     paidUntil?: Date | null;
     extendable?: boolean;
+    currency?: Currency;
     periods?: Prisma.SubscriptionPeriodCreateNestedManyWithoutSubscriptionInput;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutSubscriptionInput;
     deactivation?: SubscriptiondeactivationFactory | Prisma.SubscriptionDeactivationCreateNestedOneWithoutSubscriptionInput;

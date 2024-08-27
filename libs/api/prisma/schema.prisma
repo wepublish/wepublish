@@ -428,6 +428,7 @@ model Invoice {
   scheduledDeactivationAt   DateTime
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
+  currency                  Currency
 
   subscriptionID String?
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
@@ -781,6 +782,7 @@ model Subscription {
   properties         MetadataProperty[]
   deactivation       SubscriptionDeactivation?
   extendable         Boolean                   @default(true)
+  currency           Currency
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])

@@ -2204,7 +2204,8 @@ function autoGenerateInvoiceScalarsOrEnums({ seq }) {
     return {
         mail: getScalarFieldValueGenerator().String({ modelName: "Invoice", fieldName: "mail", isId: false, isUnique: false, seq }),
         dueAt: getScalarFieldValueGenerator().DateTime({ modelName: "Invoice", fieldName: "dueAt", isId: false, isUnique: false, seq }),
-        scheduledDeactivationAt: getScalarFieldValueGenerator().DateTime({ modelName: "Invoice", fieldName: "scheduledDeactivationAt", isId: false, isUnique: false, seq })
+        scheduledDeactivationAt: getScalarFieldValueGenerator().DateTime({ modelName: "Invoice", fieldName: "scheduledDeactivationAt", isId: false, isUnique: false, seq }),
+        currency: "CHF"
     };
 }
 function defineInvoiceFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
@@ -3425,7 +3426,8 @@ function autoGenerateSubscriptionScalarsOrEnums({ seq }) {
         paymentPeriodicity: "monthly",
         monthlyAmount: getScalarFieldValueGenerator().Float({ modelName: "Subscription", fieldName: "monthlyAmount", isId: false, isUnique: false, seq }),
         autoRenew: getScalarFieldValueGenerator().Boolean({ modelName: "Subscription", fieldName: "autoRenew", isId: false, isUnique: false, seq }),
-        startsAt: getScalarFieldValueGenerator().DateTime({ modelName: "Subscription", fieldName: "startsAt", isId: false, isUnique: false, seq })
+        startsAt: getScalarFieldValueGenerator().DateTime({ modelName: "Subscription", fieldName: "startsAt", isId: false, isUnique: false, seq }),
+        currency: "CHF"
     };
 }
 function defineSubscriptionFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {

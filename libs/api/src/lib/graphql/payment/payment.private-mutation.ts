@@ -50,7 +50,7 @@ export const createPaymentFromInvoice = async (
   const intent = await paymentProvider.createIntent({
     paymentID: payment.id,
     invoice,
-    currency: memberPlan.currency,
+    currency: invoice.currency,
     saveCustomer: true,
     successURL,
     failureURL

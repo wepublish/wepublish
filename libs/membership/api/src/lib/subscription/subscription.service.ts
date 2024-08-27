@@ -229,6 +229,7 @@ export class SubscriptionService {
 
     return this.prismaService.invoice.create({
       data: {
+        currency: subscription.currency,
         mail: subscription.user.email,
         dueAt: subscription.paidUntil || new Date(),
         description,
@@ -435,7 +436,7 @@ export class SubscriptionService {
       const intent = await paymentProvider.createIntent({
         paymentID: payment.id,
         invoice,
-        currency: invoice.subscription.memberPlan.currency,
+        currency: invoice.currency,
         saveCustomer: false,
         customerID: customer.customerID,
         backgroundTask: true
