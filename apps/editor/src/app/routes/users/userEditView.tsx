@@ -153,7 +153,6 @@ function UserEditView() {
     setName(tmpUser.name)
     setPreferredName(tmpUser.preferredName ?? undefined)
     setFlair(tmpUser.flair || undefined)
-    console.log(tmpUser)
     setBirthday(tmpUser.birthday ? new Date(tmpUser.birthday) : undefined)
     setEmail(tmpUser.email)
     setMetadataProperties(
