@@ -31,7 +31,6 @@ import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
-import '../src/global.scss'
 
 setDefaultOptions({
   locale: de
