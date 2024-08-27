@@ -89,3 +89,9 @@ export class PoleVoteListArgs {
   @Field(() => ID, {nullable: true})
   cursorId?: string
 }
+
+@ArgsType()
+export class PoleVoteByIdArgs {
+  @Field(() => ID)
+  id!: string
+}

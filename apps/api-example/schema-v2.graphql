@@ -229,6 +229,9 @@ type Mutation {
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
 
+  """Delete poll vote"""
+  deletePollVote(id: ID!): PollVote!
+
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
 

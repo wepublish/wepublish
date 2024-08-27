@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import {PoleVoteListArgs, PollVoteFilter, PollVoteSort} from './poll-vote.model'
+import {PoleVoteByIdArgs, PoleVoteListArgs, PollVoteFilter, PollVoteSort} from './poll-vote.model'
 import {getMaxTake, graphQLSortOrderToPrisma, SortOrder} from '@wepublish/utils/api'
 import {Injectable} from '@nestjs/common'
 
@@ -52,6 +52,15 @@ export class PollVoteService {
         endCursor: lastItem?.id
       }
     }
+  }
+
+  async deletePollVote({id}: PoleVoteByIdArgs) {
+    return this.prisma.pollVote.delete({
+      where: {id},
+      include: {
+        answer: true
+      }
+    })
   }
 }
 
