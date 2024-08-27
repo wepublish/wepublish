@@ -62,10 +62,6 @@ fragment FullSessionWithToken on SessionWithToken {
   token
   expiresAt
   createdAt
-
-  user {
-    ...FullUser
-  }
 }
 
 query Me {

@@ -2037,7 +2037,7 @@ export type FullAddressFragment = { __typename?: 'UserAddress', company?: string
 
 export type FullUserSessionFragment = { __typename?: 'UserSession', token: string, expiresAt: string, createdAt: string };
 
-export type FullSessionWithTokenFragment = { __typename?: 'SessionWithToken', token: string, expiresAt: string, createdAt: string, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }>, oauth2Accounts: Array<{ __typename?: 'OAuth2Account', type: string, provider: string, scope: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } };
+export type FullSessionWithTokenFragment = { __typename?: 'SessionWithToken', token: string, expiresAt: string, createdAt: string };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2050,7 +2050,7 @@ export type LoginWithCredentialsMutationVariables = Exact<{
 }>;
 
 
-export type LoginWithCredentialsMutation = { __typename?: 'Mutation', createSession: { __typename?: 'SessionWithToken', token: string, expiresAt: string, createdAt: string, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }>, oauth2Accounts: Array<{ __typename?: 'OAuth2Account', type: string, provider: string, scope: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } } };
+export type LoginWithCredentialsMutation = { __typename?: 'Mutation', createSession: { __typename?: 'SessionWithToken', token: string, expiresAt: string, createdAt: string } };
 
 export type LoginWithEmailMutationVariables = Exact<{
   email: Scalars['String'];
@@ -2064,7 +2064,7 @@ export type LoginWithJwtMutationVariables = Exact<{
 }>;
 
 
-export type LoginWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, expiresAt: string, createdAt: string, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }>, oauth2Accounts: Array<{ __typename?: 'OAuth2Account', type: string, provider: string, scope: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } } };
+export type LoginWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, expiresAt: string, createdAt: string } };
 
 export type RegisterMutationVariables = Exact<{
   name: Scalars['String'];
@@ -2118,8 +2118,12 @@ export const ImageUrLsFragmentDoc = gql`
   lSquare: transformURL(
     input: {width: 1000, height: 1000, output: PNG, quality: 0.8}
   )
-  mSquare: transformURL(input: {width: 800, height: 800, output: PNG, quality: 0.8})
-  sSquare: transformURL(input: {width: 500, height: 500, output: PNG, quality: 0.8})
+  mSquare: transformURL(
+    input: {width: 800, height: 800, output: PNG, quality: 0.8}
+  )
+  sSquare: transformURL(
+    input: {width: 500, height: 500, output: PNG, quality: 0.8}
+  )
   xsSquare: transformURL(
     input: {width: 300, height: 300, output: PNG, quality: 0.8}
   )
@@ -2923,11 +2927,8 @@ export const FullSessionWithTokenFragmentDoc = gql`
   token
   expiresAt
   createdAt
-  user {
-    ...FullUser
-  }
 }
-    ${FullUserFragmentDoc}`;
+    `;
 export const ArticleDocument = gql`
     query Article($slug: Slug, $id: ID, $token: String) {
   article(slug: $slug, id: $id, token: $token) {
