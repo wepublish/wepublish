@@ -122,6 +122,7 @@ describe('DashboardSubscriptionResolver', () => {
 
     const mockData: Prisma.SubscriptionCreateInput[] = [
       {
+        currency: Currency.CHF,
         autoRenew: true,
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',
@@ -158,6 +159,7 @@ describe('DashboardSubscriptionResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         autoRenew: false,
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',
@@ -194,6 +196,7 @@ describe('DashboardSubscriptionResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         autoRenew: false,
         monthlyAmount: 500,
         paymentPeriodicity: 'monthly',
@@ -244,6 +247,7 @@ describe('DashboardSubscriptionResolver', () => {
 
     const mockData: Prisma.SubscriptionCreateInput[] = [
       {
+        currency: Currency.CHF,
         autoRenew: true,
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',
@@ -280,6 +284,7 @@ describe('DashboardSubscriptionResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         autoRenew: true,
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',
@@ -300,6 +305,7 @@ describe('DashboardSubscriptionResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         autoRenew: false,
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',
@@ -336,6 +342,7 @@ describe('DashboardSubscriptionResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         autoRenew: false,
         monthlyAmount: 500,
         paymentPeriodicity: 'monthly',
@@ -383,6 +390,7 @@ describe('DashboardSubscriptionResolver', () => {
 
     const mockData: Prisma.SubscriptionCreateInput[] = [
       {
+        currency: Currency.CHF,
         autoRenew: true,
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',
@@ -419,6 +427,7 @@ describe('DashboardSubscriptionResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         autoRenew: true,
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',
@@ -439,6 +448,7 @@ describe('DashboardSubscriptionResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         autoRenew: true,
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',
@@ -475,6 +485,7 @@ describe('DashboardSubscriptionResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         autoRenew: false,
         monthlyAmount: 500,
         paymentPeriodicity: 'monthly',
@@ -526,6 +537,7 @@ describe('DashboardSubscriptionResolver', () => {
 
     const mockData: Prisma.SubscriptionCreateInput[] = [
       {
+        currency: Currency.CHF,
         autoRenew: true,
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',
@@ -569,6 +581,7 @@ describe('DashboardSubscriptionResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         autoRenew: true,
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',

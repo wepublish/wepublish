@@ -109,7 +109,8 @@ async function seed() {
       monthlyAmount: 3,
       autoRenew: true,
       startsAt: new Date().toISOString(),
-      user: {connect: {id: editor.id}}
+      user: {connect: {id: editor.id}},
+      currency: Currency.CHF
     }
   })
 
@@ -126,7 +127,8 @@ async function seed() {
       monthlyAmount: 3,
       autoRenew: false,
       startsAt: new Date().toISOString(),
-      user: {connect: {id: dev.id}}
+      user: {connect: {id: dev.id}},
+      currency: Currency.CHF
     }
   })
 

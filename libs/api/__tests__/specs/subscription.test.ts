@@ -93,6 +93,7 @@ beforeAll(async () => {
         monthlyAmount: 2,
         autoRenew: true,
         startsAt: new Date(),
+        currency: Currency.CHF,
         paymentMethod: {connect: paymentMethod},
         memberPlan: {connect: {slug: memberPlan.slug}},
         user: {connect: {id: user.id}}
@@ -103,6 +104,7 @@ beforeAll(async () => {
       data: {
         mail: user.email,
         dueAt: new Date(),
+        currency: Currency.CHF,
         scheduledDeactivationAt: new Date()
       }
     })

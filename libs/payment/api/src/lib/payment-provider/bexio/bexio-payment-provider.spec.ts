@@ -153,7 +153,8 @@ describe('BexioPaymentProvider', () => {
           id: '123',
           items: [],
           mail: 'dev@wepublish.com',
-          modifiedAt: new Date()
+          modifiedAt: new Date(),
+          currency: Currency.EUR
         },
         paymentID: '123',
         saveCustomer: true,
@@ -182,7 +183,8 @@ describe('BexioPaymentProvider', () => {
         id: '123',
         items: [],
         mail: 'dev@wepublish.com',
-        modifiedAt: new Date()
+        modifiedAt: new Date(),
+        currency: Currency.CHF
       },
       paymentID: '123',
       saveCustomer: true,
@@ -230,7 +232,8 @@ describe('BexioPaymentProvider', () => {
         id: '123',
         items: [],
         mail: 'dev@wepublish.com',
-        modifiedAt: new Date()
+        modifiedAt: new Date(),
+        currency: Currency.CHF
       },
       paymentID: '123',
       saveCustomer: true,
@@ -280,7 +283,8 @@ describe('BexioPaymentProvider', () => {
         id: '123',
         items: [],
         mail: 'dev@wepublish.com',
-        modifiedAt: new Date()
+        modifiedAt: new Date(),
+        currency: Currency.CHF
       },
       paymentID: '123',
       saveCustomer: true,
