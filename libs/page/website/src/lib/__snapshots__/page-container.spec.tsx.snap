@@ -408,6 +408,11 @@ exports[`Page Container should render ById 1`] = `
   aspect-ratio: 1.78343949044586;
 }
 
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .emotion-108 {
   display: grid;
   -webkit-box-pack: center;
@@ -3637,6 +3642,11 @@ exports[`Page Container should render BySlug 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-108 {
@@ -6870,6 +6880,11 @@ exports[`Page Container should render ByToken 1`] = `
   aspect-ratio: 1.78343949044586;
 }
 
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .emotion-108 {
   display: grid;
   -webkit-box-pack: center;
@@ -10099,6 +10114,11 @@ exports[`Page Container should render WithChildren 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-108 {
@@ -13335,6 +13355,11 @@ exports[`Page Container should render WithClassName 1`] = `
   aspect-ratio: 1.78343949044586;
 }
 
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .emotion-108 {
   display: grid;
   -webkit-box-pack: center;
@@ -16564,6 +16589,11 @@ exports[`Page Container should render WithEmotion 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-108 {
