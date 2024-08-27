@@ -22,9 +22,9 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {BabanewsBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
+import {BabanewsBanner} from '../src/components/website-builder-overwrites/blocks/banner'
 import {BabanewsTeaserGrid} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme from '../src/styles/theme'
-import {BabanewsBanner} from '../src/components/website-builder-overwrites/blocks/banner'
 
 setDefaultOptions({
   locale: de
