@@ -2118,8 +2118,12 @@ export const ImageUrLsFragmentDoc = gql`
   lSquare: transformURL(
     input: {width: 1000, height: 1000, output: PNG, quality: 0.8}
   )
-  mSquare: transformURL(input: {width: 800, height: 800, output: PNG, quality: 0.8})
-  sSquare: transformURL(input: {width: 500, height: 500, output: PNG, quality: 0.8})
+  mSquare: transformURL(
+    input: {width: 800, height: 800, output: PNG, quality: 0.8}
+  )
+  sSquare: transformURL(
+    input: {width: 500, height: 500, output: PNG, quality: 0.8}
+  )
   xsSquare: transformURL(
     input: {width: 300, height: 300, output: PNG, quality: 0.8}
   )

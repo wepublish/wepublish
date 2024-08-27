@@ -38,3 +38,10 @@ query PollVoteList (
         totalCount
     }
 }
+
+
+mutation DeletePollVote($id: ID!) {
+    deletePollVote(id: $id) {
+        ...FullPollVoteWithAnswer
+    }
+}

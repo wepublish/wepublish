@@ -11,13 +11,15 @@ import {
   ListViewHeader,
   Pagination,
   QueryState,
+  SelectedItemsActions,
   Table,
   TableWrapper,
+  useLoader,
   useSelectableList
 } from '@wepublish/ui/editor'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Checkbox, Table as RTable} from 'rsuite'
+import {Button, Checkbox, Table as RTable} from 'rsuite'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
@@ -25,19 +27,24 @@ type PollVotesListProps = {
   listQueryState: QueryState<PollVoteListQueryVariables>
   listQuery: PollVoteListQueryResult
   pollQuery: PollQueryResult
+  deleteItems: (ids: string[]) => Promise<void>
 }
 
-export function PollVoteList({listQueryState, listQuery, pollQuery}: PollVotesListProps) {
+export function PollVoteList({
+  listQueryState,
+  listQuery,
+  pollQuery,
+  deleteItems
+}: PollVotesListProps) {
   const {sortField, setSortField, sortOrder, setSortOrder, filter, setFilter} = listQueryState
+  const {loading, wrapLoading} = useLoader()
   const {t} = useTranslation()
+
   const ids = useMemo(
     () => listQuery?.data?.pollVotes?.nodes?.map(n => n.id),
-    [listQuery?.data?.pollVotes?.nodes.length]
+    [listQuery?.data?.pollVotes?.nodes]
   )
-  const {selectedItems, allSelected, someSelected, toggleItem, toggleAll} = useSelectableList({
-    ids
-  })
-
+  const {selectedItems, allSelected, someSelected, toggleItem, toggleAll} = useSelectableList({ids})
   return (
     <>
       <ListViewContainer>
@@ -52,6 +59,11 @@ export function PollVoteList({listQueryState, listQuery, pollQuery}: PollVotesLi
         />
       </ListViewContainer>
 
+      <SelectedItemsActions selectedItems={selectedItems}>
+        <Button onClick={() => wrapLoading(deleteItems(selectedItems))} loading={loading}>
+          {t('Delete')}
+        </Button>
+      </SelectedItemsActions>
       <TableWrapper>
         <Table
           fillHeight

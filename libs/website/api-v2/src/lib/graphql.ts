@@ -260,6 +260,8 @@ export type Mutation = {
   deleteConsent: Consent;
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Delete poll vote */
+  deletePollVote: Array<PollVote>;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -372,6 +374,11 @@ export type MutationDeleteEventArgs = {
 };
 
 
+export type MutationDeletePollVoteArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationDeleteSubscriptionFlowArgs = {
   id: Scalars['String'];
 };
@@ -473,6 +480,13 @@ export type PaginatedEvents = {
   totalCount: Scalars['Float'];
 };
 
+export type PaginatedPollVotes = {
+  __typename?: 'PaginatedPollVotes';
+  nodes: Array<PollVote>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float'];
+};
+
 export type PaymentMethodRef = {
   __typename?: 'PaymentMethodRef';
   id: Scalars['String'];
@@ -498,6 +512,37 @@ export type PeriodicJob = {
   successfullyFinished?: Maybe<Scalars['DateTime']>;
   tries: Scalars['Float'];
 };
+
+export type PollAnswerInVote = {
+  __typename?: 'PollAnswerInVote';
+  answer: Scalars['String'];
+  id: Scalars['ID'];
+};
+
+export type PollVote = {
+  __typename?: 'PollVote';
+  answer: PollAnswerInVote;
+  answerId: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  disabled: Scalars['String'];
+  fingerprint?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  pollId: Scalars['ID'];
+  userId?: Maybe<Scalars['ID']>;
+};
+
+export type PollVoteFilter = {
+  answerIds?: InputMaybe<Array<Scalars['String']>>;
+  fingerprint?: InputMaybe<Scalars['String']>;
+  from?: InputMaybe<Scalars['DateTime']>;
+  pollId?: InputMaybe<Scalars['String']>;
+  to?: InputMaybe<Scalars['DateTime']>;
+  userId?: InputMaybe<Scalars['String']>;
+};
+
+export enum PollVoteSort {
+  CreatedAt = 'CreatedAt'
+}
 
 export type Query = {
   __typename?: 'Query';
@@ -578,6 +623,8 @@ export type Query = {
   /** Returns all payment methods */
   paymentMethods: Array<PaymentMethodRef>;
   periodicJobLog: Array<PeriodicJob>;
+  /** Returns a paginated list of poll votes */
+  pollVotes: PaginatedPollVotes;
   provider: MailProviderModel;
   /**
    *
@@ -689,6 +736,16 @@ export type QueryNewSubscribersArgs = {
 
 export type QueryPeriodicJobLogArgs = {
   skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPollVotesArgs = {
+  cursorId?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<PollVoteFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<PollVoteSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 

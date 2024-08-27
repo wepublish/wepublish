@@ -4,6 +4,7 @@ import {
   PollVoteListQueryResult,
   PollVoteSort,
   SortOrder as SortOrderV2,
+  useDeletePollVoteMutation,
   usePollVoteListQuery
 } from '@wepublish/editor/api-v2'
 import {
@@ -34,13 +35,28 @@ function PollVoteListContainer() {
     variables,
     fetchPolicy: 'network-only'
   })
+  const [deletePollVote, {loading}] = useDeletePollVoteMutation({
+    client
+  })
+
+  const deletePollVotes = async (selectedItems: string[]) => {
+    await Promise.all(selectedItems.map(id => deletePollVote({variables: {id}})))
+    await listQuery.refetch()
+  }
 
   const pollQuery = usePollQuery({
     variables: {pollId},
     fetchPolicy: 'network-only'
   })
 
-  return <PollVoteList listQueryState={state} listQuery={listQuery} pollQuery={pollQuery} />
+  return (
+    <PollVoteList
+      listQueryState={state}
+      listQuery={listQuery}
+      pollQuery={pollQuery}
+      deleteItems={deletePollVotes}
+    />
+  )
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
