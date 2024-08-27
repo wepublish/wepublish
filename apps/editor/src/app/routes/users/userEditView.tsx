@@ -247,11 +247,11 @@ function UserEditView() {
               firstName: firstName || undefined,
               preferredName,
               flair,
-              birthday: birthday?.toISOString(),
+              birthday: birthday?.toISOString() ?? null,
               email,
-              emailVerifiedAt: emailVerifiedAt?.toISOString(),
+              emailVerifiedAt: emailVerifiedAt?.toISOString() ?? null,
               active,
-              userImageID: userImage?.id || null,
+              userImageID: userImage?.id ?? null,
               roleIDs: roles.map(role => role.id),
               properties: metaDataProperties.map(
                 ({value: {key, public: isPublic, value: newValue}}) => ({
@@ -473,6 +473,7 @@ function UserEditView() {
                           block
                           oneTap
                           isoWeek
+                          format="dd.MM.yyyy"
                           limitEndYear={0}
                           value={birthday}
                           disabled={isDisabled}
