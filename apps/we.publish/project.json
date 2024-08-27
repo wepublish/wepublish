@@ -1,7 +1,7 @@
 {
-  "name": "wepublish",
+  "name": "we.publish",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/wepublish",
+  "sourceRoot": "apps/we.publish",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -10,11 +10,11 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/wepublish"
+        "outputPath": "dist/apps/we.publish"
       },
       "configurations": {
         "development": {
-          "outputPath": "apps/wepublish"
+          "outputPath": "apps/we.publish"
         },
         "production": {}
       }
@@ -23,16 +23,16 @@
       "executor": "@nx/next:server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "wepublish:build",
+        "buildTarget": "we.publish:build",
         "dev": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "wepublish:build:development",
+          "buildTarget": "we.publish:build:development",
           "dev": true
         },
         "production": {
-          "buildTarget": "wepublish:build:production",
+          "buildTarget": "we.publish:build:production",
           "dev": false
         }
       }
@@ -40,14 +40,14 @@
     "export": {
       "executor": "@nx/next:export",
       "options": {
-        "buildTarget": "wepublish:build:production"
+        "buildTarget": "we.publish:build:production"
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/wepublish/jest.config.ts"
+        "jestConfig": "apps/we.publish/jest.config.ts"
       }
     },
     "lint": {
