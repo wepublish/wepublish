@@ -100,7 +100,7 @@ function deserialize<
   }
 >(el: Node, global: T) {
   if (el.nodeType === 3) {
-    return el.textContent?.trim()
+    return el.textContent?.replace(/^\n/gm, '')
   } else if (el.nodeType !== 1) {
     return null
   } else if (el.nodeName === 'BR') {
