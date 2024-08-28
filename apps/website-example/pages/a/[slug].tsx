@@ -33,8 +33,6 @@ export default function ArticleBySlugIdOrToken() {
     token
   } as ComponentProps<typeof ArticleContainer>
 
-  console.log('disable comments', data?.article?.disableComments)
-
   return (
     <>
       <ArticleContainer {...containerProps} />
