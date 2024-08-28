@@ -128,6 +128,7 @@
         "yes": "Oui",
         "hidden": "Cacher",
         "setAsHidden": "Les articles cachés sont exclus par défaut mais peuvent toujours être interrogés sur demande.",
+        "disableComments": "Disable comments for this article",
         "light": "Light",
         "style": "Style",
         "text": "Texte",

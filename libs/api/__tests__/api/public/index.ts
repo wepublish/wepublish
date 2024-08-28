@@ -36,6 +36,7 @@ export type Article = {
   breaking: Scalars['Boolean'];
   canonicalUrl?: Maybe<Scalars['String']>;
   comments: Array<Comment>;
+  disableComments?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
