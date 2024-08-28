@@ -330,7 +330,8 @@
         "link": "Lien",
         "remove": "Supprimer",
         "startWriting": "Commencez à écrire...",
-        "text": "Texte"
+        "text": "Texte",
+        "id": "ID"
       },
       "richTextTable": {
         "addBorders": "Ajouter des bordures",
