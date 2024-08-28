@@ -165,7 +165,17 @@ const migratePost = async (post: WordpressPost) => {
   }
 
   const nodes = $('body > *')
-  const specialTags = ['.woocommerce-info', 'iframe', 'figure', 'blockquote', '.content-box']
+  const specialTags = [
+    '.woocommerce-info',
+    'iframe',
+    'figure',
+    'img',
+    'blockquote',
+    '.content-box',
+    '.content-box-gelb'
+  ]
+  const imageGallery = true
+  const imageSingles = false
 
   for (const el of nodes) {
     const $el = $(el)
@@ -178,19 +188,49 @@ const migratePost = async (post: WordpressPost) => {
       switch (specialEl.tagName) {
         case 'img':
           console.error('img...')
-          console.error($.html(el).toString())
-          console.error($specialEl.attr('data-src'))
-          image = await ensureImage({
-            url: $specialEl.attr('data-src')!,
-            title: $specialEl.attr('alt')!,
-            description: $specialEl.attr('alt')!
-          })
-          blocks.push({
-            image: {
-              imageID: image.id,
-              caption: image.description
-            }
-          })
+          // console.error($.html(el).toString())
+          // console.error($specialEl.attr('data-src'))
+
+          // Image gallery
+          if (imageGallery) {
+            blocks.push({
+              imageGallery: {
+                images: await Promise.all(
+                  $el.find('img').map(async (i, img) => {
+                    const $img = $(img)
+                    const image = await ensureImage({
+                      url: $img.attr('data-src')!,
+                      title: $img.attr('alt')!,
+                      description: $img.attr('alt')!
+                    })
+                    return {
+                      imageID: image.id
+                    }
+                  })
+                )
+              }
+            })
+          }
+
+          if (imageSingles) {
+            blocks.push(
+              ...(await Promise.all(
+                $el.find('img').map(async (i, img) => {
+                  const $img = $(img)
+                  const image = await ensureImage({
+                    url: $img.attr('data-src')!,
+                    title: $img.attr('alt')!,
+                    description: $img.attr('alt')!
+                  })
+                  return {
+                    image: {
+                      imageID: image.id
+                    }
+                  }
+                })
+              ))
+            )
+          }
           break
         case 'figure':
           image = await ensureImage({
@@ -224,7 +264,7 @@ const migratePost = async (post: WordpressPost) => {
           break
       }
 
-      if ($specialEl.filter('.content-box').length) {
+      if ($specialEl.filter('.content-box, .content-box-gelb').length) {
         const $imageTag = $specialEl.find('img')
         let image
         if ($imageTag.length) {
@@ -232,9 +272,11 @@ const migratePost = async (post: WordpressPost) => {
             url: $imageTag.attr('data-src')!,
             title: $imageTag.attr('alt')!
           })
-          $imageTag.parentsUntil('.content-box').remove()
+          $imageTag.parentsUntil('.content-box, .content-box-gelb').remove()
         }
         const title = $specialEl.find(':first-child').filter('h1, h2, h3').first().remove()
+        const $iframes = $specialEl.find('iframe')
+        $iframes.parent().remove()
         const richText = (await convertHtmlToSlate($specialEl.html()!)) as unknown as Node[]
 
         blocks.push({
@@ -244,6 +286,10 @@ const migratePost = async (post: WordpressPost) => {
             richText,
             hideButton: true
           }
+        })
+
+        $iframes.map((i, iframe) => {
+          blocks.push(extractEmbed($.html(iframe).toString()))
         })
       }
     } else {

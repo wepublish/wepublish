@@ -1,7 +1,26 @@
 import {migratePostById, migratePosts, migratePostsFromCategory} from './lib/posts'
 
 async function migrate() {
-  await migratePostById(203334, 200106, 203279, 202906, 201384, 202940, 202666)
+  await migratePostById(189813) // foramtting
+  await migratePostById(203921) // spacing before links
+  // await migratePostById(100273)
+  return
+  await migratePostById(203921) // spacing before links
+  await migratePostById(167171) // content-box + iframe
+  await migratePostById(202384) // instagram aspect-ratio
+  await migratePostById(
+    197451,
+    182908,
+    190356,
+    189813,
+    203334,
+    200106,
+    203279,
+    202906,
+    201384,
+    202940,
+    202666
+  )
   await migratePosts(30)
   await migratePostsFromCategory(4371, 20)
   await migratePostsFromCategory(4950, 20)
