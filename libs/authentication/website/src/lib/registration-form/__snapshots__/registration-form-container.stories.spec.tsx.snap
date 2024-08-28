@@ -5,16 +5,7 @@ exports[`Registration Form Container should render Filled 1`] = `
 - First value
 + Second value
 
-@@ -1,18 +1,21 @@
-  <DocumentFragment>
-+   <div>
-+     Logged in as Foo
-+   </div>
-    <form
-      class="css-1uw3gxg-RegistrationFormWrapper elv4f72"
-    >
-      <div
-        class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
+@@ -7,12 +7,12 @@
       >
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -29,7 +20,7 @@ exports[`Registration Form Container should render Filled 1`] = `
           >
             Vorname
           </label>
-@@ -24,18 +27,18 @@
+@@ -24,18 +24,18 @@
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r0:"
@@ -50,7 +41,7 @@ exports[`Registration Form Container should render Filled 1`] = `
                   Vorname
                 </span>
               </legend>
-@@ -44,12 +47,12 @@
+@@ -44,12 +44,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -65,7 +56,7 @@ exports[`Registration Form Container should render Filled 1`] = `
           >
             Nachname
           </label>
-@@ -61,18 +64,18 @@
+@@ -61,18 +61,18 @@
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r1:"
@@ -86,7 +77,7 @@ exports[`Registration Form Container should render Filled 1`] = `
                   Nachname
                 </span>
               </legend>
-@@ -81,12 +84,12 @@
+@@ -81,12 +81,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -101,7 +92,7 @@ exports[`Registration Form Container should render Filled 1`] = `
           >
             Email
           </label>
-@@ -98,18 +101,18 @@
+@@ -98,18 +98,18 @@
               autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r2:"
@@ -122,51 +113,51 @@ exports[`Registration Form Container should render Filled 1`] = `
                   Email
                 </span>
               </legend>
-@@ -118,12 +121,12 @@
-        </div>
-        <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-        >
-          <label
--           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
--           data-shrink="false"
-+           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-+           data-shrink="true"
-            for=":r3:"
-            id=":r3:-label"
-          >
-            Passwort
-          </label>
-@@ -135,11 +138,11 @@
-              autocomplete="new-password"
-              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r3:"
-              name="password"
-              type="password"
--             value=""
-+             value="12345678"
-            />
-            <div
-              class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
-            >
-              <button
-@@ -172,11 +175,11 @@
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
--               class="css-yjsfm1"
-+               class="css-14lo706"
-              >
-                <span>
-                  Passwort
-                </span>
-              </legend>
-@@ -188,12 +191,12 @@
+@@ -121,12 +121,12 @@
         >
           <div
-            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1706pe8-MuiFormControl-root-MuiTextField-root"
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+          >
+            <label
+-             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
+-             data-shrink="false"
++             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
++             data-shrink="true"
+              for=":r3:"
+              id=":r3:-label"
+            >
+              Passwort
+            </label>
+@@ -138,11 +138,11 @@
+                autocomplete="new-password"
+                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
+                id=":r3:"
+                name="password"
+                type="password"
+-               value=""
++               value="12345678"
+              />
+              <div
+                class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
+              >
+                <button
+@@ -175,11 +175,11 @@
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+-                 class="css-yjsfm1"
++                 class="css-14lo706"
+                >
+                  <span>
+                    Passwort
+                  </span>
+                </legend>
+@@ -188,12 +188,12 @@
+          </div>
+          <div
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
           >
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
@@ -176,12 +167,53 @@ exports[`Registration Form Container should render Filled 1`] = `
               for=":r4:"
               id=":r4:-label"
             >
+              Passwort wiederholen
+            </label>
+@@ -205,11 +205,11 @@
+                autocomplete="new-password"
+                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
+                id=":r4:"
+                name="passwordRepeated"
+                type="password"
+-               value=""
++               value="12345678"
+              />
+              <div
+                class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
+              >
+                <button
+@@ -242,11 +242,11 @@
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+-                 class="css-yjsfm1"
++                 class="css-14lo706"
+                >
+                  <span>
+                    Passwort wiederholen
+                  </span>
+                </legend>
+@@ -259,12 +259,12 @@
+        >
+          <div
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1706pe8-MuiFormControl-root-MuiTextField-root"
+          >
+            <label
+-             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
+-             data-shrink="false"
++             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
++             data-shrink="true"
+              for=":r5:"
+              id=":r5:-label"
+            >
               Strasse und Hausnummer
             </label>
-@@ -205,18 +208,18 @@
+@@ -276,18 +276,18 @@
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r4:"
+                id=":r5:"
                 name="address.streetAddress"
                 type="text"
 -               value=""
@@ -199,7 +231,7 @@ exports[`Registration Form Container should render Filled 1`] = `
                     Strasse und Hausnummer
                   </span>
                 </legend>
-@@ -225,12 +228,12 @@
+@@ -296,12 +296,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -209,15 +241,15 @@ exports[`Registration Form Container should render Filled 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r5:"
-              id=":r5:-label"
+              for=":r6:"
+              id=":r6:-label"
             >
               PLZ
             </label>
-@@ -242,18 +245,18 @@
+@@ -313,18 +313,18 @@
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r5:"
+                id=":r6:"
                 name="address.zipCode"
                 type="text"
 -               value=""
@@ -235,7 +267,7 @@ exports[`Registration Form Container should render Filled 1`] = `
                     PLZ
                   </span>
                 </legend>
-@@ -262,12 +265,12 @@
+@@ -333,12 +333,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -245,15 +277,15 @@ exports[`Registration Form Container should render Filled 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r6:"
-              id=":r6:-label"
+              for=":r7:"
+              id=":r7:-label"
             >
               Ort / Stadt
             </label>
-@@ -279,18 +282,18 @@
+@@ -350,18 +350,18 @@
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r6:"
+                id=":r7:"
                 name="address.city"
                 type="text"
 -               value=""
@@ -271,7 +303,7 @@ exports[`Registration Form Container should render Filled 1`] = `
                     Ort / Stadt
                   </span>
                 </legend>
-@@ -299,12 +302,12 @@
+@@ -370,12 +370,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-8qobka-MuiFormControl-root-MuiTextField-root"
@@ -281,15 +313,15 @@ exports[`Registration Form Container should render Filled 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r7:"
-              id=":r7:-label"
+              for=":r8:"
+              id=":r8:-label"
             >
               Land
             </label>
-@@ -316,18 +319,18 @@
+@@ -387,18 +387,18 @@
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r7:"
+                id=":r8:"
                 name="address.country"
                 type="text"
 -               value=""
@@ -307,7 +339,7 @@ exports[`Registration Form Container should render Filled 1`] = `
                     Land
                   </span>
                 </legend>
-@@ -400,12 +403,12 @@
+@@ -471,12 +471,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -317,15 +349,15 @@ exports[`Registration Form Container should render Filled 1`] = `
 -           data-shrink="false"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="true"
-            for=":r8:"
-            id=":r8:-label"
+            for=":r9:"
+            id=":r9:-label"
           >
             Captcha
           </label>
-@@ -416,18 +419,18 @@
+@@ -487,25 +487,198 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r8:"
+              id=":r9:"
               name="challengeAnswer.challengeSolution"
               type="text"
 -             value=""
@@ -342,7 +374,187 @@ exports[`Registration Form Container should render Filled 1`] = `
                 <span>
                   Captcha
                 </span>
-              </legend>"
+              </legend>
+            </fieldset>
++         </div>
++       </div>
++     </div>
++     <div
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorError MuiAlert-standardError MuiAlert-standard css-1iznk5b-MuiPaper-root-MuiAlert-root"
++       role="alert"
++     >
++       <div
++         class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
++       >
++         <svg
++           aria-hidden="true"
++           class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
++           data-testid="ErrorOutlineIcon"
++           focusable="false"
++           viewBox="0 0 24 24"
++         >
++           <path
++             d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
++           />
++         </svg>
+        </div>
++       <div
++         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
++       >
++         No more mocked responses for the query: mutation Register($name: String!, $firstName: String, $preferredName: String, $birthday: DateTime, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
++   registerMember(
++     name: $name
++     firstName: $firstName
++     preferredName: $preferredName
++     birthday: $birthday
++     address: $address
++     email: $email
++     password: $password
++     challengeAnswer: $challengeAnswer
++   ) {
++     user {
++       ...FullUser
++       __typename
++     }
++     session {
++       ...FullUserSession
++       __typename
++     }
++     __typename
++   }
++ }
++
++ fragment FullUser on User {
++   id
++   name
++   firstName
++   preferredName
++   flair
++   birthday
++   email
++   address {
++     ...FullAddress
++     __typename
++   }
++   paymentProviderCustomers {
++     ...FullPaymentProviderCustomer
++     __typename
++   }
++   oauth2Accounts {
++     ...FullOAuth2Account
++     __typename
++   }
++   image {
++     ...FullImage
++     __typename
++   }
++   properties {
++     ...FullProperty
++     __typename
++   }
++   __typename
++ }
++
++ fragment FullAddress on UserAddress {
++   company
++   streetAddress
++   streetAddress2
++   zipCode
++   city
++   country
++   __typename
++ }
++
++ fragment FullPaymentProviderCustomer on PaymentProviderCustomer {
++   paymentProviderID
++   customerID
++   __typename
++ }
++
++ fragment FullOAuth2Account on OAuth2Account {
++   type
++   provider
++   scope
++   __typename
++ }
++
++ fragment FullImage on Image {
++   id
++   createdAt
++   modifiedAt
++   filename
++   format
++   mimeType
++   extension
++   width
++   height
++   fileSize
++   title
++   description
++   tags
++   source
++   link
++   license
++   focalPoint {
++     x
++     y
++     __typename
++   }
++   ...ImageURLs
++   __typename
++ }
++
++ fragment ImageURLs on Image {
++   url
++   xl: transformURL(input: {width: 1200, output: PNG, quality: 0.8})
++   l: transformURL(input: {width: 1000, output: PNG, quality: 0.8})
++   m: transformURL(input: {width: 800, output: PNG, quality: 0.8})
++   s: transformURL(input: {width: 500, output: PNG, quality: 0.8})
++   xs: transformURL(input: {width: 300, output: PNG, quality: 0.8})
++   xxs: transformURL(input: {width: 200, output: PNG, quality: 0.8})
++   xlSquare: transformURL(
++     input: {width: 1200, height: 1200, output: PNG, quality: 0.8}
++   )
++   lSquare: transformURL(
++     input: {width: 1000, height: 1000, output: PNG, quality: 0.8}
++   )
++   mSquare: transformURL(
++     input: {width: 800, height: 800, output: PNG, quality: 0.8}
++   )
++   sSquare: transformURL(
++     input: {width: 500, height: 500, output: PNG, quality: 0.8}
++   )
++   xsSquare: transformURL(
++     input: {width: 300, height: 300, output: PNG, quality: 0.8}
++   )
++   xxsSquare: transformURL(
++     input: {width: 200, height: 200, output: PNG, quality: 0.8}
++   )
++   __typename
++ }
++
++ fragment FullProperty on PublicProperties {
++   key
++   value
++   __typename
++ }
++
++ fragment FullUserSession on UserSession {
++   token
++   expiresAt
++   createdAt
++   __typename
++ }
++ Expected variables: {"challengeAnswer":{"challengeID":"MTY4NjY2MzEyMDU0MjtGOHpxUEhscldLL0I5a0t4aVdtaTQrMDRob21iRG5sMm5yWEJob0YybUFjPTs0NzI1","challengeSolution":"1"},"firstName":"Foo","name":"Bar","email":"foobar@email.com","password":"12345678","passwordRepeated":"12345678","address":{"streetAddress":"Musterstrasse 1","zipCode":"8047","city":"Zürich","country":"Schweiz"}}
++
++ Failed to match 1 mock for this query. The mocked response had the following variables:
++   {"name":"Bar","email":"foobar@email.com","challengeAnswer":{"challengeSolution":"1","challengeID":"MTY4NjY2MzEyMDU0MjtGOHpxUEhscldLL0I5a0t4aVdtaTQrMDRob21iRG5sMm5yWEJob0YybUFjPTs0NzI1"},"firstName":"Foo","address":{"streetAddress":"Musterstrasse 1","zipCode":"8047","city":"Zürich","country":"Schweiz"},"password":"12345678"}
++
+        </div>
+      </div>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-qgfqkk-MuiButtonBase-root-MuiButton-root-RegistrationForm"
+        tabindex="0""
 `;
 
 exports[`Registration Form Container should render WithChallengeError 1`] = `
@@ -669,7 +881,28 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   border-color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-24 {
+.emotion-22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 0 50%;
+  -ms-flex: 1 0 50%;
+  flex: 1 0 50%;
+  -webkit-box-flex-flow: row;
+  -webkit-flex-flow: row;
+  -ms-flex-flow: row;
+  flex-flow: row;
+  gap: 24px;
+}
+
+@media (min-width:900px) {
+  .emotion-22 {
+    grid-column: 1/-1;
+  }
+}
+
+.emotion-26 {
   line-height: 1.4375em;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
@@ -688,35 +921,35 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   padding-right: 14px;
 }
 
-.emotion-24.Mui-disabled {
+.emotion-26.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
   cursor: default;
 }
 
-.emotion-24:hover .MuiOutlinedInput-notchedOutline {
+.emotion-26:hover .MuiOutlinedInput-notchedOutline {
   border-color: rgba(0, 0, 0, 0.87);
 }
 
 @media (hover: none) {
-  .emotion-24:hover .MuiOutlinedInput-notchedOutline {
+  .emotion-26:hover .MuiOutlinedInput-notchedOutline {
     border-color: rgba(0, 0, 0, 0.23);
   }
 }
 
-.emotion-24.Mui-focused .MuiOutlinedInput-notchedOutline {
+.emotion-26.Mui-focused .MuiOutlinedInput-notchedOutline {
   border-color: #e91e63;
   border-width: 2px;
 }
 
-.emotion-24.Mui-error .MuiOutlinedInput-notchedOutline {
+.emotion-26.Mui-error .MuiOutlinedInput-notchedOutline {
   border-color: #d32f2f;
 }
 
-.emotion-24.Mui-disabled .MuiOutlinedInput-notchedOutline {
+.emotion-26.Mui-disabled .MuiOutlinedInput-notchedOutline {
   border-color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-25 {
+.emotion-27 {
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
@@ -737,95 +970,102 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   padding-right: 0;
 }
 
-.emotion-25::-webkit-input-placeholder {
+.emotion-27::-webkit-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-25::-moz-placeholder {
+.emotion-27::-moz-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-25:-ms-input-placeholder {
+.emotion-27:-ms-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-25::-ms-input-placeholder {
+.emotion-27::-ms-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-25:focus {
+.emotion-27:focus {
   outline: 0;
 }
 
-.emotion-25:invalid {
+.emotion-27:invalid {
   box-shadow: none;
 }
 
-.emotion-25::-webkit-search-decoration {
+.emotion-27::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25::-webkit-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27::-webkit-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25::-moz-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27::-moz-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:-ms-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25::-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27::-ms-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-webkit-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-webkit-input-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-moz-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-moz-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus:-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus:-ms-input-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-placeholder {
   opacity: 0.42;
 }
 
-.emotion-25.Mui-disabled {
+.emotion-27.Mui-disabled {
   opacity: 1;
   -webkit-text-fill-color: rgba(0, 0, 0, 0.38);
 }
 
-.emotion-25:-webkit-autofill {
+.emotion-27:-webkit-autofill {
   -webkit-animation-duration: 5000s;
   animation-duration: 5000s;
   -webkit-animation-name: mui-auto-fill;
   animation-name: mui-auto-fill;
 }
 
-.emotion-25:-webkit-autofill {
+.emotion-27:-webkit-autofill {
   border-radius: inherit;
 }
 
+<<<<<<< HEAD
 .emotion-26 {
+=======
+.emotion-28 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: flex;
   height: 0.01em;
   max-height: 2em;
@@ -838,7 +1078,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   margin-left: 8px;
 }
 
+<<<<<<< HEAD
 .emotion-27 {
+=======
+.emotion-29 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -879,38 +1126,38 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   margin-right: -12px;
 }
 
-.emotion-27::-moz-focus-inner {
+.emotion-29::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-27.Mui-disabled {
+.emotion-29.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-27 {
+  .emotion-29 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-27:hover {
+.emotion-29:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-27:hover {
+  .emotion-29:hover {
     background-color: transparent;
   }
 }
 
-.emotion-27.Mui-disabled {
+.emotion-29.Mui-disabled {
   background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-28 {
+.emotion-30 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -922,20 +1169,27 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   border-radius: inherit;
 }
 
-.emotion-31 {
+.emotion-42 {
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(2, 1fr);
 }
 
 @media (min-width:900px) {
-  .emotion-31 {
+  .emotion-42 {
     grid-column: 1/-1;
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
+<<<<<<< HEAD
 .emotion-33 {
+=======
+.emotion-44 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -950,7 +1204,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   grid-column: 1/-1;
 }
 
+<<<<<<< HEAD
 .emotion-51 {
+=======
+.emotion-62 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -965,14 +1226,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
 }
 
 @media (max-width:899.95px) {
-  .emotion-51 {
+  .emotion-62 {
     grid-column: 1/-1;
   }
 }
 
+<<<<<<< HEAD
 .emotion-57 {
   background-color: rgb(253, 237, 237);
   color: rgb(95, 33, 32);
+=======
+.emotion-68 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   border-radius: 4px;
@@ -981,15 +1248,26 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
+<<<<<<< HEAD
   display: flex;
   padding: 6px 16px;
+=======
+  background-color: transparent;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 6px 16px;
+  color: rgb(95, 33, 32);
+  background-color: rgb(253, 237, 237);
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
-.emotion-57 .MuiAlert-icon {
+.emotion-68 .MuiAlert-icon {
   color: #d32f2f;
 }
 
-.emotion-58 {
+.emotion-69 {
   margin-right: 12px;
   padding: 7px 0;
   display: flex;
@@ -997,7 +1275,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   opacity: 0.9;
 }
 
-.emotion-59 {
+.emotion-70 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -1014,13 +1292,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   font-size: inherit;
 }
 
-.emotion-60 {
+.emotion-71 {
   padding: 8px 0;
   min-width: 0;
   overflow: auto;
 }
 
+<<<<<<< HEAD
 .emotion-61 {
+=======
+.emotion-72 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1062,23 +1347,23 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   justify-self: flex-end;
 }
 
-.emotion-61::-moz-focus-inner {
+.emotion-72::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-61.Mui-disabled {
+.emotion-72.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-61 {
+  .emotion-72 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-61:hover {
+.emotion-72:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(163, 21, 69);
@@ -1086,26 +1371,26 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
 }
 
 @media (hover: none) {
-  .emotion-61:hover {
+  .emotion-72:hover {
     background-color: #e91e63;
   }
 }
 
-.emotion-61:active {
+.emotion-72:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-61.Mui-focusVisible {
+.emotion-72.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-61.Mui-disabled {
+.emotion-72.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-61:hover {
+.emotion-72:hover {
   box-shadow: none;
 }
 
@@ -1121,8 +1406,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
           data-shrink="false"
-          for=":r9:"
-          id=":r9:-label"
+          for=":ra:"
+          id=":ra:-label"
         >
           Vorname
         </label>
@@ -1133,7 +1418,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             aria-invalid="false"
             autocomplete="firstname"
             class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-            id=":r9:"
+            id=":ra:"
             name="firstName"
             type="text"
             value=""
@@ -1158,8 +1443,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
           data-shrink="false"
-          for=":ra:"
-          id=":ra:-label"
+          for=":rb:"
+          id=":rb:-label"
         >
           Nachname
         </label>
@@ -1170,7 +1455,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             aria-invalid="false"
             autocomplete="lastname"
             class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-            id=":ra:"
+            id=":rb:"
             name="name"
             type="text"
             value=""
@@ -1195,8 +1480,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
           data-shrink="false"
-          for=":rb:"
-          id=":rb:-label"
+          for=":rc:"
+          id=":rc:-label"
         >
           Email
         </label>
@@ -1207,7 +1492,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             aria-invalid="false"
             autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-            id=":rb:"
+            id=":rc:"
             name="email"
             type="email"
             value=""
@@ -1227,83 +1512,154 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         </div>
       </div>
       <div
-        class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-16"
-      >
-        <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
-          data-shrink="false"
-          for=":rc:"
-          id=":rc:-label"
-        >
-          Passwort
-        </label>
-        <div
-          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-24"
-        >
-          <input
-            aria-invalid="false"
-            autocomplete="new-password"
-            class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-25"
-            id=":rc:"
-            name="password"
-            type="password"
-            value=""
-          />
-          <div
-            class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-26"
-          >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-27"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-28"
-              />
-            </button>
-          </div>
-          <fieldset
-            aria-hidden="true"
-            class="MuiOutlinedInput-notchedOutline emotion-8"
-          >
-            <legend
-              class="emotion-9"
-            >
-              <span>
-                Passwort
-              </span>
-            </legend>
-          </fieldset>
-        </div>
-      </div>
-      <div
-        class="emotion-31 emotion-32"
+        class="emotion-22 emotion-23"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-33"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-16"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
             data-shrink="false"
             for=":rd:"
             id=":rd:-label"
+          >
+            Passwort
+          </label>
+          <div
+            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-26"
+          >
+            <input
+              aria-invalid="false"
+              autocomplete="new-password"
+              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-27"
+              id=":rd:"
+              name="password"
+              type="password"
+              value=""
+            />
+            <div
+              class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-28"
+            >
+              <button
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-29"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root emotion-30"
+                />
+              </button>
+            </div>
+            <fieldset
+              aria-hidden="true"
+              class="MuiOutlinedInput-notchedOutline emotion-8"
+            >
+              <legend
+                class="emotion-9"
+              >
+                <span>
+                  Passwort
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+        <div
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-16"
+        >
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
+            data-shrink="false"
+            for=":re:"
+            id=":re:-label"
+          >
+            Passwort wiederholen
+          </label>
+          <div
+            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-26"
+          >
+            <input
+              aria-invalid="false"
+              autocomplete="new-password"
+              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-27"
+              id=":re:"
+              name="passwordRepeated"
+              type="password"
+              value=""
+            />
+            <div
+              class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-28"
+            >
+              <button
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-29"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root emotion-30"
+                />
+              </button>
+            </div>
+            <fieldset
+              aria-hidden="true"
+              class="MuiOutlinedInput-notchedOutline emotion-8"
+            >
+              <legend
+                class="emotion-9"
+              >
+                <span>
+                  Passwort wiederholen
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div
+        class="emotion-42 emotion-43"
+      >
+        <div
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-44"
+        >
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
+            data-shrink="false"
+            for=":rf:"
+            id=":rf:-label"
           >
             Strasse und Hausnummer
           </label>
@@ -1314,7 +1670,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
               aria-invalid="false"
               autocomplete="address"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-              id=":rd:"
+              id=":rf:"
               name="address.streetAddress"
               type="text"
               value=""
@@ -1339,8 +1695,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
             data-shrink="false"
-            for=":re:"
-            id=":re:-label"
+            for=":rg:"
+            id=":rg:-label"
           >
             PLZ
           </label>
@@ -1351,7 +1707,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
               aria-invalid="false"
               autocomplete="zip"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-              id=":re:"
+              id=":rg:"
               name="address.zipCode"
               type="text"
               value=""
@@ -1376,8 +1732,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
             data-shrink="false"
-            for=":rf:"
-            id=":rf:-label"
+            for=":rh:"
+            id=":rh:-label"
           >
             Ort / Stadt
           </label>
@@ -1388,7 +1744,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
               aria-invalid="false"
               autocomplete="city"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-              id=":rf:"
+              id=":rh:"
               name="address.city"
               type="text"
               value=""
@@ -1408,13 +1764,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
           </div>
         </div>
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-51"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-62"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
             data-shrink="false"
-            for=":rg:"
-            id=":rg:-label"
+            for=":ri:"
+            id=":ri:-label"
           >
             Land
           </label>
@@ -1425,7 +1781,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
               aria-invalid="false"
               autocomplete="country"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-              id=":rg:"
+              id=":ri:"
               name="address.country"
               type="text"
               value=""
@@ -1447,15 +1803,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
       </div>
     </div>
     <div
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard emotion-57"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorError MuiAlert-standardError MuiAlert-standard emotion-68"
       role="alert"
     >
       <div
-        class="MuiAlert-icon emotion-58"
+        class="MuiAlert-icon emotion-69"
       >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-59"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-70"
           data-testid="ErrorOutlineIcon"
           focusable="false"
           viewBox="0 0 24 24"
@@ -1466,19 +1822,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         </svg>
       </div>
       <div
-        class="MuiAlert-message emotion-60"
+        class="MuiAlert-message emotion-71"
       >
         Something went wrong.
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-61"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-72"
       tabindex="0"
       type="submit"
     >
       Registrieren
       <span
-        class="MuiTouchRipple-root emotion-28"
+        class="MuiTouchRipple-root emotion-30"
       />
     </button>
   </form>
@@ -1809,7 +2165,28 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   border-color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-24 {
+.emotion-22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 0 50%;
+  -ms-flex: 1 0 50%;
+  flex: 1 0 50%;
+  -webkit-box-flex-flow: row;
+  -webkit-flex-flow: row;
+  -ms-flex-flow: row;
+  flex-flow: row;
+  gap: 24px;
+}
+
+@media (min-width:900px) {
+  .emotion-22 {
+    grid-column: 1/-1;
+  }
+}
+
+.emotion-26 {
   line-height: 1.4375em;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
@@ -1828,35 +2205,35 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   padding-right: 14px;
 }
 
-.emotion-24.Mui-disabled {
+.emotion-26.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
   cursor: default;
 }
 
-.emotion-24:hover .MuiOutlinedInput-notchedOutline {
+.emotion-26:hover .MuiOutlinedInput-notchedOutline {
   border-color: rgba(0, 0, 0, 0.87);
 }
 
 @media (hover: none) {
-  .emotion-24:hover .MuiOutlinedInput-notchedOutline {
+  .emotion-26:hover .MuiOutlinedInput-notchedOutline {
     border-color: rgba(0, 0, 0, 0.23);
   }
 }
 
-.emotion-24.Mui-focused .MuiOutlinedInput-notchedOutline {
+.emotion-26.Mui-focused .MuiOutlinedInput-notchedOutline {
   border-color: #e91e63;
   border-width: 2px;
 }
 
-.emotion-24.Mui-error .MuiOutlinedInput-notchedOutline {
+.emotion-26.Mui-error .MuiOutlinedInput-notchedOutline {
   border-color: #d32f2f;
 }
 
-.emotion-24.Mui-disabled .MuiOutlinedInput-notchedOutline {
+.emotion-26.Mui-disabled .MuiOutlinedInput-notchedOutline {
   border-color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-25 {
+.emotion-27 {
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
@@ -1877,95 +2254,102 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   padding-right: 0;
 }
 
-.emotion-25::-webkit-input-placeholder {
+.emotion-27::-webkit-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-25::-moz-placeholder {
+.emotion-27::-moz-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-25:-ms-input-placeholder {
+.emotion-27:-ms-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-25::-ms-input-placeholder {
+.emotion-27::-ms-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-25:focus {
+.emotion-27:focus {
   outline: 0;
 }
 
-.emotion-25:invalid {
+.emotion-27:invalid {
   box-shadow: none;
 }
 
-.emotion-25::-webkit-search-decoration {
+.emotion-27::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25::-webkit-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27::-webkit-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25::-moz-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27::-moz-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:-ms-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25::-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27::-ms-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-webkit-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-webkit-input-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-moz-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-moz-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus:-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus:-ms-input-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-placeholder {
   opacity: 0.42;
 }
 
-.emotion-25.Mui-disabled {
+.emotion-27.Mui-disabled {
   opacity: 1;
   -webkit-text-fill-color: rgba(0, 0, 0, 0.38);
 }
 
-.emotion-25:-webkit-autofill {
+.emotion-27:-webkit-autofill {
   -webkit-animation-duration: 5000s;
   animation-duration: 5000s;
   -webkit-animation-name: mui-auto-fill;
   animation-name: mui-auto-fill;
 }
 
-.emotion-25:-webkit-autofill {
+.emotion-27:-webkit-autofill {
   border-radius: inherit;
 }
 
+<<<<<<< HEAD
 .emotion-26 {
+=======
+.emotion-28 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: flex;
   height: 0.01em;
   max-height: 2em;
@@ -1978,7 +2362,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   margin-left: 8px;
 }
 
+<<<<<<< HEAD
 .emotion-27 {
+=======
+.emotion-29 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2019,38 +2410,38 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   margin-right: -12px;
 }
 
-.emotion-27::-moz-focus-inner {
+.emotion-29::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-27.Mui-disabled {
+.emotion-29.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-27 {
+  .emotion-29 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-27:hover {
+.emotion-29:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-27:hover {
+  .emotion-29:hover {
     background-color: transparent;
   }
 }
 
-.emotion-27.Mui-disabled {
+.emotion-29.Mui-disabled {
   background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-28 {
+.emotion-30 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -2062,20 +2453,27 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   border-radius: inherit;
 }
 
-.emotion-31 {
+.emotion-42 {
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(2, 1fr);
 }
 
 @media (min-width:900px) {
-  .emotion-31 {
+  .emotion-42 {
     grid-column: 1/-1;
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
+<<<<<<< HEAD
 .emotion-33 {
+=======
+.emotion-44 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2090,7 +2488,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   grid-column: 1/-1;
 }
 
+<<<<<<< HEAD
 .emotion-51 {
+=======
+.emotion-62 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2105,12 +2510,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
 }
 
 @media (max-width:899.95px) {
-  .emotion-51 {
+  .emotion-62 {
     grid-column: 1/-1;
   }
 }
 
-.emotion-57 {
+.emotion-68 {
   display: grid;
   grid-template-columns: minmax(max-content, 200px) 200px;
   -webkit-align-items: center;
@@ -2124,16 +2529,23 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   justify-content: flex-start;
 }
 
-.emotion-59 {
+.emotion-70 {
   height: 100%;
   display: grid;
 }
 
-.emotion-59 svg {
+.emotion-70 svg {
   height: 100%;
 }
 
+<<<<<<< HEAD
 .emotion-67 {
+=======
+.emotion-78 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2175,23 +2587,23 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   justify-self: flex-end;
 }
 
-.emotion-67::-moz-focus-inner {
+.emotion-78::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-67.Mui-disabled {
+.emotion-78.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-67 {
+  .emotion-78 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-67:hover {
+.emotion-78:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(163, 21, 69);
@@ -2199,26 +2611,26 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
 }
 
 @media (hover: none) {
-  .emotion-67:hover {
+  .emotion-78:hover {
     background-color: #e91e63;
   }
 }
 
-.emotion-67:active {
+.emotion-78:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-67.Mui-focusVisible {
+.emotion-78.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-67.Mui-disabled {
+.emotion-78.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-67:hover {
+.emotion-78:hover {
   box-shadow: none;
 }
 
@@ -2234,8 +2646,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
           data-shrink="false"
-          for=":rh:"
-          id=":rh:-label"
+          for=":rj:"
+          id=":rj:-label"
         >
           Vorname
         </label>
@@ -2246,7 +2658,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             aria-invalid="false"
             autocomplete="firstname"
             class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-            id=":rh:"
+            id=":rj:"
             name="firstName"
             type="text"
             value=""
@@ -2271,8 +2683,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
           data-shrink="false"
-          for=":ri:"
-          id=":ri:-label"
+          for=":rk:"
+          id=":rk:-label"
         >
           Nachname
         </label>
@@ -2283,7 +2695,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             aria-invalid="false"
             autocomplete="lastname"
             class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-            id=":ri:"
+            id=":rk:"
             name="name"
             type="text"
             value=""
@@ -2308,8 +2720,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
           data-shrink="false"
-          for=":rj:"
-          id=":rj:-label"
+          for=":rl:"
+          id=":rl:-label"
         >
           Email
         </label>
@@ -2320,7 +2732,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             aria-invalid="false"
             autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-            id=":rj:"
+            id=":rl:"
             name="email"
             type="email"
             value=""
@@ -2340,83 +2752,154 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         </div>
       </div>
       <div
-        class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-16"
-      >
-        <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
-          data-shrink="false"
-          for=":rk:"
-          id=":rk:-label"
-        >
-          Passwort
-        </label>
-        <div
-          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-24"
-        >
-          <input
-            aria-invalid="false"
-            autocomplete="new-password"
-            class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-25"
-            id=":rk:"
-            name="password"
-            type="password"
-            value=""
-          />
-          <div
-            class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-26"
-          >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-27"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-28"
-              />
-            </button>
-          </div>
-          <fieldset
-            aria-hidden="true"
-            class="MuiOutlinedInput-notchedOutline emotion-8"
-          >
-            <legend
-              class="emotion-9"
-            >
-              <span>
-                Passwort
-              </span>
-            </legend>
-          </fieldset>
-        </div>
-      </div>
-      <div
-        class="emotion-31 emotion-32"
+        class="emotion-22 emotion-23"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-33"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-16"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
             data-shrink="false"
-            for=":rl:"
-            id=":rl:-label"
+            for=":rm:"
+            id=":rm:-label"
+          >
+            Passwort
+          </label>
+          <div
+            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-26"
+          >
+            <input
+              aria-invalid="false"
+              autocomplete="new-password"
+              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-27"
+              id=":rm:"
+              name="password"
+              type="password"
+              value=""
+            />
+            <div
+              class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-28"
+            >
+              <button
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-29"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root emotion-30"
+                />
+              </button>
+            </div>
+            <fieldset
+              aria-hidden="true"
+              class="MuiOutlinedInput-notchedOutline emotion-8"
+            >
+              <legend
+                class="emotion-9"
+              >
+                <span>
+                  Passwort
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+        <div
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-16"
+        >
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
+            data-shrink="false"
+            for=":rn:"
+            id=":rn:-label"
+          >
+            Passwort wiederholen
+          </label>
+          <div
+            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-26"
+          >
+            <input
+              aria-invalid="false"
+              autocomplete="new-password"
+              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-27"
+              id=":rn:"
+              name="passwordRepeated"
+              type="password"
+              value=""
+            />
+            <div
+              class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-28"
+            >
+              <button
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-29"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root emotion-30"
+                />
+              </button>
+            </div>
+            <fieldset
+              aria-hidden="true"
+              class="MuiOutlinedInput-notchedOutline emotion-8"
+            >
+              <legend
+                class="emotion-9"
+              >
+                <span>
+                  Passwort wiederholen
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div
+        class="emotion-42 emotion-43"
+      >
+        <div
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-44"
+        >
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
+            data-shrink="false"
+            for=":ro:"
+            id=":ro:-label"
           >
             Strasse und Hausnummer
           </label>
@@ -2427,7 +2910,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
               aria-invalid="false"
               autocomplete="address"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-              id=":rl:"
+              id=":ro:"
               name="address.streetAddress"
               type="text"
               value=""
@@ -2452,8 +2935,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
             data-shrink="false"
-            for=":rm:"
-            id=":rm:-label"
+            for=":rp:"
+            id=":rp:-label"
           >
             PLZ
           </label>
@@ -2464,7 +2947,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
               aria-invalid="false"
               autocomplete="zip"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-              id=":rm:"
+              id=":rp:"
               name="address.zipCode"
               type="text"
               value=""
@@ -2489,8 +2972,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
             data-shrink="false"
-            for=":rn:"
-            id=":rn:-label"
+            for=":rq:"
+            id=":rq:-label"
           >
             Ort / Stadt
           </label>
@@ -2501,7 +2984,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
               aria-invalid="false"
               autocomplete="city"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-              id=":rn:"
+              id=":rq:"
               name="address.city"
               type="text"
               value=""
@@ -2521,13 +3004,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
           </div>
         </div>
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-51"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-62"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
             data-shrink="false"
-            for=":ro:"
-            id=":ro:-label"
+            for=":rr:"
+            id=":rr:-label"
           >
             Land
           </label>
@@ -2538,7 +3021,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
               aria-invalid="false"
               autocomplete="country"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-              id=":ro:"
+              id=":rr:"
               name="address.country"
               type="text"
               value=""
@@ -2560,10 +3043,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
       </div>
     </div>
     <div
-      class="emotion-57 emotion-58"
+      class="emotion-68 emotion-69"
     >
       <div
-        class="emotion-59 emotion-60"
+        class="emotion-70 emotion-71"
       >
         <svg
           viewBox="0,0,200,200"
@@ -2627,8 +3110,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
           data-shrink="false"
-          for=":rp:"
-          id=":rp:-label"
+          for=":rs:"
+          id=":rs:-label"
         >
           Captcha
         </label>
@@ -2638,7 +3121,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
           <input
             aria-invalid="false"
             class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-            id=":rp:"
+            id=":rs:"
             name="challengeAnswer.challengeSolution"
             type="text"
             value=""
@@ -2659,13 +3142,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-67"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-78"
       tabindex="0"
       type="submit"
     >
       Registrieren
       <span
-        class="MuiTouchRipple-root emotion-28"
+        class="MuiTouchRipple-root emotion-30"
       />
     </button>
   </form>
@@ -2996,7 +3479,28 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   border-color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-24 {
+.emotion-22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 0 50%;
+  -ms-flex: 1 0 50%;
+  flex: 1 0 50%;
+  -webkit-box-flex-flow: row;
+  -webkit-flex-flow: row;
+  -ms-flex-flow: row;
+  flex-flow: row;
+  gap: 24px;
+}
+
+@media (min-width:900px) {
+  .emotion-22 {
+    grid-column: 1/-1;
+  }
+}
+
+.emotion-26 {
   line-height: 1.4375em;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
@@ -3015,35 +3519,35 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   padding-right: 14px;
 }
 
-.emotion-24.Mui-disabled {
+.emotion-26.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
   cursor: default;
 }
 
-.emotion-24:hover .MuiOutlinedInput-notchedOutline {
+.emotion-26:hover .MuiOutlinedInput-notchedOutline {
   border-color: rgba(0, 0, 0, 0.87);
 }
 
 @media (hover: none) {
-  .emotion-24:hover .MuiOutlinedInput-notchedOutline {
+  .emotion-26:hover .MuiOutlinedInput-notchedOutline {
     border-color: rgba(0, 0, 0, 0.23);
   }
 }
 
-.emotion-24.Mui-focused .MuiOutlinedInput-notchedOutline {
+.emotion-26.Mui-focused .MuiOutlinedInput-notchedOutline {
   border-color: #e91e63;
   border-width: 2px;
 }
 
-.emotion-24.Mui-error .MuiOutlinedInput-notchedOutline {
+.emotion-26.Mui-error .MuiOutlinedInput-notchedOutline {
   border-color: #d32f2f;
 }
 
-.emotion-24.Mui-disabled .MuiOutlinedInput-notchedOutline {
+.emotion-26.Mui-disabled .MuiOutlinedInput-notchedOutline {
   border-color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-25 {
+.emotion-27 {
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
@@ -3064,95 +3568,102 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   padding-right: 0;
 }
 
-.emotion-25::-webkit-input-placeholder {
+.emotion-27::-webkit-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-25::-moz-placeholder {
+.emotion-27::-moz-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-25:-ms-input-placeholder {
+.emotion-27:-ms-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-25::-ms-input-placeholder {
+.emotion-27::-ms-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-25:focus {
+.emotion-27:focus {
   outline: 0;
 }
 
-.emotion-25:invalid {
+.emotion-27:invalid {
   box-shadow: none;
 }
 
-.emotion-25::-webkit-search-decoration {
+.emotion-27::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25::-webkit-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27::-webkit-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25::-moz-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27::-moz-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:-ms-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25::-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27::-ms-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-webkit-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-webkit-input-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-moz-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-moz-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus:-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus:-ms-input-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-placeholder {
   opacity: 0.42;
 }
 
-.emotion-25.Mui-disabled {
+.emotion-27.Mui-disabled {
   opacity: 1;
   -webkit-text-fill-color: rgba(0, 0, 0, 0.38);
 }
 
-.emotion-25:-webkit-autofill {
+.emotion-27:-webkit-autofill {
   -webkit-animation-duration: 5000s;
   animation-duration: 5000s;
   -webkit-animation-name: mui-auto-fill;
   animation-name: mui-auto-fill;
 }
 
-.emotion-25:-webkit-autofill {
+.emotion-27:-webkit-autofill {
   border-radius: inherit;
 }
 
+<<<<<<< HEAD
 .emotion-26 {
+=======
+.emotion-28 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: flex;
   height: 0.01em;
   max-height: 2em;
@@ -3165,7 +3676,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   margin-left: 8px;
 }
 
+<<<<<<< HEAD
 .emotion-27 {
+=======
+.emotion-29 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3206,38 +3724,38 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   margin-right: -12px;
 }
 
-.emotion-27::-moz-focus-inner {
+.emotion-29::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-27.Mui-disabled {
+.emotion-29.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-27 {
+  .emotion-29 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-27:hover {
+.emotion-29:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-27:hover {
+  .emotion-29:hover {
     background-color: transparent;
   }
 }
 
-.emotion-27.Mui-disabled {
+.emotion-29.Mui-disabled {
   background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-28 {
+.emotion-30 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -3249,20 +3767,27 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   border-radius: inherit;
 }
 
-.emotion-31 {
+.emotion-42 {
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(2, 1fr);
 }
 
 @media (min-width:900px) {
-  .emotion-31 {
+  .emotion-42 {
     grid-column: 1/-1;
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
+<<<<<<< HEAD
 .emotion-33 {
+=======
+.emotion-44 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -3277,7 +3802,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   grid-column: 1/-1;
 }
 
+<<<<<<< HEAD
 .emotion-51 {
+=======
+.emotion-62 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -3292,12 +3824,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
 }
 
 @media (max-width:899.95px) {
-  .emotion-51 {
+  .emotion-62 {
     grid-column: 1/-1;
   }
 }
 
-.emotion-57 {
+.emotion-68 {
   display: grid;
   grid-template-columns: minmax(max-content, 200px) 200px;
   -webkit-align-items: center;
@@ -3311,16 +3843,23 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   justify-content: flex-start;
 }
 
-.emotion-59 {
+.emotion-70 {
   height: 100%;
   display: grid;
 }
 
-.emotion-59 svg {
+.emotion-70 svg {
   height: 100%;
 }
 
+<<<<<<< HEAD
 .emotion-67 {
+=======
+.emotion-78 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+>>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3362,23 +3901,23 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
   justify-self: flex-end;
 }
 
-.emotion-67::-moz-focus-inner {
+.emotion-78::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-67.Mui-disabled {
+.emotion-78.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-67 {
+  .emotion-78 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-67:hover {
+.emotion-78:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(163, 21, 69);
@@ -3386,26 +3925,26 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
 }
 
 @media (hover: none) {
-  .emotion-67:hover {
+  .emotion-78:hover {
     background-color: #e91e63;
   }
 }
 
-.emotion-67:active {
+.emotion-78:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-67.Mui-focusVisible {
+.emotion-78.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-67.Mui-disabled {
+.emotion-78.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-67:hover {
+.emotion-78:hover {
   box-shadow: none;
 }
 
@@ -3421,8 +3960,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
           data-shrink="false"
-          for=":rq:"
-          id=":rq:-label"
+          for=":rt:"
+          id=":rt:-label"
         >
           Vorname
         </label>
@@ -3433,7 +3972,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             aria-invalid="false"
             autocomplete="firstname"
             class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-            id=":rq:"
+            id=":rt:"
             name="firstName"
             type="text"
             value=""
@@ -3458,8 +3997,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
           data-shrink="false"
-          for=":rr:"
-          id=":rr:-label"
+          for=":ru:"
+          id=":ru:-label"
         >
           Nachname
         </label>
@@ -3470,7 +4009,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             aria-invalid="false"
             autocomplete="lastname"
             class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-            id=":rr:"
+            id=":ru:"
             name="name"
             type="text"
             value=""
@@ -3495,8 +4034,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
           data-shrink="false"
-          for=":rs:"
-          id=":rs:-label"
+          for=":rv:"
+          id=":rv:-label"
         >
           Email
         </label>
@@ -3507,7 +4046,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
             aria-invalid="false"
             autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-            id=":rs:"
+            id=":rv:"
             name="email"
             type="email"
             value=""
@@ -3527,83 +4066,154 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         </div>
       </div>
       <div
-        class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-16"
-      >
-        <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
-          data-shrink="false"
-          for=":rt:"
-          id=":rt:-label"
-        >
-          Passwort
-        </label>
-        <div
-          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-24"
-        >
-          <input
-            aria-invalid="false"
-            autocomplete="new-password"
-            class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-25"
-            id=":rt:"
-            name="password"
-            type="password"
-            value=""
-          />
-          <div
-            class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-26"
-          >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-27"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-28"
-              />
-            </button>
-          </div>
-          <fieldset
-            aria-hidden="true"
-            class="MuiOutlinedInput-notchedOutline emotion-8"
-          >
-            <legend
-              class="emotion-9"
-            >
-              <span>
-                Passwort
-              </span>
-            </legend>
-          </fieldset>
-        </div>
-      </div>
-      <div
-        class="emotion-31 emotion-32"
+        class="emotion-22 emotion-23"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-33"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-16"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
             data-shrink="false"
-            for=":ru:"
-            id=":ru:-label"
+            for=":r10:"
+            id=":r10:-label"
+          >
+            Passwort
+          </label>
+          <div
+            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-26"
+          >
+            <input
+              aria-invalid="false"
+              autocomplete="new-password"
+              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-27"
+              id=":r10:"
+              name="password"
+              type="password"
+              value=""
+            />
+            <div
+              class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-28"
+            >
+              <button
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-29"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root emotion-30"
+                />
+              </button>
+            </div>
+            <fieldset
+              aria-hidden="true"
+              class="MuiOutlinedInput-notchedOutline emotion-8"
+            >
+              <legend
+                class="emotion-9"
+              >
+                <span>
+                  Passwort
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+        <div
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-16"
+        >
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
+            data-shrink="false"
+            for=":r11:"
+            id=":r11:-label"
+          >
+            Passwort wiederholen
+          </label>
+          <div
+            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-26"
+          >
+            <input
+              aria-invalid="false"
+              autocomplete="new-password"
+              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-27"
+              id=":r11:"
+              name="passwordRepeated"
+              type="password"
+              value=""
+            />
+            <div
+              class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-28"
+            >
+              <button
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-29"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root emotion-30"
+                />
+              </button>
+            </div>
+            <fieldset
+              aria-hidden="true"
+              class="MuiOutlinedInput-notchedOutline emotion-8"
+            >
+              <legend
+                class="emotion-9"
+              >
+                <span>
+                  Passwort wiederholen
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div
+        class="emotion-42 emotion-43"
+      >
+        <div
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-44"
+        >
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
+            data-shrink="false"
+            for=":r12:"
+            id=":r12:-label"
           >
             Strasse und Hausnummer
           </label>
@@ -3614,7 +4224,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
               aria-invalid="false"
               autocomplete="address"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-              id=":ru:"
+              id=":r12:"
               name="address.streetAddress"
               type="text"
               value=""
@@ -3639,8 +4249,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
             data-shrink="false"
-            for=":rv:"
-            id=":rv:-label"
+            for=":r13:"
+            id=":r13:-label"
           >
             PLZ
           </label>
@@ -3651,7 +4261,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
               aria-invalid="false"
               autocomplete="zip"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-              id=":rv:"
+              id=":r13:"
               name="address.zipCode"
               type="text"
               value=""
@@ -3676,8 +4286,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
             data-shrink="false"
-            for=":r10:"
-            id=":r10:-label"
+            for=":r14:"
+            id=":r14:-label"
           >
             Ort / Stadt
           </label>
@@ -3688,7 +4298,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
               aria-invalid="false"
               autocomplete="city"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-              id=":r10:"
+              id=":r14:"
               name="address.city"
               type="text"
               value=""
@@ -3708,13 +4318,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
           </div>
         </div>
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-51"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-62"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
             data-shrink="false"
-            for=":r11:"
-            id=":r11:-label"
+            for=":r15:"
+            id=":r15:-label"
           >
             Land
           </label>
@@ -3725,7 +4335,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
               aria-invalid="false"
               autocomplete="country"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-              id=":r11:"
+              id=":r15:"
               name="address.country"
               type="text"
               value=""
@@ -3747,10 +4357,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
       </div>
     </div>
     <div
-      class="emotion-57 emotion-58"
+      class="emotion-68 emotion-69"
     >
       <div
-        class="emotion-59 emotion-60"
+        class="emotion-70 emotion-71"
       >
         <svg
           viewBox="0,0,200,200"
@@ -3814,8 +4424,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
           data-shrink="false"
-          for=":r12:"
-          id=":r12:-label"
+          for=":r16:"
+          id=":r16:-label"
         >
           Captcha
         </label>
@@ -3825,7 +4435,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
           <input
             aria-invalid="false"
             class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-            id=":r12:"
+            id=":r16:"
             name="challengeAnswer.challengeSolution"
             type="text"
             value=""
@@ -3846,13 +4456,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-25:focus::-ms-input-
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-67"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-78"
       tabindex="0"
       type="submit"
     >
       Registrieren
       <span
-        class="MuiTouchRipple-root emotion-28"
+        class="MuiTouchRipple-root emotion-30"
       />
     </button>
   </form>
@@ -3874,15 +4484,15 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 -           data-shrink="false"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="true"
-            for=":r13:"
-            id=":r13:-label"
+            for=":r17:"
+            id=":r17:-label"
           >
             Vorname
           </label>
 @@ -24,18 +24,18 @@
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r13:"
+              id=":r17:"
               name="firstName"
               type="text"
 -             value=""
@@ -3910,15 +4520,15 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 -           data-shrink="false"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="true"
-            for=":r14:"
-            id=":r14:-label"
+            for=":r18:"
+            id=":r18:-label"
           >
             Nachname
           </label>
 @@ -61,18 +61,18 @@
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r14:"
+              id=":r18:"
               name="name"
               type="text"
 -             value=""
@@ -3946,15 +4556,15 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 -           data-shrink="false"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="true"
-            for=":r15:"
-            id=":r15:-label"
+            for=":r19:"
+            id=":r19:-label"
           >
             Email
           </label>
 @@ -98,18 +98,18 @@
               autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r15:"
+              id=":r19:"
               name="email"
               type="email"
 -             value=""
@@ -3972,48 +4582,89 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
                   Email
                 </span>
               </legend>
-@@ -118,12 +118,12 @@
-        </div>
-        <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+@@ -121,12 +121,12 @@
         >
-          <label
--           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
--           data-shrink="false"
-+           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-+           data-shrink="true"
-            for=":r16:"
-            id=":r16:-label"
+          <div
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
           >
-            Passwort
-          </label>
-@@ -135,11 +135,11 @@
-              autocomplete="new-password"
-              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r16:"
-              name="password"
-              type="password"
--             value=""
-+             value="12345678"
-            />
-            <div
-              class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
+            <label
+-             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
+-             data-shrink="false"
++             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
++             data-shrink="true"
+              for=":r1a:"
+              id=":r1a:-label"
             >
-              <button
-@@ -172,11 +172,11 @@
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
--               class="css-yjsfm1"
-+               class="css-14lo706"
+              Passwort
+            </label>
+@@ -138,11 +138,11 @@
+                autocomplete="new-password"
+                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
+                id=":r1a:"
+                name="password"
+                type="password"
+-               value=""
++               value="12345678"
+              />
+              <div
+                class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
-                <span>
-                  Passwort
-                </span>
-              </legend>
+                <button
+@@ -175,11 +175,11 @@
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+-                 class="css-yjsfm1"
++                 class="css-14lo706"
+                >
+                  <span>
+                    Passwort
+                  </span>
+                </legend>
 @@ -188,12 +188,12 @@
+          </div>
+          <div
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+          >
+            <label
+-             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
+-             data-shrink="false"
++             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
++             data-shrink="true"
+              for=":r1b:"
+              id=":r1b:-label"
+            >
+              Passwort wiederholen
+            </label>
+@@ -205,11 +205,11 @@
+                autocomplete="new-password"
+                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
+                id=":r1b:"
+                name="passwordRepeated"
+                type="password"
+-               value=""
++               value="12345678"
+              />
+              <div
+                class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
+              >
+                <button
+@@ -242,11 +242,11 @@
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+-                 class="css-yjsfm1"
++                 class="css-14lo706"
+                >
+                  <span>
+                    Passwort wiederholen
+                  </span>
+                </legend>
+@@ -259,12 +259,12 @@
         >
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1706pe8-MuiFormControl-root-MuiTextField-root"
@@ -4023,15 +4674,15 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r17:"
-              id=":r17:-label"
+              for=":r1c:"
+              id=":r1c:-label"
             >
               Strasse und Hausnummer
             </label>
-@@ -205,18 +205,18 @@
+@@ -276,18 +276,18 @@
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r17:"
+                id=":r1c:"
                 name="address.streetAddress"
                 type="text"
 -               value=""
@@ -4049,7 +4700,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
                     Strasse und Hausnummer
                   </span>
                 </legend>
-@@ -225,12 +225,12 @@
+@@ -296,12 +296,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -4059,15 +4710,15 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r18:"
-              id=":r18:-label"
+              for=":r1d:"
+              id=":r1d:-label"
             >
               PLZ
             </label>
-@@ -242,18 +242,18 @@
+@@ -313,18 +313,18 @@
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r18:"
+                id=":r1d:"
                 name="address.zipCode"
                 type="text"
 -               value=""
@@ -4085,7 +4736,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
                     PLZ
                   </span>
                 </legend>
-@@ -262,12 +262,12 @@
+@@ -333,12 +333,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -4095,15 +4746,15 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r19:"
-              id=":r19:-label"
+              for=":r1e:"
+              id=":r1e:-label"
             >
               Ort / Stadt
             </label>
-@@ -279,18 +279,18 @@
+@@ -350,18 +350,18 @@
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r19:"
+                id=":r1e:"
                 name="address.city"
                 type="text"
 -               value=""
@@ -4121,7 +4772,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
                     Ort / Stadt
                   </span>
                 </legend>
-@@ -299,12 +299,12 @@
+@@ -370,12 +370,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-8qobka-MuiFormControl-root-MuiTextField-root"
@@ -4131,15 +4782,15 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r1a:"
-              id=":r1a:-label"
+              for=":r1f:"
+              id=":r1f:-label"
             >
               Land
             </label>
-@@ -316,18 +316,18 @@
+@@ -387,18 +387,18 @@
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r1a:"
+                id=":r1f:"
                 name="address.country"
                 type="text"
 -               value=""
@@ -4157,7 +4808,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
                     Land
                   </span>
                 </legend>
-@@ -400,12 +400,12 @@
+@@ -471,12 +471,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -4167,15 +4818,15 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 -           data-shrink="false"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="true"
-            for=":r1b:"
-            id=":r1b:-label"
+            for=":r1g:"
+            id=":r1g:-label"
           >
             Captcha
           </label>
-@@ -416,25 +416,50 @@
+@@ -487,25 +487,198 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1b:"
+              id=":r1g:"
               name="challengeAnswer.challengeSolution"
               type="text"
 -             value=""
@@ -4196,9 +4847,9 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
             </fieldset>
 +         </div>
 +       </div>
-      </div>
++     </div>
 +     <div
-+       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorError MuiAlert-standardError MuiAlert-standard css-1iznk5b-MuiPaper-root-MuiAlert-root"
 +       role="alert"
 +     >
 +       <div
@@ -4215,14 +4866,162 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 +             d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
 +           />
 +         </svg>
-+       </div>
+        </div>
 +       <div
 +         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
 +       >
-+         Cannot read properties of undefined (reading 'registerMember')
++         No more mocked responses for the query: mutation Register($name: String!, $firstName: String, $preferredName: String, $birthday: DateTime, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
++   registerMember(
++     name: $name
++     firstName: $firstName
++     preferredName: $preferredName
++     birthday: $birthday
++     address: $address
++     email: $email
++     password: $password
++     challengeAnswer: $challengeAnswer
++   ) {
++     user {
++       ...FullUser
++       __typename
++     }
++     session {
++       ...FullUserSession
++       __typename
++     }
++     __typename
++   }
++ }
++
++ fragment FullUser on User {
++   id
++   name
++   firstName
++   preferredName
++   flair
++   birthday
++   email
++   address {
++     ...FullAddress
++     __typename
++   }
++   paymentProviderCustomers {
++     ...FullPaymentProviderCustomer
++     __typename
++   }
++   oauth2Accounts {
++     ...FullOAuth2Account
++     __typename
++   }
++   image {
++     ...FullImage
++     __typename
++   }
++   properties {
++     ...FullProperty
++     __typename
++   }
++   __typename
++ }
++
++ fragment FullAddress on UserAddress {
++   company
++   streetAddress
++   streetAddress2
++   zipCode
++   city
++   country
++   __typename
++ }
++
++ fragment FullPaymentProviderCustomer on PaymentProviderCustomer {
++   paymentProviderID
++   customerID
++   __typename
++ }
++
++ fragment FullOAuth2Account on OAuth2Account {
++   type
++   provider
++   scope
++   __typename
++ }
++
++ fragment FullImage on Image {
++   id
++   createdAt
++   modifiedAt
++   filename
++   format
++   mimeType
++   extension
++   width
++   height
++   fileSize
++   title
++   description
++   tags
++   source
++   link
++   license
++   focalPoint {
++     x
++     y
++     __typename
++   }
++   ...ImageURLs
++   __typename
++ }
++
++ fragment ImageURLs on Image {
++   url
++   xl: transformURL(input: {width: 1200, output: PNG, quality: 0.8})
++   l: transformURL(input: {width: 1000, output: PNG, quality: 0.8})
++   m: transformURL(input: {width: 800, output: PNG, quality: 0.8})
++   s: transformURL(input: {width: 500, output: PNG, quality: 0.8})
++   xs: transformURL(input: {width: 300, output: PNG, quality: 0.8})
++   xxs: transformURL(input: {width: 200, output: PNG, quality: 0.8})
++   xlSquare: transformURL(
++     input: {width: 1200, height: 1200, output: PNG, quality: 0.8}
++   )
++   lSquare: transformURL(
++     input: {width: 1000, height: 1000, output: PNG, quality: 0.8}
++   )
++   mSquare: transformURL(
++     input: {width: 800, height: 800, output: PNG, quality: 0.8}
++   )
++   sSquare: transformURL(
++     input: {width: 500, height: 500, output: PNG, quality: 0.8}
++   )
++   xsSquare: transformURL(
++     input: {width: 300, height: 300, output: PNG, quality: 0.8}
++   )
++   xxsSquare: transformURL(
++     input: {width: 200, height: 200, output: PNG, quality: 0.8}
++   )
++   __typename
++ }
++
++ fragment FullProperty on PublicProperties {
++   key
++   value
++   __typename
++ }
++
++ fragment FullUserSession on UserSession {
++   token
++   expiresAt
++   createdAt
++   __typename
++ }
++ Expected variables: {"challengeAnswer":{"challengeID":"MTY4NjY2MzEyMDU0MjtGOHpxUEhscldLL0I5a0t4aVdtaTQrMDRob21iRG5sMm5yWEJob0YybUFjPTs0NzI1","challengeSolution":"1"},"firstName":"Foo","name":"Bar","email":"foobar@email.com","password":"12345678","passwordRepeated":"12345678","address":{"streetAddress":"Musterstrasse 1","zipCode":"8047","city":"Zürich","country":"Schweiz"}}
++
++ Failed to match 1 mock for this query. The mocked response had the following variables:
++   {"name":"Bar","email":"foobar@email.com","challengeAnswer":{"challengeSolution":"1","challengeID":"MTY4NjY2MzEyMDU0MjtGOHpxUEhscldLL0I5a0t4aVdtaTQrMDRob21iRG5sMm5yWEJob0YybUFjPTs0NzI1"},"firstName":"Foo","address":{"streetAddress":"Musterstrasse 1","zipCode":"8047","city":"Zürich","country":"Schweiz"},"password":"12345678"}
++
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-qgfqkk-MuiButtonBase-root-MuiButton-root-RegistrationForm"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-qgfqkk-MuiButtonBase-root-MuiButton-root-RegistrationForm"
         tabindex="0""
 `;

@@ -45,6 +45,9 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -872,6 +875,9 @@ exports[`CommentRatings should render Default 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -1651,6 +1657,9 @@ exports[`CommentRatings should render OverridenRatings 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -2584,6 +2593,9 @@ exports[`CommentRatings should render ReadOnly 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;
 }
@@ -3072,6 +3084,9 @@ exports[`CommentRatings should render Single 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -3378,6 +3393,9 @@ exports[`CommentRatings should render UserRatings 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -4324,7 +4342,7 @@ exports[`CommentRatings should render WithRateError 1`] = `
 +       </div>
 +     </div>
 +     <div
-+       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorError MuiAlert-standardError MuiAlert-standard css-1iznk5b-MuiPaper-root-MuiAlert-root"
 +       role="alert"
 +     >
 +       <div

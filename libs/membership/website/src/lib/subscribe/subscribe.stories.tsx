@@ -350,6 +350,19 @@ const fillRequired: StoryObj['play'] = async ctx => {
   })
 }
 
+const fillBirthday: StoryObj['play'] = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement)
+
+  const input = canvas.getByLabelText('Geburtstag', {
+    selector: 'input'
+  })
+
+  await step('Enter birthday', async () => {
+    await userEvent.click(input)
+    await userEvent.type(input, '09081994')
+  })
+}
+
 const fillAddress: StoryObj['play'] = async ctx => {
   const {step} = ctx
 
@@ -520,6 +533,30 @@ export const OnlyPreferredNameInvalid: StoryObj<typeof Subscribe> = {
   play: waitForInitialDataIsSet(async ctx => {
     await clickSubscribe(ctx)
   })
+}
+
+export const OnlyBirthday: StoryObj<typeof Subscribe> = {
+  ...LoggedOut,
+  args: {
+    ...LoggedOut.args,
+    fields: ['birthday']
+  }
+}
+
+export const OnlyBirthdayFilled: StoryObj<typeof Subscribe> = {
+  ...OnlyBirthday,
+  play: async ctx => {
+    await fillRequired(ctx)
+    await fillBirthday(ctx)
+    await clickSubscribe(ctx)
+  }
+}
+
+export const OnlyBirthdayInvalid: StoryObj<typeof Subscribe> = {
+  ...OnlyBirthday,
+  play: async ctx => {
+    await clickSubscribe(ctx)
+  }
 }
 
 export const OnlyAddress: StoryObj<typeof Subscribe> = {
