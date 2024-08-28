@@ -3,11 +3,15 @@ import {Logger} from '@nestjs/common'
 import {NestFactory} from '@nestjs/core'
 import {AppModule} from './nestapp/app.module'
 import {MediaAdapterService} from '@wepublish/image/api'
-import {PaymentsService} from '@wepublish/payment/api'
+import {PaymentProviderService} from '@wepublish/payment/api'
 import {MailContext} from '@wepublish/mail/api'
 import helmet from 'helmet'
+import {GatewayModule} from './nestapp/gateway.module'
 
 async function bootstrap() {
+  const port = process.env.PORT ?? 4000
+  const privatePort = +port + 1
+
   const nestApp = await NestFactory.create(AppModule)
   nestApp.enableCors({
     origin: true,
@@ -15,13 +19,20 @@ async function bootstrap() {
   })
   nestApp.use(helmet())
   const mediaAdapter = nestApp.get(MediaAdapterService)
-  const paymentProviders = nestApp.get(PaymentsService).paymentProviders
+  const paymentProviders = nestApp.get(PaymentProviderService).paymentProviders
   const mailProvider = nestApp.get(MailContext).mailProvider
-  const port = process.env.PORT ?? 4000
-  const expressApp = nestApp.getHttpAdapter().getInstance()
+  const privateExpressApp = nestApp.getHttpAdapter().getInstance()
+
+  const gatewayApp = await NestFactory.create(GatewayModule)
+  gatewayApp.enableCors({
+    origin: true,
+    credentials: true
+  })
+  const publicExpressApp = gatewayApp.getHttpAdapter().getInstance()
 
   await runServer({
-    expressApp,
+    privateExpressApp,
+    publicExpressApp,
     mediaAdapter,
     paymentProviders,
     mailProvider
@@ -30,8 +41,11 @@ async function bootstrap() {
     process.exit(1)
   })
 
-  await nestApp.listen(port)
-  Logger.log(`🚀 Application is running on: http://localhost:${port}`)
+  await nestApp.listen(privatePort)
+  Logger.log(`🚀 Private api is running on: http://localhost:${privatePort}`)
+
+  await gatewayApp.listen(port)
+  Logger.log(`🚀 Public api is running on: http://localhost:${port}`)
 }
 
 bootstrap()

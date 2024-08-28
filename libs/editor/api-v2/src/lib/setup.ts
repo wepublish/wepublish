@@ -49,7 +49,7 @@ export function getApiClientV2() {
   const {apiURL} = getSettings()
 
   return new ApolloClient({
-    link: authLink.concat(createHttpLink({uri: `${apiURL}/v2`, fetch})),
+    link: authLink.concat(createHttpLink({uri: `${apiURL}/v1`, fetch})),
     cache: new InMemoryCache()
   })
 }
