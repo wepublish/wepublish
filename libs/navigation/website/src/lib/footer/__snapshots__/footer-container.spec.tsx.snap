@@ -3,7 +3,6 @@
 exports[`Footer Container should render Default 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;
@@ -88,7 +87,6 @@ exports[`Footer Container should render Default 1`] = `
 exports[`Footer Container should render WithClassName 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;
@@ -173,7 +171,6 @@ exports[`Footer Container should render WithClassName 1`] = `
 exports[`Footer Container should render WithEmotion 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;

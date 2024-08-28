@@ -12,18 +12,15 @@ exports[`AuthorList should render Default 1`] = `
 .emotion-2 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
   text-decoration-color: rgba(233, 30, 99, 0.4);
   display: grid;
   grid-template-rows: max-content 1fr;
   gap: 24px;
   width: 240px;
   text-align: center;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
 }
 
 .emotion-2:hover {
@@ -501,18 +498,15 @@ exports[`AuthorList should render WithClassName 1`] = `
 .emotion-2 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
   text-decoration-color: rgba(233, 30, 99, 0.4);
   display: grid;
   grid-template-rows: max-content 1fr;
   gap: 24px;
   width: 240px;
   text-align: center;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
 }
 
 .emotion-2:hover {
@@ -990,18 +984,15 @@ exports[`AuthorList should render WithEmotion 1`] = `
 .emotion-2 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
   text-decoration-color: rgba(233, 30, 99, 0.4);
   display: grid;
   grid-template-rows: max-content 1fr;
   gap: 24px;
   width: 240px;
   text-align: center;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
 }
 
 .emotion-2:hover {
@@ -1509,18 +1500,15 @@ exports[`AuthorList should render WithoutImage 1`] = `
 .emotion-2 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
   text-decoration-color: rgba(233, 30, 99, 0.4);
   display: grid;
   grid-template-rows: max-content 1fr;
   gap: 24px;
   width: 240px;
   text-align: center;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
 }
 
 .emotion-2:hover {
@@ -1918,18 +1906,15 @@ exports[`AuthorList should render WithoutJobTitle 1`] = `
 .emotion-2 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
   text-decoration-color: rgba(233, 30, 99, 0.4);
   display: grid;
   grid-template-rows: max-content 1fr;
   gap: 24px;
   width: 240px;
   text-align: center;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
 }
 
 .emotion-2:hover {

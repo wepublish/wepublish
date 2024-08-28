@@ -22,6 +22,8 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {EmotionCache} from '@emotion/cache'
+import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 
 setDefaultOptions({
   locale: de
@@ -87,78 +89,80 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
-}>
+}> & {emotionCache?: EmotionCache}
 
-function CustomApp({Component, pageProps}: CustomAppProps) {
+function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'We.Publish'
 
   return (
-    <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
-      <WebsiteProvider>
-        <WebsiteBuilderProvider
-          Head={Head}
-          Script={Script}
-          elements={{Link: NextWepublishLink}}
-          date={{format: dateFormatter}}
-          meta={{siteTitle}}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
+    <AppCacheProvider emotionCache={emotionCache}>
+      <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
+        <WebsiteProvider>
+          <WebsiteBuilderProvider
+            Head={Head}
+            Script={Script}
+            elements={{Link: NextWepublishLink}}
+            date={{format: dateFormatter}}
+            meta={{siteTitle}}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
 
-            <Head>
-              <title key="title">{siteTitle}</title>
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <Head>
+                <title key="title">{siteTitle}</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-              {/* Feeds */}
-              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+                {/* Feeds */}
+                <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+                <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+                <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
 
-              {/* Sitemap */}
-              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+                {/* Sitemap */}
+                <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
-              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-              <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-              <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-              <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-              <link rel="manifest" href="/site.webmanifest" />
-              <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-              <meta name="msapplication-TileColor" content="#ffffff" />
-              <meta name="theme-color" content="#ffffff" />
-            </Head>
+                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                <link rel="manifest" href="/site.webmanifest" />
+                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
+                <meta name="msapplication-TileColor" content="#ffffff" />
+                <meta name="theme-color" content="#ffffff" />
+              </Head>
 
-            <Spacer>
-              <NavBar
-                categorySlugs={[['categories', 'about-us']]}
-                slug="main"
-                headerSlug="header"
+              <Spacer>
+                <NavBar
+                  categorySlugs={[['categories', 'about-us']]}
+                  slug="main"
+                  headerSlug="header"
+                />
+
+                <main>
+                  <MainSpacer maxWidth="lg">
+                    <Component {...pageProps} />
+                  </MainSpacer>
+                </main>
+
+                <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
+                  <LogoLink href="/" aria-label="Startseite">
+                    <LogoWrapper />
+                  </LogoLink>
+                </FooterContainer>
+              </Spacer>
+
+              <Script
+                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
+                strategy="afterInteractive"
               />
 
-              <main>
-                <MainSpacer maxWidth="lg">
-                  <Component {...pageProps} />
-                </MainSpacer>
-              </main>
-
-              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-              </FooterContainer>
-            </Spacer>
-
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-              strategy="afterInteractive"
-            />
-
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-              strategy="lazyOnload"
-            />
-          </ThemeProvider>
-        </WebsiteBuilderProvider>
-      </WebsiteProvider>
-    </SessionProvider>
+              <Script
+                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
+                strategy="lazyOnload"
+              />
+            </ThemeProvider>
+          </WebsiteBuilderProvider>
+        </WebsiteProvider>
+      </SessionProvider>
+    </AppCacheProvider>
   )
 }
 

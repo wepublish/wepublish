@@ -39,7 +39,6 @@ exports[`Teaser Slider Teaser Grid should render Article 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-11 {
@@ -67,16 +66,13 @@ exports[`Teaser Slider Teaser Grid should render Article 1`] = `
 .emotion-15 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-15:where(.emotion-9:hover .emotion-15) {
@@ -113,8 +109,6 @@ exports[`Teaser Slider Teaser Grid should render Article 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -152,12 +146,11 @@ exports[`Teaser Slider Teaser Grid should render Article 1`] = `
 }
 
 .emotion-23 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -176,10 +169,146 @@ exports[`Teaser Slider Teaser Grid should render Article 1`] = `
   font-weight: 400;
 }
 
-.emotion-113 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+.emotion-29 {
+  display: none;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  gap: 8px;
+  grid-area: tags;
+}
+
+.emotion-31 {
+  max-width: 100%;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-size: 0.8125rem;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: #e91e63;
+  background-color: transparent;
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 1px solid rgba(233, 30, 99, 0.7);
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.emotion-31.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-31 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-31 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: rgb(163, 21, 69);
+}
+
+.emotion-31 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: rgb(0, 0, 0);
+}
+
+.emotion-31 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-31 .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+  color: inherit;
+}
+
+.emotion-31 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover,
+.emotion-31 .MuiChip-deleteIcon:active {
+  color: #fff;
+}
+
+.emotion-31.MuiChip-clickable:hover {
+  background-color: rgba(233, 30, 99, 0.04);
+}
+
+.emotion-31.Mui-focusVisible {
+  background-color: rgba(233, 30, 99, 0.12);
+}
+
+.emotion-31 .MuiChip-avatar {
+  margin-left: 4px;
+}
+
+.emotion-31 .MuiChip-avatarSmall {
+  margin-left: 2px;
+}
+
+.emotion-31 .MuiChip-icon {
+  margin-left: 4px;
+}
+
+.emotion-31 .MuiChip-iconSmall {
+  margin-left: 2px;
+}
+
+.emotion-31 .MuiChip-deleteIcon {
+  color: rgba(233, 30, 99, 0.7);
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover,
+.emotion-31 .MuiChip-deleteIcon:active {
+  color: #e91e63;
+}
+
+.emotion-31 .MuiChip-deleteIconSmall {
+  margin-right: 3px;
+}
+
+.emotion-32 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.emotion-133 {
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -188,7 +317,7 @@ exports[`Teaser Slider Teaser Grid should render Article 1`] = `
   gap: 8px;
 }
 
-.emotion-115 {
+.emotion-135 {
   -webkit-appearance: none;
   -moz-appearance: none;
   -ms-appearance: none;
@@ -204,11 +333,11 @@ exports[`Teaser Slider Teaser Grid should render Article 1`] = `
   padding: 0;
 }
 
-.emotion-115:focus {
+.emotion-135:focus {
   outline: none;
 }
 
-.emotion-117 {
+.emotion-137 {
   display: block;
   background-color: currentColor;
   height: 100%;
@@ -292,145 +421,18 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-8 emotion-9"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-11 emotion-12"
-              >
                 <div
-                  class="emotion-13 emotion-14"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-15 emotion-16"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-17 emotion-18"
+                  class="emotion-29 emotion-30"
                 >
                   <div
-                    class="emotion-19 emotion-20"
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
                   >
-                    Pre Title
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
                   </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-25 emotion-26"
-                >
-                  <time
-                    class="emotion-27 emotion-28"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
-                </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-8 emotion-9"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-11 emotion-12"
-              >
-                <div
-                  class="emotion-13 emotion-14"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-15 emotion-16"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-17 emotion-18"
-                >
-                  <div
-                    class="emotion-19 emotion-20"
-                  >
-                    Pre Title
-                  </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-25 emotion-26"
-                >
-                  <time
-                    class="emotion-27 emotion-28"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
                 </div>
               </div>
             </a>
@@ -502,6 +504,19 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
               </div>
             </a>
           </article>
@@ -571,6 +586,185 @@ https://unsplash.it/200/100 200w"
                   >
                     01.01.2023 
                   </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-8 emotion-9"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-11 emotion-12"
+              >
+                <div
+                  class="emotion-13 emotion-14"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-15 emotion-16"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-17 emotion-18"
+                >
+                  <div
+                    class="emotion-19 emotion-20"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-25 emotion-26"
+                >
+                  <time
+                    class="emotion-27 emotion-28"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-8 emotion-9"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-11 emotion-12"
+              >
+                <div
+                  class="emotion-13 emotion-14"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-15 emotion-16"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-17 emotion-18"
+                >
+                  <div
+                    class="emotion-19 emotion-20"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-25 emotion-26"
+                >
+                  <time
+                    class="emotion-27 emotion-28"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
                 </div>
               </div>
             </a>
@@ -578,31 +772,31 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-113 emotion-114"
+        class="emotion-133 emotion-134"
       >
         <button
           aria-label="Slide 1"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         >
           <span
-            class="emotion-117 emotion-118"
+            class="emotion-137 emotion-138"
           />
         </button>
         <button
           aria-label="Slide 2"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 3"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 4"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 5"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
       </div>
     </div>
@@ -649,7 +843,6 @@ exports[`Teaser Slider Teaser Grid should render Event 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-11 {
@@ -677,16 +870,13 @@ exports[`Teaser Slider Teaser Grid should render Event 1`] = `
 .emotion-15 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-15:where(.emotion-9:hover .emotion-15) {
@@ -723,8 +913,6 @@ exports[`Teaser Slider Teaser Grid should render Event 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -762,12 +950,11 @@ exports[`Teaser Slider Teaser Grid should render Event 1`] = `
 }
 
 .emotion-23 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -787,9 +974,6 @@ exports[`Teaser Slider Teaser Grid should render Event 1`] = `
 }
 
 .emotion-113 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -1259,7 +1443,6 @@ exports[`Teaser Slider Teaser Grid should render Page 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-11 {
@@ -1287,16 +1470,13 @@ exports[`Teaser Slider Teaser Grid should render Page 1`] = `
 .emotion-15 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-15:where(.emotion-9:hover .emotion-15) {
@@ -1333,8 +1513,6 @@ exports[`Teaser Slider Teaser Grid should render Page 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -1372,12 +1550,11 @@ exports[`Teaser Slider Teaser Grid should render Page 1`] = `
 }
 
 .emotion-23 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -1397,9 +1574,6 @@ exports[`Teaser Slider Teaser Grid should render Page 1`] = `
 }
 
 .emotion-113 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -1869,7 +2043,6 @@ exports[`Teaser Slider Teaser Grid should render WithClassName 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-11 {
@@ -1897,16 +2070,13 @@ exports[`Teaser Slider Teaser Grid should render WithClassName 1`] = `
 .emotion-15 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-15:where(.emotion-9:hover .emotion-15) {
@@ -1943,8 +2113,6 @@ exports[`Teaser Slider Teaser Grid should render WithClassName 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -1982,12 +2150,11 @@ exports[`Teaser Slider Teaser Grid should render WithClassName 1`] = `
 }
 
 .emotion-23 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -2006,10 +2173,146 @@ exports[`Teaser Slider Teaser Grid should render WithClassName 1`] = `
   font-weight: 400;
 }
 
-.emotion-113 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+.emotion-29 {
+  display: none;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  gap: 8px;
+  grid-area: tags;
+}
+
+.emotion-31 {
+  max-width: 100%;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-size: 0.8125rem;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: #e91e63;
+  background-color: transparent;
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 1px solid rgba(233, 30, 99, 0.7);
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.emotion-31.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-31 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-31 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: rgb(163, 21, 69);
+}
+
+.emotion-31 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: rgb(0, 0, 0);
+}
+
+.emotion-31 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-31 .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+  color: inherit;
+}
+
+.emotion-31 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover,
+.emotion-31 .MuiChip-deleteIcon:active {
+  color: #fff;
+}
+
+.emotion-31.MuiChip-clickable:hover {
+  background-color: rgba(233, 30, 99, 0.04);
+}
+
+.emotion-31.Mui-focusVisible {
+  background-color: rgba(233, 30, 99, 0.12);
+}
+
+.emotion-31 .MuiChip-avatar {
+  margin-left: 4px;
+}
+
+.emotion-31 .MuiChip-avatarSmall {
+  margin-left: 2px;
+}
+
+.emotion-31 .MuiChip-icon {
+  margin-left: 4px;
+}
+
+.emotion-31 .MuiChip-iconSmall {
+  margin-left: 2px;
+}
+
+.emotion-31 .MuiChip-deleteIcon {
+  color: rgba(233, 30, 99, 0.7);
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover,
+.emotion-31 .MuiChip-deleteIcon:active {
+  color: #e91e63;
+}
+
+.emotion-31 .MuiChip-deleteIconSmall {
+  margin-right: 3px;
+}
+
+.emotion-32 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.emotion-133 {
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -2018,7 +2321,7 @@ exports[`Teaser Slider Teaser Grid should render WithClassName 1`] = `
   gap: 8px;
 }
 
-.emotion-115 {
+.emotion-135 {
   -webkit-appearance: none;
   -moz-appearance: none;
   -ms-appearance: none;
@@ -2034,11 +2337,11 @@ exports[`Teaser Slider Teaser Grid should render WithClassName 1`] = `
   padding: 0;
 }
 
-.emotion-115:focus {
+.emotion-135:focus {
   outline: none;
 }
 
-.emotion-117 {
+.emotion-137 {
   display: block;
   background-color: currentColor;
   height: 100%;
@@ -2122,145 +2425,18 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-8 emotion-9"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-11 emotion-12"
-              >
                 <div
-                  class="emotion-13 emotion-14"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-15 emotion-16"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-17 emotion-18"
+                  class="emotion-29 emotion-30"
                 >
                   <div
-                    class="emotion-19 emotion-20"
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
                   >
-                    Pre Title
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
                   </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-25 emotion-26"
-                >
-                  <time
-                    class="emotion-27 emotion-28"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
-                </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-8 emotion-9"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-11 emotion-12"
-              >
-                <div
-                  class="emotion-13 emotion-14"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-15 emotion-16"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-17 emotion-18"
-                >
-                  <div
-                    class="emotion-19 emotion-20"
-                  >
-                    Pre Title
-                  </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-25 emotion-26"
-                >
-                  <time
-                    class="emotion-27 emotion-28"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
                 </div>
               </div>
             </a>
@@ -2332,6 +2508,19 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
               </div>
             </a>
           </article>
@@ -2401,6 +2590,185 @@ https://unsplash.it/200/100 200w"
                   >
                     01.01.2023 
                   </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-8 emotion-9"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-11 emotion-12"
+              >
+                <div
+                  class="emotion-13 emotion-14"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-15 emotion-16"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-17 emotion-18"
+                >
+                  <div
+                    class="emotion-19 emotion-20"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-25 emotion-26"
+                >
+                  <time
+                    class="emotion-27 emotion-28"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-8 emotion-9"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-11 emotion-12"
+              >
+                <div
+                  class="emotion-13 emotion-14"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-15 emotion-16"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-17 emotion-18"
+                >
+                  <div
+                    class="emotion-19 emotion-20"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-25 emotion-26"
+                >
+                  <time
+                    class="emotion-27 emotion-28"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
                 </div>
               </div>
             </a>
@@ -2408,31 +2776,31 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-113 emotion-114"
+        class="emotion-133 emotion-134"
       >
         <button
           aria-label="Slide 1"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         >
           <span
-            class="emotion-117 emotion-118"
+            class="emotion-137 emotion-138"
           />
         </button>
         <button
           aria-label="Slide 2"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 3"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 4"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 5"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
       </div>
     </div>
@@ -2479,7 +2847,6 @@ exports[`Teaser Slider Teaser Grid should render WithEmotion 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-11 {
@@ -2507,16 +2874,13 @@ exports[`Teaser Slider Teaser Grid should render WithEmotion 1`] = `
 .emotion-15 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-15:where(.emotion-9:hover .emotion-15) {
@@ -2553,8 +2917,6 @@ exports[`Teaser Slider Teaser Grid should render WithEmotion 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -2592,12 +2954,11 @@ exports[`Teaser Slider Teaser Grid should render WithEmotion 1`] = `
 }
 
 .emotion-23 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -2616,10 +2977,146 @@ exports[`Teaser Slider Teaser Grid should render WithEmotion 1`] = `
   font-weight: 400;
 }
 
-.emotion-113 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+.emotion-29 {
+  display: none;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  gap: 8px;
+  grid-area: tags;
+}
+
+.emotion-31 {
+  max-width: 100%;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-size: 0.8125rem;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: #e91e63;
+  background-color: transparent;
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 1px solid rgba(233, 30, 99, 0.7);
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.emotion-31.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-31 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-31 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: rgb(163, 21, 69);
+}
+
+.emotion-31 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: rgb(0, 0, 0);
+}
+
+.emotion-31 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-31 .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+  color: inherit;
+}
+
+.emotion-31 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover,
+.emotion-31 .MuiChip-deleteIcon:active {
+  color: #fff;
+}
+
+.emotion-31.MuiChip-clickable:hover {
+  background-color: rgba(233, 30, 99, 0.04);
+}
+
+.emotion-31.Mui-focusVisible {
+  background-color: rgba(233, 30, 99, 0.12);
+}
+
+.emotion-31 .MuiChip-avatar {
+  margin-left: 4px;
+}
+
+.emotion-31 .MuiChip-avatarSmall {
+  margin-left: 2px;
+}
+
+.emotion-31 .MuiChip-icon {
+  margin-left: 4px;
+}
+
+.emotion-31 .MuiChip-iconSmall {
+  margin-left: 2px;
+}
+
+.emotion-31 .MuiChip-deleteIcon {
+  color: rgba(233, 30, 99, 0.7);
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover,
+.emotion-31 .MuiChip-deleteIcon:active {
+  color: #e91e63;
+}
+
+.emotion-31 .MuiChip-deleteIconSmall {
+  margin-right: 3px;
+}
+
+.emotion-32 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.emotion-133 {
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -2628,7 +3125,7 @@ exports[`Teaser Slider Teaser Grid should render WithEmotion 1`] = `
   gap: 8px;
 }
 
-.emotion-115 {
+.emotion-135 {
   -webkit-appearance: none;
   -moz-appearance: none;
   -ms-appearance: none;
@@ -2644,11 +3141,11 @@ exports[`Teaser Slider Teaser Grid should render WithEmotion 1`] = `
   padding: 0;
 }
 
-.emotion-115:focus {
+.emotion-135:focus {
   outline: none;
 }
 
-.emotion-117 {
+.emotion-137 {
   display: block;
   background-color: currentColor;
   height: 100%;
@@ -2732,145 +3229,18 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-8 emotion-9"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-11 emotion-12"
-              >
                 <div
-                  class="emotion-13 emotion-14"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-15 emotion-16"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-17 emotion-18"
+                  class="emotion-29 emotion-30"
                 >
                   <div
-                    class="emotion-19 emotion-20"
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
                   >
-                    Pre Title
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
                   </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-25 emotion-26"
-                >
-                  <time
-                    class="emotion-27 emotion-28"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
-                </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-8 emotion-9"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-11 emotion-12"
-              >
-                <div
-                  class="emotion-13 emotion-14"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-15 emotion-16"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-17 emotion-18"
-                >
-                  <div
-                    class="emotion-19 emotion-20"
-                  >
-                    Pre Title
-                  </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-25 emotion-26"
-                >
-                  <time
-                    class="emotion-27 emotion-28"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
                 </div>
               </div>
             </a>
@@ -2942,6 +3312,19 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
               </div>
             </a>
           </article>
@@ -3011,6 +3394,185 @@ https://unsplash.it/200/100 200w"
                   >
                     01.01.2023 
                   </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-8 emotion-9"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-11 emotion-12"
+              >
+                <div
+                  class="emotion-13 emotion-14"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-15 emotion-16"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-17 emotion-18"
+                >
+                  <div
+                    class="emotion-19 emotion-20"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-25 emotion-26"
+                >
+                  <time
+                    class="emotion-27 emotion-28"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-8 emotion-9"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-11 emotion-12"
+              >
+                <div
+                  class="emotion-13 emotion-14"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-15 emotion-16"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-17 emotion-18"
+                >
+                  <div
+                    class="emotion-19 emotion-20"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-25 emotion-26"
+                >
+                  <time
+                    class="emotion-27 emotion-28"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
                 </div>
               </div>
             </a>
@@ -3018,31 +3580,31 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-113 emotion-114"
+        class="emotion-133 emotion-134"
       >
         <button
           aria-label="Slide 1"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         >
           <span
-            class="emotion-117 emotion-118"
+            class="emotion-137 emotion-138"
           />
         </button>
         <button
           aria-label="Slide 2"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 3"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 4"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 5"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
       </div>
     </div>
@@ -3089,7 +3651,6 @@ exports[`Teaser Slider Teaser List should render Article 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-11 {
@@ -3117,16 +3678,13 @@ exports[`Teaser Slider Teaser List should render Article 1`] = `
 .emotion-15 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-15:where(.emotion-9:hover .emotion-15) {
@@ -3163,8 +3721,6 @@ exports[`Teaser Slider Teaser List should render Article 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -3202,12 +3758,11 @@ exports[`Teaser Slider Teaser List should render Article 1`] = `
 }
 
 .emotion-23 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -3226,10 +3781,146 @@ exports[`Teaser Slider Teaser List should render Article 1`] = `
   font-weight: 400;
 }
 
-.emotion-113 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+.emotion-29 {
+  display: none;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  gap: 8px;
+  grid-area: tags;
+}
+
+.emotion-31 {
+  max-width: 100%;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-size: 0.8125rem;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: #e91e63;
+  background-color: transparent;
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 1px solid rgba(233, 30, 99, 0.7);
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.emotion-31.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-31 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-31 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: rgb(163, 21, 69);
+}
+
+.emotion-31 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: rgb(0, 0, 0);
+}
+
+.emotion-31 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-31 .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+  color: inherit;
+}
+
+.emotion-31 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover,
+.emotion-31 .MuiChip-deleteIcon:active {
+  color: #fff;
+}
+
+.emotion-31.MuiChip-clickable:hover {
+  background-color: rgba(233, 30, 99, 0.04);
+}
+
+.emotion-31.Mui-focusVisible {
+  background-color: rgba(233, 30, 99, 0.12);
+}
+
+.emotion-31 .MuiChip-avatar {
+  margin-left: 4px;
+}
+
+.emotion-31 .MuiChip-avatarSmall {
+  margin-left: 2px;
+}
+
+.emotion-31 .MuiChip-icon {
+  margin-left: 4px;
+}
+
+.emotion-31 .MuiChip-iconSmall {
+  margin-left: 2px;
+}
+
+.emotion-31 .MuiChip-deleteIcon {
+  color: rgba(233, 30, 99, 0.7);
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover,
+.emotion-31 .MuiChip-deleteIcon:active {
+  color: #e91e63;
+}
+
+.emotion-31 .MuiChip-deleteIconSmall {
+  margin-right: 3px;
+}
+
+.emotion-32 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.emotion-133 {
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -3238,7 +3929,7 @@ exports[`Teaser Slider Teaser List should render Article 1`] = `
   gap: 8px;
 }
 
-.emotion-115 {
+.emotion-135 {
   -webkit-appearance: none;
   -moz-appearance: none;
   -ms-appearance: none;
@@ -3254,11 +3945,11 @@ exports[`Teaser Slider Teaser List should render Article 1`] = `
   padding: 0;
 }
 
-.emotion-115:focus {
+.emotion-135:focus {
   outline: none;
 }
 
-.emotion-117 {
+.emotion-137 {
   display: block;
   background-color: currentColor;
   height: 100%;
@@ -3342,145 +4033,18 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-8 emotion-9"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-11 emotion-12"
-              >
                 <div
-                  class="emotion-13 emotion-14"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-15 emotion-16"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-17 emotion-18"
+                  class="emotion-29 emotion-30"
                 >
                   <div
-                    class="emotion-19 emotion-20"
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
                   >
-                    Pre Title
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
                   </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-25 emotion-26"
-                >
-                  <time
-                    class="emotion-27 emotion-28"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
-                </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-8 emotion-9"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-11 emotion-12"
-              >
-                <div
-                  class="emotion-13 emotion-14"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-15 emotion-16"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-17 emotion-18"
-                >
-                  <div
-                    class="emotion-19 emotion-20"
-                  >
-                    Pre Title
-                  </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-25 emotion-26"
-                >
-                  <time
-                    class="emotion-27 emotion-28"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
                 </div>
               </div>
             </a>
@@ -3552,6 +4116,19 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
               </div>
             </a>
           </article>
@@ -3621,6 +4198,185 @@ https://unsplash.it/200/100 200w"
                   >
                     01.01.2023 
                   </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-8 emotion-9"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-11 emotion-12"
+              >
+                <div
+                  class="emotion-13 emotion-14"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-15 emotion-16"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-17 emotion-18"
+                >
+                  <div
+                    class="emotion-19 emotion-20"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-25 emotion-26"
+                >
+                  <time
+                    class="emotion-27 emotion-28"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-8 emotion-9"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-11 emotion-12"
+              >
+                <div
+                  class="emotion-13 emotion-14"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-15 emotion-16"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-17 emotion-18"
+                >
+                  <div
+                    class="emotion-19 emotion-20"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-25 emotion-26"
+                >
+                  <time
+                    class="emotion-27 emotion-28"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
                 </div>
               </div>
             </a>
@@ -3628,31 +4384,31 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-113 emotion-114"
+        class="emotion-133 emotion-134"
       >
         <button
           aria-label="Slide 1"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         >
           <span
-            class="emotion-117 emotion-118"
+            class="emotion-137 emotion-138"
           />
         </button>
         <button
           aria-label="Slide 2"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 3"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 4"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 5"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
       </div>
     </div>
@@ -3699,7 +4455,6 @@ exports[`Teaser Slider Teaser List should render Event 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-11 {
@@ -3727,16 +4482,13 @@ exports[`Teaser Slider Teaser List should render Event 1`] = `
 .emotion-15 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-15:where(.emotion-9:hover .emotion-15) {
@@ -3773,8 +4525,6 @@ exports[`Teaser Slider Teaser List should render Event 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -3812,12 +4562,11 @@ exports[`Teaser Slider Teaser List should render Event 1`] = `
 }
 
 .emotion-23 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -3837,9 +4586,6 @@ exports[`Teaser Slider Teaser List should render Event 1`] = `
 }
 
 .emotion-113 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -4309,7 +5055,6 @@ exports[`Teaser Slider Teaser List should render Page 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-11 {
@@ -4337,16 +5082,13 @@ exports[`Teaser Slider Teaser List should render Page 1`] = `
 .emotion-15 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-15:where(.emotion-9:hover .emotion-15) {
@@ -4383,8 +5125,6 @@ exports[`Teaser Slider Teaser List should render Page 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -4422,12 +5162,11 @@ exports[`Teaser Slider Teaser List should render Page 1`] = `
 }
 
 .emotion-23 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -4447,9 +5186,6 @@ exports[`Teaser Slider Teaser List should render Page 1`] = `
 }
 
 .emotion-113 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -4919,7 +5655,6 @@ exports[`Teaser Slider Teaser List should render WithClassName 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-11 {
@@ -4947,16 +5682,13 @@ exports[`Teaser Slider Teaser List should render WithClassName 1`] = `
 .emotion-15 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-15:where(.emotion-9:hover .emotion-15) {
@@ -4993,8 +5725,6 @@ exports[`Teaser Slider Teaser List should render WithClassName 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -5032,12 +5762,11 @@ exports[`Teaser Slider Teaser List should render WithClassName 1`] = `
 }
 
 .emotion-23 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -5056,10 +5785,146 @@ exports[`Teaser Slider Teaser List should render WithClassName 1`] = `
   font-weight: 400;
 }
 
-.emotion-113 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+.emotion-29 {
+  display: none;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  gap: 8px;
+  grid-area: tags;
+}
+
+.emotion-31 {
+  max-width: 100%;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-size: 0.8125rem;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: #e91e63;
+  background-color: transparent;
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 1px solid rgba(233, 30, 99, 0.7);
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.emotion-31.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-31 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-31 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: rgb(163, 21, 69);
+}
+
+.emotion-31 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: rgb(0, 0, 0);
+}
+
+.emotion-31 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-31 .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+  color: inherit;
+}
+
+.emotion-31 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover,
+.emotion-31 .MuiChip-deleteIcon:active {
+  color: #fff;
+}
+
+.emotion-31.MuiChip-clickable:hover {
+  background-color: rgba(233, 30, 99, 0.04);
+}
+
+.emotion-31.Mui-focusVisible {
+  background-color: rgba(233, 30, 99, 0.12);
+}
+
+.emotion-31 .MuiChip-avatar {
+  margin-left: 4px;
+}
+
+.emotion-31 .MuiChip-avatarSmall {
+  margin-left: 2px;
+}
+
+.emotion-31 .MuiChip-icon {
+  margin-left: 4px;
+}
+
+.emotion-31 .MuiChip-iconSmall {
+  margin-left: 2px;
+}
+
+.emotion-31 .MuiChip-deleteIcon {
+  color: rgba(233, 30, 99, 0.7);
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover,
+.emotion-31 .MuiChip-deleteIcon:active {
+  color: #e91e63;
+}
+
+.emotion-31 .MuiChip-deleteIconSmall {
+  margin-right: 3px;
+}
+
+.emotion-32 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.emotion-133 {
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -5068,7 +5933,7 @@ exports[`Teaser Slider Teaser List should render WithClassName 1`] = `
   gap: 8px;
 }
 
-.emotion-115 {
+.emotion-135 {
   -webkit-appearance: none;
   -moz-appearance: none;
   -ms-appearance: none;
@@ -5084,11 +5949,11 @@ exports[`Teaser Slider Teaser List should render WithClassName 1`] = `
   padding: 0;
 }
 
-.emotion-115:focus {
+.emotion-135:focus {
   outline: none;
 }
 
-.emotion-117 {
+.emotion-137 {
   display: block;
   background-color: currentColor;
   height: 100%;
@@ -5172,145 +6037,18 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-8 emotion-9"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-11 emotion-12"
-              >
                 <div
-                  class="emotion-13 emotion-14"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-15 emotion-16"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-17 emotion-18"
+                  class="emotion-29 emotion-30"
                 >
                   <div
-                    class="emotion-19 emotion-20"
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
                   >
-                    Pre Title
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
                   </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-25 emotion-26"
-                >
-                  <time
-                    class="emotion-27 emotion-28"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
-                </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-8 emotion-9"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-11 emotion-12"
-              >
-                <div
-                  class="emotion-13 emotion-14"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-15 emotion-16"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-17 emotion-18"
-                >
-                  <div
-                    class="emotion-19 emotion-20"
-                  >
-                    Pre Title
-                  </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-25 emotion-26"
-                >
-                  <time
-                    class="emotion-27 emotion-28"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
                 </div>
               </div>
             </a>
@@ -5382,6 +6120,19 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
               </div>
             </a>
           </article>
@@ -5451,6 +6202,185 @@ https://unsplash.it/200/100 200w"
                   >
                     01.01.2023 
                   </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-8 emotion-9"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-11 emotion-12"
+              >
+                <div
+                  class="emotion-13 emotion-14"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-15 emotion-16"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-17 emotion-18"
+                >
+                  <div
+                    class="emotion-19 emotion-20"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-25 emotion-26"
+                >
+                  <time
+                    class="emotion-27 emotion-28"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-8 emotion-9"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-11 emotion-12"
+              >
+                <div
+                  class="emotion-13 emotion-14"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-15 emotion-16"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-17 emotion-18"
+                >
+                  <div
+                    class="emotion-19 emotion-20"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-25 emotion-26"
+                >
+                  <time
+                    class="emotion-27 emotion-28"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
                 </div>
               </div>
             </a>
@@ -5458,31 +6388,31 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-113 emotion-114"
+        class="emotion-133 emotion-134"
       >
         <button
           aria-label="Slide 1"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         >
           <span
-            class="emotion-117 emotion-118"
+            class="emotion-137 emotion-138"
           />
         </button>
         <button
           aria-label="Slide 2"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 3"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 4"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 5"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
       </div>
     </div>
@@ -5529,7 +6459,6 @@ exports[`Teaser Slider Teaser List should render WithEmotion 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-11 {
@@ -5557,16 +6486,13 @@ exports[`Teaser Slider Teaser List should render WithEmotion 1`] = `
 .emotion-15 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-15:where(.emotion-9:hover .emotion-15) {
@@ -5603,8 +6529,6 @@ exports[`Teaser Slider Teaser List should render WithEmotion 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -5642,12 +6566,11 @@ exports[`Teaser Slider Teaser List should render WithEmotion 1`] = `
 }
 
 .emotion-23 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -5666,10 +6589,146 @@ exports[`Teaser Slider Teaser List should render WithEmotion 1`] = `
   font-weight: 400;
 }
 
-.emotion-113 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+.emotion-29 {
+  display: none;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  gap: 8px;
+  grid-area: tags;
+}
+
+.emotion-31 {
+  max-width: 100%;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-size: 0.8125rem;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: #e91e63;
+  background-color: transparent;
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 1px solid rgba(233, 30, 99, 0.7);
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.emotion-31.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-31 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-31 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: rgb(163, 21, 69);
+}
+
+.emotion-31 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: rgb(0, 0, 0);
+}
+
+.emotion-31 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-31 .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+  color: inherit;
+}
+
+.emotion-31 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover,
+.emotion-31 .MuiChip-deleteIcon:active {
+  color: #fff;
+}
+
+.emotion-31.MuiChip-clickable:hover {
+  background-color: rgba(233, 30, 99, 0.04);
+}
+
+.emotion-31.Mui-focusVisible {
+  background-color: rgba(233, 30, 99, 0.12);
+}
+
+.emotion-31 .MuiChip-avatar {
+  margin-left: 4px;
+}
+
+.emotion-31 .MuiChip-avatarSmall {
+  margin-left: 2px;
+}
+
+.emotion-31 .MuiChip-icon {
+  margin-left: 4px;
+}
+
+.emotion-31 .MuiChip-iconSmall {
+  margin-left: 2px;
+}
+
+.emotion-31 .MuiChip-deleteIcon {
+  color: rgba(233, 30, 99, 0.7);
+}
+
+.emotion-31 .MuiChip-deleteIcon:hover,
+.emotion-31 .MuiChip-deleteIcon:active {
+  color: #e91e63;
+}
+
+.emotion-31 .MuiChip-deleteIconSmall {
+  margin-right: 3px;
+}
+
+.emotion-32 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.emotion-133 {
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -5678,7 +6737,7 @@ exports[`Teaser Slider Teaser List should render WithEmotion 1`] = `
   gap: 8px;
 }
 
-.emotion-115 {
+.emotion-135 {
   -webkit-appearance: none;
   -moz-appearance: none;
   -ms-appearance: none;
@@ -5694,11 +6753,11 @@ exports[`Teaser Slider Teaser List should render WithEmotion 1`] = `
   padding: 0;
 }
 
-.emotion-115:focus {
+.emotion-135:focus {
   outline: none;
 }
 
-.emotion-117 {
+.emotion-137 {
   display: block;
   background-color: currentColor;
   height: 100%;
@@ -5782,145 +6841,18 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-8 emotion-9"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-11 emotion-12"
-              >
                 <div
-                  class="emotion-13 emotion-14"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-15 emotion-16"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-17 emotion-18"
+                  class="emotion-29 emotion-30"
                 >
                   <div
-                    class="emotion-19 emotion-20"
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
                   >
-                    Pre Title
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
                   </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-25 emotion-26"
-                >
-                  <time
-                    class="emotion-27 emotion-28"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
-                </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-8 emotion-9"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-11 emotion-12"
-              >
-                <div
-                  class="emotion-13 emotion-14"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-15 emotion-16"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-17 emotion-18"
-                >
-                  <div
-                    class="emotion-19 emotion-20"
-                  >
-                    Pre Title
-                  </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-25 emotion-26"
-                >
-                  <time
-                    class="emotion-27 emotion-28"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
                 </div>
               </div>
             </a>
@@ -5992,6 +6924,19 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
               </div>
             </a>
           </article>
@@ -6061,6 +7006,185 @@ https://unsplash.it/200/100 200w"
                   >
                     01.01.2023 
                   </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-8 emotion-9"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-11 emotion-12"
+              >
+                <div
+                  class="emotion-13 emotion-14"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-15 emotion-16"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-17 emotion-18"
+                >
+                  <div
+                    class="emotion-19 emotion-20"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-25 emotion-26"
+                >
+                  <time
+                    class="emotion-27 emotion-28"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-8 emotion-9"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-10"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-11 emotion-12"
+              >
+                <div
+                  class="emotion-13 emotion-14"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-15 emotion-16"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-17 emotion-18"
+                >
+                  <div
+                    class="emotion-19 emotion-20"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23 emotion-24"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-25 emotion-26"
+                >
+                  <time
+                    class="emotion-27 emotion-28"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-29 emotion-30"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-31"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-32"
+                    >
+                      Foobar
+                    </span>
+                  </div>
                 </div>
               </div>
             </a>
@@ -6068,31 +7192,31 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-113 emotion-114"
+        class="emotion-133 emotion-134"
       >
         <button
           aria-label="Slide 1"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         >
           <span
-            class="emotion-117 emotion-118"
+            class="emotion-137 emotion-138"
           />
         </button>
         <button
           aria-label="Slide 2"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 3"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 4"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
         <button
           aria-label="Slide 5"
-          class="emotion-115 emotion-116"
+          class="emotion-135 emotion-136"
         />
       </div>
     </div>
@@ -6147,7 +7271,6 @@ exports[`Teaser Slider Teaser List should render WithTitle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-12 {
@@ -6175,16 +7298,13 @@ exports[`Teaser Slider Teaser List should render WithTitle 1`] = `
 .emotion-16 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-16:where(.emotion-10:hover .emotion-16) {
@@ -6221,8 +7341,6 @@ exports[`Teaser Slider Teaser List should render WithTitle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -6260,12 +7378,11 @@ exports[`Teaser Slider Teaser List should render WithTitle 1`] = `
 }
 
 .emotion-24 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -6284,10 +7401,146 @@ exports[`Teaser Slider Teaser List should render WithTitle 1`] = `
   font-weight: 400;
 }
 
-.emotion-114 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+.emotion-30 {
+  display: none;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  gap: 8px;
+  grid-area: tags;
+}
+
+.emotion-32 {
+  max-width: 100%;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-size: 0.8125rem;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: #e91e63;
+  background-color: transparent;
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 1px solid rgba(233, 30, 99, 0.7);
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.emotion-32.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-32 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-32 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: rgb(163, 21, 69);
+}
+
+.emotion-32 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: rgb(0, 0, 0);
+}
+
+.emotion-32 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-32 .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+  color: inherit;
+}
+
+.emotion-32 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-32 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-32 .MuiChip-deleteIcon:hover,
+.emotion-32 .MuiChip-deleteIcon:active {
+  color: #fff;
+}
+
+.emotion-32.MuiChip-clickable:hover {
+  background-color: rgba(233, 30, 99, 0.04);
+}
+
+.emotion-32.Mui-focusVisible {
+  background-color: rgba(233, 30, 99, 0.12);
+}
+
+.emotion-32 .MuiChip-avatar {
+  margin-left: 4px;
+}
+
+.emotion-32 .MuiChip-avatarSmall {
+  margin-left: 2px;
+}
+
+.emotion-32 .MuiChip-icon {
+  margin-left: 4px;
+}
+
+.emotion-32 .MuiChip-iconSmall {
+  margin-left: 2px;
+}
+
+.emotion-32 .MuiChip-deleteIcon {
+  color: rgba(233, 30, 99, 0.7);
+}
+
+.emotion-32 .MuiChip-deleteIcon:hover,
+.emotion-32 .MuiChip-deleteIcon:active {
+  color: #e91e63;
+}
+
+.emotion-32 .MuiChip-deleteIconSmall {
+  margin-right: 3px;
+}
+
+.emotion-33 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.emotion-134 {
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -6296,7 +7549,7 @@ exports[`Teaser Slider Teaser List should render WithTitle 1`] = `
   gap: 8px;
 }
 
-.emotion-116 {
+.emotion-136 {
   -webkit-appearance: none;
   -moz-appearance: none;
   -ms-appearance: none;
@@ -6312,11 +7565,11 @@ exports[`Teaser Slider Teaser List should render WithTitle 1`] = `
   padding: 0;
 }
 
-.emotion-116:focus {
+.emotion-136:focus {
   outline: none;
 }
 
-.emotion-118 {
+.emotion-138 {
   display: block;
   background-color: currentColor;
   height: 100%;
@@ -6406,145 +7659,18 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-9 emotion-10"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-12 emotion-13"
-              >
                 <div
-                  class="emotion-14 emotion-15"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-16 emotion-17"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-18 emotion-19"
+                  class="emotion-30 emotion-31"
                 >
                   <div
-                    class="emotion-20 emotion-21"
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
                   >
-                    Pre Title
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-33"
+                    >
+                      Foobar
+                    </span>
                   </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-26 emotion-27"
-                >
-                  <time
-                    class="emotion-28 emotion-29"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
-                </div>
-              </div>
-            </a>
-          </article>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <article
-            class="emotion-9 emotion-10"
-            x="0"
-            y="0"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
-              href="https://example.com"
-            >
-              <div
-                class="emotion-12 emotion-13"
-              >
-                <div
-                  class="emotion-14 emotion-15"
-                >
-                  <img
-                    alt="An image description"
-                    class="emotion-16 emotion-17"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                    srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                    title="An image title"
-                  />
-                </div>
-                <div
-                  class="emotion-18 emotion-19"
-                >
-                  <div
-                    class="emotion-20 emotion-21"
-                  >
-                    Pre Title
-                  </div>
-                </div>
-                <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
-                >
-                  Title
-                </h1>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
-                >
-                  Lead
-                </p>
-                <div
-                  class="emotion-26 emotion-27"
-                >
-                  <time
-                    class="emotion-28 emotion-29"
-                    datetime="2023-01-01T00:00:00.000Z"
-                  >
-                    01.01.2023 
-                  </time>
                 </div>
               </div>
             </a>
@@ -6616,6 +7742,19 @@ https://unsplash.it/200/100 200w"
                     01.01.2023 
                   </time>
                 </div>
+                <div
+                  class="emotion-30 emotion-31"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-33"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
               </div>
             </a>
           </article>
@@ -6685,6 +7824,185 @@ https://unsplash.it/200/100 200w"
                   >
                     01.01.2023 
                   </time>
+                </div>
+                <div
+                  class="emotion-30 emotion-31"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-33"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-9 emotion-10"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-12 emotion-13"
+              >
+                <div
+                  class="emotion-14 emotion-15"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-16 emotion-17"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-18 emotion-19"
+                >
+                  <div
+                    class="emotion-20 emotion-21"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-26 emotion-27"
+                >
+                  <time
+                    class="emotion-28 emotion-29"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-30 emotion-31"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-33"
+                    >
+                      Foobar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <div
+          class="keen-slider__slide"
+        >
+          <article
+            class="emotion-9 emotion-10"
+            x="0"
+            y="0"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
+              href="https://example.com"
+            >
+              <div
+                class="emotion-12 emotion-13"
+              >
+                <div
+                  class="emotion-14 emotion-15"
+                >
+                  <img
+                    alt="An image description"
+                    class="emotion-16 emotion-17"
+                    loading="lazy"
+                    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+                    title="An image title"
+                  />
+                </div>
+                <div
+                  class="emotion-18 emotion-19"
+                >
+                  <div
+                    class="emotion-20 emotion-21"
+                  >
+                    Pre Title
+                  </div>
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h4 emotion-22 emotion-23"
+                >
+                  Title
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
+                >
+                  Lead
+                </p>
+                <div
+                  class="emotion-26 emotion-27"
+                >
+                  <time
+                    class="emotion-28 emotion-29"
+                    datetime="2023-01-01T00:00:00.000Z"
+                  >
+                    01.01.2023 
+                  </time>
+                </div>
+                <div
+                  class="emotion-30 emotion-31"
+                >
+                  <div
+                    class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium emotion-33"
+                    >
+                      Foobar
+                    </span>
+                  </div>
                 </div>
               </div>
             </a>
@@ -6692,31 +8010,31 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-114 emotion-115"
+        class="emotion-134 emotion-135"
       >
         <button
           aria-label="Slide 1"
-          class="emotion-116 emotion-117"
+          class="emotion-136 emotion-137"
         >
           <span
-            class="emotion-118 emotion-119"
+            class="emotion-138 emotion-139"
           />
         </button>
         <button
           aria-label="Slide 2"
-          class="emotion-116 emotion-117"
+          class="emotion-136 emotion-137"
         />
         <button
           aria-label="Slide 3"
-          class="emotion-116 emotion-117"
+          class="emotion-136 emotion-137"
         />
         <button
           aria-label="Slide 4"
-          class="emotion-116 emotion-117"
+          class="emotion-136 emotion-137"
         />
         <button
           aria-label="Slide 5"
-          class="emotion-116 emotion-117"
+          class="emotion-136 emotion-137"
         />
       </div>
     </div>

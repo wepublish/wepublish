@@ -38,6 +38,8 @@ import {
   BajourTeaserList
 } from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
+import {EmotionCache} from '@emotion/cache'
+import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 
 setDefaultOptions({
   locale: de
@@ -63,7 +65,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
-}>
+}> & {emotionCache?: EmotionCache}
 
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
@@ -84,13 +86,13 @@ const ButtonLink = styled('a')`
 
 const {publicRuntimeConfig} = getConfig()
 
-function CustomApp({Component, pageProps}: CustomAppProps) {
+function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'Bajour'
   const router = useRouter()
   const {popup} = router.query
 
   return (
-    <>
+    <AppCacheProvider emotionCache={emotionCache}>
       <Head>
         <title key="title">{siteTitle}</title>
 
@@ -194,7 +196,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           </WebsiteBuilderProvider>
         </WebsiteProvider>
       </SessionProvider>
-    </>
+    </AppCacheProvider>
   )
 }
 

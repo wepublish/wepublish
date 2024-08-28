@@ -3,10 +3,7 @@
 exports[`PeriodicityPicker should render Default 1`] = `
 <DocumentFragment>
   .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: grid;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -16,7 +13,6 @@ exports[`PeriodicityPicker should render Default 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
-  display: grid;
 }
 
 .emotion-2 {
@@ -26,14 +22,13 @@ exports[`PeriodicityPicker should render Default 1`] = `
   font-weight: 400;
   font-size: 1rem;
   padding: 0;
-  position: relative;
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(133% - 32px);
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(14px, -9px) scale(0.75);
@@ -71,15 +66,11 @@ exports[`PeriodicityPicker should render Default 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
   border-radius: 4px;
 }
 
@@ -123,7 +114,7 @@ exports[`PeriodicityPicker should render Default 1`] = `
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 4px 0 5px;
+  padding: 16.5px 14px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -137,7 +128,6 @@ exports[`PeriodicityPicker should render Default 1`] = `
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
 }
 
 .emotion-4:focus {
@@ -390,10 +380,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 exports[`PeriodicityPicker should render Selected 1`] = `
 <DocumentFragment>
   .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: grid;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -403,7 +390,6 @@ exports[`PeriodicityPicker should render Selected 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
-  display: grid;
 }
 
 .emotion-2 {
@@ -413,14 +399,13 @@ exports[`PeriodicityPicker should render Selected 1`] = `
   font-weight: 400;
   font-size: 1rem;
   padding: 0;
-  position: relative;
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(133% - 32px);
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(14px, -9px) scale(0.75);
@@ -458,15 +443,11 @@ exports[`PeriodicityPicker should render Selected 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
   border-radius: 4px;
 }
 
@@ -510,7 +491,7 @@ exports[`PeriodicityPicker should render Selected 1`] = `
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 4px 0 5px;
+  padding: 16.5px 14px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -524,7 +505,6 @@ exports[`PeriodicityPicker should render Selected 1`] = `
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
 }
 
 .emotion-4:focus {
@@ -779,10 +759,7 @@ exports[`PeriodicityPicker should render Single 1`] = `<DocumentFragment />`;
 exports[`PeriodicityPicker should render WithClassName 1`] = `
 <DocumentFragment>
   .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: grid;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -792,7 +769,6 @@ exports[`PeriodicityPicker should render WithClassName 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
-  display: grid;
 }
 
 .emotion-2 {
@@ -802,14 +778,13 @@ exports[`PeriodicityPicker should render WithClassName 1`] = `
   font-weight: 400;
   font-size: 1rem;
   padding: 0;
-  position: relative;
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(133% - 32px);
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(14px, -9px) scale(0.75);
@@ -847,15 +822,11 @@ exports[`PeriodicityPicker should render WithClassName 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
   border-radius: 4px;
 }
 
@@ -899,7 +870,7 @@ exports[`PeriodicityPicker should render WithClassName 1`] = `
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 4px 0 5px;
+  padding: 16.5px 14px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -913,7 +884,6 @@ exports[`PeriodicityPicker should render WithClassName 1`] = `
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
 }
 
 .emotion-4:focus {
@@ -1166,10 +1136,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 exports[`PeriodicityPicker should render WithEmotion 1`] = `
 <DocumentFragment>
   .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: grid;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -1179,7 +1146,6 @@ exports[`PeriodicityPicker should render WithEmotion 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
-  display: grid;
   background-color: #eee;
 }
 
@@ -1190,14 +1156,13 @@ exports[`PeriodicityPicker should render WithEmotion 1`] = `
   font-weight: 400;
   font-size: 1rem;
   padding: 0;
-  position: relative;
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(133% - 32px);
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(14px, -9px) scale(0.75);
@@ -1235,15 +1200,11 @@ exports[`PeriodicityPicker should render WithEmotion 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
   border-radius: 4px;
 }
 
@@ -1287,7 +1248,7 @@ exports[`PeriodicityPicker should render WithEmotion 1`] = `
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 4px 0 5px;
+  padding: 16.5px 14px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -1301,7 +1262,6 @@ exports[`PeriodicityPicker should render WithEmotion 1`] = `
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
 }
 
 .emotion-4:focus {
@@ -1554,10 +1514,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 exports[`PeriodicityPicker should render WithError 1`] = `
 <DocumentFragment>
   .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: grid;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -1567,7 +1524,6 @@ exports[`PeriodicityPicker should render WithError 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
-  display: grid;
 }
 
 .emotion-2 {
@@ -1577,14 +1533,13 @@ exports[`PeriodicityPicker should render WithError 1`] = `
   font-weight: 400;
   font-size: 1rem;
   padding: 0;
-  position: relative;
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(133% - 32px);
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(14px, -9px) scale(0.75);
@@ -1622,15 +1577,11 @@ exports[`PeriodicityPicker should render WithError 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
   border-radius: 4px;
 }
 
@@ -1674,7 +1625,7 @@ exports[`PeriodicityPicker should render WithError 1`] = `
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 4px 0 5px;
+  padding: 16.5px 14px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -1688,7 +1639,6 @@ exports[`PeriodicityPicker should render WithError 1`] = `
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
 }
 
 .emotion-4:focus {
@@ -1941,10 +1891,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 exports[`PeriodicityPicker should render WithLoading 1`] = `
 <DocumentFragment>
   .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: grid;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -1954,7 +1901,6 @@ exports[`PeriodicityPicker should render WithLoading 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
-  display: grid;
 }
 
 .emotion-2 {
@@ -1964,14 +1910,13 @@ exports[`PeriodicityPicker should render WithLoading 1`] = `
   font-weight: 400;
   font-size: 1rem;
   padding: 0;
-  position: relative;
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(133% - 32px);
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(14px, -9px) scale(0.75);
@@ -2009,15 +1954,11 @@ exports[`PeriodicityPicker should render WithLoading 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
   border-radius: 4px;
 }
 
@@ -2061,7 +2002,7 @@ exports[`PeriodicityPicker should render WithLoading 1`] = `
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 4px 0 5px;
+  padding: 16.5px 14px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -2075,7 +2016,6 @@ exports[`PeriodicityPicker should render WithLoading 1`] = `
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
 }
 
 .emotion-4:focus {

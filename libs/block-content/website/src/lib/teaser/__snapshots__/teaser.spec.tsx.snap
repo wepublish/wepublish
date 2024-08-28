@@ -15,14 +15,14 @@ exports[`Teaser Article should render Default 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -32,7 +32,6 @@ exports[`Teaser Article should render Default 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -60,16 +59,13 @@ exports[`Teaser Article should render Default 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -106,8 +102,6 @@ exports[`Teaser Article should render Default 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -145,12 +139,11 @@ exports[`Teaser Article should render Default 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -262,14 +255,14 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -279,7 +272,6 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -307,16 +299,13 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -353,8 +342,6 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -392,12 +379,11 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -509,14 +495,14 @@ exports[`Teaser Article should render WithoutArticlePreTitle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -526,7 +512,6 @@ exports[`Teaser Article should render WithoutArticlePreTitle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -554,16 +539,13 @@ exports[`Teaser Article should render WithoutArticlePreTitle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -600,8 +582,6 @@ exports[`Teaser Article should render WithoutArticlePreTitle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -639,12 +619,11 @@ exports[`Teaser Article should render WithoutArticlePreTitle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -665,6 +644,145 @@ exports[`Teaser Article should render WithoutArticlePreTitle 1`] = `
 
 .emotion-21 {
   font-weight: 400;
+}
+
+.emotion-23 {
+  display: none;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  gap: 8px;
+  grid-area: tags;
+}
+
+.emotion-25 {
+  max-width: 100%;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-size: 0.8125rem;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: #e91e63;
+  background-color: transparent;
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 1px solid rgba(233, 30, 99, 0.7);
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.emotion-25.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-25 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-25 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: rgb(163, 21, 69);
+}
+
+.emotion-25 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: rgb(0, 0, 0);
+}
+
+.emotion-25 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-25 .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+  color: inherit;
+}
+
+.emotion-25 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-25 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-25 .MuiChip-deleteIcon:hover,
+.emotion-25 .MuiChip-deleteIcon:active {
+  color: #fff;
+}
+
+.emotion-25.MuiChip-clickable:hover {
+  background-color: rgba(233, 30, 99, 0.04);
+}
+
+.emotion-25.Mui-focusVisible {
+  background-color: rgba(233, 30, 99, 0.12);
+}
+
+.emotion-25 .MuiChip-avatar {
+  margin-left: 4px;
+}
+
+.emotion-25 .MuiChip-avatarSmall {
+  margin-left: 2px;
+}
+
+.emotion-25 .MuiChip-icon {
+  margin-left: 4px;
+}
+
+.emotion-25 .MuiChip-iconSmall {
+  margin-left: 2px;
+}
+
+.emotion-25 .MuiChip-deleteIcon {
+  color: rgba(233, 30, 99, 0.7);
+}
+
+.emotion-25 .MuiChip-deleteIcon:hover,
+.emotion-25 .MuiChip-deleteIcon:active {
+  color: #e91e63;
+}
+
+.emotion-25 .MuiChip-deleteIconSmall {
+  margin-right: 3px;
+}
+
+.emotion-26 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
 }
 
 <article
@@ -735,6 +853,28 @@ https://unsplash.it/200/100 200w"
             | 01.01.2023 
           </time>
         </div>
+        <div
+          class="emotion-23 emotion-24"
+        >
+          <div
+            class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-25"
+          >
+            <span
+              class="MuiChip-label MuiChip-labelMedium emotion-26"
+            >
+              Secondary Tag
+            </span>
+          </div>
+          <div
+            class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-25"
+          >
+            <span
+              class="MuiChip-label MuiChip-labelMedium emotion-26"
+            >
+              Main Tag
+            </span>
+          </div>
+        </div>
       </div>
     </a>
   </article>
@@ -756,14 +896,14 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -773,7 +913,6 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -801,16 +940,13 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -847,8 +983,6 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -886,12 +1020,11 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -994,14 +1127,14 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -1011,7 +1144,6 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -1039,16 +1171,13 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -1085,8 +1214,6 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -1124,12 +1251,11 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -1241,14 +1367,14 @@ exports[`Teaser Article should render WithoutDate 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -1258,7 +1384,6 @@ exports[`Teaser Article should render WithoutDate 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -1286,16 +1411,13 @@ exports[`Teaser Article should render WithoutDate 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -1332,8 +1454,6 @@ exports[`Teaser Article should render WithoutDate 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -1371,12 +1491,11 @@ exports[`Teaser Article should render WithoutDate 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -1478,14 +1597,14 @@ exports[`Teaser Article should render WithoutImage 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -1495,7 +1614,6 @@ exports[`Teaser Article should render WithoutImage 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -1523,16 +1641,13 @@ exports[`Teaser Article should render WithoutImage 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -1569,8 +1684,6 @@ exports[`Teaser Article should render WithoutImage 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -1608,12 +1721,11 @@ exports[`Teaser Article should render WithoutImage 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -1725,21 +1837,21 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-s6gs1e-ImageWrapper-Teaser:where(.emotion-1:hover .css-s6gs1e-ImageWrapper-Teaser) {
+.css-b495xr-ImageWrapper-Teaser:where(.emotion-1:hover .css-b495xr-ImageWrapper-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -1749,7 +1861,6 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -1795,8 +1906,6 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -1834,12 +1943,11 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
 }
 
 .emotion-13 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -1932,14 +2040,14 @@ exports[`Teaser Article should render WithoutLead 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -1949,7 +2057,6 @@ exports[`Teaser Article should render WithoutLead 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -1977,16 +2084,13 @@ exports[`Teaser Article should render WithoutLead 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -2023,8 +2127,6 @@ exports[`Teaser Article should render WithoutLead 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -2062,12 +2164,11 @@ exports[`Teaser Article should render WithoutLead 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -2179,14 +2280,14 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -2196,7 +2297,6 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -2224,16 +2324,13 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -2270,8 +2367,6 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -2309,12 +2404,11 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -2426,14 +2520,14 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -2443,7 +2537,6 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -2471,16 +2564,13 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -2517,8 +2607,6 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -2556,12 +2644,11 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -2673,14 +2760,14 @@ exports[`Teaser Custom should render Default 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -2690,7 +2777,6 @@ exports[`Teaser Custom should render Default 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -2718,16 +2804,13 @@ exports[`Teaser Custom should render Default 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -2764,8 +2847,6 @@ exports[`Teaser Custom should render Default 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -2803,12 +2884,11 @@ exports[`Teaser Custom should render Default 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -2900,14 +2980,14 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -2917,7 +2997,6 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -2945,16 +3024,13 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -2991,8 +3067,6 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -3030,12 +3104,11 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -3127,21 +3200,21 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-s6gs1e-ImageWrapper-Teaser:where(.emotion-1:hover .css-s6gs1e-ImageWrapper-Teaser) {
+.css-b495xr-ImageWrapper-Teaser:where(.emotion-1:hover .css-b495xr-ImageWrapper-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -3151,7 +3224,6 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -3197,8 +3269,6 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -3236,12 +3306,11 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
 }
 
 .emotion-13 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -3314,18 +3383,18 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-6mexrt-TeaserPreTitleWrapper:where(.emotion-1:hover .css-6mexrt-TeaserPreTitleWrapper) {
+.css-4hpttn-TeaserPreTitleWrapper:where(.emotion-1:hover .css-4hpttn-TeaserPreTitleWrapper) {
   background-color: #e91e63;
 }
 
-.css-hc9hel-TeaserPreTitle:where(.emotion-1:hover .css-hc9hel-TeaserPreTitle) {
+.css-1h38v36-TeaserPreTitle:where(.emotion-1:hover .css-1h38v36-TeaserPreTitle) {
   background-color: #e91e63;
   color: #fff;
 }
@@ -3336,7 +3405,6 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -3364,16 +3432,13 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -3419,12 +3484,11 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
 }
 
 .emotion-13 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -3510,14 +3574,14 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -3527,7 +3591,6 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -3555,16 +3618,13 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -3601,8 +3661,6 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -3640,12 +3698,11 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -3735,14 +3792,14 @@ exports[`Teaser Event should render Default 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -3752,7 +3809,6 @@ exports[`Teaser Event should render Default 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -3780,16 +3836,13 @@ exports[`Teaser Event should render Default 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -3826,8 +3879,6 @@ exports[`Teaser Event should render Default 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -3865,12 +3916,11 @@ exports[`Teaser Event should render Default 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -3973,14 +4023,14 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -3990,7 +4040,6 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -4018,16 +4067,13 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -4064,8 +4110,6 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -4103,12 +4147,11 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -4211,14 +4254,14 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -4228,7 +4271,6 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -4256,16 +4298,13 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -4302,8 +4341,6 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -4341,12 +4378,11 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -4449,14 +4485,14 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -4466,7 +4502,6 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -4494,16 +4529,13 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -4540,8 +4572,6 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -4667,14 +4697,14 @@ exports[`Teaser Event should render WithoutImage 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -4684,7 +4714,6 @@ exports[`Teaser Event should render WithoutImage 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -4712,16 +4741,13 @@ exports[`Teaser Event should render WithoutImage 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -4758,8 +4784,6 @@ exports[`Teaser Event should render WithoutImage 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -4797,12 +4821,11 @@ exports[`Teaser Event should render WithoutImage 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -4905,21 +4928,21 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-s6gs1e-ImageWrapper-Teaser:where(.emotion-1:hover .css-s6gs1e-ImageWrapper-Teaser) {
+.css-b495xr-ImageWrapper-Teaser:where(.emotion-1:hover .css-b495xr-ImageWrapper-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -4929,7 +4952,6 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -4975,8 +4997,6 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -5014,12 +5034,11 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
 }
 
 .emotion-13 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -5103,18 +5122,18 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-6mexrt-TeaserPreTitleWrapper:where(.emotion-1:hover .css-6mexrt-TeaserPreTitleWrapper) {
+.css-4hpttn-TeaserPreTitleWrapper:where(.emotion-1:hover .css-4hpttn-TeaserPreTitleWrapper) {
   background-color: #e91e63;
 }
 
-.css-hc9hel-TeaserPreTitle:where(.emotion-1:hover .css-hc9hel-TeaserPreTitle) {
+.css-1h38v36-TeaserPreTitle:where(.emotion-1:hover .css-1h38v36-TeaserPreTitle) {
   background-color: #e91e63;
   color: #fff;
 }
@@ -5125,7 +5144,6 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -5153,16 +5171,13 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -5208,12 +5223,11 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
 }
 
 .emotion-13 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -5310,14 +5324,14 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -5327,7 +5341,6 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -5355,16 +5368,13 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -5401,8 +5411,6 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -5440,12 +5448,11 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -5548,14 +5555,14 @@ exports[`Teaser Page should render Default 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -5565,7 +5572,6 @@ exports[`Teaser Page should render Default 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -5593,16 +5599,13 @@ exports[`Teaser Page should render Default 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -5639,8 +5642,6 @@ exports[`Teaser Page should render Default 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -5678,12 +5679,11 @@ exports[`Teaser Page should render Default 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -5775,14 +5775,14 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -5792,7 +5792,6 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -5820,16 +5819,13 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -5866,8 +5862,6 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -5905,12 +5899,11 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -6002,14 +5995,14 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -6019,7 +6012,6 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -6047,16 +6039,13 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -6093,8 +6082,6 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -6132,12 +6119,11 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -6229,14 +6215,14 @@ exports[`Teaser Page should render WithoutImage 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -6246,7 +6232,6 @@ exports[`Teaser Page should render WithoutImage 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -6274,16 +6259,13 @@ exports[`Teaser Page should render WithoutImage 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -6320,8 +6302,6 @@ exports[`Teaser Page should render WithoutImage 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -6359,12 +6339,11 @@ exports[`Teaser Page should render WithoutImage 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -6456,14 +6435,14 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -6473,7 +6452,6 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -6501,16 +6479,13 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -6547,8 +6522,6 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -6586,12 +6559,11 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -6683,14 +6655,14 @@ exports[`Teaser Page should render WithoutLead 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -6700,7 +6672,6 @@ exports[`Teaser Page should render WithoutLead 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -6728,16 +6699,13 @@ exports[`Teaser Page should render WithoutLead 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -6774,8 +6742,6 @@ exports[`Teaser Page should render WithoutLead 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -6813,12 +6779,11 @@ exports[`Teaser Page should render WithoutLead 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -6910,14 +6875,14 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -6927,7 +6892,6 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -6955,16 +6919,13 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -7001,8 +6962,6 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -7040,12 +6999,11 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -7058,6 +7016,145 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
   margin: 0;
   font-size: 12px;
   grid-area: authors;
+}
+
+.emotion-19 {
+  display: none;
+  -webkit-box-flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  gap: 8px;
+  grid-area: tags;
+}
+
+.emotion-21 {
+  max-width: 100%;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-size: 0.8125rem;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: #e91e63;
+  background-color: transparent;
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 1px solid rgba(233, 30, 99, 0.7);
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.emotion-21.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-21 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-21 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: rgb(163, 21, 69);
+}
+
+.emotion-21 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: rgb(0, 0, 0);
+}
+
+.emotion-21 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-21 .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+  color: inherit;
+}
+
+.emotion-21 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-21 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-21 .MuiChip-deleteIcon:hover,
+.emotion-21 .MuiChip-deleteIcon:active {
+  color: #fff;
+}
+
+.emotion-21.MuiChip-clickable:hover {
+  background-color: rgba(233, 30, 99, 0.04);
+}
+
+.emotion-21.Mui-focusVisible {
+  background-color: rgba(233, 30, 99, 0.12);
+}
+
+.emotion-21 .MuiChip-avatar {
+  margin-left: 4px;
+}
+
+.emotion-21 .MuiChip-avatarSmall {
+  margin-left: 2px;
+}
+
+.emotion-21 .MuiChip-icon {
+  margin-left: 4px;
+}
+
+.emotion-21 .MuiChip-iconSmall {
+  margin-left: 2px;
+}
+
+.emotion-21 .MuiChip-deleteIcon {
+  color: rgba(233, 30, 99, 0.7);
+}
+
+.emotion-21 .MuiChip-deleteIcon:hover,
+.emotion-21 .MuiChip-deleteIcon:active {
+  color: #e91e63;
+}
+
+.emotion-21 .MuiChip-deleteIconSmall {
+  margin-right: 3px;
+}
+
+.emotion-22 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
 }
 
 <article
@@ -7116,6 +7213,28 @@ https://unsplash.it/200/100 200w"
         <div
           class="emotion-17 emotion-18"
         />
+        <div
+          class="emotion-19 emotion-20"
+        >
+          <div
+            class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-21"
+          >
+            <span
+              class="MuiChip-label MuiChip-labelMedium emotion-22"
+            >
+              Secondary Tag
+            </span>
+          </div>
+          <div
+            class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-21"
+          >
+            <span
+              class="MuiChip-label MuiChip-labelMedium emotion-22"
+            >
+              Main Tag
+            </span>
+          </div>
+        </div>
       </div>
     </a>
   </article>
@@ -7137,14 +7256,14 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -7154,7 +7273,6 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -7182,16 +7300,13 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -7228,8 +7343,6 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -7267,12 +7380,11 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -7364,14 +7476,14 @@ exports[`Teaser PeerArticle should render Default 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -7381,7 +7493,6 @@ exports[`Teaser PeerArticle should render Default 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -7409,16 +7520,13 @@ exports[`Teaser PeerArticle should render Default 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -7455,8 +7563,6 @@ exports[`Teaser PeerArticle should render Default 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -7494,12 +7600,11 @@ exports[`Teaser PeerArticle should render Default 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -7611,14 +7716,14 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -7628,7 +7733,6 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -7656,16 +7760,13 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -7702,8 +7803,6 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -7741,12 +7840,11 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -7858,14 +7956,14 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -7875,7 +7973,6 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -7903,16 +8000,13 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -7949,8 +8043,6 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -7988,12 +8080,11 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -8096,14 +8187,14 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -8113,7 +8204,6 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -8141,16 +8231,13 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -8187,8 +8274,6 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -8226,12 +8311,11 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -8343,14 +8427,14 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -8360,7 +8444,6 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -8388,16 +8471,13 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -8434,8 +8514,6 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -8473,12 +8551,11 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -8580,14 +8657,14 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -8597,7 +8674,6 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -8625,16 +8701,13 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -8671,8 +8744,6 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -8710,12 +8781,11 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -8827,21 +8897,21 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-s6gs1e-ImageWrapper-Teaser:where(.emotion-1:hover .css-s6gs1e-ImageWrapper-Teaser) {
+.css-b495xr-ImageWrapper-Teaser:where(.emotion-1:hover .css-b495xr-ImageWrapper-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -8851,7 +8921,6 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -8897,8 +8966,6 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -8936,12 +9003,11 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
 }
 
 .emotion-13 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -9034,14 +9100,14 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -9051,7 +9117,6 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -9079,16 +9144,13 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -9125,8 +9187,6 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -9164,12 +9224,11 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -9281,14 +9340,14 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-liekhy-TeaserPreTitleNoContent:where(.emotion-1:hover .css-liekhy-TeaserPreTitleNoContent) {
+.css-14qlh4f-TeaserPreTitleNoContent:where(.emotion-1:hover .css-14qlh4f-TeaserPreTitleNoContent) {
   background-color: #e91e63;
 }
 
@@ -9298,7 +9357,6 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -9326,16 +9384,13 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -9372,8 +9427,6 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -9411,12 +9464,11 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -9528,7 +9580,7 @@ exports[`Teaser should render WithClassName 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -9541,7 +9593,6 @@ exports[`Teaser should render WithClassName 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -9569,16 +9620,13 @@ exports[`Teaser should render WithClassName 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -9615,8 +9663,6 @@ exports[`Teaser should render WithClassName 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -9654,12 +9700,11 @@ exports[`Teaser should render WithClassName 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -9751,7 +9796,7 @@ exports[`Teaser should render WithEmotion 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -9764,7 +9809,6 @@ exports[`Teaser should render WithEmotion 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -9792,16 +9836,13 @@ exports[`Teaser should render WithEmotion 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -9838,8 +9879,6 @@ exports[`Teaser should render WithEmotion 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -9877,12 +9916,11 @@ exports[`Teaser should render WithEmotion 1`] = `
 }
 
 .emotion-15 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -9974,18 +10012,18 @@ exports[`Teaser should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-1t5cc0o-Teaser:where(.emotion-1:hover .css-1t5cc0o-Teaser) {
+.css-1nme0ku-Teaser:where(.emotion-1:hover .css-1nme0ku-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-6mexrt-TeaserPreTitleWrapper:where(.emotion-1:hover .css-6mexrt-TeaserPreTitleWrapper) {
+.css-4hpttn-TeaserPreTitleWrapper:where(.emotion-1:hover .css-4hpttn-TeaserPreTitleWrapper) {
   background-color: #e91e63;
 }
 
-.css-hc9hel-TeaserPreTitle:where(.emotion-1:hover .css-hc9hel-TeaserPreTitle) {
+.css-1h38v36-TeaserPreTitle:where(.emotion-1:hover .css-1h38v36-TeaserPreTitle) {
   background-color: #e91e63;
   color: #fff;
 }
@@ -9996,7 +10034,6 @@ exports[`Teaser should render WithoutPreTitle 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-3 {
@@ -10024,16 +10061,13 @@ exports[`Teaser should render WithoutPreTitle 1`] = `
 .emotion-7 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-7:where(.emotion-1:hover .emotion-7) {
@@ -10079,12 +10113,11 @@ exports[`Teaser should render WithoutPreTitle 1`] = `
 }
 
 .emotion-13 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }

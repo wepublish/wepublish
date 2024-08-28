@@ -49,12 +49,11 @@ exports[`Personal Data Form Container should render Default 1`] = `
 
 .emotion-10 {
   max-width: 100%;
-  height: auto;
+  height: 150px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 150px;
-  height: 150px;
   border-radius: 100%;
   overflow: hidden;
 }
@@ -75,9 +74,6 @@ exports[`Personal Data Form Container should render Default 1`] = `
 }
 
 .emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -94,8 +90,8 @@ exports[`Personal Data Form Container should render Default 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 8px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -106,19 +102,15 @@ exports[`Personal Data Form Container should render Default 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #d32f2f;
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
   font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #d32f2f;
 }
 
 .emotion-15::-moz-focus-inner {
@@ -175,9 +167,6 @@ exports[`Personal Data Form Container should render Default 1`] = `
 }
 
 .emotion-17 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -194,8 +183,8 @@ exports[`Personal Data Form Container should render Default 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 8px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -206,19 +195,15 @@ exports[`Personal Data Form Container should render Default 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
   font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #e91e63;
 }
 
 .emotion-17::-moz-focus-inner {
@@ -263,9 +248,6 @@ exports[`Personal Data Form Container should render Default 1`] = `
 }
 
 .emotion-19 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -285,14 +267,13 @@ exports[`Personal Data Form Container should render Default 1`] = `
   font-weight: 400;
   font-size: 1rem;
   padding: 0;
-  position: relative;
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(133% - 32px);
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(14px, -9px) scale(0.75);
@@ -330,15 +311,11 @@ exports[`Personal Data Form Container should render Default 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
   border-radius: 4px;
 }
 
@@ -374,7 +351,7 @@ exports[`Personal Data Form Container should render Default 1`] = `
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 4px 0 5px;
+  padding: 16.5px 14px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -388,7 +365,6 @@ exports[`Personal Data Form Container should render Default 1`] = `
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
 }
 
 .emotion-22::-webkit-input-placeholder {
@@ -527,14 +503,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   font-weight: 400;
   font-size: 1rem;
   padding: 0;
-  position: relative;
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(100% - 24px);
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(14px, 16px) scale(1);
@@ -583,9 +558,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
 }
 
 .emotion-45 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -617,16 +589,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   width: 100%;
-  position: relative;
   border-radius: 4px;
 }
 
@@ -659,9 +627,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
 }
 
 .emotion-51 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -676,9 +641,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
 }
 
 .emotion-63 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -720,9 +682,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
   font-size: 0.75rem;
+  margin-bottom: 0.35em;
   position: absolute;
   top: 0;
 }
@@ -740,16 +701,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   width: 100%;
-  position: relative;
   border-radius: 4px;
   padding-right: 14px;
 }
@@ -786,7 +743,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 4px 0 5px;
+  padding: 16.5px 14px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -800,7 +757,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
   padding-right: 0;
 }
 
@@ -893,9 +849,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
 }
 
 .emotion-76 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   height: 0.01em;
   max-height: 2em;
@@ -909,9 +862,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
 }
 
 .emotion-77 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -928,8 +878,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 8px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -940,16 +890,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
   font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   margin-right: -12px;
@@ -993,9 +940,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
 }
 
 .emotion-98 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1008,12 +952,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
+  background-color: #e91e63;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 6px 16px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1024,24 +968,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #fff;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
+  font-weight: 700;
   font-size: 0.875rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
-  font-weight: 700;
   justify-self: flex-end;
 }
 
@@ -2070,12 +2006,11 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
 
 .emotion-10 {
   max-width: 100%;
-  height: auto;
+  height: 150px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 150px;
-  height: 150px;
   border-radius: 100%;
   overflow: hidden;
 }
@@ -2096,9 +2031,6 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
 }
 
 .emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2115,8 +2047,8 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 8px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -2127,19 +2059,15 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #d32f2f;
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
   font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #d32f2f;
 }
 
 .emotion-15::-moz-focus-inner {
@@ -2196,9 +2124,6 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
 }
 
 .emotion-17 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2215,8 +2140,8 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 8px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -2227,19 +2152,15 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
   font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #e91e63;
 }
 
 .emotion-17::-moz-focus-inner {
@@ -2284,9 +2205,6 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
 }
 
 .emotion-19 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2306,14 +2224,13 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
   font-weight: 400;
   font-size: 1rem;
   padding: 0;
-  position: relative;
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(133% - 32px);
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(14px, -9px) scale(0.75);
@@ -2351,15 +2268,11 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
   border-radius: 4px;
 }
 
@@ -2395,7 +2308,7 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 4px 0 5px;
+  padding: 16.5px 14px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -2409,7 +2322,6 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
 }
 
 .emotion-22::-webkit-input-placeholder {
@@ -2548,14 +2460,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   font-weight: 400;
   font-size: 1rem;
   padding: 0;
-  position: relative;
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(100% - 24px);
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(14px, 16px) scale(1);
@@ -2604,9 +2515,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
 }
 
 .emotion-45 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2638,16 +2546,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   width: 100%;
-  position: relative;
   border-radius: 4px;
 }
 
@@ -2680,9 +2584,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
 }
 
 .emotion-51 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2697,9 +2598,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
 }
 
 .emotion-63 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2741,9 +2639,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
   font-size: 0.75rem;
+  margin-bottom: 0.35em;
   position: absolute;
   top: 0;
 }
@@ -2761,16 +2658,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   width: 100%;
-  position: relative;
   border-radius: 4px;
   padding-right: 14px;
 }
@@ -2807,7 +2700,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 4px 0 5px;
+  padding: 16.5px 14px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -2821,7 +2714,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
   padding-right: 0;
 }
 
@@ -2914,9 +2806,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
 }
 
 .emotion-76 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   height: 0.01em;
   max-height: 2em;
@@ -2930,9 +2819,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
 }
 
 .emotion-77 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2949,8 +2835,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 8px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -2961,16 +2847,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
   font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   margin-right: -12px;
@@ -3014,9 +2897,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
 }
 
 .emotion-98 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3029,12 +2909,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
+  background-color: #e91e63;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 6px 16px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3045,24 +2925,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #fff;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
+  font-weight: 700;
   font-size: 0.875rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
-  font-weight: 700;
   justify-self: flex-end;
 }
 
@@ -3760,12 +3632,11 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
 
 .emotion-10 {
   max-width: 100%;
-  height: auto;
+  height: 150px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 150px;
-  height: 150px;
   border-radius: 100%;
   overflow: hidden;
 }
@@ -3786,9 +3657,6 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
 }
 
 .emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3805,8 +3673,8 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 8px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3817,19 +3685,15 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #d32f2f;
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
   font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #d32f2f;
 }
 
 .emotion-15::-moz-focus-inner {
@@ -3886,9 +3750,6 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
 }
 
 .emotion-17 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3905,8 +3766,8 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 8px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3917,19 +3778,15 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
   font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #e91e63;
 }
 
 .emotion-17::-moz-focus-inner {
@@ -3974,9 +3831,6 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
 }
 
 .emotion-19 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -3996,14 +3850,13 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
   font-weight: 400;
   font-size: 1rem;
   padding: 0;
-  position: relative;
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(133% - 32px);
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(14px, -9px) scale(0.75);
@@ -4041,15 +3894,11 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
   border-radius: 4px;
 }
 
@@ -4085,7 +3934,7 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 4px 0 5px;
+  padding: 16.5px 14px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -4099,7 +3948,6 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
 }
 
 .emotion-22::-webkit-input-placeholder {
@@ -4238,14 +4086,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   font-weight: 400;
   font-size: 1rem;
   padding: 0;
-  position: relative;
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(100% - 24px);
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(14px, 16px) scale(1);
@@ -4294,9 +4141,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
 }
 
 .emotion-45 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -4328,16 +4172,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   width: 100%;
-  position: relative;
   border-radius: 4px;
 }
 
@@ -4370,9 +4210,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
 }
 
 .emotion-51 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -4387,9 +4224,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
 }
 
 .emotion-63 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -4431,9 +4265,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
   font-size: 0.75rem;
+  margin-bottom: 0.35em;
   position: absolute;
   top: 0;
 }
@@ -4451,16 +4284,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   width: 100%;
-  position: relative;
   border-radius: 4px;
   padding-right: 14px;
 }
@@ -4497,7 +4326,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 4px 0 5px;
+  padding: 16.5px 14px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -4511,7 +4340,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
   padding-right: 0;
 }
 
@@ -4604,9 +4432,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
 }
 
 .emotion-76 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   height: 0.01em;
   max-height: 2em;
@@ -4620,9 +4445,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
 }
 
 .emotion-77 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4639,8 +4461,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 8px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -4651,16 +4473,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
   font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   margin-right: -12px;
@@ -4704,9 +4523,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
 }
 
 .emotion-98 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4719,12 +4535,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
+  background-color: #e91e63;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 6px 16px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -4735,24 +4551,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-75:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #fff;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
+  font-weight: 700;
   font-size: 0.875rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
-  font-weight: 700;
   justify-self: flex-end;
 }
 

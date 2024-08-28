@@ -14,6 +14,10 @@ export const PaywallBlockWrapper = styled('div')`
   align-items: center;
 `
 
+export const PaywallBlockImage = styled(Image)`
+  max-width: 100%;
+`
+
 const buttonStyles = (theme: Theme) => css`
   width: fit-content;
 `
@@ -25,7 +29,7 @@ export const PaywallBlock = () => {
 
   return (
     <PaywallBlockWrapper>
-      <Image
+      <PaywallBlockImage
         alt="Mannschaft+ Teaser"
         src={PaywallImage.src}
         height={PaywallImage.height}

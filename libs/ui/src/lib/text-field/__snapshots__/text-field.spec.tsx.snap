@@ -3,9 +3,6 @@
 exports[`TextField should render TextField 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -18,9 +15,6 @@ exports[`TextField should render TextField 1`] = `
 }
 
 .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -40,14 +34,13 @@ exports[`TextField should render TextField 1`] = `
   font-weight: 400;
   font-size: 1rem;
   padding: 0;
-  position: relative;
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(100% - 24px);
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(14px, 16px) scale(1);
@@ -81,15 +74,11 @@ exports[`TextField should render TextField 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
   border-radius: 4px;
 }
 
@@ -125,7 +114,7 @@ exports[`TextField should render TextField 1`] = `
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 4px 0 5px;
+  padding: 16.5px 14px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -139,7 +128,6 @@ exports[`TextField should render TextField 1`] = `
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
 }
 
 .emotion-4::-webkit-input-placeholder {

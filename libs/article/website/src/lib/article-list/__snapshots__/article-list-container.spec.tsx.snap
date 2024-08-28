@@ -45,7 +45,6 @@ exports[`AuthorList Container should render Default 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-7 {
@@ -73,16 +72,13 @@ exports[`AuthorList Container should render Default 1`] = `
 .emotion-11 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-11:where(.emotion-5:hover .emotion-11) {
@@ -128,12 +124,11 @@ exports[`AuthorList Container should render Default 1`] = `
 }
 
 .emotion-17 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -433,7 +428,6 @@ exports[`AuthorList Container should render WithClassName 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-7 {
@@ -461,16 +455,13 @@ exports[`AuthorList Container should render WithClassName 1`] = `
 .emotion-11 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-11:where(.emotion-5:hover .emotion-11) {
@@ -516,12 +507,11 @@ exports[`AuthorList Container should render WithClassName 1`] = `
 }
 
 .emotion-17 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -821,7 +811,6 @@ exports[`AuthorList Container should render WithEmotion 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-7 {
@@ -849,16 +838,13 @@ exports[`AuthorList Container should render WithEmotion 1`] = `
 .emotion-11 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-11:where(.emotion-5:hover .emotion-11) {
@@ -904,12 +890,11 @@ exports[`AuthorList Container should render WithEmotion 1`] = `
 }
 
 .emotion-17 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -1209,7 +1194,6 @@ exports[`AuthorList Container should render WithFilter 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-7 {
@@ -1237,16 +1221,13 @@ exports[`AuthorList Container should render WithFilter 1`] = `
 .emotion-11 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-11:where(.emotion-5:hover .emotion-11) {
@@ -1292,12 +1273,11 @@ exports[`AuthorList Container should render WithFilter 1`] = `
 }
 
 .emotion-17 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }

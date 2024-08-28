@@ -34,14 +34,12 @@ exports[`Break Block should render Default 1`] = `
 }
 
 .emotion-4 {
-  max-width: 100%;
+  max-width: 480px;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
-  object-fit: contain;
   object-fit: cover;
   width: 100%;
-  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -52,14 +50,12 @@ exports[`Break Block should render Default 1`] = `
 }
 
 .emotion-8 {
-  font-size: 40px;
+  font-size: 26px;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 26px;
 }
 
 @media (min-width:900px) {
@@ -306,14 +302,12 @@ exports[`Break Block should render ImageRight 1`] = `
 }
 
 .emotion-4 {
-  max-width: 100%;
+  max-width: 480px;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
-  object-fit: contain;
   object-fit: cover;
   width: 100%;
-  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -333,14 +327,12 @@ exports[`Break Block should render ImageRight 1`] = `
 }
 
 .emotion-8 {
-  font-size: 40px;
+  font-size: 26px;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 26px;
 }
 
 @media (min-width:900px) {
@@ -579,14 +571,12 @@ exports[`Break Block should render WithButton 1`] = `
 }
 
 .emotion-4 {
-  max-width: 100%;
+  max-width: 480px;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
-  object-fit: contain;
   object-fit: cover;
   width: 100%;
-  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -597,14 +587,12 @@ exports[`Break Block should render WithButton 1`] = `
 }
 
 .emotion-8 {
-  font-size: 40px;
+  font-size: 26px;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 26px;
 }
 
 @media (min-width:900px) {
@@ -667,13 +655,10 @@ exports[`Break Block should render WithButton 1`] = `
 .emotion-16 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
+  color: #fff;
+  -webkit-text-decoration: none;
+  text-decoration: none;
   text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -686,12 +671,11 @@ exports[`Break Block should render WithButton 1`] = `
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
+  background-color: #000;
   outline: 0;
   border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 32px;
+  padding: 8px 24px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -700,34 +684,17 @@ exports[`Break Block should render WithButton 1`] = `
   vertical-align: middle;
   -moz-appearance: none;
   -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
+  font-weight: 700;
   font-size: 0.875rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: none;
   min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
-  font-weight: 700;
-  text-transform: none;
-  background-color: #000;
   margin-top: 16px;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
-  padding: 8px 24px;
-  border-radius: 32px;
 }
 
 .emotion-16:hover {
@@ -987,14 +954,12 @@ exports[`Break Block should render WithClassName 1`] = `
 }
 
 .emotion-4 {
-  max-width: 100%;
+  max-width: 480px;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
-  object-fit: contain;
   object-fit: cover;
   width: 100%;
-  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -1005,14 +970,12 @@ exports[`Break Block should render WithClassName 1`] = `
 }
 
 .emotion-8 {
-  font-size: 40px;
+  font-size: 26px;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 26px;
 }
 
 @media (min-width:900px) {
@@ -1251,14 +1214,12 @@ exports[`Break Block should render WithEmotion 1`] = `
 }
 
 .emotion-4 {
-  max-width: 100%;
+  max-width: 480px;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
-  object-fit: contain;
   object-fit: cover;
   width: 100%;
-  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -1269,14 +1230,12 @@ exports[`Break Block should render WithEmotion 1`] = `
 }
 
 .emotion-8 {
-  font-size: 40px;
+  font-size: 26px;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 26px;
 }
 
 @media (min-width:900px) {
@@ -1515,14 +1474,12 @@ exports[`Break Block should render WithoutImage 1`] = `
 }
 
 .emotion-4 {
-  font-size: 40px;
+  font-size: 3.75rem;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 3.75rem;
 }
 
 @media (min-width:900px) {
@@ -1745,14 +1702,12 @@ exports[`Break Block should render WithoutImageRight 1`] = `
 }
 
 .emotion-4 {
-  font-size: 40px;
+  font-size: 3.75rem;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 3.75rem;
 }
 
 @media (min-width:900px) {

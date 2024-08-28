@@ -44,9 +44,6 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
 }
 
 .emotion-8 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -61,10 +58,10 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
   -webkit-tap-highlight-color: transparent;
   background-color: transparent;
   outline: 0;
-  border: 0;
+  border: 1px solid rgba(233, 30, 99, 0.5);
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 5px 15px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -75,21 +72,15 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 500;
   font-size: 0.875rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 5px 15px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(233, 30, 99, 0.5);
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
 }
 
@@ -289,7 +280,6 @@ exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
   position: relative;
   font-size: 0.75em;
   padding: 4px 8px;
-  position: relative;
   background-color: #eeeeee;
 }
 
@@ -314,16 +304,14 @@ exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #e0e0e0;
+  background-color: #e91e63;
   z-index: 0;
   pointer-events: none;
-  background-color: #e91e63;
   width: 47.61904761904761%;
 }
 
 .emotion-34 {
   position: relative;
-  color: rgba(0, 0, 0, 0.87);
   color: #fff;
 }
 
@@ -487,9 +475,6 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
 }
 
 .emotion-8 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -504,10 +489,10 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
   -webkit-tap-highlight-color: transparent;
   background-color: transparent;
   outline: 0;
-  border: 0;
+  border: 1px solid rgba(233, 30, 99, 0.5);
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 5px 15px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -518,21 +503,15 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 500;
   font-size: 0.875rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 5px 15px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(233, 30, 99, 0.5);
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
 }
 
@@ -833,7 +812,6 @@ exports[`Poll Block should render Default 1`] = `
   position: relative;
   font-size: 0.75em;
   padding: 4px 8px;
-  position: relative;
   background-color: #eeeeee;
 }
 
@@ -842,16 +820,14 @@ exports[`Poll Block should render Default 1`] = `
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #e0e0e0;
+  background-color: #e91e63;
   z-index: 0;
   pointer-events: none;
-  background-color: #e91e63;
   width: 52.38095238095239%;
 }
 
 .emotion-20 {
   position: relative;
-  color: rgba(0, 0, 0, 0.87);
   color: #fff;
 }
 
@@ -1031,9 +1007,6 @@ exports[`Poll Block should render Voting 1`] = `
 }
 
 .emotion-8 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1048,10 +1021,10 @@ exports[`Poll Block should render Voting 1`] = `
   -webkit-tap-highlight-color: transparent;
   background-color: transparent;
   outline: 0;
-  border: 0;
+  border: 1px solid rgba(233, 30, 99, 0.5);
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 5px 15px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1062,21 +1035,15 @@ exports[`Poll Block should render Voting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 500;
   font-size: 0.875rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 5px 15px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(233, 30, 99, 0.5);
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
 }
 
@@ -1276,7 +1243,6 @@ exports[`Poll Block should render VotingClosed 1`] = `
   position: relative;
   font-size: 0.75em;
   padding: 4px 8px;
-  position: relative;
   background-color: #eeeeee;
 }
 
@@ -1285,16 +1251,14 @@ exports[`Poll Block should render VotingClosed 1`] = `
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #e0e0e0;
+  background-color: #e91e63;
   z-index: 0;
   pointer-events: none;
-  background-color: #e91e63;
   width: 52.38095238095239%;
 }
 
 .emotion-20 {
   position: relative;
-  color: rgba(0, 0, 0, 0.87);
   color: #fff;
 }
 
@@ -1598,7 +1562,6 @@ exports[`Poll Block should render WithClassName 1`] = `
   position: relative;
   font-size: 0.75em;
   padding: 4px 8px;
-  position: relative;
   background-color: #eeeeee;
 }
 
@@ -1607,16 +1570,14 @@ exports[`Poll Block should render WithClassName 1`] = `
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #e0e0e0;
+  background-color: #e91e63;
   z-index: 0;
   pointer-events: none;
-  background-color: #e91e63;
   width: 52.38095238095239%;
 }
 
 .emotion-20 {
   position: relative;
-  color: rgba(0, 0, 0, 0.87);
   color: #fff;
 }
 
@@ -1822,7 +1783,6 @@ exports[`Poll Block should render WithEmotion 1`] = `
   position: relative;
   font-size: 0.75em;
   padding: 4px 8px;
-  position: relative;
   background-color: #eeeeee;
 }
 
@@ -1831,16 +1791,14 @@ exports[`Poll Block should render WithEmotion 1`] = `
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #e0e0e0;
+  background-color: #e91e63;
   z-index: 0;
   pointer-events: none;
-  background-color: #e91e63;
   width: 52.38095238095239%;
 }
 
 .emotion-20 {
   position: relative;
-  color: rgba(0, 0, 0, 0.87);
   color: #fff;
 }
 

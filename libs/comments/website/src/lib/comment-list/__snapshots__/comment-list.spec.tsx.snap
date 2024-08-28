@@ -28,12 +28,11 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
 
 .emotion-6 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -50,10 +49,8 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
 }
 
 .emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -96,9 +93,6 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
 }
 
 .emotion-23 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -119,9 +113,6 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
 }
 
 .emotion-27 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -138,9 +129,6 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
 }
 
 .emotion-32 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -157,8 +145,8 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -169,20 +157,15 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.125rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.125rem;
   border-width: 0px;
 }
 
@@ -230,9 +213,6 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
 }
 
 .emotion-34 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -247,10 +227,10 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
   -webkit-tap-highlight-color: transparent;
   background-color: transparent;
   outline: 0;
-  border: 0;
+  border: 1px solid rgba(233, 30, 99, 0.5);
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 3px 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -261,21 +241,15 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 3px 9px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(233, 30, 99, 0.5);
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
   border-width: 1px;
 }
@@ -342,9 +316,6 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
 }
 
 .emotion-796 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: end;
   -ms-flex-pack: end;
@@ -353,9 +324,6 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
 }
 
 .emotion-799 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -368,12 +336,12 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
+  background-color: #e91e63;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 8px 20px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -384,26 +352,16 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #fff;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
+  font-weight: 700;
   font-size: 0.875rem;
   line-height: 1.4;
   text-transform: uppercase;
   min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
-  font-weight: 700;
-  padding: 8px 20px;
-  text-transform: uppercase;
 }
 
 .emotion-799::-moz-focus-inner {
@@ -3903,12 +3861,11 @@ exports[`Comment List should render Commenting 1`] = `
 
 .emotion-6 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -3925,10 +3882,8 @@ exports[`Comment List should render Commenting 1`] = `
 }
 
 .emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -3971,9 +3926,6 @@ exports[`Comment List should render Commenting 1`] = `
 }
 
 .emotion-23 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -3994,9 +3946,6 @@ exports[`Comment List should render Commenting 1`] = `
 }
 
 .emotion-27 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -4013,9 +3962,6 @@ exports[`Comment List should render Commenting 1`] = `
 }
 
 .emotion-32 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4032,8 +3978,8 @@ exports[`Comment List should render Commenting 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -4044,20 +3990,15 @@ exports[`Comment List should render Commenting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.125rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.125rem;
   border-width: 0px;
 }
 
@@ -4105,9 +4046,6 @@ exports[`Comment List should render Commenting 1`] = `
 }
 
 .emotion-34 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4122,10 +4060,10 @@ exports[`Comment List should render Commenting 1`] = `
   -webkit-tap-highlight-color: transparent;
   background-color: transparent;
   outline: 0;
-  border: 0;
+  border: 1px solid rgba(233, 30, 99, 0.5);
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 3px 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -4136,21 +4074,15 @@ exports[`Comment List should render Commenting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 3px 9px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(233, 30, 99, 0.5);
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
   border-width: 1px;
 }
@@ -4217,9 +4149,6 @@ exports[`Comment List should render Commenting 1`] = `
 }
 
 .emotion-796 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: end;
   -ms-flex-pack: end;
@@ -4228,9 +4157,6 @@ exports[`Comment List should render Commenting 1`] = `
 }
 
 .emotion-799 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4243,12 +4169,12 @@ exports[`Comment List should render Commenting 1`] = `
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
+  background-color: #e91e63;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 8px 20px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -4259,26 +4185,16 @@ exports[`Comment List should render Commenting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #fff;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
+  font-weight: 700;
   font-size: 0.875rem;
   line-height: 1.4;
   text-transform: uppercase;
   min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
-  font-weight: 700;
-  padding: 8px 20px;
-  text-transform: uppercase;
 }
 
 .emotion-799::-moz-focus-inner {
@@ -7778,12 +7694,11 @@ exports[`Comment List should render Default 1`] = `
 
 .emotion-6 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -7800,10 +7715,8 @@ exports[`Comment List should render Default 1`] = `
 }
 
 .emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -7846,9 +7759,6 @@ exports[`Comment List should render Default 1`] = `
 }
 
 .emotion-23 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -7869,9 +7779,6 @@ exports[`Comment List should render Default 1`] = `
 }
 
 .emotion-27 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -7888,9 +7795,6 @@ exports[`Comment List should render Default 1`] = `
 }
 
 .emotion-32 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -7907,8 +7811,8 @@ exports[`Comment List should render Default 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -7919,20 +7823,15 @@ exports[`Comment List should render Default 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.125rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.125rem;
   border-width: 0px;
 }
 
@@ -10690,8 +10589,8 @@ exports[`Comment List should render Empty 1`] = `
 }
 
 .emotion-2 {
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: rgb(229, 246, 253);
+  color: rgb(1, 67, 97);
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   border-radius: 4px;
@@ -10700,13 +10599,8 @@ exports[`Comment List should render Empty 1`] = `
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-  background-color: rgb(229, 246, 253);
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 6px 16px;
-  color: rgb(1, 67, 97);
 }
 
 .emotion-2 .MuiAlert-icon {
@@ -10716,9 +10610,6 @@ exports[`Comment List should render Empty 1`] = `
 .emotion-3 {
   margin-right: 12px;
   padding: 7px 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   font-size: 22px;
   opacity: 0.9;
@@ -10807,12 +10698,11 @@ exports[`Comment List should render WithClassName 1`] = `
 
 .emotion-6 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -10829,10 +10719,8 @@ exports[`Comment List should render WithClassName 1`] = `
 }
 
 .emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -10875,9 +10763,6 @@ exports[`Comment List should render WithClassName 1`] = `
 }
 
 .emotion-23 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -10898,9 +10783,6 @@ exports[`Comment List should render WithClassName 1`] = `
 }
 
 .emotion-27 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -10917,9 +10799,6 @@ exports[`Comment List should render WithClassName 1`] = `
 }
 
 .emotion-32 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -10936,8 +10815,8 @@ exports[`Comment List should render WithClassName 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -10948,20 +10827,15 @@ exports[`Comment List should render WithClassName 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.125rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.125rem;
   border-width: 0px;
 }
 
@@ -13740,12 +13614,11 @@ exports[`Comment List should render WithEmotion 1`] = `
 
 .emotion-6 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -13762,10 +13635,8 @@ exports[`Comment List should render WithEmotion 1`] = `
 }
 
 .emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -13808,9 +13679,6 @@ exports[`Comment List should render WithEmotion 1`] = `
 }
 
 .emotion-23 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -13831,9 +13699,6 @@ exports[`Comment List should render WithEmotion 1`] = `
 }
 
 .emotion-27 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -13850,9 +13715,6 @@ exports[`Comment List should render WithEmotion 1`] = `
 }
 
 .emotion-32 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -13869,8 +13731,8 @@ exports[`Comment List should render WithEmotion 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -13881,20 +13743,15 @@ exports[`Comment List should render WithEmotion 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.125rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.125rem;
   border-width: 0px;
 }
 
@@ -16652,8 +16509,8 @@ exports[`Comment List should render WithError 1`] = `
 }
 
 .emotion-2 {
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: rgb(253, 237, 237);
+  color: rgb(95, 33, 32);
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   border-radius: 4px;
@@ -16662,13 +16519,8 @@ exports[`Comment List should render WithError 1`] = `
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-  background-color: rgb(253, 237, 237);
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 6px 16px;
-  color: rgb(95, 33, 32);
 }
 
 .emotion-2 .MuiAlert-icon {
@@ -16678,9 +16530,6 @@ exports[`Comment List should render WithError 1`] = `
 .emotion-3 {
   margin-right: 12px;
   padding: 7px 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   font-size: 22px;
   opacity: 0.9;

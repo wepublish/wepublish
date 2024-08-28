@@ -3,9 +3,6 @@
 exports[`Alert should render Alert 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -14,8 +11,8 @@ exports[`Alert should render Alert 1`] = `
 }
 
 .emotion-1 {
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: rgb(253, 237, 237);
+  color: rgb(95, 33, 32);
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   border-radius: 4px;
@@ -24,13 +21,8 @@ exports[`Alert should render Alert 1`] = `
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-  background-color: rgb(253, 237, 237);
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 6px 16px;
-  color: rgb(95, 33, 32);
 }
 
 .emotion-1 .MuiAlert-icon {
@@ -40,9 +32,6 @@ exports[`Alert should render Alert 1`] = `
 .emotion-2 {
   margin-right: 12px;
   padding: 7px 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   font-size: 22px;
   opacity: 0.9;
@@ -72,8 +61,8 @@ exports[`Alert should render Alert 1`] = `
 }
 
 .emotion-5 {
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: rgb(255, 244, 229);
+  color: rgb(102, 60, 0);
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   border-radius: 4px;
@@ -82,13 +71,8 @@ exports[`Alert should render Alert 1`] = `
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-  background-color: rgb(255, 244, 229);
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 6px 16px;
-  color: rgb(102, 60, 0);
 }
 
 .emotion-5 .MuiAlert-icon {
@@ -96,8 +80,8 @@ exports[`Alert should render Alert 1`] = `
 }
 
 .emotion-9 {
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: rgb(229, 246, 253);
+  color: rgb(1, 67, 97);
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   border-radius: 4px;
@@ -106,13 +90,8 @@ exports[`Alert should render Alert 1`] = `
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-  background-color: rgb(229, 246, 253);
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 6px 16px;
-  color: rgb(1, 67, 97);
 }
 
 .emotion-9 .MuiAlert-icon {
@@ -120,8 +99,8 @@ exports[`Alert should render Alert 1`] = `
 }
 
 .emotion-13 {
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: rgb(237, 247, 237);
+  color: rgb(30, 70, 32);
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   border-radius: 4px;
@@ -130,13 +109,8 @@ exports[`Alert should render Alert 1`] = `
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-  background-color: rgb(237, 247, 237);
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 6px 16px;
-  color: rgb(30, 70, 32);
 }
 
 .emotion-13 .MuiAlert-icon {

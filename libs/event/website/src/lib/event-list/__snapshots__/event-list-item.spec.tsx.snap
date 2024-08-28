@@ -5,15 +5,12 @@ exports[`EventListItem should render Default 1`] = `
   .emotion-0 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  width: 100%;
   color: inherit;
   -webkit-text-decoration: inherit;
   text-decoration: inherit;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
   container-type: inline-size;
 }
 
@@ -30,12 +27,6 @@ exports[`EventListItem should render Default 1`] = `
   align-content: start;
 }
 
-@container (min-width: 400px) {
-  .emotion-1 {
-    grid-template-columns: minmax(30%, 200px) auto;
-  }
-}
-
 .emotion-5 {
   max-width: 100%;
   height: auto;
@@ -45,9 +36,6 @@ exports[`EventListItem should render Default 1`] = `
 }
 
 .emotion-7 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: column;
   -webkit-flex-flow: column;
@@ -542,15 +530,12 @@ exports[`EventListItem should render WithClassName 1`] = `
   .emotion-0 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  width: 100%;
   color: inherit;
   -webkit-text-decoration: inherit;
   text-decoration: inherit;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
   container-type: inline-size;
 }
 
@@ -567,12 +552,6 @@ exports[`EventListItem should render WithClassName 1`] = `
   align-content: start;
 }
 
-@container (min-width: 400px) {
-  .emotion-1 {
-    grid-template-columns: minmax(30%, 200px) auto;
-  }
-}
-
 .emotion-5 {
   max-width: 100%;
   height: auto;
@@ -582,9 +561,6 @@ exports[`EventListItem should render WithClassName 1`] = `
 }
 
 .emotion-7 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: column;
   -webkit-flex-flow: column;
@@ -1079,15 +1055,12 @@ exports[`EventListItem should render WithEmotion 1`] = `
   .emotion-0 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  width: 100%;
   color: inherit;
   -webkit-text-decoration: inherit;
   text-decoration: inherit;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
   container-type: inline-size;
 }
 
@@ -1104,12 +1077,6 @@ exports[`EventListItem should render WithEmotion 1`] = `
   align-content: start;
 }
 
-@container (min-width: 400px) {
-  .emotion-1 {
-    grid-template-columns: minmax(30%, 200px) auto;
-  }
-}
-
 .emotion-5 {
   max-width: 100%;
   height: auto;
@@ -1119,9 +1086,6 @@ exports[`EventListItem should render WithEmotion 1`] = `
 }
 
 .emotion-7 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: column;
   -webkit-flex-flow: column;
@@ -1616,15 +1580,12 @@ exports[`EventListItem should render WithoutImage 1`] = `
   .emotion-0 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  width: 100%;
   color: inherit;
   -webkit-text-decoration: inherit;
   text-decoration: inherit;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
   container-type: inline-size;
 }
 
@@ -1641,16 +1602,7 @@ exports[`EventListItem should render WithoutImage 1`] = `
   align-content: start;
 }
 
-@container (min-width: 400px) {
-  .emotion-1 {
-    grid-template-columns: minmax(30%, 200px) auto;
-  }
-}
-
 .emotion-5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: column;
   -webkit-flex-flow: column;
