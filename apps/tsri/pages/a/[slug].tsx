@@ -58,14 +58,17 @@ export default function ArticleBySlugIdOrToken() {
             />
           </ArticleWrapper>
 
-          <ArticleWrapper>
-            <AfterArticleTitle component={'h2'}>Kommentare</AfterArticleTitle>
-            <CommentListContainer
-              id={data.article.id}
-              type={ApiV1.CommentItemType.Article}
-              signUpUrl="/mitmachen"
-            />
-          </ArticleWrapper>
+          {!data.article.disableComments && (
+            <ArticleWrapper>
+              <AfterArticleTitle component={'h2'}>Kommentare</AfterArticleTitle>
+
+              <CommentListContainer
+                id={data.article.id}
+                type={ApiV1.CommentItemType.Article}
+                signUpUrl="/mitmachen"
+              />
+            </ArticleWrapper>
+          )}
         </>
       )}
     </>

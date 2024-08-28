@@ -24,16 +24,17 @@ import {useEffect, useMemo, useState} from 'react'
  * deactivation. This is used for trial subscriptions or to replace legacy subscriptions like
  * Payrexx Subscription. Other use cases are possible.
  */
-export type SubscribeContainerProps<T extends BuilderUserFormFields = BuilderUserFormFields> =
-  BuilderContainerProps &
-    Pick<BuilderSubscribeProps<T>, 'fields' | 'schema' | 'defaults' | 'extraMoneyOffset'> & {
-      successURL: string
-      failureURL: string
-      filter?: (memberPlans: MemberPlan[]) => MemberPlan[]
-      deactivateSubscriptionId?: string
-    }
+export type SubscribeContainerProps<
+  T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<BuilderUserFormFields, 'flair'>
+> = BuilderContainerProps &
+  Pick<BuilderSubscribeProps<T>, 'fields' | 'schema' | 'defaults' | 'extraMoneyOffset'> & {
+    successURL: string
+    failureURL: string
+    filter?: (memberPlans: MemberPlan[]) => MemberPlan[]
+    deactivateSubscriptionId?: string
+  }
 
-export const SubscribeContainer = <T extends BuilderUserFormFields>({
+export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   className,
   extraMoneyOffset,
   failureURL,

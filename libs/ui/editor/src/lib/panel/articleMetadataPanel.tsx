@@ -115,6 +115,7 @@ export interface ArticleMetadata {
   readonly image?: ImageRefFragment
   readonly shared: boolean
   readonly hidden?: boolean | null
+  readonly disableComments?: boolean | null
   readonly breaking: boolean
   readonly hideAuthor: boolean
   readonly socialMediaTitle?: string
@@ -155,6 +156,7 @@ function ArticleMetadataPanel({
     authors,
     shared,
     hidden,
+    disableComments,
     breaking,
     image,
     hideAuthor,
@@ -513,6 +515,15 @@ function ArticleMetadataPanel({
                 onChange={hidden => onChange?.({...value, hidden})}
               />
               <HelpText>{t('articleEditor.panels.setAsHidden')}</HelpText>
+            </Group>
+
+            <Group controlId="disableComments">
+              <ControlLabel>{t('articleEditor.panels.disableComments')}</ControlLabel>
+              <Toggle
+                checked={disableComments ?? false}
+                disabled={!isAuthorized}
+                onChange={disableComments => onChange?.({...value, disableComments})}
+              />
             </Group>
 
             <ControlLabel>{t('articleEditor.panels.postImage')}</ControlLabel>
