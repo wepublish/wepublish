@@ -1963,6 +1963,7 @@ type UserFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
+    birthday?: Date | null;
     email?: string;
     emailVerifiedAt?: Date | null;
     name?: string;

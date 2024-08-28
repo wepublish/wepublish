@@ -1177,7 +1177,8 @@
       "Unknown": "Unbekannt",
       "userDataTitle": "Userdaten",
       "userRoles": "Userrollen",
-      "zipCode": "PLZ"
+      "zipCode": "PLZ",
+      "birthday": "Geburtstag"
     },
     "userList": {
       "overview": {

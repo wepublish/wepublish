@@ -414,6 +414,11 @@ exports[`Article should render Default 1`] = `
   aspect-ratio: 1.78343949044586;
 }
 
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .emotion-108 {
   display: grid;
   -webkit-box-pack: center;
@@ -1385,6 +1390,7 @@ exports[`Article should render Default 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -1535,8 +1541,8 @@ exports[`Article should render Default 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -3936,12 +3942,7 @@ https://unsplash.it/200/100 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>
@@ -4052,12 +4053,7 @@ https://unsplash.it/200/200 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>
@@ -4608,6 +4604,11 @@ exports[`Article should render WithChildren 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-108 {
@@ -5581,6 +5582,7 @@ exports[`Article should render WithChildren 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -5731,8 +5733,8 @@ exports[`Article should render WithChildren 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -8159,12 +8161,7 @@ https://unsplash.it/200/100 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>
@@ -8275,12 +8272,7 @@ https://unsplash.it/200/200 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>
@@ -8834,6 +8826,11 @@ exports[`Article should render WithClassName 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-108 {
@@ -9807,6 +9804,7 @@ exports[`Article should render WithClassName 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -9957,8 +9955,8 @@ exports[`Article should render WithClassName 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -12385,12 +12383,7 @@ https://unsplash.it/200/100 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>
@@ -12501,12 +12494,7 @@ https://unsplash.it/200/200 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>
@@ -13057,6 +13045,11 @@ exports[`Article should render WithEmotion 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-108 {
@@ -14030,6 +14023,7 @@ exports[`Article should render WithEmotion 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -14180,8 +14174,8 @@ exports[`Article should render WithEmotion 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -16608,12 +16602,7 @@ https://unsplash.it/200/100 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>
@@ -16724,12 +16713,7 @@ https://unsplash.it/200/200 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>
@@ -17384,6 +17368,11 @@ exports[`Article should render WithoutAuthors 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-108 {
@@ -18266,6 +18255,7 @@ exports[`Article should render WithoutAuthors 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -18416,8 +18406,8 @@ exports[`Article should render WithoutAuthors 1`] = `
 .emotion-518 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -21260,6 +21250,11 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   aspect-ratio: 1.78343949044586;
 }
 
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .emotion-108 {
   display: grid;
   -webkit-box-pack: center;
@@ -22231,6 +22226,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -22381,8 +22377,8 @@ exports[`Article should render WithoutImageMetadata 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -24809,12 +24805,7 @@ https://unsplash.it/200/100 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>
@@ -24925,12 +24916,7 @@ https://unsplash.it/200/200 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>
@@ -25481,6 +25467,11 @@ exports[`Article should render WithoutLead 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-108 {
@@ -26454,6 +26445,7 @@ exports[`Article should render WithoutLead 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -26604,8 +26596,8 @@ exports[`Article should render WithoutLead 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -29028,12 +29020,7 @@ https://unsplash.it/200/100 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>
@@ -29144,12 +29131,7 @@ https://unsplash.it/200/200 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>
@@ -29700,6 +29682,11 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-108 {
@@ -30673,6 +30660,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: unset;
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -30823,8 +30811,8 @@ exports[`Article should render WithoutSocialMedia 1`] = `
 .emotion-558 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -33251,12 +33239,7 @@ https://unsplash.it/200/100 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>
@@ -33367,12 +33350,7 @@ https://unsplash.it/200/200 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-              srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+              srcset="https://unsplash.it/200/200 200w"
               title=""
             />
           </div>

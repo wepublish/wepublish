@@ -297,7 +297,7 @@ exports[`MemberPlanPicker should render Default 1`] = `
     class="emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root emotion-2 emotion-3"
+      class="MuiFormGroup-root MuiRadioGroup-root emotion-2 emotion-3"
       role="radiogroup"
     >
       <label
@@ -834,7 +834,7 @@ exports[`MemberPlanPicker should render Selected 1`] = `
     class="emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root emotion-2 emotion-3"
+      class="MuiFormGroup-root MuiRadioGroup-root emotion-2 emotion-3"
       role="radiogroup"
     >
       <label
@@ -1457,7 +1457,7 @@ exports[`MemberPlanPicker should render WithClassName 1`] = `
     class="extra-classname emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root emotion-2 emotion-3"
+      class="MuiFormGroup-root MuiRadioGroup-root emotion-2 emotion-3"
       role="radiogroup"
     >
       <label
@@ -1995,7 +1995,7 @@ exports[`MemberPlanPicker should render WithEmotion 1`] = `
     class="emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root emotion-2 emotion-3"
+      class="MuiFormGroup-root MuiRadioGroup-root emotion-2 emotion-3"
       role="radiogroup"
     >
       <label
@@ -2532,7 +2532,7 @@ exports[`MemberPlanPicker should render WithError 1`] = `
     class="emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root emotion-2 emotion-3"
+      class="MuiFormGroup-root MuiRadioGroup-root emotion-2 emotion-3"
       role="radiogroup"
     >
       <label
@@ -3069,7 +3069,7 @@ exports[`MemberPlanPicker should render WithLoading 1`] = `
     class="emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root emotion-2 emotion-3"
+      class="MuiFormGroup-root MuiRadioGroup-root emotion-2 emotion-3"
       role="radiogroup"
     >
       <label

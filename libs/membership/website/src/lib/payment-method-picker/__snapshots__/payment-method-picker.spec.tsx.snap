@@ -286,7 +286,7 @@ exports[`PaymentMethodPicker should render Default 1`] = `
     class="MuiFormControl-root emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":r0:"
       role="radiogroup"
     >
@@ -719,7 +719,7 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
     class="MuiFormControl-root emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":r2:"
       role="radiogroup"
     >
@@ -1113,7 +1113,7 @@ exports[`PaymentMethodPicker should render Single 1`] = `
     class="MuiFormControl-root emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":r4:"
       role="radiogroup"
     >
@@ -1477,7 +1477,7 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
     class="MuiFormControl-root extra-classname emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":r6:"
       role="radiogroup"
     >
@@ -1911,7 +1911,7 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
     class="MuiFormControl-root emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":r8:"
       role="radiogroup"
     >
@@ -2344,7 +2344,7 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
     class="MuiFormControl-root emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":ra:"
       role="radiogroup"
     >
@@ -2777,7 +2777,7 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
     class="MuiFormControl-root emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":rc:"
       role="radiogroup"
     >

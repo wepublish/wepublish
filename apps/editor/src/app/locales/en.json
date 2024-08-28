@@ -1264,7 +1264,8 @@
       "Unknown": "Unknown",
       "userDataTitle": "User Data",
       "userRoles": "User Roles",
-      "zipCode": "ZIP"
+      "zipCode": "ZIP",
+      "birthday": "Birthday"
     },
     "userList": {
       "overview": {

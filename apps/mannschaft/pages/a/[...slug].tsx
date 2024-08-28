@@ -1,7 +1,9 @@
+import {css} from '@mui/material'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
   ArticleContainer,
+  ArticleInfoWrapper,
   ArticleListContainer,
   ArticleWrapper,
   CommentListContainer,
@@ -12,9 +14,20 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
+import {useHasSubscription} from '../../src/paywall/has-subscription'
+import {PaywallBlock} from '../../src/paywall/paywall-block'
+
+const paywallCss = css`
+  // Shows the first 3 blocks and hides the rest
+  & > :nth-child(n + 4):not(:is(${ArticleInfoWrapper})) {
+    display: none;
+  }
+`
+
 export default function ArticleBySlugIdOrToken() {
+  const hasSubscription = useHasSubscription()
   const {
-    query: {slug: slugs, id, token}
+    query: {slug: slugs, id, token, articleId}
   } = useRouter()
   const slug = typeof slugs === 'object' ? slugs.reverse()[0] : slugs
   const {
@@ -34,9 +47,16 @@ export default function ArticleBySlugIdOrToken() {
     token
   } as ComponentProps<typeof ArticleContainer>
 
+  const showPaywall =
+    !hasSubscription &&
+    articleId !== data?.article?.id &&
+    data?.article?.tags.some(({tag}) => tag === 'MANNSCHAFT+')
+
   return (
     <>
-      <ArticleContainer {...containerProps} />
+      <ArticleContainer {...containerProps} css={showPaywall ? paywallCss : undefined}>
+        {showPaywall && <PaywallBlock />}
+      </ArticleContainer>
 
       {data?.article && (
         <>

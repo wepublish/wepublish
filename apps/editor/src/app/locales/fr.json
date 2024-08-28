@@ -1130,7 +1130,8 @@
       "Unknown": "Inconnu",
       "userDataTitle": "Données des utilisateurs·trices",
       "userRoles": "Rôles de l'utilisateur·trice",
-      "zipCode": "Code Postal"
+      "zipCode": "Code Postal",
+      "birthday": "Birthday"
     },
     "userList": {
       "overview": {

@@ -850,6 +850,7 @@ model User {
   id              String    @id @default(cuid())
   createdAt       DateTime  @default(now())
   modifiedAt      DateTime  @updatedAt
+  birthday        DateTime? @db.Date
   email           String    @unique
   emailVerifiedAt DateTime?
   name            String

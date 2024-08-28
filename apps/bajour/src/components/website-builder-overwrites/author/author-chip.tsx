@@ -67,7 +67,7 @@ export function BajourAuthorChip({className, author}: BajourAuthorChipProps) {
     <BajourAuthorChipWrapper className={className}>
       {author.image && (
         <BajourAuthorChipImageWrapper>
-          <Image image={author.image} square css={imageStyles} />
+          <Image image={author.image} square css={imageStyles} maxWidth={200} />
         </BajourAuthorChipImageWrapper>
       )}
 

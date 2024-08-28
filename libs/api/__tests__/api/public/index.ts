@@ -714,6 +714,7 @@ export type MutationRateCommentArgs = {
 
 export type MutationRegisterMemberArgs = {
   address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
   challengeAnswer: ChallengeInput;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
@@ -726,6 +727,7 @@ export type MutationRegisterMemberArgs = {
 export type MutationRegisterMemberAndReceivePaymentArgs = {
   address?: InputMaybe<UserAddressInput>;
   autoRenew: Scalars['Boolean'];
+  birthday?: InputMaybe<Scalars['DateTime']>;
   challengeAnswer: ChallengeInput;
   email: Scalars['String'];
   failureURL?: InputMaybe<Scalars['String']>;
@@ -1486,6 +1488,7 @@ export type UploadImageInput = {
 export type User = {
   __typename?: 'User';
   address?: Maybe<UserAddress>;
+  birthday?: Maybe<Scalars['DateTime']>;
   email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
   flair?: Maybe<Scalars['String']>;
@@ -1519,6 +1522,7 @@ export type UserAddressInput = {
 
 export type UserInput = {
   address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
   flair?: InputMaybe<Scalars['String']>;
