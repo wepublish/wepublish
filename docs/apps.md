@@ -1,0 +1,5 @@
+# Create a new Website (Customer)
+- copy and paste apps/website-example with the name of the app (e.g. cultur)
+- replace "website-example" in all files with the name of your app (e.g. cultur)
+- replace "we.publish" in all files with the name of your app (e.g. Cültür)
+- replace the default e-mail "info@wepublish.dev" with the apps e-mail (e.g. info@cultur.ch)
