@@ -1,10 +1,11 @@
 import {migratePostById, migratePosts, migratePostsFromCategory} from './lib/posts'
 
 async function migrate() {
-  await migratePostById(189813) // foramtting
-  await migratePostById(203921) // spacing before links
+  await migratePostById(182908) // article references
   // await migratePostById(100273)
   return
+  await migratePostById(189813) // formatting
+  await migratePostById(203921) // spacing before links
   await migratePostById(203921) // spacing before links
   await migratePostById(167171) // content-box + iframe
   await migratePostById(202384) // instagram aspect-ratio

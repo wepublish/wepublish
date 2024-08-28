@@ -29,7 +29,8 @@ const ELEMENT_TAGS: Record<HTMLElement['nodeName'], (el: HTMLElement) => Attribu
     return {
       type: TAG['link'],
       url: sanitizeUrl(el.getAttribute('href') ?? ''),
-      ...(el.hasAttribute('title') && {title: el.getAttribute('title')})
+      ...(el.hasAttribute('title') && {title: el.getAttribute('title')}),
+      ...(el.hasAttribute('name') && {id: el.getAttribute('name')})
     }
   },
   BLOCKQUOTE: () => ({type: TAG.paragraph}),
