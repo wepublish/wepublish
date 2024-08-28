@@ -177,7 +177,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const {control, handleSubmit, watch, setValue, resetField} = useForm<
     z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
   >({
-    resolver: zodResolver(loggedOutSchema),
+    resolver: zodResolver(hasUser ? loggedInSchema : loggedOutSchema),
     defaultValues: {
       ...defaults,
       monthlyAmount: 0,
