@@ -337,7 +337,7 @@ export function ListViewFilters({
                     answers.filter(answer => value.includes(answer.id)).map(r => r.id) || null
                 })
               }}
-              placeholder={t('pollEditView.answerPanelHeader')}
+              placeholder={t('pollVoteList.answerId')}
             />
           </Group>
         )}
@@ -386,7 +386,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Input
               value={filter.fingerprint || ''}
-              placeholder={t('pollVoteList.filter.fingerpint')}
+              placeholder={t('pollVoteList.fingerprint')}
               onChange={value => updateFilter({fingerprint: value})}
             />
           </Group>

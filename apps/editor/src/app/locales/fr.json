@@ -968,6 +968,7 @@
       "closedAtNone": "Non fermé",
       "createNew": "Créer Sondage",
       "delete": "Supprimer",
+      "showVotes": "Afficher les votes",
       "hasBeenClosedAt": "Fermé le {{closedAt, ccc PP p}}",
       "noQuestion": "Aucune question saisie",
       "openedAt": "Débuté le {{openedAt, ccc PP p}}",
@@ -977,6 +978,13 @@
       "question": "Question",
       "state": "État",
       "title": "Sondages"
+    },
+    "pollVoteList": {
+      "createdAt": "Créé le",
+      "answerId": "Réponse",
+      "userId": "ID utilisateur",
+      "fingerprint": "Empreinte digitale",
+      "deleteItems": "Supprimer les éléments"
     },
     "pollStateIndication": {
       "closed": "Sondage fermé",
@@ -1276,6 +1284,9 @@
       "hideOnTeam": "Masquer sur la page de l'équipe",
       "hideOnArticle": "Masquer sur les articles",
       "hideOnTeaser": "Masquer sur les teasers"
+    },
+    "selectableItemsActions": {
+      "selectedItems": "{{numberOfItems}} éléments sélectionnés"
     }
   }
 }

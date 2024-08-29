@@ -132,7 +132,7 @@ function PollList() {
             <PaddedCell align={'center'}>
               {(poll: RowDataType<Poll>) => (
                 <Button appearance={'primary'} href={`/polls/votes/${poll?.id}`}>
-                  {'Show votes'}
+                  {t('pollList.showVotes')}
                 </Button>
               )}
             </PaddedCell>

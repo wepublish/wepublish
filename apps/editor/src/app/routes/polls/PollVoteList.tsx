@@ -61,7 +61,7 @@ export function PollVoteList({
 
       <SelectedItemsActions selectedItems={selectedItems}>
         <Button onClick={() => wrapLoading(deleteItems(selectedItems))} loading={loading}>
-          {t('Delete')}
+          {t('pollVoteList.deleteItems')}
         </Button>
       </SelectedItemsActions>
       <TableWrapper>
@@ -99,7 +99,7 @@ export function PollVoteList({
           </Column>
 
           <Column width={250} align="left" resizable sortable>
-            <HeaderCell>{t('pollVoteList.overview.createdAt')}</HeaderCell>
+            <HeaderCell>{t('pollVoteList.createdAt')}</HeaderCell>
             <RCell dataKey="createdAt">
               {({createdAt}: FullPollVoteFragment) =>
                 `${new Date(createdAt).toLocaleDateString()} ${new Date(
@@ -109,17 +109,17 @@ export function PollVoteList({
             </RCell>
           </Column>
           <Column width={250} align="left" resizable>
-            <HeaderCell>{t('pollVoteList.overview.answerId')}</HeaderCell>
+            <HeaderCell>{t('pollVoteList.answerId')}</HeaderCell>
             <RCell dataKey="answerId">
               {({answer}: FullPollVoteWithAnswerFragment) => answer.answer}
             </RCell>
           </Column>
           <Column width={250} align="left" resizable>
-            <HeaderCell>{t('pollVoteList.overview.userId')}</HeaderCell>
+            <HeaderCell>{t('pollVoteList.userId')}</HeaderCell>
             <RCell dataKey="userId">{({userId}: FullPollVoteFragment) => userId}</RCell>
           </Column>
           <Column width={250} align="left" resizable>
-            <HeaderCell>{t('pollVoteList.overview.fingerprint')}</HeaderCell>
+            <HeaderCell>{t('pollVoteList.fingerprint')}</HeaderCell>
             <RCell dataKey="userId">{({fingerprint}: FullPollVoteFragment) => fingerprint}</RCell>
           </Column>
         </Table>

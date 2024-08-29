@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import {ReactNode} from 'react'
+import {useTranslation} from 'react-i18next'
 
 type SelectedItemsActionsProps = {
   selectedItems: string[]
@@ -23,10 +24,15 @@ const SelectedItemsActionsStyled = styled.div`
 `
 
 export function SelectedItemsActions({selectedItems, children}: SelectedItemsActionsProps) {
+  const {t} = useTranslation()
   const hasSelectedItems = selectedItems && selectedItems.length > 0
   return (
     <SelectedItemsActionsStyled className={hasSelectedItems ? 'has-selected-items' : ''}>
-      <div>Selected {selectedItems.length} items</div>
+      <div>
+        {t('selectableItemsActions.selectedItems', {
+          numberOfItems: selectedItems.length
+        })}
+      </div>
       {children}
     </SelectedItemsActionsStyled>
   )
