@@ -9,12 +9,12 @@ export function useSelectableList({ids}: UseSelectableListProps) {
   const allSelected = ids && selectedItems.length === ids.length
   const someSelected = ids && selectedItems.length > 0
 
-  const toggleAll = () => setSelectedItems(someSelected ? [] : [...(ids ?? [])])
+  const toggleAll = () => setSelectedItems(someSelected ? [] : ids ?? [])
 
   const selectItem = (id: string) => {
     setSelectedItems([...new Set([...selectedItems, id])])
   }
-  const deselectItem = (id: string) => {
+  const unselectItem = (id: string) => {
     setSelectedItems(selectedItems.filter(item => item !== id))
   }
   const toggleItem = (id: string | any, value?: boolean) => {
@@ -24,7 +24,7 @@ export function useSelectableList({ids}: UseSelectableListProps) {
     if (value) {
       selectItem(id)
     } else {
-      deselectItem(id)
+      unselectItem(id)
     }
   }
 
@@ -40,7 +40,7 @@ export function useSelectableList({ids}: UseSelectableListProps) {
     someSelected: someSelected && !allSelected,
     toggleAll,
     selectItem,
-    deselectItem,
+    unselectItem,
     toggleItem
   }
 }
