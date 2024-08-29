@@ -102,9 +102,14 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 const styles = (theme: Theme) => css`
   html {
+    scroll-padding-top: ${theme.spacing(7)};
     font-family: ${theme.typography.fontFamily};
     hyphens: auto;
     word-break: break-word;
+
+    ${theme.breakpoints.up('lg')} {
+      scroll-padding-top: ${theme.spacing(12.5)};
+    }
   }
 
   * {

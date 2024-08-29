@@ -325,7 +325,8 @@
         "link": "Link",
         "remove": "Remove",
         "startWriting": "Start writing ...",
-        "text": "Text"
+        "text": "Text",
+        "id": "ID"
       },
       "richTextTable": {
         "addBorders": "Add Borders",
