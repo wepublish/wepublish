@@ -20,7 +20,7 @@ import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDelete} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
+import {Button, IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
@@ -123,6 +123,17 @@ function PollList() {
                   size="sm"
                   onClick={() => setPollDelete(poll as Poll)}
                 />
+              )}
+            </PaddedCell>
+          </Column>
+          {/* show votes */}
+          <Column resizable fixed="right">
+            <HeaderCell align={'center'}>{t('pollList.showVotes')}</HeaderCell>
+            <PaddedCell align={'center'}>
+              {(poll: RowDataType<Poll>) => (
+                <Button appearance={'primary'} href={`/polls/votes/${poll?.id}`}>
+                  {t('pollList.showVotes')}
+                </Button>
               )}
             </PaddedCell>
           </Column>

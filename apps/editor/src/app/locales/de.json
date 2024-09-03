@@ -1016,6 +1016,7 @@
       "closedAtNone": "Nicht geschlossen",
       "createNew": "Umfrage erstellen",
       "delete": "Löschen",
+      "showVotes": "Stimmen anzeigen",
       "hasBeenClosedAt": "Geschlossen am {{closedAt, ccc PP p}}",
       "noQuestion": "Keine Frage erfasst",
       "openedAt": "Begonnen am {{openedAt, ccc PP p}}",
@@ -1025,6 +1026,13 @@
       "question": "Frage",
       "state": "Status",
       "title": "Umfragen"
+    },
+    "pollVoteList": {
+      "createdAt": "Erstellt am",
+      "answerId": "Antwort",
+      "userId": "Benutzer-ID",
+      "fingerprint": "Fingerabdruck",
+      "deleteItems": "Elemente löschen"
     },
     "pollStateIndication": {
       "closed": "Umfrage geschlossen",
@@ -1326,6 +1334,9 @@
       "hideOnTeam": "Auf der Team-Seite ausblenden",
       "hideOnArticle": "Auf den Artikeln ausblenden",
       "hideOnTeaser": "Auf den Teasern ausblenden"
+    },
+    "selectableItemsActions": {
+      "selectedItems": "{{numberOfItems}} Elemente ausgewählt"
     }
   }
 }
