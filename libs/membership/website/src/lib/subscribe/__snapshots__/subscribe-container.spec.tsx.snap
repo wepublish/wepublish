@@ -3546,7 +3546,7 @@ exports[`Subscribe Container should render Filled 1`] = `
               >
                 Ort / Stadt
               </label>
-@@ -644,18 +651,18 @@
+@@ -644,60 +651,98 @@
                   autocomplete="city"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":rm:"
@@ -3567,15 +3567,22 @@ exports[`Subscribe Container should render Filled 1`] = `
                       Ort / Stadt
                     </span>
                   </legend>
-@@ -668,24 +675,25 @@
+                </fieldset>
+              </div>
+            </div>
+            <div
+-             class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-cb07vo-MuiAutocomplete-root"
++             class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon css-cb07vo-MuiAutocomplete-root"
+              name="address.country"
             >
               <div
                 class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
               >
                 <label
 -                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
-+                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
-                  data-shrink="false"
+-                 data-shrink="false"
++                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
++                 data-shrink="true"
                   for=":rn:"
                   id=":rn:-label"
                 >
@@ -3583,37 +3590,83 @@ exports[`Subscribe Container should render Filled 1`] = `
                 </label>
                 <div
 -                 class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1y6ah8l-MuiInputBase-root-MuiOutlinedInput-root"
-+                 class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1y6ah8l-MuiInputBase-root-MuiOutlinedInput-root"
-                >
++                 class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-fv07na-MuiInputBase-root-MuiOutlinedInput-root"
++               >
++                 <div
++                   class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-16su6c8-MuiInputAdornment-root"
++                 >
++                   <span
++                     class="notranslate"
+                    >
++                     ​
++                   </span>
++                   <img
++                     alt="Schweiz"
++                     loading="lazy"
++                     src="https://flagcdn.com/w20/ch.webp"
++                     srcset="https://flagcdn.com/w40/ch.webp 2x"
++                     width="20"
++                   />
++                 </div>
                   <input
                     aria-autocomplete="list"
-+                   aria-describedby=":rn:-helper-text"
                     aria-expanded="false"
--                   aria-invalid="false"
-+                   aria-invalid="true"
+                    aria-invalid="false"
                     autocapitalize="none"
                     autocomplete="nothing"
-                    class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
+-                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
++                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-152mnda-MuiInputBase-input-MuiOutlinedInput-input"
                     id=":rn:"
                     role="combobox"
-@@ -730,10 +738,16 @@
+                    spellcheck="false"
+                    type="text"
+-                   value=""
++                   value="Schweiz"
+                  />
+                  <div
+                    class="MuiAutocomplete-endAdornment css-p1olib-MuiAutocomplete-endAdornment"
++                 >
++                   <button
++                     aria-label="Clear"
++                     class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-clearIndicator css-1glvl0p-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-clearIndicator"
++                     tabindex="-1"
++                     title="Clear"
++                     type="button"
+                    >
++                     <svg
++                       aria-hidden="true"
++                       class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
++                       data-testid="CloseIcon"
++                       focusable="false"
++                       viewBox="0 0 24 24"
++                     >
++                       <path
++                         d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
++                       />
++                     </svg>
++                     <span
++                       class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
++                     />
++                   </button>
+                    <button
+                      aria-label="Open"
+                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-qzbt6i-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator"
+                      tabindex="-1"
+                      title="Open"
+@@ -722,11 +767,11 @@
+                  <fieldset
+                    aria-hidden="true"
+                    class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+                  >
+                    <legend
+-                     class="css-yjsfm1"
++                     class="css-14lo706"
+                    >
+                      <span>
                         Land
                       </span>
                     </legend>
-                  </fieldset>
-                </div>
-+               <p
-+                 class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1612nlz-MuiFormHelperText-root"
-+                 id=":rn:-helper-text"
-+               >
-+                 Required
-+               </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-@@ -1132,12 +1146,12 @@
+@@ -1132,12 +1177,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -3628,7 +3681,7 @@ exports[`Subscribe Container should render Filled 1`] = `
             >
               Captcha
             </label>
-@@ -1148,18 +1162,18 @@
+@@ -1148,18 +1193,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rt:"

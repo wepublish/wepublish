@@ -13,21 +13,18 @@ export const countryOptions = Object.entries(userCountries).map(([code, names]) 
   suggested: ['ch', 'de', 'at', 'li'].includes(code.toLowerCase())
 }))
 
-export const CountrySelect = forwardRef(function CountrySelect({
-  value,
-  onChange,
-  error,
-  helperText,
-  ...props
-}: Omit<
-  ComponentProps<typeof Autocomplete<(typeof countryOptions)[0]>>,
-  'renderInput' | 'options' | 'value' | 'onChange'
-> & {
-  value: string
-  onChange: ControllerRenderProps['onChange']
-  error?: boolean
-  helperText?: string
-}) {
+export const CountrySelect = forwardRef<
+  HTMLSelectElement,
+  Omit<
+    ComponentProps<typeof Autocomplete<(typeof countryOptions)[0]>>,
+    'renderInput' | 'options' | 'value' | 'onChange'
+  > & {
+    value: string
+    onChange: ControllerRenderProps['onChange']
+    error?: boolean
+    helperText?: string
+  }
+>(function CountrySelect({value, onChange, error, helperText, ...props}, ref) {
   const {
     elements: {TextField}
   } = useWebsiteBuilder()
@@ -35,7 +32,8 @@ export const CountrySelect = forwardRef(function CountrySelect({
   return (
     <Autocomplete
       {...props}
-      value={countryOptions.find(({label}) => label === value)}
+      ref={ref}
+      value={countryOptions.find(({label}) => label === value) ?? null}
       onChange={(_, value) => onChange(value?.label)}
       options={countryOptions.sort((a, b) => (a.suggested ? (b.suggested ? 0 : -1) : 1))}
       autoHighlight
@@ -85,10 +83,10 @@ export const CountrySelect = forwardRef(function CountrySelect({
       }}
       groupBy={option => (option.suggested ? 'Vorgeschlagen' : '')}
       renderGroup={params => (
-        <li key={params.key}>
+        <div key={params.key}>
           {params.children}
           {params.group && <Divider />}
-        </li>
+        </div>
       )}
     />
   )

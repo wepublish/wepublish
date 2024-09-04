@@ -2202,53 +2202,108 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                   aria-hidden="true"
                   class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
                 >
-@@ -368,24 +368,25 @@
+@@ -361,43 +361,81 @@
+                  </legend>
+                </fieldset>
+              </div>
+            </div>
+            <div
+-             class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-cb07vo-MuiAutocomplete-root"
++             class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon css-cb07vo-MuiAutocomplete-root"
+              name="address.country"
             >
               <div
                 class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
               >
                 <label
 -                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
-+                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
-                  data-shrink="false"
+-                 data-shrink="false"
++                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
++                 data-shrink="true"
                   for=":r12:"
                   id=":r12:-label"
                 >
                   Land
                 </label>
-                <div
++               <div
++                 class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-fv07na-MuiInputBase-root-MuiOutlinedInput-root"
++               >
+                  <div
 -                 class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1y6ah8l-MuiInputBase-root-MuiOutlinedInput-root"
-+                 class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1y6ah8l-MuiInputBase-root-MuiOutlinedInput-root"
-                >
++                   class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-16su6c8-MuiInputAdornment-root"
++                 >
++                   <span
++                     class="notranslate"
+                    >
++                     ​
++                   </span>
++                   <img
++                     alt="Schweiz"
++                     loading="lazy"
++                     src="https://flagcdn.com/w20/ch.webp"
++                     srcset="https://flagcdn.com/w40/ch.webp 2x"
++                     width="20"
++                   />
++                 </div>
                   <input
                     aria-autocomplete="list"
-+                   aria-describedby=":r12:-helper-text"
                     aria-expanded="false"
--                   aria-invalid="false"
-+                   aria-invalid="true"
+                    aria-invalid="false"
                     autocapitalize="none"
                     autocomplete="nothing"
-                    class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
+-                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
++                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-152mnda-MuiInputBase-input-MuiOutlinedInput-input"
                     id=":r12:"
                     role="combobox"
-@@ -430,10 +431,16 @@
+                    spellcheck="false"
+                    type="text"
+-                   value=""
++                   value="Schweiz"
+                  />
+                  <div
+                    class="MuiAutocomplete-endAdornment css-p1olib-MuiAutocomplete-endAdornment"
++                 >
++                   <button
++                     aria-label="Clear"
++                     class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-clearIndicator css-1glvl0p-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-clearIndicator"
++                     tabindex="-1"
++                     title="Clear"
++                     type="button"
+                    >
++                     <svg
++                       aria-hidden="true"
++                       class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
++                       data-testid="CloseIcon"
++                       focusable="false"
++                       viewBox="0 0 24 24"
++                     >
++                       <path
++                         d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
++                       />
++                     </svg>
++                     <span
++                       class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
++                     />
++                   </button>
+                    <button
+                      aria-label="Open"
+                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-qzbt6i-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator"
+                      tabindex="-1"
+                      title="Open"
+@@ -422,11 +460,11 @@
+                  <fieldset
+                    aria-hidden="true"
+                    class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+                  >
+                    <legend
+-                     class="css-yjsfm1"
++                     class="css-14lo706"
+                    >
+                      <span>
                         Land
                       </span>
                     </legend>
-                  </fieldset>
-                </div>
-+               <p
-+                 class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1612nlz-MuiFormHelperText-root"
-+                 id=":r12:-helper-text"
-+               >
-+                 Invalid enum value. Expected 'Afghanistan' | 'Ägypten' | 'Åland' | 'Albanien' | 'Algerien' | 'Amerikanisch-Samoa' | 'Amerikanische Jungferninseln' | 'Andorra' | 'Angola' | 'Anguilla' | 'Antarktis' | 'Antigua und Barbuda' | 'Äquatorialguinea' | 'Argentinien' | 'Armenien' | 'Aruba' | 'Aserbaidschan' | 'Äthiopien' | 'Australien' | 'Bahamas' | 'Bahrain' | 'Bangladesch' | 'Barbados' | 'Belarus' | 'Belgien' | 'Belize' | 'Benin' | 'Bermuda' | 'Bhutan' | 'Bolivien' | 'Bonaire' | 'Bosnien und Herzegowina' | 'Botswana' | 'Bouvetinsel' | 'Brasilien' | 'Britische Jungferninseln' | 'Britisches Territorium im Indischen Ozean' | 'Brunei Darussalam' | 'Bulgarien' | 'Burkina Faso' | 'Burundi' | 'Chile' | 'China' | 'Cookinseln' | 'Costa Rica' | 'Elfenbeinküste' | 'Curaçao' | 'Dänemark' | 'Deutschland' | 'Dominica' | 'Dominikanische Republik' | 'Dschibuti' | 'Ecuador' | 'El Salvador' | 'Eritrea' | 'Estland' | 'Falklandinseln' | 'Färöer' | 'Fidschi' | 'Finnland' | 'Frankreich' | 'Französisch-Guayana' | 'Französisch-Polynesien' | 'Französische Süd- und Antarktisgebiete' | 'Gabun' | 'Gambia' | 'Georgien' | 'Ghana' | 'Gibraltar' | 'Grenada' | 'Griechenland' | 'Grönland' | 'Guadeloupe' | 'Guam' | 'Guatemala' | 'Guernsey' | 'Guinea' | 'Guinea-Bissau' | 'Guyana' | 'Haiti' | 'Heard und McDonaldinseln' | 'Honduras' | 'Hong Kong' | 'Indien' | 'Indonesien' | 'Insel Man' | 'Irak' | 'Iran' | 'Irland' | 'Island' | 'Israel' | 'Italien' | 'Jamaika' | 'Japan' | 'Jemen' | 'Jersey' | 'Jordanien' | 'Kaimaninseln' | 'Kambodscha' | 'Kamerun' | 'Kanada' | 'Kap Verde' | 'Kasachstan' | 'Katar' | 'Kenia' | 'Kirgisistan' | 'Kiribati' | 'Kokosinseln' | 'Kolumbien' | 'Komoren' | 'Kongo' | 'Nordkorea' | 'Südkorea' | 'Kroatien' | 'Kuba' | 'Kuwait' | 'Laos' | 'Lesotho' | 'Lettland' | 'Libanon' | 'Liberia' | 'Libyen' | 'Liechtenstein' | 'Litauen' | 'Luxemburg' | 'Macao' | 'Madagaskar' | 'Malawi' | 'Malaysia' | 'Malediven' | 'Mali' | 'Malta' | 'Marokko' | 'Marshallinseln' | 'Martinique' | 'Mauretanien' | 'Mauritius' | 'Mayotte' | 'Mexiko' | 'Mikronesien' | 'Moldawien' | 'Monaco' | 'Mongolei' | 'Montenegro' | 'Montserrat' | 'Mosambik' | 'Myanmar' | 'Namibia' | 'Nauru' | 'Nepal' | 'Neukaledonien' | 'Neuseeland' | 'Nicaragua' | 'Niederlande' | 'Niger' | 'Nigeria' | 'Niue' | 'Nordmazedonien' | 'Nördliche Marianen' | 'Norfolkinsel' | 'Norwegen' | 'Oman' | 'Österreich' | 'Osttimor' | 'Pakistan' | 'Staat Palästina' | 'Palau' | 'Panama' | 'Papua-Neuguinea' | 'Paraguay' | 'Peru' | 'Philippinen' | 'Pitcairninseln' | 'Polen' | 'Portugal' | 'Puerto Rico' | 'Taiwan' | 'Republik Kongo' | 'Réunion' | 'Ruanda' | 'Rumänien' | 'Russland' | 'Saint-Barthélemy' | 'Saint-Martin' | 'Salomonen' | 'Sambia' | 'Samoa' | 'San Marino' | 'São Tomé und Príncipe' | 'Saudi-Arabien' | 'Schweden' | 'Schweiz' | 'Senegal' | 'Serbien' | 'Seychellen' | 'Sierra Leone' | 'Simbabwe' | 'Singapur' | 'Sint Maarten' | 'Slowakei' | 'Slowenien' | 'Somalia' | 'Spanien' | 'Sri Lanka' | 'St. Helena' | 'St. Kitts und Nevis' | 'St. Lucia' | 'Saint-Pierre und Miquelon' | 'St. Vincent und die Grenadinen' | 'Südafrika' | 'Sudan' | 'Südgeorgien und die Südlichen Sandwichinseln' | 'Südsudan' | 'Suriname' | 'Svalbard und Jan Mayen' | 'Eswatini' | 'Syrien, Arabische Republik' | 'Tadschikistan' | 'Tansania' | 'Thailand' | 'Togo' | 'Tokelau' | 'Tonga' | 'Trinidad und Tobago' | 'Tschad' | 'Tschechien' | 'Tunesien' | 'Türkei' | 'Turkmenistan' | 'Turks- und Caicosinseln' | 'Tuvalu' | 'Uganda' | 'Ukraine' | 'Ungarn' | 'United States Minor Outlying Islands' | 'Uruguay' | 'Usbekistan' | 'Vanuatu' | 'Vatikanstadt' | 'Venezuela' | 'Vereinigte Arabische Emirate' | 'USA' | 'Großbritannien' | 'Vietnam' | 'Wallis und Futuna' | 'Weihnachtsinsel' | 'Westsahara' | 'Zentralafrikanische Republik' | 'Zypern' | 'Kosovo', received 'Australia'
-+               </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-@@ -446,12 +453,12 @@
+@@ -446,12 +484,12 @@
           </p>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -2263,7 +2318,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
             >
               Passwort
             </label>
-@@ -463,11 +470,11 @@
+@@ -463,11 +501,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r14:"
@@ -2276,7 +2331,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
-@@ -500,11 +507,11 @@
+@@ -500,11 +538,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -2289,7 +2344,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -513,12 +520,12 @@
+@@ -513,12 +551,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -2304,7 +2359,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
             >
               Passwort wiederholen
             </label>
-@@ -530,11 +537,11 @@
+@@ -530,11 +568,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r15:"
@@ -2317,7 +2372,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
-@@ -567,11 +574,11 @@
+@@ -567,11 +605,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
