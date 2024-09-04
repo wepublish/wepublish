@@ -146,8 +146,6 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;
@@ -946,8 +944,6 @@ exports[`Comment List Item should render Commenting 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
@@ -1927,8 +1923,6 @@ exports[`Comment List Item should render Default 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;
@@ -2601,8 +2595,6 @@ exports[`Comment List Item should render Editing 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
@@ -3690,8 +3682,6 @@ exports[`Comment List Item should render MaxNesting 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
@@ -5062,8 +5052,6 @@ exports[`Comment List Item should render Nested 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
@@ -6837,8 +6825,6 @@ exports[`Comment List Item should render WithClassName 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;
@@ -7512,8 +7498,6 @@ exports[`Comment List Item should render WithEmotion 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;

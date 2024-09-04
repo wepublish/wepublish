@@ -882,9 +882,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
 }
 
 .emotion-22 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex: 1 0 50%;
   -ms-flex: 1 0 50%;
@@ -1058,14 +1055,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   border-radius: inherit;
 }
 
-<<<<<<< HEAD
-.emotion-26 {
-=======
 .emotion-28 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: flex;
   height: 0.01em;
   max-height: 2em;
@@ -1078,14 +1068,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   margin-left: 8px;
 }
 
-<<<<<<< HEAD
-.emotion-27 {
-=======
 .emotion-29 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1182,14 +1165,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   }
 }
 
-<<<<<<< HEAD
-.emotion-33 {
-=======
 .emotion-44 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -1204,14 +1180,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   grid-column: 1/-1;
 }
 
-<<<<<<< HEAD
-.emotion-51 {
-=======
 .emotion-62 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -1231,15 +1200,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   }
 }
 
-<<<<<<< HEAD
-.emotion-57 {
+.emotion-68 {
   background-color: rgb(253, 237, 237);
   color: rgb(95, 33, 32);
-=======
-.emotion-68 {
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   border-radius: 4px;
@@ -1248,19 +1211,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-<<<<<<< HEAD
   display: flex;
   padding: 6px 16px;
-=======
-  background-color: transparent;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 6px 16px;
-  color: rgb(95, 33, 32);
-  background-color: rgb(253, 237, 237);
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-68 .MuiAlert-icon {
@@ -1298,14 +1250,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   overflow: auto;
 }
 
-<<<<<<< HEAD
-.emotion-61 {
-=======
 .emotion-72 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2166,9 +2111,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
 }
 
 .emotion-22 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex: 1 0 50%;
   -ms-flex: 1 0 50%;
@@ -2342,14 +2284,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   border-radius: inherit;
 }
 
-<<<<<<< HEAD
-.emotion-26 {
-=======
 .emotion-28 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: flex;
   height: 0.01em;
   max-height: 2em;
@@ -2362,14 +2297,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   margin-left: 8px;
 }
 
-<<<<<<< HEAD
-.emotion-27 {
-=======
 .emotion-29 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2466,14 +2394,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   }
 }
 
-<<<<<<< HEAD
-.emotion-33 {
-=======
 .emotion-44 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2488,14 +2409,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   grid-column: 1/-1;
 }
 
-<<<<<<< HEAD
-.emotion-51 {
-=======
 .emotion-62 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2538,14 +2452,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   height: 100%;
 }
 
-<<<<<<< HEAD
-.emotion-67 {
-=======
 .emotion-78 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3480,9 +3387,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
 }
 
 .emotion-22 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex: 1 0 50%;
   -ms-flex: 1 0 50%;
@@ -3656,14 +3560,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   border-radius: inherit;
 }
 
-<<<<<<< HEAD
-.emotion-26 {
-=======
 .emotion-28 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: flex;
   height: 0.01em;
   max-height: 2em;
@@ -3676,14 +3573,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   margin-left: 8px;
 }
 
-<<<<<<< HEAD
-.emotion-27 {
-=======
 .emotion-29 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3780,14 +3670,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   }
 }
 
-<<<<<<< HEAD
-.emotion-33 {
-=======
 .emotion-44 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -3802,14 +3685,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   grid-column: 1/-1;
 }
 
-<<<<<<< HEAD
-.emotion-51 {
-=======
 .emotion-62 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -3852,14 +3728,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   height: 100%;
 }
 
-<<<<<<< HEAD
-.emotion-67 {
-=======
 .emotion-78 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;

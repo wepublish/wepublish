@@ -1094,19 +1094,8 @@ exports[`Invoice Item should render WithPayrexxSubscriptionsWarning 1`] = `
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-<<<<<<< HEAD
   display: flex;
   padding: 6px 16px;
-=======
-  background-color: transparent;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 6px 16px;
-  color: rgb(102, 60, 0);
-  background-color: rgb(255, 244, 229);
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-15 .MuiAlert-icon {

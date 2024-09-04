@@ -1,4 +1,6 @@
+import {EmotionCache} from '@emotion/cache'
 import {Container, css, CssBaseline, NoSsr, styled, ThemeProvider} from '@mui/material'
+import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
@@ -31,8 +33,6 @@ import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
-import {EmotionCache} from '@emotion/cache'
-import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 
 setDefaultOptions({
   locale: de

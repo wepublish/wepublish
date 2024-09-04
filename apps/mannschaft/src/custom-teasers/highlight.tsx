@@ -70,9 +70,4 @@ export const HighlightTeaser = styled(MannschaftBaseTeaser)`
       max-height: unset;
     }
   }
-
-  .MuiChip-root {
-    color: inherit;
-    border-color: inherit;
-  }
 `

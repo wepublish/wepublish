@@ -1,3 +1,4 @@
+import {EmotionCache} from '@emotion/cache'
 import {
   Container,
   createTheme,
@@ -37,7 +38,6 @@ import {GruppettoBreakBlock} from '../src/break-block'
 import {Footer} from '../src/footer'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
-import {EmotionCache} from '@emotion/cache'
 
 setDefaultOptions({
   locale: de

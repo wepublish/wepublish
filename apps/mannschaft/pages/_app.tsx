@@ -1,4 +1,6 @@
+import {EmotionCache} from '@emotion/cache'
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -31,9 +33,8 @@ import {MannschaftBreakBlock} from '../src/mannschaft-break-block'
 import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
 import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
+import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
 import theme from '../src/theme'
-import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {EmotionCache} from '@emotion/cache'
 
 setDefaultOptions({
   locale: de
@@ -106,6 +107,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             elements={{Link: NextWepublishLink}}
             blocks={{
               Teaser: MannschaftTeaser,
+              TeaserGrid: MannschaftTeaserGrid,
               Break: MannschaftBreakBlock,
               Renderer: MannschaftBlockRenderer
             }}

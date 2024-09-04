@@ -152,15 +152,15 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
 export const selectTeaserTags = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      return teaser.page?.tags?.filter(({tag}) => !!tag) ?? []
+      return teaser.page?.tags?.filter(({tag, main}) => !!tag && main) ?? []
     }
 
     case 'ArticleTeaser': {
-      return teaser.article?.tags?.filter(({tag}) => !!tag) ?? []
+      return teaser.article?.tags?.filter(({tag, main}) => !!tag && main) ?? []
     }
 
     case 'EventTeaser':
-      return teaser.event?.tags?.filter(({tag}) => !!tag) ?? []
+      return teaser.event?.tags?.filter(({tag, main}) => !!tag && main) ?? []
 
     case 'PeerArticleTeaser':
     case 'CustomTeaser':
@@ -403,7 +403,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
         {!!tags?.length && (
           <TeaserTags>
-            {tags?.map(tag => (
+            {tags?.slice(0, 5).map(tag => (
               <Chip key={tag.id} label={tag.tag} color="primary" variant="outlined" />
             ))}
           </TeaserTags>

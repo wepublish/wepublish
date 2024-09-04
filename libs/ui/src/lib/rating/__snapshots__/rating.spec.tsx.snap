@@ -33,8 +33,6 @@ exports[`Rating should render Rating 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
@@ -86,8 +84,6 @@ exports[`Rating should render Rating 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;

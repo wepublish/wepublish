@@ -89,7 +89,7 @@ import {
 } from '@wepublish/ui'
 import {ImageUpload, PersonalDataForm} from '@wepublish/user/website'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
-import {format} from 'date-fns'
+import {format, getDefaultOptions} from 'date-fns'
 import {PropsWithChildren, memo} from 'react'
 import {IconContext} from 'react-icons'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
@@ -130,7 +130,9 @@ const styles = (theme: Theme) => css`
 export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
     <IconContext.Provider value={{}}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider
+        dateAdapter={AdapterDateFns}
+        adapterLocale={(getDefaultOptions() as {locale: Locale}).locale}>
         <WebsiteBuilderProvider
           Author={Author}
           AuthorLinks={AuthorLinks}

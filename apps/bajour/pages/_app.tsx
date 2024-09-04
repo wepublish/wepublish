@@ -1,4 +1,6 @@
+import {EmotionCache} from '@emotion/cache'
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
@@ -38,8 +40,6 @@ import {
   BajourTeaserList
 } from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
-import {EmotionCache} from '@emotion/cache'
-import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 
 setDefaultOptions({
   locale: de

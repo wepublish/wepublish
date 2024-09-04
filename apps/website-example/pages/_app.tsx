@@ -1,4 +1,6 @@
+import {EmotionCache} from '@emotion/cache'
 import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -22,8 +24,6 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
-import {EmotionCache} from '@emotion/cache'
-import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 
 setDefaultOptions({
   locale: de

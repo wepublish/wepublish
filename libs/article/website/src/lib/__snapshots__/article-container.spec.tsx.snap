@@ -1256,26 +1256,6 @@ exports[`Article Container should render ById 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-<<<<<<< HEAD
-=======
-  cursor: unset;
-  outline: 0;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  border: 0;
-  padding: 0;
-  vertical-align: middle;
-  box-sizing: border-box;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  cursor: pointer;
-  background-color: transparent;
-  border: 1px solid rgba(233, 30, 99, 0.7);
-  color: #e91e63;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-536:hover {
@@ -5264,26 +5244,6 @@ exports[`Article Container should render BySlug 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-<<<<<<< HEAD
-=======
-  cursor: unset;
-  outline: 0;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  border: 0;
-  padding: 0;
-  vertical-align: middle;
-  box-sizing: border-box;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  cursor: pointer;
-  background-color: transparent;
-  border: 1px solid rgba(233, 30, 99, 0.7);
-  color: #e91e63;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-536:hover {
@@ -9272,26 +9232,6 @@ exports[`Article Container should render ByToken 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-<<<<<<< HEAD
-=======
-  cursor: unset;
-  outline: 0;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  border: 0;
-  padding: 0;
-  vertical-align: middle;
-  box-sizing: border-box;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  cursor: pointer;
-  background-color: transparent;
-  border: 1px solid rgba(233, 30, 99, 0.7);
-  color: #e91e63;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-536:hover {
@@ -13280,26 +13220,6 @@ exports[`Article Container should render WithChildren 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-<<<<<<< HEAD
-=======
-  cursor: unset;
-  outline: 0;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  border: 0;
-  padding: 0;
-  vertical-align: middle;
-  box-sizing: border-box;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  cursor: pointer;
-  background-color: transparent;
-  border: 1px solid rgba(233, 30, 99, 0.7);
-  color: #e91e63;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-536:hover {
@@ -17291,26 +17211,6 @@ exports[`Article Container should render WithClassName 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-<<<<<<< HEAD
-=======
-  cursor: unset;
-  outline: 0;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  border: 0;
-  padding: 0;
-  vertical-align: middle;
-  box-sizing: border-box;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  cursor: pointer;
-  background-color: transparent;
-  border: 1px solid rgba(233, 30, 99, 0.7);
-  color: #e91e63;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-536:hover {
@@ -21299,26 +21199,6 @@ exports[`Article Container should render WithEmotion 1`] = `
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-<<<<<<< HEAD
-=======
-  cursor: unset;
-  outline: 0;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  border: 0;
-  padding: 0;
-  vertical-align: middle;
-  box-sizing: border-box;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  cursor: pointer;
-  background-color: transparent;
-  border: 1px solid rgba(233, 30, 99, 0.7);
-  color: #e91e63;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-536:hover {

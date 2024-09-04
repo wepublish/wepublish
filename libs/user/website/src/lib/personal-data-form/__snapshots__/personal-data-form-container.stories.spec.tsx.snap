@@ -248,8 +248,6 @@ exports[`Personal Data Form Container should render Default 1`] = `
 }
 
 .emotion-19 {
-<<<<<<< HEAD
-=======
   display: grid;
   gap: 24px;
   grid-template-columns: 1fr;
@@ -263,10 +261,6 @@ exports[`Personal Data Form Container should render Default 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -577,8 +571,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
 }
 
 .emotion-45 {
-<<<<<<< HEAD
-=======
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(2, 1fr);
@@ -592,10 +584,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
 }
 
 .emotion-47 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -656,14 +644,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
   border-color: rgba(0, 0, 0, 0.26);
 }
 
-<<<<<<< HEAD
-.emotion-51 {
-=======
 .emotion-53 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -677,14 +658,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
   width: 100%;
 }
 
-<<<<<<< HEAD
-.emotion-63 {
-=======
 .emotion-65 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -890,14 +864,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-77:focus::-ms-input-
   border-radius: inherit;
 }
 
-<<<<<<< HEAD
-.emotion-76 {
-=======
 .emotion-78 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: flex;
   height: 0.01em;
   max-height: 2em;
@@ -910,14 +877,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-77:focus::-ms-input-
   margin-left: 8px;
 }
 
-<<<<<<< HEAD
-.emotion-77 {
-=======
 .emotion-79 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -995,14 +955,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-77:focus::-ms-input-
   gap: 8px;
 }
 
-<<<<<<< HEAD
-.emotion-98 {
-=======
 .emotion-100 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2272,8 +2225,6 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
 }
 
 .emotion-19 {
-<<<<<<< HEAD
-=======
   display: grid;
   gap: 24px;
   grid-template-columns: 1fr;
@@ -2287,10 +2238,6 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2601,8 +2548,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
 }
 
 .emotion-45 {
-<<<<<<< HEAD
-=======
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(2, 1fr);
@@ -2616,10 +2561,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
 }
 
 .emotion-47 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2680,14 +2621,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
   border-color: rgba(0, 0, 0, 0.26);
 }
 
-<<<<<<< HEAD
-.emotion-51 {
-=======
 .emotion-53 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2701,14 +2635,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
   width: 100%;
 }
 
-<<<<<<< HEAD
-.emotion-63 {
-=======
 .emotion-65 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2914,14 +2841,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-77:focus::-ms-input-
   border-radius: inherit;
 }
 
-<<<<<<< HEAD
-.emotion-76 {
-=======
 .emotion-78 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: flex;
   height: 0.01em;
   max-height: 2em;
@@ -2934,14 +2854,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-77:focus::-ms-input-
   margin-left: 8px;
 }
 
-<<<<<<< HEAD
-.emotion-77 {
-=======
 .emotion-79 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3019,14 +2932,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-77:focus::-ms-input-
   gap: 8px;
 }
 
-<<<<<<< HEAD
-.emotion-98 {
-=======
 .emotion-100 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3964,8 +3870,6 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
 }
 
 .emotion-19 {
-<<<<<<< HEAD
-=======
   display: grid;
   gap: 24px;
   grid-template-columns: 1fr;
@@ -3979,10 +3883,6 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -4293,8 +4193,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
 }
 
 .emotion-45 {
-<<<<<<< HEAD
-=======
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(2, 1fr);
@@ -4308,10 +4206,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
 }
 
 .emotion-47 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -4372,14 +4266,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
   border-color: rgba(0, 0, 0, 0.26);
 }
 
-<<<<<<< HEAD
-.emotion-51 {
-=======
 .emotion-53 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -4393,14 +4280,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
   width: 100%;
 }
 
-<<<<<<< HEAD
-.emotion-63 {
-=======
 .emotion-65 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -4606,14 +4486,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-77:focus::-ms-input-
   border-radius: inherit;
 }
 
-<<<<<<< HEAD
-.emotion-76 {
-=======
 .emotion-78 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: flex;
   height: 0.01em;
   max-height: 2em;
@@ -4626,14 +4499,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-77:focus::-ms-input-
   margin-left: 8px;
 }
 
-<<<<<<< HEAD
-.emotion-77 {
-=======
 .emotion-79 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4711,14 +4577,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-77:focus::-ms-input-
   gap: 8px;
 }
 
-<<<<<<< HEAD
-.emotion-98 {
-=======
 .emotion-100 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;

@@ -16,4 +16,9 @@ export const MannschaftBaseTeaser = styled(Teaser)`
   ${TeaserMetadata} {
     display: none;
   }
+
+  .MuiChip-root {
+    color: inherit;
+    border-color: inherit;
+  }
 `

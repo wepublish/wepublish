@@ -1,9 +1,9 @@
 import {
+  documentGetInitialProps,
   DocumentHeadTags,
-  DocumentHeadTagsProps,
-  documentGetInitialProps
+  DocumentHeadTagsProps
 } from '@mui/material-nextjs/v13-pagesRouter'
-import {Html, Head, Main, NextScript, DocumentContext} from 'next/document'
+import {DocumentContext, Head, Html, Main, NextScript} from 'next/document'
 
 export default function MuiDocument(props: DocumentHeadTagsProps) {
   // console.log(props)

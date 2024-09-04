@@ -8671,19 +8671,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-<<<<<<< HEAD
   display: flex;
   padding: 6px 16px;
-=======
-  background-color: transparent;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 6px 16px;
-  color: rgb(95, 33, 32);
-  background-color: rgb(253, 237, 237);
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-22 .MuiAlert-icon {
@@ -9645,19 +9634,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-<<<<<<< HEAD
   display: flex;
   padding: 6px 16px;
-=======
-  background-color: transparent;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 6px 16px;
-  color: rgb(95, 33, 32);
-  background-color: rgb(253, 237, 237);
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-32 .MuiAlert-icon {

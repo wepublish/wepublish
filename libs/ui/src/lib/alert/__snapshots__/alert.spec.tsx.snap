@@ -21,19 +21,8 @@ exports[`Alert should render Alert 1`] = `
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-<<<<<<< HEAD
   display: flex;
   padding: 6px 16px;
-=======
-  background-color: transparent;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 6px 16px;
-  color: rgb(95, 33, 32);
-  background-color: rgb(253, 237, 237);
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-1 .MuiAlert-icon {
@@ -82,19 +71,8 @@ exports[`Alert should render Alert 1`] = `
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-<<<<<<< HEAD
   display: flex;
   padding: 6px 16px;
-=======
-  background-color: transparent;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 6px 16px;
-  color: rgb(102, 60, 0);
-  background-color: rgb(255, 244, 229);
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-5 .MuiAlert-icon {
@@ -112,19 +90,8 @@ exports[`Alert should render Alert 1`] = `
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-<<<<<<< HEAD
   display: flex;
   padding: 6px 16px;
-=======
-  background-color: transparent;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 6px 16px;
-  color: rgb(1, 67, 97);
-  background-color: rgb(229, 246, 253);
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-9 .MuiAlert-icon {
@@ -142,19 +109,8 @@ exports[`Alert should render Alert 1`] = `
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
-<<<<<<< HEAD
   display: flex;
   padding: 6px 16px;
-=======
-  background-color: transparent;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 6px 16px;
-  color: rgb(30, 70, 32);
-  background-color: rgb(237, 247, 237);
->>>>>>> 292e29c07cad28ff4dbdb9d866b7659acc52cdac
 }
 
 .emotion-13 .MuiAlert-icon {
