@@ -5,7 +5,7 @@ import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
 import {Cache} from 'cache-manager'
 import {EventFromSource} from './events-import.model'
 import {CreateEventParams, EventsProvider, ImportedEventParams} from './events-import.service'
-import {fetchAndParseKulturagenda} from './kulturagenda-parser'
+import {KulturagendaParser} from './kulturagenda-parser'
 
 @Injectable()
 export class AgendaBaselService implements EventsProvider {
@@ -13,7 +13,8 @@ export class AgendaBaselService implements EventsProvider {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private prisma: PrismaClient,
     private mediaAdapter: MediaAdapterService,
-    private imageFetcher: ImageFetcherService
+    private imageFetcher: ImageFetcherService,
+    private parser: KulturagendaParser
   ) {}
 
   readonly name = 'AgendaBasel'
@@ -26,7 +27,7 @@ export class AgendaBaselService implements EventsProvider {
       return cachedEvents
     }
 
-    const events = await fetchAndParseKulturagenda(this.url, this.name)
+    const events = await this.parser.fetchAndParseKulturagenda(this.url, this.name)
     const ttl = 8 * 60 * 60 * 1000 // 8 hours
 
     await this.cacheManager.set('agenda-basel-events', events, ttl)
