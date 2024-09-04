@@ -35,6 +35,7 @@ import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
 import theme from '../src/theme'
+import {GoogleAnalytics} from '@next/third-parties/google'
 
 setDefaultOptions({
   locale: de
@@ -184,6 +185,10 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   strategy="lazyOnload"
                   src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
                 />
+              )}
+
+              {publicRuntimeConfig.env.GA_ID && (
+                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
               )}
             </ThemeProvider>
           </WebsiteBuilderProvider>
