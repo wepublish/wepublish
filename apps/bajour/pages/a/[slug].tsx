@@ -98,7 +98,7 @@ export default function ArticleBySlugIdOrToken() {
             </ArticleWrapper>
 
             {!isFDT &&
-              data?.article?.authors.map(a => (
+              data.article.authors.map(a => (
                 <AuthorWrapper key={a.id}>
                   <BajourAuthorChip key={a.id} author={a} />
                 </AuthorWrapper>
@@ -110,12 +110,14 @@ export default function ArticleBySlugIdOrToken() {
                   Kommentare
                 </H5>
 
-                <CommentListContainer
-                  id={data.article.id}
-                  type={ApiV1.CommentItemType.Article}
-                  variables={{sort: ApiV1.CommentSort.Rating, order: ApiV1.SortOrder.Descending}}
-                  maxCommentDepth={1}
-                />
+                {!data.article.disableComments && (
+                  <CommentListContainer
+                    id={data.article.id}
+                    type={ApiV1.CommentItemType.Article}
+                    variables={{sort: ApiV1.CommentSort.Rating, order: ApiV1.SortOrder.Descending}}
+                    maxCommentDepth={1}
+                  />
+                )}
               </ArticleWrapper>
             )}
           </>

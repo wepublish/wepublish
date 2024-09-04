@@ -250,11 +250,11 @@ function UserEditView() {
               firstName: firstName || undefined,
               preferredName,
               flair,
-              birthday: birthday?.toISOString(),
+              birthday: birthday?.toISOString() ?? null,
               email,
-              emailVerifiedAt: emailVerifiedAt?.toISOString(),
+              emailVerifiedAt: emailVerifiedAt?.toISOString() ?? null,
               active,
-              userImageID: userImage?.id || null,
+              userImageID: userImage?.id ?? null,
               roleIDs: roles.map(role => role.id),
               properties: metaDataProperties.map(
                 ({value: {key, public: isPublic, value: newValue}}) => ({
@@ -463,6 +463,27 @@ function UserEditView() {
                           onChange={(value: string) => {
                             setEmail(value)
                           }}
+                        />
+                      </Form.Group>
+                    </Col>
+                    {/* birthday */}
+                    <Col xs={12}>
+                      <Form.Group controlId="birthday">
+                        <Form.ControlLabel>{t('userCreateOrEditView.birthday')}</Form.ControlLabel>
+                        <Form.Control
+                          name="birthday"
+                          autoComplete="birthday"
+                          block
+                          oneTap
+                          isoWeek
+                          format="dd.MM.yyyy"
+                          limitEndYear={0}
+                          value={birthday}
+                          disabled={isDisabled}
+                          onChange={value => {
+                            setBirthday(value as Date)
+                          }}
+                          accepter={DatePicker}
                         />
                       </Form.Group>
                     </Col>

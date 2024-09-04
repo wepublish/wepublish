@@ -25,6 +25,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 import {CookieOrPay} from '../src/cookie-or-pay/cookie-or-pay'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {MainSpacer} from '../src/main-spacer'
+import {MannschaftArticleDateWithShare} from '../src/mannschaft-article-date-with-share'
 import {MannschaftBlockRenderer} from '../src/mannschaft-block-renderer'
 import {MannschaftBreakBlock} from '../src/mannschaft-break-block'
 import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
@@ -98,6 +99,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Head={Head}
           Script={Script}
           Page={MannschaftPage}
+          ArticleDate={MannschaftArticleDateWithShare}
           elements={{Link: NextWepublishLink}}
           blocks={{
             Teaser: MannschaftTeaser,

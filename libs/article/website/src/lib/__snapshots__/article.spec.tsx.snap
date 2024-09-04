@@ -414,6 +414,11 @@ exports[`Article should render Default 1`] = `
   aspect-ratio: 1.78343949044586;
 }
 
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .emotion-108 {
   display: grid;
   -webkit-box-pack: center;
@@ -4599,6 +4604,11 @@ exports[`Article should render WithChildren 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-108 {
@@ -8818,6 +8828,11 @@ exports[`Article should render WithClassName 1`] = `
   aspect-ratio: 1.78343949044586;
 }
 
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .emotion-108 {
   display: grid;
   -webkit-box-pack: center;
@@ -13030,6 +13045,11 @@ exports[`Article should render WithEmotion 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-108 {
@@ -17350,6 +17370,11 @@ exports[`Article should render WithoutAuthors 1`] = `
   aspect-ratio: 1.78343949044586;
 }
 
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .emotion-108 {
   display: grid;
   -webkit-box-pack: center;
@@ -21223,6 +21248,11 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-108 {
@@ -25439,6 +25469,11 @@ exports[`Article should render WithoutLead 1`] = `
   aspect-ratio: 1.78343949044586;
 }
 
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .emotion-108 {
   display: grid;
   -webkit-box-pack: center;
@@ -29647,6 +29682,11 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-104 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-108 {

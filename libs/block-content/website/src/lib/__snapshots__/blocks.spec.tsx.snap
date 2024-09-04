@@ -1893,7 +1893,12 @@ https://unsplash.it/200/100 200w"
     data-testid="fake-script"
     src="https://media.online.bildwurf.ch/js/code.min.js"
   />
-  <div
+  .emotion-0 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+<div
     class="emotion-0 emotion-1"
   >
     
@@ -6780,6 +6785,11 @@ exports[`Blocks should render WithLayout 1`] = `
   width: 100%;
   border: 0;
   aspect-ratio: 1.78343949044586;
+}
+
+.emotion-163 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .emotion-167 {

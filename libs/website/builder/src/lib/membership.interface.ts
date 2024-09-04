@@ -77,7 +77,9 @@ export type BuilderPaymentMethodPickerProps = {
   value?: string
 }
 
-export type BuilderSubscribeProps<T extends BuilderUserFormFields = BuilderUserFormFields> = {
+export type BuilderSubscribeProps<
+  T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<BuilderUserFormFields, 'flair'>
+> = {
   challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>
   userSubscriptions: Pick<QueryResult<SubscriptionsQuery>, 'data' | 'loading' | 'error'>
   userInvoices: Pick<QueryResult<InvoicesQuery>, 'data' | 'loading' | 'error'>

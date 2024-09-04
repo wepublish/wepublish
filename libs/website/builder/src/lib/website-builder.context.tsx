@@ -11,6 +11,7 @@ import {
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {
+  BuilderArticleDateProps,
   BuilderArticleListProps,
   BuilderArticleProps,
   BuilderArticleSEOProps
@@ -111,6 +112,7 @@ export type WebsiteBuilderProps = {
   PageSEO: ComponentType<BuilderPageSEOProps>
   Article: ComponentType<BuilderArticleProps>
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
+  ArticleDate: ComponentType<BuilderArticleDateProps>
   PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
   AuthorLinks: ComponentType<BuilderAuthorLinksProps>
@@ -235,6 +237,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   PageSEO: NoComponent,
   Article: NoComponent,
   ArticleSEO: NoComponent,
+  ArticleDate: NoComponent,
   PeerInformation: NoComponent,
   Author: NoComponent,
   AuthorLinks: NoComponent,
