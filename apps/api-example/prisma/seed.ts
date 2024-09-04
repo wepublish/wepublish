@@ -809,7 +809,7 @@ async function seedComments(prisma: PrismaClient, articleIds: string[], imageIds
 }
 
 async function seed() {
-  // const {app} = await bootstrap(['error'])
+  const {app} = await bootstrap(['error'])
   const prisma = new PrismaClient()
   await prisma.$connect()
 
@@ -832,15 +832,18 @@ async function seed() {
     console.log('Seeding navigations')
     const navigations = await seedNavigations(prisma, tags)
     console.log('Seeding images')
-    const [] = await seedImages(prisma)
+    const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
     console.log('Seeding authors')
-    const authors = await seedAuthors(prisma, [])
+    const authors = await seedAuthors(prisma, [womanProfilePhoto.id, manProfilePhoto.id])
     console.log('Seeding events')
-    const events = await seedEvents(prisma, [])
+    const events = await seedEvents(
+      prisma,
+      teaserImages.map(({id}) => id)
+    )
     console.log('Seeding articles')
     const articles = await seedArticles(
       prisma,
-      [],
+      teaserImages.map(({id}) => id),
       authors.map(({id}) => id),
       tags,
       polls.map(({id}) => id),
@@ -850,12 +853,12 @@ async function seed() {
     const comments = await seedComments(
       prisma,
       articles.map(({id}) => id),
-      []
+      [womanProfilePhoto.id, manProfilePhoto.id]
     )
     console.log('Seeding pages')
     const pages = await seedPages(
       prisma,
-      [],
+      teaserImages.map(({id}) => id),
       articles.map(({id}) => id)
     )
 
@@ -897,7 +900,7 @@ async function seed() {
       throw e
     }
   } finally {
-    // await app.close()
+    await app.close()
     await prisma.$disconnect()
   }
 }
