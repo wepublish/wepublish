@@ -20,6 +20,7 @@ fragment FullUser on User {
   firstName
   preferredName
   flair
+  birthday
   email
 
   address {
@@ -90,6 +91,7 @@ mutation Register(
   $name: String!
   $firstName: String
   $preferredName: String
+  $birthday: DateTime
   $address: UserAddressInput
   $email: String!
   $password: String
@@ -99,6 +101,7 @@ mutation Register(
     name: $name
     firstName: $firstName
     preferredName: $preferredName
+    birthday: $birthday
     address: $address
     email: $email
     password: $password

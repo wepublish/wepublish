@@ -22,15 +22,15 @@ const buttonStyles = css`
 `
 
 const withEmailFormSchema = z.object({
-  email: z.string().email().nonempty(),
+  email: z.string().email().min(1),
   requirePassword: z.literal(false),
   password: z.string().optional()
 })
 
 const withCredentialsFormSchema = z.object({
-  email: z.string().email().nonempty(),
+  email: z.string().email().min(1),
   requirePassword: z.literal(true),
-  password: z.string().nonempty()
+  password: z.string().min(1)
 })
 
 const loginFormSchema = z.union([withEmailFormSchema, withCredentialsFormSchema])

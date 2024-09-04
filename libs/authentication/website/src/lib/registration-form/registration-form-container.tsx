@@ -1,21 +1,17 @@
-import {
-  RegisterMutationVariables,
-  useChallengeQuery,
-  useRegisterMutation
-} from '@wepublish/website/api'
+import {useChallengeQuery, useRegisterMutation} from '@wepublish/website/api'
 import {
   BuilderContainerProps,
   BuilderRegistrationFormProps,
+  BuilderUserFormFields,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {OptionalKeysOf} from 'type-fest'
 import {useUser} from '../session.context'
 
 export type RegistrationFormContainerProps<
-  T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
+  T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<BuilderUserFormFields, 'flair'>
 > = BuilderContainerProps & Pick<BuilderRegistrationFormProps<T>, 'fields' | 'schema'>
 
-export function RegistrationFormContainer<T extends OptionalKeysOf<RegisterMutationVariables>>({
+export function RegistrationFormContainer<T extends Exclude<BuilderUserFormFields, 'flair'>>({
   className,
   fields,
   schema
