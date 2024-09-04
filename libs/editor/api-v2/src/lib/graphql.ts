@@ -261,7 +261,7 @@ export type Mutation = {
   /** Deletes an existing event. */
   deleteEvent: Event;
   /** Delete poll vote */
-  deletePollVote: Array<PollVote>;
+  deletePollVote: PollVote;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -1119,7 +1119,7 @@ export type DeletePollVoteMutationVariables = Exact<{
 }>;
 
 
-export type DeletePollVoteMutation = { __typename?: 'Mutation', deletePollVote: Array<{ __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } }> };
+export type DeletePollVoteMutation = { __typename?: 'Mutation', deletePollVote: { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } } };
 
 export type SettingsListQueryVariables = Exact<{ [key: string]: never; }>;
 
