@@ -261,7 +261,7 @@ export type Mutation = {
   /** Deletes an existing event. */
   deleteEvent: Event;
   /** Delete poll vote */
-  deletePollVote: Array<PollVote>;
+  deletePollVote: PollVote;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
