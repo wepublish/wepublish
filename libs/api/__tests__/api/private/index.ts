@@ -34,6 +34,7 @@ export type AllowedSettingVals = {
 export type Article = {
   __typename?: 'Article';
   createdAt: Scalars['DateTime'];
+  disableComments?: Maybe<Scalars['Boolean']>;
   draft?: Maybe<ArticleRevision>;
   hidden?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
@@ -78,6 +79,7 @@ export type ArticleInput = {
   blocks: Array<BlockInput>;
   breaking: Scalars['Boolean'];
   canonicalUrl?: InputMaybe<Scalars['String']>;
+  disableComments?: InputMaybe<Scalars['Boolean']>;
   hidden?: InputMaybe<Scalars['Boolean']>;
   hideAuthor: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['ID']>;
@@ -2747,6 +2749,7 @@ export type User = {
   __typename?: 'User';
   active: Scalars['Boolean'];
   address?: Maybe<UserAddress>;
+  birthday?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
@@ -2806,6 +2809,7 @@ export type UserFilter = {
 export type UserInput = {
   active: Scalars['Boolean'];
   address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
   email: Scalars['String'];
   emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
   firstName?: InputMaybe<Scalars['String']>;

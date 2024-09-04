@@ -204,7 +204,8 @@ function MemberPlanEdit() {
         formValue={{
           name: memberPlan?.name,
           slug: memberPlan?.slug,
-          amountPerMonthMin: memberPlan?.amountPerMonthMin
+          amountPerMonthMin: memberPlan?.amountPerMonthMin,
+          currency: memberPlan?.currency
         }}>
         <SingleViewTitle
           loading={loading}

@@ -2,6 +2,7 @@ import {css, styled} from '@mui/material'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
+  Article,
   ArticleContainer,
   ArticleList,
   ArticleListContainer,
@@ -11,8 +12,7 @@ import {
   ContentWrapper,
   PollBlock,
   useWebsiteBuilder,
-  WebsiteBuilderProvider,
-  Article
+  WebsiteBuilderProvider
 } from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
@@ -20,13 +20,13 @@ import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
+import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
 import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
 import {Container} from '../../src/components/layout/container'
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {BajourTeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
-import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
 
 const uppercase = css`
   text-transform: uppercase;
@@ -98,7 +98,7 @@ export default function ArticleBySlugIdOrToken() {
             </ArticleWrapper>
 
             {!isFDT &&
-              data?.article?.authors.map(a => (
+              data.article.authors.map(a => (
                 <AuthorWrapper key={a.id}>
                   <BajourAuthorChip key={a.id} author={a} />
                 </AuthorWrapper>
@@ -110,12 +110,14 @@ export default function ArticleBySlugIdOrToken() {
                   Kommentare
                 </H5>
 
-                <CommentListContainer
-                  id={data.article.id}
-                  type={ApiV1.CommentItemType.Article}
-                  variables={{sort: ApiV1.CommentSort.Rating, order: ApiV1.SortOrder.Descending}}
-                  maxCommentDepth={1}
-                />
+                {!data.article.disableComments && (
+                  <CommentListContainer
+                    id={data.article.id}
+                    type={ApiV1.CommentItemType.Article}
+                    variables={{sort: ApiV1.CommentSort.Rating, order: ApiV1.SortOrder.Descending}}
+                    maxCommentDepth={1}
+                  />
+                )}
               </ArticleWrapper>
             )}
           </>

@@ -24,7 +24,10 @@ function Profile() {
     <ProfileWrapper>
       <H4 component={'h1'}>Profil</H4>
 
-      <PersonalDataFormContainer mediaEmail="info@wepublish.dev" />
+      <PersonalDataFormContainer
+        mediaEmail="info@wepublish.dev"
+        fields={['firstName', 'address', 'birthday', 'image', 'password', 'flair']}
+      />
     </ProfileWrapper>
   )
 }

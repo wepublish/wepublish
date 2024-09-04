@@ -62,6 +62,95 @@ https://unsplash.it/200/200 200w"
 </DocumentFragment>
 `;
 
+exports[`Image should render WithClassName 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+<img
+    alt="An image description"
+    class="extra-classname emotion-0 emotion-1"
+    loading="lazy"
+    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+    title="An image title"
+  />
+</DocumentFragment>
+`;
+
+exports[`Image should render WithEmotion 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  background-color: #eee;
+}
+
+<img
+    alt="An image description"
+    class="emotion-0 emotion-1"
+    loading="lazy"
+    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+    srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+    title="An image title"
+  />
+</DocumentFragment>
+`;
+
+exports[`Image should render WithMaxWidth 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+<img
+    alt="An image description"
+    class="emotion-0 emotion-1"
+    loading="lazy"
+    sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+    srcset="https://unsplash.it/200/100 200w"
+    title="An image title"
+  />
+</DocumentFragment>
+`;
+
 exports[`Image should render WithoutDescription 1`] = `
 <DocumentFragment>
   .emotion-0 {

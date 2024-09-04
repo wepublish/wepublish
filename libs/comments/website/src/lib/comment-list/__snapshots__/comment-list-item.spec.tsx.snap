@@ -155,6 +155,9 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;
 }
@@ -793,12 +796,12 @@ https://unsplash.it/200/200 200w"
           </button>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall emotion-56"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary emotion-56"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-57"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-57"
           >
             <svg
               fill="currentColor"
@@ -984,6 +987,9 @@ exports[`Comment List Item should render Commenting 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -1803,12 +1809,12 @@ https://unsplash.it/200/200 200w"
           </button>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall emotion-68"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary emotion-68"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
           >
             <svg
               fill="currentColor"
@@ -1994,6 +2000,9 @@ exports[`Comment List Item should render Default 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;
 }
@@ -2688,6 +2697,9 @@ exports[`Comment List Item should render Editing 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -3592,12 +3604,12 @@ https://unsplash.it/200/200 200w"
           </button>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-68"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary emotion-68"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
           >
             <svg
               fill="currentColor"
@@ -3623,12 +3635,12 @@ https://unsplash.it/200/200 200w"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall emotion-71"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary emotion-71"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
           >
             <svg
               fill="currentColor"
@@ -3814,6 +3826,9 @@ exports[`Comment List Item should render MaxNesting 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -4726,12 +4741,12 @@ https://unsplash.it/200/200 200w"
           </button>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-68"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary emotion-68"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
           >
             <svg
               fill="currentColor"
@@ -4757,12 +4772,12 @@ https://unsplash.it/200/200 200w"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall emotion-71"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary emotion-71"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
           >
             <svg
               fill="currentColor"
@@ -4910,12 +4925,12 @@ https://unsplash.it/200/200 200w"
               </button>
             </div>
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-68"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary emotion-68"
               tabindex="0"
               type="button"
             >
               <span
-                class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+                class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
               >
                 <svg
                   fill="currentColor"
@@ -5223,6 +5238,9 @@ exports[`Comment List Item should render Nested 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -6135,12 +6153,12 @@ https://unsplash.it/200/200 200w"
           </button>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-68"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary emotion-68"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
           >
             <svg
               fill="currentColor"
@@ -6166,12 +6184,12 @@ https://unsplash.it/200/200 200w"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall emotion-71"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary emotion-71"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
           >
             <svg
               fill="currentColor"
@@ -6319,12 +6337,12 @@ https://unsplash.it/200/200 200w"
               </button>
             </div>
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-68"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary emotion-68"
               tabindex="0"
               type="button"
             >
               <span
-                class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+                class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
               >
                 <svg
                   fill="currentColor"
@@ -6350,12 +6368,12 @@ https://unsplash.it/200/200 200w"
               />
             </button>
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall emotion-71"
+              class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary emotion-71"
               tabindex="0"
               type="button"
             >
               <span
-                class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+                class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
               >
                 <svg
                   fill="currentColor"
@@ -6503,12 +6521,12 @@ https://unsplash.it/200/200 200w"
                   </button>
                 </div>
                 <button
-                  class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall emotion-71"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary emotion-71"
                   tabindex="0"
                   type="button"
                 >
                   <span
-                    class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+                    class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
                   >
                     <svg
                       fill="currentColor"
@@ -6656,12 +6674,12 @@ https://unsplash.it/200/200 200w"
               </button>
             </div>
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall emotion-71"
+              class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary emotion-71"
               tabindex="0"
               type="button"
             >
               <span
-                class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+                class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
               >
                 <svg
                   fill="currentColor"
@@ -6809,12 +6827,12 @@ https://unsplash.it/200/200 200w"
                   </button>
                 </div>
                 <button
-                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-68"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary emotion-68"
                   tabindex="0"
                   type="button"
                 >
                   <span
-                    class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+                    class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
                   >
                     <svg
                       fill="currentColor"
@@ -6840,12 +6858,12 @@ https://unsplash.it/200/200 200w"
                   />
                 </button>
                 <button
-                  class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall emotion-71"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary emotion-71"
                   tabindex="0"
                   type="button"
                 >
                   <span
-                    class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
+                    class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-69"
                   >
                     <svg
                       fill="currentColor"
@@ -7035,6 +7053,9 @@ exports[`Comment List Item should render WithClassName 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;
 }
@@ -7730,6 +7751,9 @@ exports[`Comment List Item should render WithEmotion 1`] = `
   color: #faaf00;
   cursor: pointer;
   text-align: left;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;
 }

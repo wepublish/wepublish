@@ -15,6 +15,8 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
+import {useState} from 'react'
+import {AdConfig} from 'react-ad-manager'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
@@ -23,14 +25,13 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 import {CookieOrPay} from '../src/cookie-or-pay/cookie-or-pay'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {MainSpacer} from '../src/main-spacer'
+import {MannschaftArticleDateWithShare} from '../src/mannschaft-article-date-with-share'
 import {MannschaftBlockRenderer} from '../src/mannschaft-block-renderer'
 import {MannschaftBreakBlock} from '../src/mannschaft-break-block'
 import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
 import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import theme from '../src/theme'
-import {useState} from 'react'
-import {AdConfig} from 'react-ad-manager'
 
 setDefaultOptions({
   locale: de
@@ -98,6 +99,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Head={Head}
           Script={Script}
           Page={MannschaftPage}
+          ArticleDate={MannschaftArticleDateWithShare}
           elements={{Link: NextWepublishLink}}
           blocks={{
             Teaser: MannschaftTeaser,

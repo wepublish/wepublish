@@ -38,7 +38,7 @@ export function AuthorListItem({
   return (
     <Link css={wrapperStyles(theme)} className={className} href={url}>
       <AuthorListItemImageWrapper>
-        {image && <Image image={image} square css={imageStyles} />}
+        {image && <Image image={image} square css={imageStyles} maxWidth={500} />}
       </AuthorListItemImageWrapper>
 
       <AuthorListItemContent>

@@ -1078,7 +1078,7 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-20"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-20"
         tabindex="0"
         type="button"
       >
@@ -1893,7 +1893,12 @@ https://unsplash.it/200/100 200w"
     data-testid="fake-script"
     src="https://media.online.bildwurf.ch/js/code.min.js"
   />
-  <div
+  .emotion-0 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+<div
     class="emotion-0 emotion-1"
   >
     
@@ -6782,6 +6787,11 @@ exports[`Blocks should render WithLayout 1`] = `
   aspect-ratio: 1.78343949044586;
 }
 
+.emotion-163 #bildwurf-ad-in-content {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .emotion-167 {
   display: grid;
   -webkit-box-pack: center;
@@ -8189,7 +8199,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-59"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-59"
           tabindex="0"
           type="button"
         >

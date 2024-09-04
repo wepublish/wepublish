@@ -104,6 +104,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
 
     shared: {type: new GraphQLNonNull(GraphQLBoolean)},
     hidden: {type: GraphQLBoolean},
+    disableComments: {type: GraphQLBoolean},
     breaking: {type: new GraphQLNonNull(GraphQLBoolean)},
 
     hideAuthor: {type: new GraphQLNonNull(GraphQLBoolean)},
@@ -211,6 +212,7 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
     id: {type: new GraphQLNonNull(GraphQLID)},
     shared: {type: new GraphQLNonNull(GraphQLBoolean)},
     hidden: {type: GraphQLBoolean},
+    disableComments: {type: GraphQLBoolean},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -307,6 +309,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
         type: GraphQLString
       },
 
+      disableComments: {type: GraphQLBoolean},
       preTitle: {type: GraphQLString},
       title: {type: new GraphQLNonNull(GraphQLString)},
       lead: {type: GraphQLString},

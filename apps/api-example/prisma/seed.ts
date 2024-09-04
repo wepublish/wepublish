@@ -263,19 +263,31 @@ async function seedPoll(prisma: PrismaClient) {
     ...future.answers.map(answer =>
       prisma.pollVote.createMany({
         data: Array.from({length: faker.number.int({min: 25, max: 100})}, (x, i) => ({
+          pollId: future.id,
           answerId: answer.id,
-          pollId: future.id
+          createdAt: faker.date.recent(),
+          fingerprint: faker.number.bigInt().toString()
         }))
       })
     ),
     ...past.answers.map(answer =>
       prisma.pollVote.createMany({
         data: Array.from({length: faker.number.int({min: 25, max: 100})}, (x, i) => ({
+          pollId: past.id,
           answerId: answer.id,
-          pollId: past.id
+          createdAt: faker.date.recent(),
+          fingerprint: faker.number.bigInt().toString()
         }))
       })
-    )
+    ),
+    prisma.pollVote.createMany({
+      data: Array.from({length: faker.number.int({min: 25, max: 100})}, (x, i) => ({
+        pollId: past.id,
+        answerId: past.answers[0].id,
+        createdAt: faker.date.recent(),
+        fingerprint: 'someone-manipulating-votes'
+      }))
+    })
   ])
 
   return [past, future]
@@ -797,7 +809,7 @@ async function seedComments(prisma: PrismaClient, articleIds: string[], imageIds
 }
 
 async function seed() {
-  const {app} = await bootstrap(['error'])
+  // const {app} = await bootstrap(['error'])
   const prisma = new PrismaClient()
   await prisma.$connect()
 
@@ -815,33 +827,39 @@ async function seed() {
     }
 
     const tags = Array.from({length: 5}, () => faker.word.noun().toLowerCase())
+    console.log('Seeding polls')
     const polls = await seedPoll(prisma)
+    console.log('Seeding navigations')
     const navigations = await seedNavigations(prisma, tags)
-    const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
-    const authors = await seedAuthors(prisma, [womanProfilePhoto.id, manProfilePhoto.id])
-    const events = await seedEvents(
-      prisma,
-      teaserImages.map(({id}) => id)
-    )
+    console.log('Seeding images')
+    const [] = await seedImages(prisma)
+    console.log('Seeding authors')
+    const authors = await seedAuthors(prisma, [])
+    console.log('Seeding events')
+    const events = await seedEvents(prisma, [])
+    console.log('Seeding articles')
     const articles = await seedArticles(
       prisma,
-      teaserImages.map(({id}) => id),
+      [],
       authors.map(({id}) => id),
       tags,
       polls.map(({id}) => id),
       events.map(({id}) => id)
     )
+    console.log('Seeding comments')
     const comments = await seedComments(
       prisma,
       articles.map(({id}) => id),
-      [womanProfilePhoto.id, manProfilePhoto.id]
+      []
     )
+    console.log('Seeding pages')
     const pages = await seedPages(
       prisma,
-      teaserImages.map(({id}) => id),
+      [],
       articles.map(({id}) => id)
     )
 
+    console.log('Seeding users')
     await Promise.all([
       prisma.user.upsert({
         where: {
@@ -879,7 +897,7 @@ async function seed() {
       throw e
     }
   } finally {
-    await app.close()
+    // await app.close()
     await prisma.$disconnect()
   }
 }

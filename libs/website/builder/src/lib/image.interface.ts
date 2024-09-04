@@ -3,7 +3,10 @@ import {ImgHTMLAttributes} from 'react'
 
 export type BuilderImageProviderProps = {
   square?: boolean
+  maxWidth?: BuilderImageWidths
 } & Pick<ImgHTMLAttributes<HTMLImageElement>, 'loading' | 'fetchPriority'>
+
+export type BuilderImageWidths = 200 | 300 | 500 | 800 | 1000 | 1200
 
 export type BuilderImageProps = {
   image: FullImageFragment

@@ -52,6 +52,7 @@ import {PeerArticleList} from './routes/peerArticles/peerArticleList'
 import {PeerList} from './routes/peers/peerList'
 import {PollEditView} from './routes/polls/pollEditView'
 import {PollList} from './routes/polls/pollList'
+import {PollVoteListContainer} from './routes/polls/PollVotesListContainer'
 import {SubscriptionEditView} from './routes/subscriptions/subscriptionEditView'
 import {SubscriptionList} from './routes/subscriptions/subscriptionList'
 import {TagList} from './routes/tags/tagList'
@@ -307,6 +308,14 @@ export function App() {
               element={
                 <Base>
                   <PollEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="polls/votes/:pollId"
+              element={
+                <Base>
+                  <PollVoteListContainer />
                 </Base>
               }
             />

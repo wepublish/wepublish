@@ -122,6 +122,7 @@
         "yes": "Yes",
         "hidden": "Hide",
         "setAsHidden": "Hidden articles are excluded by default but can still be queried on demand.",
+        "disableComments": "Disable comments for this article",
         "light": "Light",
         "style": "Style",
         "text": "Text",
@@ -324,7 +325,8 @@
         "link": "Link",
         "remove": "Remove",
         "startWriting": "Start writing ...",
-        "text": "Text"
+        "text": "Text",
+        "id": "ID"
       },
       "richTextTable": {
         "addBorders": "Add Borders",
@@ -1028,6 +1030,7 @@
       "closedAtNone": "Not closed",
       "createNew": "Create Poll",
       "delete": "Delete",
+      "showVotes": "Show votes",
       "hasBeenClosedAt": "Closed at {{closedAt, ccc PP p}}",
       "noQuestion": "No question captured",
       "openedAt": "Opened at {{openedAt, ccc PP p}}",
@@ -1037,6 +1040,13 @@
       "question": "Question",
       "state": "State",
       "title": "Polls"
+    },
+    "pollVoteList": {
+      "createdAt": "Created at",
+      "answerId": "Answer",
+      "userId": "User ID",
+      "fingerprint": "Fingerprint",
+      "deleteItems": "Delete items"
     },
     "pollStateIndication": {
       "closed": "Poll closed",
@@ -1265,7 +1275,8 @@
       "Unknown": "Unknown",
       "userDataTitle": "User Data",
       "userRoles": "User Roles",
-      "zipCode": "ZIP"
+      "zipCode": "ZIP",
+      "birthday": "Birthday"
     },
     "userList": {
       "overview": {
@@ -1421,6 +1432,9 @@
       "hideOnTeam": "Hide on team page",
       "hideOnArticle": "Hide on articles",
       "hideOnTeaser": "Hide on teasers"
+    },
+    "selectableItemsActions": {
+      "selectedItems": "Selected {{numberOfItems}} items"
     }
   }
 }

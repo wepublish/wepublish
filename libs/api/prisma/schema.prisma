@@ -117,8 +117,9 @@ model Article {
   draftId String?          @unique
   draft   ArticleRevision? @relation("draftArticleRevision", fields: [draftId], references: [id], onDelete: SetNull)
 
-  shared Boolean
-  hidden Boolean @default(false)
+  shared          Boolean
+  hidden          Boolean @default(false)
+  disableComments Boolean @default(false)
 
   navigations NavigationLink[]
   tags        TaggedArticles[]
@@ -857,6 +858,7 @@ model User {
   id              String    @id @default(cuid())
   createdAt       DateTime  @default(now())
   modifiedAt      DateTime  @updatedAt
+  birthday        DateTime? @db.Date
   email           String    @unique
   emailVerifiedAt DateTime?
   name            String
