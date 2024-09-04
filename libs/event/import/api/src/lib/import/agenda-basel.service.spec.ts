@@ -1,10 +1,23 @@
-import {HttpService} from '@nestjs/axios'
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {Test, TestingModule} from '@nestjs/testing'
-import {PrismaClient} from '@prisma/client'
+import {EventStatus, PrismaClient} from '@prisma/client'
 import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
 import {AgendaBaselService} from './agenda-basel.service'
 import {EVENT_IMPORT_PROVIDER} from './events-import.service'
+import {KulturagendaParser} from './kulturagenda-parser'
+import {EventFromSource} from './events-import.model'
+
+const mockedEvent: EventFromSource = {
+  id: '1234',
+  createdAt: new Date('2023-01-01'),
+  modifiedAt: new Date('2023-01-01'),
+  name: 'Foobar',
+  startsAt: new Date('2023-01-01'),
+  status: EventStatus.Scheduled,
+  description: [],
+  externalSourceId: '123',
+  externalSourceName: 'KulturBasel'
+}
 
 describe('AgendaBaselService', () => {
   let service: AgendaBaselService
@@ -15,14 +28,14 @@ describe('AgendaBaselService', () => {
       providers: [
         AgendaBaselService,
         {
-          provide: EVENT_IMPORT_PROVIDER,
-          useValue: [AgendaBaselService]
+          provide: KulturagendaParser,
+          useValue: {
+            fetchAndParseKulturagenda: async () => [mockedEvent]
+          }
         },
         {
-          provide: HttpService,
-          useValue: {
-            get: jest.fn()
-          }
+          provide: EVENT_IMPORT_PROVIDER,
+          useValue: [AgendaBaselService]
         },
         {
           provide: CACHE_MANAGER,
