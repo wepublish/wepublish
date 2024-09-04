@@ -3,7 +3,7 @@
 exports[`HTML Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="emotion-0 emotion-1"
+    class="css-1moxsbr-HtmlBlockWrapper emotion-0"
   >
     <div>
       <div
@@ -19,7 +19,7 @@ exports[`HTML Block should render Default 1`] = `
 exports[`HTML Block should render Empty 1`] = `
 <DocumentFragment>
   <div
-    class="emotion-0 emotion-1"
+    class="css-1moxsbr-HtmlBlockWrapper emotion-0"
   />
 </DocumentFragment>
 `;
@@ -27,7 +27,7 @@ exports[`HTML Block should render Empty 1`] = `
 exports[`HTML Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname emotion-0 emotion-1"
+    class="extra-classname css-1moxsbr-HtmlBlockWrapper emotion-0"
   >
     <div>
       <div
@@ -43,7 +43,7 @@ exports[`HTML Block should render WithClassName 1`] = `
 exports[`HTML Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="emotion-0 emotion-1"
+    class="css-1moxsbr-HtmlBlockWrapper emotion-0"
   >
     <div>
       <div
@@ -59,7 +59,7 @@ exports[`HTML Block should render WithEmotion 1`] = `
 exports[`HTML Block should render WithScript 1`] = `
 <DocumentFragment>
   <div
-    class="emotion-0 emotion-1"
+    class="css-1moxsbr-HtmlBlockWrapper emotion-0"
   >
     <div>
       

@@ -122,6 +122,7 @@
         "yes": "Ja",
         "hidden": "Ausblenden",
         "setAsHidden": "Ausgeblendete Artikel werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden.",
+        "disableComments": "Kommentare für diesen Artikel deaktivieren",
         "light": "Light",
         "style": "Style",
         "text": "Text",
@@ -324,7 +325,8 @@
         "link": "Link",
         "remove": "Entfernen",
         "startWriting": "Beginne zu schreiben ...",
-        "text": "Text"
+        "text": "Text",
+        "id": "ID"
       },
       "richTextTable": {
         "addBorders": "Rahmen hinzufügen",
@@ -1184,7 +1186,8 @@
       "Unknown": "Unbekannt",
       "userDataTitle": "Userdaten",
       "userRoles": "Userrollen",
-      "zipCode": "PLZ"
+      "zipCode": "PLZ",
+      "birthday": "Geburtstag"
     },
     "userList": {
       "overview": {

@@ -4,7 +4,6 @@ exports[`Event should render Default 1`] = `
 <DocumentFragment>
   .emotion-1 {
   display: grid;
-  gap: 56px;
   gap: 32px;
 }
 
@@ -674,7 +673,6 @@ exports[`Event should render WithClassName 1`] = `
 <DocumentFragment>
   .emotion-1 {
   display: grid;
-  gap: 56px;
   gap: 32px;
 }
 
@@ -1344,7 +1342,6 @@ exports[`Event should render WithEmotion 1`] = `
 <DocumentFragment>
   .emotion-1 {
   display: grid;
-  gap: 56px;
   gap: 32px;
 }
 
@@ -2014,7 +2011,6 @@ exports[`Event should render WithError 1`] = `
 <DocumentFragment>
   .emotion-1 {
   display: grid;
-  gap: 56px;
   gap: 32px;
 }
 
@@ -2083,7 +2079,6 @@ exports[`Event should render WithLoading 1`] = `
 <DocumentFragment>
   .emotion-1 {
   display: grid;
-  gap: 56px;
   gap: 32px;
 }
 
@@ -2152,7 +2147,6 @@ exports[`Event should render WithoutImage 1`] = `
 <DocumentFragment>
   .emotion-1 {
   display: grid;
-  gap: 56px;
   gap: 32px;
 }
 

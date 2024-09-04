@@ -3,10 +3,7 @@
 exports[`PaymentMethodPicker should render Default 1`] = `
 <DocumentFragment>
   .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: grid;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -16,13 +13,9 @@ exports[`PaymentMethodPicker should render Default 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
-  display: grid;
 }
 
 .emotion-2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
@@ -34,9 +27,6 @@ exports[`PaymentMethodPicker should render Default 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -58,9 +48,6 @@ exports[`PaymentMethodPicker should render Default 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -77,8 +64,8 @@ exports[`PaymentMethodPicker should render Default 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -89,9 +76,6 @@ exports[`PaymentMethodPicker should render Default 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
-  padding: 9px;
-  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
   visibility: hidden;
   width: 0;
@@ -147,9 +131,6 @@ exports[`PaymentMethodPicker should render Default 1`] = `
 
 .emotion-6 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
 }
 
@@ -186,8 +167,8 @@ exports[`PaymentMethodPicker should render Default 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
@@ -195,8 +176,6 @@ exports[`PaymentMethodPicker should render Default 1`] = `
   -moz-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-9 {
@@ -228,11 +207,10 @@ exports[`PaymentMethodPicker should render Default 1`] = `
 
 .emotion-12 {
   max-width: 100%;
-  height: auto;
+  height: 40px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  height: 40px;
 }
 
 .emotion-14 {
@@ -255,8 +233,8 @@ exports[`PaymentMethodPicker should render Default 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
@@ -264,8 +242,6 @@ exports[`PaymentMethodPicker should render Default 1`] = `
   -moz-transform: scale(0);
   -ms-transform: scale(0);
   transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-22 {
@@ -286,7 +262,7 @@ exports[`PaymentMethodPicker should render Default 1`] = `
     class="MuiFormControl-root emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":r0:"
       role="radiogroup"
     >
@@ -436,10 +412,7 @@ https://unsplash.it/200/100 200w"
 exports[`PaymentMethodPicker should render Selected 1`] = `
 <DocumentFragment>
   .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: grid;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -449,13 +422,9 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
-  display: grid;
 }
 
 .emotion-2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
@@ -467,9 +436,6 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -491,9 +457,6 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -510,8 +473,8 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -522,9 +485,6 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
-  padding: 9px;
-  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
   visibility: hidden;
   width: 0;
@@ -580,9 +540,6 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
 
 .emotion-6 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
 }
 
@@ -619,8 +576,8 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
@@ -628,8 +585,6 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
   -moz-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-9 {
@@ -661,11 +616,10 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
 
 .emotion-12 {
   max-width: 100%;
-  height: auto;
+  height: 40px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  height: 40px;
 }
 
 .emotion-14 {
@@ -688,8 +642,8 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
@@ -697,8 +651,6 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
   -moz-transform: scale(0);
   -ms-transform: scale(0);
   transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-22 {
@@ -719,7 +671,7 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
     class="MuiFormControl-root emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":r2:"
       role="radiogroup"
     >
@@ -869,10 +821,7 @@ https://unsplash.it/200/100 200w"
 exports[`PaymentMethodPicker should render Single 1`] = `
 <DocumentFragment>
   .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: grid;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -882,13 +831,9 @@ exports[`PaymentMethodPicker should render Single 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
-  display: grid;
 }
 
 .emotion-2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
@@ -900,9 +845,6 @@ exports[`PaymentMethodPicker should render Single 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -924,9 +866,6 @@ exports[`PaymentMethodPicker should render Single 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -943,8 +882,8 @@ exports[`PaymentMethodPicker should render Single 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -955,9 +894,6 @@ exports[`PaymentMethodPicker should render Single 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
-  padding: 9px;
-  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
   visibility: hidden;
   width: 0;
@@ -1013,9 +949,6 @@ exports[`PaymentMethodPicker should render Single 1`] = `
 
 .emotion-6 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
 }
 
@@ -1052,8 +985,8 @@ exports[`PaymentMethodPicker should render Single 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
@@ -1061,8 +994,6 @@ exports[`PaymentMethodPicker should render Single 1`] = `
   -moz-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-9 {
@@ -1094,11 +1025,10 @@ exports[`PaymentMethodPicker should render Single 1`] = `
 
 .emotion-12 {
   max-width: 100%;
-  height: auto;
+  height: 40px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  height: 40px;
 }
 
 .emotion-14 {
@@ -1113,7 +1043,7 @@ exports[`PaymentMethodPicker should render Single 1`] = `
     class="MuiFormControl-root emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":r4:"
       role="radiogroup"
     >
@@ -1194,10 +1124,7 @@ https://unsplash.it/200/100 200w"
 exports[`PaymentMethodPicker should render WithClassName 1`] = `
 <DocumentFragment>
   .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: grid;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -1207,13 +1134,9 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
-  display: grid;
 }
 
 .emotion-2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
@@ -1225,9 +1148,6 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1249,9 +1169,6 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1268,8 +1185,8 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1280,9 +1197,6 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
-  padding: 9px;
-  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
   visibility: hidden;
   width: 0;
@@ -1338,9 +1252,6 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
 
 .emotion-6 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
 }
 
@@ -1377,8 +1288,8 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
@@ -1386,8 +1297,6 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
   -moz-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-9 {
@@ -1419,11 +1328,10 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
 
 .emotion-12 {
   max-width: 100%;
-  height: auto;
+  height: 40px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  height: 40px;
 }
 
 .emotion-14 {
@@ -1446,8 +1354,8 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
@@ -1455,8 +1363,6 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
   -moz-transform: scale(0);
   -ms-transform: scale(0);
   transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-22 {
@@ -1477,7 +1383,7 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
     class="MuiFormControl-root extra-classname emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":r6:"
       role="radiogroup"
     >
@@ -1627,10 +1533,7 @@ https://unsplash.it/200/100 200w"
 exports[`PaymentMethodPicker should render WithEmotion 1`] = `
 <DocumentFragment>
   .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: grid;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -1640,14 +1543,10 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
-  display: grid;
   background-color: #eee;
 }
 
 .emotion-2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
@@ -1659,9 +1558,6 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1683,9 +1579,6 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1702,8 +1595,8 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1714,9 +1607,6 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
-  padding: 9px;
-  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
   visibility: hidden;
   width: 0;
@@ -1772,9 +1662,6 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
 
 .emotion-6 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
 }
 
@@ -1811,8 +1698,8 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
@@ -1820,8 +1707,6 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
   -moz-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-9 {
@@ -1853,11 +1738,10 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
 
 .emotion-12 {
   max-width: 100%;
-  height: auto;
+  height: 40px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  height: 40px;
 }
 
 .emotion-14 {
@@ -1880,8 +1764,8 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
@@ -1889,8 +1773,6 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
   -moz-transform: scale(0);
   -ms-transform: scale(0);
   transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-22 {
@@ -1911,7 +1793,7 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
     class="MuiFormControl-root emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":r8:"
       role="radiogroup"
     >
@@ -2061,10 +1943,7 @@ https://unsplash.it/200/100 200w"
 exports[`PaymentMethodPicker should render WithError 1`] = `
 <DocumentFragment>
   .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: grid;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -2074,13 +1953,9 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
-  display: grid;
 }
 
 .emotion-2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
@@ -2092,9 +1967,6 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2116,9 +1988,6 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2135,8 +2004,8 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -2147,9 +2016,6 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
-  padding: 9px;
-  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
   visibility: hidden;
   width: 0;
@@ -2205,9 +2071,6 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
 
 .emotion-6 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
 }
 
@@ -2244,8 +2107,8 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
@@ -2253,8 +2116,6 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
   -moz-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-9 {
@@ -2286,11 +2147,10 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
 
 .emotion-12 {
   max-width: 100%;
-  height: auto;
+  height: 40px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  height: 40px;
 }
 
 .emotion-14 {
@@ -2313,8 +2173,8 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
@@ -2322,8 +2182,6 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
   -moz-transform: scale(0);
   -ms-transform: scale(0);
   transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-22 {
@@ -2344,7 +2202,7 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
     class="MuiFormControl-root emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":ra:"
       role="radiogroup"
     >
@@ -2494,10 +2352,7 @@ https://unsplash.it/200/100 200w"
 exports[`PaymentMethodPicker should render WithLoading 1`] = `
 <DocumentFragment>
   .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: grid;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -2507,13 +2362,9 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
-  display: grid;
 }
 
 .emotion-2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
@@ -2525,9 +2376,6 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2549,9 +2397,6 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2568,8 +2413,8 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -2580,9 +2425,6 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
-  padding: 9px;
-  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
   visibility: hidden;
   width: 0;
@@ -2638,9 +2480,6 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
 
 .emotion-6 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
 }
 
@@ -2677,8 +2516,8 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
@@ -2686,8 +2525,6 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
   -moz-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-9 {
@@ -2719,11 +2556,10 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
 
 .emotion-12 {
   max-width: 100%;
-  height: auto;
+  height: 40px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
-  height: 40px;
 }
 
 .emotion-14 {
@@ -2746,8 +2582,8 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
@@ -2755,8 +2591,6 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
   -moz-transform: scale(0);
   -ms-transform: scale(0);
   transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-22 {
@@ -2777,7 +2611,7 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
     class="MuiFormControl-root emotion-0 emotion-1"
   >
     <div
-      class="MuiFormGroup-root MuiFormGroup-row emotion-2"
+      class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-2"
       id=":rc:"
       role="radiogroup"
     >

@@ -1,3 +1,5 @@
+import {styled} from '@mui/material'
+import {H2} from '@wepublish/ui'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -10,8 +12,7 @@ import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
-import {styled} from '@mui/material'
-import {H2} from '@wepublish/ui'
+
 import TsriAdHeader from '../../src/components/tsri-ad-header'
 
 const AfterArticleTitle = styled(H2)`
@@ -57,14 +58,17 @@ export default function ArticleBySlugIdOrToken() {
             />
           </ArticleWrapper>
 
-          <ArticleWrapper>
-            <AfterArticleTitle component={'h2'}>Kommentare</AfterArticleTitle>
-            <CommentListContainer
-              id={data.article.id}
-              type={ApiV1.CommentItemType.Article}
-              signUpUrl="/mitmachen"
-            />
-          </ArticleWrapper>
+          {!data.article.disableComments && (
+            <ArticleWrapper>
+              <AfterArticleTitle component={'h2'}>Kommentare</AfterArticleTitle>
+
+              <CommentListContainer
+                id={data.article.id}
+                type={ApiV1.CommentItemType.Article}
+                signUpUrl="/mitmachen"
+              />
+            </ArticleWrapper>
+          )}
         </>
       )}
     </>

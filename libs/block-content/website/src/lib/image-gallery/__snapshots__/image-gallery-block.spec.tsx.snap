@@ -29,9 +29,6 @@ exports[`Image Gallery Block should render Default 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   position: relative;
   -webkit-flex-direction: column;
@@ -419,9 +416,6 @@ exports[`Image Gallery Block should render WithClassName 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   position: relative;
   -webkit-flex-direction: column;
@@ -809,9 +803,6 @@ exports[`Image Gallery Block should render WithEmotion 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   position: relative;
   -webkit-flex-direction: column;
@@ -1199,9 +1190,6 @@ exports[`Image Gallery Block should render WithoutCaption 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   position: relative;
   -webkit-flex-direction: column;

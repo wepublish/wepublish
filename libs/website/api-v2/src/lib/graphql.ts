@@ -1064,4 +1064,3 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
   "possibleTypes": {}
 };
       export default result;
-    

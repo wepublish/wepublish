@@ -21,9 +21,6 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
 }
 
 .emotion-2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -209,9 +206,6 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
 }
 
 .emotion-2 .rs-table-cell-content {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;

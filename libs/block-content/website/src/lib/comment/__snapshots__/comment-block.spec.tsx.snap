@@ -28,12 +28,11 @@ exports[`Comment List should render Default 1`] = `
 
 .emotion-6 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -50,10 +49,8 @@ exports[`Comment List should render Default 1`] = `
 }
 
 .emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -288,12 +285,11 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
 
 .emotion-6 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -310,10 +306,8 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
 }
 
 .emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -548,12 +542,11 @@ exports[`Comment List should render WithClassName 1`] = `
 
 .emotion-6 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -570,10 +563,8 @@ exports[`Comment List should render WithClassName 1`] = `
 }
 
 .emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -808,12 +799,11 @@ exports[`Comment List should render WithEmotion 1`] = `
 
 .emotion-6 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -830,10 +820,8 @@ exports[`Comment List should render WithEmotion 1`] = `
 }
 
 .emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -1068,12 +1056,11 @@ exports[`Comment List should render WithError 1`] = `
 
 .emotion-6 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -1090,10 +1077,8 @@ exports[`Comment List should render WithError 1`] = `
 }
 
 .emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -1328,12 +1313,11 @@ exports[`Comment List should render WithLoading 1`] = `
 
 .emotion-6 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -1350,10 +1334,8 @@ exports[`Comment List should render WithLoading 1`] = `
 }
 
 .emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 

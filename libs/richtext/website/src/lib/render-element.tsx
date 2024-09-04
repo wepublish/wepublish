@@ -86,8 +86,9 @@ export function RenderElement({
     case InlineFormat.Link:
       return (
         <Link
-          target="_blank"
+          target={(element.url as string).startsWith('#') ? '' : '_blank'}
           rel="noreferrer"
+          id={element.id as string}
           href={element.url as string}
           title={element.title as string}
           {...attributes}>

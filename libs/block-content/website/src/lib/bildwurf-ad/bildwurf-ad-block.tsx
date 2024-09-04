@@ -7,7 +7,12 @@ import {BuilderBildwurfAdBlockProps, useWebsiteBuilder} from '@wepublish/website
 export const isBildwurfAdBlock = (block: Block): block is BildwurfAdBlockType =>
   block.__typename === 'BildwurfAdBlock'
 
-export const BildwurfBlockWrapper = styled('div')``
+export const BildwurfBlockWrapper = styled('div')`
+  #bildwurf-ad-in-content {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+`
 
 declare global {
   interface Window {
