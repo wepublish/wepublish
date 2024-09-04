@@ -362,11 +362,11 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const image = teaser && selectTeaserImage(teaser)
   const publishDate = teaser && selectTeaserDate(teaser)
   const authors = teaser && selectTeaserAuthors(teaser)
-  const tags = teaser && selectTeaserTags(teaser)
+  const tags = teaser && selectTeaserTags(teaser).filter(tag => tag.tag !== preTitle)
 
   const {
     date,
-    elements: {Image, Paragraph, H4, Link}
+    elements: {Image, Paragraph, H4}
   } = useWebsiteBuilder()
 
   const imageStyles = useImageStyles()
