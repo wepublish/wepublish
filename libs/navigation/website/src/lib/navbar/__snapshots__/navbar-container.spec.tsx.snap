@@ -3,7 +3,6 @@
 exports[`Navbar Container should render Default 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;
@@ -13,14 +12,11 @@ exports[`Navbar Container should render Default 1`] = `
 }
 
 .emotion-2 {
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: transparent;
+  color: inherit;
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   box-shadow: none;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -31,32 +27,21 @@ exports[`Navbar Container should render Default 1`] = `
   -ms-flex-negative: 0;
   flex-shrink: 0;
   position: static;
-  background-color: transparent;
-  color: inherit;
 }
 
 .emotion-4 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
+  display: grid;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   padding-left: 16px;
   padding-right: 16px;
-  min-height: 56px;
-  display: grid;
+  min-height: unset;
   grid-template-columns: max-content max-content 1fr;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
   grid-auto-flow: column;
   justify-items: center;
-  min-height: unset;
   padding: 0;
 }
 
@@ -109,9 +94,6 @@ exports[`Navbar Container should render Default 1`] = `
 
 .emotion-7 {
   background-color: #e91e63;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -149,9 +131,6 @@ exports[`Navbar Container should render Default 1`] = `
 }
 
 .emotion-9 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -168,8 +147,8 @@ exports[`Navbar Container should render Default 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 12px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -180,21 +159,15 @@ exports[`Navbar Container should render Default 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: white;
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.75rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 12px;
-  font-size: 1.75rem;
-  color: white;
 }
 
 .emotion-9::-moz-focus-inner {
@@ -256,9 +229,6 @@ exports[`Navbar Container should render Default 1`] = `
 
 @media (min-width: 740px) {
   .emotion-11 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
   }
 }
@@ -266,14 +236,11 @@ exports[`Navbar Container should render Default 1`] = `
 .emotion-13 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  font-size: 1rem;
+  color: #000;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: #000;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  font-size: 1rem;
 }
 
 .emotion-13:hover {
@@ -289,11 +256,10 @@ exports[`Navbar Container should render Default 1`] = `
 .emotion-16 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
+  color: unset;
   -webkit-text-decoration: underline;
   text-decoration: underline;
   text-decoration-color: rgba(233, 30, 99, 0.4);
-  color: unset;
   display: grid;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -313,9 +279,6 @@ exports[`Navbar Container should render Default 1`] = `
 }
 
 .emotion-19 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -328,7 +291,6 @@ exports[`Navbar Container should render Default 1`] = `
   justify-self: end;
   gap: 8px;
   padding-right: 8px;
-  justify-self: end;
 }
 
 @media (min-width:900px) {
@@ -357,9 +319,6 @@ exports[`Navbar Container should render Default 1`] = `
 }
 
 .emotion-22 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -376,8 +335,8 @@ exports[`Navbar Container should render Default 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 8px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -388,20 +347,15 @@ exports[`Navbar Container should render Default 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: black;
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 2em;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 2em;
-  color: black;
 }
 
 .emotion-22::-moz-focus-inner {
@@ -555,7 +509,6 @@ exports[`Navbar Container should render Default 1`] = `
 exports[`Navbar Container should render WithClassName 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;
@@ -565,14 +518,11 @@ exports[`Navbar Container should render WithClassName 1`] = `
 }
 
 .emotion-2 {
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: transparent;
+  color: inherit;
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   box-shadow: none;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -583,32 +533,21 @@ exports[`Navbar Container should render WithClassName 1`] = `
   -ms-flex-negative: 0;
   flex-shrink: 0;
   position: static;
-  background-color: transparent;
-  color: inherit;
 }
 
 .emotion-4 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
+  display: grid;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   padding-left: 16px;
   padding-right: 16px;
-  min-height: 56px;
-  display: grid;
+  min-height: unset;
   grid-template-columns: max-content max-content 1fr;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
   grid-auto-flow: column;
   justify-items: center;
-  min-height: unset;
   padding: 0;
 }
 
@@ -661,9 +600,6 @@ exports[`Navbar Container should render WithClassName 1`] = `
 
 .emotion-7 {
   background-color: #e91e63;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -701,9 +637,6 @@ exports[`Navbar Container should render WithClassName 1`] = `
 }
 
 .emotion-9 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -720,8 +653,8 @@ exports[`Navbar Container should render WithClassName 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 12px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -732,21 +665,15 @@ exports[`Navbar Container should render WithClassName 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: white;
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.75rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 12px;
-  font-size: 1.75rem;
-  color: white;
 }
 
 .emotion-9::-moz-focus-inner {
@@ -808,9 +735,6 @@ exports[`Navbar Container should render WithClassName 1`] = `
 
 @media (min-width: 740px) {
   .emotion-11 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
   }
 }
@@ -818,14 +742,11 @@ exports[`Navbar Container should render WithClassName 1`] = `
 .emotion-13 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  font-size: 1rem;
+  color: #000;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: #000;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  font-size: 1rem;
 }
 
 .emotion-13:hover {
@@ -841,11 +762,10 @@ exports[`Navbar Container should render WithClassName 1`] = `
 .emotion-16 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
+  color: unset;
   -webkit-text-decoration: underline;
   text-decoration: underline;
   text-decoration-color: rgba(233, 30, 99, 0.4);
-  color: unset;
   display: grid;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -865,9 +785,6 @@ exports[`Navbar Container should render WithClassName 1`] = `
 }
 
 .emotion-19 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -880,7 +797,6 @@ exports[`Navbar Container should render WithClassName 1`] = `
   justify-self: end;
   gap: 8px;
   padding-right: 8px;
-  justify-self: end;
 }
 
 @media (min-width:900px) {
@@ -909,9 +825,6 @@ exports[`Navbar Container should render WithClassName 1`] = `
 }
 
 .emotion-22 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -928,8 +841,8 @@ exports[`Navbar Container should render WithClassName 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 8px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -940,20 +853,15 @@ exports[`Navbar Container should render WithClassName 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: black;
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 2em;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 2em;
-  color: black;
 }
 
 .emotion-22::-moz-focus-inner {
@@ -1107,7 +1015,6 @@ exports[`Navbar Container should render WithClassName 1`] = `
 exports[`Navbar Container should render WithEmotion 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;
@@ -1117,14 +1024,11 @@ exports[`Navbar Container should render WithEmotion 1`] = `
 }
 
 .emotion-2 {
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: transparent;
+  color: inherit;
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   box-shadow: none;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -1135,32 +1039,21 @@ exports[`Navbar Container should render WithEmotion 1`] = `
   -ms-flex-negative: 0;
   flex-shrink: 0;
   position: static;
-  background-color: transparent;
-  color: inherit;
 }
 
 .emotion-4 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
+  display: grid;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   padding-left: 16px;
   padding-right: 16px;
-  min-height: 56px;
-  display: grid;
+  min-height: unset;
   grid-template-columns: max-content max-content 1fr;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
   grid-auto-flow: column;
   justify-items: center;
-  min-height: unset;
   padding: 0;
 }
 
@@ -1213,9 +1106,6 @@ exports[`Navbar Container should render WithEmotion 1`] = `
 
 .emotion-7 {
   background-color: #e91e63;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -1253,9 +1143,6 @@ exports[`Navbar Container should render WithEmotion 1`] = `
 }
 
 .emotion-9 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1272,8 +1159,8 @@ exports[`Navbar Container should render WithEmotion 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 12px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1284,21 +1171,15 @@ exports[`Navbar Container should render WithEmotion 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: white;
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.75rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 12px;
-  font-size: 1.75rem;
-  color: white;
 }
 
 .emotion-9::-moz-focus-inner {
@@ -1360,9 +1241,6 @@ exports[`Navbar Container should render WithEmotion 1`] = `
 
 @media (min-width: 740px) {
   .emotion-11 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
   }
 }
@@ -1370,14 +1248,11 @@ exports[`Navbar Container should render WithEmotion 1`] = `
 .emotion-13 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  font-size: 1rem;
+  color: #000;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: #000;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  font-size: 1rem;
 }
 
 .emotion-13:hover {
@@ -1393,11 +1268,10 @@ exports[`Navbar Container should render WithEmotion 1`] = `
 .emotion-16 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
+  color: unset;
   -webkit-text-decoration: underline;
   text-decoration: underline;
   text-decoration-color: rgba(233, 30, 99, 0.4);
-  color: unset;
   display: grid;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1417,9 +1291,6 @@ exports[`Navbar Container should render WithEmotion 1`] = `
 }
 
 .emotion-19 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -1432,7 +1303,6 @@ exports[`Navbar Container should render WithEmotion 1`] = `
   justify-self: end;
   gap: 8px;
   padding-right: 8px;
-  justify-self: end;
 }
 
 @media (min-width:900px) {
@@ -1461,9 +1331,6 @@ exports[`Navbar Container should render WithEmotion 1`] = `
 }
 
 .emotion-22 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1480,8 +1347,8 @@ exports[`Navbar Container should render WithEmotion 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 8px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1492,20 +1359,15 @@ exports[`Navbar Container should render WithEmotion 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: black;
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 2em;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 2em;
-  color: black;
 }
 
 .emotion-22::-moz-focus-inner {

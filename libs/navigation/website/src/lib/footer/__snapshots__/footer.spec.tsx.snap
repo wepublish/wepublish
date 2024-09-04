@@ -3,7 +3,6 @@
 exports[`Footer should render Default 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;
@@ -51,16 +50,14 @@ exports[`Footer should render Default 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-7 {
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.15;
   font-size: 26px;
-  font-weight: 700;
 }
 
 @media (min-width: 900px) {
@@ -105,7 +102,6 @@ exports[`Footer should render Default 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 @media (min-width:600px) {
@@ -117,10 +113,9 @@ exports[`Footer should render Default 1`] = `
 .emotion-25 {
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
+  font-weight: 700;
   font-size: 1.25rem;
   line-height: 1.4;
-  font-weight: 700;
 }
 
 .emotion-46 {
@@ -363,7 +358,6 @@ exports[`Footer should render Default 1`] = `
 exports[`Footer should render WithClassName 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;
@@ -411,16 +405,14 @@ exports[`Footer should render WithClassName 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-7 {
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.15;
   font-size: 26px;
-  font-weight: 700;
 }
 
 @media (min-width: 900px) {
@@ -465,7 +457,6 @@ exports[`Footer should render WithClassName 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 @media (min-width:600px) {
@@ -477,10 +468,9 @@ exports[`Footer should render WithClassName 1`] = `
 .emotion-25 {
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
+  font-weight: 700;
   font-size: 1.25rem;
   line-height: 1.4;
-  font-weight: 700;
 }
 
 .emotion-46 {
@@ -723,7 +713,6 @@ exports[`Footer should render WithClassName 1`] = `
 exports[`Footer should render WithEmotion 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;
@@ -771,16 +760,14 @@ exports[`Footer should render WithEmotion 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-7 {
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.15;
   font-size: 26px;
-  font-weight: 700;
 }
 
 @media (min-width: 900px) {
@@ -825,7 +812,6 @@ exports[`Footer should render WithEmotion 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 @media (min-width:600px) {
@@ -837,10 +823,9 @@ exports[`Footer should render WithEmotion 1`] = `
 .emotion-25 {
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
+  font-weight: 700;
   font-size: 1.25rem;
   line-height: 1.4;
-  font-weight: 700;
 }
 
 .emotion-46 {
@@ -1083,7 +1068,6 @@ exports[`Footer should render WithEmotion 1`] = `
 exports[`Footer should render WithError 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;
@@ -1168,7 +1152,6 @@ exports[`Footer should render WithError 1`] = `
 exports[`Footer should render WithLoading 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;
@@ -1253,7 +1236,6 @@ exports[`Footer should render WithLoading 1`] = `
 exports[`Footer should render WithoutItems 1`] = `
 <DocumentFragment>
   .emotion-0 {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;

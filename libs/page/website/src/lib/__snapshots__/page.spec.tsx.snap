@@ -181,9 +181,6 @@ exports[`Page should render Default 1`] = `
 }
 
 .emotion-34 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   position: relative;
   -webkit-flex-direction: column;
@@ -347,14 +344,12 @@ exports[`Page should render Default 1`] = `
 }
 
 .emotion-88 {
-  max-width: 100%;
+  max-width: 480px;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
-  object-fit: contain;
   object-fit: cover;
   width: 100%;
-  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -365,14 +360,12 @@ exports[`Page should render Default 1`] = `
 }
 
 .emotion-92 {
-  font-size: 40px;
+  font-size: 26px;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 26px;
 }
 
 @media (min-width:900px) {
@@ -504,7 +497,6 @@ exports[`Page should render Default 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-139 {
@@ -532,16 +524,13 @@ exports[`Page should render Default 1`] = `
 .emotion-143 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-143:where(.emotion-137:hover .emotion-143) {
@@ -578,8 +567,6 @@ exports[`Page should render Default 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -617,12 +604,11 @@ exports[`Page should render Default 1`] = `
 }
 
 .emotion-151 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -674,16 +660,13 @@ exports[`Page should render Default 1`] = `
 .emotion-166 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1.4998125234345707;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-166:where(.emotion-137:hover .emotion-166) {
@@ -1018,7 +1001,6 @@ exports[`Page should render Default 1`] = `
   position: relative;
   font-size: 0.75em;
   padding: 4px 8px;
-  position: relative;
   background-color: #eeeeee;
 }
 
@@ -1027,16 +1009,14 @@ exports[`Page should render Default 1`] = `
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #e0e0e0;
+  background-color: #e91e63;
   z-index: 0;
   pointer-events: none;
-  background-color: #e91e63;
   width: 52.38095238095239%;
 }
 
 .emotion-453 {
   position: relative;
-  color: rgba(0, 0, 0, 0.87);
   color: #fff;
 }
 
@@ -1087,12 +1067,11 @@ exports[`Page should render Default 1`] = `
 
 .emotion-477 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -1109,10 +1088,8 @@ exports[`Page should render Default 1`] = `
 }
 
 .emotion-483 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -1147,15 +1124,12 @@ exports[`Page should render Default 1`] = `
 .emotion-496 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  width: 100%;
   color: inherit;
   -webkit-text-decoration: inherit;
   text-decoration: inherit;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
   container-type: inline-size;
 }
 
@@ -1172,16 +1146,7 @@ exports[`Page should render Default 1`] = `
   align-content: start;
 }
 
-@container (min-width: 400px) {
-  .emotion-497 {
-    grid-template-columns: minmax(30%, 200px) auto;
-  }
-}
-
 .emotion-503 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: column;
   -webkit-flex-flow: column;
@@ -3729,9 +3694,6 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 .emotion-34 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   position: relative;
   -webkit-flex-direction: column;
@@ -3895,14 +3857,12 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 .emotion-88 {
-  max-width: 100%;
+  max-width: 480px;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
-  object-fit: contain;
   object-fit: cover;
   width: 100%;
-  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -3913,14 +3873,12 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 .emotion-92 {
-  font-size: 40px;
+  font-size: 26px;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 26px;
 }
 
 @media (min-width:900px) {
@@ -4052,7 +4010,6 @@ exports[`Page should render WithChildren 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-139 {
@@ -4080,16 +4037,13 @@ exports[`Page should render WithChildren 1`] = `
 .emotion-143 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-143:where(.emotion-137:hover .emotion-143) {
@@ -4126,8 +4080,6 @@ exports[`Page should render WithChildren 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -4165,12 +4117,11 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 .emotion-151 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -4222,16 +4173,13 @@ exports[`Page should render WithChildren 1`] = `
 .emotion-166 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1.4998125234345707;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-166:where(.emotion-137:hover .emotion-166) {
@@ -4566,7 +4514,6 @@ exports[`Page should render WithChildren 1`] = `
   position: relative;
   font-size: 0.75em;
   padding: 4px 8px;
-  position: relative;
   background-color: #eeeeee;
 }
 
@@ -4575,16 +4522,14 @@ exports[`Page should render WithChildren 1`] = `
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #e0e0e0;
+  background-color: #e91e63;
   z-index: 0;
   pointer-events: none;
-  background-color: #e91e63;
   width: 52.38095238095239%;
 }
 
 .emotion-453 {
   position: relative;
-  color: rgba(0, 0, 0, 0.87);
   color: #fff;
 }
 
@@ -4635,12 +4580,11 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-477 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -4657,10 +4601,8 @@ exports[`Page should render WithChildren 1`] = `
 }
 
 .emotion-483 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -4695,15 +4637,12 @@ exports[`Page should render WithChildren 1`] = `
 .emotion-496 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  width: 100%;
   color: inherit;
   -webkit-text-decoration: inherit;
   text-decoration: inherit;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
   container-type: inline-size;
 }
 
@@ -4720,16 +4659,7 @@ exports[`Page should render WithChildren 1`] = `
   align-content: start;
 }
 
-@container (min-width: 400px) {
-  .emotion-497 {
-    grid-template-columns: minmax(30%, 200px) auto;
-  }
-}
-
 .emotion-503 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: column;
   -webkit-flex-flow: column;
@@ -7307,9 +7237,6 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 .emotion-34 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   position: relative;
   -webkit-flex-direction: column;
@@ -7473,14 +7400,12 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 .emotion-88 {
-  max-width: 100%;
+  max-width: 480px;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
-  object-fit: contain;
   object-fit: cover;
   width: 100%;
-  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -7491,14 +7416,12 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 .emotion-92 {
-  font-size: 40px;
+  font-size: 26px;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 26px;
 }
 
 @media (min-width:900px) {
@@ -7630,7 +7553,6 @@ exports[`Page should render WithClassName 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-139 {
@@ -7658,16 +7580,13 @@ exports[`Page should render WithClassName 1`] = `
 .emotion-143 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-143:where(.emotion-137:hover .emotion-143) {
@@ -7704,8 +7623,6 @@ exports[`Page should render WithClassName 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -7743,12 +7660,11 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 .emotion-151 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -7800,16 +7716,13 @@ exports[`Page should render WithClassName 1`] = `
 .emotion-166 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1.4998125234345707;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-166:where(.emotion-137:hover .emotion-166) {
@@ -8144,7 +8057,6 @@ exports[`Page should render WithClassName 1`] = `
   position: relative;
   font-size: 0.75em;
   padding: 4px 8px;
-  position: relative;
   background-color: #eeeeee;
 }
 
@@ -8153,16 +8065,14 @@ exports[`Page should render WithClassName 1`] = `
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #e0e0e0;
+  background-color: #e91e63;
   z-index: 0;
   pointer-events: none;
-  background-color: #e91e63;
   width: 52.38095238095239%;
 }
 
 .emotion-453 {
   position: relative;
-  color: rgba(0, 0, 0, 0.87);
   color: #fff;
 }
 
@@ -8213,12 +8123,11 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-477 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -8235,10 +8144,8 @@ exports[`Page should render WithClassName 1`] = `
 }
 
 .emotion-483 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -8273,15 +8180,12 @@ exports[`Page should render WithClassName 1`] = `
 .emotion-496 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  width: 100%;
   color: inherit;
   -webkit-text-decoration: inherit;
   text-decoration: inherit;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
   container-type: inline-size;
 }
 
@@ -8298,16 +8202,7 @@ exports[`Page should render WithClassName 1`] = `
   align-content: start;
 }
 
-@container (min-width: 400px) {
-  .emotion-497 {
-    grid-template-columns: minmax(30%, 200px) auto;
-  }
-}
-
 .emotion-503 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: column;
   -webkit-flex-flow: column;
@@ -10882,9 +10777,6 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 .emotion-34 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   position: relative;
   -webkit-flex-direction: column;
@@ -11048,14 +10940,12 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 .emotion-88 {
-  max-width: 100%;
+  max-width: 480px;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
-  object-fit: contain;
   object-fit: cover;
   width: 100%;
-  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -11066,14 +10956,12 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 .emotion-92 {
-  font-size: 40px;
+  font-size: 26px;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 26px;
 }
 
 @media (min-width:900px) {
@@ -11205,7 +11093,6 @@ exports[`Page should render WithEmotion 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-139 {
@@ -11233,16 +11120,13 @@ exports[`Page should render WithEmotion 1`] = `
 .emotion-143 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-143:where(.emotion-137:hover .emotion-143) {
@@ -11279,8 +11163,6 @@ exports[`Page should render WithEmotion 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -11318,12 +11200,11 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 .emotion-151 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -11375,16 +11256,13 @@ exports[`Page should render WithEmotion 1`] = `
 .emotion-166 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1.4998125234345707;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-166:where(.emotion-137:hover .emotion-166) {
@@ -11719,7 +11597,6 @@ exports[`Page should render WithEmotion 1`] = `
   position: relative;
   font-size: 0.75em;
   padding: 4px 8px;
-  position: relative;
   background-color: #eeeeee;
 }
 
@@ -11728,16 +11605,14 @@ exports[`Page should render WithEmotion 1`] = `
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #e0e0e0;
+  background-color: #e91e63;
   z-index: 0;
   pointer-events: none;
-  background-color: #e91e63;
   width: 52.38095238095239%;
 }
 
 .emotion-453 {
   position: relative;
-  color: rgba(0, 0, 0, 0.87);
   color: #fff;
 }
 
@@ -11788,12 +11663,11 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-477 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -11810,10 +11684,8 @@ exports[`Page should render WithEmotion 1`] = `
 }
 
 .emotion-483 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -11848,15 +11720,12 @@ exports[`Page should render WithEmotion 1`] = `
 .emotion-496 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  width: 100%;
   color: inherit;
   -webkit-text-decoration: inherit;
   text-decoration: inherit;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
   container-type: inline-size;
 }
 
@@ -11873,16 +11742,7 @@ exports[`Page should render WithEmotion 1`] = `
   align-content: start;
 }
 
-@container (min-width: 400px) {
-  .emotion-497 {
-    grid-template-columns: minmax(30%, 200px) auto;
-  }
-}
-
 .emotion-503 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: column;
   -webkit-flex-flow: column;
@@ -14529,9 +14389,6 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 .emotion-34 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   position: relative;
   -webkit-flex-direction: column;
@@ -14695,14 +14552,12 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 .emotion-88 {
-  max-width: 100%;
+  max-width: 480px;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
-  object-fit: contain;
   object-fit: cover;
   width: 100%;
-  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -14713,14 +14568,12 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 .emotion-92 {
-  font-size: 40px;
+  font-size: 26px;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 26px;
 }
 
 @media (min-width:900px) {
@@ -14852,7 +14705,6 @@ exports[`Page should render WithoutDescription 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-139 {
@@ -14880,16 +14732,13 @@ exports[`Page should render WithoutDescription 1`] = `
 .emotion-143 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-143:where(.emotion-137:hover .emotion-143) {
@@ -14926,8 +14775,6 @@ exports[`Page should render WithoutDescription 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -14965,12 +14812,11 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 .emotion-151 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -15022,16 +14868,13 @@ exports[`Page should render WithoutDescription 1`] = `
 .emotion-166 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1.4998125234345707;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-166:where(.emotion-137:hover .emotion-166) {
@@ -15366,7 +15209,6 @@ exports[`Page should render WithoutDescription 1`] = `
   position: relative;
   font-size: 0.75em;
   padding: 4px 8px;
-  position: relative;
   background-color: #eeeeee;
 }
 
@@ -15375,16 +15217,14 @@ exports[`Page should render WithoutDescription 1`] = `
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #e0e0e0;
+  background-color: #e91e63;
   z-index: 0;
   pointer-events: none;
-  background-color: #e91e63;
   width: 52.38095238095239%;
 }
 
 .emotion-453 {
   position: relative;
-  color: rgba(0, 0, 0, 0.87);
   color: #fff;
 }
 
@@ -15435,12 +15275,11 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-477 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -15457,10 +15296,8 @@ exports[`Page should render WithoutDescription 1`] = `
 }
 
 .emotion-483 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -15495,15 +15332,12 @@ exports[`Page should render WithoutDescription 1`] = `
 .emotion-496 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  width: 100%;
   color: inherit;
   -webkit-text-decoration: inherit;
   text-decoration: inherit;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
   container-type: inline-size;
 }
 
@@ -15520,16 +15354,7 @@ exports[`Page should render WithoutDescription 1`] = `
   align-content: start;
 }
 
-@container (min-width: 400px) {
-  .emotion-497 {
-    grid-template-columns: minmax(30%, 200px) auto;
-  }
-}
-
 .emotion-503 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: column;
   -webkit-flex-flow: column;
@@ -18104,9 +17929,6 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 .emotion-34 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   position: relative;
   -webkit-flex-direction: column;
@@ -18270,14 +18092,12 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 .emotion-88 {
-  max-width: 100%;
+  max-width: 480px;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
-  object-fit: contain;
   object-fit: cover;
   width: 100%;
-  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -18288,14 +18108,12 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 .emotion-92 {
-  font-size: 40px;
+  font-size: 26px;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 26px;
 }
 
 @media (min-width:900px) {
@@ -18427,7 +18245,6 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-139 {
@@ -18455,16 +18272,13 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 .emotion-143 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-143:where(.emotion-137:hover .emotion-143) {
@@ -18501,8 +18315,6 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -18540,12 +18352,11 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 .emotion-151 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -18597,16 +18408,13 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 .emotion-166 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1.4998125234345707;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-166:where(.emotion-137:hover .emotion-166) {
@@ -18941,7 +18749,6 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   position: relative;
   font-size: 0.75em;
   padding: 4px 8px;
-  position: relative;
   background-color: #eeeeee;
 }
 
@@ -18950,16 +18757,14 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #e0e0e0;
+  background-color: #e91e63;
   z-index: 0;
   pointer-events: none;
-  background-color: #e91e63;
   width: 52.38095238095239%;
 }
 
 .emotion-453 {
   position: relative;
-  color: rgba(0, 0, 0, 0.87);
   color: #fff;
 }
 
@@ -19010,12 +18815,11 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-477 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -19032,10 +18836,8 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 }
 
 .emotion-483 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -19070,15 +18872,12 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 .emotion-496 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  width: 100%;
   color: inherit;
   -webkit-text-decoration: inherit;
   text-decoration: inherit;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
   container-type: inline-size;
 }
 
@@ -19095,16 +18894,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   align-content: start;
 }
 
-@container (min-width: 400px) {
-  .emotion-497 {
-    grid-template-columns: minmax(30%, 200px) auto;
-  }
-}
-
 .emotion-503 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: column;
   -webkit-flex-flow: column;
@@ -21679,9 +21469,6 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 .emotion-34 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   position: relative;
   -webkit-flex-direction: column;
@@ -21845,14 +21632,12 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 .emotion-88 {
-  max-width: 100%;
+  max-width: 480px;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
-  object-fit: contain;
   object-fit: cover;
   width: 100%;
-  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -21863,14 +21648,12 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 .emotion-92 {
-  font-size: 40px;
+  font-size: 26px;
   font-weight: 600;
   text-transform: uppercase;
   margin: 0;
   font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
   line-height: 1.15;
-  font-size: 26px;
 }
 
 @media (min-width:900px) {
@@ -22002,7 +21785,6 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   color: inherit;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
 }
 
 .emotion-139 {
@@ -22030,16 +21812,13 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 .emotion-143 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-143:where(.emotion-137:hover .emotion-143) {
@@ -22076,8 +21855,6 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   padding: 4px 16px;
   background-color: #F5FF64;
   color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -22115,12 +21892,11 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 .emotion-151 {
-  font-weight: 300;
+  font-weight: 400;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
 }
@@ -22172,16 +21948,13 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 .emotion-166 {
   max-width: 100%;
   height: auto;
-  aspect-ratio: auto 1.4998125234345707;
-  max-height: 80lvh;
-  object-fit: contain;
+  aspect-ratio: 1.8;
   max-height: 400px;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
   grid-column: 1/13;
   -webkit-transition: -webkit-transform 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
 }
 
 .emotion-166:where(.emotion-137:hover .emotion-166) {
@@ -22516,7 +22289,6 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   position: relative;
   font-size: 0.75em;
   padding: 4px 8px;
-  position: relative;
   background-color: #eeeeee;
 }
 
@@ -22525,16 +22297,14 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #e0e0e0;
+  background-color: #e91e63;
   z-index: 0;
   pointer-events: none;
-  background-color: #e91e63;
   width: 52.38095238095239%;
 }
 
 .emotion-453 {
   position: relative;
-  color: rgba(0, 0, 0, 0.87);
   color: #fff;
 }
 
@@ -22585,12 +22355,11 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-477 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -22607,10 +22376,8 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 }
 
 .emotion-483 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -22645,15 +22412,12 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 .emotion-496 {
   margin: 0;
   font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  width: 100%;
   color: inherit;
   -webkit-text-decoration: inherit;
   text-decoration: inherit;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
   container-type: inline-size;
 }
 
@@ -22670,16 +22434,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   align-content: start;
 }
 
-@container (min-width: 400px) {
-  .emotion-497 {
-    grid-template-columns: minmax(30%, 200px) auto;
-  }
-}
-
 .emotion-503 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: column;
   -webkit-flex-flow: column;

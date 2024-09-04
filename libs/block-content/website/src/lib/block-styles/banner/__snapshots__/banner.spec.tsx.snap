@@ -16,9 +16,8 @@ exports[`Banner should render Default 1`] = `
   height: auto;
   aspect-ratio: auto 1;
   max-height: 80lvh;
-  object-fit: contain;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
 }
 
 <a
@@ -64,9 +63,8 @@ exports[`Banner should render WithClassName 1`] = `
   height: auto;
   aspect-ratio: auto 1;
   max-height: 80lvh;
-  object-fit: contain;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
 }
 
 <a
@@ -112,9 +110,8 @@ exports[`Banner should render WithEmotion 1`] = `
   height: auto;
   aspect-ratio: auto 1;
   max-height: 80lvh;
-  object-fit: contain;
-  width: 100%;
   object-fit: cover;
+  width: 100%;
 }
 
 <a

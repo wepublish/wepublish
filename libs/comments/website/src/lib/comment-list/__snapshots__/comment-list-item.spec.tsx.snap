@@ -23,12 +23,11 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -45,10 +44,8 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
 }
 
 .emotion-10 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -91,9 +88,6 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -146,17 +140,12 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
 }
 
 .emotion-31 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   position: relative;
   font-size: 1.5rem;
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;
@@ -184,9 +173,6 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
 }
 
 .emotion-32 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -195,9 +181,6 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
 }
 
 .emotion-49 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -214,9 +197,6 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
 }
 
 .emotion-54 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -233,8 +213,8 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -245,20 +225,15 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.125rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.125rem;
   border-width: 0px;
 }
 
@@ -306,9 +281,6 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
 }
 
 .emotion-56 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -323,10 +295,10 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
   -webkit-tap-highlight-color: transparent;
   background-color: transparent;
   outline: 0;
-  border: 0;
+  border: 1px solid rgba(233, 30, 99, 0.5);
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 3px 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -337,21 +309,15 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 3px 9px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(233, 30, 99, 0.5);
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
   border-width: 1px;
 }
@@ -855,12 +821,11 @@ exports[`Comment List Item should render Commenting 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -877,10 +842,8 @@ exports[`Comment List Item should render Commenting 1`] = `
 }
 
 .emotion-10 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -923,9 +886,6 @@ exports[`Comment List Item should render Commenting 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -978,17 +938,12 @@ exports[`Comment List Item should render Commenting 1`] = `
 }
 
 .emotion-31 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   position: relative;
   font-size: 1.5rem;
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
@@ -1019,9 +974,6 @@ exports[`Comment List Item should render Commenting 1`] = `
 }
 
 .emotion-33 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -1030,9 +982,6 @@ exports[`Comment List Item should render Commenting 1`] = `
 }
 
 .emotion-61 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -1049,9 +998,6 @@ exports[`Comment List Item should render Commenting 1`] = `
 }
 
 .emotion-66 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1068,8 +1014,8 @@ exports[`Comment List Item should render Commenting 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1080,20 +1026,15 @@ exports[`Comment List Item should render Commenting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.125rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.125rem;
   border-width: 0px;
 }
 
@@ -1141,9 +1082,6 @@ exports[`Comment List Item should render Commenting 1`] = `
 }
 
 .emotion-68 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1158,10 +1096,10 @@ exports[`Comment List Item should render Commenting 1`] = `
   -webkit-tap-highlight-color: transparent;
   background-color: transparent;
   outline: 0;
-  border: 0;
+  border: 1px solid rgba(233, 30, 99, 0.5);
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 3px 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1172,21 +1110,15 @@ exports[`Comment List Item should render Commenting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 3px 9px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(233, 30, 99, 0.5);
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
   border-width: 1px;
 }
@@ -1868,12 +1800,11 @@ exports[`Comment List Item should render Default 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -1890,10 +1821,8 @@ exports[`Comment List Item should render Default 1`] = `
 }
 
 .emotion-10 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -1936,9 +1865,6 @@ exports[`Comment List Item should render Default 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -1991,17 +1917,12 @@ exports[`Comment List Item should render Default 1`] = `
 }
 
 .emotion-31 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   position: relative;
   font-size: 1.5rem;
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;
@@ -2029,9 +1950,6 @@ exports[`Comment List Item should render Default 1`] = `
 }
 
 .emotion-32 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -2040,9 +1958,6 @@ exports[`Comment List Item should render Default 1`] = `
 }
 
 .emotion-49 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -2059,9 +1974,6 @@ exports[`Comment List Item should render Default 1`] = `
 }
 
 .emotion-54 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2078,8 +1990,8 @@ exports[`Comment List Item should render Default 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -2090,20 +2002,15 @@ exports[`Comment List Item should render Default 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.125rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.125rem;
   border-width: 0px;
 }
 
@@ -2565,12 +2472,11 @@ exports[`Comment List Item should render Editing 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -2587,10 +2493,8 @@ exports[`Comment List Item should render Editing 1`] = `
 }
 
 .emotion-10 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -2633,9 +2537,6 @@ exports[`Comment List Item should render Editing 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -2688,17 +2589,12 @@ exports[`Comment List Item should render Editing 1`] = `
 }
 
 .emotion-31 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   position: relative;
   font-size: 1.5rem;
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
@@ -2729,9 +2625,6 @@ exports[`Comment List Item should render Editing 1`] = `
 }
 
 .emotion-33 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -2740,9 +2633,6 @@ exports[`Comment List Item should render Editing 1`] = `
 }
 
 .emotion-61 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -2759,9 +2649,6 @@ exports[`Comment List Item should render Editing 1`] = `
 }
 
 .emotion-66 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2778,8 +2665,8 @@ exports[`Comment List Item should render Editing 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -2790,20 +2677,15 @@ exports[`Comment List Item should render Editing 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.125rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.125rem;
   border-width: 0px;
 }
 
@@ -2851,9 +2733,6 @@ exports[`Comment List Item should render Editing 1`] = `
 }
 
 .emotion-68 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2870,8 +2749,8 @@ exports[`Comment List Item should render Editing 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 4px 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -2882,20 +2761,15 @@ exports[`Comment List Item should render Editing 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 4px 5px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
 }
 
@@ -2946,9 +2820,6 @@ exports[`Comment List Item should render Editing 1`] = `
 }
 
 .emotion-71 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2963,10 +2834,10 @@ exports[`Comment List Item should render Editing 1`] = `
   -webkit-tap-highlight-color: transparent;
   background-color: transparent;
   outline: 0;
-  border: 0;
+  border: 1px solid rgba(233, 30, 99, 0.5);
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 3px 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -2977,21 +2848,15 @@ exports[`Comment List Item should render Editing 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 3px 9px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(233, 30, 99, 0.5);
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
   border-width: 1px;
 }
@@ -3694,12 +3559,11 @@ exports[`Comment List Item should render MaxNesting 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -3716,10 +3580,8 @@ exports[`Comment List Item should render MaxNesting 1`] = `
 }
 
 .emotion-10 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -3762,9 +3624,6 @@ exports[`Comment List Item should render MaxNesting 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -3817,17 +3676,12 @@ exports[`Comment List Item should render MaxNesting 1`] = `
 }
 
 .emotion-31 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   position: relative;
   font-size: 1.5rem;
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
@@ -3858,9 +3712,6 @@ exports[`Comment List Item should render MaxNesting 1`] = `
 }
 
 .emotion-33 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -3869,9 +3720,6 @@ exports[`Comment List Item should render MaxNesting 1`] = `
 }
 
 .emotion-61 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -3888,9 +3736,6 @@ exports[`Comment List Item should render MaxNesting 1`] = `
 }
 
 .emotion-66 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3907,8 +3752,8 @@ exports[`Comment List Item should render MaxNesting 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3919,20 +3764,15 @@ exports[`Comment List Item should render MaxNesting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.125rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.125rem;
   border-width: 0px;
 }
 
@@ -3980,9 +3820,6 @@ exports[`Comment List Item should render MaxNesting 1`] = `
 }
 
 .emotion-68 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3999,8 +3836,8 @@ exports[`Comment List Item should render MaxNesting 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 4px 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -4011,20 +3848,15 @@ exports[`Comment List Item should render MaxNesting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 4px 5px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
 }
 
@@ -4075,9 +3907,6 @@ exports[`Comment List Item should render MaxNesting 1`] = `
 }
 
 .emotion-71 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4092,10 +3921,10 @@ exports[`Comment List Item should render MaxNesting 1`] = `
   -webkit-tap-highlight-color: transparent;
   background-color: transparent;
   outline: 0;
-  border: 0;
+  border: 1px solid rgba(233, 30, 99, 0.5);
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 3px 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -4106,21 +3935,15 @@ exports[`Comment List Item should render MaxNesting 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 3px 9px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(233, 30, 99, 0.5);
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
   border-width: 1px;
 }
@@ -5106,12 +4929,11 @@ exports[`Comment List Item should render Nested 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -5128,10 +4950,8 @@ exports[`Comment List Item should render Nested 1`] = `
 }
 
 .emotion-10 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -5174,9 +4994,6 @@ exports[`Comment List Item should render Nested 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -5229,17 +5046,12 @@ exports[`Comment List Item should render Nested 1`] = `
 }
 
 .emotion-31 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   position: relative;
   font-size: 1.5rem;
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
 }
@@ -5270,9 +5082,6 @@ exports[`Comment List Item should render Nested 1`] = `
 }
 
 .emotion-33 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -5281,9 +5090,6 @@ exports[`Comment List Item should render Nested 1`] = `
 }
 
 .emotion-61 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -5300,9 +5106,6 @@ exports[`Comment List Item should render Nested 1`] = `
 }
 
 .emotion-66 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -5319,8 +5122,8 @@ exports[`Comment List Item should render Nested 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -5331,20 +5134,15 @@ exports[`Comment List Item should render Nested 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.125rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.125rem;
   border-width: 0px;
 }
 
@@ -5392,9 +5190,6 @@ exports[`Comment List Item should render Nested 1`] = `
 }
 
 .emotion-68 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -5411,8 +5206,8 @@ exports[`Comment List Item should render Nested 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 4px 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -5423,20 +5218,15 @@ exports[`Comment List Item should render Nested 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 4px 5px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
 }
 
@@ -5487,9 +5277,6 @@ exports[`Comment List Item should render Nested 1`] = `
 }
 
 .emotion-71 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -5504,10 +5291,10 @@ exports[`Comment List Item should render Nested 1`] = `
   -webkit-tap-highlight-color: transparent;
   background-color: transparent;
   outline: 0;
-  border: 0;
+  border: 1px solid rgba(233, 30, 99, 0.5);
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 30px;
+  padding: 3px 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -5518,21 +5305,15 @@ exports[`Comment List Item should render Nested 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #e91e63;
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: initial;
   min-width: 64px;
-  padding: 3px 9px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(233, 30, 99, 0.5);
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
   box-shadow: none;
   border-width: 1px;
 }
@@ -6921,12 +6702,11 @@ exports[`Comment List Item should render WithClassName 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -6943,10 +6723,8 @@ exports[`Comment List Item should render WithClassName 1`] = `
 }
 
 .emotion-10 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -6989,9 +6767,6 @@ exports[`Comment List Item should render WithClassName 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -7044,17 +6819,12 @@ exports[`Comment List Item should render WithClassName 1`] = `
 }
 
 .emotion-31 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   position: relative;
   font-size: 1.5rem;
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;
@@ -7082,9 +6852,6 @@ exports[`Comment List Item should render WithClassName 1`] = `
 }
 
 .emotion-32 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -7093,9 +6860,6 @@ exports[`Comment List Item should render WithClassName 1`] = `
 }
 
 .emotion-49 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -7112,9 +6876,6 @@ exports[`Comment List Item should render WithClassName 1`] = `
 }
 
 .emotion-54 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -7131,8 +6892,8 @@ exports[`Comment List Item should render WithClassName 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -7143,20 +6904,15 @@ exports[`Comment List Item should render WithClassName 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.125rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.125rem;
   border-width: 0px;
 }
 
@@ -7619,12 +7375,11 @@ exports[`Comment List Item should render WithEmotion 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  height: auto;
+  height: 46px;
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
   width: 46px;
-  height: 46px;
   border-radius: 50%;
 }
 
@@ -7641,10 +7396,8 @@ exports[`Comment List Item should render WithEmotion 1`] = `
 }
 
 .emotion-10 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
   font-size: 1rem;
+  font-family: Merriweather,Roboto,sans-serif;
   font-weight: 700;
 }
 
@@ -7687,9 +7440,6 @@ exports[`Comment List Item should render WithEmotion 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -7742,17 +7492,12 @@ exports[`Comment List Item should render WithEmotion 1`] = `
 }
 
 .emotion-31 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   position: relative;
   font-size: 1.5rem;
   color: #faaf00;
   cursor: pointer;
   text-align: left;
-  width: -webkit-min-content;
-  width: -moz-min-content;
   width: min-content;
   -webkit-tap-highlight-color: transparent;
   pointer-events: none;
@@ -7780,9 +7525,6 @@ exports[`Comment List Item should render WithEmotion 1`] = `
 }
 
 .emotion-32 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -7791,9 +7533,6 @@ exports[`Comment List Item should render WithEmotion 1`] = `
 }
 
 .emotion-49 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
@@ -7810,9 +7549,6 @@ exports[`Comment List Item should render WithEmotion 1`] = `
 }
 
 .emotion-54 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -7829,8 +7565,8 @@ exports[`Comment List Item should render WithEmotion 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -7841,20 +7577,15 @@ exports[`Comment List Item should render WithEmotion 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.125rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.125rem;
   border-width: 0px;
 }
 

@@ -38,9 +38,6 @@ exports[`Image Slider should render Default 1`] = `
 }
 
 .emotion-24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -244,9 +241,6 @@ exports[`Image Slider should render WithClassName 1`] = `
 }
 
 .emotion-24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -450,9 +444,6 @@ exports[`Image Slider should render WithEmotion 1`] = `
 }
 
 .emotion-24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
