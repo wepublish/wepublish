@@ -294,13 +294,16 @@ const migratePost = async (post: WordpressPost) => {
       }
     } else {
       if ($el.filter('p').length && $el.prev('hr').length && $el.next('hr').length) {
-        const richText = (await convertHtmlToSlate($el.html()!)) as unknown as Node[]
-        blocks.push({
-          linkPageBreak: {
-            richText,
-            hideButton: true
-          }
-        })
+        const skipHrSurroundedLinks = true
+        if (!skipHrSurroundedLinks) {
+          const richText = (await convertHtmlToSlate($el.html()!)) as unknown as Node[]
+          blocks.push({
+            linkPageBreak: {
+              richText,
+              hideButton: true
+            }
+          })
+        }
       } else {
         slateContent = (await convertHtmlToSlate($.html(el).toString())) as unknown as Node[]
         if (lastBlock?.richText) {
