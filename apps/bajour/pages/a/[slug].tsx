@@ -2,6 +2,7 @@ import {css, styled} from '@mui/material'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
+  Article,
   ArticleContainer,
   ArticleList,
   ArticleListContainer,
@@ -16,14 +17,16 @@ import {
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {ComponentProps} from 'react'
 
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
-import {FrageDesTagesArticle} from '../../src/components/frage-des-tages/frage-des-tages-article'
+import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
+import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
 import {Container} from '../../src/components/layout/container'
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
-import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
+import {BajourTeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
 
 const uppercase = css`
   text-transform: uppercase;
@@ -31,7 +34,7 @@ const uppercase = css`
 
 const RelatedArticleSlider = (props: BuilderArticleListProps) => {
   return (
-    <WebsiteBuilderProvider blocks={{TeaserGrid: TeaserSlider}}>
+    <WebsiteBuilderProvider blocks={{TeaserGrid: BajourTeaserSlider}}>
       <ArticleList {...props} />
     </WebsiteBuilderProvider>
   )
@@ -45,9 +48,9 @@ export const AuthorWrapper = styled(ContentWrapper)`
   }
 `
 
-export default function ArticleBySlug() {
+export default function ArticleBySlugIdOrToken() {
   const {
-    query: {slug}
+    query: {slug, id, token}
   } = useRouter()
   const {
     elements: {H5}
@@ -60,17 +63,24 @@ export default function ArticleBySlug() {
     }
   })
 
+  const containerProps = {
+    slug,
+    id,
+    token
+  } as ComponentProps<typeof ArticleContainer>
+
   const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
 
   return (
     <WebsiteBuilderProvider
       ArticleList={RelatedArticleSlider}
       blocks={{
-        Poll: isFDT ? FrageDesTagesArticle : PollBlock
+        Poll: isFDT ? FdtPollBlock : PollBlock
       }}
+      Article={isFDT ? FdTArticle : Article}
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
-        <ArticleContainer slug={slug as string} />
+        <ArticleContainer {...containerProps} />
 
         <BriefingNewsletter />
 
@@ -87,8 +97,8 @@ export default function ArticleBySlug() {
               />
             </ArticleWrapper>
 
-            {data?.article?.authors.length &&
-              data?.article?.authors.map(a => (
+            {!isFDT &&
+              data.article.authors.map(a => (
                 <AuthorWrapper key={a.id}>
                   <BajourAuthorChip key={a.id} author={a} />
                 </AuthorWrapper>
@@ -100,11 +110,14 @@ export default function ArticleBySlug() {
                   Kommentare
                 </H5>
 
-                <CommentListContainer
-                  id={data.article.id}
-                  type={ApiV1.CommentItemType.Article}
-                  variables={{sort: ApiV1.CommentSort.Rating, order: ApiV1.SortOrder.Descending}}
-                />
+                {!data.article.disableComments && (
+                  <CommentListContainer
+                    id={data.article.id}
+                    type={ApiV1.CommentItemType.Article}
+                    variables={{sort: ApiV1.CommentSort.Rating, order: ApiV1.SortOrder.Descending}}
+                    maxCommentDepth={1}
+                  />
+                )}
               </ArticleWrapper>
             )}
           </>

@@ -45,41 +45,47 @@ exports[`Navbar Container should render Default 1`] = `
               />
             </button>
           </div>
+          <div
+            class="emotion-11 emotion-12"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/"
+            >
+              Home
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/a/abcd"
+            >
+              Artikel
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="https://google.com"
+            >
+              Google
+            </a>
+          </div>
         </div>
+        <a
+          aria-label="Startseite"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-16"
+          href="/"
+        >
+          <div
+            class="emotion-17 emotion-18"
+          />
+        </a>
         <div
-          class="emotion-11 emotion-12"
+          class="emotion-19 emotion-20"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/"
-          >
-            Home
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/a/abcd"
-          >
-            Artikel
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="https://google.com"
-          >
-            Google
-          </a>
-        </div>
-        <div
-          class="emotion-16 emotion-17"
-        />
-        <div
-          class="emotion-18 emotion-19"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-20"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-21"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-21"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-22"
               tabindex="0"
               type="button"
             >
@@ -158,41 +164,47 @@ exports[`Navbar Container should render WithClassName 1`] = `
               />
             </button>
           </div>
+          <div
+            class="emotion-11 emotion-12"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/"
+            >
+              Home
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/a/abcd"
+            >
+              Artikel
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="https://google.com"
+            >
+              Google
+            </a>
+          </div>
         </div>
+        <a
+          aria-label="Startseite"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-16"
+          href="/"
+        >
+          <div
+            class="emotion-17 emotion-18"
+          />
+        </a>
         <div
-          class="emotion-11 emotion-12"
+          class="emotion-19 emotion-20"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/"
-          >
-            Home
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/a/abcd"
-          >
-            Artikel
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="https://google.com"
-          >
-            Google
-          </a>
-        </div>
-        <div
-          class="emotion-16 emotion-17"
-        />
-        <div
-          class="emotion-18 emotion-19"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-20"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-21"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-21"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-22"
               tabindex="0"
               type="button"
             >
@@ -271,41 +283,47 @@ exports[`Navbar Container should render WithEmotion 1`] = `
               />
             </button>
           </div>
+          <div
+            class="emotion-11 emotion-12"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/"
+            >
+              Home
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/a/abcd"
+            >
+              Artikel
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="https://google.com"
+            >
+              Google
+            </a>
+          </div>
         </div>
+        <a
+          aria-label="Startseite"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-16"
+          href="/"
+        >
+          <div
+            class="emotion-17 emotion-18"
+          />
+        </a>
         <div
-          class="emotion-11 emotion-12"
+          class="emotion-19 emotion-20"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/"
-          >
-            Home
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/a/abcd"
-          >
-            Artikel
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="https://google.com"
-          >
-            Google
-          </a>
-        </div>
-        <div
-          class="emotion-16 emotion-17"
-        />
-        <div
-          class="emotion-18 emotion-19"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-20"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-21"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-21"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-22"
               tabindex="0"
               type="button"
             >

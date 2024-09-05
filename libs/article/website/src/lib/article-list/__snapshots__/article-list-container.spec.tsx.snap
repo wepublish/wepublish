@@ -30,8 +30,12 @@ exports[`AuthorList Container should render Default 1`] = `
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -91,8 +95,12 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -152,8 +160,12 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -226,8 +238,12 @@ exports[`AuthorList Container should render WithClassName 1`] = `
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -287,8 +303,12 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -348,8 +368,12 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -422,8 +446,12 @@ exports[`AuthorList Container should render WithEmotion 1`] = `
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -483,8 +511,12 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -544,8 +576,12 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -618,8 +654,12 @@ exports[`AuthorList Container should render WithFilter 1`] = `
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
@@ -679,8 +719,12 @@ https://unsplash.it/200/100 200w"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-                srcset="https://unsplash.it/800/400 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+                srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"

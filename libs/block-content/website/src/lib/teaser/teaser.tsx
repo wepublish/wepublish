@@ -1,4 +1,4 @@
-import {css, styled, useTheme} from '@mui/material'
+import {Chip, css, styled, useTheme} from '@mui/material'
 import {firstParagraphToPlaintext} from '@wepublish/richtext'
 import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -31,9 +31,14 @@ export const selectTeaserPreTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PeerArticleTeaser':
     case 'ArticleTeaser':
-      return teaser.preTitle || teaser.article?.preTitle
-    case 'EventTeaser':
+      return (
+        teaser.preTitle ||
+        teaser.article?.preTitle ||
+        teaser.article?.tags?.find(({main}) => !!main)?.tag
+      )
     case 'PageTeaser':
+      return teaser.preTitle || teaser.page?.tags?.find(({main}) => !!main)?.tag
+    case 'EventTeaser':
     case 'CustomTeaser':
       return teaser.preTitle
   }
@@ -133,7 +138,9 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
-      return teaser.article?.authors.map(author => author.name)
+      return teaser.article?.authors
+        .filter(author => !author.hideOnTeaser)
+        .map(author => author.name)
     }
 
     case 'EventTeaser':
@@ -142,13 +149,46 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
   }
 }
 
+export const selectTeaserTags = (teaser: TeaserType) => {
+  switch (teaser.__typename) {
+    case 'PageTeaser': {
+      return teaser.page?.tags?.filter(({tag, main}) => !!tag && main) ?? []
+    }
+
+    case 'ArticleTeaser': {
+      return teaser.article?.tags?.filter(({tag, main}) => !!tag && main) ?? []
+    }
+
+    case 'EventTeaser':
+      return teaser.event?.tags?.filter(({tag, main}) => !!tag && main) ?? []
+
+    case 'PeerArticleTeaser':
+    case 'CustomTeaser':
+      return []
+  }
+
+  return []
+}
+
 export const TeaserWrapper = styled('article')<FlexAlignment>`
   display: grid;
 
-  ${({w}) =>
+  ${({theme, w}) =>
     w > 6 &&
     css`
       grid-column: 1 / -1;
+
+      ${theme.breakpoints.up('md')} {
+        ${TeaserTitle} {
+          font-size: ${theme.typography.h3.fontSize};
+          line-height: ${theme.typography.h3.lineHeight};
+        }
+
+        ${TeaserLead} {
+          font-size: ${theme.typography.h6.fontSize};
+          line-height: ${theme.typography.h6.lineHeight};
+        }
+      }
     `}
 
   ${({theme, h, w, x, y}) => css`
@@ -185,6 +225,7 @@ const useImageStyles = () => {
 
   return useMemo(
     () => css`
+      max-height: 400px;
       width: 100%;
       object-fit: cover;
       grid-column: 1/13;
@@ -222,11 +263,10 @@ export const TeaserTitle = styled('h1')`
 
 export const TeaserLead = styled('p')`
   font-weight: 300;
-  font-size: ${({theme}) => theme.typography.body1.fontSize};
   grid-area: lead;
 `
 
-export const Authors = styled('span')`
+export const TeaserAuthors = styled('span')`
   font-weight: 500;
 `
 
@@ -255,10 +295,13 @@ export const TeaserPreTitleWrapper = styled('div')`
   }
 `
 
-export const PreTitle = styled('div')`
-  transition: background-color 0.3s ease-in-out;
+export const TeaserPreTitle = styled('div')`
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   padding: ${({theme}) => `${theme.spacing(0.5)} ${theme.spacing(2)}`};
   background-color: ${({theme}) => theme.palette.accent.main};
+  color: ${({theme}) => theme.palette.accent.contrastText};
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
@@ -266,6 +309,7 @@ export const PreTitle = styled('div')`
 
   :where(${TeaserWrapper}:hover &) {
     background-color: ${({theme}) => theme.palette.primary.main};
+    color: ${({theme}) => theme.palette.primary.contrastText};
   }
 
   ${({theme}) => theme.breakpoints.up('md')} {
@@ -281,6 +325,13 @@ export const TeaserMetadata = styled('div')`
 
 export const TeaserTime = styled('time')`
   font-weight: 400;
+`
+
+export const TeaserTags = styled('div')`
+  display: none;
+  flex-flow: row wrap;
+  gap: ${({theme}) => theme.spacing(1)};
+  grid-area: tags;
 `
 
 const TeaserContent = ({
@@ -311,6 +362,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const image = teaser && selectTeaserImage(teaser)
   const publishDate = teaser && selectTeaserDate(teaser)
   const authors = teaser && selectTeaserAuthors(teaser)
+  const tags = teaser && selectTeaserTags(teaser).filter(tag => tag.tag !== preTitle)
 
   const {
     date,
@@ -328,7 +380,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
         {preTitle && (
           <TeaserPreTitleWrapper>
-            <PreTitle>{preTitle}</PreTitle>
+            <TeaserPreTitle>{preTitle}</TeaserPreTitle>
           </TeaserPreTitleWrapper>
         )}
         {!preTitle && <TeaserPreTitleNoContent />}
@@ -337,7 +389,9 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
         {lead && <Paragraph component={TeaserLead}>{lead}</Paragraph>}
 
         <TeaserMetadata>
-          {authors && authors?.length ? <Authors>Von {authors?.join(', ')} </Authors> : null}
+          {authors && authors?.length ? (
+            <TeaserAuthors>Von {authors?.join(', ')} </TeaserAuthors>
+          ) : null}
 
           {publishDate && (
             <TeaserTime suppressHydrationWarning dateTime={publishDate}>
@@ -346,6 +400,14 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
             </TeaserTime>
           )}
         </TeaserMetadata>
+
+        {!!tags?.length && (
+          <TeaserTags>
+            {tags?.slice(0, 5).map(tag => (
+              <Chip key={tag.id} label={tag.tag} color="primary" variant="outlined" />
+            ))}
+          </TeaserTags>
+        )}
       </TeaserContent>
     </TeaserWrapper>
   )

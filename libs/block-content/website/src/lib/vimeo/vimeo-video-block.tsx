@@ -1,7 +1,7 @@
 import {styled} from '@mui/material'
 import {Block, VimeoVideoBlock as VimeoVideoBlockType} from '@wepublish/website/api'
 import {BuilderVimeoVideoBlockProps} from '@wepublish/website/builder'
-import ReactPlayer from 'react-player/vimeo'
+import ReactPlayer from 'react-player'
 
 export const isVimeoVideoBlock = (block: Block): block is VimeoVideoBlockType =>
   block.__typename === 'VimeoVideoBlock'

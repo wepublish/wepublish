@@ -1,11 +1,14 @@
+import {EmotionCache} from '@emotion/cache'
 import {Container, css, CssBaseline, NoSsr, styled, ThemeProvider} from '@mui/material'
+import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
-import {IconButton} from '@wepublish/ui'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
+  TitleBlock,
+  TitleBlockTitle,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
@@ -18,20 +21,18 @@ import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
-import {MdOutlineShoppingBag} from 'react-icons/md'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {TsriBlockRenderer} from '../src/components/block-renderer/block-renderer'
 import {Paywall} from '../src/components/paywall'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
-import {TsriNavbar} from '../src/components/tsri-navbar'
+import {MitmachenButton, TsriNavbar} from '../src/components/tsri-navbar'
 import {TsriQuoteBlock} from '../src/components/tsri-quote-block'
+import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
-import {TsriRichText} from '../src/components/tsri-richtext'
 
 setDefaultOptions({
   locale: de
@@ -86,9 +87,12 @@ const LogoWrapper = styled(Logo)`
   }
 `
 
-const NavBar = styled(NavbarContainer)`
-  grid-column: -1/1;
-  z-index: 11;
+const TsriTitle = styled(TitleBlock)`
+  ${TitleBlockTitle} {
+    ${({theme}) => theme.breakpoints.down('sm')} {
+      font-size: 2rem;
+    }
+  }
 `
 
 const dateFormatter = (date: Date, includeTime = true) =>
@@ -98,112 +102,108 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
-}>
+}> & {emotionCache?: EmotionCache}
 
-function CustomApp({Component, pageProps}: CustomAppProps) {
+function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'Tsri'
 
   return (
-    <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
-      <WebsiteProvider>
-        <WebsiteBuilderProvider
-          Head={Head}
-          Script={Script}
-          Navbar={TsriNavbar}
-          elements={{Link: NextWepublishLink}}
-          blocks={{
-            Renderer: TsriBlockRenderer,
-            Teaser: TsriTeaser,
-            Break: TsriBreakBlock,
-            Quote: TsriQuoteBlock,
-            RichText: TsriRichText
-          }}
-          date={{format: dateFormatter}}
-          meta={{siteTitle}}
-          thirdParty={{
-            stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
-          }}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
+    <AppCacheProvider emotionCache={emotionCache}>
+      <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
+        <WebsiteProvider>
+          <WebsiteBuilderProvider
+            Head={Head}
+            Script={Script}
+            Navbar={TsriNavbar}
+            elements={{Link: NextWepublishLink}}
+            blocks={{
+              Teaser: TsriTeaser,
+              Break: TsriBreakBlock,
+              Quote: TsriQuoteBlock,
+              RichText: TsriRichText,
+              Title: TsriTitle
+            }}
+            date={{format: dateFormatter}}
+            meta={{siteTitle}}
+            thirdParty={{
+              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
+            }}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
 
-            <Head>
-              <title key="title">{siteTitle}</title>
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <Head>
+                <title key="title">{siteTitle}</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-              {/* Feeds */}
-              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+                {/* Feeds */}
+                <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+                <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+                <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
 
-              {/* Sitemap */}
-              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+                {/* Sitemap */}
+                <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
-              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-              <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-              <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-              <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-              <link rel="manifest" href="/site.webmanifest" />
-              <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-              <meta name="msapplication-TileColor" content="#ffffff" />
-              <meta name="theme-color" content="#ffffff" />
-            </Head>
+                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                <link rel="manifest" href="/site.webmanifest" />
+                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
+                <meta name="msapplication-TileColor" content="#ffffff" />
+                <meta name="theme-color" content="#ffffff" />
+              </Head>
 
-            <Spacer>
-              <NavBar
-                categorySlugs={[['categories', 'about-us']]}
-                slug="main"
-                headerSlug="header"
-                actions={
-                  <NextWepublishLink href="https://shop.tsri.ch/" target="_blank">
-                    <IconButton css={{fontSize: '2em', color: 'black'}}>
-                      <MdOutlineShoppingBag aria-label="Shop" />
-                    </IconButton>
-                  </NextWepublishLink>
-                }
-              />
+              <Spacer>
+                <NavbarContainer
+                  categorySlugs={[['categories', 'about-us']]}
+                  slug="main"
+                  headerSlug="header"
+                  actions={<MitmachenButton />}
+                />
 
-              <main>
-                <MainSpacer maxWidth="lg">
-                  <NoSsr>
-                    <Paywall />
-                  </NoSsr>
+                <main>
+                  <MainSpacer maxWidth="lg">
+                    <NoSsr>
+                      <Paywall />
+                    </NoSsr>
 
-                  <Component {...pageProps} />
-                </MainSpacer>
-              </main>
+                    <Component {...pageProps} />
+                  </MainSpacer>
+                </main>
 
-              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-              </FooterContainer>
-            </Spacer>
+                <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
+                  <LogoLink href="/" aria-label="Startseite">
+                    <LogoWrapper />
+                  </LogoLink>
+                </FooterContainer>
+              </Spacer>
 
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-              strategy="afterInteractive"
-            />
-
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-              strategy="lazyOnload"
-            />
-
-            {publicRuntimeConfig.env.GA_ID && (
-              <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
-            )}
-
-            {publicRuntimeConfig.env.SPARKLOOP_ID && (
               <Script
-                src={`https://script.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
-                strategy="lazyOnload"
-                data-sparkloop
+                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
+                strategy="afterInteractive"
               />
-            )}
-          </ThemeProvider>
-        </WebsiteBuilderProvider>
-      </WebsiteProvider>
-    </SessionProvider>
+
+              <Script
+                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
+                strategy="lazyOnload"
+              />
+
+              {publicRuntimeConfig.env.GA_ID && (
+                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+              )}
+
+              {publicRuntimeConfig.env.SPARKLOOP_ID && (
+                <Script
+                  src={`https://script.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
+                  strategy="lazyOnload"
+                  data-sparkloop
+                />
+              )}
+            </ThemeProvider>
+          </WebsiteBuilderProvider>
+        </WebsiteProvider>
+      </SessionProvider>
+    </AppCacheProvider>
   )
 }
 

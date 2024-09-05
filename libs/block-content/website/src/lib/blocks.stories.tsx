@@ -5,7 +5,8 @@ import {
   Event,
   EventStatus,
   FullImageFragment,
-  FullPollFragment
+  FullPollFragment,
+  TeaserType
 } from '@wepublish/website/api'
 import {Blocks} from './blocks'
 
@@ -37,14 +38,18 @@ const image = {
   },
   title: null,
   url: 'https://unsplash.it/500/281',
-  bigURL: 'https://unsplash.it/800/400',
-  largeURL: 'https://unsplash.it/500/300',
-  mediumURL: 'https://unsplash.it/300/200',
-  smallURL: 'https://unsplash.it/200/100',
-  squareBigURL: 'https://unsplash.it/800/800',
-  squareLargeURL: 'https://unsplash.it/500/500',
-  squareMediumURL: 'https://unsplash.it/300/300',
-  squareSmallURL: 'https://unsplash.it/200/200'
+  xl: 'https://unsplash.it/1200/400',
+  l: 'https://unsplash.it/1000/400',
+  m: 'https://unsplash.it/800/400',
+  s: 'https://unsplash.it/500/300',
+  xs: 'https://unsplash.it/300/200',
+  xxs: 'https://unsplash.it/200/100',
+  xlSquare: 'https://unsplash.it/1200/1200',
+  lSquare: 'https://unsplash.it/1000/1000',
+  mSquare: 'https://unsplash.it/800/800',
+  sSquare: 'https://unsplash.it/500/500',
+  xsSquare: 'https://unsplash.it/300/300',
+  xxsSquare: 'https://unsplash.it/200/200'
 } as FullImageFragment
 
 const event = {
@@ -179,6 +184,8 @@ const event = {
     {
       id: 'cldwtndha026601nui49kyxrk',
       tag: 'Concert',
+      main: false,
+      url: '',
       __typename: 'Tag'
     }
   ],
@@ -508,6 +515,138 @@ const blocks = [
     image
   },
   {
+    __typename: 'LinkPageBreakBlock',
+    text: 'Break block test',
+    linkText: null,
+    linkURL: null,
+    styleOption: 'default',
+    richText: [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+          }
+        ]
+      },
+      {
+        type: 'paragraph',
+        children: [
+          {
+            text: ''
+          }
+        ]
+      },
+      {
+        type: 'heading-three',
+        children: [
+          {
+            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+          }
+        ]
+      },
+      {
+        type: 'heading-three',
+        children: [
+          {
+            text: ''
+          }
+        ]
+      },
+      {
+        type: 'paragraph',
+        children: [
+          {
+            bold: true,
+            text: ' Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+            italic: true
+          },
+          {
+            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+            italic: true
+          },
+          {
+            text: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+            italic: true,
+            underline: true
+          }
+        ]
+      }
+    ],
+    linkTarget: null,
+    hideButton: false,
+    templateOption: 'none',
+    layoutOption: 'image-left',
+    image,
+    blockStyle: 'ContextBox'
+  },
+  {
+    __typename: 'LinkPageBreakBlock',
+    text: 'Break block test',
+    linkText: null,
+    linkURL: null,
+    styleOption: 'default',
+    richText: [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+          }
+        ]
+      },
+      {
+        type: 'paragraph',
+        children: [
+          {
+            text: ''
+          }
+        ]
+      },
+      {
+        type: 'heading-three',
+        children: [
+          {
+            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+          }
+        ]
+      },
+      {
+        type: 'heading-three',
+        children: [
+          {
+            text: ''
+          }
+        ]
+      },
+      {
+        type: 'paragraph',
+        children: [
+          {
+            bold: true,
+            text: ' Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+            italic: true
+          },
+          {
+            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+            italic: true
+          },
+          {
+            text: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+            italic: true,
+            underline: true
+          }
+        ]
+      }
+    ],
+    linkTarget: null,
+    hideButton: false,
+    templateOption: 'none',
+    layoutOption: 'image-left',
+    image,
+    blockStyle: 'Banner'
+  },
+  {
     __typename: 'ImageBlock',
     caption: 'Caption',
     image
@@ -528,6 +667,24 @@ const blocks = [
         image
       }
     ]
+  },
+  {
+    __typename: 'ImageGalleryBlock',
+    images: [
+      {
+        caption: 'Caption',
+        image
+      },
+      {
+        caption: 'Caption',
+        image
+      },
+      {
+        caption: 'Caption',
+        image
+      }
+    ],
+    blockStyle: 'Slider'
   },
   {
     __typename: 'ListicleBlock',
@@ -1145,6 +1302,666 @@ const blocks = [
         properties: []
       }
     ]
+  },
+  {
+    __typename: 'TeaserGridBlock',
+    numColumns: 3,
+    teasers: [
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      },
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image: null,
+        preTitle: null,
+        title: null,
+        lead: null,
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      },
+      {
+        __typename: 'PageTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        page: {
+          id: 'cl95fumlq261901phgrctx4mz',
+          title: 'Home',
+          description: '',
+          url: 'https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/',
+          blocks: [
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'EventBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            },
+            {
+              __typename: 'LinkPageBreakBlock'
+            },
+            {
+              __typename: 'TitleBlock',
+              title: 'Das ist ein Titel',
+              lead: null
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: 'Das ist eine Bildunterschrift',
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            }
+          ]
+        }
+      },
+      {
+        __typename: 'PageTeaser',
+        style: 'DEFAULT',
+        image: null,
+        preTitle: null,
+        title: null,
+        lead: null,
+        page: {
+          id: 'cl95fumlq261901phgrctx4mz',
+          title: 'Home',
+          description: '',
+          url: 'https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/',
+          blocks: [
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'EventBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            },
+            {
+              __typename: 'LinkPageBreakBlock'
+            },
+            {
+              __typename: 'TitleBlock',
+              title: 'Das ist ein Titel',
+              lead: null
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: 'Das ist eine Bildunterschrift',
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            }
+          ]
+        }
+      },
+      {
+        __typename: 'CustomTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        contentUrl: 'https://google.com',
+        properties: []
+      }
+    ],
+    blockStyle: 'Slider'
+  },
+  {
+    __typename: 'TeaserListBlock',
+    filter: {},
+    skip: 0,
+    take: 6,
+    teaserType: TeaserType.Article,
+    teasers: [
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      },
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image: null,
+        preTitle: null,
+        title: null,
+        lead: null,
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      },
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      },
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image: null,
+        preTitle: null,
+        title: null,
+        lead: null,
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      },
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      },
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image: null,
+        preTitle: null,
+        title: null,
+        lead: null,
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      }
+    ]
+  },
+  {
+    __typename: 'TeaserListBlock',
+    filter: {},
+    skip: 0,
+    take: 6,
+    teaserType: TeaserType.Article,
+    teasers: [
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      },
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image: null,
+        preTitle: null,
+        title: null,
+        lead: null,
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      },
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      },
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image: null,
+        preTitle: null,
+        title: null,
+        lead: null,
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      },
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      },
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image: null,
+        preTitle: null,
+        title: null,
+        lead: null,
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
+        }
+      }
+    ],
+    blockStyle: 'Slider'
   },
   {
     __typename: 'TeaserGridFlexBlock',

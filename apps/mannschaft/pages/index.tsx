@@ -1,13 +1,9 @@
-import {ApiV1, ContentWidthProvider, PageContainer} from '@wepublish/website'
+import {ApiV1, PageContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
 export default function Index() {
-  return (
-    <ContentWidthProvider fullWidth>
-      <PageContainer slug={''} />
-    </ContentWidthProvider>
-  )
+  return <PageContainer slug={''} />
 }
 
 export const getStaticProps: GetStaticProps = async () => {

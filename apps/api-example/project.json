@@ -53,14 +53,31 @@
         "jestConfig": "apps/api-example/jest.config.ts"
       }
     },
-    "seed": {
-      "executor": "nx:run-commands",
+    "build-seed": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
       "options": {
-        "commands": [
-          {
-            "command": "npx tsx apps/api-example/prisma/seed.ts"
-          }
-        ]
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/api-example-seed",
+        "main": "apps/api-example/prisma/seed.ts",
+        "tsConfig": "apps/api-example/tsconfig.app.json",
+        "assets": ["apps/api-example/src/seed"],
+        "webpackConfig": "apps/api-example/webpack.config.js"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
+      }
+    },
+    "seed": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "api-example:build-seed:production",
+        "watch": false
       }
     }
   }

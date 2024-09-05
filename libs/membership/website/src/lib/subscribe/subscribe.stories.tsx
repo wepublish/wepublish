@@ -49,14 +49,18 @@ const image = {
   },
   title: null,
   url: 'https://unsplash.it/500/281',
-  bigURL: 'https://unsplash.it/800/400',
-  largeURL: 'https://unsplash.it/500/300',
-  mediumURL: 'https://unsplash.it/300/200',
-  smallURL: 'https://unsplash.it/200/100',
-  squareBigURL: 'https://unsplash.it/800/800',
-  squareLargeURL: 'https://unsplash.it/500/500',
-  squareMediumURL: 'https://unsplash.it/300/300',
-  squareSmallURL: 'https://unsplash.it/200/200'
+  xl: 'https://unsplash.it/1200/400',
+  l: 'https://unsplash.it/1000/400',
+  m: 'https://unsplash.it/800/400',
+  s: 'https://unsplash.it/500/300',
+  xs: 'https://unsplash.it/300/200',
+  xxs: 'https://unsplash.it/200/100',
+  xlSquare: 'https://unsplash.it/1200/1200',
+  lSquare: 'https://unsplash.it/1000/1000',
+  mSquare: 'https://unsplash.it/800/800',
+  sSquare: 'https://unsplash.it/500/500',
+  xsSquare: 'https://unsplash.it/300/300',
+  xxsSquare: 'https://unsplash.it/200/200'
 } as FullImageFragment
 
 const text = [
@@ -263,7 +267,7 @@ const fillPassword: StoryObj['play'] = async ({canvasElement, step}) => {
 const fillStreetName: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const input = canvas.getByLabelText('Adresse', {
+  const input = canvas.getByLabelText('Strasse und Hausnummer', {
     selector: 'input'
   })
 
@@ -343,6 +347,19 @@ const fillRequired: StoryObj['play'] = async ctx => {
     await fillName(ctx)
     await fillEmail(ctx)
     await fillCaptcha(ctx)
+  })
+}
+
+const fillBirthday: StoryObj['play'] = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement)
+
+  const input = canvas.getByLabelText('Geburtstag', {
+    selector: 'input'
+  })
+
+  await step('Enter birthday', async () => {
+    await userEvent.click(input)
+    await userEvent.type(input, '09081994')
   })
 }
 
@@ -516,6 +533,30 @@ export const OnlyPreferredNameInvalid: StoryObj<typeof Subscribe> = {
   play: waitForInitialDataIsSet(async ctx => {
     await clickSubscribe(ctx)
   })
+}
+
+export const OnlyBirthday: StoryObj<typeof Subscribe> = {
+  ...LoggedOut,
+  args: {
+    ...LoggedOut.args,
+    fields: ['birthday']
+  }
+}
+
+export const OnlyBirthdayFilled: StoryObj<typeof Subscribe> = {
+  ...OnlyBirthday,
+  play: async ctx => {
+    await fillRequired(ctx)
+    await fillBirthday(ctx)
+    await clickSubscribe(ctx)
+  }
+}
+
+export const OnlyBirthdayInvalid: StoryObj<typeof Subscribe> = {
+  ...OnlyBirthday,
+  play: async ctx => {
+    await clickSubscribe(ctx)
+  }
 }
 
 export const OnlyAddress: StoryObj<typeof Subscribe> = {

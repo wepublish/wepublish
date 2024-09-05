@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {Block, FacebookVideoBlock as FacebookVideoBlockType} from '@wepublish/website/api'
 import {BuilderFacebookVideoBlockProps} from '@wepublish/website/builder'
-import ReactPlayer from 'react-player/facebook'
+import ReactPlayer from 'react-player'
 import {useId} from 'react'
 
 export const isFacebookVideoBlock = (block: Block): block is FacebookVideoBlockType =>
@@ -27,7 +27,7 @@ export const FacebookVideoBlock = ({
         height={'auto'}
         url={`https://www.facebook.com/${userID}/videos/${videoID}/`}
         controls={true}
-        config={{playerId: id}}
+        config={{facebook: {playerId: id}}}
       />
     </FacebookVideoBlockWrapper>
   )

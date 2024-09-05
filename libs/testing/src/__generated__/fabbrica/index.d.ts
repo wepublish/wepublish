@@ -300,6 +300,7 @@ type ArticleFactoryDefineInput = {
     modifiedAt?: Date;
     shared?: boolean;
     hidden?: boolean;
+    disableComments?: boolean;
     published?: ArticlepublishedFactory | Prisma.ArticleRevisionCreateNestedOneWithoutPublishedArticleInput;
     pending?: ArticlependingFactory | Prisma.ArticleRevisionCreateNestedOneWithoutPendingArticleInput;
     draft?: ArticledraftFactory | Prisma.ArticleRevisionCreateNestedOneWithoutDraftArticleInput;
@@ -431,6 +432,9 @@ type AuthorFactoryDefineInput = {
     slug?: string;
     jobTitle?: string | null;
     bio?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue;
+    hideOnArticle?: boolean;
+    hideOnTeaser?: boolean;
+    hideOnTeam?: boolean;
     links?: Prisma.AuthorsLinksCreateNestedManyWithoutAuthorInput;
     image?: AuthorimageFactory | Prisma.ImageCreateNestedOneWithoutAuthorInput;
     articlesAsAuthor?: Prisma.ArticleRevisionAuthorCreateNestedManyWithoutAuthorInput;
@@ -1959,6 +1963,7 @@ type UserFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
+    birthday?: Date | null;
     email?: string;
     emailVerifiedAt?: Date | null;
     name?: string;

@@ -30,6 +30,7 @@ import {
   PollBlock,
   EventBlock
 } from '../../../libs/api/src/lib/db/block'
+import {bootstrap} from '../../media/src/bootstrap'
 
 const shuffle = <T>(list: T[]): T[] => {
   let idx = -1
@@ -262,19 +263,31 @@ async function seedPoll(prisma: PrismaClient) {
     ...future.answers.map(answer =>
       prisma.pollVote.createMany({
         data: Array.from({length: faker.number.int({min: 25, max: 100})}, (x, i) => ({
+          pollId: future.id,
           answerId: answer.id,
-          pollId: future.id
+          createdAt: faker.date.recent(),
+          fingerprint: faker.number.bigInt().toString()
         }))
       })
     ),
     ...past.answers.map(answer =>
       prisma.pollVote.createMany({
         data: Array.from({length: faker.number.int({min: 25, max: 100})}, (x, i) => ({
+          pollId: past.id,
           answerId: answer.id,
-          pollId: past.id
+          createdAt: faker.date.recent(),
+          fingerprint: faker.number.bigInt().toString()
         }))
       })
-    )
+    ),
+    prisma.pollVote.createMany({
+      data: Array.from({length: faker.number.int({min: 25, max: 100})}, (x, i) => ({
+        pollId: past.id,
+        answerId: past.answers[0].id,
+        createdAt: faker.date.recent(),
+        fingerprint: 'someone-manipulating-votes'
+      }))
+    })
   ])
 
   return [past, future]
@@ -796,6 +809,7 @@ async function seedComments(prisma: PrismaClient, articleIds: string[], imageIds
 }
 
 async function seed() {
+  const {app} = await bootstrap(['error'])
   const prisma = new PrismaClient()
   await prisma.$connect()
 
@@ -812,16 +826,21 @@ async function seed() {
       throw 'Website Example seeding has already been done. Skipping'
     }
 
-    const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
-
     const tags = Array.from({length: 5}, () => faker.word.noun().toLowerCase())
+    console.log('Seeding polls')
     const polls = await seedPoll(prisma)
+    console.log('Seeding navigations')
     const navigations = await seedNavigations(prisma, tags)
+    console.log('Seeding images')
+    const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
+    console.log('Seeding authors')
     const authors = await seedAuthors(prisma, [womanProfilePhoto.id, manProfilePhoto.id])
+    console.log('Seeding events')
     const events = await seedEvents(
       prisma,
       teaserImages.map(({id}) => id)
     )
+    console.log('Seeding articles')
     const articles = await seedArticles(
       prisma,
       teaserImages.map(({id}) => id),
@@ -830,42 +849,50 @@ async function seed() {
       polls.map(({id}) => id),
       events.map(({id}) => id)
     )
+    console.log('Seeding comments')
     const comments = await seedComments(
       prisma,
       articles.map(({id}) => id),
       [womanProfilePhoto.id, manProfilePhoto.id]
     )
+    console.log('Seeding pages')
     const pages = await seedPages(
       prisma,
       teaserImages.map(({id}) => id),
       articles.map(({id}) => id)
     )
 
-    await prisma.user.create({
-      data: {
-        email: 'dev@wepublish.ch',
-        emailVerifiedAt: new Date(),
-        name: 'Dev User',
-        active: true,
-        roleIDs: [adminUserRole.id],
-        password: await hashPassword('123')
-      }
-    })
-
-    await prisma.user.upsert({
-      where: {
-        email: 'editor@wepublish.ch'
-      },
-      update: {},
-      create: {
-        email: 'editor@wepublish.ch',
-        emailVerifiedAt: new Date(),
-        name: 'Editor User',
-        active: true,
-        roleIDs: [editorUserRole.id],
-        password: await hashPassword('123')
-      }
-    })
+    console.log('Seeding users')
+    await Promise.all([
+      prisma.user.upsert({
+        where: {
+          email: 'dev@wepublish.ch'
+        },
+        update: {},
+        create: {
+          email: 'dev@wepublish.ch',
+          emailVerifiedAt: new Date(),
+          name: 'Dev User',
+          active: true,
+          roleIDs: [adminUserRole.id],
+          password: await hashPassword('123')
+        }
+      }),
+      prisma.user.upsert({
+        where: {
+          email: 'editor@wepublish.ch'
+        },
+        update: {},
+        create: {
+          email: 'editor@wepublish.ch',
+          emailVerifiedAt: new Date(),
+          name: 'Editor User',
+          active: true,
+          roleIDs: [editorUserRole.id],
+          password: await hashPassword('123')
+        }
+      })
+    ])
   } catch (e) {
     if (typeof e === 'string') {
       console.warn(e)
@@ -873,6 +900,7 @@ async function seed() {
       throw e
     }
   } finally {
+    await app.close()
     await prisma.$disconnect()
   }
 }

@@ -3,6 +3,7 @@ fragment MutationArticle on Article {
 
   shared
   hidden
+  disableComments
   tags {
     id
     tag
@@ -39,6 +40,7 @@ fragment ArticleRef on Article {
 
   shared
   hidden
+  disableComments
   tags {
     id
     tag
@@ -191,6 +193,7 @@ query Article($id: ID!) {
     id
     shared
     hidden
+    disableComments
 
     tags {
       id

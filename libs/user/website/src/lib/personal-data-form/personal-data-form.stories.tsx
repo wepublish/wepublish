@@ -44,14 +44,18 @@ const mockUser = {
     },
     title: null,
     url: 'https://unsplash.it/500/281',
-    bigURL: 'https://unsplash.it/800/400',
-    largeURL: 'https://unsplash.it/500/300',
-    mediumURL: 'https://unsplash.it/300/200',
-    smallURL: 'https://unsplash.it/200/100',
-    squareBigURL: 'https://unsplash.it/800/800',
-    squareLargeURL: 'https://unsplash.it/500/500',
-    squareMediumURL: 'https://unsplash.it/300/300',
-    squareSmallURL: 'https://unsplash.it/200/200'
+    xl: 'https://unsplash.it/1200/400',
+    l: 'https://unsplash.it/1000/400',
+    m: 'https://unsplash.it/800/400',
+    s: 'https://unsplash.it/500/300',
+    xs: 'https://unsplash.it/300/200',
+    xxs: 'https://unsplash.it/200/100',
+    xlSquare: 'https://unsplash.it/1200/1200',
+    lSquare: 'https://unsplash.it/1000/1000',
+    mSquare: 'https://unsplash.it/800/800',
+    sSquare: 'https://unsplash.it/500/500',
+    xsSquare: 'https://unsplash.it/300/300',
+    xxsSquare: 'https://unsplash.it/200/200'
   } as FullImageFragment,
   oauth2Accounts: [],
   paymentProviderCustomers: [],
@@ -65,7 +69,7 @@ const Render = () => {
   return (
     <PersonalDataForm
       {...props}
-      initialUser={mockUser}
+      user={mockUser}
       onUpdate={async data => {
         args.onUpdate(data)
         updateArgs({
@@ -179,7 +183,7 @@ const fillRepeatPassword: StoryObj['play'] = async ({canvasElement, step}) => {
 const fillStreetName: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const input = canvas.getByLabelText('Adresse', {
+  const input = canvas.getByLabelText('Strasse und Hausnummer', {
     selector: 'input'
   })
 
@@ -257,6 +261,19 @@ const fillAddress: StoryObj['play'] = async ctx => {
   })
 }
 
+const fillBirthday: StoryObj['play'] = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement)
+
+  const input = canvas.getByLabelText('Geburtstag', {
+    selector: 'input'
+  })
+
+  await step('Enter birthday', async () => {
+    await userEvent.click(input)
+    await userEvent.type(input, '09081994')
+  })
+}
+
 const deleteImage: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
   const button = canvas.getByTitle('Bild löschen')
@@ -317,13 +334,6 @@ export const OnlyFirstNameFilled: StoryObj = {
   }
 }
 
-export const OnlyFirstNameInvalid: StoryObj = {
-  ...OnlyFirstName,
-  play: async ctx => {
-    await clickUpdate(ctx)
-  }
-}
-
 export const OnlyPreferredName: StoryObj = {
   args: {
     onUpdate: action('onUpdate'),
@@ -337,13 +347,6 @@ export const OnlyPreferredNameFilled: StoryObj = {
   play: async ctx => {
     await fillRequired(ctx)
     await fillPreferredName(ctx)
-    await clickUpdate(ctx)
-  }
-}
-
-export const OnlyPreferredNameInvalid: StoryObj = {
-  ...OnlyPreferredName,
-  play: async ctx => {
     await clickUpdate(ctx)
   }
 }
@@ -365,9 +368,19 @@ export const OnlyFlairFilled: StoryObj = {
   }
 }
 
-export const OnlyFlairInvalid: StoryObj = {
-  ...OnlyFlair,
+export const OnlyBirthday: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    fields: ['birthday']
+  }
+}
+
+export const OnlyBirthdayFilled: StoryObj = {
+  ...OnlyBirthday,
   play: async ctx => {
+    await fillRequired(ctx)
+    await fillBirthday(ctx)
     await clickUpdate(ctx)
   }
 }
@@ -385,13 +398,6 @@ export const OnlyAddressFilled: StoryObj = {
   play: async ctx => {
     await fillRequired(ctx)
     await fillAddress(ctx)
-    await clickUpdate(ctx)
-  }
-}
-
-export const OnlyAddressInvalid: StoryObj = {
-  ...OnlyAddress,
-  play: async ctx => {
     await clickUpdate(ctx)
   }
 }
@@ -433,13 +439,6 @@ export const OnlyRequiredFilled: StoryObj = {
   ...OnlyRequired,
   play: async ctx => {
     await fillRequired(ctx)
-    await clickUpdate(ctx)
-  }
-}
-
-export const OnlyRequiredInvalid: StoryObj = {
-  ...OnlyRequired,
-  play: async ctx => {
     await clickUpdate(ctx)
   }
 }

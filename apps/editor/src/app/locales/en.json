@@ -121,7 +121,12 @@
         "value": "Value",
         "yes": "Yes",
         "hidden": "Hide",
-        "setAsHidden": "Hidden articles are excluded by default but can still be queried on demand."
+        "setAsHidden": "Hidden articles are excluded by default but can still be queried on demand.",
+        "disableComments": "Disable comments for this article",
+        "light": "Light",
+        "style": "Style",
+        "text": "Text",
+        "default": "Default"
       }
     },
     "articleList": {
@@ -320,7 +325,8 @@
         "link": "Link",
         "remove": "Remove",
         "startWriting": "Start writing ...",
-        "text": "Text"
+        "text": "Text",
+        "id": "ID"
       },
       "richTextTable": {
         "addBorders": "Add Borders",
@@ -371,7 +377,8 @@
       "tags": "Tags",
       "title": "Title",
       "userPanelHeader": "Author of the comment",
-      "variousPanelHeader": "Tags & Source"
+      "variousPanelHeader": "Tags & Source",
+      "featuredHelpText": "The comment shows at the top of the comment list."
     },
     "commentHistory": {
       "addComment": "Create new comment",
@@ -1021,6 +1028,7 @@
       "closedAtNone": "Not closed",
       "createNew": "Create Poll",
       "delete": "Delete",
+      "showVotes": "Show votes",
       "hasBeenClosedAt": "Closed at {{closedAt, ccc PP p}}",
       "noQuestion": "No question captured",
       "openedAt": "Opened at {{openedAt, ccc PP p}}",
@@ -1030,6 +1038,13 @@
       "question": "Question",
       "state": "State",
       "title": "Polls"
+    },
+    "pollVoteList": {
+      "createdAt": "Created at",
+      "answerId": "Answer",
+      "userId": "User ID",
+      "fingerprint": "Fingerprint",
+      "deleteItems": "Delete items"
     },
     "pollStateIndication": {
       "closed": "Poll closed",
@@ -1258,7 +1273,8 @@
       "Unknown": "Unknown",
       "userDataTitle": "User Data",
       "userRoles": "User Roles",
-      "zipCode": "ZIP"
+      "zipCode": "ZIP",
+      "birthday": "Birthday"
     },
     "userList": {
       "overview": {
@@ -1408,6 +1424,15 @@
         "event": "Event",
         "custom": "Custom"
       }
+    },
+    "authorEditPanel": {
+      "hideAuthor": "Hide authors",
+      "hideOnTeam": "Hide on team page",
+      "hideOnArticle": "Hide on articles",
+      "hideOnTeaser": "Hide on teasers"
+    },
+    "selectableItemsActions": {
+      "selectedItems": "Selected {{numberOfItems}} items"
     }
   }
 }

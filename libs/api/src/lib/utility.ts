@@ -7,6 +7,7 @@ import {Context} from './context'
 import {TeaserStyle} from './db/block'
 import {SubscriptionWithRelations} from './db/subscription'
 import {UserWithRelations} from './db/user'
+import {format} from 'date-fns'
 
 export const MAX_PAYLOAD_SIZE = '1MB'
 
@@ -30,6 +31,7 @@ export function mapSubscriptionsAsCsv(
       'firstName',
       'name',
       'preferredName',
+      'birthday',
       'email',
       'active',
       'createdAt',
@@ -67,6 +69,7 @@ export function mapSubscriptionsAsCsv(
         `${sanitizeCsvContent(user?.firstName)}`,
         `${sanitizeCsvContent(user?.name)}`,
         `${sanitizeCsvContent(user?.preferredName)}`,
+        `${user?.birthday ? format(user?.birthday, 'yyyy-MM-dd') : ''}`,
         `${user?.email ?? ''}`,
         user?.active,
         user?.createdAt ? formatISO(user.createdAt, {representation: 'date'}) : '',

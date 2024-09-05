@@ -10,10 +10,11 @@ import {
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {ComponentProps} from 'react'
 
-export default function ArticleBySlug() {
+export default function ArticleBySlugIdOrToken() {
   const {
-    query: {slug}
+    query: {slug, id, token}
   } = useRouter()
   const {
     elements: {H3}
@@ -26,9 +27,15 @@ export default function ArticleBySlug() {
     }
   })
 
+  const containerProps = {
+    slug,
+    id,
+    token
+  } as ComponentProps<typeof ArticleContainer>
+
   return (
     <>
-      <ArticleContainer slug={slug as string} />
+      <ArticleContainer {...containerProps} />
 
       {data?.article && (
         <>
@@ -40,10 +47,12 @@ export default function ArticleBySlug() {
             />
           </ArticleWrapper>
 
-          <ArticleWrapper>
-            <H3 component={'h2'}>Kommentare</H3>
-            <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
-          </ArticleWrapper>
+          {!data.article.disableComments && (
+            <ArticleWrapper>
+              <H3 component={'h2'}>Kommentare</H3>
+              <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
+            </ArticleWrapper>
+          )}
         </>
       )}
     </>

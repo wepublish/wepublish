@@ -36,7 +36,9 @@ export const CommentList = ({
   edit,
   onEditComment,
   openEditorsState,
-  openEditorsStateDispatch: dispatch
+  openEditorsStateDispatch: dispatch,
+  signUpUrl,
+  maxCommentDepth
 }: BuilderCommentListProps) => {
   const {
     CommentEditor,
@@ -73,6 +75,8 @@ export const CommentList = ({
           userCanEdit={userCanEdit}
           maxCommentLength={maxCommentLength}
           children={(comment.children as Comment[]) ?? []}
+          signUpUrl={signUpUrl}
+          maxCommentDepth={maxCommentDepth}
         />
       ))}
 
@@ -90,6 +94,9 @@ export const CommentList = ({
           onSubmit={onAddComment}
           error={add.error}
           loading={add.loading}
+          canReply={canReply}
+          signUpUrl={signUpUrl}
+          anonymousCanComment={anonymousCanComment}
         />
       )}
 

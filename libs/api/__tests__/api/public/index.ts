@@ -36,6 +36,7 @@ export type Article = {
   breaking: Scalars['Boolean'];
   canonicalUrl?: Maybe<Scalars['String']>;
   comments: Array<Comment>;
+  disableComments?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
@@ -101,6 +102,9 @@ export type Author = {
   __typename?: 'Author';
   bio?: Maybe<Scalars['RichText']>;
   createdAt: Scalars['DateTime'];
+  hideOnArticle?: Maybe<Scalars['Boolean']>;
+  hideOnTeam?: Maybe<Scalars['Boolean']>;
+  hideOnTeaser?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   jobTitle?: Maybe<Scalars['String']>;
@@ -120,6 +124,7 @@ export type AuthorConnection = {
 };
 
 export type AuthorFilter = {
+  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   tagIds?: InputMaybe<Array<Scalars['ID']>>;
 };
@@ -709,6 +714,7 @@ export type MutationRateCommentArgs = {
 
 export type MutationRegisterMemberArgs = {
   address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
   challengeAnswer: ChallengeInput;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
@@ -721,6 +727,7 @@ export type MutationRegisterMemberArgs = {
 export type MutationRegisterMemberAndReceivePaymentArgs = {
   address?: InputMaybe<UserAddressInput>;
   autoRenew: Scalars['Boolean'];
+  birthday?: InputMaybe<Scalars['DateTime']>;
   challengeAnswer: ChallengeInput;
   email: Scalars['String'];
   failureURL?: InputMaybe<Scalars['String']>;
@@ -1481,6 +1488,7 @@ export type UploadImageInput = {
 export type User = {
   __typename?: 'User';
   address?: Maybe<UserAddress>;
+  birthday?: Maybe<Scalars['DateTime']>;
   email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
   flair?: Maybe<Scalars['String']>;
@@ -1514,6 +1522,7 @@ export type UserAddressInput = {
 
 export type UserInput = {
   address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
   flair?: InputMaybe<Scalars['String']>;
@@ -1576,7 +1585,7 @@ export type PeerArticleQuery = { __typename?: 'Query', peerArticle?: { __typenam
 
 export type AuthorRefFragment = { __typename?: 'Author', id: string, name: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
-export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: Node[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: Node[] | null, hideOnTeam?: boolean | null, hideOnTeaser?: boolean | null, hideOnArticle?: boolean | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
 export type AuthorListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>;
@@ -1586,14 +1595,14 @@ export type AuthorListQueryVariables = Exact<{
 }>;
 
 
-export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Node[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Node[] | null, hideOnTeam?: boolean | null, hideOnTeaser?: boolean | null, hideOnArticle?: boolean | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type AuthorQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', slug: string, bio?: Node[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', slug: string, bio?: Node[] | null, hideOnTeam?: boolean | null, hideOnTeaser?: boolean | null, hideOnArticle?: boolean | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 type FullTeaser_ArticleTeaser_Fragment = { __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, preTitle?: string | null, title: string, lead?: string | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
@@ -1837,6 +1846,9 @@ export const FullAuthor = gql`
     url
   }
   bio
+  hideOnTeam
+  hideOnTeaser
+  hideOnArticle
   ...AuthorRef
 }
     ${AuthorRef}`;

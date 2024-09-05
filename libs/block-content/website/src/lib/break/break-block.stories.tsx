@@ -31,21 +31,25 @@ const image = {
   },
   title: null,
   url: 'https://unsplash.it/500/281',
-  bigURL: 'https://unsplash.it/800/400',
-  largeURL: 'https://unsplash.it/500/300',
-  mediumURL: 'https://unsplash.it/300/200',
-  smallURL: 'https://unsplash.it/200/100',
-  squareBigURL: 'https://unsplash.it/800/800',
-  squareLargeURL: 'https://unsplash.it/500/500',
-  squareMediumURL: 'https://unsplash.it/300/300',
-  squareSmallURL: 'https://unsplash.it/200/200'
+  xl: 'https://unsplash.it/1200/400',
+  l: 'https://unsplash.it/1000/400',
+  m: 'https://unsplash.it/800/400',
+  s: 'https://unsplash.it/500/300',
+  xs: 'https://unsplash.it/300/200',
+  xxs: 'https://unsplash.it/200/100',
+  xlSquare: 'https://unsplash.it/1200/1200',
+  lSquare: 'https://unsplash.it/1000/1000',
+  mSquare: 'https://unsplash.it/800/800',
+  sSquare: 'https://unsplash.it/500/500',
+  xsSquare: 'https://unsplash.it/300/300',
+  xxsSquare: 'https://unsplash.it/200/200'
 } as FullImageFragment
 
 const breakBlock = {
   __typename: 'LinkPageBreakBlock',
   text: 'Break block test',
   linkText: 'Link Text',
-  linkURL: 'Link URL',
+  linkURL: 'https://example.com',
   styleOption: 'default',
   richText: [
     {
@@ -126,20 +130,21 @@ export const WithButton = {
     hideButton: false
   }
 }
-
-export const WithClassName = {
-  args: {
-    ...breakBlock,
-    className: 'extra-classname'
-  }
-}
-
 export const WithEmotion = {
+  ...Default,
   args: {
-    ...breakBlock,
+    ...Default.args,
     css: css`
       background-color: #eee;
     `
+  }
+}
+
+export const WithClassName = {
+  ...Default,
+  args: {
+    ...Default.args,
+    className: 'extra-classname'
   }
 }
 

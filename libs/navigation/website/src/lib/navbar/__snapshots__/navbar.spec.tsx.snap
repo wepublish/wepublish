@@ -45,22 +45,22 @@ exports[`Navbar should render Default 1`] = `
               />
             </button>
           </div>
-        </div>
-        <div
-          class="emotion-11 emotion-12"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/foo/"
+          <div
+            class="emotion-11 emotion-12"
           >
-            Foo
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/bar"
-          >
-            Bar
-          </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/foo/"
+            >
+              Foo
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/bar"
+            >
+              Bar
+            </a>
+          </div>
         </div>
         <a
           aria-label="Startseite"
@@ -77,27 +77,28 @@ exports[`Navbar should render Default 1`] = `
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
         </a>
         <div
           class="emotion-20 emotion-21"
-        />
-        <div
-          class="emotion-22 emotion-23"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-24"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-25"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
               tabindex="0"
               type="button"
             >
@@ -176,22 +177,22 @@ exports[`Navbar should render WithChildren 1`] = `
               />
             </button>
           </div>
-        </div>
-        <div
-          class="emotion-11 emotion-12"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/foo/"
+          <div
+            class="emotion-11 emotion-12"
           >
-            Foo
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/bar"
-          >
-            Bar
-          </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/foo/"
+            >
+              Foo
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/bar"
+            >
+              Bar
+            </a>
+          </div>
         </div>
         <a
           aria-label="Startseite"
@@ -208,27 +209,28 @@ exports[`Navbar should render WithChildren 1`] = `
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
         </a>
         <div
           class="emotion-20 emotion-21"
-        />
-        <div
-          class="emotion-22 emotion-23"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-24"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-25"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
               tabindex="0"
               type="button"
             >
@@ -307,22 +309,22 @@ exports[`Navbar should render WithClassName 1`] = `
               />
             </button>
           </div>
-        </div>
-        <div
-          class="emotion-11 emotion-12"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/foo/"
+          <div
+            class="emotion-11 emotion-12"
           >
-            Foo
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/bar"
-          >
-            Bar
-          </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/foo/"
+            >
+              Foo
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/bar"
+            >
+              Bar
+            </a>
+          </div>
         </div>
         <a
           aria-label="Startseite"
@@ -339,27 +341,28 @@ exports[`Navbar should render WithClassName 1`] = `
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
         </a>
         <div
           class="emotion-20 emotion-21"
-        />
-        <div
-          class="emotion-22 emotion-23"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-24"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-25"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
               tabindex="0"
               type="button"
             >
@@ -438,22 +441,22 @@ exports[`Navbar should render WithEmotion 1`] = `
               />
             </button>
           </div>
-        </div>
-        <div
-          class="emotion-11 emotion-12"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/foo/"
+          <div
+            class="emotion-11 emotion-12"
           >
-            Foo
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/bar"
-          >
-            Bar
-          </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/foo/"
+            >
+              Foo
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/bar"
+            >
+              Bar
+            </a>
+          </div>
         </div>
         <a
           aria-label="Startseite"
@@ -470,27 +473,28 @@ exports[`Navbar should render WithEmotion 1`] = `
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
         </a>
         <div
           class="emotion-20 emotion-21"
-        />
-        <div
-          class="emotion-22 emotion-23"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-24"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-25"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
               tabindex="0"
               type="button"
             >
@@ -585,27 +589,28 @@ exports[`Navbar should render WithError 1`] = `
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
         </a>
         <div
           class="emotion-16 emotion-17"
-        />
-        <div
-          class="emotion-18 emotion-19"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-20"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-18"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-21"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-19"
               tabindex="0"
               type="button"
             >
@@ -700,27 +705,28 @@ exports[`Navbar should render WithLoading 1`] = `
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
         </a>
         <div
           class="emotion-16 emotion-17"
-        />
-        <div
-          class="emotion-18 emotion-19"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-20"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-18"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-21"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-19"
               tabindex="0"
               type="button"
             >
@@ -799,22 +805,22 @@ exports[`Navbar should render WithLoggedIn 1`] = `
               />
             </button>
           </div>
-        </div>
-        <div
-          class="emotion-11 emotion-12"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/foo/"
+          <div
+            class="emotion-11 emotion-12"
           >
-            Foo
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/bar"
-          >
-            Bar
-          </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/foo/"
+            >
+              Foo
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/bar"
+            >
+              Bar
+            </a>
+          </div>
         </div>
         <a
           aria-label="Startseite"
@@ -831,27 +837,28 @@ exports[`Navbar should render WithLoggedIn 1`] = `
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
         </a>
         <div
           class="emotion-20 emotion-21"
-        />
-        <div
-          class="emotion-22 emotion-23"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-24"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
             href="/profile/subscription"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-25"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-23"
               tabindex="0"
               type="button"
             >
@@ -879,11 +886,11 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
             </button>
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-24"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
             href="/profile"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-25"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
               tabindex="0"
               type="button"
             >
@@ -978,27 +985,28 @@ exports[`Navbar should render WithoutItems 1`] = `
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-              srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
-https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w"
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+              srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
         </a>
         <div
           class="emotion-16 emotion-17"
-        />
-        <div
-          class="emotion-18 emotion-19"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-20"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-18"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-21"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-19"
               tabindex="0"
               type="button"
             >
@@ -1077,35 +1085,41 @@ exports[`Navbar should render WithoutLogo 1`] = `
               />
             </button>
           </div>
+          <div
+            class="emotion-11 emotion-12"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/foo/"
+            >
+              Foo
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
+              href="/bar"
+            >
+              Bar
+            </a>
+          </div>
         </div>
+        <a
+          aria-label="Startseite"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-15"
+          href="/"
+        >
+          <div
+            class="emotion-16 emotion-17"
+          />
+        </a>
         <div
-          class="emotion-11 emotion-12"
+          class="emotion-18 emotion-19"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/foo/"
-          >
-            Foo
-          </a>
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-            href="/bar"
-          >
-            Bar
-          </a>
-        </div>
-        <div
-          class="emotion-15 emotion-16"
-        />
-        <div
-          class="emotion-17 emotion-18"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-19"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-20"
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-20"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-21"
               tabindex="0"
               type="button"
             >

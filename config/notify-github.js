@@ -27,7 +27,7 @@ async function main() {
 `
 
     const projects = JSON.parse(PROJECTS);
-    for (const project of projects) {
+    for (const project of projects.target) {
         deploymentMessage += `
   - ${project}: https://${project}${PROJECT_URL_SUFFIX}`
     }

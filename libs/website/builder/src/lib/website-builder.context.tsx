@@ -6,10 +6,12 @@ import {
   PropsWithChildren,
   ReactNode,
   ScriptHTMLAttributes,
-  useContext
+  useContext,
+  useMemo
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {
+  BuilderArticleDateProps,
   BuilderArticleListProps,
   BuilderArticleProps,
   BuilderArticleSEOProps
@@ -97,6 +99,7 @@ import {
   BuilderTextFieldProps
 } from './ui.interface'
 import {BuilderImageUploadProps, BuilderPersonalDataFormProps} from './user.interface'
+import {BuilderBlockStyleProps} from './block-styles.interface'
 
 const NoComponent = () => null
 
@@ -109,6 +112,7 @@ export type WebsiteBuilderProps = {
   PageSEO: ComponentType<BuilderPageSEOProps>
   Article: ComponentType<BuilderArticleProps>
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
+  ArticleDate: ComponentType<BuilderArticleDateProps>
   PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
   AuthorLinks: ComponentType<BuilderAuthorLinksProps>
@@ -197,6 +201,10 @@ export type WebsiteBuilderProps = {
     Comment: ComponentType<BuilderCommentBlockProps>
   }
 
+  blockStyles: {
+    [key in keyof BuilderBlockStyleProps]: ComponentType<BuilderBlockStyleProps[key]>
+  }
+
   date: {
     format: (date: Date, includeTime?: boolean) => string
   }
@@ -229,6 +237,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   PageSEO: NoComponent,
   Article: NoComponent,
   ArticleSEO: NoComponent,
+  ArticleDate: NoComponent,
   PeerInformation: NoComponent,
   Author: NoComponent,
   AuthorLinks: NoComponent,
@@ -308,6 +317,14 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     Break: NoComponent
   },
 
+  blockStyles: {
+    ImageSlider: NoComponent,
+    TeaserSlider: NoComponent,
+    FocusTeaser: NoComponent,
+    ContextBox: NoComponent,
+    Banner: NoComponent
+  },
+
   date: {
     format: date => date.toString()
   },
@@ -327,7 +344,10 @@ export const useWebsiteBuilder = () => {
 export const WebsiteBuilderProvider = memo<PropsWithChildren<PartialDeep<WebsiteBuilderProps>>>(
   ({children, ...components}) => {
     const parentComponents = useWebsiteBuilder()
-    const newComponents = mergeDeepRight(parentComponents, components) as WebsiteBuilderProps
+    const newComponents = useMemo(
+      () => mergeDeepRight(parentComponents, components) as WebsiteBuilderProps,
+      [components, parentComponents]
+    )
 
     return (
       <WebsiteBuilderContext.Provider value={newComponents}>

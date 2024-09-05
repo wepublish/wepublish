@@ -6,16 +6,12 @@ const {join} = require('path')
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
 const nextConfig = {
+  output: 'standalone',
   nx: {
     svgr: true
   },
   poweredByHeader: false,
   reactStrictMode: true,
-  // Adds the language attribute to the HTML
-  i18n: {
-    locales: ['de'],
-    defaultLocale: 'de'
-  },
   compiler: {
     // This is needed so that we can use components as selectors in Emotion
     emotion: {

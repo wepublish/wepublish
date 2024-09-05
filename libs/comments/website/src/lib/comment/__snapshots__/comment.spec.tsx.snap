@@ -16,8 +16,12 @@ exports[`Comment should render AnonymousUser 1`] = `
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-        srcset="https://unsplash.it/800/800 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+        srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
@@ -38,29 +42,20 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-12 emotion-13"
         >
-          <a
-            class="emotion-14 emotion-15"
-            href="Source"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Source
-          </a>
+          Source
         </div>
       </div>
     </header>
     <div
-      class="emotion-16 emotion-17"
+      class="emotion-14 emotion-15"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 emotion-18"
+        class="MuiTypography-root MuiTypography-body1 emotion-16 emotion-17"
       >
-        <strong>
-          de Finibus Bonorum et Malorum
-        </strong>
+        de Finibus Bonorum et Malorum
       </h1>
       <div
-        class="emotion-19 emotion-20"
+        class="emotion-18 emotion-19"
       >
         <div
           data-gramm="false"
@@ -69,7 +64,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-21"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
             data-slate-node="element"
           >
             <span
@@ -105,8 +100,12 @@ exports[`Comment should render PendingApproval 1`] = `
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-        srcset="https://unsplash.it/800/800 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+        srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
@@ -123,57 +122,24 @@ https://unsplash.it/200/200 200w"
           >
             Signed Up User
           </div>
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>
-                Member
-              </title>
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
-              />
-            </svg>
-          </div>
         </div>
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
-          <a
-            class="emotion-16 emotion-17"
-            href="Source"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Flair
-          </a>
+          Flair
         </div>
       </div>
     </header>
     <div
-      class="emotion-18 emotion-19"
+      class="emotion-14 emotion-15"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 emotion-20"
+        class="MuiTypography-root MuiTypography-body1 emotion-16 emotion-17"
       >
-        <strong>
-          de Finibus Bonorum et Malorum
-        </strong>
+        de Finibus Bonorum et Malorum
       </h1>
       <div
-        class="emotion-21 emotion-22"
+        class="emotion-18 emotion-19"
       >
         <div
           data-gramm="false"
@@ -182,7 +148,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
             data-slate-node="element"
           >
             <span
@@ -218,8 +184,12 @@ exports[`Comment should render PendingUserChanges 1`] = `
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-        srcset="https://unsplash.it/800/800 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+        srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
@@ -236,57 +206,24 @@ https://unsplash.it/200/200 200w"
           >
             Signed Up User
           </div>
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>
-                Member
-              </title>
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
-              />
-            </svg>
-          </div>
         </div>
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
-          <a
-            class="emotion-16 emotion-17"
-            href="Source"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Flair
-          </a>
+          Flair
         </div>
       </div>
     </header>
     <div
-      class="emotion-18 emotion-19"
+      class="emotion-14 emotion-15"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 emotion-20"
+        class="MuiTypography-root MuiTypography-body1 emotion-16 emotion-17"
       >
-        <strong>
-          de Finibus Bonorum et Malorum
-        </strong>
+        de Finibus Bonorum et Malorum
       </h1>
       <div
-        class="emotion-21 emotion-22"
+        class="emotion-18 emotion-19"
       >
         <div
           data-gramm="false"
@@ -295,7 +232,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
             data-slate-node="element"
           >
             <span
@@ -331,8 +268,12 @@ exports[`Comment should render Rejected 1`] = `
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-        srcset="https://unsplash.it/800/800 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+        srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
@@ -349,57 +290,24 @@ https://unsplash.it/200/200 200w"
           >
             Signed Up User
           </div>
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>
-                Member
-              </title>
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
-              />
-            </svg>
-          </div>
         </div>
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
-          <a
-            class="emotion-16 emotion-17"
-            href="Source"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Flair
-          </a>
+          Flair
         </div>
       </div>
     </header>
     <div
-      class="emotion-18 emotion-19"
+      class="emotion-14 emotion-15"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 emotion-20"
+        class="MuiTypography-root MuiTypography-body1 emotion-16 emotion-17"
       >
-        <strong>
-          de Finibus Bonorum et Malorum
-        </strong>
+        de Finibus Bonorum et Malorum
       </h1>
       <div
-        class="emotion-21 emotion-22"
+        class="emotion-18 emotion-19"
       >
         <div
           data-gramm="false"
@@ -408,7 +316,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
             data-slate-node="element"
           >
             <span
@@ -444,8 +352,12 @@ exports[`Comment should render VerifiedUser 1`] = `
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-        srcset="https://unsplash.it/800/800 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+        srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
@@ -462,57 +374,24 @@ https://unsplash.it/200/200 200w"
           >
             Signed Up User
           </div>
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>
-                Member
-              </title>
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
-              />
-            </svg>
-          </div>
         </div>
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
-          <a
-            class="emotion-16 emotion-17"
-            href="Source"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Flair
-          </a>
+          Flair
         </div>
       </div>
     </header>
     <div
-      class="emotion-18 emotion-19"
+      class="emotion-14 emotion-15"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 emotion-20"
+        class="MuiTypography-root MuiTypography-body1 emotion-16 emotion-17"
       >
-        <strong>
-          de Finibus Bonorum et Malorum
-        </strong>
+        de Finibus Bonorum et Malorum
       </h1>
       <div
-        class="emotion-21 emotion-22"
+        class="emotion-18 emotion-19"
       >
         <div
           data-gramm="false"
@@ -521,7 +400,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
             data-slate-node="element"
           >
             <span
@@ -557,8 +436,12 @@ exports[`Comment should render WithClassName 1`] = `
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-        srcset="https://unsplash.it/800/800 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+        srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
@@ -575,57 +458,24 @@ https://unsplash.it/200/200 200w"
           >
             Signed Up User
           </div>
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>
-                Member
-              </title>
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
-              />
-            </svg>
-          </div>
         </div>
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
-          <a
-            class="emotion-16 emotion-17"
-            href="Source"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Flair
-          </a>
+          Flair
         </div>
       </div>
     </header>
     <div
-      class="emotion-18 emotion-19"
+      class="emotion-14 emotion-15"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 emotion-20"
+        class="MuiTypography-root MuiTypography-body1 emotion-16 emotion-17"
       >
-        <strong>
-          de Finibus Bonorum et Malorum
-        </strong>
+        de Finibus Bonorum et Malorum
       </h1>
       <div
-        class="emotion-21 emotion-22"
+        class="emotion-18 emotion-19"
       >
         <div
           data-gramm="false"
@@ -634,7 +484,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
             data-slate-node="element"
           >
             <span
@@ -670,8 +520,12 @@ exports[`Comment should render WithEmotion 1`] = `
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-        srcset="https://unsplash.it/800/800 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+        srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
@@ -688,57 +542,24 @@ https://unsplash.it/200/200 200w"
           >
             Signed Up User
           </div>
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>
-                Member
-              </title>
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
-              />
-            </svg>
-          </div>
         </div>
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
-          <a
-            class="emotion-16 emotion-17"
-            href="Source"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Flair
-          </a>
+          Flair
         </div>
       </div>
     </header>
     <div
-      class="emotion-18 emotion-19"
+      class="emotion-14 emotion-15"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 emotion-20"
+        class="MuiTypography-root MuiTypography-body1 emotion-16 emotion-17"
       >
-        <strong>
-          de Finibus Bonorum et Malorum
-        </strong>
+        de Finibus Bonorum et Malorum
       </h1>
       <div
-        class="emotion-21 emotion-22"
+        class="emotion-18 emotion-19"
       >
         <div
           data-gramm="false"
@@ -747,7 +568,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
             data-slate-node="element"
           >
             <span
@@ -783,8 +604,12 @@ exports[`Comment should render WithoutFlair 1`] = `
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-        srcset="https://unsplash.it/800/800 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+        srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
@@ -801,57 +626,24 @@ https://unsplash.it/200/200 200w"
           >
             Signed Up User
           </div>
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>
-                Member
-              </title>
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
-              />
-            </svg>
-          </div>
         </div>
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
-          <a
-            class="emotion-16 emotion-17"
-            href="Source"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Source
-          </a>
+          Source
         </div>
       </div>
     </header>
     <div
-      class="emotion-18 emotion-19"
+      class="emotion-14 emotion-15"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 emotion-20"
+        class="MuiTypography-root MuiTypography-body1 emotion-16 emotion-17"
       >
-        <strong>
-          de Finibus Bonorum et Malorum
-        </strong>
+        de Finibus Bonorum et Malorum
       </h1>
       <div
-        class="emotion-21 emotion-22"
+        class="emotion-18 emotion-19"
       >
         <div
           data-gramm="false"
@@ -860,7 +652,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
             data-slate-node="element"
           >
             <span
@@ -918,57 +710,24 @@ exports[`Comment should render WithoutImage 1`] = `
           >
             Signed Up User
           </div>
-          <div
-            class="emotion-11 emotion-12"
-          >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>
-                Member
-              </title>
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
-              />
-            </svg>
-          </div>
         </div>
         <div
-          class="emotion-13 emotion-14"
+          class="emotion-11 emotion-12"
         >
-          <a
-            class="emotion-15 emotion-16"
-            href="Source"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Flair
-          </a>
+          Flair
         </div>
       </div>
     </header>
     <div
-      class="emotion-17 emotion-18"
+      class="emotion-13 emotion-14"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 emotion-19"
+        class="MuiTypography-root MuiTypography-body1 emotion-15 emotion-16"
       >
-        <strong>
-          de Finibus Bonorum et Malorum
-        </strong>
+        de Finibus Bonorum et Malorum
       </h1>
       <div
-        class="emotion-20 emotion-21"
+        class="emotion-17 emotion-18"
       >
         <div
           data-gramm="false"
@@ -977,7 +736,7 @@ exports[`Comment should render WithoutImage 1`] = `
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
             data-slate-node="element"
           >
             <span
@@ -1013,8 +772,12 @@ exports[`Comment should render WithoutPreferredName 1`] = `
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-        srcset="https://unsplash.it/800/800 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+        srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
@@ -1031,57 +794,24 @@ https://unsplash.it/200/200 200w"
           >
             Fallback User
           </div>
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>
-                Member
-              </title>
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
-              />
-            </svg>
-          </div>
         </div>
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
-          <a
-            class="emotion-16 emotion-17"
-            href="Source"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Flair
-          </a>
+          Flair
         </div>
       </div>
     </header>
     <div
-      class="emotion-18 emotion-19"
+      class="emotion-14 emotion-15"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 emotion-20"
+        class="MuiTypography-root MuiTypography-body1 emotion-16 emotion-17"
       >
-        <strong>
-          de Finibus Bonorum et Malorum
-        </strong>
+        de Finibus Bonorum et Malorum
       </h1>
       <div
-        class="emotion-21 emotion-22"
+        class="emotion-18 emotion-19"
       >
         <div
           data-gramm="false"
@@ -1090,7 +820,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
             data-slate-node="element"
           >
             <span
@@ -1126,8 +856,12 @@ exports[`Comment should render WithoutSource 1`] = `
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
-800w"
-        srcset="https://unsplash.it/800/800 800w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+        srcset="https://unsplash.it/1200/1200 1200w,
+https://unsplash.it/1000/1000 1000w,
+https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
@@ -1144,50 +878,24 @@ https://unsplash.it/200/200 200w"
           >
             Signed Up User
           </div>
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>
-                Member
-              </title>
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
-              />
-            </svg>
-          </div>
         </div>
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
           29.06.2023 09:39
         </div>
       </div>
     </header>
     <div
-      class="emotion-16 emotion-17"
+      class="emotion-14 emotion-15"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 emotion-18"
+        class="MuiTypography-root MuiTypography-body1 emotion-16 emotion-17"
       >
-        <strong>
-          de Finibus Bonorum et Malorum
-        </strong>
+        de Finibus Bonorum et Malorum
       </h1>
       <div
-        class="emotion-19 emotion-20"
+        class="emotion-18 emotion-19"
       >
         <div
           data-gramm="false"
@@ -1196,7 +904,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-21"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
             data-slate-node="element"
           >
             <span

@@ -1,4 +1,42 @@
 #######
+## Website
+#######
+
+FROM node:18.19.1-bookworm-slim as build-website
+### FRONT_ARG_REPLACER ###
+
+WORKDIR /wepublish
+COPY . .
+RUN npm ci
+RUN npx nx build ${NEXT_PROJECT}
+RUN bash /wepublish/deployment/map-secrets.sh clean
+
+FROM node:18.19.1-bookworm-slim as website
+MAINTAINER WePublish Foundation
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV HOSTNAME=0.0.0.0
+ENV ADDRESS=0.0.0.0
+ENV PORT=4000
+### FRONT_ARG_REPLACER ###
+
+WORKDIR /wepublish
+RUN groupadd -r wepublish && \
+    useradd -r -g wepublish -d /wepublish wepublish && \
+    chown -R wepublish:wepublish /wepublish && \
+    echo "#!/bin/bash\n bash /wepublish/map-secrets.sh restore && node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \
+    chown -R wepublish:wepublish /entrypoint.sh && \
+    chmod +x /entrypoint.sh
+COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
+COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/${NEXT_PROJECT}/public
+COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/apps/${NEXT_PROJECT}/public/_next/static
+COPY --chown=wepublish:wepublish --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
+COPY --chown=wepublish:wepublish --from=build-website /wepublish/deployment/map-secrets.sh /wepublish/map-secrets.sh
+EXPOSE 4001
+USER wepublish
+ENTRYPOINT ["/entrypoint.sh"]
+
+#######
 ## API
 #######
 
@@ -11,7 +49,7 @@ RUN apt-get update && \
     npm install -g pkg && \
     npx nx build api-example && \
     cp docker/api_build_package.json package.json && \
-    pkg -C Brotli package.json
+    pkg package.json
 
 FROM debian:bookworm-slim as api
 MAINTAINER WePublish Foundation
@@ -44,7 +82,7 @@ RUN npm ci && \
     npm install -g pkg && \
     npx nx build editor && \
     cp docker/editor_build_package.json package.json && \
-    pkg -C Brotli package.json
+    pkg package.json
 
 FROM debian:bookworm-slim as editor
 MAINTAINER WePublish Foundation
@@ -99,10 +137,12 @@ CMD ["bash", "./start.sh"]
 ## Media Server
 #######
 
-FROM node:18.20.3-alpine AS base-media
+FROM node:18.20.4-bullseye-slim  AS base-media
 FROM base-media AS build-media
-# RUN apk add --no-cache --update libc6-compat alpine-sdk
+ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 WORKDIR /app
+RUN apt-get update
+RUN apt-get install -y libjemalloc-dev
 COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
@@ -113,27 +153,18 @@ FROM base-media AS media
 ENV NODE_ENV=production
 MAINTAINER WePublish Foundation
 WORKDIR /wepublish
-RUN addgroup --system --gid 1001 wepublish
-RUN adduser --system --uid 1001 wepublish
+ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
+RUN groupadd -r wepublish && \
+        useradd -r -g wepublish -d /wepublish wepublish && \
+        apt-get update && \
+        apt-get install -y libjemalloc-dev && \
+        apt-get clean && \
+        rm -rf /var/lib/apt/lists/*
 COPY --from=build-media /app/dist/apps/media/ .
 COPY --from=build-media --chown=wepublish:wepublish /app/node_modules ./node_modules
 USER wepublish
 EXPOSE 4100
 CMD ["node", "main.js"]
-
-
-#######
-## Website
-#######
-FROM node:18.19.1-bookworm-slim as website
-MAINTAINER WePublish Foundation
-ENV ADDRESS=0.0.0.0
-ENV PORT=4200
-WORKDIR /wepublish
-COPY . .
-RUN npm ci
-EXPOSE 4200
-CMD ["npx", "nx", "serve", "website-example"]
 
 ######
 ## Storybook

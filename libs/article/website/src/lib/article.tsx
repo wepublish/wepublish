@@ -31,42 +31,37 @@ export const ArticleAuthors = styled('div')`
   gap: ${({theme}) => theme.spacing(3)};
 `
 
-export const ArticleDate = styled('time')`
-  margin-top: -${({theme}) => theme.spacing(2)};
-`
-
 export function Article({className, data, children, loading, error}: BuilderArticleProps) {
   const {
     AuthorChip,
     ArticleSEO,
-    elements: {Link},
-    date
+    ArticleDate,
+    elements: {Link}
   } = useWebsiteBuilder()
+
+  const article = data?.article
+  const authors = article?.authors.filter(author => !author.hideOnArticle) || []
 
   return (
     <ArticleWrapper className={className}>
-      {data?.article && <ArticleSEO article={data.article as ArticleType} />}
+      {article && <ArticleSEO article={data.article as ArticleType} />}
 
-      <Blocks blocks={(data?.article?.blocks as Block[]) ?? []} type="Article" />
+      <Blocks blocks={(article?.blocks as Block[]) ?? []} type="Article" />
 
       <ArticleInfoWrapper>
-        {!!data?.article?.authors.length && (
+        {!!authors.length && (
           <ArticleAuthors>
-            {data.article.authors.map(author => (
+            {authors.map(author => (
               <AuthorChip key={author.id} author={author} />
             ))}
 
-            {data.article.publishedAt && (
-              <ArticleDate suppressHydrationWarning dateTime={data.article.publishedAt}>
-                {date.format(new Date(data.article.publishedAt), false)}
-              </ArticleDate>
-            )}
+            <ArticleDate article={article as ArticleType} />
           </ArticleAuthors>
         )}
 
-        {!!data?.article?.tags.length && (
+        {!!article?.tags.length && (
           <ArticleTags>
-            {data.article.tags.map(tag => (
+            {article.tags.map(tag => (
               <Chip
                 key={tag.id}
                 label={tag.tag}

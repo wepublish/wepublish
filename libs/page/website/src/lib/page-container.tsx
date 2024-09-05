@@ -3,16 +3,20 @@ import {usePageQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren} from 'react'
 
-type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
+type IdSlugOrToken =
+  | {id: string; token?: never; slug?: never}
+  | {id?: never; token?: never; slug: string}
+  | {id?: never; token: string; slug?: never}
 
-export type PageContainerProps = PropsWithChildren<IdOrSlug & BuilderContainerProps>
+export type PageContainerProps = PropsWithChildren<IdSlugOrToken & BuilderContainerProps>
 
-export function PageContainer({id, slug, className, children}: PageContainerProps) {
+export function PageContainer({id, slug, token, className, children}: PageContainerProps) {
   const {Page} = useWebsiteBuilder()
   const {data, loading, error} = usePageQuery({
     variables: {
       id,
-      slug
+      slug,
+      token
     }
   })
 

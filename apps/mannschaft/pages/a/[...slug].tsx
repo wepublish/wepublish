@@ -1,7 +1,9 @@
+import {css} from '@mui/material'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
   ArticleContainer,
+  ArticleInfoWrapper,
   ArticleListContainer,
   ArticleWrapper,
   CommentListContainer,
@@ -10,11 +12,24 @@ import {
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {ComponentProps} from 'react'
 
-export default function ArticleBySlug() {
+import {useHasSubscription} from '../../src/paywall/has-subscription'
+import {PaywallBlock} from '../../src/paywall/paywall-block'
+
+const paywallCss = css`
+  // Shows the first 3 blocks and hides the rest
+  & > :nth-child(n + 4):not(:is(${ArticleInfoWrapper})) {
+    display: none;
+  }
+`
+
+export default function ArticleBySlugIdOrToken() {
+  const hasSubscription = useHasSubscription()
   const {
-    query: {slug}
+    query: {slug: slugs, id, token, articleId}
   } = useRouter()
+  const slug = typeof slugs === 'object' ? slugs.reverse()[0] : slugs
   const {
     elements: {H3}
   } = useWebsiteBuilder()
@@ -26,9 +41,22 @@ export default function ArticleBySlug() {
     }
   })
 
+  const containerProps = {
+    slug,
+    id,
+    token
+  } as ComponentProps<typeof ArticleContainer>
+
+  const showPaywall =
+    !hasSubscription &&
+    articleId !== data?.article?.id &&
+    data?.article?.tags.some(({tag}) => tag === 'MANNSCHAFT+')
+
   return (
     <>
-      <ArticleContainer slug={slug as string} />
+      <ArticleContainer {...containerProps} css={showPaywall ? paywallCss : undefined}>
+        {showPaywall && <PaywallBlock />}
+      </ArticleContainer>
 
       {data?.article && (
         <>
@@ -41,10 +69,12 @@ export default function ArticleBySlug() {
             />
           </ArticleWrapper>
 
-          <ArticleWrapper>
-            <H3 component={'h2'}>Kommentare</H3>
-            <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
-          </ArticleWrapper>
+          {!data.article.disableComments && (
+            <ArticleWrapper>
+              <H3 component={'h2'}>Kommentare</H3>
+              <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
+            </ArticleWrapper>
+          )}
         </>
       )}
     </>

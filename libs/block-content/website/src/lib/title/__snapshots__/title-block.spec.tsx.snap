@@ -6,12 +6,12 @@ exports[`Title Block should render Default 1`] = `
     class="emotion-0 emotion-1"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 emotion-2"
+      class="MuiTypography-root MuiTypography-h3 emotion-2 emotion-3"
     >
       This is a title
     </h1>
     <p
-      class="MuiTypography-root MuiTypography-h6 emotion-3"
+      class="MuiTypography-root MuiTypography-h6 emotion-4"
     >
       This is a lead
     </p>
@@ -25,12 +25,12 @@ exports[`Title Block should render WithClassName 1`] = `
     class="extra-classname emotion-0 emotion-1"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 emotion-2"
+      class="MuiTypography-root MuiTypography-h3 emotion-2 emotion-3"
     >
       This is a title
     </h1>
     <p
-      class="MuiTypography-root MuiTypography-h6 emotion-3"
+      class="MuiTypography-root MuiTypography-h6 emotion-4"
     >
       This is a lead
     </p>
@@ -44,12 +44,12 @@ exports[`Title Block should render WithEmotion 1`] = `
     class="emotion-0 emotion-1"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 emotion-2"
+      class="MuiTypography-root MuiTypography-h3 emotion-2 emotion-3"
     >
       This is a title
     </h1>
     <p
-      class="MuiTypography-root MuiTypography-h6 emotion-3"
+      class="MuiTypography-root MuiTypography-h6 emotion-4"
     >
       This is a lead
     </p>
@@ -63,7 +63,7 @@ exports[`Title Block should render WithoutLead 1`] = `
     class="emotion-0 emotion-1"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 emotion-2"
+      class="MuiTypography-root MuiTypography-h3 emotion-2 emotion-3"
     >
       This is a title
     </h1>

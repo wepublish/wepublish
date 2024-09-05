@@ -129,6 +129,28 @@ export const AnonymousInvalid: StoryObj = {
   }
 }
 
+export const AnonymousCanCommentFalse: StoryObj = {
+  ...Anonymous,
+  args: {
+    ...Anonymous.args,
+    anonymousCanComment: false
+  },
+  play: async ctx => {
+    await clickSubmit(ctx)
+  }
+}
+
+export const AnonymousCanCommentTrue: StoryObj = {
+  ...Anonymous,
+  args: {
+    ...Anonymous.args,
+    anonymousCanComment: true
+  },
+  play: async ctx => {
+    await clickSubmit(ctx)
+  }
+}
+
 export const LoggedIn: StoryObj = {
   args: {
     ...Anonymous.args,

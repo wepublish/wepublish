@@ -127,7 +127,12 @@
         "value": "Valeur",
         "yes": "Oui",
         "hidden": "Cacher",
-        "setAsHidden": "Les articles cachés sont exclus par défaut mais peuvent toujours être interrogés sur demande."
+        "setAsHidden": "Les articles cachés sont exclus par défaut mais peuvent toujours être interrogés sur demande.",
+        "disableComments": "Disable comments for this article",
+        "light": "Light",
+        "style": "Style",
+        "text": "Texte",
+        "default": "Default"
       }
     },
     "articleList": {
@@ -326,7 +331,8 @@
         "link": "Lien",
         "remove": "Supprimer",
         "startWriting": "Commencez à écrire...",
-        "text": "Texte"
+        "text": "Texte",
+        "id": "ID"
       },
       "richTextTable": {
         "addBorders": "Ajouter des bordures",
@@ -377,7 +383,8 @@
       "tags": "Tags",
       "title": "Titre",
       "userPanelHeader": "Auteur dans le commentaire",
-      "variousPanelHeader": "Balises & source"
+      "variousPanelHeader": "Balises & source",
+      "featuredHelpText": "Le commentaire apparaît en haut de la liste des commentaires."
     },
     "commentHistory": {
       "addComment": "Créer un nouveau commentaire",
@@ -963,6 +970,7 @@
       "closedAtNone": "Non fermé",
       "createNew": "Créer Sondage",
       "delete": "Supprimer",
+      "showVotes": "Afficher les votes",
       "hasBeenClosedAt": "Fermé le {{closedAt, ccc PP p}}",
       "noQuestion": "Aucune question saisie",
       "openedAt": "Débuté le {{openedAt, ccc PP p}}",
@@ -972,6 +980,13 @@
       "question": "Question",
       "state": "État",
       "title": "Sondages"
+    },
+    "pollVoteList": {
+      "createdAt": "Créé le",
+      "answerId": "Réponse",
+      "userId": "ID utilisateur",
+      "fingerprint": "Empreinte digitale",
+      "deleteItems": "Supprimer les éléments"
     },
     "pollStateIndication": {
       "closed": "Sondage fermé",
@@ -1124,7 +1139,8 @@
       "Unknown": "Inconnu",
       "userDataTitle": "Données des utilisateurs·trices",
       "userRoles": "Rôles de l'utilisateur·trice",
-      "zipCode": "Code Postal"
+      "zipCode": "Code Postal",
+      "birthday": "Birthday"
     },
     "userList": {
       "overview": {
@@ -1265,6 +1281,15 @@
         "event": "Event",
         "custom": "Custom"
       }
+    },
+    "authorEditPanel": {
+      "hideAuthor": "Masquer les auteurs",
+      "hideOnTeam": "Masquer sur la page de l'équipe",
+      "hideOnArticle": "Masquer sur les articles",
+      "hideOnTeaser": "Masquer sur les teasers"
+    },
+    "selectableItemsActions": {
+      "selectedItems": "{{numberOfItems}} éléments sélectionnés"
     }
   }
 }

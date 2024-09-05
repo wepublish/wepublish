@@ -3821,7 +3821,7 @@ exports[`CommentRatings should render WithRateError 1`] = `
 +       </div>
 +     </div>
 +     <div
-+       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorError MuiAlert-standardError MuiAlert-standard css-1iznk5b-MuiPaper-root-MuiAlert-root"
 +       role="alert"
 +     >
 +       <div

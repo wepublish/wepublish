@@ -12,6 +12,7 @@ fragment ArticleWithoutBlocks on Article {
   title
   url
   peeredArticleURL
+  disableComments
 
   tags {
     ...FullTag
@@ -44,8 +45,8 @@ fragment FullArticle on Article {
   }
 }
 
-query Article($slug: Slug, $id: ID) {
-  article(slug: $slug, id: $id) {
+query Article($slug: Slug, $id: ID, $token: String) {
+  article(slug: $slug, id: $id, token: $token) {
     ...FullArticle
   }
 }

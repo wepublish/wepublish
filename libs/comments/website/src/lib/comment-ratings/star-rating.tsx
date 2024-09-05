@@ -3,9 +3,9 @@ import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const StarRatingWrapper = styled('div')`
   display: grid;
-  grid-template-columns: auto max-content;
+  grid-template-columns: 1fr max-content;
   align-items: center;
-  justify-content: end;
+  justify-content: start;
   gap: ${({theme}) => theme.spacing(1)};
 `
 

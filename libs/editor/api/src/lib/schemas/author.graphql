@@ -19,6 +19,9 @@ fragment FullAuthor on Author {
     tag
   }
   createdAt
+  hideOnArticle
+  hideOnTeaser
+  hideOnTeam
   ...AuthorRef
 }
 

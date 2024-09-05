@@ -1,0 +1,63 @@
+name: Deploy production
+
+on:
+  push:
+    tags:
+      - 'deploy_*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  get-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.image_tag.outputs.version }}
+      project: ${{ steps.image_tag.outputs.project }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - id: image_tag
+        run: ./deployment/get_production_tag.sh ${GITHUB_REF##*/}
+
+  deploy-wepublish-production:
+    name: ${{ needs.get-tag.outputs.project }} backend
+    needs: get-tag
+    uses: ./.github/workflows/on-demand-publish-docker-image.yml
+    if: ${{ needs.get-tag.result == 'success' }}
+    with:
+      migration_tags: |
+        ghcr.io/wepublish/migration:production-${{ needs.get-tag.outputs.project }}-${{ needs.get-tag.outputs.version }}
+      api_tags: |
+        ghcr.io/wepublish/api:production-${{ needs.get-tag.outputs.project }}-${{ needs.get-tag.outputs.version }}
+      editor_tags: |
+        ghcr.io/wepublish/editor:production-${{ needs.get-tag.outputs.project }}-${{ needs.get-tag.outputs.version }}
+      media_tags: |
+        ghcr.io/wepublish/media:production-${{ needs.get-tag.outputs.project }}-${{ needs.get-tag.outputs.version }}
+    secrets: inherit
+
+  check-if-website-deployment:
+    runs-on: ubuntu-latest
+    outputs:
+      has-website: ${{ steps.read-deployment-config.outputs.has-website }}
+    needs: [ get-tag, deploy-wepublish-production ]
+    if: ${{ needs.deploy-wepublish-production.result == 'success' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - id: read-deployment-config
+        run: ./deployment/read_deployment_config.sh '.website.production.deployment' true ${{ needs.get-tag.outputs.project }}
+
+  deploy_website_production:
+    name: ${{ needs.get-tag.outputs.project }} website
+    needs: [ get-tag, check-if-website-deployment ]
+    if: ${{ needs.check-if-website-deployment.outputs.has-website == 'true' }}
+    uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
+    with:
+      website_project: ${{ needs.get-tag.outputs.project }}
+      api_url: https://api-${{ needs.get-tag.outputs.project }}.wepublish.media
+      website_tags: |
+        ghcr.io/wepublish/website-${{ needs.get-tag.outputs.project }}:production-${{ needs.get-tag.outputs.version }}
+      environment: production
+    secrets: inherit

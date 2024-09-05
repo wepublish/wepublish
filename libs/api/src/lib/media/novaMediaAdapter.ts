@@ -32,7 +32,8 @@ export class NovaMediaAdapter implements MediaAdapter {
     const response = await fetch(this.internalURL, {
       method: 'POST',
       headers: {authorization: `Bearer ${this.token}`},
-      body: form
+      body: form,
+      signal: AbortSignal.timeout(50000)
     })
 
     const json = await response.json()
@@ -98,11 +99,13 @@ export class NovaMediaAdapter implements MediaAdapter {
     const queryParameters = [] as string[]
 
     if (transformations?.width || transformations?.height) {
-      const xFocalPoint =
-        image.focalPoint.x > 0.6 ? 'right' : image.focalPoint.x < 0.4 ? 'left' : ''
+      let xFocalPoint = ''
+      let yFocalPoint = ''
+      if (image?.focalPoint?.x) {
+        xFocalPoint = image.focalPoint.x > 0.6 ? 'right' : image.focalPoint.x < 0.4 ? 'left' : ''
 
-      const yFocalPoint =
-        image.focalPoint.x > 0.6 ? 'bottom' : image.focalPoint.x < 0.4 ? 'top' : ''
+        yFocalPoint = image.focalPoint.x > 0.6 ? 'bottom' : image.focalPoint.x < 0.4 ? 'top' : ''
+      }
 
       const position = `${xFocalPoint} ${yFocalPoint}`.trim() || undefined
 
@@ -143,8 +146,11 @@ export class NovaMediaAdapter implements MediaAdapter {
       queryParameters.push(`sharpen=1`)
     }
 
-    queryParameters.push(`quality=${transformations?.quality ?? 80}`)
+    // Max quality is 80 so 1 => 80
+    queryParameters.push(
+      `quality=${transformations?.quality ? Math.ceil(transformations.quality * 80) : 65}`
+    )
 
-    return `${this.url}/${image.id}?${queryParameters.join('&')}`
+    return encodeURI(`${this.url}/${image.id}?${queryParameters.join('&')}`)
   }
 }
