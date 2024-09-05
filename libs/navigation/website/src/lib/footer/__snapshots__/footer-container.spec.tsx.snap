@@ -2,68 +2,7 @@
 
 exports[`Footer Container should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-}
-
-.emotion-2 {
-  padding: 20px;
-  background-color: #1a1a1a;
-  color: #fff;
-  display: grid;
-  gap: 24px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  -webkit-transform: translateY(100%);
-  -moz-transform: translateY(100%);
-  -ms-transform: translateY(100%);
-  transform: translateY(100%);
-  overflow: hidden;
-  row-gap: 64px;
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    gap: 48px;
-    row-gap: 96px;
-    grid-template-columns: 1fr 1fr;
-    padding: calc(100% / 12) calc(100% / 6);
-  }
-}
-
-.emotion-4 {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-@media (min-width:600px) {
-  .emotion-4 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.emotion-8 {
-  position: absolute;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 50%;
-  background-color: #000;
-  z-index: -1;
-  -webkit-transform: translateY(-2rem);
-  -moz-transform: translateY(-2rem);
-  -ms-transform: translateY(-2rem);
-  transform: translateY(-2rem);
-}
-
-<footer
+  <footer
     class="emotion-0 emotion-1"
   >
     <div
@@ -86,68 +25,7 @@ exports[`Footer Container should render Default 1`] = `
 
 exports[`Footer Container should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-}
-
-.emotion-2 {
-  padding: 20px;
-  background-color: #1a1a1a;
-  color: #fff;
-  display: grid;
-  gap: 24px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  -webkit-transform: translateY(100%);
-  -moz-transform: translateY(100%);
-  -ms-transform: translateY(100%);
-  transform: translateY(100%);
-  overflow: hidden;
-  row-gap: 64px;
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    gap: 48px;
-    row-gap: 96px;
-    grid-template-columns: 1fr 1fr;
-    padding: calc(100% / 12) calc(100% / 6);
-  }
-}
-
-.emotion-4 {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-@media (min-width:600px) {
-  .emotion-4 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.emotion-8 {
-  position: absolute;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 50%;
-  background-color: #000;
-  z-index: -1;
-  -webkit-transform: translateY(-2rem);
-  -moz-transform: translateY(-2rem);
-  -ms-transform: translateY(-2rem);
-  transform: translateY(-2rem);
-}
-
-<footer
+  <footer
     class="extra-classname emotion-0 emotion-1"
   >
     <div
@@ -170,68 +48,7 @@ exports[`Footer Container should render WithClassName 1`] = `
 
 exports[`Footer Container should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-}
-
-.emotion-2 {
-  padding: 20px;
-  background-color: #1a1a1a;
-  color: #fff;
-  display: grid;
-  gap: 24px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  -webkit-transform: translateY(100%);
-  -moz-transform: translateY(100%);
-  -ms-transform: translateY(100%);
-  transform: translateY(100%);
-  overflow: hidden;
-  row-gap: 64px;
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    gap: 48px;
-    row-gap: 96px;
-    grid-template-columns: 1fr 1fr;
-    padding: calc(100% / 12) calc(100% / 6);
-  }
-}
-
-.emotion-4 {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-@media (min-width:600px) {
-  .emotion-4 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.emotion-8 {
-  position: absolute;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 50%;
-  background-color: #000;
-  z-index: -1;
-  -webkit-transform: translateY(-2rem);
-  -moz-transform: translateY(-2rem);
-  -ms-transform: translateY(-2rem);
-  transform: translateY(-2rem);
-}
-
-<footer
+  <footer
     class="emotion-0 emotion-1"
   >
     <div

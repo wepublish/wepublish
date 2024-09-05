@@ -2,25 +2,7 @@
 
 exports[`Banner should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  aspect-ratio: 2.7/1;
-  width: 100%;
-  background-color: #0288d1;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-2 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: cover;
-  width: 100%;
-}
-
-<a
+  <a
     class="emotion-0 emotion-1"
     href="https://example.com"
     target="_blank"
@@ -49,25 +31,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`Banner should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  aspect-ratio: 2.7/1;
-  width: 100%;
-  background-color: #0288d1;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-2 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: cover;
-  width: 100%;
-}
-
-<a
+  <a
     class="emotion-0 emotion-1"
     href="https://example.com"
     target="_blank"
@@ -96,25 +60,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`Banner should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  aspect-ratio: 2.7/1;
-  width: 100%;
-  background-color: #0288d1;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-2 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: cover;
-  width: 100%;
-}
-
-<a
+  <a
     class="emotion-0 emotion-1"
     href="https://example.com"
     target="_blank"
