@@ -90,6 +90,7 @@ export class WepublishServer {
       extend type PaymentMethod @key(fields: "id")
       extend type MemberPlan @key(fields: "id")
       extend type User @key(fields: "id")
+      extend type PollVote @key(fields: "id")
     `
     const typeDefs = [graphQLJSSchemaToAST(GraphQLWepublishPublicSchema), federatedTypeDefs]
     const resolvers = {

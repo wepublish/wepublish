@@ -38,21 +38,21 @@ export default function ArticleBySlugIdOrToken() {
       <ArticleContainer {...containerProps} />
 
       {data?.article && (
-        <>
-          <ArticleWrapper>
-            <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
+        <ArticleWrapper>
+          <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
 
-            <ArticleListContainer
-              variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
-              filter={articles => articles.filter(article => article.id !== data.article?.id)}
-            />
-          </ArticleWrapper>
+          <ArticleListContainer
+            variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
+            filter={articles => articles.filter(article => article.id !== data.article?.id)}
+          />
+        </ArticleWrapper>
+      )}
 
-          <ArticleWrapper>
-            <H3 component={'h2'}>Kommentare</H3>
-            <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
-          </ArticleWrapper>
-        </>
+      {!data?.article?.disableComments && (
+        <ArticleWrapper>
+          <H3 component={'h2'}>Kommentare</H3>
+          <CommentListContainer id={data!.article!.id} type={ApiV1.CommentItemType.Article} />
+        </ArticleWrapper>
       )}
     </>
   )

@@ -2,32 +2,7 @@
 
 exports[`Author Links should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  grid-auto-columns: max-content;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 16px;
-}
-
-.emotion-2 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-}
-
-.emotion-2:hover {
-  text-decoration-color: inherit;
-}
-
-<aside
+  <aside
     class="emotion-0 emotion-1"
   >
     <a
@@ -160,32 +135,7 @@ exports[`Author Links should render Default 1`] = `
 
 exports[`Author Links should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  grid-auto-columns: max-content;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 16px;
-}
-
-.emotion-2 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-}
-
-.emotion-2:hover {
-  text-decoration-color: inherit;
-}
-
-<aside
+  <aside
     class="extra-classname emotion-0 emotion-1"
   >
     <a
@@ -318,32 +268,7 @@ exports[`Author Links should render WithClassName 1`] = `
 
 exports[`Author Links should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  grid-auto-columns: max-content;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 16px;
-}
-
-.emotion-2 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-}
-
-.emotion-2:hover {
-  text-decoration-color: inherit;
-}
-
-<aside
+  <aside
     class="emotion-0 emotion-1"
   >
     <a

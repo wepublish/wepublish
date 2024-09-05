@@ -76,6 +76,7 @@ import {
 
 import {mailLogType} from '@wepublish/mail/api'
 import {sub} from 'date-fns'
+import {GraphQLDateTime} from 'graphql-scalars'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -189,6 +190,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         email: {type: new GraphQLNonNull(GraphQLString)},
         address: {type: GraphQLUserAddressInput},
         password: {type: GraphQLString},
+        birthday: {
+          type: GraphQLDateTime
+        },
         challengeAnswer: {
           type: new GraphQLNonNull(GraphQLChallengeInput)
         }
@@ -196,7 +200,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description: 'This mutation allows to register a new member,',
       async resolve(
         root,
-        {name, firstName, preferredName, email, address, password, challengeAnswer},
+        {name, firstName, preferredName, email, address, birthday, password, challengeAnswer},
         {sessionTTL, hashCostFactor, prisma, challenge, mailContext}
       ) {
         email = email.toLowerCase()
@@ -232,6 +236,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             firstName,
             preferredName,
             email,
+            birthday,
             address,
             emailVerifiedAt: null,
             active: true,
@@ -261,6 +266,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: new GraphQLNonNull(GraphQLMemberRegistrationAndPayment),
       args: {
         name: {type: new GraphQLNonNull(GraphQLString)},
+        birthday: {
+          type: GraphQLDateTime
+        },
         firstName: {type: GraphQLString},
         preferredName: {type: GraphQLString},
         email: {type: new GraphQLNonNull(GraphQLString)},
@@ -293,6 +301,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           email,
           address,
           password,
+          birthday,
           memberPlanID,
           memberPlanSlug,
           autoRenew,
@@ -372,6 +381,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             preferredName,
             email,
             address,
+            birthday,
             emailVerifiedAt: null,
             active: true,
             roleIDs: [],

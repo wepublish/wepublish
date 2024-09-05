@@ -2,22 +2,23 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   ParseFilePipe,
   Post,
   Query,
   Res,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common'
 import {FileInterceptor} from '@nestjs/platform-express'
 import {
+  getTransformationKey,
   MediaService,
+  SupportedImagesValidator,
   TokenAuthGuard,
-  TransformationsDto,
-  SupportedImagesValidator
+  TransformationsDto
 } from '@wepublish/media/api'
 import {Response} from 'express'
 import 'multer'
@@ -68,20 +69,27 @@ export class AppController {
   @Get(':imageId')
   async transformImage(
     @Res() res: Response,
+    @Req() req: Request,
     @Param('imageId') imageId: string,
     @Query() transformations: TransformationsDto
   ) {
-    const hasImage = await this.media.hasImage(imageId)
-
-    if (!hasImage) {
-      throw new NotFoundException()
+    // Handle etag
+    const etagClient = req.headers['if-none-match']
+    if (etagClient) {
+      const remoteEtag = await this.media.getRemoteEtag(
+        `images/${imageId}/${getTransformationKey(transformations)}`
+      )
+      if (`"${remoteEtag}"` === etagClient) {
+        res.status(304).end()
+        return
+      }
     }
 
-    const [file, stats] = await this.media.getImage(imageId, transformations)
+    const [file, etag] = await this.media.getImage(imageId, transformations)
     res.setHeader('Content-Type', 'image/webp')
 
     if (process.env['NODE_ENV'] === 'production') {
-      res.setHeader('ETag', stats.etag)
+      res.setHeader('ETag', etag)
       res.setHeader('Cache-Control', `public, max-age=172800`) // cache for 48 hours and then re-checks the ETag
     }
 

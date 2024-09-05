@@ -1,0 +1,9 @@
+import {styled} from '@mui/material'
+import {TeaserGridBlock} from '@wepublish/website'
+
+export const MannschaftTeaserGrid = styled(TeaserGridBlock)`
+  // Makes ads never too big and center them
+  max-width: 100%;
+  overflow: hidden;
+  justify-items: center;
+`

@@ -256,6 +256,9 @@ type Mutation {
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
 
+  """Delete poll vote"""
+  deletePollVote(id: ID!): PollVote!
+
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
 
@@ -314,6 +317,12 @@ type PaginatedEvents {
   totalCount: Float!
 }
 
+type PaginatedPollVotes {
+  nodes: [PollVote!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
+}
+
 type PaymentMethod {
   id: ID!
   name: String!
@@ -336,6 +345,35 @@ type PeriodicJob {
   modifiedAt: DateTime!
   successfullyFinished: DateTime
   tries: Float!
+}
+
+type PollAnswerInVote {
+  answer: String!
+  id: ID!
+}
+
+type PollVote {
+  answer: PollAnswerInVote!
+  answerId: ID!
+  createdAt: DateTime!
+  disabled: Boolean!
+  fingerprint: String
+  id: ID!
+  pollId: ID!
+  userId: ID
+}
+
+input PollVoteFilter {
+  answerIds: [String!]
+  fingerprint: String
+  from: DateTime
+  pollId: String
+  to: DateTime
+  userId: String
+}
+
+enum PollVoteSort {
+  CreatedAt
 }
 
 type Query {
@@ -387,6 +425,9 @@ type Query {
   """Returns all payment methods"""
   paymentMethods: [PaymentMethod!]!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
+
+  """Returns a paginated list of poll votes"""
+  pollVotes(cursorId: ID, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
   provider: MailProviderModel!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "

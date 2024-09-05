@@ -6,20 +6,24 @@ import {
   HeadingWithoutImage,
   isBreakBlock
 } from '@wepublish/website'
-import {allPass} from 'ramda'
+import {allPass, anyPass} from 'ramda'
 
 // Main
 export const isPrimaryBreakBlock = (block: ApiV1.Block): block is ApiV1.LinkPageBreakBlock =>
-  allPass([hasBlockStyle('Primary Bg'), isBreakBlock])(block)
+  allPass([anyPass([hasBlockStyle('Primary Bg'), hasBlockStyle('Schwarz Bg')]), isBreakBlock])(
+    block
+  )
 
 export const isSecondaryBreakBlock = (block: ApiV1.Block): block is ApiV1.LinkPageBreakBlock =>
-  allPass([hasBlockStyle('Secondary Bg'), isBreakBlock])(block)
+  allPass([anyPass([hasBlockStyle('Secondary Bg'), hasBlockStyle('Pink Bg')]), isBreakBlock])(block)
 
 export const isAccentBreakBlock = (block: ApiV1.Block): block is ApiV1.LinkPageBreakBlock =>
-  allPass([hasBlockStyle('Accent Bg'), isBreakBlock])(block)
+  allPass([anyPass([hasBlockStyle('Accent Bg'), hasBlockStyle('Türkis Bg')]), isBreakBlock])(block)
 
 export const isLightAccentBreakBlock = (block: ApiV1.Block): block is ApiV1.LinkPageBreakBlock =>
-  allPass([hasBlockStyle('Light Accent Bg'), isBreakBlock])(block)
+  allPass([anyPass([hasBlockStyle('Light Accent Bg'), hasBlockStyle('Gelb Bg')]), isBreakBlock])(
+    block
+  )
 
 // Sub
 export const isVioletBreakBlock = (block: ApiV1.Block): block is ApiV1.LinkPageBreakBlock =>
@@ -29,16 +33,16 @@ export const isPurpleBreakBlock = (block: ApiV1.Block): block is ApiV1.LinkPageB
   allPass([hasBlockStyle('Lila Bg'), isBreakBlock])(block)
 
 export const isWarningBreakBlock = (block: ApiV1.Block): block is ApiV1.LinkPageBreakBlock =>
-  allPass([hasBlockStyle('Warning Bg'), isBreakBlock])(block)
+  allPass([anyPass([hasBlockStyle('Warning Bg'), hasBlockStyle('Orange Bg')]), isBreakBlock])(block)
 
 export const isErrorBreakBlock = (block: ApiV1.Block): block is ApiV1.LinkPageBreakBlock =>
-  allPass([hasBlockStyle('Error Bg'), isBreakBlock])(block)
+  allPass([anyPass([hasBlockStyle('Error Bg'), hasBlockStyle('Rot Bg')]), isBreakBlock])(block)
 
 export const isSuccessBreakBlock = (block: ApiV1.Block): block is ApiV1.LinkPageBreakBlock =>
-  allPass([hasBlockStyle('Success Bg'), isBreakBlock])(block)
+  allPass([anyPass([hasBlockStyle('Success Bg'), hasBlockStyle('Grün Bg')]), isBreakBlock])(block)
 
 export const isInfoBreakBlock = (block: ApiV1.Block): block is ApiV1.LinkPageBreakBlock =>
-  allPass([hasBlockStyle('Info Bg'), isBreakBlock])(block)
+  allPass([anyPass([hasBlockStyle('Info Bg'), hasBlockStyle('Blau Bg')]), isBreakBlock])(block)
 
 export const MannschaftBreakBlock = styled(BreakBlock)`
   ${({theme}) => theme.breakpoints.up('md')} {

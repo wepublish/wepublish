@@ -36,6 +36,7 @@ export type Article = {
   breaking: Scalars['Boolean'];
   canonicalUrl?: Maybe<Scalars['String']>;
   comments: Array<Comment>;
+  disableComments?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
@@ -784,6 +785,8 @@ export type Mutation = {
   deleteConsent: Consent;
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Delete poll vote */
+  deletePollVote: PollVote;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -967,6 +970,11 @@ export type MutationDeleteEventArgs = {
 };
 
 
+export type MutationDeletePollVoteArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationDeleteSubscriptionFlowArgs = {
   id: Scalars['String'];
 };
@@ -1004,6 +1012,7 @@ export type MutationRateCommentArgs = {
 
 export type MutationRegisterMemberArgs = {
   address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
   challengeAnswer: ChallengeInput;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
@@ -1016,6 +1025,7 @@ export type MutationRegisterMemberArgs = {
 export type MutationRegisterMemberAndReceivePaymentArgs = {
   address?: InputMaybe<UserAddressInput>;
   autoRenew: Scalars['Boolean'];
+  birthday?: InputMaybe<Scalars['DateTime']>;
   challengeAnswer: ChallengeInput;
   email: Scalars['String'];
   failureURL?: InputMaybe<Scalars['String']>;
@@ -1215,6 +1225,13 @@ export type PaginatedEvents = {
   totalCount: Scalars['Float'];
 };
 
+export type PaginatedPollVotes = {
+  __typename?: 'PaginatedPollVotes';
+  nodes: Array<PollVote>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float'];
+};
+
 export type Payment = {
   __typename?: 'Payment';
   id: Scalars['ID'];
@@ -1348,6 +1365,12 @@ export type PolisConversationBlock = {
   conversationID: Scalars['String'];
 };
 
+export type PollAnswerInVote = {
+  __typename?: 'PollAnswerInVote';
+  answer: Scalars['String'];
+  id: Scalars['ID'];
+};
+
 export type PollAnswerWithVoteCount = {
   __typename?: 'PollAnswerWithVoteCount';
   answer?: Maybe<Scalars['String']>;
@@ -1378,11 +1401,28 @@ export type PollExternalVoteSource = {
 
 export type PollVote = {
   __typename?: 'PollVote';
-  answerId: Scalars['String'];
+  answer: PollAnswerInVote;
+  answerId: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   disabled: Scalars['Boolean'];
+  fingerprint?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
   pollId: Scalars['ID'];
+  userId?: Maybe<Scalars['ID']>;
 };
+
+export type PollVoteFilter = {
+  answerIds?: InputMaybe<Array<Scalars['String']>>;
+  fingerprint?: InputMaybe<Scalars['String']>;
+  from?: InputMaybe<Scalars['DateTime']>;
+  pollId?: InputMaybe<Scalars['String']>;
+  to?: InputMaybe<Scalars['DateTime']>;
+  userId?: InputMaybe<Scalars['String']>;
+};
+
+export enum PollVoteSort {
+  CreatedAt = 'CreatedAt'
+}
 
 export type PublicProperties = {
   __typename?: 'PublicProperties';
@@ -1493,6 +1533,8 @@ export type Query = {
   phrase?: Maybe<Phrase>;
   /** This query returns a poll with all the needed data */
   poll: FullPoll;
+  /** Returns a paginated list of poll votes */
+  pollVotes: PaginatedPollVotes;
   provider: MailProviderModel;
   ratingSystem: FullCommentRatingSystem;
   /** Returns all renewing subscribers in a given timeframe. */
@@ -1709,6 +1751,16 @@ export type QueryPhraseArgs = {
 
 export type QueryPollArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryPollVotesArgs = {
+  cursorId?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<PollVoteFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<PollVoteSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -2064,6 +2116,7 @@ export type User = {
   __typename?: 'User';
   active: Scalars['Boolean'];
   address?: Maybe<UserAddress>;
+  birthday?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
@@ -2121,6 +2174,7 @@ export enum UserEvent {
 
 export type UserInput = {
   address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
   flair?: InputMaybe<Scalars['String']>;

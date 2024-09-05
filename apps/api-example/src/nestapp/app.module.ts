@@ -44,6 +44,7 @@ import {readConfig} from '../readConfig'
 import {EventModule} from '@wepublish/event/api'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
+import {PollModule} from '@wepublish/poll/api'
 
 @Global()
 @Module({
@@ -249,7 +250,8 @@ import {PrismaClient} from '@prisma/client'
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
     HealthModule,
-    SystemInfoModule
+    SystemInfoModule,
+    PollModule
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [

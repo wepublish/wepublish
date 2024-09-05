@@ -562,7 +562,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
         teaserList: {
           title: block.value.title,
           filter: {
-            tags: block.value.filter.tags
+            tags: block.value.filter.tags || []
           },
           take: block.value.take,
           skip: block.value.skip,

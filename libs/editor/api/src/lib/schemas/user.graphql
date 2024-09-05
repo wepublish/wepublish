@@ -17,6 +17,7 @@ fragment FullUser on User {
     country
   }
   flair
+  birthday
   userImage {
     ...ImageRef
   }

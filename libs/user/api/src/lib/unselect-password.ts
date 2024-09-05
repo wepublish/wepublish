@@ -18,6 +18,7 @@ export const unselectPassword: Record<
   boolean
 > = {
   address: true,
+  birthday: true,
   oauth2Accounts: true,
   properties: true,
   paymentProviderCustomers: true,

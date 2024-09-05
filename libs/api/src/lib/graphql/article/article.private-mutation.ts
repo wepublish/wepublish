@@ -66,7 +66,7 @@ export const deleteArticleById = async (
   return article
 }
 
-type CreateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared' | 'hidden'> &
+type CreateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared' | 'hidden' | 'disableComments'> &
   Omit<Prisma.ArticleRevisionCreateInput, 'properties' | 'revision'> & {
     properties: Prisma.MetadataPropertyCreateManyArticleRevisionInput[]
     authorIDs: Prisma.ArticleRevisionAuthorCreateManyRevisionInput['authorId'][]
@@ -80,12 +80,22 @@ export const createArticle = async (
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateArticle, roles)
-  const {shared, hidden, properties, authorIDs, socialMediaAuthorIDs, tags, ...data} = input
+  const {
+    shared,
+    hidden,
+    disableComments,
+    properties,
+    authorIDs,
+    socialMediaAuthorIDs,
+    tags,
+    ...data
+  } = input
 
   return article.create({
     data: {
       shared,
       hidden,
+      disableComments,
       draft: {
         create: {
           ...data,
@@ -177,6 +187,7 @@ export const duplicateArticle = async (
     data: {
       shared: article.shared,
       hidden: article.hidden,
+      disableComments: article.disableComments,
       tags: {
         createMany: {
           data: article.tags.map(({tagId}) => ({
@@ -454,7 +465,7 @@ export const publishArticle = async (
   return updatedArticle
 }
 
-type UpdateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared' | 'hidden'> &
+type UpdateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared' | 'hidden' | 'disableComments'> &
   Omit<Prisma.ArticleRevisionCreateInput, 'revision' | 'properties' | 'tags'> & {
     tags: string[]
     properties: Prisma.MetadataPropertyUncheckedCreateWithoutArticleRevisionInput[]
@@ -464,7 +475,16 @@ type UpdateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared' | 'hidden'> &
 
 export const updateArticle = async (
   id: string,
-  {properties, authorIDs, socialMediaAuthorIDs, shared, hidden, tags, ...input}: UpdateArticleInput,
+  {
+    properties,
+    authorIDs,
+    socialMediaAuthorIDs,
+    shared,
+    hidden,
+    disableComments,
+    tags,
+    ...input
+  }: UpdateArticleInput,
   authenticate: Context['authenticate'],
   articleClient: PrismaClient['article'],
   articleLoader: Context['loaders']['articles']
@@ -483,6 +503,7 @@ export const updateArticle = async (
     data: {
       shared,
       hidden,
+      disableComments,
       draft: {
         upsert: {
           update: {

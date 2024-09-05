@@ -77,7 +77,7 @@ export const AuthorBox = memo(function AuthorBox({author, className}: AuthorBoxP
   return (
     <AuthorWrapper className={className}>
       <AuthorHeader>
-        {image && <Image image={image} square css={avatarStyles} />}
+        {image && <Image image={image} square css={avatarStyles} maxWidth={200} />}
         {!image && <MdPerson css={avatarStyles} />}
 
         <AuthorHeaderContent>
