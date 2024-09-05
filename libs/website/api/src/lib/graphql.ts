@@ -367,7 +367,6 @@ export type EmbedBlock = {
 
 export type Event = {
   __typename?: 'Event';
-  createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['RichText']>;
   endsAt?: Maybe<Scalars['DateTime']>;
   externalSourceId?: Maybe<Scalars['String']>;
@@ -377,7 +376,6 @@ export type Event = {
   imageId?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   page?: Maybe<Page>;
   startsAt: Scalars['DateTime'];
@@ -410,7 +408,6 @@ export type EventFilter = {
 
 export type EventFromSource = {
   __typename?: 'EventFromSource';
-  createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['RichText']>;
   endsAt?: Maybe<Scalars['DateTime']>;
   externalSourceId?: Maybe<Scalars['String']>;
@@ -419,7 +416,6 @@ export type EventFromSource = {
   imageUrl?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   page?: Maybe<Page>;
   startsAt: Scalars['DateTime'];
@@ -2116,10 +2112,8 @@ export type UploadImageInput = {
 
 export type User = {
   __typename?: 'User';
-  active: Scalars['Boolean'];
   address?: Maybe<UserAddress>;
   birthday?: Maybe<Scalars['DateTime']>;
-  createdAt: Scalars['DateTime'];
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   firstName?: Maybe<Scalars['String']>;
@@ -2127,14 +2121,12 @@ export type User = {
   id: Scalars['String'];
   image?: Maybe<Image>;
   lastLogin?: Maybe<Scalars['DateTime']>;
-  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   oauth2Accounts: Array<OAuth2Account>;
-  password: Scalars['String'];
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
   preferredName?: Maybe<Scalars['String']>;
   properties: Array<PublicProperties>;
-  roleIDs: Array<Scalars['String']>;
+  roleIDs?: Maybe<Array<Scalars['String']>>;
   userImageID?: Maybe<Scalars['String']>;
 };
 

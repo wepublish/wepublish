@@ -9,12 +9,6 @@ export class User {
   id!: string
 
   @Field()
-  createdAt!: Date
-
-  @Field()
-  modifiedAt!: Date
-
-  @Field()
   email!: string
 
   @Field({nullable: true})
@@ -29,17 +23,11 @@ export class User {
   @Field({nullable: true})
   preferredName?: string
 
-  @Field()
-  password!: string
-
-  @Field()
-  active!: boolean
-
   @Field({nullable: true})
   lastLogin?: Date
 
-  @Field(type => [String])
-  roleIDs!: string[]
+  @Field(type => [String], {nullable: true})
+  roleIDs?: string[]
 
   @Field({nullable: true})
   userImageID?: string

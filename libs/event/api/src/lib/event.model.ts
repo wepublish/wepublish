@@ -43,12 +43,6 @@ export class Event {
   id!: string
 
   @Field()
-  createdAt!: Date
-
-  @Field()
-  modifiedAt!: Date
-
-  @Field()
   startsAt!: Date
 
   @Field({nullable: true})
