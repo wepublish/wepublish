@@ -12,8 +12,6 @@ import {EVENT_IMPORT_PROVIDER, EventsImportService} from './events-import.servic
 export const mockImportableEvents: EventFromSource[] = [
   {
     id: '123',
-    createdAt: new Date(),
-    modifiedAt: new Date(),
     name: 'some name',
     description: htmlToSlate('<p>some description</p>') as unknown as Node[],
     status: EventStatus.Scheduled,
