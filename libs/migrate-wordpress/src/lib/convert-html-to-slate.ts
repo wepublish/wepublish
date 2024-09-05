@@ -33,6 +33,7 @@ const ELEMENT_TAGS: Record<HTMLElement['nodeName'], (el: HTMLElement) => Attribu
       ...(el.hasAttribute('name') && {id: el.getAttribute('name')})
     }
   },
+
   BLOCKQUOTE: () => ({type: TAG.paragraph}),
   H1: () => ({type: TAG['heading-one']}),
   H2: () => ({type: TAG['heading-two']}),
@@ -78,15 +79,22 @@ const ELEMENT_TAGS: Record<HTMLElement['nodeName'], (el: HTMLElement) => Attribu
   }
 }
 
+type CustomMark = Mark & {
+  superscript?: boolean
+  subscript?: boolean
+}
+
 const TEXT_TAGS: Record<
   HTMLElement['nodeName'],
-  (el?: HTMLElement) => Partial<Record<keyof Mark, boolean>>
+  (el?: HTMLElement) => Partial<Record<keyof CustomMark, boolean>>
 > = {
   CODE: () => ({code: true}),
   EM: () => ({italic: true}),
   I: () => ({italic: true}),
   STRONG: () => ({bold: true}),
-  U: () => ({underline: true})
+  U: () => ({underline: true}),
+  SUP: () => ({superscript: true}),
+  SUB: () => ({subscript: true})
 }
 
 function deserialize<
