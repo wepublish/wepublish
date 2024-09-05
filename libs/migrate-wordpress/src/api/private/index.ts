@@ -10830,7 +10830,7 @@ export type TagListQuery = {
   tags?: {
     __typename?: 'TagConnection'
     totalCount: number
-    nodes: Array<{__typename?: 'Tag'; id: string; tag?: string | null}>
+    nodes: Array<{__typename?: 'Tag'; id: string; tag?: string | null; main: boolean}>
     pageInfo: {
       __typename?: 'PageInfo'
       startCursor?: string | null
@@ -10844,21 +10844,23 @@ export type TagListQuery = {
 export type CreateTagMutationVariables = Exact<{
   tag?: InputMaybe<Scalars['String']>
   type: TagType
+  main?: InputMaybe<Scalars['Boolean']>
 }>
 
 export type CreateTagMutation = {
   __typename?: 'Mutation'
-  createTag?: {__typename?: 'Tag'; id: string; tag?: string | null} | null
+  createTag?: {__typename?: 'Tag'; id: string; tag?: string | null; main: boolean} | null
 }
 
 export type UpdateTagMutationVariables = Exact<{
   id: Scalars['ID']
   tag?: InputMaybe<Scalars['String']>
+  main?: InputMaybe<Scalars['Boolean']>
 }>
 
 export type UpdateTagMutation = {
   __typename?: 'Mutation'
-  updateTag?: {__typename?: 'Tag'; id: string; tag?: string | null} | null
+  updateTag?: {__typename?: 'Tag'; id: string; tag?: string | null; main: boolean} | null
 }
 
 export type DeleteTagMutationVariables = Exact<{
@@ -12547,6 +12549,7 @@ export const TagList = gql`
       nodes {
         id
         tag
+        main
       }
       pageInfo {
         startCursor
@@ -12559,18 +12562,20 @@ export const TagList = gql`
   }
 `
 export const CreateTag = gql`
-  mutation CreateTag($tag: String, $type: TagType!) {
-    createTag(tag: $tag, type: $type) {
+  mutation CreateTag($tag: String, $type: TagType!, $main: Boolean) {
+    createTag(tag: $tag, type: $type, main: $main) {
       id
       tag
+      main
     }
   }
 `
 export const UpdateTag = gql`
-  mutation UpdateTag($id: ID!, $tag: String) {
-    updateTag(id: $id, tag: $tag) {
+  mutation UpdateTag($id: ID!, $tag: String, $main: Boolean) {
+    updateTag(id: $id, tag: $tag, main: $main) {
       id
       tag
+      main
     }
   }
 `

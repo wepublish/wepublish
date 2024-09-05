@@ -23,7 +23,10 @@ import {
   TagList,
   TagListQuery,
   TagListQueryVariables,
-  TagType
+  TagType,
+  UpdateTag,
+  UpdateTagMutation,
+  UpdateTagMutationVariables
 } from '../api/private'
 import {GraphQLClient} from 'graphql-request'
 
@@ -105,11 +108,17 @@ export async function getTagByName(name: string) {
   ).tags?.nodes.find(({tag}) => tag === name)
 }
 
-export async function createTag({tag}: Pick<CreateTagMutationVariables, 'tag'>) {
+export async function createTag(variables: Omit<CreateTagMutationVariables, 'type'>) {
   return (
     await privateClient.request<CreateTagMutation, CreateTagMutationVariables>(CreateTag, {
-      tag,
+      ...variables,
       type: TagType.Article
     })
   ).createTag!
+}
+
+export async function updateTag(variables: UpdateTagMutationVariables) {
+  return (
+    await privateClient.request<UpdateTagMutation, UpdateTagMutationVariables>(UpdateTag, variables)
+  ).updateTag!
 }

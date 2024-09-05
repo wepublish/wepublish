@@ -1,45 +1,48 @@
 query TagList(
-  $filter: TagFilter
-  $cursor: ID
-  $take: Int
-  $skip: Int
-  $order: SortOrder
-  $sort: TagSort
+    $filter: TagFilter
+    $cursor: ID
+    $take: Int
+    $skip: Int
+    $order: SortOrder
+    $sort: TagSort
 ) {
-  tags(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
-    nodes {
-      id
-      tag
-    }
+    tags(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+        nodes {
+            id
+            tag
+            main
+        }
 
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
+        pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+        }
 
-    totalCount
-  }
+        totalCount
+    }
 }
 
-mutation CreateTag($tag: String, $type: TagType!) {
-  createTag(tag: $tag, type: $type) {
-    id
-    tag
-  }
+mutation CreateTag($tag: String, $type: TagType!, $main: Boolean) {
+    createTag(tag: $tag, type: $type, main: $main) {
+        id
+        tag
+        main
+    }
 }
 
-mutation UpdateTag($id: ID!, $tag: String) {
-  updateTag(id: $id, tag: $tag) {
-    id
-    tag
-  }
+mutation UpdateTag($id: ID!, $tag: String, $main: Boolean) {
+    updateTag(id: $id, tag: $tag, main: $main) {
+        id
+        tag
+        main
+    }
 }
 
 mutation DeleteTag($id: ID!) {
-  deleteTag(id: $id) {
-    id
-    tag
-  }
+    deleteTag(id: $id) {
+        id
+        tag
+    }
 }
