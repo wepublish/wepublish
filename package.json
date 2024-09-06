@@ -20,7 +20,7 @@
     "watch:api-example": "nx serve api-example",
     "watch:website-example": "nx serve website-example",
     "watch:media": "nx serve media",
-    "start:docker": "docker-compose up --detach database pgadmin storage",
+    "start:docker": "docker-compose up --detach database storage",
     "watch": "npm run migrate && nx run-many --target=serve --output-style=stream --projects=api-example,editor,media,website-example",
     "generate-api": "graphql-codegen -r dotenv/config --config codegen.yml",
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
@@ -204,7 +204,7 @@
   "dependencies": {
     "@apollo/client": "^3.7.17",
     "@apollo/federation-internals": "^2.8.4",
-    "@apollo/gateway": "^2.8.1",
+    "@apollo/gateway": "^2.8.4",
     "@apollo/server": "^4.9.1",
     "@apollo/subgraph": "^2.2.3",
     "@dnd-kit/core": "^6.0.7",
