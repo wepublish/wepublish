@@ -143,7 +143,8 @@ export class WepublishServer {
         resolvers
       }),
       introspection: this.opts.introspection ?? false,
-      context: ({req}) => contextFromRequest(req, this.opts)
+      context: ({req}) => contextFromRequest(req, this.opts),
+      allowBatchedHttpRequests: true
     })
     await publicServer.start()
 
