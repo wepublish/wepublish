@@ -15,8 +15,6 @@ import possibleTypes from './graphql'
 import {ComponentType, memo, useMemo} from 'react'
 import {createUploadLink} from 'apollo-upload-client'
 import {absoluteUrlToRelative} from './absolute-url-to-relative'
-import {inspect} from 'util'
-inspect.defaultOptions.depth = 7
 
 export const V1_CLIENT_STATE_PROP_NAME = '__APOLLO_STATE_V1__'
 
