@@ -95,6 +95,7 @@ export type DashboardSubscription = {
 
 export type Event = {
   __typename?: 'Event';
+  createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['RichText']>;
   endsAt?: Maybe<Scalars['DateTime']>;
   externalSourceId?: Maybe<Scalars['String']>;
@@ -104,6 +105,7 @@ export type Event = {
   imageId?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   page?: Maybe<Page>;
   startsAt: Scalars['DateTime'];
@@ -122,6 +124,7 @@ export type EventFilter = {
 
 export type EventFromSource = {
   __typename?: 'EventFromSource';
+  createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['RichText']>;
   endsAt?: Maybe<Scalars['DateTime']>;
   externalSourceId?: Maybe<Scalars['String']>;
@@ -130,6 +133,7 @@ export type EventFromSource = {
   imageUrl?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   page?: Maybe<Page>;
   startsAt: Scalars['DateTime'];

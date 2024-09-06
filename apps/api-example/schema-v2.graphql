@@ -93,6 +93,7 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Event {
+  createdAt: DateTime!
   description: RichText
   endsAt: DateTime
   externalSourceId: String
@@ -102,6 +103,7 @@ type Event {
   imageId: String
   lead: String
   location: String
+  modifiedAt: DateTime!
   name: String!
   page: Page
   startsAt: DateTime!
@@ -119,6 +121,7 @@ input EventFilter {
 }
 
 type EventFromSource {
+  createdAt: DateTime!
   description: RichText
   endsAt: DateTime
   externalSourceId: String
@@ -127,6 +130,7 @@ type EventFromSource {
   imageUrl: String
   lead: String
   location: String
+  modifiedAt: DateTime!
   name: String!
   page: Page
   startsAt: DateTime!
