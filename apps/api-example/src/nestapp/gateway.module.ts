@@ -10,7 +10,8 @@ import {GraphQLModule} from '@nestjs/graphql'
       server: {
         introspection: true,
         playground: true,
-        path: '/v1'
+        path: '/v1',
+        allowBatchedHttpRequests: true
       },
       gateway: {
         buildService: ({name, url}) => {
