@@ -9,8 +9,10 @@ import {GraphQLModule} from '@nestjs/graphql'
       driver: ApolloGatewayDriver,
       server: {
         introspection: true,
-        playground: true,
-        path: '/v1',
+        sortSchema: true,
+        path: 'v1',
+        cache: 'bounded',
+        playground: process.env.NODE_ENV === 'development',
         allowBatchedHttpRequests: true
       },
       gateway: {
