@@ -346,6 +346,15 @@
     "@swc/core-linux-arm64-gnu": "^1.3.90",
     "@swc/core-linux-arm64-musl": "^1.3.90",
     "@swc/core-linux-x64-gnu": "^1.3.90",
-    "@swc/core-linux-x64-musl": "^1.3.90"
+    "@swc/core-linux-x64-musl": "^1.3.90",
+    "@next/swc-darwin-arm64": "13.4.19",
+    "@next/swc-darwin-x64": "13.4.19",
+    "@next/swc-linux-arm64-gnu": "13.4.19",
+    "@next/swc-linux-arm64-musl": "13.4.19",
+    "@next/swc-linux-x64-gnu": "13.4.19",
+    "@next/swc-linux-x64-musl": "13.4.19",
+    "@next/swc-win32-arm64-msvc": "13.4.19",
+    "@next/swc-win32-ia32-msvc": "13.4.19",
+    "@next/swc-win32-x64-msvc": "13.4.19"
   }
 }
