@@ -8,14 +8,23 @@ export class SettingsResolver {
   constructor(private settingsService: SettingsService) {}
 
   @Query(returns => [Setting], {
-    name: 'settingsList',
+    name: 'settings',
     description: `
       Returns all settings.
     `
   })
-  @Permissions(CanGetSettings)
-  settingsList(@Args('filter', {nullable: true}) filter?: SettingFilter) {
+  settings(@Args('filter', {nullable: true}) filter?: SettingFilter) {
     return this.settingsService.settingsList(filter)
+  }
+
+  @Query(returns => Setting, {
+    name: 'setting',
+    description: `
+      Returns a single setting by name.
+    `
+  })
+  setting(@Args('name') name: string) {
+    return this.settingsService.settingByName(name)
   }
 
   @Query(returns => Setting, {

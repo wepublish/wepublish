@@ -436,11 +436,14 @@ type Query {
   "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
+  "\n      Returns a single setting by name.\n    "
+  setting(name: String!): Setting!
+
   "\n      Returns a single setting by id.\n    "
   settingById(id: String!): Setting!
 
   "\n      Returns all settings.\n    "
-  settingsList(filter: SettingFilter): [Setting!]!
+  settings(filter: SettingFilter): [Setting!]!
   stats: Stats
 
   """Returns all subscription flows"""

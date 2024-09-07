@@ -10,24 +10,24 @@ fragment FullSetting on Setting {
 }
 
 query SettingList {
-  settings {
-    id
-    name
-    value
-    settingRestriction {
-        maxValue
-        minValue
-        inputLength
-        allowedValues {
-            stringChoice
-            boolChoice
+    settings {
+        id
+        name
+        value
+        settingRestriction {
+            maxValue
+            minValue
+            inputLength
+            allowedValues {
+                stringChoice
+                boolChoice
+            }
         }
     }
-  }
 }
 
 mutation UpdateSettingList($input: [UpdateSettingArgs!]) {
-  updateSettingList(value: $input) {
-    value
-  }
+    updateSettingList(value: $input) {
+        value
+    }
 }

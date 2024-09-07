@@ -23,8 +23,8 @@ import {GraphQLSettingValueType} from './settings.model'
 export class AppModule {}
 
 const settingsListQuery = `
-  query settingsList($filter: SettingFilter) {
-    settingsList(filter: $filter) {
+  query settings($filter: SettingFilter) {
+    settings(filter: $filter) {
       id
       name
       value
@@ -157,7 +157,7 @@ describe('SettingsResolver', () => {
     await app.close()
   })
 
-  test('settingsList query', async () => {
+  test('settings query', async () => {
     await request(app.getHttpServer())
       .post('')
       .send({
@@ -166,7 +166,7 @@ describe('SettingsResolver', () => {
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.settingsList).toHaveLength(2)
+        expect(res.body.data.settings).toHaveLength(2)
       })
   })
 

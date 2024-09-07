@@ -655,6 +655,12 @@ export type Query = {
   revenue: Array<DashboardInvoice>;
   /**
    *
+   *       Returns a single setting by name.
+   *
+   */
+  setting: Setting;
+  /**
+   *
    *       Returns a single setting by id.
    *
    */
@@ -664,7 +670,7 @@ export type Query = {
    *       Returns all settings.
    *
    */
-  settingsList: Array<Setting>;
+  settings: Array<Setting>;
   stats?: Maybe<Stats>;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
@@ -776,12 +782,17 @@ export type QueryRevenueArgs = {
 };
 
 
+export type QuerySettingArgs = {
+  name: Scalars['String'];
+};
+
+
 export type QuerySettingByIdArgs = {
   id: Scalars['String'];
 };
 
 
-export type QuerySettingsListArgs = {
+export type QuerySettingsArgs = {
   filter?: InputMaybe<SettingFilter>;
 };
 
@@ -1139,7 +1150,7 @@ export type DeletePollVoteMutation = { __typename?: 'Mutation', deletePollVote: 
 export type SettingsListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SettingsListQuery = { __typename?: 'Query', settingsList: Array<{ __typename?: 'Setting', id: string, name: SettingName, value?: any | null, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null, allowedValues?: { __typename?: 'AllowedSettingVals', stringChoice?: Array<string> | null, boolChoice?: boolean | null } | null } | null }> };
+export type SettingsListQuery = { __typename?: 'Query', settings: Array<{ __typename?: 'Setting', id: string, name: SettingName, value?: any | null, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null, allowedValues?: { __typename?: 'AllowedSettingVals', stringChoice?: Array<string> | null, boolChoice?: boolean | null } | null } | null }> };
 
 export type UpdateSettingMutationVariables = Exact<{
   name: SettingName;
@@ -2266,7 +2277,7 @@ export type DeletePollVoteMutationResult = Apollo.MutationResult<DeletePollVoteM
 export type DeletePollVoteMutationOptions = Apollo.BaseMutationOptions<DeletePollVoteMutation, DeletePollVoteMutationVariables>;
 export const SettingsListDocument = gql`
     query SettingsList {
-  settingsList {
+  settings {
     id
     name
     value

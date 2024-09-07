@@ -26,7 +26,7 @@ export type Scalars = {
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
   boolChoice?: Maybe<Scalars['Boolean']>;
-  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
+  stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
 export type Article = {
@@ -1544,12 +1544,12 @@ export type Query = {
    * Only includes paid invoices that have not been manually paid.
    */
   revenue: Array<DashboardInvoice>;
-  setting?: Maybe<Setting>;
+  /** Returns a single setting by name. */
+  setting: Setting;
   /** Returns a single setting by id. */
   settingById: Setting;
-  settings: Array<Setting>;
   /** Returns all settings. */
-  settingsList: Array<Setting>;
+  settings: Array<Setting>;
   stats?: Maybe<Stats>;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
@@ -1786,7 +1786,7 @@ export type QuerySettingByIdArgs = {
 };
 
 
-export type QuerySettingsListArgs = {
+export type QuerySettingsArgs = {
   filter?: InputMaybe<SettingFilter>;
 };
 

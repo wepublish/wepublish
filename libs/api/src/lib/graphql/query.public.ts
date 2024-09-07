@@ -63,8 +63,6 @@ import {GraphQLPublicPhrase} from './phrase/phrase'
 import {queryPhrase} from './phrase/phrase.public-queries'
 import {GraphQLFullPoll} from './poll/poll'
 import {getPoll, userPollVote} from './poll/poll.public-queries'
-import {GraphQLSetting} from './setting'
-import {getSetting, getSettings} from './setting/setting.public-queries'
 import {GraphQLSlug} from './slug'
 import {GraphQLPublicSubscription} from './subscription-public'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
@@ -584,20 +582,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           articleSort,
           order
         )
-    },
-
-    // Setting
-    // ======
-
-    setting: {
-      type: GraphQLSetting,
-      args: {name: {type: new GraphQLNonNull(GraphQLString)}},
-      resolve: (root, {name}, {prisma: {setting}}) => getSetting(name, setting)
-    },
-
-    settings: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLSetting))),
-      resolve: (root, _, {prisma: {setting}}) => getSettings(setting)
     }
   }
 })

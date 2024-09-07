@@ -2372,7 +2372,6 @@ export enum SettingName {
   BodyScript = 'BODY_SCRIPT',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
   HeadScript = 'HEAD_SCRIPT',
-  MailProviderName = 'MAIL_PROVIDER_NAME',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
   MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',

@@ -23,7 +23,25 @@ export const GraphQLSettingValueType = new GraphQLScalarType({
 
 export const GraphQLSettingName = new GraphQLEnumType({
   name: 'SettingName',
-  values: Object.fromEntries(Object.keys(SettingName).map(key => [key, {value: SettingName[key]}]))
+
+  values: {
+    ALLOW_GUEST_COMMENTING: {value: SettingName.ALLOW_GUEST_COMMENTING},
+    ALLOW_GUEST_COMMENT_RATING: {value: SettingName.ALLOW_GUEST_COMMENT_RATING},
+    ALLOW_GUEST_POLL_VOTING: {value: SettingName.ALLOW_GUEST_POLL_VOTING},
+    SEND_LOGIN_JWT_EXPIRES_MIN: {value: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN},
+    RESET_PASSWORD_JWT_EXPIRES_MIN: {value: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN},
+    PEERING_TIMEOUT_MS: {value: SettingName.PEERING_TIMEOUT_MS},
+    MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC: {value: SettingName.MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC},
+    MAKE_NEW_SUBSCRIBERS_API_PUBLIC: {value: SettingName.MAKE_NEW_SUBSCRIBERS_API_PUBLIC},
+    MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC: {value: SettingName.MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC},
+    MAKE_NEW_DEACTIVATIONS_API_PUBLIC: {value: SettingName.MAKE_NEW_DEACTIVATIONS_API_PUBLIC},
+    MAKE_EXPECTED_REVENUE_API_PUBLIC: {value: SettingName.MAKE_EXPECTED_REVENUE_API_PUBLIC},
+    MAKE_REVENUE_API_PUBLIC: {value: SettingName.MAKE_REVENUE_API_PUBLIC},
+    COMMENT_CHAR_LIMIT: {value: SettingName.COMMENT_CHAR_LIMIT},
+    ALLOW_COMMENT_EDITING: {value: SettingName.ALLOW_COMMENT_EDITING},
+    HEAD_SCRIPT: {value: SettingName.HEAD_SCRIPT},
+    BODY_SCRIPT: {value: SettingName.BODY_SCRIPT}
+  }
 })
 
 export const GraphQLAllowedSettingVals = new GraphQLObjectType({
