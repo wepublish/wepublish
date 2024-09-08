@@ -79,8 +79,8 @@ export type ArticleNavigationLink = BaseNavigationLink & {
 };
 
 export enum ArticleSort {
-  PublishedAt = 'PUBLISHED_AT',
-  UpdatedAt = 'UPDATED_AT'
+  PublishedAt = 'publishedAt',
+  UpdatedAt = 'updatedAt'
 }
 
 export type ArticleTeaser = {
@@ -138,9 +138,9 @@ export type AuthorLink = {
 };
 
 export enum AuthorSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME'
+  Name = 'NAME',
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type AvailablePaymentMethod = {
@@ -239,10 +239,10 @@ export type Comment = {
 };
 
 export enum CommentAuthorType {
-  Author = 'Author',
-  GuestUser = 'GuestUser',
-  Team = 'Team',
-  VerifiedUser = 'VerifiedUser'
+  Author = 'author',
+  GuestUser = 'guestUser',
+  Team = 'team',
+  VerifiedUser = 'verifiedUser'
 }
 
 export type CommentBlock = {
@@ -263,9 +263,9 @@ export type CommentInput = {
 };
 
 export enum CommentItemType {
-  Article = 'Article',
-  Page = 'Page',
-  PeerArticle = 'PeerArticle'
+  Article = 'article',
+  Page = 'page',
+  PeerArticle = 'peerArticle'
 }
 
 export type CommentRating = {
@@ -289,14 +289,14 @@ export type CommentRatingSystemAnswer = {
 };
 
 export enum CommentSort {
-  Rating = 'RATING'
+  Rating = 'rating'
 }
 
 export enum CommentState {
-  Approved = 'Approved',
-  PendingApproval = 'PendingApproval',
-  PendingUserChanges = 'PendingUserChanges',
-  Rejected = 'Rejected'
+  Approved = 'approved',
+  PendingApproval = 'pendingApproval',
+  PendingUserChanges = 'pendingUserChanges',
+  Rejected = 'rejected'
 }
 
 export type CommentUpdateInput = {
@@ -564,17 +564,17 @@ export type ImageGalleryBlock = {
 };
 
 export enum ImageOutput {
-  Jpeg = 'JPEG',
-  Png = 'PNG',
-  Webp = 'WEBP'
+  Jpeg = 'jpeg',
+  Png = 'png',
+  Webp = 'webp'
 }
 
 export enum ImageRotation {
-  Auto = 'AUTO',
-  Rotate_0 = 'ROTATE_0',
-  Rotate_90 = 'ROTATE_90',
-  Rotate_180 = 'ROTATE_180',
-  Rotate_270 = 'ROTATE_270'
+  Auto = 'Auto',
+  Rotate0 = 'Rotate0',
+  Rotate90 = 'Rotate90',
+  Rotate180 = 'Rotate180',
+  Rotate270 = 'Rotate270'
 }
 
 export type ImageTransformation = {
@@ -747,8 +747,8 @@ export type MemberPlanFilter = {
 };
 
 export enum MemberPlanSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type Mutation = {
@@ -1280,13 +1280,13 @@ export type PaymentProviderCustomerInput = {
 };
 
 export enum PaymentState {
-  Canceled = 'Canceled',
-  Created = 'Created',
-  Declined = 'Declined',
-  Paid = 'Paid',
-  Processing = 'Processing',
-  RequiresUserAction = 'RequiresUserAction',
-  Submitted = 'Submitted'
+  Canceled = 'canceled',
+  Created = 'created',
+  Declined = 'declined',
+  Paid = 'paid',
+  Processing = 'processing',
+  RequiresUserAction = 'requiresUserAction',
+  Submitted = 'submitted'
 }
 
 export type Peer = {
@@ -1442,8 +1442,8 @@ export type PublishedPageFilter = {
 };
 
 export enum PublishedPageSort {
-  PublishedAt = 'PUBLISHED_AT',
-  UpdatedAt = 'UPDATED_AT'
+  PublishedAt = 'publishedAt',
+  UpdatedAt = 'updatedAt'
 }
 
 export type Query = {
@@ -1834,7 +1834,7 @@ export type QuoteBlock = {
 };
 
 export enum RatingSystemType {
-  Star = 'STAR'
+  Star = 'star'
 }
 
 export type Registration = {
@@ -2022,9 +2022,9 @@ export type TagFilter = {
 };
 
 export enum TagSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  Tag = 'TAG'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Tag = 'Tag'
 }
 
 export enum TagType {
@@ -2068,9 +2068,9 @@ export type TeaserListBlockFilter = {
 };
 
 export enum TeaserStyle {
-  Default = 'DEFAULT',
-  Light = 'LIGHT',
-  Text = 'TEXT'
+  Default = 'default',
+  Light = 'light',
+  Text = 'text'
 }
 
 export enum TeaserType {
@@ -2783,29 +2783,29 @@ export const FullTagFragmentDoc = gql`
 export const ImageUrLsFragmentDoc = gql`
     fragment ImageURLs on Image {
   url
-  xl: transformURL(input: {width: 1200, output: PNG, quality: 0.8})
-  l: transformURL(input: {width: 1000, output: PNG, quality: 0.8})
-  m: transformURL(input: {width: 800, output: PNG, quality: 0.8})
-  s: transformURL(input: {width: 500, output: PNG, quality: 0.8})
-  xs: transformURL(input: {width: 300, output: PNG, quality: 0.8})
-  xxs: transformURL(input: {width: 200, output: PNG, quality: 0.8})
+  xl: transformURL(input: {width: 1200, output: png, quality: 0.8})
+  l: transformURL(input: {width: 1000, output: png, quality: 0.8})
+  m: transformURL(input: {width: 800, output: png, quality: 0.8})
+  s: transformURL(input: {width: 500, output: png, quality: 0.8})
+  xs: transformURL(input: {width: 300, output: png, quality: 0.8})
+  xxs: transformURL(input: {width: 200, output: png, quality: 0.8})
   xlSquare: transformURL(
-    input: {width: 1200, height: 1200, output: PNG, quality: 0.8}
+    input: {width: 1200, height: 1200, output: png, quality: 0.8}
   )
   lSquare: transformURL(
-    input: {width: 1000, height: 1000, output: PNG, quality: 0.8}
+    input: {width: 1000, height: 1000, output: png, quality: 0.8}
   )
   mSquare: transformURL(
-    input: {width: 800, height: 800, output: PNG, quality: 0.8}
+    input: {width: 800, height: 800, output: png, quality: 0.8}
   )
   sSquare: transformURL(
-    input: {width: 500, height: 500, output: PNG, quality: 0.8}
+    input: {width: 500, height: 500, output: png, quality: 0.8}
   )
   xsSquare: transformURL(
-    input: {width: 300, height: 300, output: PNG, quality: 0.8}
+    input: {width: 300, height: 300, output: png, quality: 0.8}
   )
   xxsSquare: transformURL(
-    input: {width: 200, height: 200, output: PNG, quality: 0.8}
+    input: {width: 200, height: 200, output: png, quality: 0.8}
   )
 }
     `;

@@ -13,8 +13,8 @@ import {DateFilterComparison} from '../db/common'
 export const GraphQLSortOrder = new GraphQLEnumType({
   name: 'SortOrder',
   values: {
-    Ascending: {value: SortOrder.Ascending},
-    Descending: {value: SortOrder.Descending}
+    [SortOrder.Ascending]: {value: SortOrder.Ascending},
+    [SortOrder.Descending]: {value: SortOrder.Descending}
   }
 })
 
@@ -73,11 +73,11 @@ export const GraphQLMetadataPropertyPublicInput = new GraphQLInputObjectType({
 export const GraphQLDateFilterComparison = new GraphQLEnumType({
   name: 'DateFilterComparison',
   values: {
-    GREATER: {value: DateFilterComparison.GreaterThan},
-    GREATER_OR_EQUAL: {value: DateFilterComparison.GreaterThanOrEqual},
-    EQUAL: {value: DateFilterComparison.Equal},
-    LOWER: {value: DateFilterComparison.LowerThan},
-    LOWER_OR_EQUAL: {value: DateFilterComparison.LowerThanOrEqual}
+    [DateFilterComparison.GreaterThan]: {value: DateFilterComparison.GreaterThan},
+    [DateFilterComparison.GreaterThanOrEqual]: {value: DateFilterComparison.GreaterThanOrEqual},
+    [DateFilterComparison.Equal]: {value: DateFilterComparison.Equal},
+    [DateFilterComparison.LowerThan]: {value: DateFilterComparison.LowerThan},
+    [DateFilterComparison.LowerThanOrEqual]: {value: DateFilterComparison.LowerThanOrEqual}
   }
 })
 

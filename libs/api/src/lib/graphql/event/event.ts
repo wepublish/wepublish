@@ -23,10 +23,10 @@ import {EventSort} from './event.query'
 export const GraphQLEventStatus = new GraphQLEnumType({
   name: 'EventStatus',
   values: {
-    Cancelled: {value: EventStatus.Cancelled},
-    Rescheduled: {value: EventStatus.Rescheduled},
-    Postponed: {value: EventStatus.Postponed},
-    Scheduled: {value: EventStatus.Scheduled}
+    [EventStatus.Cancelled]: {value: EventStatus.Cancelled},
+    [EventStatus.Rescheduled]: {value: EventStatus.Rescheduled},
+    [EventStatus.Postponed]: {value: EventStatus.Postponed},
+    [EventStatus.Scheduled]: {value: EventStatus.Scheduled}
   }
 })
 
@@ -102,10 +102,10 @@ export const GraphQLEventFilter = new GraphQLInputObjectType({
 export const GraphQLEventSort = new GraphQLEnumType({
   name: 'EventSort',
   values: {
-    StartsAt: {value: EventSort.StartsAt},
-    EndsAt: {value: EventSort.EndsAt},
-    CreatedAt: {value: EventSort.CreatedAt},
-    ModifiedAt: {value: EventSort.ModifiedAt}
+    [EventSort.StartsAt]: {value: EventSort.StartsAt},
+    [EventSort.EndsAt]: {value: EventSort.EndsAt},
+    [EventSort.CreatedAt]: {value: EventSort.CreatedAt},
+    [EventSort.ModifiedAt]: {value: EventSort.ModifiedAt}
   }
 })
 

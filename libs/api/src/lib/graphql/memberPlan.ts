@@ -23,10 +23,10 @@ import {AvailablePaymentMethod, PaymentPeriodicity} from '@prisma/client'
 export const GraphQLPaymentPeriodicity = new GraphQLEnumType({
   name: 'PaymentPeriodicity',
   values: {
-    monthly: {value: PaymentPeriodicity.monthly},
-    quarterly: {value: PaymentPeriodicity.quarterly},
-    biannual: {value: PaymentPeriodicity.biannual},
-    yearly: {value: PaymentPeriodicity.yearly}
+    [PaymentPeriodicity.monthly]: {value: PaymentPeriodicity.monthly},
+    [PaymentPeriodicity.quarterly]: {value: PaymentPeriodicity.quarterly},
+    [PaymentPeriodicity.biannual]: {value: PaymentPeriodicity.biannual},
+    [PaymentPeriodicity.yearly]: {value: PaymentPeriodicity.yearly}
   }
 })
 
@@ -156,8 +156,8 @@ export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
 export const GraphQLMemberPlanSort = new GraphQLEnumType({
   name: 'MemberPlanSort',
   values: {
-    CREATED_AT: {value: MemberPlanSort.CreatedAt},
-    MODIFIED_AT: {value: MemberPlanSort.ModifiedAt}
+    [MemberPlanSort.CreatedAt]: {value: MemberPlanSort.CreatedAt},
+    [MemberPlanSort.ModifiedAt]: {value: MemberPlanSort.ModifiedAt}
   }
 })
 

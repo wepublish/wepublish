@@ -107,9 +107,9 @@ export const GraphQLinvoiceFilter = new GraphQLInputObjectType({
 export const GraphQLInvoiceSort = new GraphQLEnumType({
   name: 'InvoiceSort',
   values: {
-    CREATED_AT: {value: InvoiceSort.CreatedAt},
-    MODIFIED_AT: {value: InvoiceSort.ModifiedAt},
-    PAID_AT: {value: InvoiceSort.PaidAt}
+    [InvoiceSort.CreatedAt]: {value: InvoiceSort.CreatedAt},
+    [InvoiceSort.ModifiedAt]: {value: InvoiceSort.ModifiedAt},
+    [InvoiceSort.PaidAt]: {value: InvoiceSort.PaidAt}
   }
 })
 

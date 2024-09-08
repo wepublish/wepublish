@@ -139,11 +139,11 @@ export type ArticleRevision = {
 };
 
 export enum ArticleSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  PublishedAt = 'PUBLISHED_AT',
-  PublishAt = 'PUBLISH_AT',
-  UpdatedAt = 'UPDATED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt',
+  PublishAt = 'publishAt',
+  PublishedAt = 'publishedAt',
+  UpdatedAt = 'updatedAt'
 }
 
 export type ArticleTeaser = {
@@ -234,9 +234,9 @@ export type AuthorLinkInput = {
 };
 
 export enum AuthorSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME'
+  Name = 'NAME',
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type AvailablePaymentMethod = {
@@ -320,10 +320,10 @@ export type Comment = {
 };
 
 export enum CommentAuthorType {
-  Author = 'Author',
-  GuestUser = 'GuestUser',
-  Team = 'Team',
-  VerifiedUser = 'VerifiedUser'
+  Author = 'author',
+  GuestUser = 'guestUser',
+  Team = 'team',
+  VerifiedUser = 'verifiedUser'
 }
 
 export type CommentBlock = {
@@ -373,9 +373,9 @@ export type CommentFilter = {
 };
 
 export enum CommentItemType {
-  Article = 'Article',
-  Page = 'Page',
-  PeerArticle = 'PeerArticle'
+  Article = 'article',
+  Page = 'page',
+  PeerArticle = 'peerArticle'
 }
 
 export type CommentRatingOverrideUpdateInput = {
@@ -392,8 +392,8 @@ export type CommentRatingSystemAnswer = {
 };
 
 export enum CommentRejectionReason {
-  Misconduct = 'Misconduct',
-  Spam = 'Spam'
+  Misconduct = 'misconduct',
+  Spam = 'spam'
 }
 
 export type CommentRevision = {
@@ -411,15 +411,15 @@ export type CommentRevisionUpdateInput = {
 };
 
 export enum CommentSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export enum CommentState {
-  Approved = 'Approved',
-  PendingApproval = 'PendingApproval',
-  PendingUserChanges = 'PendingUserChanges',
-  Rejected = 'Rejected'
+  Approved = 'approved',
+  PendingApproval = 'pendingApproval',
+  PendingUserChanges = 'pendingUserChanges',
+  Rejected = 'rejected'
 }
 
 export type CreatePeerInput = {
@@ -466,11 +466,11 @@ export type DateFilter = {
 };
 
 export enum DateFilterComparison {
-  Equal = 'EQUAL',
-  Greater = 'GREATER',
-  GreaterOrEqual = 'GREATER_OR_EQUAL',
-  Lower = 'LOWER',
-  LowerOrEqual = 'LOWER_OR_EQUAL'
+  Eq = 'eq',
+  Gt = 'gt',
+  Gte = 'gte',
+  Lt = 'lt',
+  Lte = 'lte'
 }
 
 export type EmbedBlock = {
@@ -771,22 +771,22 @@ export type ImageGalleryBlockInput = {
 };
 
 export enum ImageOutput {
-  Jpeg = 'JPEG',
-  Png = 'PNG',
-  Webp = 'WEBP'
+  Jpeg = 'jpeg',
+  Png = 'png',
+  Webp = 'webp'
 }
 
 export enum ImageRotation {
-  Auto = 'AUTO',
-  Rotate_0 = 'ROTATE_0',
-  Rotate_90 = 'ROTATE_90',
-  Rotate_180 = 'ROTATE_180',
-  Rotate_270 = 'ROTATE_270'
+  Auto = 'Auto',
+  Rotate0 = 'Rotate0',
+  Rotate90 = 'Rotate90',
+  Rotate180 = 'Rotate180',
+  Rotate270 = 'Rotate270'
 }
 
 export enum ImageSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type ImageTransformation = {
@@ -871,9 +871,9 @@ export type InvoiceItemInput = {
 };
 
 export enum InvoiceSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  PaidAt = 'PAID_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt',
+  PaidAt = 'paidAt'
 }
 
 export type JwtToken = {
@@ -982,8 +982,8 @@ export type MemberPlanInput = {
 };
 
 export enum MemberPlanSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type Mutation = {
@@ -1664,11 +1664,11 @@ export type PageRevision = {
 };
 
 export enum PageSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  PublishedAt = 'PUBLISHED_AT',
-  PublishAt = 'PUBLISH_AT',
-  UpdatedAt = 'UPDATED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt',
+  PublishAt = 'publishAt',
+  PublishedAt = 'publishedAt',
+  UpdatedAt = 'updatedAt'
 }
 
 export type PageTeaser = {
@@ -1767,18 +1767,18 @@ export type PaymentProviderCustomer = {
 };
 
 export enum PaymentSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export enum PaymentState {
-  Canceled = 'Canceled',
-  Created = 'Created',
-  Declined = 'Declined',
-  Paid = 'Paid',
-  Processing = 'Processing',
-  RequiresUserAction = 'RequiresUserAction',
-  Submitted = 'Submitted'
+  Canceled = 'canceled',
+  Created = 'created',
+  Declined = 'declined',
+  Paid = 'paid',
+  Processing = 'processing',
+  RequiresUserAction = 'requiresUserAction',
+  Submitted = 'submitted'
 }
 
 export type Peer = {
@@ -1933,9 +1933,9 @@ export type PollFilter = {
 };
 
 export enum PollSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  OpensAt = 'OPENS_AT'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  OpensAt = 'OpensAt'
 }
 
 export type PollStartedAction = {
@@ -2325,7 +2325,7 @@ export type QuoteBlockInput = {
 };
 
 export enum RatingSystemType {
-  Star = 'STAR'
+  Star = 'star'
 }
 
 export type RichTextBlock = {
@@ -2365,22 +2365,22 @@ export type Setting = {
 };
 
 export enum SettingName {
-  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
-  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
-  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
-  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
-  BodyScript = 'BODY_SCRIPT',
-  CommentCharLimit = 'COMMENT_CHAR_LIMIT',
-  HeadScript = 'HEAD_SCRIPT',
-  MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
-  MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
-  MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
-  MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
-  MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
-  MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
-  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
-  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
-  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
+  AllowCommentEditing = 'allowCommentEditing',
+  AllowGuestCommentRating = 'allowGuestCommentRating',
+  AllowGuestCommenting = 'allowGuestCommenting',
+  AllowGuestPollVoting = 'allowGuestPollVoting',
+  BodyScript = 'bodyScript',
+  CommentCharLimit = 'commentCharLimit',
+  HeadScript = 'headScript',
+  MakeActiveSubscribersApiPublic = 'makeActiveSubscribersApiPublic',
+  MakeExpectedRevenueApiPublic = 'makeExpectedRevenueApiPublic',
+  MakeNewDeactivationsApiPublic = 'makeNewDeactivationsApiPublic',
+  MakeNewSubscribersApiPublic = 'makeNewSubscribersApiPublic',
+  MakeRenewingSubscribersApiPublic = 'makeRenewingSubscribersApiPublic',
+  MakeRevenueApiPublic = 'makeRevenueApiPublic',
+  PeeringTimeoutInMs = 'peeringTimeoutInMs',
+  ResetPasswordJwtExpiresMin = 'resetPasswordJwtExpiresMin',
+  SendLoginJwtExpiresMin = 'sendLoginJwtExpiresMin'
 }
 
 export type SettingRestriction = {
@@ -2508,8 +2508,8 @@ export type SubscriptionPeriod = {
 };
 
 export enum SubscriptionSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type Tag = {
@@ -2534,9 +2534,9 @@ export type TagFilter = {
 };
 
 export enum TagSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  Tag = 'TAG'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Tag = 'Tag'
 }
 
 export enum TagType {
@@ -2612,9 +2612,9 @@ export type TeaserListBlockInput = {
 };
 
 export enum TeaserStyle {
-  Default = 'DEFAULT',
-  Light = 'LIGHT',
-  Text = 'TEXT'
+  Default = 'default',
+  Light = 'light',
+  Text = 'text'
 }
 
 export enum TeaserType {
@@ -2843,15 +2843,15 @@ export type UserRoleInput = {
 };
 
 export enum UserRoleSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export enum UserSort {
-  CreatedAt = 'CREATED_AT',
-  FirstName = 'FIRST_NAME',
-  ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME'
+  CreatedAt = 'createdAt',
+  FirstName = 'firstName',
+  ModifiedAt = 'modifiedAt',
+  Name = 'name'
 }
 
 export type UserSubscription = {

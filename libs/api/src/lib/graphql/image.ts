@@ -38,20 +38,20 @@ export const GraphQLFocalPoint = new GraphQLObjectType<any, Context>({
 export const GraphQLImageRotation = new GraphQLEnumType({
   name: 'ImageRotation',
   values: {
-    AUTO: {value: ImageRotation.Auto},
-    ROTATE_0: {value: ImageRotation.Rotate0},
-    ROTATE_90: {value: ImageRotation.Rotate90},
-    ROTATE_180: {value: ImageRotation.Rotate180},
-    ROTATE_270: {value: ImageRotation.Rotate270}
+    Auto: {value: ImageRotation.Auto},
+    Rotate0: {value: ImageRotation.Rotate0},
+    Rotate90: {value: ImageRotation.Rotate90},
+    Rotate180: {value: ImageRotation.Rotate180},
+    Rotate270: {value: ImageRotation.Rotate270}
   }
 })
 
 export const GraphQLImageOutput = new GraphQLEnumType({
   name: 'ImageOutput',
   values: {
-    PNG: {value: ImageOutput.PNG},
-    JPEG: {value: ImageOutput.JPEG},
-    WEBP: {value: ImageOutput.WEBP}
+    [ImageOutput.PNG]: {value: ImageOutput.PNG},
+    [ImageOutput.JPEG]: {value: ImageOutput.JPEG},
+    [ImageOutput.WEBP]: {value: ImageOutput.WEBP}
   }
 })
 
@@ -113,8 +113,8 @@ export const GraphQLImageFilter = new GraphQLInputObjectType({
 export const GraphQLImageSort = new GraphQLEnumType({
   name: 'ImageSort',
   values: {
-    CREATED_AT: {value: ImageSort.CreatedAt},
-    MODIFIED_AT: {value: ImageSort.ModifiedAt}
+    [ImageSort.CreatedAt]: {value: ImageSort.CreatedAt},
+    [ImageSort.ModifiedAt]: {value: ImageSort.ModifiedAt}
   }
 })
 

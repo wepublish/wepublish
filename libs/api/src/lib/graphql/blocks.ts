@@ -82,9 +82,9 @@ import {GraphQLTag} from './tag/tag'
 export const GraphQLTeaserStyle = new GraphQLEnumType({
   name: 'TeaserStyle',
   values: {
-    DEFAULT: {value: TeaserStyle.Default},
-    LIGHT: {value: TeaserStyle.Light},
-    TEXT: {value: TeaserStyle.Text}
+    [TeaserStyle.Default]: {value: TeaserStyle.Default},
+    [TeaserStyle.Light]: {value: TeaserStyle.Light},
+    [TeaserStyle.Text]: {value: TeaserStyle.Text}
   }
 })
 
