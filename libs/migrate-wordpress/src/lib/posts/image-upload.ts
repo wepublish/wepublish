@@ -2,7 +2,7 @@ import axios from 'axios'
 import FormData from 'form-data'
 import {Readable} from 'stream'
 import {privateGraphqlEndpoint, privateToken} from './private-api'
-import {UploadImageInput} from '../api/private'
+import {UploadImageInput} from '../../api/private'
 
 async function getDownloadStream(fileUrl: string): Promise<Readable> {
   const response = await axios({

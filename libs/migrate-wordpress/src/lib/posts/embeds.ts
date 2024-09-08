@@ -1,4 +1,4 @@
-import {BlockInput} from '../api/private'
+import {BlockInput} from '../../api/private'
 import cheerio from 'cheerio'
 
 export function extractEmbed(input: string): BlockInput {

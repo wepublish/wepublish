@@ -1,4 +1,4 @@
-import {Article, ArticleQuery, ArticleQueryVariables} from '../api/public'
+import {Article, ArticleQuery, ArticleQueryVariables} from '../../api/public'
 import {GraphQLClient} from 'graphql-request'
 
 const publicGraphqlEndpoint = process.env['WEPUBLISH_API_URL'] + '/v1'

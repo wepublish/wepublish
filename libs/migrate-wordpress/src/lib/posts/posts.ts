@@ -8,7 +8,7 @@ import {
   publishArticle
 } from './private-api'
 import {getArticleBySlug} from './public-api'
-import {BlockInput} from '../api/private'
+import {BlockInput} from '../../api/private'
 import {Node} from 'slate'
 import {convertHtmlToSlate} from './convert-html-to-slate'
 import {extractEmbed} from './embeds'

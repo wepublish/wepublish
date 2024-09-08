@@ -27,7 +27,7 @@ import {
   UpdateTag,
   UpdateTagMutation,
   UpdateTagMutationVariables
-} from '../api/private'
+} from '../../api/private'
 import {GraphQLClient} from 'graphql-request'
 
 export const privateToken = process.env['TOKEN']
