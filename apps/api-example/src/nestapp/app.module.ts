@@ -57,7 +57,8 @@ import {PollModule} from '@wepublish/poll/api'
       path: 'v2',
       cache: 'bounded',
       playground: process.env.NODE_ENV === 'development',
-      allowBatchedHttpRequests: true
+      allowBatchedHttpRequests: true,
+      introspection: true
     }),
     PrismaModule,
     MailsModule.registerAsync({
