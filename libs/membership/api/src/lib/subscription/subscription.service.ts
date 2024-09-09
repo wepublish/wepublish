@@ -229,6 +229,7 @@ export class SubscriptionService {
 
     return this.prismaService.invoice.create({
       data: {
+        currency: subscription.currency,
         mail: subscription.user.email,
         dueAt: subscription.paidUntil || new Date(),
         description,
@@ -403,6 +404,10 @@ export class SubscriptionService {
       throw new NotFoundException('Subscription not found!')
     }
 
+    if (!invoice.subscription.memberPlan) {
+      throw new NotFoundException('Memberplan not found!')
+    }
+
     if (!invoice.subscription.user) {
       throw new NotFoundException('User not found!')
     }
@@ -431,6 +436,7 @@ export class SubscriptionService {
       const intent = await paymentProvider.createIntent({
         paymentID: payment.id,
         invoice,
+        currency: invoice.currency,
         saveCustomer: false,
         customerID: customer.customerID,
         backgroundTask: true

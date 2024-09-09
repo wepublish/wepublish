@@ -10,6 +10,7 @@ import {
   zodAlwaysRefine
 } from '@wepublish/authentication/website'
 import {
+  Currency,
   MemberPlan,
   PaymentPeriodicity,
   RegisterMutationVariables,
@@ -25,7 +26,7 @@ import {
 import {useEffect, useMemo, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'
-import {formatChf} from '../formatters/format-currency'
+import {formatCurrency} from '../formatters/format-currency'
 import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
@@ -107,15 +108,18 @@ export const getPaymentText = (
   autoRenew: boolean,
   paymentPeriodicity: PaymentPeriodicity,
   monthlyAmount: number,
+  currency: Currency,
   locale: string
 ) =>
   autoRenew
-    ? `${formatRenewalPeriod(paymentPeriodicity)} für ${formatChf(
+    ? `${formatRenewalPeriod(paymentPeriodicity)} für ${formatCurrency(
         (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        currency,
         locale
       )}`
-    : `${formatPaymentPeriod(paymentPeriodicity)} für ${formatChf(
+    : `${formatPaymentPeriod(paymentPeriodicity)} für ${formatCurrency(
         (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        currency,
         locale
       )}`
 
@@ -233,8 +237,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     [selectedMemberPlan?.availablePaymentMethods]
   )
 
-  const paymentText = getPaymentText(autoRenew, selectedPaymentPeriodicity, monthlyAmount, locale)
-  const monthlyPaymentText = getPaymentText(true, PaymentPeriodicity.Monthly, monthlyAmount, locale)
+  const paymentText = getPaymentText(
+    autoRenew,
+    selectedPaymentPeriodicity,
+    monthlyAmount,
+    selectedMemberPlan?.currency ?? Currency.Chf,
+    locale
+  )
+
+  const monthlyPaymentText = getPaymentText(
+    true,
+    PaymentPeriodicity.Monthly,
+    monthlyAmount,
+    selectedMemberPlan?.currency ?? Currency.Chf,
+    locale
+  )
 
   const onSubmit = handleSubmit(data => {
     const subscribeData: SubscribeMutationVariables = {
@@ -382,7 +399,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                 {...field}
                 min={selectedMemberPlan?.amountPerMonthMin}
                 max={(selectedMemberPlan?.amountPerMonthMin ?? 500) * 5}
-                valueLabelFormat={val => formatChf(val / 100, locale)}
+                valueLabelFormat={val =>
+                  formatCurrency(val / 100, selectedMemberPlan?.currency ?? Currency.Chf, locale)
+                }
                 step={100}
                 color="secondary"
               />
