@@ -1,6 +1,7 @@
 import {EmotionCache} from '@emotion/cache'
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
+import {GoogleAnalytics} from '@next/third-parties/google'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -35,7 +36,6 @@ import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
 import theme from '../src/theme'
-import {GoogleAnalytics} from '@next/third-parties/google'
 
 setDefaultOptions({
   locale: de
