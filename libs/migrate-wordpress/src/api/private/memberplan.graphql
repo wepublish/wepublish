@@ -1,0 +1,45 @@
+fragment MemberPlanRef on MemberPlan {
+    id
+    name
+    description
+    slug
+    active
+    tags
+    image {
+        ...ImageRef
+    }
+}
+
+fragment FullMemberPlan on MemberPlan {
+    tags
+    amountPerMonthMin
+    availablePaymentMethods {
+        paymentMethods {
+            id
+            name
+            slug
+        }
+        paymentPeriodicities
+        forceAutoRenewal
+    }
+    ...MemberPlanRef
+    extendable
+    maxCount
+}
+
+query MemberPlanList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+        nodes {
+            ...FullMemberPlan
+        }
+
+        pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+        }
+
+        totalCount
+    }
+}

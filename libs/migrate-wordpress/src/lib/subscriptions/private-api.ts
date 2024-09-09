@@ -15,7 +15,10 @@ import {
   DeleteUser,
   DeleteSubscription,
   DeleteSubscriptionMutation,
-  DeleteSubscriptionMutationVariables
+  DeleteSubscriptionMutationVariables,
+  MemberPlanListQuery,
+  MemberPlanListQueryVariables,
+  MemberPlanList
 } from '../../api/private'
 import {privateClient} from '../api/clients'
 
@@ -69,4 +72,12 @@ export async function deleteSubscription(id: string) {
       }
     )
   ).deleteSubscription!
+}
+
+export async function findMemberPlanByName(name: string) {
+  return (
+    await privateClient.request<MemberPlanListQuery, MemberPlanListQueryVariables>(MemberPlanList, {
+      filter: name
+    })
+  ).memberPlans.nodes.find(mp => mp.name === name)
 }

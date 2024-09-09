@@ -6143,6 +6143,137 @@ export type DeleteImageMutation = {
   } | null
 }
 
+export type MemberPlanRefFragment = {
+  __typename?: 'MemberPlan'
+  id: string
+  name: string
+  description?: Node[] | null
+  slug: string
+  active: boolean
+  tags?: Array<string> | null
+  image?: {
+    __typename?: 'Image'
+    id: string
+    link?: string | null
+    filename?: string | null
+    extension: string
+    title?: string | null
+    description?: string | null
+    width: number
+    height: number
+    url?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    thumbURL?: string | null
+    squareURL?: string | null
+    previewURL?: string | null
+    column1URL?: string | null
+    column6URL?: string | null
+  } | null
+}
+
+export type FullMemberPlanFragment = {
+  __typename?: 'MemberPlan'
+  tags?: Array<string> | null
+  amountPerMonthMin: number
+  extendable: boolean
+  maxCount?: number | null
+  id: string
+  name: string
+  description?: Node[] | null
+  slug: string
+  active: boolean
+  availablePaymentMethods: Array<{
+    __typename?: 'AvailablePaymentMethod'
+    paymentPeriodicities: Array<PaymentPeriodicity>
+    forceAutoRenewal: boolean
+    paymentMethods: Array<{__typename?: 'PaymentMethod'; id: string; name: string; slug: string}>
+  }>
+  image?: {
+    __typename?: 'Image'
+    id: string
+    link?: string | null
+    filename?: string | null
+    extension: string
+    title?: string | null
+    description?: string | null
+    width: number
+    height: number
+    url?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    thumbURL?: string | null
+    squareURL?: string | null
+    previewURL?: string | null
+    column1URL?: string | null
+    column6URL?: string | null
+  } | null
+}
+
+export type MemberPlanListQueryVariables = Exact<{
+  filter?: InputMaybe<Scalars['String']>
+  cursor?: InputMaybe<Scalars['ID']>
+  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
+}>
+
+export type MemberPlanListQuery = {
+  __typename?: 'Query'
+  memberPlans: {
+    __typename?: 'MemberPlanConnection'
+    totalCount: number
+    nodes: Array<{
+      __typename?: 'MemberPlan'
+      tags?: Array<string> | null
+      amountPerMonthMin: number
+      extendable: boolean
+      maxCount?: number | null
+      id: string
+      name: string
+      description?: Node[] | null
+      slug: string
+      active: boolean
+      availablePaymentMethods: Array<{
+        __typename?: 'AvailablePaymentMethod'
+        paymentPeriodicities: Array<PaymentPeriodicity>
+        forceAutoRenewal: boolean
+        paymentMethods: Array<{
+          __typename?: 'PaymentMethod'
+          id: string
+          name: string
+          slug: string
+        }>
+      }>
+      image?: {
+        __typename?: 'Image'
+        id: string
+        link?: string | null
+        filename?: string | null
+        extension: string
+        title?: string | null
+        description?: string | null
+        width: number
+        height: number
+        url?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        thumbURL?: string | null
+        squareURL?: string | null
+        previewURL?: string | null
+        column1URL?: string | null
+        column6URL?: string | null
+      } | null
+    }>
+    pageInfo: {
+      __typename?: 'PageInfo'
+      startCursor?: string | null
+      endCursor?: string | null
+      hasNextPage: boolean
+      hasPreviousPage: boolean
+    }
+  }
+}
+
 export type FullNavigationFragment = {
   __typename?: 'Navigation'
   id: string
@@ -11543,6 +11674,39 @@ export const FullImage = gql`
   }
   ${ImageRef}
 `
+export const MemberPlanRef = gql`
+  fragment MemberPlanRef on MemberPlan {
+    id
+    name
+    description
+    slug
+    active
+    tags
+    image {
+      ...ImageRef
+    }
+  }
+  ${ImageRef}
+`
+export const FullMemberPlan = gql`
+  fragment FullMemberPlan on MemberPlan {
+    tags
+    amountPerMonthMin
+    availablePaymentMethods {
+      paymentMethods {
+        id
+        name
+        slug
+      }
+      paymentPeriodicities
+      forceAutoRenewal
+    }
+    ...MemberPlanRef
+    extendable
+    maxCount
+  }
+  ${MemberPlanRef}
+`
 export const PageRef = gql`
   fragment PageRef on Page {
     id
@@ -12342,6 +12506,23 @@ export const DeleteImage = gql`
     }
   }
   ${FullImage}
+`
+export const MemberPlanList = gql`
+  query MemberPlanList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+      nodes {
+        ...FullMemberPlan
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+  ${FullMemberPlan}
 `
 export const NavigationList = gql`
   query NavigationList {

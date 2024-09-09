@@ -5,16 +5,14 @@ import {
   createUser,
   deleteSubscription,
   deleteUser,
+  findMemberPlanByName,
   findUserByEmail
 } from './private-api'
 import {randomUUID} from 'crypto'
 import {convertColumnsToRow, Row} from './row'
 
-import {differenceInDays, differenceInMonths, differenceInYears} from 'date-fns'
+import {differenceInDays, differenceInMonths} from 'date-fns'
 import {PaymentPeriodicity} from '../../api/private'
-
-const memberPlanID = 'clr1922pj0002dcevqtcze88f'
-const paymentMethodID = 'clq55mjgx0002lul140p75ul9'
 
 function oneAtOnce(stream: ReadStream, processor: (data: string[]) => Promise<void>) {
   return async function (data: string[]) {
@@ -95,19 +93,23 @@ function extractPaidUntil(row: Row) {
 }
 
 async function migrateSubscription(userId: string, row: Row) {
-  const {email} = row
+  const {productName, email} = row
   const {startsAt, paidUntil} = extractPaidUntil(row)
   const {paymentPeriodicity, monthlyAmount} = extractPeriodicityAndMonthlyAmount(row)
+  const memberPlan = await findMemberPlanByName(productName)
+  if (!memberPlan) {
+    throw new Error(`Member plan "${productName}" not found`)
+  }
 
   console.log('   subscription create', email)
   await createSubscription({
     autoRenew: false,
     deactivation: undefined,
     extendable: true,
-    memberPlanID,
+    memberPlanID: memberPlan.id,
     monthlyAmount: +(monthlyAmount * 100).toFixed(0),
     paidUntil,
-    paymentMethodID,
+    paymentMethodID: memberPlan.availablePaymentMethods[0].paymentMethods[0].id,
     paymentPeriodicity,
     properties: [],
     startsAt,
