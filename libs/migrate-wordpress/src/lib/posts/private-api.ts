@@ -28,16 +28,7 @@ import {
   UpdateTagMutation,
   UpdateTagMutationVariables
 } from '../../api/private'
-import {GraphQLClient} from 'graphql-request'
-
-export const privateToken = process.env['TOKEN']
-export const privateGraphqlEndpoint = process.env['WEPUBLISH_API_URL'] + '/v1/admin'
-export const privateClient = new GraphQLClient(privateGraphqlEndpoint, {
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${privateToken}`
-  }
-})
+import {privateClient} from '../api/clients'
 
 export async function getAuthorBySlug(slug: string) {
   return (

@@ -4977,6 +4977,7 @@ export type FullParentCommentFragment = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
+    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -5050,6 +5051,7 @@ export type FullCommentFragment = {
     flair?: string | null
     firstName?: string | null
     preferredName?: string | null
+    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -5086,6 +5088,7 @@ export type FullCommentFragment = {
       email: string
       emailVerifiedAt?: string | null
       flair?: string | null
+      subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
       roles: Array<{
         __typename?: 'UserRole'
         id: string
@@ -5170,6 +5173,7 @@ export type CommentListQuery = {
         flair?: string | null
         firstName?: string | null
         preferredName?: string | null
+        subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
         roles: Array<{
           __typename?: 'UserRole'
           id: string
@@ -5206,6 +5210,7 @@ export type CommentListQuery = {
           email: string
           emailVerifiedAt?: string | null
           flair?: string | null
+          subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
           roles: Array<{
             __typename?: 'UserRole'
             id: string
@@ -5291,6 +5296,7 @@ export type CommentQuery = {
       flair?: string | null
       firstName?: string | null
       preferredName?: string | null
+      subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
       roles: Array<{
         __typename?: 'UserRole'
         id: string
@@ -5327,6 +5333,7 @@ export type CommentQuery = {
         email: string
         emailVerifiedAt?: string | null
         flair?: string | null
+        subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
         roles: Array<{
           __typename?: 'UserRole'
           id: string
@@ -5451,6 +5458,7 @@ export type UpdateCommentMutation = {
       flair?: string | null
       firstName?: string | null
       preferredName?: string | null
+      subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
       roles: Array<{
         __typename?: 'UserRole'
         id: string
@@ -5487,6 +5495,7 @@ export type UpdateCommentMutation = {
         email: string
         emailVerifiedAt?: string | null
         flair?: string | null
+        subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
         roles: Array<{
           __typename?: 'UserRole'
           id: string
@@ -5568,6 +5577,7 @@ export type CreateCommentMutation = {
       flair?: string | null
       firstName?: string | null
       preferredName?: string | null
+      subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
       roles: Array<{
         __typename?: 'UserRole'
         id: string
@@ -5604,6 +5614,7 @@ export type CreateCommentMutation = {
         email: string
         emailVerifiedAt?: string | null
         flair?: string | null
+        subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
         roles: Array<{
           __typename?: 'UserRole'
           id: string
@@ -10816,6 +10827,15 @@ export type RenewSubscriptionMutation = {
   renewSubscription?: {__typename?: 'Invoice'; id: string} | null
 }
 
+export type DeleteSubscriptionMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteSubscriptionMutation = {
+  __typename?: 'Mutation'
+  deleteSubscription?: {__typename?: 'Subscription'; id: string} | null
+}
+
 export type TagListQueryVariables = Exact<{
   filter?: InputMaybe<TagFilter>
   cursor?: InputMaybe<Scalars['ID']>
@@ -10879,6 +10899,7 @@ export type FullUserFragment = {
   email: string
   emailVerifiedAt?: string | null
   flair?: string | null
+  subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
   roles: Array<{
     __typename?: 'UserRole'
     id: string
@@ -10913,6 +10934,7 @@ export type UserListQuery = {
       email: string
       emailVerifiedAt?: string | null
       flair?: string | null
+      subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
       roles: Array<{
         __typename?: 'UserRole'
         id: string
@@ -10948,6 +10970,7 @@ export type MeQuery = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
+    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -10977,6 +11000,7 @@ export type UserQuery = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
+    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -11007,6 +11031,7 @@ export type CreateUserMutation = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
+    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -11037,6 +11062,7 @@ export type UpdateUserMutation = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
+    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -11067,6 +11093,7 @@ export type ResetUserPasswordMutation = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
+    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -11096,6 +11123,7 @@ export type DeleteUserMutation = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
+    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -11404,6 +11432,9 @@ export const FullUser = gql`
     name
     email
     emailVerifiedAt
+    subscriptions {
+      id
+    }
     flair
     roles {
       ...FullUserRole
@@ -12536,6 +12567,13 @@ export const RenewSubscription = gql`
     }
   }
 `
+export const DeleteSubscription = gql`
+  mutation DeleteSubscription($id: ID!) {
+    deleteSubscription(id: $id) {
+      id
+    }
+  }
+`
 export const TagList = gql`
   query TagList(
     $filter: TagFilter
@@ -12589,7 +12627,7 @@ export const DeleteTag = gql`
 `
 export const UserList = gql`
   query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
-    users(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+    users(filter: {text: $filter}, cursor: $cursor, take: $take, skip: $skip) {
       nodes {
         ...FullUser
       }

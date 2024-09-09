@@ -1,81 +1,84 @@
 fragment FullUser on User {
-  id
-  name
-  email
-  emailVerifiedAt
-  flair
-  roles {
-    ...FullUserRole
-  }
+    id
+    name
+    email
+    emailVerifiedAt
+    subscriptions {
+        id
+    }
+    flair
+    roles {
+        ...FullUserRole
+    }
 }
 
 query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
-  users(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-    nodes {
-      ...FullUser
-    }
+    users(filter: {text: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+        nodes {
+            ...FullUser
+        }
 
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
+        pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+        }
 
-    totalCount
-  }
+        totalCount
+    }
 }
 
 query Me {
-  me {
-    ...FullUser
-  }
+    me {
+        ...FullUser
+    }
 }
 
 query User($id: ID!) {
-  user(id: $id) {
-    ...FullUser
-  }
+    user(id: $id) {
+        ...FullUser
+    }
 }
 
 mutation CreateUser($input: UserInput!, $password: String!) {
-  createUser(input: $input, password: $password) {
-    ...FullUser
-  }
+    createUser(input: $input, password: $password) {
+        ...FullUser
+    }
 }
 
 mutation UpdateUser($id: ID!, $input: UserInput!) {
-  updateUser(id: $id, input: $input) {
-    ...FullUser
-  }
+    updateUser(id: $id, input: $input) {
+        ...FullUser
+    }
 }
 
 mutation ResetUserPassword($id: ID!, $password: String!) {
-  resetUserPassword(id: $id, password: $password) {
-    ...FullUser
-  }
+    resetUserPassword(id: $id, password: $password) {
+        ...FullUser
+    }
 }
 
 mutation DeleteUser($id: ID!) {
-  deleteUser(id: $id) {
-    ...FullUser
-  }
+    deleteUser(id: $id) {
+        ...FullUser
+    }
 }
 
 mutation CreateSession($email: String!, $password: String!) {
-  createSession(email: $email, password: $password) {
-    user {
-      email
+    createSession(email: $email, password: $password) {
+        user {
+            email
+        }
+        token
     }
-    token
-  }
 }
 
 mutation CreateSessionWithJWT($jwt: String!) {
-  createSessionWithJWT(jwt: $jwt) {
-    user {
-      email
+    createSessionWithJWT(jwt: $jwt) {
+        user {
+            email
+        }
+        token
     }
-    token
-  }
 }
