@@ -1,4 +1,5 @@
 import {
+  Currency,
   Invoice,
   InvoiceItem,
   MetadataProperty,
@@ -34,6 +35,7 @@ export interface IntentState {
 export interface CreatePaymentIntentProps {
   paymentID: string
   invoice: InvoiceWithItems
+  currency: Currency
   saveCustomer: boolean
   customerID?: string
   successURL?: string

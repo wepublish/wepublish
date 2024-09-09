@@ -51,6 +51,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
 
   async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
     const apiKey = props.req.query?.apiKey as string
+
     if (!timeConstantCompare(apiKey, this.webhookApiKey)) {
       return {
         status: 403,
@@ -66,6 +67,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     }
 
     const transaction = props.req.body.transaction as Transaction
+
     if (transaction.subscription) {
       return {
         status: 200,
@@ -74,20 +76,24 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     }
 
     const state = this.mapPayrexxEventToPaymentStatus(transaction.status)
+
     if (state === null) {
       return {
         status: 200,
         paymentStates: []
       }
     }
+
     const intentState: IntentState = {
       paymentID: transaction.referenceId,
       paymentData: JSON.stringify(transaction),
       state
     }
+
     if (state === 'paid' && transaction.preAuthorizationId) {
       intentState.customerID = String(transaction.preAuthorizationId)
     }
+
     return {
       status: 200,
       paymentStates: [intentState]
@@ -99,20 +105,24 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       const offsiteTransactionIntent = await this.createOffsiteTransactionIntent(
         createPaymentIntentProps
       )
+
       if (offsiteTransactionIntent.state === 'paid') {
         return offsiteTransactionIntent
       }
     }
+
     return this.createGatewayIntent(createPaymentIntentProps)
   }
 
   async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
     const transaction = await this.transactionClient.retrieveTransaction(intentID)
+
     if (transaction) {
       return this.checkTransactionIntentStatus(transaction)
     }
 
     const gateway = await this.gatewayClient.getGateway(intentID)
+
     if (gateway) {
       return this.checkGatewayIntentStatus(gateway)
     }
@@ -122,6 +132,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       intentID,
       this.id
     )
+
     throw new Error('Payrexx Gateway/Transaction not found')
   }
 
@@ -136,22 +147,27 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       (accumulator, {amount, quantity}) => accumulator + amount * quantity,
       0
     )
+
     let transaction: Transaction
     try {
-      transaction = await this.transactionClient.chargePreAuthorizedTransaction(
-        parseInt(customerID as string),
-        {
-          amount,
-          referenceId: paymentID
-        }
-      )
+      if (!customerID) {
+        throw new Error('No customerID given')
+      }
+
+      transaction = await this.transactionClient.chargePreAuthorizedTransaction(+customerID, {
+        amount,
+        referenceId: paymentID
+      })
     } catch (e) {
       if (backgroundTask) {
         throw e
       }
+
       transaction = this.createErroredPreAuthorizedTransaction()
     }
+
     const state = this.mapPayrexxEventToPaymentStatus(transaction.status)
+
     if (state === null) {
       throw new Error('Invalid payrexx transaction status')
     }
@@ -166,6 +182,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
 
   private async createGatewayIntent({
     invoice,
+    currency,
     paymentID,
     successURL,
     failureURL
@@ -174,6 +191,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       (accumulator, {amount, quantity}) => accumulator + amount * quantity,
       0
     )
+
     const gateway = await this.gatewayClient.createGateway({
       psp: this.psp,
       pm: this.pm,
@@ -188,15 +206,17 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       failedRedirectUrl: failureURL as string,
       cancelRedirectUrl: failureURL as string,
       vatRate: this.vatRate,
-      currency: 'CHF',
+      currency,
       preAuthorization: true,
       chargeOnAuthorization: true
     })
+
     logger('payrexxPaymentProvider').info(
       'Created Payrexx intent with ID: %s for paymentProvider %s',
       gateway.id,
       this.id
     )
+
     return {
       intentID: gateway.id.toString(),
       intentSecret: gateway.link,
@@ -207,6 +227,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
 
   private checkTransactionIntentStatus(transaction: Transaction): IntentState {
     const state = this.mapPayrexxEventToPaymentStatus(transaction.status)
+
     if (!state) {
       logger('payrexxPaymentProvider').error(
         'Payrexx gateway with ID: %s for paymentProvider %s returned with an unmappable status %s',
@@ -214,6 +235,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
         this.id,
         transaction.status
       )
+
       throw new Error('Unmappable Payrexx transaction status')
     }
 
@@ -223,6 +245,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
         transaction.id,
         this.id
       )
+
       throw new Error('empty referenceId')
     }
 

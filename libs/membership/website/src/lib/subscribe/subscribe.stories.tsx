@@ -7,6 +7,7 @@ import {WithUserDecorator} from '@wepublish/storybook'
 import {wait} from '@wepublish/testing'
 import {
   Challenge,
+  Currency,
   Exact,
   FullImageFragment,
   FullInvoiceFragment,
@@ -144,7 +145,8 @@ const memberPlan = {
   slug: '',
   description: text,
   tags: [],
-  extendable: true
+  extendable: true,
+  currency: Currency.Chf
 } as Exact<FullMemberPlanFragment>
 
 const memberPlan2 = {
@@ -152,7 +154,8 @@ const memberPlan2 = {
   id: '2',
   name: 'Barfoo Memberplan',
   amountPerMonthMin: 500,
-  availablePaymentMethods: [memberPlan.availablePaymentMethods[1]]
+  availablePaymentMethods: [memberPlan.availablePaymentMethods[1]],
+  currency: Currency.Eur
 } as Exact<FullMemberPlanFragment>
 
 const memberPlan3 = {
@@ -776,6 +779,21 @@ export const NoWarningPaindInvoice: StoryObj<typeof Subscribe> = {
       },
       loading: false
     }
+  }
+}
+
+export const WithCurrency: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  play: waitForInitialDataIsSet(async ctx => {
+    await changeMemberPlan(memberPlan2)(ctx)
+  })
+}
+
+export const WithExtraMoneyOffset: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    extraMoneyOffset: 300
   }
 }
 

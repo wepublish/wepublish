@@ -14,6 +14,7 @@ export const createPaymentFromInvoice = async (
   paymentProviders: Context['paymentProviders'],
   invoicesByID: Context['loaders']['invoicesByID'],
   paymentMethodsByID: Context['loaders']['paymentMethodsByID'],
+  memberPlanClient: PrismaClient['memberPlan'],
   paymentClient: PrismaClient['payment']
 ): Promise<Payment> => {
   const {roles} = authenticate()
@@ -24,8 +25,17 @@ export const createPaymentFromInvoice = async (
   const paymentProvider = paymentProviders.find(pp => pp.id === paymentMethod?.paymentProviderID)
 
   const invoice = await invoicesByID.load(invoiceID)
+  const memberPlan = await memberPlanClient.findFirst({
+    where: {
+      Subscription: {
+        some: {
+          id: invoice.subscriptionID
+        }
+      }
+    }
+  })
 
-  if (!invoice || !paymentProvider) {
+  if (!invoice || !paymentProvider || !memberPlan) {
     throw new Error('Invalid data') // TODO: better error handling
   }
 
@@ -40,6 +50,7 @@ export const createPaymentFromInvoice = async (
   const intent = await paymentProvider.createIntent({
     paymentID: payment.id,
     invoice,
+    currency: invoice.currency,
     saveCustomer: true,
     successURL,
     failureURL

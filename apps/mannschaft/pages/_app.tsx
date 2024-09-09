@@ -1,6 +1,7 @@
 import {EmotionCache} from '@emotion/cache'
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
+import {GoogleAnalytics} from '@next/third-parties/google'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -25,6 +26,7 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {CookieOrPay} from '../src/cookie-or-pay/cookie-or-pay'
+import {PURModel} from '../src/cookie-or-pay/pur-model'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {MainSpacer} from '../src/main-spacer'
 import {MannschaftArticleDateWithShare} from '../src/mannschaft-article-date-with-share'
@@ -35,7 +37,6 @@ import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
 import theme from '../src/theme'
-import {GoogleAnalytics} from '@next/third-parties/google'
 
 setDefaultOptions({
   locale: de
@@ -188,7 +189,10 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               )}
 
               {publicRuntimeConfig.env.GA_ID && (
-                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+                <>
+                  <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+                  <PURModel />
+                </>
               )}
             </ThemeProvider>
           </WebsiteBuilderProvider>
