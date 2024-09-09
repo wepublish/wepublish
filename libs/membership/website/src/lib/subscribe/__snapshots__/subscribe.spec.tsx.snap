@@ -955,7 +955,7 @@ exports[`Subscribe should render LoggedIn 1`] = `
                 <small
                   class="emotion-26 emotion-27"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -1684,7 +1684,7 @@ exports[`Subscribe should render LoggedOut 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -2988,7 +2988,7 @@ exports[`Subscribe should render NoWarningDeactivatedSubscription 1`] = `
                 <small
                   class="emotion-21 emotion-22"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -3744,7 +3744,7 @@ exports[`Subscribe should render NoWarningPaindInvoice 1`] = `
                 <small
                   class="emotion-21 emotion-22"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -4468,7 +4468,7 @@ exports[`Subscribe should render OnlyAddress 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -6182,7 +6182,7 @@ exports[`Subscribe should render OnlyBirthday 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -7515,7 +7515,7 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -8784,7 +8784,7 @@ exports[`Subscribe should render OnlyPassword 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -10095,7 +10095,7 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -11325,7 +11325,7 @@ exports[`Subscribe should render OnlyRequired 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -13218,7 +13218,7 @@ exports[`Subscribe should render WithChallengeError 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -14416,7 +14416,7 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -15587,7 +15587,7 @@ exports[`Subscribe should render WithClassName 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -16884,7 +16884,7 @@ exports[`Subscribe should render WithCurrency 1`] = `
                   <span
 @@ -101,11 +69,11 @@
                   >
-                    Ab EUR 5.00 pro Monat
+                    Ab €5.00 pro Monat
                   </small>
                 </div>
                 <span
@@ -16954,7 +16954,7 @@ exports[`Subscribe should render WithCurrency 1`] = `
             class="MuiTypography-root MuiTypography-body1 css-2be65z-SubscribeAmountText-MuiTypography-root eu4qtxp2"
           >
 -           Ich unterstütze Newsroom Name monatlich für CHF 12.-
-+           Ich unterstütze Newsroom Name monatlich für EUR 5.00
++           Ich unterstütze Newsroom Name monatlich für €5.00
           </p>
           <span
             class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-1tihl4y-MuiSlider-root"
@@ -17326,7 +17326,7 @@ exports[`Subscribe should render WithCurrency 1`] = `
           type="submit"
         >
 -         Monatlich für CHF 12.- Abonnieren
-+         Monatlich für EUR 5.00 Abonnieren
++         Monatlich für €5.00 Abonnieren
           <span
             class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
@@ -17546,7 +17546,7 @@ exports[`Subscribe should render WithEmotion 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -18882,7 +18882,7 @@ exports[`Subscribe should render WithExtraMoneyOffset 1`] = `
                 <small
                   class="emotion-26 emotion-27"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -20084,7 +20084,7 @@ exports[`Subscribe should render WithUserInvoicesLoading 1`] = `
                 <small
                   class="emotion-21 emotion-22"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span
@@ -20838,7 +20838,7 @@ exports[`Subscribe should render WithUserSubscriptionsLoading 1`] = `
                 <small
                   class="emotion-21 emotion-22"
                 >
-                  Ab EUR 5.00 pro Monat
+                  Ab €5.00 pro Monat
                 </small>
               </div>
               <span

@@ -22,11 +22,6 @@ export const formatCurrency = (value: number, currency: Currency, locale = 'ch-D
   }
 
   const formatter = new Intl.NumberFormat(locale, {style: 'currency', currency})
-  let result = formatter.format(value)
 
-  if (locale === 'ch-DE') {
-    result = fixCHNumberDelimiter(value, formatter)
-  }
-
-  return result
+  return formatter.format(value).replace(/EUR[\s]?/, '€')
 }

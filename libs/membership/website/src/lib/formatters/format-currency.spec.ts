@@ -18,7 +18,7 @@ describe('formatChf', () => {
 
 describe('formatCurrency', () => {
   it('should format a number without decimals in the swiss german locale but as euros', () => {
-    expect(formatCurrency(50000, Currency.Eur, 'ch-DE')).toMatchInlineSnapshot(`"EUR 50’000.00"`)
+    expect(formatCurrency(50000, Currency.Eur, 'ch-DE')).toMatchInlineSnapshot(`"€50’000.00"`)
   })
 
   it('should format a number without decimals in the german locale as euros', () => {
