@@ -244,9 +244,11 @@ function ImageEditPanel({id, file, block, onClose, onSave, imageMetaData}: Image
     if (!willImageResize(file, imgMinSizeToCompress)) {
       return file // do not resize
     }
+
     const options = {
       maxSizeMB: imgMinSizeToCompress // the max size in MB, defaults to 2MB
     }
+
     return imageCompression(file, options)
   }
 

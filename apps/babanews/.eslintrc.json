@@ -6,7 +6,6 @@
     "../../.eslintrc.json"
   ],
   "ignorePatterns": ["!**/*", ".next/**/*"],
-  "plugins": ["simple-import-sort"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -27,9 +26,7 @@
               }
             ]
           }
-        ],
-        "simple-import-sort/imports": 1,
-        "simple-import-sort/exports": 1
+        ]
       }
     },
     {
