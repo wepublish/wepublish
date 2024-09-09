@@ -84,7 +84,6 @@ const requiredSchema = requiredRegisterSchema.omit({
 
 const defaultSchema = z.object({
   firstName: z.string().optional().or(z.literal('')),
-  preferredName: z.string().optional().or(z.literal('')),
   flair: z.string().optional().or(z.literal('')),
   birthday: z.coerce.date().max(new Date()).optional(),
   address: z.object({
@@ -98,7 +97,7 @@ const defaultSchema = z.object({
 })
 
 export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
-  fields = ['firstName', 'name', 'flair', 'address', 'password', 'preferredName', 'image'] as T[],
+  fields = ['firstName', 'flair', 'address', 'password', 'image'] as T[],
   className,
   user,
   schema = defaultSchema,
@@ -152,7 +151,6 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
       },
       email: user.email,
       firstName: user.firstName || '',
-      preferredName: user.preferredName || '',
       name: user.name,
       flair: user.flair || '',
       birthday: user.birthday

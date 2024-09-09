@@ -532,7 +532,6 @@ type User {
   modifiedAt: DateTime!
   name: String!
   password: String!
-  preferredName: String
   roleIDs: [String!]!
   userImageID: String
 }

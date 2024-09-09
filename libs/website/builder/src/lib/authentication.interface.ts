@@ -37,7 +37,6 @@ export type BuilderRegistrationFormProps<
     Partial<{
       password: z.ZodString | z.ZodOptional<z.ZodString>
       passwordRepeated: z.ZodString | z.ZodOptional<z.ZodString>
-      preferredName: z.ZodString | z.ZodOptional<z.ZodString>
       firstName: z.ZodString | z.ZodOptional<z.ZodString>
       address: AddressShape | z.ZodOptional<AddressShape>
       birthday: z.ZodDate | z.ZodOptional<z.ZodDate>

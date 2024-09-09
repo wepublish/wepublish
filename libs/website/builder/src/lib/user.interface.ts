@@ -50,9 +50,8 @@ export type BuilderPersonalDataFormProps<
     Partial<{
       password: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
       passwordRepeated: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
-      preferredName: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
       firstName: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
-      lastName: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
+      name: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
       flair: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
       address: AddressShape | z.ZodOptional<AddressShape>
       birthday: z.ZodDate | z.ZodOptional<z.ZodDate>

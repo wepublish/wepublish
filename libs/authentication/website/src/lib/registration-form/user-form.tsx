@@ -87,22 +87,6 @@ export function UserForm<T extends BuilderUserFormFields>({
         />
       )}
 
-      {fieldsToDisplay.preferredName && (
-        <Controller
-          name={'preferredName'}
-          control={control}
-          render={({field, fieldState: {error}}) => (
-            <TextField
-              {...field}
-              value={field.value ?? ''}
-              label={'Bevorzugter Name'}
-              error={!!error}
-              helperText={error?.message}
-            />
-          )}
-        />
-      )}
-
       {fieldsToDisplay.flair && (
         <Controller
           name={'flair'}

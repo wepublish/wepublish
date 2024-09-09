@@ -55,19 +55,6 @@ const fillFirstName: StoryObj['play'] = async ({canvasElement, step}) => {
   })
 }
 
-const fillPreferredName: StoryObj['play'] = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement)
-
-  const input = canvas.getByLabelText('Bevorzugter Name', {
-    selector: 'input'
-  })
-
-  await step('Enter preferred name', async () => {
-    await userEvent.click(input)
-    await userEvent.type(input, 'Baz')
-  })
-}
-
 const fillName: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
@@ -276,30 +263,6 @@ export const OnlyFirstNameFilled: StoryObj = {
 
 export const OnlyFirstNameInvalid: StoryObj = {
   ...OnlyFirstName,
-  play: async ctx => {
-    await clickRegister(ctx)
-  }
-}
-
-export const OnlyPreferredName: StoryObj = {
-  ...Default,
-  args: {
-    ...Default.args,
-    fields: ['preferredName']
-  }
-}
-
-export const OnlyPreferredNameFilled: StoryObj = {
-  ...OnlyPreferredName,
-  play: async ctx => {
-    await fillRequired(ctx)
-    await fillPreferredName(ctx)
-    await clickRegister(ctx)
-  }
-}
-
-export const OnlyPreferredNameInvalid: StoryObj = {
-  ...OnlyPreferredName,
   play: async ctx => {
     await clickRegister(ctx)
   }

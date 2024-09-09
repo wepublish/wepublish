@@ -186,7 +186,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         name: {type: new GraphQLNonNull(GraphQLString)},
         firstName: {type: GraphQLString},
-        preferredName: {type: GraphQLString},
         email: {type: new GraphQLNonNull(GraphQLString)},
         address: {type: GraphQLUserAddressInput},
         password: {type: GraphQLString},
@@ -200,11 +199,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description: 'This mutation allows to register a new member,',
       async resolve(
         root,
-        {name, firstName, preferredName, email, address, birthday, password, challengeAnswer},
+        {name, firstName, email, address, birthday, password, challengeAnswer},
         {sessionTTL, hashCostFactor, prisma, challenge, mailContext}
       ) {
         email = email.toLowerCase()
-        await Validator.createUser().parse({name, email, firstName, preferredName})
+        await Validator.createUser().parse({name, email, firstName})
 
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
@@ -234,7 +233,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           {
             name,
             firstName,
-            preferredName,
             email,
             birthday,
             address,
@@ -270,7 +268,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           type: GraphQLDateTime
         },
         firstName: {type: GraphQLString},
-        preferredName: {type: GraphQLString},
         email: {type: new GraphQLNonNull(GraphQLString)},
         address: {type: GraphQLUserAddressInput},
         password: {type: GraphQLString},
@@ -297,7 +294,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {
           name,
           firstName,
-          preferredName,
           email,
           address,
           password,
@@ -326,7 +322,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         }
       ) {
         email = email.toLowerCase()
-        await Validator.createUser().parse({name, email, firstName, preferredName})
+        await Validator.createUser().parse({name, email, firstName})
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
@@ -378,7 +374,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           {
             name,
             firstName,
-            preferredName,
             email,
             address,
             birthday,

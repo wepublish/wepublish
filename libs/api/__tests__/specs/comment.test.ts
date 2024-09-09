@@ -396,7 +396,6 @@ describe('Comments', () => {
     const input: UserInput = {
       name: 'Wayne',
       firstName: 'Bruce',
-      preferredName: 'Batman',
       flair: 'Superhero',
       email: newUserEmail,
       emailVerifiedAt: new Date().toISOString(),

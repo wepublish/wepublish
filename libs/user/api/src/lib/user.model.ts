@@ -23,9 +23,6 @@ export class User {
   @Field({nullable: true})
   firstName?: string
 
-  @Field({nullable: true})
-  preferredName?: string
-
   @Field()
   password!: string
 

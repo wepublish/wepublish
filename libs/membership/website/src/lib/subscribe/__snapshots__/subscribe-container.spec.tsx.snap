@@ -101,7 +101,7 @@ exports[`Subscribe Container should render Default 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab €8.00 pro Monat
+                  Ab EUR 8.00 pro Monat
                 </small>
               </div>
               <span
@@ -1702,7 +1702,7 @@ exports[`Subscribe Container should render LoggedIn 1`] = `
                 <small
                   class="emotion-26 emotion-27"
                 >
-                  Ab €8.00 pro Monat
+                  Ab EUR 8.00 pro Monat
                 </small>
               </div>
               <span
@@ -2348,7 +2348,7 @@ exports[`Subscribe Container should render WithChallengeError 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab €8.00 pro Monat
+                  Ab EUR 8.00 pro Monat
                 </small>
               </div>
               <span
@@ -3433,7 +3433,7 @@ exports[`Subscribe Container should render WithClassName 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab €8.00 pro Monat
+                  Ab EUR 8.00 pro Monat
                 </small>
               </div>
               <span
@@ -4592,7 +4592,7 @@ exports[`Subscribe Container should render WithEmotion 1`] = `
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab €8.00 pro Monat
+                  Ab EUR 8.00 pro Monat
                 </small>
               </div>
               <span

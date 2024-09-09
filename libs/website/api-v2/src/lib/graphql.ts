@@ -900,7 +900,6 @@ export type User = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   password: Scalars['String'];
-  preferredName?: Maybe<Scalars['String']>;
   roleIDs: Array<Scalars['String']>;
   userImageID?: Maybe<Scalars['String']>;
 };

@@ -107,7 +107,6 @@ function UserEditView() {
   // user props
   const [name, setName] = useState('')
   const [firstName, setFirstName] = useState<string | undefined | null>()
-  const [preferredName, setPreferredName] = useState<string | undefined>()
   const [birthday, setBirthday] = useState<Date>()
   const [flair, setFlair] = useState<string | undefined>()
   const [email, setEmail] = useState('')
@@ -151,7 +150,6 @@ function UserEditView() {
     setUser(tmpUser)
     setFirstName(tmpUser.firstName)
     setName(tmpUser.name)
-    setPreferredName(tmpUser.preferredName ?? undefined)
     setFlair(tmpUser.flair || undefined)
     setBirthday(tmpUser.birthday ? new Date(tmpUser.birthday) : undefined)
     setEmail(tmpUser.email)
@@ -245,7 +243,6 @@ function UserEditView() {
             input: {
               name,
               firstName: firstName || undefined,
-              preferredName,
               flair,
               birthday: birthday?.toISOString() ?? null,
               email,
@@ -294,7 +291,6 @@ function UserEditView() {
             input: {
               name,
               firstName,
-              preferredName,
               flair,
               birthday: birthday?.toISOString(),
               email,
@@ -429,20 +425,6 @@ function UserEditView() {
                           onChange={(value: string) => {
                             setName(value)
                           }}
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* preferred name */}
-                    <Col xs={12}>
-                      <Form.Group controlId="preferredName">
-                        <Form.ControlLabel>
-                          {t('userCreateOrEditView.preferredName')}
-                        </Form.ControlLabel>
-                        <Form.Control
-                          name="preferredName"
-                          value={preferredName || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) => setPreferredName(value)}
                         />
                       </Form.Group>
                     </Col>

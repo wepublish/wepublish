@@ -1125,7 +1125,6 @@
       "password": "Mot de passe",
       "passwordChangeSuccess": "Le mot de passe a été changé avec succès !",
       "passwordHeader": "Mots de passe & accès",
-      "preferredName": "Nom préféré",
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
       "selectUserImage": "Choisir une photo de profil",

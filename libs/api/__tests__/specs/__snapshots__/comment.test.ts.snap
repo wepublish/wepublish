@@ -207,6 +207,5 @@ exports[`Comments sensitive data of the user associated with the comment is hidd
   "id": Any<String>,
   "image": null,
   "name": "Wayne",
-  "preferredName": "Batman",
 }
 `;

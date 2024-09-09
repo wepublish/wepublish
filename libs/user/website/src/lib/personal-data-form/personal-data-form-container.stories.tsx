@@ -79,8 +79,7 @@ const onUpdateVariables = {
       zipCode: '123458047',
       city: 'Surfers ParadiseZürich',
       country: 'AustraliaSchweiz'
-    },
-    preferredName: ''
+    }
   }
 }
 
@@ -105,7 +104,6 @@ export const Default: StoryObj = {
                 name: 'Gojny',
                 firstName: 'Emil',
                 email: 'emilgojny69@gmail.com',
-                preferredName: null,
                 address: {
                   company: null,
                   streetAddress: 'street',
@@ -157,7 +155,6 @@ export const Default: StoryObj = {
                 name: 'Gojny',
                 firstName: 'Emil',
                 email: 'emilgojny69@gmail.com',
-                preferredName: null,
                 address: {
                   company: null,
                   streetAddress: 'street',

@@ -67,7 +67,6 @@ export const requiredRegisterSchema = z.object({
 })
 
 export const defaultRegisterSchema = z.object({
-  preferredName: z.string().optional(),
   firstName: z.string().min(1),
   address: z.object({
     streetAddress: z.string().min(1),
