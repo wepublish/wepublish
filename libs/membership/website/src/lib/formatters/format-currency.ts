@@ -1,7 +1,7 @@
 import {Currency} from '@wepublish/website/api'
 import {fixCHNumberDelimiter} from './format-number'
 
-export const formatChf = (value: number, locale = 'ch-DE') => {
+const formatChf = (value: number, locale = 'ch-DE') => {
   const formatter = new Intl.NumberFormat(locale, {style: 'currency', currency: 'CHF'})
   let result = formatter.format(value)
 
@@ -17,11 +17,19 @@ export const formatChf = (value: number, locale = 'ch-DE') => {
 }
 
 export const formatCurrency = (value: number, currency: Currency, locale = 'ch-DE') => {
+  let result: string
+
   if (currency === Currency.Chf) {
-    return formatChf(value, locale)
+    result = formatChf(value, locale)
+  } else {
+    const formatter = new Intl.NumberFormat(locale, {style: 'currency', currency})
+    result = formatter.format(value)
   }
 
-  const formatter = new Intl.NumberFormat(locale, {style: 'currency', currency})
-
-  return formatter.format(value).replace(/EUR[\s]?/, '€')
+  return (
+    result
+      // Replacing those as CI & locally behave different
+      .replace(/EUR[\s]?/, '€')
+      .replace('’', "'")
+  )
 }
