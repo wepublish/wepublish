@@ -26,6 +26,7 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {CookieOrPay} from '../src/cookie-or-pay/cookie-or-pay'
+import {PURModel} from '../src/cookie-or-pay/pur-model'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {MainSpacer} from '../src/main-spacer'
 import {MannschaftArticleDateWithShare} from '../src/mannschaft-article-date-with-share'
@@ -188,7 +189,10 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               )}
 
               {publicRuntimeConfig.env.GA_ID && (
-                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+                <>
+                  <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+                  <PURModel />
+                </>
               )}
             </ThemeProvider>
           </WebsiteBuilderProvider>
