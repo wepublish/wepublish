@@ -12,11 +12,6 @@ const nextConfig = {
   },
   poweredByHeader: false,
   reactStrictMode: true,
-  // Adds the language attribute to the HTML
-  i18n: {
-    locales: ['de'],
-    defaultLocale: 'de'
-  },
   compiler: {
     // This is needed so that we can use components as selectors in Emotion
     emotion: {
