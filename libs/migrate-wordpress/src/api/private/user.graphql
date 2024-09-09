@@ -5,6 +5,10 @@ fragment FullUser on User {
     emailVerifiedAt
     subscriptions {
         id
+        memberPlan {
+            id
+            slug
+        }
     }
     flair
     roles {

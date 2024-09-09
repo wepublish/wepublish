@@ -9,6 +9,7 @@ mutation CreateSubscription($input: SubscriptionInput!) {
         monthlyAmount
         memberPlan {
             id
+            slug
         }
         extendable
         paymentMethod {

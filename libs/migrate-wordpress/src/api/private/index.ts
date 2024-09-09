@@ -4977,7 +4977,11 @@ export type FullParentCommentFragment = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
-    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+    subscriptions: Array<{
+      __typename?: 'UserSubscription'
+      id: string
+      memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+    }>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -5051,7 +5055,11 @@ export type FullCommentFragment = {
     flair?: string | null
     firstName?: string | null
     preferredName?: string | null
-    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+    subscriptions: Array<{
+      __typename?: 'UserSubscription'
+      id: string
+      memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+    }>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -5088,7 +5096,11 @@ export type FullCommentFragment = {
       email: string
       emailVerifiedAt?: string | null
       flair?: string | null
-      subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+      subscriptions: Array<{
+        __typename?: 'UserSubscription'
+        id: string
+        memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+      }>
       roles: Array<{
         __typename?: 'UserRole'
         id: string
@@ -5173,7 +5185,11 @@ export type CommentListQuery = {
         flair?: string | null
         firstName?: string | null
         preferredName?: string | null
-        subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+        subscriptions: Array<{
+          __typename?: 'UserSubscription'
+          id: string
+          memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+        }>
         roles: Array<{
           __typename?: 'UserRole'
           id: string
@@ -5210,7 +5226,11 @@ export type CommentListQuery = {
           email: string
           emailVerifiedAt?: string | null
           flair?: string | null
-          subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+          subscriptions: Array<{
+            __typename?: 'UserSubscription'
+            id: string
+            memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+          }>
           roles: Array<{
             __typename?: 'UserRole'
             id: string
@@ -5296,7 +5316,11 @@ export type CommentQuery = {
       flair?: string | null
       firstName?: string | null
       preferredName?: string | null
-      subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+      subscriptions: Array<{
+        __typename?: 'UserSubscription'
+        id: string
+        memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+      }>
       roles: Array<{
         __typename?: 'UserRole'
         id: string
@@ -5333,7 +5357,11 @@ export type CommentQuery = {
         email: string
         emailVerifiedAt?: string | null
         flair?: string | null
-        subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+        subscriptions: Array<{
+          __typename?: 'UserSubscription'
+          id: string
+          memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+        }>
         roles: Array<{
           __typename?: 'UserRole'
           id: string
@@ -5458,7 +5486,11 @@ export type UpdateCommentMutation = {
       flair?: string | null
       firstName?: string | null
       preferredName?: string | null
-      subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+      subscriptions: Array<{
+        __typename?: 'UserSubscription'
+        id: string
+        memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+      }>
       roles: Array<{
         __typename?: 'UserRole'
         id: string
@@ -5495,7 +5527,11 @@ export type UpdateCommentMutation = {
         email: string
         emailVerifiedAt?: string | null
         flair?: string | null
-        subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+        subscriptions: Array<{
+          __typename?: 'UserSubscription'
+          id: string
+          memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+        }>
         roles: Array<{
           __typename?: 'UserRole'
           id: string
@@ -5577,7 +5613,11 @@ export type CreateCommentMutation = {
       flair?: string | null
       firstName?: string | null
       preferredName?: string | null
-      subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+      subscriptions: Array<{
+        __typename?: 'UserSubscription'
+        id: string
+        memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+      }>
       roles: Array<{
         __typename?: 'UserRole'
         id: string
@@ -5614,7 +5654,11 @@ export type CreateCommentMutation = {
         email: string
         emailVerifiedAt?: string | null
         flair?: string | null
-        subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+        subscriptions: Array<{
+          __typename?: 'UserSubscription'
+          id: string
+          memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+        }>
         roles: Array<{
           __typename?: 'UserRole'
           id: string
@@ -10944,7 +10988,7 @@ export type CreateSubscriptionMutation = {
     monthlyAmount: number
     extendable: boolean
     user?: {__typename?: 'User'; id: string} | null
-    memberPlan: {__typename?: 'MemberPlan'; id: string}
+    memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
     paymentMethod: {__typename?: 'PaymentMethod'; id: string}
   } | null
 }
@@ -11030,7 +11074,11 @@ export type FullUserFragment = {
   email: string
   emailVerifiedAt?: string | null
   flair?: string | null
-  subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+  subscriptions: Array<{
+    __typename?: 'UserSubscription'
+    id: string
+    memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+  }>
   roles: Array<{
     __typename?: 'UserRole'
     id: string
@@ -11065,7 +11113,11 @@ export type UserListQuery = {
       email: string
       emailVerifiedAt?: string | null
       flair?: string | null
-      subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+      subscriptions: Array<{
+        __typename?: 'UserSubscription'
+        id: string
+        memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+      }>
       roles: Array<{
         __typename?: 'UserRole'
         id: string
@@ -11101,7 +11153,11 @@ export type MeQuery = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
-    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+    subscriptions: Array<{
+      __typename?: 'UserSubscription'
+      id: string
+      memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+    }>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -11131,7 +11187,11 @@ export type UserQuery = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
-    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+    subscriptions: Array<{
+      __typename?: 'UserSubscription'
+      id: string
+      memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+    }>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -11162,7 +11222,11 @@ export type CreateUserMutation = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
-    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+    subscriptions: Array<{
+      __typename?: 'UserSubscription'
+      id: string
+      memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+    }>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -11193,7 +11257,11 @@ export type UpdateUserMutation = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
-    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+    subscriptions: Array<{
+      __typename?: 'UserSubscription'
+      id: string
+      memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+    }>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -11224,7 +11292,11 @@ export type ResetUserPasswordMutation = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
-    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+    subscriptions: Array<{
+      __typename?: 'UserSubscription'
+      id: string
+      memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+    }>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -11254,7 +11326,11 @@ export type DeleteUserMutation = {
     email: string
     emailVerifiedAt?: string | null
     flair?: string | null
-    subscriptions: Array<{__typename?: 'UserSubscription'; id: string}>
+    subscriptions: Array<{
+      __typename?: 'UserSubscription'
+      id: string
+      memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+    }>
     roles: Array<{
       __typename?: 'UserRole'
       id: string
@@ -11565,6 +11641,10 @@ export const FullUser = gql`
     emailVerifiedAt
     subscriptions {
       id
+      memberPlan {
+        id
+        slug
+      }
     }
     flair
     roles {
@@ -12733,6 +12813,7 @@ export const CreateSubscription = gql`
       monthlyAmount
       memberPlan {
         id
+        slug
       }
       extendable
       paymentMethod {
