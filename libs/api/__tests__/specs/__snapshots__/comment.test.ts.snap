@@ -6,9 +6,9 @@ exports[`Comments can be created with bare minimum 1`] = `
     "addComment": {
       "id": Any<String>,
       "itemID": Any<String>,
-      "itemType": "Article",
+      "itemType": "article",
       "parentID": null,
-      "state": "Approved",
+      "state": "approved",
       "text": Any<Object>,
       "user": Any<Object>,
     },
@@ -29,9 +29,9 @@ exports[`Comments create authorize permissions Public: comment from a user with 
     "addComment": {
       "id": Any<String>,
       "itemID": "d",
-      "itemType": "Article",
+      "itemType": "article",
       "parentID": null,
-      "state": "Approved",
+      "state": "approved",
       "text": [
         {
           "children": [
@@ -63,9 +63,9 @@ exports[`Comments create authorize permissions Public: comment from a user witho
     "addComment": {
       "id": Any<String>,
       "itemID": "d",
-      "itemType": "Article",
+      "itemType": "article",
       "parentID": null,
-      "state": "PendingApproval",
+      "state": "pendingApproval",
       "text": [
         {
           "children": [
@@ -101,7 +101,7 @@ exports[`Comments create authorize permissions comment from a user with approval
       "guestUsername": null,
       "id": Any<String>,
       "itemID": "d",
-      "itemType": "Article",
+      "itemType": "article",
       "modifiedAt": Any<Date>,
       "overriddenRatings": null,
       "parentComment": null,
@@ -112,7 +112,7 @@ exports[`Comments create authorize permissions comment from a user with approval
         },
       ],
       "source": null,
-      "state": "Approved",
+      "state": "approved",
       "tags": [],
       "user": null,
     },
@@ -137,7 +137,7 @@ exports[`Comments create authorize permissions comment from a user without appro
       "guestUsername": null,
       "id": Any<String>,
       "itemID": "d",
-      "itemType": "Article",
+      "itemType": "article",
       "modifiedAt": Any<Date>,
       "overriddenRatings": null,
       "parentComment": null,
@@ -148,7 +148,7 @@ exports[`Comments create authorize permissions comment from a user without appro
         },
       ],
       "source": null,
-      "state": "PendingApproval",
+      "state": "pendingApproval",
       "tags": [],
       "user": null,
     },
@@ -173,7 +173,7 @@ exports[`Comments create can be created 1`] = `
       "guestUsername": null,
       "id": Any<String>,
       "itemID": "d",
-      "itemType": "Article",
+      "itemType": "article",
       "modifiedAt": Any<Date>,
       "overriddenRatings": null,
       "parentComment": null,
@@ -184,7 +184,7 @@ exports[`Comments create can be created 1`] = `
         },
       ],
       "source": null,
-      "state": "Approved",
+      "state": "approved",
       "tags": [],
       "user": null,
     },

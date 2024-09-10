@@ -1,4 +1,4 @@
-import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
+import {ApolloDriverConfig, ApolloFederationDriver} from '@nestjs/apollo'
 import {Global, Module} from '@nestjs/common'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {GraphQLModule} from '@nestjs/graphql'
@@ -49,16 +49,25 @@ import {PollModule} from '@wepublish/poll/api'
 @Global()
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      resolvers: {RichText: GraphQLRichText},
-      autoSchemaFile: './apps/api-example/schema-v2.graphql',
-      sortSchema: true,
-      path: 'v2',
-      cache: 'bounded',
-      playground: process.env.NODE_ENV === 'development',
-      allowBatchedHttpRequests: true
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloFederationDriver,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+        return {
+          resolvers: {RichText: GraphQLRichText},
+          autoSchemaFile: './apps/api-example/schema-v2.graphql',
+          sortSchema: true,
+          path: 'v2',
+          cache: 'bounded',
+          introspection: configFile.general.apolloIntrospection,
+          playground: configFile.general.apolloPlayground,
+          allowBatchedHttpRequests: true
+        }
+      }
     }),
+
     PrismaModule,
     MailsModule.registerAsync({
       imports: [ConfigModule],

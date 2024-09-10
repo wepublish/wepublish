@@ -88,8 +88,8 @@ export const GraphQLAuthorFilter = new GraphQLInputObjectType({
 export const GraphQLAuthorSort = new GraphQLEnumType({
   name: 'AuthorSort',
   values: {
-    CREATED_AT: {value: AuthorSort.CreatedAt},
-    MODIFIED_AT: {value: AuthorSort.ModifiedAt},
+    [AuthorSort.CreatedAt]: {value: AuthorSort.CreatedAt},
+    [AuthorSort.ModifiedAt]: {value: AuthorSort.ModifiedAt},
     NAME: {value: AuthorSort.Name}
   }
 })

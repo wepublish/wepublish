@@ -20,6 +20,7 @@ export type Scalars = {
   /** Setting Value */
   GraphQLSettingValueType: any;
   RichText: Node[];
+  link__Import: any;
 };
 
 export type AllowedSettingVals = {
@@ -99,15 +100,17 @@ export type Event = {
   endsAt?: Maybe<Scalars['DateTime']>;
   externalSourceId?: Maybe<Scalars['String']>;
   externalSourceName?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  id: Scalars['ID'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  page?: Maybe<Page>;
   startsAt: Scalars['DateTime'];
   status: EventStatus;
+  tags?: Maybe<Array<Tag>>;
 };
 
 export type EventFilter = {
@@ -126,12 +129,13 @@ export type EventFromSource = {
   endsAt?: Maybe<Scalars['DateTime']>;
   externalSourceId?: Maybe<Scalars['String']>;
   externalSourceName?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  id: Scalars['ID'];
   imageUrl?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  page?: Maybe<Page>;
   startsAt: Scalars['DateTime'];
   status: EventStatus;
 };
@@ -158,6 +162,11 @@ export type FocalPoint = {
 
 export type Image = {
   __typename?: 'Image';
+  id: Scalars['ID'];
+};
+
+export type ImageV2 = {
+  __typename?: 'ImageV2';
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['RichText']>;
   extension: Scalars['String'];
@@ -166,7 +175,7 @@ export type Image = {
   focalPoint?: Maybe<FocalPoint>;
   format: Scalars['String'];
   height: Scalars['Int'];
-  id: Scalars['String'];
+  id: Scalars['ID'];
   license?: Maybe<Scalars['String']>;
   link?: Maybe<Scalars['String']>;
   mimeType: Scalars['String'];
@@ -221,9 +230,9 @@ export type MailTemplateWithUrlAndStatusModel = {
   url: Scalars['String'];
 };
 
-export type MemberPlanRef = {
-  __typename?: 'MemberPlanRef';
-  id: Scalars['String'];
+export type MemberPlan = {
+  __typename?: 'MemberPlan';
+  id: Scalars['ID'];
   name: Scalars['String'];
 };
 
@@ -465,6 +474,11 @@ export type MutationUpdateUserConsentArgs = {
   value: Scalars['Boolean'];
 };
 
+export type Page = {
+  __typename?: 'Page';
+  id: Scalars['ID'];
+};
+
 export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor?: Maybe<Scalars['String']>;
@@ -487,9 +501,9 @@ export type PaginatedPollVotes = {
   totalCount: Scalars['Float'];
 };
 
-export type PaymentMethodRef = {
-  __typename?: 'PaymentMethodRef';
-  id: Scalars['String'];
+export type PaymentMethod = {
+  __typename?: 'PaymentMethod';
+  id: Scalars['ID'];
   name: Scalars['String'];
 };
 
@@ -524,7 +538,7 @@ export type PollVote = {
   answer: PollAnswerInVote;
   answerId: Scalars['ID'];
   createdAt: Scalars['DateTime'];
-  disabled: Scalars['String'];
+  disabled: Scalars['Boolean'];
   fingerprint?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   pollId: Scalars['ID'];
@@ -585,7 +599,7 @@ export type Query = {
    */
   expectedRevenue: Array<DashboardInvoice>;
   /** Returns an image by id. */
-  image: Image;
+  getImage: ImageV2;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
@@ -621,7 +635,7 @@ export type Query = {
    */
   newSubscribers: Array<DashboardSubscription>;
   /** Returns all payment methods */
-  paymentMethods: Array<PaymentMethodRef>;
+  paymentMethods: Array<PaymentMethod>;
   periodicJobLog: Array<PeriodicJob>;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
@@ -641,16 +655,22 @@ export type Query = {
   revenue: Array<DashboardInvoice>;
   /**
    *
-   *       Returns a single setting by id.
+   *       Returns a single setting by name.
    *
    */
   setting: Setting;
   /**
    *
+   *       Returns a single setting by id.
+   *
+   */
+  settingById: Setting;
+  /**
+   *
    *       Returns all settings.
    *
    */
-  settingsList: Array<Setting>;
+  settings: Array<Setting>;
   stats?: Maybe<Stats>;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
@@ -683,12 +703,12 @@ export type QueryConsentsArgs = {
 
 
 export type QueryEventArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type QueryEventsArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['ID']>;
   filter?: InputMaybe<EventFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -703,7 +723,7 @@ export type QueryExpectedRevenueArgs = {
 };
 
 
-export type QueryImageArgs = {
+export type QueryGetImageArgs = {
   id: Scalars['String'];
 };
 
@@ -763,11 +783,16 @@ export type QueryRevenueArgs = {
 
 
 export type QuerySettingArgs = {
+  name: Scalars['String'];
+};
+
+
+export type QuerySettingByIdArgs = {
   id: Scalars['String'];
 };
 
 
-export type QuerySettingsListArgs = {
+export type QuerySettingsArgs = {
   filter?: InputMaybe<SettingFilter>;
 };
 
@@ -868,9 +893,9 @@ export type SubscriptionFlowModel = {
   default: Scalars['Boolean'];
   id: Scalars['String'];
   intervals: Array<SubscriptionInterval>;
-  memberPlan?: Maybe<MemberPlanRef>;
+  memberPlan?: Maybe<MemberPlan>;
   numberOfSubscriptions: Scalars['Int'];
-  paymentMethods: Array<PaymentMethodRef>;
+  paymentMethods: Array<PaymentMethod>;
   periodicities: Array<PaymentPeriodicity>;
 };
 
@@ -888,20 +913,21 @@ export type SystemMailModel = {
   mailTemplate?: Maybe<MailTemplateRef>;
 };
 
+export type Tag = {
+  __typename?: 'Tag';
+  id: Scalars['ID'];
+};
+
 export type User = {
   __typename?: 'User';
-  active: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   lastLogin?: Maybe<Scalars['DateTime']>;
-  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  password: Scalars['String'];
   preferredName?: Maybe<Scalars['String']>;
-  roleIDs: Array<Scalars['String']>;
+  roleIDs?: Maybe<Array<Scalars['String']>>;
   userImageID?: Maybe<Scalars['String']>;
 };
 
@@ -1124,7 +1150,7 @@ export type DeletePollVoteMutation = { __typename?: 'Mutation', deletePollVote: 
 export type SettingsListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SettingsListQuery = { __typename?: 'Query', settingsList: Array<{ __typename?: 'Setting', id: string, name: SettingName, value?: any | null, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null, allowedValues?: { __typename?: 'AllowedSettingVals', stringChoice?: Array<string> | null, boolChoice?: boolean | null } | null } | null }> };
+export type SettingsListQuery = { __typename?: 'Query', settings: Array<{ __typename?: 'Setting', id: string, name: SettingName, value?: any | null, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null, allowedValues?: { __typename?: 'AllowedSettingVals', stringChoice?: Array<string> | null, boolChoice?: boolean | null } | null } | null }> };
 
 export type UpdateSettingMutationVariables = Exact<{
   name: SettingName;
@@ -1140,7 +1166,7 @@ export type SubscriptionFlowsQueryVariables = Exact<{
 }>;
 
 
-export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type CreateSubscriptionFlowMutationVariables = Exact<{
   memberPlanId: Scalars['String'];
@@ -1150,7 +1176,7 @@ export type CreateSubscriptionFlowMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type UpdateSubscriptionFlowMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1160,14 +1186,14 @@ export type UpdateSubscriptionFlowMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type DeleteSubscriptionFlowMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type CreateSubscriptionIntervalMutationVariables = Exact<{
   subscriptionFlowId: Scalars['String'];
@@ -1177,7 +1203,7 @@ export type CreateSubscriptionIntervalMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type UpdateSubscriptionIntervalMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1186,29 +1212,29 @@ export type UpdateSubscriptionIntervalMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type DeleteSubscriptionIntervalMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type ListPaymentMethodsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ListPaymentMethodsQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }> };
+export type ListPaymentMethodsQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }> };
 
-export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
+export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
 
 export type SubscriptionIntervalFragment = { __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null };
 
 export type MailTemplateRefFragment = { __typename?: 'MailTemplateRef', id: string, name: string };
 
-export type MemberPlanRefFragment = { __typename?: 'MemberPlanRef', id: string, name: string };
+export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string };
 
-export type PaymentMethodRefFragment = { __typename?: 'PaymentMethodRef', id: string, name: string };
+export type PaymentMethodRefFragment = { __typename?: 'PaymentMethod', id: string, name: string };
 
 export type SystemMailsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1336,13 +1362,13 @@ export const FullPollVoteWithAnswerFragmentDoc = gql`
 }
     ${FullPollVoteFragmentDoc}`;
 export const MemberPlanRefFragmentDoc = gql`
-    fragment MemberPlanRef on MemberPlanRef {
+    fragment MemberPlanRef on MemberPlan {
   id
   name
 }
     `;
 export const PaymentMethodRefFragmentDoc = gql`
-    fragment PaymentMethodRef on PaymentMethodRef {
+    fragment PaymentMethodRef on PaymentMethod {
   id
   name
 }
@@ -2251,7 +2277,7 @@ export type DeletePollVoteMutationResult = Apollo.MutationResult<DeletePollVoteM
 export type DeletePollVoteMutationOptions = Apollo.BaseMutationOptions<DeletePollVoteMutation, DeletePollVoteMutationVariables>;
 export const SettingsListDocument = gql`
     query SettingsList {
-  settingsList {
+  settings {
     id
     name
     value

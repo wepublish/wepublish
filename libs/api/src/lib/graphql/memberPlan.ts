@@ -31,10 +31,10 @@ export const GraphQLSupportedCurrency = new GraphQLEnumType({
 export const GraphQLPaymentPeriodicity = new GraphQLEnumType({
   name: 'PaymentPeriodicity',
   values: {
-    MONTHLY: {value: PaymentPeriodicity.monthly},
-    QUARTERLY: {value: PaymentPeriodicity.quarterly},
-    BIANNUAL: {value: PaymentPeriodicity.biannual},
-    YEARLY: {value: PaymentPeriodicity.yearly}
+    [PaymentPeriodicity.monthly]: {value: PaymentPeriodicity.monthly},
+    [PaymentPeriodicity.quarterly]: {value: PaymentPeriodicity.quarterly},
+    [PaymentPeriodicity.biannual]: {value: PaymentPeriodicity.biannual},
+    [PaymentPeriodicity.yearly]: {value: PaymentPeriodicity.yearly}
   }
 })
 
@@ -166,8 +166,8 @@ export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
 export const GraphQLMemberPlanSort = new GraphQLEnumType({
   name: 'MemberPlanSort',
   values: {
-    CREATED_AT: {value: MemberPlanSort.CreatedAt},
-    MODIFIED_AT: {value: MemberPlanSort.ModifiedAt}
+    [MemberPlanSort.CreatedAt]: {value: MemberPlanSort.CreatedAt},
+    [MemberPlanSort.ModifiedAt]: {value: MemberPlanSort.ModifiedAt}
   }
 })
 
