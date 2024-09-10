@@ -3,7 +3,13 @@ import {Readable} from 'stream'
 import axios from 'axios'
 import FormData from 'form-data'
 import {privateClient, privateGraphqlEndpoint, privateToken} from '../api/clients'
-import {ImageList, ImageListQuery, UploadImageInput} from '../../api/private'
+import {
+  ImageList,
+  ImageListQuery,
+  UploadImage,
+  UploadImageInput,
+  UploadImageMutationVariables
+} from '../../api/private'
 
 export type Image = {
   id: string
@@ -73,13 +79,7 @@ function prepareFileInput(stream: Readable, input: UploadStreamInput) {
   form.append(
     'operations',
     JSON.stringify({
-      query: `
-      mutation UploadImage($input: UploadImageInput!) {
-        uploadImage(input: $input) {
-          id
-        }
-      }
-    `,
+      query: UploadImage,
       variables: {
         input: {
           focalPoint: {
@@ -88,7 +88,7 @@ function prepareFileInput(stream: Readable, input: UploadStreamInput) {
           },
           ...input
         }
-      }
+      } as UploadImageMutationVariables
     })
   )
   form.append(
@@ -98,7 +98,6 @@ function prepareFileInput(stream: Readable, input: UploadStreamInput) {
     })
   )
   form.append('0', stream)
-
   return form
 }
 
