@@ -49,16 +49,25 @@ import {PollModule} from '@wepublish/poll/api'
 @Global()
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloFederationDriver,
-      resolvers: {RichText: GraphQLRichText},
-      autoSchemaFile: './apps/api-example/schema-v2.graphql',
-      sortSchema: true,
-      path: 'v2',
-      cache: 'bounded',
-      playground: process.env.NODE_ENV === 'development',
-      allowBatchedHttpRequests: true
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+        return {
+          resolvers: {RichText: GraphQLRichText},
+          autoSchemaFile: './apps/api-example/schema-v2.graphql',
+          sortSchema: true,
+          path: 'v2',
+          cache: 'bounded',
+          introspection: configFile.general.apolloIntrospection,
+          playground: configFile.general.apolloPlayground,
+          allowBatchedHttpRequests: true
+        }
+      }
     }),
+
     PrismaModule,
     MailsModule.registerAsync({
       imports: [ConfigModule],
