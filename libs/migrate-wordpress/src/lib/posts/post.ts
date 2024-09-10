@@ -1,5 +1,5 @@
 import {deleteArticle, ensureArticle, getArticleBySlug} from './article'
-import {ensureTagsForPost} from './tags'
+import {ensureTags} from './tags'
 import {BlockInput} from '../../api/private'
 import {
   convertNodeContentToRichText,
@@ -21,13 +21,8 @@ import {PreparedArticleData} from './prepare-data'
 const deleteBeforeMigrate = true
 
 export async function migratePost(data: PreparedArticleData) {
-  const {id, title, lead, content, createdAt, modifiedAt, slug, link, featuredMedia} = data
+  const {title, lead, content, createdAt, modifiedAt, slug, link, featuredMedia} = data
 
-  console.log()
-  console.log('========================================================================')
-  console.log()
-  console.log('Migrating article')
-  console.log({title, slug, link})
   const existingArticle = await getArticleBySlug(slug)
   if (existingArticle) {
     console.log('  article exists', slug)
@@ -40,7 +35,7 @@ export async function migratePost(data: PreparedArticleData) {
   }
 
   // Tags
-  const tags = await ensureTagsForPost(id)
+  const tags = await ensureTags(data)
 
   // Authors
   const authors = await ensureAuthors(data)

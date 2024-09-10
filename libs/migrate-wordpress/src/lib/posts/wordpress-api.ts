@@ -1,4 +1,5 @@
 import axios, {AxiosRequestConfig} from 'axios'
+import {cache} from './cache'
 
 export type WordpressTag = {
   name: string
@@ -54,6 +55,9 @@ export type WordpressPost = {
 }
 
 const WORDPRESS_URL = process.env['WORDPRESS_URL'] + '/wp-json/wp/v2'
+
+const categoriesCache = cache('categories')
+const tagsCache = cache('tags')
 
 const request = ({path, ...request}: Omit<AxiosRequestConfig, 'url'> & {path: string}) => {
   // console.log(`${request.method ?? 'get'} ${path}`)
@@ -116,6 +120,17 @@ export const fetchTagsForPost = async (postId: string): Promise<WordpressTag[]> 
   return response.data
 }
 
+export const fetchTag = async (tagId: number): Promise<WordpressTag> => {
+  return tagsCache.get(tagId.toString(), async tagId => {
+    const response = await request({
+      method: 'get',
+      path: `/tags/${tagId}`,
+      auth: fetchAuth()
+    })
+    return response.data
+  })
+}
+
 export const fetchLeafCategoriesForPost = async (postId: number): Promise<WordpressCategory[]> => {
   const response = await request({
     method: 'get',
@@ -126,12 +141,14 @@ export const fetchLeafCategoriesForPost = async (postId: number): Promise<Wordpr
 }
 
 export const fetchCategoryById = async (categoryId: number): Promise<WordpressCategory> => {
-  const response = await request({
-    method: 'get',
-    path: '/categories/' + categoryId.toString(),
-    auth: fetchAuth()
+  return categoriesCache.get(categoryId.toString(), async categoryId => {
+    const response = await request({
+      method: 'get',
+      path: '/categories/' + categoryId.toString(),
+      auth: fetchAuth()
+    })
+    return response.data
   })
-  return response.data
 }
 
 export const fetchCategoryBranch = async (categoryId: number) => {

@@ -1,5 +1,3 @@
-import {fetchCategoriesForPost, fetchTagsForPost} from './wordpress-api'
-import {decode} from 'html-entities'
 import {privateClient} from '../api/clients'
 import {
   CreateTag,
@@ -13,6 +11,7 @@ import {
   UpdateTagMutation,
   UpdateTagMutationVariables
 } from '../../api/private'
+import {PreparedArticleData} from './prepare-data'
 
 export type Tag = {
   id: string
@@ -23,7 +22,7 @@ type TagInput = {
   main?: boolean
 }
 
-const ensureTag = async ({name, main = false}: TagInput): Promise<Tag> => {
+const ensureTag = async ({name, main = false}: TagInput): Promise<Tag | undefined> => {
   const tag = name
   const existingTag = await getTagByName(tag)
   if (existingTag) {
@@ -35,25 +34,14 @@ const ensureTag = async ({name, main = false}: TagInput): Promise<Tag> => {
     return existingTag
   }
   console.log('  tag create', tag)
-  return await createTag({tag, main})
+  return createTag({tag, main}).catch(e => {
+    console.error(e)
+    return undefined
+  })
 }
 
-export const ensureTagsForPost = async (postId: number): Promise<Tag[]> => {
-  const categories: TagInput[] = (await fetchCategoriesForPost(postId)).map(({name, parent}) => ({
-    name,
-    main: !parent
-  }))
-  const tags: TagInput[] = await fetchTagsForPost(postId.toString())
-  const postTags: TagInput[] = [...tags, ...categories].map(({name, ...tag}) => ({
-    ...tag,
-    name: decode(name)
-  }))
-
-  const wepTagIds = []
-  for (const tag of postTags) {
-    wepTagIds.push(await ensureTag(tag))
-  }
-  return wepTagIds
+export async function ensureTags({tags}: PreparedArticleData): Promise<Tag[]> {
+  return (await Promise.all(tags.map(t => ensureTag(t)))).filter(t => t) as Tag[]
 }
 
 // API

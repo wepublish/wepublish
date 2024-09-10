@@ -2,6 +2,7 @@ import {URL} from 'url'
 import {Readable} from 'stream'
 import axios from 'axios'
 import FormData from 'form-data'
+import {print} from 'graphql'
 import {privateClient, privateGraphqlEndpoint, privateToken} from '../api/clients'
 import {
   ImageList,
@@ -79,7 +80,7 @@ function prepareFileInput(stream: Readable, input: UploadStreamInput) {
   form.append(
     'operations',
     JSON.stringify({
-      query: UploadImage,
+      query: print(UploadImage),
       variables: {
         input: {
           focalPoint: {

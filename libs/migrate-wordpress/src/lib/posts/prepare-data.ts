@@ -1,4 +1,11 @@
-import {WordpressAuthor, WordpressPost} from './wordpress-api'
+import {
+  fetchCategoriesForPost,
+  fetchCategoryBranch,
+  fetchTag,
+  fetchTagsForPost,
+  WordpressAuthor,
+  WordpressPost
+} from './wordpress-api'
 import {decode} from 'html-entities'
 import {load} from 'cheerio'
 
@@ -12,6 +19,7 @@ export type PreparedArticleData = {
   modifiedAt: Date
   slug: string
   link: string
+  tags: TagInput[]
   authors: WordpressAuthor[]
   featuredMedia?: {
     url: string
@@ -20,7 +28,7 @@ export type PreparedArticleData = {
   }
 }
 
-export function prepareArticleData(post: WordpressPost): PreparedArticleData {
+export async function prepareArticleData(post: WordpressPost): Promise<PreparedArticleData> {
   const {
     id,
     title: {rendered: encodedTitle},
@@ -28,6 +36,8 @@ export function prepareArticleData(post: WordpressPost): PreparedArticleData {
     content: {rendered: content},
     date_gmt,
     modified_gmt,
+    categories: categoryIds,
+    tags: tagIds,
     wps_subtitle: subtitle,
     slug,
     link,
@@ -36,6 +46,7 @@ export function prepareArticleData(post: WordpressPost): PreparedArticleData {
   const title = decode(encodedTitle)
   const lead = removeLinks(excerpt)
 
+  // Featured media
   let featuredMedia
   if (_embedded?.['wp:featuredmedia']?.length) {
     const featuredMediaData = _embedded?.['wp:featuredmedia'][0]
@@ -46,11 +57,15 @@ export function prepareArticleData(post: WordpressPost): PreparedArticleData {
     }
   }
 
+  // Tags
+  const tags = await prepareTags(tagIds, categoryIds)
+
   return {
     id,
     title,
     subtitle,
     lead,
+    tags,
     content,
     createdAt: new Date(date_gmt + 'Z'),
     modifiedAt: new Date(modified_gmt + 'Z'),
@@ -59,6 +74,27 @@ export function prepareArticleData(post: WordpressPost): PreparedArticleData {
     authors: _embedded?.author ?? [],
     featuredMedia
   }
+}
+
+type TagInput = {
+  name: string
+  main?: boolean
+}
+
+async function prepareTags(tagIds: number[], categoryIds: number[]) {
+  const categories = (await Promise.all(categoryIds.map(id => fetchCategoryBranch(id)))).flat()
+  const tags = await Promise.all(tagIds.map(id => fetchTag(id)))
+
+  return [
+    ...categories.map(({name, parent}) => ({
+      name: decode(name),
+      main: !parent
+    })),
+    ...tags.map(({name}) => ({
+      name,
+      main: false
+    }))
+  ]
 }
 
 function removeLinks(html: string) {
