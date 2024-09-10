@@ -1,5 +1,5 @@
 import {css, styled} from '@mui/material'
-import {ApiV1, PollBlockProvider, useAsyncAction} from '@wepublish/website'
+import {ApiV1, PollBlockProvider, usePollBlock} from '@wepublish/website'
 import {useRouter} from 'next/router'
 import {useCallback, useEffect, useState} from 'react'
 
@@ -119,7 +119,6 @@ const PollBlockStyled = styled(PollBlock)`
 `
 
 export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
-  const [vote] = ApiV1.usePollVoteMutation()
   const router = useRouter()
   const {
     query: {slug}
@@ -127,7 +126,7 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
-  const callAction = useAsyncAction(setLoading, setError)
+  const {vote} = usePollBlock()
 
   const {data: articleData} = ApiV1.useArticleQuery({
     fetchPolicy: 'cache-only',
@@ -140,16 +139,20 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
 
   const autoVote = useCallback(async () => {
     const answerId = router.query.answerId as string
-    if (answerId) {
-      callAction(async () => {
-        await vote({
-          variables: {
-            answerId
-          }
-        })
-      })()
+
+    if (!answerId || !poll?.id) {
+      return
     }
-  }, [callAction, router.query.answerId, vote])
+
+    await vote(
+      {
+        variables: {
+          answerId
+        }
+      },
+      poll.id
+    )
+  }, [poll?.id, router.query.answerId, vote])
 
   useEffect(() => {
     autoVote()
@@ -175,15 +178,17 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
 
             <TopComments>Top antworten</TopComments>
 
-            <CommentListContainer
-              id={articleData?.article?.id || ''}
-              variables={{
-                sort: ApiV1.CommentSort.Rating,
-                order: ApiV1.SortOrder.Descending
-              }}
-              type={ApiV1.CommentItemType.Article}
-              maxCommentDepth={1}
-            />
+            {!articleData?.article?.disableComments && (
+              <CommentListContainer
+                id={articleData?.article?.id || ''}
+                variables={{
+                  sort: ApiV1.CommentSort.Rating,
+                  order: ApiV1.SortOrder.Descending
+                }}
+                type={ApiV1.CommentItemType.Article}
+                maxCommentDepth={1}
+              />
+            )}
           </CommentsWrapper>
         </FrageDesTagesWrapper>
       </FrageDesTagesContainer>

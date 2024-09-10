@@ -1,4 +1,7 @@
+import {EmotionCache} from '@emotion/cache'
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
+import {GoogleAnalytics} from '@next/third-parties/google'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -15,22 +18,25 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
+import {useState} from 'react'
+import {AdConfig} from 'react-ad-manager'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {CookieOrPay} from '../src/cookie-or-pay/cookie-or-pay'
+import {PURModel} from '../src/cookie-or-pay/pur-model'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {MainSpacer} from '../src/main-spacer'
+import {MannschaftArticleDateWithShare} from '../src/mannschaft-article-date-with-share'
 import {MannschaftBlockRenderer} from '../src/mannschaft-block-renderer'
 import {MannschaftBreakBlock} from '../src/mannschaft-break-block'
 import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
 import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
+import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
 import theme from '../src/theme'
-import {useState} from 'react'
-import {AdConfig} from 'react-ad-manager'
 
 setDefaultOptions({
   locale: de
@@ -85,103 +91,114 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
-}>
+}> & {emotionCache?: EmotionCache}
 
-function CustomApp({Component, pageProps}: CustomAppProps) {
+function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'Mannschaft'
   const [showAds, setShowAds] = useState(false)
 
   return (
-    <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
-      <WebsiteProvider>
-        <WebsiteBuilderProvider
-          Head={Head}
-          Script={Script}
-          Page={MannschaftPage}
-          elements={{Link: NextWepublishLink}}
-          blocks={{
-            Teaser: MannschaftTeaser,
-            Break: MannschaftBreakBlock,
-            Renderer: MannschaftBlockRenderer
-          }}
-          blockStyles={{
-            FocusTeaser: MannschaftFocusTeaser
-          }}
-          date={{format: dateFormatter}}
-          meta={{siteTitle}}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
+    <AppCacheProvider emotionCache={emotionCache}>
+      <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
+        <WebsiteProvider>
+          <WebsiteBuilderProvider
+            Head={Head}
+            Script={Script}
+            Page={MannschaftPage}
+            ArticleDate={MannschaftArticleDateWithShare}
+            elements={{Link: NextWepublishLink}}
+            blocks={{
+              Teaser: MannschaftTeaser,
+              TeaserGrid: MannschaftTeaserGrid,
+              Break: MannschaftBreakBlock,
+              Renderer: MannschaftBlockRenderer
+            }}
+            blockStyles={{
+              FocusTeaser: MannschaftFocusTeaser
+            }}
+            date={{format: dateFormatter}}
+            meta={{siteTitle}}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
 
-            <Head>
-              <title key="title">{siteTitle}</title>
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <Head>
+                <title key="title">{siteTitle}</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-              {/* Feeds */}
-              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+                {/* Feeds */}
+                <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+                <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+                <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
 
-              {/* Sitemap */}
-              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+                {/* Sitemap */}
+                <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
-              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-              <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-              <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-              <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-              <link rel="manifest" href="/site.webmanifest" />
-              <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-              <meta name="msapplication-TileColor" content="#ffffff" />
-              <meta name="theme-color" content="#ffffff" />
+                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                <link rel="manifest" href="/site.webmanifest" />
+                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
+                <meta name="msapplication-TileColor" content="#ffffff" />
+                <meta name="theme-color" content="#ffffff" />
 
-              <AdConfig collapseEmptyDivs={'collapse'} />
-            </Head>
+                <AdConfig collapseEmptyDivs={'collapse'} />
+              </Head>
 
-            <Spacer>
-              <NavBar
-                categorySlugs={[['categories', 'about-us']]}
-                slug="main"
-                headerSlug="header"
+              <Spacer>
+                <NavBar
+                  categorySlugs={[['categories', 'about-us']]}
+                  slug="main"
+                  headerSlug="header"
+                />
+
+                <main>
+                  <MainSpacer maxWidth="lg">
+                    <Component {...pageProps} />
+                  </MainSpacer>
+                </main>
+
+                <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
+                  <LogoLink href="/" aria-label="Startseite">
+                    <LogoWrapper />
+                  </LogoLink>
+                </FooterContainer>
+              </Spacer>
+
+              <CookieOrPay
+                onCookie={() => {
+                  setShowAds(true)
+                }}
               />
 
-              <main>
-                <MainSpacer maxWidth="lg">
-                  <Component {...pageProps} />
-                </MainSpacer>
-              </main>
-
-              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-              </FooterContainer>
-            </Spacer>
-
-            <CookieOrPay
-              onCookie={() => {
-                setShowAds(true)
-              }}
-            />
-
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-              strategy="afterInteractive"
-            />
-
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-              strategy="lazyOnload"
-            />
-
-            {showAds && (
               <Script
-                strategy="lazyOnload"
-                src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
+                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
+                strategy="afterInteractive"
               />
-            )}
-          </ThemeProvider>
-        </WebsiteBuilderProvider>
-      </WebsiteProvider>
-    </SessionProvider>
+
+              <Script
+                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
+                strategy="lazyOnload"
+              />
+
+              {showAds && (
+                <Script
+                  strategy="lazyOnload"
+                  src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
+                />
+              )}
+
+              {publicRuntimeConfig.env.GA_ID && (
+                <>
+                  <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+                  <PURModel />
+                </>
+              )}
+            </ThemeProvider>
+          </WebsiteBuilderProvider>
+        </WebsiteProvider>
+      </SessionProvider>
+    </AppCacheProvider>
   )
 }
 

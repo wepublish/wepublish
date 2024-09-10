@@ -11,6 +11,8 @@ export type BuilderAuthorProps = Pick<QueryResult<AuthorQuery>, 'data' | 'loadin
   className?: string
 }
 
+export type BuilderAuthor = Author
+
 export type BuilderAuthorChipProps = {
   author: FullAuthorFragment
   className?: string

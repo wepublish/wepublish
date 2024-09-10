@@ -66,19 +66,19 @@ export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
 export const GraphQLArticleSort = new GraphQLEnumType({
   name: 'ArticleSort',
   values: {
-    CREATED_AT: {value: ArticleSort.CreatedAt},
-    MODIFIED_AT: {value: ArticleSort.ModifiedAt},
-    PUBLISH_AT: {value: ArticleSort.PublishAt},
-    PUBLISHED_AT: {value: ArticleSort.PublishedAt},
-    UPDATED_AT: {value: ArticleSort.UpdatedAt}
+    [ArticleSort.CreatedAt]: {value: ArticleSort.CreatedAt},
+    [ArticleSort.ModifiedAt]: {value: ArticleSort.ModifiedAt},
+    [ArticleSort.PublishAt]: {value: ArticleSort.PublishAt},
+    [ArticleSort.PublishedAt]: {value: ArticleSort.PublishedAt},
+    [ArticleSort.UpdatedAt]: {value: ArticleSort.UpdatedAt}
   }
 })
 
 export const GraphQLPublicArticleSort = new GraphQLEnumType({
   name: 'ArticleSort',
   values: {
-    PUBLISHED_AT: {value: ArticleSort.PublishedAt},
-    UPDATED_AT: {value: ArticleSort.UpdatedAt}
+    [ArticleSort.PublishedAt]: {value: ArticleSort.PublishedAt},
+    [ArticleSort.UpdatedAt]: {value: ArticleSort.UpdatedAt}
   }
 })
 
@@ -104,6 +104,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
 
     shared: {type: new GraphQLNonNull(GraphQLBoolean)},
     hidden: {type: GraphQLBoolean},
+    disableComments: {type: GraphQLBoolean},
     breaking: {type: new GraphQLNonNull(GraphQLBoolean)},
 
     hideAuthor: {type: new GraphQLNonNull(GraphQLBoolean)},
@@ -211,6 +212,7 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
     id: {type: new GraphQLNonNull(GraphQLID)},
     shared: {type: new GraphQLNonNull(GraphQLBoolean)},
     hidden: {type: GraphQLBoolean},
+    disableComments: {type: GraphQLBoolean},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -307,6 +309,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
         type: GraphQLString
       },
 
+      disableComments: {type: GraphQLBoolean},
       preTitle: {type: GraphQLString},
       title: {type: new GraphQLNonNull(GraphQLString)},
       lead: {type: GraphQLString},
@@ -354,7 +357,6 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
           if (hideAuthor) {
             return []
           }
-
           return (await loaders.authorsByID.loadMany(authors.map(({authorId}) => authorId))).filter(
             Boolean
           )

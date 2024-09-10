@@ -95,7 +95,8 @@ export const GraphQLPollAnswerWithVoteCount = new GraphQLObjectType<
 export const GraphQLPollVote = new GraphQLObjectType<PollVote, Context>({
   name: 'PollVote',
   fields: {
-    answerId: {type: new GraphQLNonNull(GraphQLString)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
+    answerId: {type: new GraphQLNonNull(GraphQLID)},
     pollId: {type: new GraphQLNonNull(GraphQLID)},
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     disabled: {type: new GraphQLNonNull(GraphQLBoolean)}
@@ -143,9 +144,9 @@ export const GraphQLPollFilter = new GraphQLInputObjectType({
 export const GraphQLPollSort = new GraphQLEnumType({
   name: 'PollSort',
   values: {
-    OPENS_AT: {value: PollSort.OpensAt},
-    CREATED_AT: {value: PollSort.CreatedAt},
-    MODIFIED_AT: {value: PollSort.ModifiedAt}
+    [PollSort.OpensAt]: {value: PollSort.OpensAt},
+    [PollSort.CreatedAt]: {value: PollSort.CreatedAt},
+    [PollSort.ModifiedAt]: {value: PollSort.ModifiedAt}
   }
 })
 

@@ -75,7 +75,7 @@ export function PersonalDataFormContainer<T extends BuilderPersonalDataFormField
   return (
     <PersonalDataForm
       className={className}
-      initialUser={user}
+      user={user}
       onImageUpload={handleOnImageUpload}
       onUpdate={handleOnUpdate}
       mediaEmail={mediaEmail}

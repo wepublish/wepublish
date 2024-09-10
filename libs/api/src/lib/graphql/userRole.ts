@@ -75,7 +75,7 @@ export const GraphQLUserRoleFilter = new GraphQLInputObjectType({
 export const GraphQLUserRoleSort = new GraphQLEnumType({
   name: 'UserRoleSort',
   values: {
-    CREATED_AT: {value: UserRoleSort.CreatedAt},
-    MODIFIED_AT: {value: UserRoleSort.ModifiedAt}
+    [UserRoleSort.CreatedAt]: {value: UserRoleSort.CreatedAt},
+    [UserRoleSort.ModifiedAt]: {value: UserRoleSort.ModifiedAt}
   }
 })

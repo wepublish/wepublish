@@ -3,6 +3,7 @@ import {SubscriptionListContainer} from './subscription-list-container'
 import {css} from '@mui/material'
 import {
   CancelSubscriptionDocument,
+  Currency,
   Exact,
   ExtendSubscriptionDocument,
   FullImageFragment,
@@ -89,7 +90,8 @@ const subscription = {
     slug: '',
     description: [],
     tags: [],
-    extendable: true
+    extendable: true,
+    currency: Currency.Chf
   },
   properties: [],
   deactivation: null,

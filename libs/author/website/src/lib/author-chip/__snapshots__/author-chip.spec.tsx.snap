@@ -2,102 +2,7 @@
 
 exports[`Author Chip should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-  -webkit-align-items: end;
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  align-items: end;
-  gap: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.emotion-2 {
-  display: grid;
-  width: 60px;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.emotion-6 {
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-  -webkit-align-items: end;
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  align-items: end;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-}
-
-.emotion-8 {
-  font-weight: 500;
-}
-
-.emotion-10 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-}
-
-.emotion-10:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-13 {
-  display: grid;
-  grid-auto-columns: max-content;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 16px;
-}
-
-.emotion-15 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-}
-
-.emotion-15:hover {
-  text-decoration-color: inherit;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -113,12 +18,7 @@ exports[`Author Chip should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-        srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+        srcset="https://unsplash.it/200/200 200w"
         title=""
       />
     </div>
@@ -218,102 +118,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Author Chip should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-  -webkit-align-items: end;
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  align-items: end;
-  gap: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.emotion-2 {
-  display: grid;
-  width: 60px;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.emotion-6 {
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-  -webkit-align-items: end;
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  align-items: end;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-}
-
-.emotion-8 {
-  font-weight: 500;
-}
-
-.emotion-10 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-}
-
-.emotion-10:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-13 {
-  display: grid;
-  grid-auto-columns: max-content;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 16px;
-}
-
-.emotion-15 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-}
-
-.emotion-15:hover {
-  text-decoration-color: inherit;
-}
-
-<div
+  <div
     class="extra-classname emotion-0 emotion-1"
   >
     <div
@@ -329,12 +134,7 @@ exports[`Author Chip should render WithClassName 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-        srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+        srcset="https://unsplash.it/200/200 200w"
         title=""
       />
     </div>
@@ -434,102 +234,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Author Chip should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-  -webkit-align-items: end;
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  align-items: end;
-  gap: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.emotion-2 {
-  display: grid;
-  width: 60px;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.emotion-6 {
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-  -webkit-align-items: end;
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  align-items: end;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-}
-
-.emotion-8 {
-  font-weight: 500;
-}
-
-.emotion-10 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-}
-
-.emotion-10:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-13 {
-  display: grid;
-  grid-auto-columns: max-content;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 16px;
-}
-
-.emotion-15 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-}
-
-.emotion-15:hover {
-  text-decoration-color: inherit;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -545,12 +250,7 @@ exports[`Author Chip should render WithEmotion 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-        srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+        srcset="https://unsplash.it/200/200 200w"
         title=""
       />
     </div>
@@ -650,88 +350,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Author Chip should render WithoutImage 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-  -webkit-align-items: end;
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  align-items: end;
-  gap: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.emotion-2 {
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-  -webkit-align-items: end;
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  align-items: end;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-}
-
-.emotion-4 {
-  font-weight: 500;
-}
-
-.emotion-6 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-}
-
-.emotion-6:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-9 {
-  display: grid;
-  grid-auto-columns: max-content;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 16px;
-}
-
-.emotion-11 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-}
-
-.emotion-11:hover {
-  text-decoration-color: inherit;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -830,102 +449,7 @@ exports[`Author Chip should render WithoutImage 1`] = `
 
 exports[`Author Chip should render WithoutJobTitle 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-  -webkit-align-items: end;
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  align-items: end;
-  gap: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.emotion-2 {
-  display: grid;
-  width: 60px;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.emotion-6 {
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-  -webkit-align-items: end;
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  align-items: end;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-}
-
-.emotion-8 {
-  font-weight: 500;
-}
-
-.emotion-10 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-}
-
-.emotion-10:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-11 {
-  display: grid;
-  grid-auto-columns: max-content;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 16px;
-}
-
-.emotion-13 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-}
-
-.emotion-13:hover {
-  text-decoration-color: inherit;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -941,12 +465,7 @@ exports[`Author Chip should render WithoutJobTitle 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-        srcset="https://unsplash.it/1200/1200 1200w,
-https://unsplash.it/1000/1000 1000w,
-https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+        srcset="https://unsplash.it/200/200 200w"
         title=""
       />
     </div>

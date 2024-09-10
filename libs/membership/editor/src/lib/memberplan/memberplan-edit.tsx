@@ -1,6 +1,7 @@
 import {ApolloError} from '@apollo/client'
 import {
   AvailablePaymentMethod,
+  Currency,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   PaymentMethod,
@@ -83,6 +84,7 @@ function MemberPlanEdit() {
       id: 'dummy-id',
       availablePaymentMethods: [],
       description: [],
+      currency: Currency.Chf,
       amountPerMonthMin: 0,
       image: undefined,
       active: true,
@@ -128,7 +130,8 @@ function MemberPlanEdit() {
     slug: Schema.Types.StringType().isRequired(t('memberPlanEdit.slugRequired')),
     amountPerMonthMin: Schema.Types.NumberType()
       .isRequired(t('memberPlanEdit.amountPerMonthMinRequired'))
-      .min(0, t('memberPlanEdit.amountPerMonthMinZero'))
+      .min(0, t('memberPlanEdit.amountPerMonthMinZero')),
+    currency: Schema.Types.StringType().isRequired(t('memberPlanEdit.currencyRequired'))
   })
 
   async function saveMemberPlan() {
@@ -148,6 +151,7 @@ function MemberPlanEdit() {
         forceAutoRenewal: value.forceAutoRenewal,
         paymentMethodIDs: value.paymentMethods.map((pm: PaymentMethod) => pm.id)
       })),
+      currency: memberPlan.currency,
       amountPerMonthMin: memberPlan.amountPerMonthMin,
       extendable: memberPlan.extendable,
       maxCount: memberPlan.maxCount
@@ -200,7 +204,8 @@ function MemberPlanEdit() {
         formValue={{
           name: memberPlan?.name,
           slug: memberPlan?.slug,
-          amountPerMonthMin: memberPlan?.amountPerMonthMin
+          amountPerMonthMin: memberPlan?.amountPerMonthMin,
+          currency: memberPlan?.currency
         }}>
         <SingleViewTitle
           loading={loading}

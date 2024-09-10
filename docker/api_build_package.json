@@ -1,8 +1,8 @@
 {
   "name": "api",
   "pkg": {
-    "assets": ["node_modules/.prisma","node_modules/axios/dist/node/axios.cjs"],
-    "targets": [ "node16-linux" ]
+    "assets": ["node_modules/.prisma", "node_modules/axios/dist/node/axios.cjs", "node_modules/es-get-iterator/node.js"],
+    "targets": ["node16-linux"]
   },
   "bin": {
     "main": "dist/apps/api-example/main.js"

@@ -53,19 +53,19 @@ export const GraphQLPublishedPageFilter = new GraphQLInputObjectType({
 export const GraphQLPageSort = new GraphQLEnumType({
   name: 'PageSort',
   values: {
-    CREATED_AT: {value: PageSort.CreatedAt},
-    MODIFIED_AT: {value: PageSort.ModifiedAt},
-    PUBLISH_AT: {value: PageSort.PublishAt},
-    PUBLISHED_AT: {value: PageSort.PublishedAt},
-    UPDATED_AT: {value: PageSort.UpdatedAt}
+    [PageSort.CreatedAt]: {value: PageSort.CreatedAt},
+    [PageSort.ModifiedAt]: {value: PageSort.ModifiedAt},
+    [PageSort.PublishAt]: {value: PageSort.PublishAt},
+    [PageSort.PublishedAt]: {value: PageSort.PublishedAt},
+    [PageSort.UpdatedAt]: {value: PageSort.UpdatedAt}
   }
 })
 
 export const GraphQLPublishedPageSort = new GraphQLEnumType({
   name: 'PublishedPageSort',
   values: {
-    PUBLISHED_AT: {value: PageSort.PublishedAt},
-    UPDATED_AT: {value: PageSort.UpdatedAt}
+    [PageSort.PublishedAt]: {value: PageSort.PublishedAt},
+    [PageSort.UpdatedAt]: {value: PageSort.UpdatedAt}
   }
 })
 
@@ -282,3 +282,12 @@ export const GraphQLPublicPageConnection = new GraphQLObjectType({
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
+
+export const GraphQLPublicPageResolver = {
+  __resolveReference: async (reference, {loaders}) => {
+    const {id} = reference
+    const page = await loaders.publicPagesByID.load(id)
+    if (!page) throw new Error('Page not found')
+    return page
+  }
+}

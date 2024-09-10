@@ -6,9 +6,11 @@ import {
   UserForm,
   defaultRegisterSchema,
   requiredRegisterSchema,
-  useUser
+  useUser,
+  zodAlwaysRefine
 } from '@wepublish/authentication/website'
 import {
+  Currency,
   MemberPlan,
   PaymentPeriodicity,
   RegisterMutationVariables,
@@ -24,7 +26,7 @@ import {
 import {useEffect, useMemo, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'
-import {formatChf} from '../formatters/format-currency'
+import {formatCurrency} from '../formatters/format-currency'
 import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
@@ -34,8 +36,8 @@ import {ApolloError} from '@apollo/client'
 import {ApiAlert} from '@wepublish/errors/website'
 
 const subscribeSchema = z.object({
-  memberPlanId: z.string().nonempty(),
-  paymentMethodId: z.string().nonempty(),
+  memberPlanId: z.string().min(1),
+  paymentMethodId: z.string().min(1),
   monthlyAmount: z.coerce.number().gte(0),
   autoRenew: z.boolean(),
   paymentPeriodicity: z.enum([
@@ -106,26 +108,29 @@ export const getPaymentText = (
   autoRenew: boolean,
   paymentPeriodicity: PaymentPeriodicity,
   monthlyAmount: number,
+  currency: Currency,
   locale: string
 ) =>
   autoRenew
-    ? `${formatRenewalPeriod(paymentPeriodicity)} für ${formatChf(
+    ? `${formatRenewalPeriod(paymentPeriodicity)} für ${formatCurrency(
         (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        currency,
         locale
       )}`
-    : `${formatPaymentPeriod(paymentPeriodicity)} für ${formatChf(
+    : `${formatPaymentPeriod(paymentPeriodicity)} für ${formatCurrency(
         (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        currency,
         locale
       )}`
 
-export const Subscribe = <T extends BuilderUserFormFields>({
+export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
   extraMoneyOffset = 0,
   memberPlans,
   challenge,
   userSubscriptions,
   userInvoices,
-  fields = ['firstName', 'password', 'address'] as T[],
+  fields = ['firstName', 'password', 'passwordRepeated', 'address'] as T[],
   schema = defaultRegisterSchema,
   className,
   onSubscribe,
@@ -149,22 +154,34 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     () =>
       fields.reduce(
         (obj, field) => ({...obj, [field]: true}),
-        {} as Record<BuilderUserFormFields, true>
+        {} as Record<Exclude<BuilderUserFormFields, 'flair'>, true>
       ),
     [fields]
   )
 
-  const loggedOutSchema = useMemo(
-    () => requiredRegisterSchema.merge(schema.pick(fieldsToDisplay).merge(subscribeSchema)),
-    [fieldsToDisplay, schema]
-  )
+  /**
+   * Done like this to avoid type errors due to z.ZodObject vs z.ZodEffect<z.ZodObject>.
+   * [Fixed with Zod 4](https://github.com/colinhacks/zod/issues/2474)
+   */
+  const loggedOutSchema = useMemo(() => {
+    const result = requiredRegisterSchema.merge(schema.pick(fieldsToDisplay).merge(subscribeSchema))
+
+    if (fieldsToDisplay.passwordRepeated) {
+      return zodAlwaysRefine(result).refine(data => data.password === data.passwordRepeated, {
+        message: 'Passwörter stimmen nicht überein.',
+        path: ['passwordRepeated']
+      })
+    }
+
+    return result
+  }, [fieldsToDisplay, schema])
 
   const loggedInSchema = subscribeSchema
 
   const {control, handleSubmit, watch, setValue, resetField} = useForm<
     z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
   >({
-    resolver: zodResolver(hasUser ? subscribeSchema : loggedOutSchema),
+    resolver: zodResolver(hasUser ? loggedInSchema : loggedOutSchema),
     defaultValues: {
       ...defaults,
       monthlyAmount: 0,
@@ -220,8 +237,21 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     [selectedMemberPlan?.availablePaymentMethods]
   )
 
-  const paymentText = getPaymentText(autoRenew, selectedPaymentPeriodicity, monthlyAmount, locale)
-  const monthlyPaymentText = getPaymentText(true, PaymentPeriodicity.Monthly, monthlyAmount, locale)
+  const paymentText = getPaymentText(
+    autoRenew,
+    selectedPaymentPeriodicity,
+    monthlyAmount,
+    selectedMemberPlan?.currency ?? Currency.Chf,
+    locale
+  )
+
+  const monthlyPaymentText = getPaymentText(
+    true,
+    PaymentPeriodicity.Monthly,
+    monthlyAmount,
+    selectedMemberPlan?.currency ?? Currency.Chf,
+    locale
+  )
 
   const onSubmit = handleSubmit(data => {
     const subscribeData: SubscribeMutationVariables = {
@@ -236,10 +266,11 @@ export const Subscribe = <T extends BuilderUserFormFields>({
       return callAction(onSubscribe)(subscribeData)
     }
 
-    const {address, challengeAnswer, email, password, name, firstName, preferredName} =
+    const {address, challengeAnswer, email, birthday, password, name, firstName, preferredName} =
       data as z.infer<typeof loggedOutSchema>
 
     const registerData = {
+      birthday,
       email,
       password,
       name,
@@ -300,21 +331,23 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     if (deactivateSubscriptionId) {
       return
     }
+
     return (
       userSubscriptions.data?.subscriptions.some(
         ({memberPlan, deactivation}) => memberPlan.id === selectedMemberPlanId && !deactivation
       ) ?? false
     )
-  }, [userSubscriptions.data?.subscriptions, selectedMemberPlanId])
+  }, [deactivateSubscriptionId, userSubscriptions.data?.subscriptions, selectedMemberPlanId])
 
   const hasOpenInvoices = useMemo(() => {
     if (deactivateSubscriptionId) {
       return
     }
+
     return (
       userInvoices.data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt) ?? false
     )
-  }, [userInvoices.data?.invoices])
+  }, [deactivateSubscriptionId, userInvoices.data?.invoices])
 
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
@@ -366,7 +399,9 @@ export const Subscribe = <T extends BuilderUserFormFields>({
                 {...field}
                 min={selectedMemberPlan?.amountPerMonthMin}
                 max={(selectedMemberPlan?.amountPerMonthMin ?? 500) * 5}
-                valueLabelFormat={val => formatChf(val / 100, locale)}
+                valueLabelFormat={val =>
+                  formatCurrency(val / 100, selectedMemberPlan?.currency ?? Currency.Chf, locale)
+                }
                 step={100}
                 color="secondary"
               />

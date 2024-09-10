@@ -37,13 +37,7 @@ import {getRatingSystem} from './comment-rating/comment-rating.public-queries'
 import {GraphQLPublicComment, GraphQLPublicCommentSort} from './comment/comment'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 import {GraphQLSortOrder} from './common'
-import {
-  GraphQLEvent,
-  GraphQLEventConnection,
-  GraphQLEventFilter,
-  GraphQLEventSort
-} from './event/event'
-import {EventSort, getEvent, getEvents, getImportedEventsIds} from './event/event.query'
+
 import {GraphQLPublicInvoice} from './invoice'
 import {getPublicInvoices} from './invoice/invoice.public-queries'
 import {getActiveMemberPlans} from './member-plan/member-plan.public-queries'
@@ -69,8 +63,6 @@ import {GraphQLPublicPhrase} from './phrase/phrase'
 import {queryPhrase} from './phrase/phrase.public-queries'
 import {GraphQLFullPoll} from './poll/poll'
 import {getPoll, userPollVote} from './poll/poll.public-queries'
-import {GraphQLSetting} from './setting'
-import {getSetting, getSettings} from './setting/setting.public-queries'
 import {GraphQLSlug} from './slug'
 import {GraphQLPublicSubscription} from './subscription-public'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
@@ -545,38 +537,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         userPollVote(pollId, authenticateUser, pollVote)
     },
 
-    // Event
-    // =======
-    events: {
-      type: GraphQLEventConnection,
-      description: 'This query returns a list of events',
-      args: {
-        cursor: {type: GraphQLID},
-        take: {type: GraphQLInt, defaultValue: 10},
-        skip: {type: GraphQLInt, defaultValue: 0},
-        filter: {type: GraphQLEventFilter},
-        sort: {type: GraphQLEventSort, defaultValue: EventSort.StartsAt},
-        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
-      },
-      resolve: (root, {cursor, take, skip, filter, sort, order}, {prisma: {event}}) =>
-        getEvents(filter, sort, order, cursor, skip, take, event)
-    },
-
-    event: {
-      type: new GraphQLNonNull(GraphQLEvent),
-      description: 'This query returns an event',
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLID)}
-      },
-      resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
-    },
-
-    importedEventsIds: {
-      type: new GraphQLList(GraphQLString),
-      description: 'This query returns a list of original ids of imported events',
-      resolve: (root, {prisma: {event}}) => getImportedEventsIds(event)
-    },
-
     // Tag
     // ==========
 
@@ -622,20 +582,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           articleSort,
           order
         )
-    },
-
-    // Setting
-    // ======
-
-    setting: {
-      type: GraphQLSetting,
-      args: {name: {type: new GraphQLNonNull(GraphQLString)}},
-      resolve: (root, {name}, {prisma: {setting}}) => getSetting(name, setting)
-    },
-
-    settings: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLSetting))),
-      resolve: (root, _, {prisma: {setting}}) => getSettings(setting)
     }
   }
 })

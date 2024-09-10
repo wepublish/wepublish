@@ -1,24 +1,30 @@
+import {styled} from '@mui/material'
+import {H2} from '@wepublish/ui'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
   ArticleContainer,
   ArticleListContainer,
   ArticleWrapper,
-  CommentListContainer,
-  useWebsiteBuilder
+  CommentListContainer
 } from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
+import TsriAdHeader from '../../src/components/tsri-ad-header'
+
+const AfterArticleTitle = styled(H2)`
+  ${({theme}) => theme.breakpoints.down('sm')} {
+    font-size: 2rem;
+  }
+`
+
 export default function ArticleBySlugIdOrToken() {
   const {
     query: {slug, id, token}
   } = useRouter()
-  const {
-    elements: {H3}
-  } = useWebsiteBuilder()
 
   const {data} = ApiV1.useArticleQuery({
     fetchPolicy: 'cache-only',
@@ -35,12 +41,16 @@ export default function ArticleBySlugIdOrToken() {
 
   return (
     <>
+      <TsriAdHeader authors={data?.article?.authors} />
+
       <ArticleContainer {...containerProps} />
 
       {data?.article && (
         <>
           <ArticleWrapper>
-            <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
+            <AfterArticleTitle component={'h2'}>
+              Das könnte dich auch interessieren
+            </AfterArticleTitle>
 
             <ArticleListContainer
               variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
@@ -48,14 +58,17 @@ export default function ArticleBySlugIdOrToken() {
             />
           </ArticleWrapper>
 
-          <ArticleWrapper>
-            <H3 component={'h2'}>Kommentare</H3>
-            <CommentListContainer
-              id={data.article.id}
-              type={ApiV1.CommentItemType.Article}
-              signUpUrl="/mitmachen"
-            />
-          </ArticleWrapper>
+          {!data.article.disableComments && (
+            <ArticleWrapper>
+              <AfterArticleTitle component={'h2'}>Kommentare</AfterArticleTitle>
+
+              <CommentListContainer
+                id={data.article.id}
+                type={ApiV1.CommentItemType.Article}
+                signUpUrl="/mitmachen"
+              />
+            </ArticleWrapper>
+          )}
         </>
       )}
     </>

@@ -1,7 +1,6 @@
 import {useUser} from '@wepublish/authentication/website'
 import {
   MemberPlan,
-  RegisterMutationVariables,
   useChallengeLazyQuery,
   useInvoicesLazyQuery,
   useMemberPlanListQuery,
@@ -12,12 +11,12 @@ import {
 import {
   BuilderContainerProps,
   BuilderSubscribeProps,
+  BuilderUserFormFields,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
 import {produce} from 'immer'
 import {StripeElement, StripePayment} from '@wepublish/payment/website'
 import {useEffect, useMemo, useState} from 'react'
-import {OptionalKeysOf} from 'type-fest'
 
 /**
  * If you pass the "deactivateSubscriptionId" prop, this specific subscription will be canceled when
@@ -26,7 +25,7 @@ import {OptionalKeysOf} from 'type-fest'
  * Payrexx Subscription. Other use cases are possible.
  */
 export type SubscribeContainerProps<
-  T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
+  T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<BuilderUserFormFields, 'flair'>
 > = BuilderContainerProps &
   Pick<BuilderSubscribeProps<T>, 'fields' | 'schema' | 'defaults' | 'extraMoneyOffset'> & {
     successURL: string
@@ -35,7 +34,7 @@ export type SubscribeContainerProps<
     deactivateSubscriptionId?: string
   }
 
-export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVariables>>({
+export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   className,
   extraMoneyOffset,
   failureURL,

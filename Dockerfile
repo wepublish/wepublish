@@ -137,10 +137,12 @@ CMD ["bash", "./start.sh"]
 ## Media Server
 #######
 
-FROM node:18.20.3-alpine AS base-media
+FROM node:18.20.4-bullseye-slim  AS base-media
 FROM base-media AS build-media
-# RUN apk add --no-cache --update libc6-compat alpine-sdk
+ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 WORKDIR /app
+RUN apt-get update
+RUN apt-get install -y libjemalloc-dev
 COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
@@ -151,8 +153,13 @@ FROM base-media AS media
 ENV NODE_ENV=production
 MAINTAINER WePublish Foundation
 WORKDIR /wepublish
-RUN addgroup --system --gid 1001 wepublish
-RUN adduser --system --uid 1001 wepublish
+ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
+RUN groupadd -r wepublish && \
+        useradd -r -g wepublish -d /wepublish wepublish && \
+        apt-get update && \
+        apt-get install -y libjemalloc-dev && \
+        apt-get clean && \
+        rm -rf /var/lib/apt/lists/*
 COPY --from=build-media /app/dist/apps/media/ .
 COPY --from=build-media --chown=wepublish:wepublish /app/node_modules ./node_modules
 USER wepublish

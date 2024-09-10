@@ -1,15 +1,12 @@
-import {Field, ObjectType} from '@nestjs/graphql'
+import {Directive, Field, ObjectType} from '@nestjs/graphql'
 
 @ObjectType()
+@Directive('@extends')
+@Directive('@key(fields: "id")')
 export class User {
   @Field()
+  @Directive('@external')
   id!: string
-
-  @Field()
-  createdAt!: Date
-
-  @Field()
-  modifiedAt!: Date
 
   @Field()
   email!: string
@@ -26,17 +23,11 @@ export class User {
   @Field({nullable: true})
   preferredName?: string
 
-  @Field()
-  password!: string
-
-  @Field()
-  active!: boolean
-
   @Field({nullable: true})
   lastLogin?: Date
 
-  @Field(type => [String])
-  roleIDs!: string[]
+  @Field(type => [String], {nullable: true})
+  roleIDs?: string[]
 
   @Field({nullable: true})
   userImageID?: string

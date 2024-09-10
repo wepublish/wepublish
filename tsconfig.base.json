@@ -12,7 +12,10 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2017", "dom"],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
@@ -56,6 +59,7 @@
       "@wepublish/payment/website": ["libs/payment/website/src/index.ts"],
       "@wepublish/peering/website": ["libs/peering/website/src/index.ts"],
       "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],
+      "@wepublish/poll/api": ["libs/poll/api/src/index.ts"],
       "@wepublish/richtext": ["libs/richtext/src/index.ts"],
       "@wepublish/richtext/api": ["libs/richtext/api/src/index.ts"],
       "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
@@ -76,10 +80,12 @@
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
       "@wepublish/website": ["libs/website/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
-      "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
       "@wepublish/website/server": ["libs/website/src/server.ts"]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
