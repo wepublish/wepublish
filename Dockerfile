@@ -47,7 +47,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
     npm ci && \
     npm install -g pkg && \
-    npx nx build api-example --skip-nx-cache && \
+    npx nx build api-example && \
     cp docker/api_build_package.json package.json && \
     pkg package.json
 
