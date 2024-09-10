@@ -470,7 +470,7 @@ const parseDomDocument = async (normalizedHTML: string) => {
   }
 }
 
-export function convertHtmlToSlate<T>(html: string): Promise<ChildNode[]>
+export function convertHtmlToSlate<T>(html: string): Promise<T[]>
 export async function convertHtmlToSlate(html: string) {
   if (!html) {
     return undefined

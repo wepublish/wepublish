@@ -1,360 +1,10 @@
-import cheerio from 'cheerio'
-import {
-  createArticle,
-  createAuthor,
-  deleteArticle,
-  getAuthorBySlug,
-  getImagesByTitle,
-  publishArticle
-} from './private-api'
-import {getArticleBySlug} from './public-api'
-import {BlockInput} from '../../api/private'
-import {Node} from 'slate'
-import {convertHtmlToSlate} from './convert-html-to-slate'
-import {extractEmbed} from './embeds'
-import {createImage} from './image-upload'
-import {URL} from 'url'
-import {decode} from 'html-entities'
-import {fetchPost, fetchPosts, WordpressAuthor, WordpressPost} from './wordpress-api'
-import {ensureTagsForPost} from './tags'
+import {fetchPost, fetchPosts, WordpressPost} from './wordpress-api'
+import {migratePost} from './post'
+import {prepareArticleData} from './prepare-data'
 
-type ImageInput = {
-  url: string
-  title: string
-  description?: string
-}
-
-const deleteBeforeMigrate = true
-
-const ensureAuthor = async (author: WordpressAuthor): Promise<{id: string}> => {
-  const {slug, link, url, name, description, avatar_urls} = author
-
-  const existingAuthor = await getAuthorBySlug(author.slug)
-  if (existingAuthor) {
-    console.log('  author exists', slug)
-    return existingAuthor
-  }
-
-  const image = await ensureImage({
-    url: avatar_urls['96'],
-    title: name
-  })
-
-  console.log('  author create', slug)
-  return await createAuthor({
-    name,
-    slug,
-    links: [{title: 'Link', url: link}],
-    imageID: image.id
-  })
-}
-
-const ensureImage = async (input: ImageInput) => {
-  const {url, title, description} = input
-
-  const foundImages = (await getImagesByTitle(title)).nodes
-  const existingImage = foundImages.find(image => image.link === url)
-  if (existingImage) {
-    console.log('  image exists', url)
-    return existingImage
-  }
-
-  console.log('  create image', url)
-  const image = await createImage({
-    downloadUrl: url,
-    filename: new URL(url).pathname.split('/').pop() as string,
-    title,
-    link: url,
-    description
-  })
-
-  return {
-    id: image.id!,
-    title,
-    description
-  }
-}
-
-const removeLinks = (html: string) => {
-  const $ = cheerio.load(html)
-  $('a').remove()
-  return decode($.text())
-}
-
-const extractBlockquote = (content: string): BlockInput => {
-  const embedBlock = extractEmbed(content)
-  if (JSON.stringify(embedBlock) === '{"embed":{}}') {
-    return {
-      quote: {
-        quote: cheerio.load(content).text()
-      }
-    }
-  }
-  return embedBlock
-}
-
-const migratePost = async (post: WordpressPost) => {
-  const {
-    title: {rendered: encodedTitle},
-    excerpt: {rendered: excerpt},
-    content: {rendered: content},
-    date_gmt,
-    modified_gmt,
-    wps_subtitle: subtitle,
-    slug,
-    link,
-    _embedded
-  } = post
-
-  let featuredImage
-  const title = decode(encodedTitle)
-  const lead = removeLinks(excerpt)
-
-  console.log()
-  console.log('========================================================================')
-  console.log()
-  console.log('Migrating article')
-  console.log({title, slug, link})
-  const existingArticle = await getArticleBySlug(slug)
-  if (existingArticle) {
-    console.log('  article exists', slug)
-    if (deleteBeforeMigrate) {
-      console.log('  article delete', slug)
-      await deleteArticle(existingArticle.id)
-    } else {
-      return existingArticle
-    }
-  }
-
-  let slateContent: Node[] | undefined
-  let lastBlock: undefined | BlockInput
-  const $ = cheerio.load(content)
-  const blocks: BlockInput[] = []
-
-  // Authors
-  const authors = []
-  for (const author of _embedded?.author ?? []) {
-    authors.push(await ensureAuthor(author))
-  }
-
-  // Tags
-  const tagIds = await ensureTagsForPost(post.id)
-
-  // Title
-  blocks.push({
-    title: {
-      title,
-      lead: subtitle
-    }
-  })
-
-  // Featured image
-  if (_embedded?.['wp:featuredmedia']?.length) {
-    const featuredMedia = _embedded?.['wp:featuredmedia'][0]
-    featuredImage = await ensureImage({
-      url: featuredMedia.source_url,
-      title: featuredMedia.title.rendered,
-      description: removeLinks(featuredMedia.caption.rendered)
-    })
-    blocks.push({
-      image: {
-        imageID: featuredImage.id,
-        caption: featuredImage.description
-      }
-    })
-  }
-
-  const nodes = $('body > *')
-  const specialTags = [
-    '.woocommerce-info',
-    'iframe',
-    'figure',
-    'img',
-    'blockquote',
-    '.content-box',
-    '.content-box-gelb'
-  ]
-  const imageGallery = true
-  const imageSingles = false
-
-  for (const el of nodes) {
-    const $el = $(el)
-    const $wrapper = $(el).wrap('<div></div>').parent()
-    const specialEl = $wrapper.find(specialTags.join(', '))[0]
-    $el.unwrap()
-    const $specialEl = $(specialEl)
-    let image
-    if (specialEl) {
-      switch (specialEl.tagName) {
-        case 'img':
-          console.error('img...')
-          // console.error($.html(el).toString())
-          // console.error($specialEl.attr('data-src'))
-
-          // Image gallery
-          if (imageGallery) {
-            blocks.push({
-              imageGallery: {
-                images: await Promise.all(
-                  $el.find('img').map(async (i, img) => {
-                    const $img = $(img)
-                    const image = await ensureImage({
-                      url: $img.attr('data-src')!,
-                      title: $img.attr('alt')!,
-                      description: $img.attr('alt')!
-                    })
-                    return {
-                      imageID: image.id
-                    }
-                  })
-                )
-              }
-            })
-          }
-
-          if (imageSingles) {
-            blocks.push(
-              ...(await Promise.all(
-                $el.find('img').map(async (i, img) => {
-                  const $img = $(img)
-                  const image = await ensureImage({
-                    url: $img.attr('data-src')!,
-                    title: $img.attr('alt')!,
-                    description: $img.attr('alt')!
-                  })
-                  return {
-                    image: {
-                      imageID: image.id
-                    }
-                  }
-                })
-              ))
-            )
-          }
-          break
-        case 'figure':
-          image = await ensureImage({
-            url: $specialEl.find('img').attr('data-src')!,
-            title: $specialEl.find('img').attr('alt')!,
-            description: $specialEl.find('figcaption').text()!
-          })
-          blocks.push({
-            image: {
-              imageID: image.id,
-              caption: image.description
-            }
-          })
-          break
-        case 'iframe':
-          if ($specialEl.attr('src')) {
-            blocks.push(extractEmbed($.html(specialEl).toString()))
-          }
-          break
-        case 'blockquote':
-          blocks.push(extractBlockquote($specialEl.html()!))
-          break
-        case 'div':
-        case 'p':
-        case 'h1':
-        case 'h2':
-        case 'h3':
-        case 'h4':
-        case 'h5':
-        case 'h6':
-          break
-      }
-
-      if ($specialEl.filter('.content-box, .content-box-gelb').length) {
-        const $imageTag = $specialEl.find('img')
-        let image
-        if ($imageTag.length) {
-          image = await ensureImage({
-            url: $imageTag.attr('data-src')!,
-            title: $imageTag.attr('alt')!
-          })
-          $imageTag.parentsUntil('.content-box, .content-box-gelb').remove()
-        }
-        const title = $specialEl.find(':first-child').filter('h1, h2, h3').first().remove()
-        const $iframes = $specialEl.find('iframe')
-        $iframes.parent().remove()
-        const richText = (await convertHtmlToSlate($specialEl.html()!)) as unknown as Node[]
-
-        blocks.push({
-          linkPageBreak: {
-            imageID: image ? image.id : undefined,
-            text: title.text() ?? '',
-            richText,
-            hideButton: true
-          }
-        })
-
-        $iframes.map((i, iframe) => {
-          blocks.push(extractEmbed($.html(iframe).toString()))
-        })
-      }
-    } else {
-      if ($el.filter('p').length && $el.prev('hr').length && $el.next('hr').length) {
-        const skipHrSurroundedLinks = true
-        if (!skipHrSurroundedLinks) {
-          const richText = (await convertHtmlToSlate($el.html()!)) as unknown as Node[]
-          blocks.push({
-            linkPageBreak: {
-              richText,
-              hideButton: true
-            }
-          })
-        }
-      } else {
-        slateContent = (await convertHtmlToSlate($.html(el).toString())) as unknown as Node[]
-        if (lastBlock?.richText) {
-          lastBlock?.richText.richText.push(...slateContent)
-        } else {
-          blocks.push({richText: {richText: slateContent}})
-        }
-      }
-    }
-    lastBlock = blocks[blocks.length - 1]
-  }
-
-  console.log('  article create', slug)
-  blocks
-    .map(block => {
-      if (block.richText) {
-        return {richtext: {richtext: '<content>'}}
-      } else {
-        return block
-      }
-    })
-    .map(b => JSON.stringify(b))
-    .forEach(b => console.log(`    ${b}`))
-
-  const article = await createArticle({
-    authorIDs: authors.map(a => a.id),
-    breaking: false,
-    hideAuthor: false,
-    properties: [],
-    shared: false,
-    socialMediaAuthorIDs: [],
-    tags: tagIds,
-    title,
-    lead,
-    slug,
-    // preTitle: subtitle,
-    imageID: featuredImage ? featuredImage.id : undefined,
-    blocks: blocks.map(block => {
-      if (block.richText) {
-        return {
-          richText: {
-            richText: block.richText.richText
-          }
-        }
-      }
-      return block
-    })
-  })
-
-  await publishArticle(article.id, new Date(date_gmt + 'Z'), new Date(modified_gmt + 'Z'))
-  return article
+async function prepareDataAndMigratePost(post: WordpressPost) {
+  const data = prepareArticleData(post)
+  return await migratePost(data)
 }
 
 export const migratePosts = async (limit?: number) => {
@@ -367,13 +17,15 @@ export const migratePosts = async (limit?: number) => {
       page,
       perPage: +BATCH_SIZE
     })
-    if (batch.length === 0) break
+    if (batch.length === 0) {
+      break
+    }
 
     for (const post of batch) {
       if (limit !== undefined && postsMigrated >= limit) {
         return
       }
-      await migratePost(post)
+      await prepareDataAndMigratePost(post)
       postsMigrated++
     }
   }
@@ -396,7 +48,7 @@ export const migratePostsFromCategory = async (categoryId: number, limit?: numbe
       if (limit !== undefined && postsMigrated >= limit) {
         return
       }
-      await migratePost(post)
+      await prepareDataAndMigratePost(post)
       postsMigrated++
     }
   }
@@ -404,6 +56,6 @@ export const migratePostsFromCategory = async (categoryId: number, limit?: numbe
 export const migratePostById = async (...ids: number[]) => {
   for (const id of ids) {
     const post = await fetchPost(id)
-    await migratePost(post)
+    await prepareDataAndMigratePost(post)
   }
 }
