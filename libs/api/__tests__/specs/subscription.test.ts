@@ -2,6 +2,7 @@ import {ApolloServer} from 'apollo-server-express'
 import {createGraphQLTestClientWithPrisma} from '../utility'
 import {CreateSubscription, RenewSubscription, SubscriptionInput} from '../api/private'
 import {
+  Currency,
   Invoice,
   MemberPlan,
   PaymentMethod,
@@ -71,7 +72,8 @@ beforeAll(async () => {
             paymentMethodIDs: [paymentMethod.id],
             paymentPeriodicities: ['biannual', 'monthly', 'quarterly', 'yearly']
           }
-        }
+        },
+        currency: Currency.CHF
       }
     })
 
@@ -91,6 +93,7 @@ beforeAll(async () => {
         monthlyAmount: 2,
         autoRenew: true,
         startsAt: new Date(),
+        currency: Currency.CHF,
         paymentMethod: {connect: paymentMethod},
         memberPlan: {connect: {slug: memberPlan.slug}},
         user: {connect: {id: user.id}}
@@ -101,6 +104,7 @@ beforeAll(async () => {
       data: {
         mail: user.email,
         dueAt: new Date(),
+        currency: Currency.CHF,
         scheduledDeactivationAt: new Date()
       }
     })

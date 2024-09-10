@@ -1,4 +1,5 @@
 import {
+  Currency,
   PaymentPeriodicity,
   PrismaClient,
   Subscription,
@@ -62,7 +63,8 @@ describe('SubscriptionController', () => {
             slug: 'memberplan',
             description: 'memberplan',
             active: true,
-            amountPerMonthMin: 100
+            amountPerMonthMin: 100,
+            currency: Currency.CHF
           }
         }
       },
@@ -228,6 +230,7 @@ describe('SubscriptionController', () => {
           amount: 10,
           invoice: {
             create: {
+              currency: Currency.CHF,
               scheduledDeactivationAt: add(validUntil, {days: 7}),
               mail: 'test@wepublish.com',
               dueAt: sub(validUntil, {years: 1}),
@@ -362,6 +365,7 @@ describe('SubscriptionController', () => {
       },
       invoices: {
         create: {
+          currency: Currency.CHF,
           scheduledDeactivationAt: sub(new Date(), {days: 100}),
           mail: 'test@wepublish.com',
           dueAt: sub(new Date(), {days: 100}),
@@ -388,6 +392,7 @@ describe('SubscriptionController', () => {
       },
       invoices: {
         create: {
+          currency: Currency.CHF,
           scheduledDeactivationAt: sub(new Date(), {days: 100}),
           mail: 'test@wepublish.com',
           dueAt: sub(new Date(), {days: 100}),
@@ -418,6 +423,7 @@ describe('SubscriptionController', () => {
     // Ensure that filter for invoices works
     await SubscriptionFactory.create({
       paidUntil: add(new Date(), {days: 1}),
+      currency: Currency.CHF,
       periods: {
         create: {
           startsAt: add(new Date(), {days: 1}),
@@ -426,6 +432,7 @@ describe('SubscriptionController', () => {
           amount: 22,
           invoice: {
             create: {
+              currency: Currency.CHF,
               scheduledDeactivationAt: sub(new Date(), {days: 2}),
               mail: 'test@wepublish.com',
               dueAt: sub(new Date(), {days: 100})
@@ -437,6 +444,7 @@ describe('SubscriptionController', () => {
 
     let subscription = await SubscriptionFactory.create({
       paidUntil: sub(new Date(), {days: 1}),
+      currency: Currency.CHF,
       periods: {
         create: {
           startsAt: sub(new Date(), {days: 1}),
@@ -445,6 +453,7 @@ describe('SubscriptionController', () => {
           amount: 22,
           invoice: {
             create: {
+              currency: Currency.CHF,
               scheduledDeactivationAt: add(new Date(), {days: 2}),
               mail: 'test@wepublish.com',
               dueAt: sub(new Date(), {days: 1})
@@ -473,6 +482,7 @@ describe('SubscriptionController', () => {
       paidUntil: add(new Date(), {days: 1}),
       invoices: {
         create: {
+          currency: Currency.CHF,
           scheduledDeactivationAt: sub(new Date(), {days: 4}),
           mail: 'test@wepublish.com',
           dueAt: sub(new Date(), {days: 100}),

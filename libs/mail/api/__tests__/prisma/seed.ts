@@ -1,4 +1,4 @@
-import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
+import {Currency, PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
 import {seed as rootSeed} from '../../../../api/prisma/seed'
 import {hashPassword} from '../../../../api/src/lib/db/user'
 
@@ -84,7 +84,8 @@ async function seed() {
       tags: [],
       description: {},
       active: true,
-      amountPerMonthMin: 1
+      amountPerMonthMin: 1,
+      currency: Currency.CHF
     }
   })
 
@@ -100,6 +101,7 @@ async function seed() {
       memberPlan: {connect: {id: memberPlan.id}},
       monthlyAmount: 3,
       autoRenew: true,
+      currency: Currency.CHF,
       startsAt: new Date().toISOString(),
       user: {connect: {id: editor.id}}
     }
@@ -117,6 +119,7 @@ async function seed() {
       memberPlan: {connect: {id: memberPlan.id}},
       monthlyAmount: 3,
       autoRenew: false,
+      currency: Currency.CHF,
       startsAt: new Date().toISOString(),
       user: {connect: {id: dev.id}}
     }

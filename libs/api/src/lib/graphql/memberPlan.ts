@@ -18,7 +18,15 @@ import {
 import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLPageInfo} from './common'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
-import {AvailablePaymentMethod, PaymentPeriodicity} from '@prisma/client'
+import {AvailablePaymentMethod, Currency, PaymentPeriodicity} from '@prisma/client'
+
+export const GraphQLSupportedCurrency = new GraphQLEnumType({
+  name: 'Currency',
+  values: {
+    CHF: {value: Currency.CHF},
+    EUR: {value: Currency.EUR}
+  }
+})
 
 export const GraphQLPaymentPeriodicity = new GraphQLEnumType({
   name: 'PaymentPeriodicity',
@@ -110,6 +118,7 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
     amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
     maxCount: {type: GraphQLInt},
     extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
     availablePaymentMethods: {
@@ -133,6 +142,7 @@ export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context
     },
     description: {type: GraphQLRichText},
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
     amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
     maxCount: {type: GraphQLInt},
     extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
@@ -202,6 +212,7 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
     amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
     extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
     maxCount: {type: GraphQLInt},
     availablePaymentMethods: {
