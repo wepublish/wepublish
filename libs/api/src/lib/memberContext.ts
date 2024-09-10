@@ -711,6 +711,7 @@ export class MemberContext implements MemberContextInterface {
       })
       const invoice = await this.prisma.invoice.create({
         data: {
+          currency: memberPlan.currency,
           subscriptionID: subscription.id,
           description: `Membership from ${startsAt.toISOString()} for ${user.name || user.email}`,
           mail: user.email,

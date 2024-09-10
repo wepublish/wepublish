@@ -16,10 +16,10 @@ export type Scalars = {
   Color: string
   Date: string
   DateTime: string
+  GraphQLSettingValueType: any
   RichText: Node[]
   Slug: string
   Upload: File
-  Value: any
   VoteValue: number
 }
 
@@ -42,6 +42,7 @@ export type AllowedSettingVals = {
 export type Article = {
   __typename?: 'Article'
   createdAt: Scalars['DateTime']
+  disableComments?: Maybe<Scalars['Boolean']>
   draft?: Maybe<ArticleRevision>
   hidden?: Maybe<Scalars['Boolean']>
   id: Scalars['ID']
@@ -86,6 +87,7 @@ export type ArticleInput = {
   blocks: Array<BlockInput>
   breaking: Scalars['Boolean']
   canonicalUrl?: InputMaybe<Scalars['String']>
+  disableComments?: InputMaybe<Scalars['Boolean']>
   hidden?: InputMaybe<Scalars['Boolean']>
   hideAuthor: Scalars['Boolean']
   imageID?: InputMaybe<Scalars['ID']>
@@ -143,11 +145,11 @@ export type ArticleRevision = {
 }
 
 export enum ArticleSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  PublishedAt = 'PUBLISHED_AT',
-  PublishAt = 'PUBLISH_AT',
-  UpdatedAt = 'UPDATED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt',
+  PublishAt = 'publishAt',
+  PublishedAt = 'publishedAt',
+  UpdatedAt = 'updatedAt'
 }
 
 export type ArticleTeaser = {
@@ -180,6 +182,9 @@ export type Author = {
   __typename?: 'Author'
   bio?: Maybe<Scalars['RichText']>
   createdAt: Scalars['DateTime']
+  hideOnArticle?: Maybe<Scalars['Boolean']>
+  hideOnTeam?: Maybe<Scalars['Boolean']>
+  hideOnTeaser?: Maybe<Scalars['Boolean']>
   id: Scalars['ID']
   image?: Maybe<Image>
   jobTitle?: Maybe<Scalars['String']>
@@ -205,12 +210,16 @@ export type AuthorCreatedAction = {
 }
 
 export type AuthorFilter = {
+  hideOnTeam?: InputMaybe<Scalars['Boolean']>
   name?: InputMaybe<Scalars['String']>
   tagIds?: InputMaybe<Array<Scalars['ID']>>
 }
 
 export type AuthorInput = {
   bio?: InputMaybe<Scalars['RichText']>
+  hideOnArticle?: InputMaybe<Scalars['Boolean']>
+  hideOnTeam?: InputMaybe<Scalars['Boolean']>
+  hideOnTeaser?: InputMaybe<Scalars['Boolean']>
   imageID?: InputMaybe<Scalars['ID']>
   jobTitle?: InputMaybe<Scalars['String']>
   links?: InputMaybe<Array<AuthorLinkInput>>
@@ -231,9 +240,9 @@ export type AuthorLinkInput = {
 }
 
 export enum AuthorSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME'
+  Name = 'NAME',
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type AvailablePaymentMethod = {
@@ -342,10 +351,10 @@ export type Comment = {
 }
 
 export enum CommentAuthorType {
-  Author = 'Author',
-  GuestUser = 'GuestUser',
-  Team = 'Team',
-  VerifiedUser = 'VerifiedUser'
+  Author = 'author',
+  GuestUser = 'guestUser',
+  Team = 'team',
+  VerifiedUser = 'verifiedUser'
 }
 
 export type CommentBlock = {
@@ -395,9 +404,9 @@ export type CommentFilter = {
 }
 
 export enum CommentItemType {
-  Article = 'Article',
-  Page = 'Page',
-  PeerArticle = 'PeerArticle'
+  Article = 'article',
+  Page = 'page',
+  PeerArticle = 'peerArticle'
 }
 
 export type CommentRatingOverrideUpdateInput = {
@@ -414,8 +423,8 @@ export type CommentRatingSystemAnswer = {
 }
 
 export enum CommentRejectionReason {
-  Misconduct = 'Misconduct',
-  Spam = 'Spam'
+  Misconduct = 'misconduct',
+  Spam = 'spam'
 }
 
 export type CommentRevision = {
@@ -433,15 +442,15 @@ export type CommentRevisionUpdateInput = {
 }
 
 export enum CommentSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export enum CommentState {
-  Approved = 'Approved',
-  PendingApproval = 'PendingApproval',
-  PendingUserChanges = 'PendingUserChanges',
-  Rejected = 'Rejected'
+  Approved = 'approved',
+  PendingApproval = 'pendingApproval',
+  PendingUserChanges = 'pendingUserChanges',
+  Rejected = 'rejected'
 }
 
 export type CreatePeerInput = {
@@ -458,6 +467,11 @@ export type CreatedToken = {
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
   token: Scalars['String']
+}
+
+export enum Currency {
+  Chf = 'CHF',
+  Eur = 'EUR'
 }
 
 export type CustomTeaser = {
@@ -488,11 +502,11 @@ export type DateFilter = {
 }
 
 export enum DateFilterComparison {
-  Equal = 'EQUAL',
-  Greater = 'GREATER',
-  GreaterOrEqual = 'GREATER_OR_EQUAL',
-  Lower = 'LOWER',
-  LowerOrEqual = 'LOWER_OR_EQUAL'
+  Eq = 'eq',
+  Gt = 'gt',
+  Gte = 'gte',
+  Lt = 'lt',
+  Lte = 'lte'
 }
 
 export type EmbedBlock = {
@@ -579,17 +593,17 @@ export type EventFilter = {
 }
 
 export enum EventSort {
-  CreatedAt = 'CREATED_AT',
-  EndsAt = 'ENDS_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  StartsAt = 'STARTS_AT'
+  CreatedAt = 'CreatedAt',
+  EndsAt = 'EndsAt',
+  ModifiedAt = 'ModifiedAt',
+  StartsAt = 'StartsAt'
 }
 
 export enum EventStatus {
-  Cancelled = 'CANCELLED',
-  Postponed = 'POSTPONED',
-  Rescheduled = 'RESCHEDULED',
-  Scheduled = 'SCHEDULED'
+  Cancelled = 'Cancelled',
+  Postponed = 'Postponed',
+  Rescheduled = 'Rescheduled',
+  Scheduled = 'Scheduled'
 }
 
 export type EventTeaser = {
@@ -680,6 +694,12 @@ export type FlexTeaserInput = {
   teaser?: InputMaybe<TeaserInput>
 }
 
+export type FocalPoint = {
+  __typename?: 'FocalPoint'
+  x: Scalars['Float']
+  y: Scalars['Float']
+}
+
 export type FullCommentRatingSystem = {
   __typename?: 'FullCommentRatingSystem'
   answers: Array<CommentRatingSystemAnswer>
@@ -727,7 +747,7 @@ export type Image = {
   extension: Scalars['String']
   fileSize: Scalars['Int']
   filename?: Maybe<Scalars['String']>
-  focalPoint?: Maybe<Point>
+  focalPoint?: Maybe<FocalPoint>
   format: Scalars['String']
   height: Scalars['Int']
   id: Scalars['ID']
@@ -786,22 +806,22 @@ export type ImageGalleryBlockInput = {
 }
 
 export enum ImageOutput {
-  Jpeg = 'JPEG',
-  Png = 'PNG',
-  Webp = 'WEBP'
+  Jpeg = 'jpeg',
+  Png = 'png',
+  Webp = 'webp'
 }
 
 export enum ImageRotation {
-  Auto = 'AUTO',
-  Rotate_0 = 'ROTATE_0',
-  Rotate_90 = 'ROTATE_90',
-  Rotate_180 = 'ROTATE_180',
-  Rotate_270 = 'ROTATE_270'
+  Auto = 'Auto',
+  Rotate0 = 'Rotate0',
+  Rotate90 = 'Rotate90',
+  Rotate180 = 'Rotate180',
+  Rotate270 = 'Rotate270'
 }
 
 export enum ImageSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type ImageTransformation = {
@@ -886,9 +906,9 @@ export type InvoiceItemInput = {
 }
 
 export enum InvoiceSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  PaidAt = 'PAID_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt',
+  PaidAt = 'paidAt'
 }
 
 export type JwtToken = {
@@ -959,6 +979,7 @@ export type MemberPlan = {
   amountPerMonthMin: Scalars['Int']
   availablePaymentMethods: Array<AvailablePaymentMethod>
   createdAt: Scalars['DateTime']
+  currency: Currency
   description?: Maybe<Scalars['RichText']>
   extendable: Scalars['Boolean']
   id: Scalars['ID']
@@ -987,6 +1008,7 @@ export type MemberPlanInput = {
   active: Scalars['Boolean']
   amountPerMonthMin: Scalars['Int']
   availablePaymentMethods: Array<AvailablePaymentMethodInput>
+  currency: Currency
   description?: InputMaybe<Scalars['RichText']>
   extendable: Scalars['Boolean']
   imageID?: InputMaybe<Scalars['ID']>
@@ -997,8 +1019,8 @@ export type MemberPlanInput = {
 }
 
 export enum MemberPlanSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type Mutation = {
@@ -1600,11 +1622,11 @@ export type PageRevision = {
 }
 
 export enum PageSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  PublishedAt = 'PUBLISHED_AT',
-  PublishAt = 'PUBLISH_AT',
-  UpdatedAt = 'UPDATED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt',
+  PublishAt = 'publishAt',
+  PublishedAt = 'publishedAt',
+  UpdatedAt = 'updatedAt'
 }
 
 export type PageTeaser = {
@@ -1684,10 +1706,10 @@ export type PaymentMethodInput = {
 }
 
 export enum PaymentPeriodicity {
-  Biannual = 'BIANNUAL',
-  Monthly = 'MONTHLY',
-  Quarterly = 'QUARTERLY',
-  Yearly = 'YEARLY'
+  Biannual = 'biannual',
+  Monthly = 'monthly',
+  Quarterly = 'quarterly',
+  Yearly = 'yearly'
 }
 
 export type PaymentProvider = {
@@ -1703,18 +1725,18 @@ export type PaymentProviderCustomer = {
 }
 
 export enum PaymentSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export enum PaymentState {
-  Canceled = 'Canceled',
-  Created = 'Created',
-  Declined = 'Declined',
-  Paid = 'Paid',
-  Processing = 'Processing',
-  RequiresUserAction = 'RequiresUserAction',
-  Submitted = 'Submitted'
+  Canceled = 'canceled',
+  Created = 'created',
+  Declined = 'declined',
+  Paid = 'paid',
+  Processing = 'processing',
+  RequiresUserAction = 'requiresUserAction',
+  Submitted = 'submitted'
 }
 
 export type Peer = {
@@ -1798,12 +1820,6 @@ export type Permission = {
   id: Scalars['String']
 }
 
-export type Point = {
-  __typename?: 'Point'
-  x: Scalars['Float']
-  y: Scalars['Float']
-}
-
 export type PolisConversationBlock = {
   __typename?: 'PolisConversationBlock'
   blockStyle?: Maybe<Scalars['String']>
@@ -1875,9 +1891,9 @@ export type PollFilter = {
 }
 
 export enum PollSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  OpensAt = 'OPENS_AT'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  OpensAt = 'OpensAt'
 }
 
 export type PollStartedAction = {
@@ -2227,7 +2243,7 @@ export type QuoteBlockInput = {
 }
 
 export enum RatingSystemType {
-  Star = 'STAR'
+  Star = 'star'
 }
 
 export type RichTextBlock = {
@@ -2263,26 +2279,26 @@ export type Setting = {
   id: Scalars['ID']
   name: SettingName
   settingRestriction?: Maybe<SettingRestriction>
-  value: Scalars['Value']
+  value: Scalars['GraphQLSettingValueType']
 }
 
 export enum SettingName {
-  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
-  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
-  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
-  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
-  BodyScript = 'BODY_SCRIPT',
-  CommentCharLimit = 'COMMENT_CHAR_LIMIT',
-  HeadScript = 'HEAD_SCRIPT',
-  MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
-  MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
-  MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
-  MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
-  MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
-  MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
-  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
-  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
-  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
+  AllowCommentEditing = 'allowCommentEditing',
+  AllowGuestCommentRating = 'allowGuestCommentRating',
+  AllowGuestCommenting = 'allowGuestCommenting',
+  AllowGuestPollVoting = 'allowGuestPollVoting',
+  BodyScript = 'bodyScript',
+  CommentCharLimit = 'commentCharLimit',
+  HeadScript = 'headScript',
+  MakeActiveSubscribersApiPublic = 'makeActiveSubscribersApiPublic',
+  MakeExpectedRevenueApiPublic = 'makeExpectedRevenueApiPublic',
+  MakeNewDeactivationsApiPublic = 'makeNewDeactivationsApiPublic',
+  MakeNewSubscribersApiPublic = 'makeNewSubscribersApiPublic',
+  MakeRenewingSubscribersApiPublic = 'makeRenewingSubscribersApiPublic',
+  MakeRevenueApiPublic = 'makeRevenueApiPublic',
+  PeeringTimeoutInMs = 'peeringTimeoutInMs',
+  ResetPasswordJwtExpiresMin = 'resetPasswordJwtExpiresMin',
+  SendLoginJwtExpiresMin = 'sendLoginJwtExpiresMin'
 }
 
 export type SettingRestriction = {
@@ -2294,8 +2310,8 @@ export type SettingRestriction = {
 }
 
 export enum SortOrder {
-  Ascending = 'ASCENDING',
-  Descending = 'DESCENDING'
+  Ascending = 'Ascending',
+  Descending = 'Descending'
 }
 
 export type SoundCloudTrackBlock = {
@@ -2358,9 +2374,9 @@ export type SubscriptionDeactivationInput = {
 }
 
 export enum SubscriptionDeactivationReason {
-  InvoiceNotPaid = 'INVOICE_NOT_PAID',
-  None = 'NONE',
-  UserSelfDeactivated = 'USER_SELF_DEACTIVATED'
+  InvoiceNotPaid = 'invoiceNotPaid',
+  None = 'none',
+  UserSelfDeactivated = 'userSelfDeactivated'
 }
 
 export type SubscriptionFilter = {
@@ -2410,8 +2426,8 @@ export type SubscriptionPeriod = {
 }
 
 export enum SubscriptionSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type Tag = {
@@ -2436,9 +2452,9 @@ export type TagFilter = {
 }
 
 export enum TagSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  Tag = 'TAG'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Tag = 'Tag'
 }
 
 export enum TagType {
@@ -2514,9 +2530,9 @@ export type TeaserListBlockInput = {
 }
 
 export enum TeaserStyle {
-  Default = 'DEFAULT',
-  Light = 'LIGHT',
-  Text = 'TEXT'
+  Default = 'default',
+  Light = 'light',
+  Text = 'text'
 }
 
 export enum TeaserType {
@@ -2627,7 +2643,7 @@ export type UpdatePollExternalVoteSources = {
 
 export type UpdateSettingArgs = {
   name: SettingName
-  value: Scalars['Value']
+  value: Scalars['GraphQLSettingValueType']
 }
 
 export type UploadImageInput = {
@@ -2646,6 +2662,7 @@ export type User = {
   __typename?: 'User'
   active: Scalars['Boolean']
   address?: Maybe<UserAddress>
+  birthday?: Maybe<Scalars['DateTime']>
   createdAt: Scalars['DateTime']
   email: Scalars['String']
   emailVerifiedAt?: Maybe<Scalars['DateTime']>
@@ -2705,6 +2722,7 @@ export type UserFilter = {
 export type UserInput = {
   active: Scalars['Boolean']
   address?: InputMaybe<UserAddressInput>
+  birthday?: InputMaybe<Scalars['DateTime']>
   email: Scalars['String']
   emailVerifiedAt?: InputMaybe<Scalars['DateTime']>
   firstName?: InputMaybe<Scalars['String']>
@@ -2743,15 +2761,15 @@ export type UserRoleInput = {
 }
 
 export enum UserRoleSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export enum UserSort {
-  CreatedAt = 'CREATED_AT',
-  FirstName = 'FIRST_NAME',
-  ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME'
+  CreatedAt = 'createdAt',
+  FirstName = 'firstName',
+  ModifiedAt = 'modifiedAt',
+  Name = 'name'
 }
 
 export type UserSubscription = {
@@ -6014,7 +6032,7 @@ export type FullImageFragment = {
   previewURL?: string | null
   column1URL?: string | null
   column6URL?: string | null
-  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
 }
 
 export type ImageListQueryVariables = Exact<{
@@ -6087,7 +6105,7 @@ export type ImageQuery = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
-    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -6149,7 +6167,7 @@ export type UpdateImageMutation = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
-    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -6183,7 +6201,7 @@ export type DeleteImageMutation = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
-    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
