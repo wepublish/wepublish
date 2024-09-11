@@ -21,8 +21,9 @@ import gql from 'graphql-tag'
 import {GraphQLPublicPageResolver} from './graphql/page'
 import {GraphQLTagResolver} from './graphql/tag/tag'
 import {GraphQLImageResolver} from './graphql/image'
-import {GraphQLObjectType, GraphQLUnionType} from 'graphql'
+import {GraphQLObjectType, GraphQLUnionType, printSchema} from 'graphql'
 import {GraphQLEventResolver} from './graphql/event/event'
+import * as fs from 'fs'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -57,9 +58,15 @@ export class WepublishServer {
           ? ApolloServerPluginLandingPageGraphQLPlayground()
           : ApolloServerPluginLandingPageDisabled()
       ],
-      introspection: this.opts.introspection ?? false,
+      introspection: true,
       context: ({req}) => contextFromRequest(req, this.opts)
     })
+
+    await fs.promises.writeFile(
+      './apps/api-example/schema-v1-admin.graphql',
+      printSchema(GraphQLWepublishSchema)
+    )
+
     await adminServer.start()
 
     const federatedTypeDefs = gql`
@@ -137,15 +144,20 @@ export class WepublishServer {
       resolvers[type] = {...resolvers[type], ...federatedResolvers[type]}
     }
 
+    const publicSchema = buildSubgraphSchema({
+      typeDefs,
+      resolvers
+    })
+
     const publicServer = new ApolloServer({
-      schema: buildSubgraphSchema({
-        typeDefs,
-        resolvers
-      }),
+      schema: publicSchema,
       introspection: this.opts.introspection ?? false,
       context: ({req}) => contextFromRequest(req, this.opts),
       allowBatchedHttpRequests: true
     })
+
+    await fs.promises.writeFile('./apps/api-example/schema-v1.graphql', printSchema(publicSchema))
+
     await publicServer.start()
 
     const corsOptions = {
