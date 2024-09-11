@@ -4,26 +4,13 @@ import {convertColumnsToRow} from './row'
 
 import {migrateUser} from './user'
 import {migrateSubscription} from './subscription'
-
-function oneAtOnce(stream: ReadStream, processor: (data: string[]) => Promise<void>) {
-  return async function (data: string[]) {
-    stream.pause()
-    try {
-      await processor(data)
-    } catch (error) {
-      console.error('Error processing data:', error)
-    } finally {
-      stream.resume()
-    }
-    return
-  }
-}
+import {streamLimit} from './streaml-limit'
 
 export async function migrateSubscriptionsFromStream(stream: ReadStream) {
   return new Promise((resolve, reject) => {
-    stream
-      .pipe(parse({delimiter: ';', fromLine: 2}))
-      .on('data', oneAtOnce(stream, processRow))
+    const parser = stream.pipe(parse({delimiter: ';', fromLine: 2}))
+    parser
+      .on('data', streamLimit<string[]>(parser, processRow, 5))
       .on('end', resolve)
       .on('error', reject)
   })
