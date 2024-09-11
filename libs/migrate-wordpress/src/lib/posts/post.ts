@@ -30,7 +30,7 @@ export async function migratePost(data: PreparedArticleData) {
       console.log('  article delete', slug)
       await deleteArticle(existingArticle.id)
     } else {
-      return existingArticle
+      return
     }
   }
 
