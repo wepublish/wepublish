@@ -1,0 +1,10 @@
+projects:
+  editor-api:
+    schema: 'apps/api-example/schema-v1-admin.graphql'
+    documents: 'libs/editor/api/**/*.graphql'
+  editor-api-v2:
+    schema: 'apps/api-example/schema-v2.graphql'
+    documents: 'libs/editor/api-v2/**/*.graphql'
+  website-api:
+    schema: 'apps/api-example/schema-v2.graphql'
+    documents: 'libs/editor/api-v2/**/*.graphql'
