@@ -1,6 +1,7 @@
 import {PollBlockProvider} from '@wepublish/block-content/website'
-import {useArticleQuery} from '@wepublish/website/api'
+import {BannerDocumentType, useArticleQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BannerContainer} from '@wepublish/banner/website'
 import {PropsWithChildren} from 'react'
 
 type IdSlugOrToken =
@@ -22,6 +23,7 @@ export function ArticleContainer({id, slug, token, className, children}: Article
 
   return (
     <PollBlockProvider>
+      <BannerContainer documentId={data?.article?.id} documentType={BannerDocumentType.Article} />
       <Article data={data} loading={loading} error={error} className={className}>
         {children}
       </Article>
