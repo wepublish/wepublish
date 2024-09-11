@@ -1,6 +1,5 @@
 import {Optional} from '@nestjs/common'
 import {ArgsType, Field, ID, InputType, Int, ObjectType} from '@nestjs/graphql'
-import {PaginationArgs} from '@wepublish/api'
 
 @ObjectType({description: 'Banner'})
 export class Banner {
@@ -15,7 +14,7 @@ export class Banner {
 }
 
 @ArgsType()
-export class BannerArgs extends PaginationArgs {}
+export class BannerArgs {}
 
 @InputType()
 export class NewBannerInput {
