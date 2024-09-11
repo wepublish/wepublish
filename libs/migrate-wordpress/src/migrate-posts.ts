@@ -21,7 +21,7 @@ export async function migrate() {
     202940,
     202666
   )
-  await migratePosts(30)
-  await migratePostsFromCategory(4371, 20)
-  await migratePostsFromCategory(4950, 20)
+  await migratePosts(200)
+  await migratePostsFromCategory(4371, 50)
+  await migratePostsFromCategory(4950, 50)
 }
