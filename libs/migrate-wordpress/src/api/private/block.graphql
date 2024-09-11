@@ -1,170 +1,166 @@
 fragment FullTeaser on Teaser {
-  ... on ArticleTeaser {
-    style
+    ... on ArticleTeaser {
+        style
 
-    image {
-      ...ImageRef
+        image {
+            ...ImageRef
+        }
+
+        preTitle
+        title
+        lead
+
+        article {
+            ...ArticleRef
+        }
     }
 
-    preTitle
-    title
-    lead
+    ... on PeerArticleTeaser {
+        style
 
-    article {
-      ...ArticleRef
-    }
-  }
+        image {
+            ...ImageRef
+        }
 
-  ... on PeerArticleTeaser {
-    style
+        preTitle
+        title
+        lead
 
-    image {
-      ...ImageRef
-    }
-
-    preTitle
-    title
-    lead
-
-    peer {
-      ...PeerWithProfile
+        articleID
+        article {
+            ...ArticleRef
+        }
     }
 
-    articleID
-    article {
-      ...ArticleRef
-    }
-  }
+    ... on PageTeaser {
+        style
 
-  ... on PageTeaser {
-    style
+        image {
+            ...ImageRef
+        }
 
-    image {
-      ...ImageRef
-    }
+        preTitle
+        title
+        lead
 
-    preTitle
-    title
-    lead
-
-    page {
-      ...PageRef
-    }
-  }
-
-  ... on EventTeaser {
-    style
-
-    image {
-      ...ImageRef
+        page {
+            id
+        }
     }
 
-    preTitle
-    title
-    lead
+    ... on EventTeaser {
+        style
 
-    event {
-      ...EventRef
+        image {
+            ...ImageRef
+        }
+
+        preTitle
+        title
+        lead
+
+        event {
+            id
+        }
     }
-  }
 }
 
 fragment FullBlock on Block {
-  __typename
+    __typename
 
-  ... on TitleBlock {
-    title
-    lead
-  }
-
-  ... on RichTextBlock {
-    richText
-  }
-
-  ... on QuoteBlock {
-    quote
-    author
-    image {
-      ...ImageRef
+    ... on TitleBlock {
+        title
+        lead
     }
-  }
 
-  ... on LinkPageBreakBlock {
-    text
-    linkText
-    linkURL
-  }
-
-  ... on ImageBlock {
-    caption
-    image {
-      ...ImageRef
+    ... on RichTextBlock {
+        richText
     }
-  }
 
-  ... on ImageGalleryBlock {
-    images {
-      caption
-      image {
-        ...ImageRef
-      }
+    ... on QuoteBlock {
+        quote
+        author
+        image {
+            ...ImageRef
+        }
     }
-  }
 
-  ... on ListicleBlock {
-    items {
-      title
-      image {
-        ...ImageRef
-      }
-      richText
+    ... on LinkPageBreakBlock {
+        text
+        linkText
+        linkURL
     }
-  }
 
-  ... on FacebookPostBlock {
-    userID
-    postID
-  }
-
-  ... on FacebookVideoBlock {
-    userID
-    videoID
-  }
-
-  ... on InstagramPostBlock {
-    postID
-  }
-
-  ... on TwitterTweetBlock {
-    userID
-    tweetID
-  }
-
-  ... on VimeoVideoBlock {
-    videoID
-  }
-
-  ... on YouTubeVideoBlock {
-    videoID
-  }
-
-  ... on SoundCloudTrackBlock {
-    trackID
-  }
-
-  ... on EmbedBlock {
-    url
-    title
-    width
-    height
-    styleCustom
-    sandbox
-  }
-
-  ... on TeaserGridBlock {
-    teasers {
-      ...FullTeaser
+    ... on ImageBlock {
+        caption
+        image {
+            ...ImageRef
+        }
     }
-    numColumns
-  }
+
+    ... on ImageGalleryBlock {
+        images {
+            caption
+            image {
+                ...ImageRef
+            }
+        }
+    }
+
+    ... on ListicleBlock {
+        items {
+            title
+            image {
+                ...ImageRef
+            }
+            richText
+        }
+    }
+
+    ... on FacebookPostBlock {
+        userID
+        postID
+    }
+
+    ... on FacebookVideoBlock {
+        userID
+        videoID
+    }
+
+    ... on InstagramPostBlock {
+        postID
+    }
+
+    ... on TwitterTweetBlock {
+        userID
+        tweetID
+    }
+
+    ... on VimeoVideoBlock {
+        videoID
+    }
+
+    ... on YouTubeVideoBlock {
+        videoID
+    }
+
+    ... on SoundCloudTrackBlock {
+        trackID
+    }
+
+    ... on EmbedBlock {
+        url
+        title
+        width
+        height
+        styleCustom
+        sandbox
+    }
+
+    ... on TeaserGridBlock {
+        teasers {
+            ...FullTeaser
+        }
+        numColumns
+    }
 }

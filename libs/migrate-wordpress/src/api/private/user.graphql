@@ -11,9 +11,6 @@ fragment FullUser on User {
         }
     }
     flair
-    roles {
-        ...FullUserRole
-    }
 }
 
 query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
@@ -33,18 +30,6 @@ query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
     }
 }
 
-query Me {
-    me {
-        ...FullUser
-    }
-}
-
-query User($id: ID!) {
-    user(id: $id) {
-        ...FullUser
-    }
-}
-
 mutation CreateUser($input: UserInput!, $password: String!) {
     createUser(input: $input, password: $password) {
         ...FullUser
@@ -57,32 +42,8 @@ mutation UpdateUser($id: ID!, $input: UserInput!) {
     }
 }
 
-mutation ResetUserPassword($id: ID!, $password: String!) {
-    resetUserPassword(id: $id, password: $password) {
-        ...FullUser
-    }
-}
-
 mutation DeleteUser($id: ID!) {
     deleteUser(id: $id) {
         ...FullUser
-    }
-}
-
-mutation CreateSession($email: String!, $password: String!) {
-    createSession(email: $email, password: $password) {
-        user {
-            email
-        }
-        token
-    }
-}
-
-mutation CreateSessionWithJWT($jwt: String!) {
-    createSessionWithJWT(jwt: $jwt) {
-        user {
-            email
-        }
-        token
     }
 }
