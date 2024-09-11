@@ -12,10 +12,7 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
@@ -27,6 +24,8 @@
       "@wepublish/authentication/api": ["libs/authentication/api/src/index.ts"],
       "@wepublish/authentication/website": ["libs/authentication/website/src/index.ts"],
       "@wepublish/author/website": ["libs/author/website/src/index.ts"],
+      "@wepublish/banner/api": ["libs/banner/api/src/index.ts"],
+      "@wepublish/banner/editor": ["libs/banner/editor/src/index.ts"],
       "@wepublish/block-content/api": ["libs/block-content/api/src/index.ts"],
       "@wepublish/block-content/website": ["libs/block-content/website/src/index.ts"],
       "@wepublish/comments/website": ["libs/comments/website/src/index.ts"],
@@ -83,8 +82,5 @@
       "@wepublish/website/server": ["libs/website/src/server.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

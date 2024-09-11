@@ -728,6 +728,7 @@
     "navbar": {
       "articles": "Articles",
       "authors": "Authors",
+      "banners": "Banners",
       "blocks": {
         "polls": "Polls",
         "blockStyles": "Block Styling",

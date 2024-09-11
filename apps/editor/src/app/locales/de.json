@@ -717,6 +717,7 @@
     "navbar": {
       "articles": "Artikel",
       "authors": "Autor*innen",
+      "banners": "Banner",
       "blocks": {
         "polls": "Umfrage",
         "blockStyles": "Block Styling",
