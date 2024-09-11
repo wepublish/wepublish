@@ -1,7 +1,7 @@
 overwrite: true
 generates:
   ./libs/editor/api/src/lib/graphql.ts:
-    schema: ${API_URL}/v1/admin
+    schema: ./apps/api-example/schema-v1-admin.graphql
     documents: ./libs/editor/api/src/lib/schemas/*.graphql
     plugins:
       - add:
@@ -76,7 +76,7 @@ generates:
       withComponent: false
 
   ./libs/api/__tests__/api/private/index.ts:
-    schema: ${API_URL}/v1/admin
+    schema: ./apps/api-example/schema-v1-admin.graphql
     documents: ./libs/api/__tests__/api/private/*.graphql
     plugins:
       - add:
