@@ -144,15 +144,20 @@ export class WepublishServer {
       resolvers[type] = {...resolvers[type], ...federatedResolvers[type]}
     }
 
+    const publicSchema = buildSubgraphSchema({
+      typeDefs,
+      resolvers
+    })
+
     const publicServer = new ApolloServer({
-      schema: buildSubgraphSchema({
-        typeDefs,
-        resolvers
-      }),
+      schema: publicSchema,
       introspection: this.opts.introspection ?? false,
       context: ({req}) => contextFromRequest(req, this.opts),
       allowBatchedHttpRequests: true
     })
+
+    await fs.promises.writeFile('./apps/api-example/schema-v1.graphql', printSchema(publicSchema))
+
     await publicServer.start()
 
     const corsOptions = {
