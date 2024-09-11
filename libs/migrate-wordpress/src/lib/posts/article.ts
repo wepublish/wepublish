@@ -42,6 +42,7 @@ export async function ensureArticle(props: EnsureArticleProps) {
     hideAuthor: false,
     properties: [],
     shared: false,
+    disableComments: true,
     socialMediaAuthorIDs: [],
     tags: tags.map(t => t.id),
     blocks,
