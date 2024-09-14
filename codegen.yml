@@ -1,7 +1,8 @@
 overwrite: true
 generates:
   ./libs/editor/api/src/lib/graphql.ts:
-    schema: ${API_URL}/v1/admin
+    schema:
+      - ./apps/api-example/schema-v1-admin.graphql
     documents: ./libs/editor/api/src/lib/schemas/*.graphql
     plugins:
       - add:
@@ -25,7 +26,8 @@ generates:
       withHOC: false
       withComponent: false
   ./libs/editor/api-v2/src/lib/graphql.ts:
-    schema: ./apps/api-example/schema-v2.graphql
+    schema:
+      - ./apps/api-example/schema-v2.graphql
     documents: ./libs/editor/api-v2/src/lib/schemas/*.graphql
     plugins:
       - add:
@@ -50,7 +52,9 @@ generates:
       withComponent: false
 
   ./libs/website/api/src/lib/graphql.ts:
-    schema: ${API_URL}/v1
+    schema:
+      - ./apps/api-example/schema-v1.graphql
+      - ./apps/api-example/schema-v2.graphql
     documents: ./libs/website/api/src/lib/schemas/*.graphql
     plugins:
       - add:
@@ -76,7 +80,8 @@ generates:
       withComponent: false
 
   ./libs/api/__tests__/api/private/index.ts:
-    schema: ${API_URL}/v1/admin
+    schema:
+      - ./apps/api-example/schema-v1-admin.graphql
     documents: ./libs/api/__tests__/api/private/*.graphql
     plugins:
       - add:
@@ -96,7 +101,9 @@ generates:
         RichText: Node[]
         Upload: File
   ./libs/api/__tests__/api/public/index.ts:
-    schema: ${API_URL}/v1
+    schema:
+      - ./apps/api-example/schema-v1.graphql
+      - ./apps/api-example/schema-v2.graphql
     documents: ./libs/api/__tests__/api/public/*.graphql
     plugins:
       - add:

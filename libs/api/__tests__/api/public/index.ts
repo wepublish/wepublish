@@ -13,14 +13,23 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A hexidecimal color value. */
   Color: string;
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: string;
+  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: string;
+  /** Setting Value */
   GraphQLSettingValueType: any;
   RichText: Node[];
   Slug: string;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: File;
+  /** A valid vote value */
   VoteValue: number;
+  _Any: any;
+  _FieldSet: any;
+  link__Import: any;
 };
 
 export type AllowedSettingVals = {
@@ -385,7 +394,7 @@ export type Event = {
   page?: Maybe<Page>;
   startsAt: Scalars['DateTime'];
   status: EventStatus;
-  tags?: Maybe<Array<Tag>>;
+  tags: Array<Tag>;
   url: Scalars['String'];
 };
 
@@ -763,7 +772,11 @@ export type Mutation = {
   cancelUserSubscription?: Maybe<Subscription>;
   /** Creates a new block style. */
   createBlockStyle: BlockStyle;
-  /** Create a new consent. */
+  /**
+   *
+   *       Create a new consent.
+   *
+   */
   createConsent: Consent;
   /** Creates a new event. */
   createEvent: Event;
@@ -781,13 +794,19 @@ export type Mutation = {
   /** Create a subscription interval */
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
   /**
-   * Creates a new userConsent based on input.
-   * Returns created userConsent.
+   *
+   *       Creates a new userConsent based on input.
+   *       Returns created userConsent.
+   *
    */
   createUserConsent: UserConsent;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
-  /** Deletes an existing consent. */
+  /**
+   *
+   *       Deletes an existing consent.
+   *
+   */
   deleteConsent: Consent;
   /** Deletes an existing event. */
   deleteEvent: Event;
@@ -798,15 +817,19 @@ export type Mutation = {
   /** Delete an existing subscription interval */
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>;
   /**
-   * Delete an existing userConsent by id.
-   * Returns deleted userConsent.
+   *
+   *       Delete an existing userConsent by id.
+   *       Returns deleted userConsent.
+   *
    */
   deleteUserConsent: UserConsent;
   /** This mutation extends an subscription early */
   extendSubscription: Payment;
   /**
-   * Creates and event based on data from importable events list and an id and provider.
-   * Also, uploads an image to WePublish Image library.
+   *
+   *       Creates and event based on data from importable events list and an id and provider.
+   *       Also, uploads an image to WePublish Image library.
+   *
    */
   importEvent: Scalars['String'];
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
@@ -826,7 +849,11 @@ export type Mutation = {
   updateBlockStyle: BlockStyle;
   /** This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text. */
   updateComment: Comment;
-  /** Updates an existing consent. */
+  /**
+   *
+   *       Updates an existing consent.
+   *
+   */
   updateConsent: Consent;
   /** Updates an existing event. */
   updateEvent: Event;
@@ -845,8 +872,10 @@ export type Mutation = {
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
   updateUser?: Maybe<User>;
   /**
-   * Updates an existing userConsent based on input.
-   * Returns updated userConsent.
+   *
+   *       Updates an existing userConsent based on input.
+   *       Returns updated userConsent.
+   *
    */
   updateUserConsent: UserConsent;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
@@ -1452,9 +1481,13 @@ export enum PublishedPageSort {
 
 export type Query = {
   __typename?: 'Query';
+  _entities: Array<Maybe<_Entity>>;
+  _service: _Service;
   /**
-   * Returns all active subscribers.
-   * Includes subscribers with a cancelled but not run out subscription.
+   *
+   *       Returns all active subscribers.
+   *       Includes subscribers with a cancelled but not run out subscription.
+   *
    */
   activeSubscribers: Array<DashboardSubscription>;
   /** This query takes either the ID, slug or token and returns the article. */
@@ -1475,28 +1508,54 @@ export type Query = {
   checkInvoiceStatus?: Maybe<Invoice>;
   /** This query returns the comments of an item. */
   comments: Array<Comment>;
-  /** Returns a consent by id. */
+  /**
+   *
+   *       Returns a consent by id.
+   *
+   */
   consent: Consent;
-  /** Returns all consents. */
+  /**
+   *
+   *       Returns all consents.
+   *
+   */
   consents: Array<Consent>;
   /** Returns a event by id. */
   event: Event;
-  /** Returns a list of Importable Event Providers */
+  /**
+   *
+   *       Returns a list of Importable Event Providers
+   *
+   */
   eventProviders: Array<Scalars['String']>;
   /** Returns a paginated list of events based on the filters given. */
   events: PaginatedEvents;
   /**
-   * Returns the expected revenue for the time period given.
-   * Excludes cancelled or manually set as paid invoices.
+   *
+   *       Returns the expected revenue for the time period given.
+   *       Excludes cancelled or manually set as paid invoices.
+   *
    */
   expectedRevenue: Array<DashboardInvoice>;
   /** Returns an image by id. */
   getImage: ImageV2;
-  /** Returns a more detailed version of a single importable event, by id and source. */
+  /**
+   *
+   *       Returns a more detailed version of a single importable event, by id and source.
+   *
+   */
   importedEvent: EventFromSource;
-  /** Returns a list of imported events from external sources, transformed to match our model. */
+  /**
+   *
+   *       Returns a list of imported events from external sources, transformed to match our model.
+   *
+   */
   importedEvents: ImportedEventsDocument;
-  /** Returns a list of external source ids of already imported events. */
+  /**
+   *
+   *       Returns a list of external source ids of already imported events.
+   *
+   */
   importedEventsIds: Array<Scalars['String']>;
   /** This query returns the invoices  of the authenticated user. */
   invoices: Array<Invoice>;
@@ -1513,13 +1572,17 @@ export type Query = {
   /** This query returns all navigations. */
   navigations?: Maybe<Array<Navigation>>;
   /**
-   * Returns all new deactivations in a given timeframe.
-   * This considers the time the deactivation was made, not when the subscription runs out.
+   *
+   *       Returns all new deactivations in a given timeframe.
+   *       This considers the time the deactivation was made, not when the subscription runs out.
+   *
    */
   newDeactivations: Array<DashboardSubscription>;
   /**
-   * Returns all new subscribers in a given timeframe.
-   * Includes already deactivated ones.
+   *
+   *       Returns all new subscribers in a given timeframe.
+   *       Includes already deactivated ones.
+   *
    */
   newSubscribers: Array<DashboardSubscription>;
   /** This query takes either the ID, slug or token and returns the page. */
@@ -1543,18 +1606,36 @@ export type Query = {
   pollVotes: PaginatedPollVotes;
   provider: MailProviderModel;
   ratingSystem: FullCommentRatingSystem;
-  /** Returns all renewing subscribers in a given timeframe. */
+  /**
+   *
+   *       Returns all renewing subscribers in a given timeframe.
+   *
+   */
   renewingSubscribers: Array<DashboardSubscription>;
   /**
-   * Returns the revenue generated for the time period given.
-   * Only includes paid invoices that have not been manually paid.
+   *
+   *       Returns the revenue generated for the time period given.
+   *       Only includes paid invoices that have not been manually paid.
+   *
    */
   revenue: Array<DashboardInvoice>;
-  /** Returns a single setting by name. */
+  /**
+   *
+   *       Returns a single setting by name.
+   *
+   */
   setting: Setting;
-  /** Returns a single setting by id. */
+  /**
+   *
+   *       Returns a single setting by id.
+   *
+   */
   settingById: Setting;
-  /** Returns all settings. */
+  /**
+   *
+   *       Returns all settings.
+   *
+   */
   settings: Array<Setting>;
   stats?: Maybe<Stats>;
   /** Returns all subscription flows */
@@ -1565,13 +1646,26 @@ export type Query = {
   systemMails: Array<SystemMailModel>;
   /** This query returns a list of tags */
   tags?: Maybe<TagConnection>;
-  /** Returns a single userConsent by id. */
+  /**
+   *
+   *       Returns a single userConsent by id.
+   *
+   */
   userConsent: UserConsent;
-  /** Returns a list of userConsents. Possible to filter. */
+  /**
+   *
+   *       Returns a list of userConsents. Possible to filter.
+   *
+   */
   userConsents: Array<UserConsent>;
   /** This query returns the answerId of a poll if the user has already voted on it. */
   userPollVote?: Maybe<Scalars['ID']>;
   versionInformation: VersionInformation;
+};
+
+
+export type Query_EntitiesArgs = {
+  representations: Array<Scalars['_Any']>;
 };
 
 
@@ -2209,6 +2303,13 @@ export type YouTubeVideoBlock = {
   videoID: Scalars['String'];
 };
 
+export type _Entity = Event | Image | MemberPlan | Page | PaymentMethod | PollVote | Tag | User;
+
+export type _Service = {
+  __typename?: '_Service';
+  sdl?: Maybe<Scalars['String']>;
+};
+
 export type OverriddenRating = {
   __typename?: 'overriddenRating';
   answerId: Scalars['ID'];
@@ -2354,7 +2455,7 @@ export type CommentsQueryVariables = Exact<{
 
 export type CommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: string, createdAt: string, modifiedAt?: string | null, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null }> };
 
-export type EventRefFragment = { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null };
+export type EventRefFragment = { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> };
 
 export type EventListQueryVariables = Exact<{
   filter?: InputMaybe<EventFilter>;
@@ -2366,14 +2467,14 @@ export type EventListQueryVariables = Exact<{
 }>;
 
 
-export type EventListQuery = { __typename?: 'Query', events: { __typename?: 'PaginatedEvents', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type EventListQuery = { __typename?: 'Query', events: { __typename?: 'PaginatedEvents', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type EventQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } };
+export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } };
 
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
