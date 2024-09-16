@@ -30,6 +30,7 @@ COPY --chown=wepublish:wepublish --from=base-image-build /wepublish/node_modules
 FROM ${BUILD_IMAGE} AS  build-website
 ### FRONT_ARG_REPLACER ###
 
+COPY /wepublish/secrets_name.list /wepublish/secrets_name.list
 RUN npx nx build ${NEXT_PROJECT}
 RUN bash /wepublish/deployment/map-secrets.sh clean
 
