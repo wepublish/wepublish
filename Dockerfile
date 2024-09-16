@@ -5,7 +5,12 @@ ARG BUILD_IMAGE=node:18.19.1-bookworm-slim
 FROM node:18.19.1-bookworm-slim as base-image-build
 WORKDIR /wepublish
 COPY . .
-RUN npm ci
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends openssl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    npm ci
 
 FROM node:18.19.1-bookworm-slim as base-image
 MAINTAINER WePublish Foundation
