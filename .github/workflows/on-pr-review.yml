@@ -20,7 +20,7 @@ env:
 
 jobs:
   publish_docker_base_image:
-    name: Docker
+    name: Docker base image
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
     with:
       base_image_tags: |
@@ -29,7 +29,7 @@ jobs:
 
   publish_docker_image:
     needs: [publish_docker_base_image]
-    name: Docker base image
+    name: Docker backend images
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
       base_image_tag: ghcr.io/wepublish/base-image:${{ github.sha }}
