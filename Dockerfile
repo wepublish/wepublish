@@ -8,7 +8,7 @@ WORKDIR /wepublish
 COPY package-lock.json .
 COPY package.json .
 COPY .npmrc .
-COPY build .
+COPY build/ ./build
 RUN npm ci
 
 
