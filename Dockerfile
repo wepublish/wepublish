@@ -1,4 +1,13 @@
 #######
+## Base Image
+#######
+FROM node:18.19.1-bookworm-slim as base-image
+COPY package-lock.json .
+COPY package.json .
+RUN npm ci
+
+
+#######
 ## Website
 #######
 

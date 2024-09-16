@@ -19,7 +19,16 @@ env:
 
 
 jobs:
+  publish_docker_base_image:
+    name: Docker
+    uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
+    with:
+      editor_tags: |
+        ghcr.io/wepublish/base-image:${{ github.sha }}
+    secrets: inherit
+
   publish_docker_image:
+    needs: [publish_docker_base_image]
     name: Docker
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
