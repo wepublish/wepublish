@@ -30,10 +30,22 @@ jobs:
         id: set-matrix
         run: deployment/read_deployment_config.sh '.website.staging.deployment' true
 
-  publish_master_docker:
+  publish-docker-base-image:
+    name: ${{ needs.get-tag.outputs.project }} base image
+    if: ${{ needs.date_sha_tag.result == 'success' }}
     needs: date_sha_tag
+    uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
+    with:
+      base_image_tags: |
+        ghcr.io/wepublish/base-image:master-${{ needs.date_sha_tag.outputs.tag }}
+    secrets: inherit
+
+  publish_master_docker:
+    needs: [date_sha_tag, publish-docker-base-image]
+    if: ${{ needs.publish-docker-base-image.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
+      base_image_tag: ghcr.io/wepublish/base-image:master-${{ needs.date_sha_tag.outputs.tag }}
       migration_tags: |
         ghcr.io/wepublish/migration:master-${{ needs.date_sha_tag.outputs.tag }}
         ghcr.io/wepublish/migration:master
@@ -58,12 +70,13 @@ jobs:
 
   publish_master_docker_website:
     name: Website
-    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker ]
+    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker, publish-docker-base-image]
     if: ${{ needs.publish_master_docker.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
       matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
     with:
+      base_image_tag: ghcr.io/wepublish/base-image:master-${{ needs.date_sha_tag.outputs.tag }}
       website_project: ${{ matrix.target }}
       api_url: https://api-${{ matrix.target }}.wepublish.dev
       environment: staging
