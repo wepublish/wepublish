@@ -7,6 +7,7 @@ ENV NODE_ENV=production
 COPY package-lock.json .
 COPY package.json .
 COPY .npmrc .
+COPY build .
 RUN npm ci
 
 
