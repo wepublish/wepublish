@@ -2,6 +2,8 @@
 ## Base Image
 #######
 FROM node:18.19.1-bookworm-slim as base-image
+MAINTAINER WePublish Foundation
+ENV NODE_ENV=production
 COPY package-lock.json .
 COPY package.json .
 COPY .npmrc .
