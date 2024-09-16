@@ -22,10 +22,10 @@ import {
   useAuthorisation,
   UserSubscriptionsList
 } from '@wepublish/ui/editor'
+import {userCountryNames} from '@wepublish/user'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useLocation, useNavigate, useParams} from 'react-router-dom'
-import {userCountryNames} from '@wepublish/user'
 import {
   CheckPicker,
   Col,
@@ -38,9 +38,9 @@ import {
   Panel as RPanel,
   Row,
   Schema,
+  SelectPicker,
   toaster,
-  Toggle as RToggle,
-  SelectPicker
+  Toggle as RToggle
 } from 'rsuite'
 
 const Grid = styled(RGrid)`
@@ -477,26 +477,6 @@ function UserEditView() {
                           oneTap
                           isoWeek
                           format="dd.MM.yyyy"
-                          limitEndYear={0}
-                          value={birthday}
-                          disabled={isDisabled}
-                          onChange={value => {
-                            setBirthday(value as Date)
-                          }}
-                          accepter={DatePicker}
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* flair */}
-                    <Col xs={12}>
-                      <Form.Group controlId="birthday">
-                        <Form.ControlLabel>{t('userCreateOrEditView.birthday')}</Form.ControlLabel>
-                        <Form.Control
-                          name="birthday"
-                          autoComplete="birthday"
-                          block
-                          oneTap
-                          isoWeek
                           limitEndYear={0}
                           value={birthday}
                           disabled={isDisabled}
