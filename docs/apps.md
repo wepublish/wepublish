@@ -1,6 +1,6 @@
 # Create a new Website (Customer)
 - copy and paste apps/website-example with the name of the app (e.g. cultur)
 - replace "website-example" in all files with the name of your app (e.g. cultur)
-- replace "we.publish" in all files with the name of your app (e.g. Cültür)
+- replace "We.Publish" in all files with the name of your app (e.g. Cültür)
 - replace the default e-mail "info@wepublish.dev" with the apps e-mail (e.g. info@cultur.ch)
 - create/prepare the respective [infrastructure repository](https://github.com/wepublish/infrastructure?tab=readme-ov-file#how-to-add-a-new-media) 
