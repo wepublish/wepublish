@@ -188,6 +188,7 @@ CMD ["node", "main.js"]
 ######
 
 FROM ${BUILD_IMAGE} as storybook-builder
+WORKDIR /wepublish
 COPY . .
 RUN npx nx run website:build-storybook
 
