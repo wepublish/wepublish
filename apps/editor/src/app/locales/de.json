@@ -122,6 +122,7 @@
         "yes": "Ja",
         "hidden": "Ausblenden",
         "setAsHidden": "Ausgeblendete Artikel werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden.",
+        "disableComments": "Kommentare für diesen Artikel deaktivieren",
         "light": "Light",
         "style": "Style",
         "text": "Text",
@@ -324,7 +325,8 @@
         "link": "Link",
         "remove": "Entfernen",
         "startWriting": "Beginne zu schreiben ...",
-        "text": "Text"
+        "text": "Text",
+        "id": "ID"
       },
       "richTextTable": {
         "addBorders": "Rahmen hinzufügen",
@@ -673,6 +675,8 @@
     "memberPlanEdit": {
       "active": "Aktiv",
       "activeDescription": "Plan verfügbar machen",
+      "currency": "Währung",
+      "currencyRequired": "Währung erforderlich",
       "amountPerMonthMin": "Minimaler Betrag / Monat",
       "amountPerMonthMinRequired": "Minimaler Betrag erforderlich",
       "amountPerMonthMinZero": "Minimaler Betrag muss mindestens 0 betragen",
@@ -1014,6 +1018,7 @@
       "closedAtNone": "Nicht geschlossen",
       "createNew": "Umfrage erstellen",
       "delete": "Löschen",
+      "showVotes": "Stimmen anzeigen",
       "hasBeenClosedAt": "Geschlossen am {{closedAt, ccc PP p}}",
       "noQuestion": "Keine Frage erfasst",
       "openedAt": "Begonnen am {{openedAt, ccc PP p}}",
@@ -1023,6 +1028,13 @@
       "question": "Frage",
       "state": "Status",
       "title": "Umfragen"
+    },
+    "pollVoteList": {
+      "createdAt": "Erstellt am",
+      "answerId": "Antwort",
+      "userId": "Benutzer-ID",
+      "fingerprint": "Fingerabdruck",
+      "deleteItems": "Elemente löschen"
     },
     "pollStateIndication": {
       "closed": "Umfrage geschlossen",
@@ -1176,7 +1188,8 @@
       "Unknown": "Unbekannt",
       "userDataTitle": "Userdaten",
       "userRoles": "Userrollen",
-      "zipCode": "PLZ"
+      "zipCode": "PLZ",
+      "birthday": "Geburtstag"
     },
     "userList": {
       "overview": {
@@ -1323,6 +1336,9 @@
       "hideOnTeam": "Auf der Team-Seite ausblenden",
       "hideOnArticle": "Auf den Artikeln ausblenden",
       "hideOnTeaser": "Auf den Teasern ausblenden"
+    },
+    "selectableItemsActions": {
+      "selectedItems": "{{numberOfItems}} Elemente ausgewählt"
     }
   }
 }

@@ -1,3 +1,4 @@
+import {EmotionCache} from '@emotion/cache'
 import {
   Container,
   createTheme,
@@ -119,11 +120,11 @@ const NavBar = styled(NavbarContainer)`
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
-}>
+}> & {emotionCache?: EmotionCache}
 
 const {publicRuntimeConfig} = getConfig()
 
-function CustomApp({Component, pageProps}: CustomAppProps) {
+function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'Gruppetto - Das neue Schweizer Radsportmagazin'
 
   return (

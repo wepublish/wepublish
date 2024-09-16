@@ -30,6 +30,7 @@ export function LinkMenu() {
 
   const [title, setTitle] = useState('')
   const [url, setURL] = useState('')
+  const [id, setId] = useState('')
 
   enum prefixType {
     http = 'http://',
@@ -90,6 +91,8 @@ export function LinkMenu() {
         setPrefix(prefixType.other)
       }
       setURL((nodeUrl as string) ?? '')
+
+      setId((node.id as string) ?? '')
     } else if (editor.selection) {
       const text = Editor.string(editor, editor.selection)
       setTitle(text ?? '')
@@ -134,6 +137,16 @@ export function LinkMenu() {
             value={title}
             onChange={(title: string) => {
               setTitle(title)
+            }}
+          />
+        </Group>
+        <Group controlId="id">
+          <ControlLabel>{t('blocks.richText.id')}</ControlLabel>
+          <Control
+            name="id"
+            value={id}
+            onChange={(id: string) => {
+              setId(id)
             }}
           />
         </Group>

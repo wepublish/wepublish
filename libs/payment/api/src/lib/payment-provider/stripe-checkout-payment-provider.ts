@@ -89,7 +89,7 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
       payment_method_types: ['card'],
       line_items: props.invoice.items.map(item => ({
         price_data: {
-          currency: 'chf',
+          currency: props.currency,
           product_data: {
             name: item.name
           },

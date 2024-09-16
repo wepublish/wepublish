@@ -7,11 +7,15 @@ import PaywallImage from './liebe-zeigen-abo.png'
 
 export const PaywallBlockWrapper = styled('div')`
   display: grid !important; // exception as it should always be shown
-  background-color: ${({theme}) => theme.palette.warning.light};
-  color: ${({theme}) => theme.palette.warning.contrastText};
+  background-color: ${({theme}) => theme.palette.accent.light};
+  color: ${({theme}) => theme.palette.accent.contrastText};
   padding: ${({theme}) => theme.spacing(4)};
   justify-content: center;
   align-items: center;
+`
+
+export const PaywallBlockImage = styled(Image)`
+  max-width: 100%;
 `
 
 const buttonStyles = (theme: Theme) => css`
@@ -25,7 +29,7 @@ export const PaywallBlock = () => {
 
   return (
     <PaywallBlockWrapper>
-      <Image
+      <PaywallBlockImage
         alt="Mannschaft+ Teaser"
         src={PaywallImage.src}
         height={PaywallImage.height}

@@ -114,6 +114,7 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
     firstName: {type: GraphQLString},
     email: {type: new GraphQLNonNull(GraphQLString)},
     emailVerifiedAt: {type: GraphQLDateTime},
+    birthday: {type: GraphQLDateTime},
 
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddress},
@@ -175,6 +176,12 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
     id: {type: new GraphQLNonNull(GraphQLString)},
     name: {type: new GraphQLNonNull(GraphQLString)},
     firstName: {type: GraphQLString},
+    birthday: {
+      type: GraphQLDateTime,
+      resolve: createProxyingResolver(({birthday, id}, _, {session}) =>
+        birthday && isMeBySession(id, session) ? birthday : null
+      )
+    },
     email: {
       type: new GraphQLNonNull(GraphQLString),
       resolve: createProxyingResolver(({email, id}, _, {session}) =>
@@ -233,10 +240,10 @@ export const GraphQLUserFilter = new GraphQLInputObjectType({
 export const GraphQLUserSort = new GraphQLEnumType({
   name: 'UserSort',
   values: {
-    CREATED_AT: {value: UserSort.CreatedAt},
-    MODIFIED_AT: {value: UserSort.ModifiedAt},
-    NAME: {value: UserSort.Name},
-    FIRST_NAME: {value: UserSort.FirstName}
+    [UserSort.CreatedAt]: {value: UserSort.CreatedAt},
+    [UserSort.ModifiedAt]: {value: UserSort.ModifiedAt},
+    [UserSort.Name]: {value: UserSort.Name},
+    [UserSort.FirstName]: {value: UserSort.FirstName}
   }
 })
 
@@ -269,6 +276,9 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
     email: {type: new GraphQLNonNull(GraphQLString)},
     emailVerifiedAt: {type: GraphQLDateTime},
 
+    birthday: {
+      type: GraphQLDateTime
+    },
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},
     flair: {type: GraphQLString},
@@ -294,6 +304,9 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},
     flair: {type: GraphQLString},
+    birthday: {
+      type: GraphQLDateTime
+    },
     uploadImageInput: {type: GraphQLUploadImageInput}
   }
 })

@@ -2,12 +2,7 @@
 
 exports[`Vimeo Video Block should render Default 1`] = `
 <DocumentFragment>
-  .emotion-2 {
-  width: 100%;
-  aspect-ratio: 16/9;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -20,12 +15,7 @@ exports[`Vimeo Video Block should render Default 1`] = `
 
 exports[`Vimeo Video Block should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-2 {
-  width: 100%;
-  aspect-ratio: 16/9;
-}
-
-<div
+  <div
     class="extra-classname emotion-0 emotion-1"
   >
     <div

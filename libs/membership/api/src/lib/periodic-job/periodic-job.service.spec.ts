@@ -1,6 +1,6 @@
 import {forwardRef} from '@nestjs/common'
 import {Test, TestingModule} from '@nestjs/testing'
-import {PaymentPeriodicity, PrismaClient, SubscriptionEvent, User} from '@prisma/client'
+import {Currency, PaymentPeriodicity, PrismaClient, SubscriptionEvent, User} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {
   clearDatabase,
@@ -212,6 +212,7 @@ describe('PeriodicJobService', () => {
       email: mail,
       Subscription: {
         create: {
+          currency: Currency.CHF,
           paymentPeriodicity: PaymentPeriodicity.yearly,
           paidUntil: renewalDate,
           autoRenew: true,
@@ -342,6 +343,7 @@ describe('PeriodicJobService', () => {
       },
       Subscription: {
         create: {
+          currency: Currency.CHF,
           paymentPeriodicity: PaymentPeriodicity.yearly,
           paidUntil: renewalDate,
           autoRenew: true,
@@ -517,6 +519,7 @@ describe('PeriodicJobService', () => {
       email: mail,
       Subscription: {
         create: {
+          currency: Currency.CHF,
           paymentPeriodicity: PaymentPeriodicity.yearly,
           paidUntil: subscriptionValidUntil,
           autoRenew: true,
@@ -595,6 +598,7 @@ describe('PeriodicJobService', () => {
       email: mail,
       Subscription: {
         create: {
+          currency: Currency.CHF,
           paymentPeriodicity: PaymentPeriodicity.yearly,
           paidUntil: renewalDate,
           autoRenew: true,
@@ -695,6 +699,7 @@ describe('PeriodicJobService', () => {
       email: mail,
       Subscription: {
         create: {
+          currency: Currency.CHF,
           paymentPeriodicity: PaymentPeriodicity.yearly,
           paidUntil: renewalDate,
           autoRenew: true,

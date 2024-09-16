@@ -2,153 +2,7 @@
 
 exports[`Poll Block should render AlreadyVoted 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-2 {
-    font-size: 32px;
-  }
-}
-
-.emotion-5 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-5.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-5:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-6 {
-  display: grid;
-  gap: 12px;
-}
-
-.emotion-8 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 5px 15px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(233, 30, 99, 0.5);
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-}
-
-.emotion-8::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-8.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-8 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-8:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgba(233, 30, 99, 0.04);
-  border: 1px solid #e91e63;
-}
-
-@media (hover: none) {
-  .emotion-8:hover {
-    background-color: transparent;
-  }
-}
-
-.emotion-8.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  border: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.emotion-8:hover {
-  box-shadow: none;
-}
-
-.emotion-9 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-.emotion-12 {
-  font-size: 0.875em;
-  color: rgba(0, 0, 0, 0.38);
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <h1
@@ -185,7 +39,7 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
       class="emotion-6 emotion-7"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium emotion-8"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-8"
         tabindex="0"
         type="button"
       >
@@ -195,7 +49,7 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
         />
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium emotion-8"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-8"
         tabindex="0"
         type="button"
       >
@@ -221,118 +75,7 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
 
 exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-2 {
-    font-size: 32px;
-  }
-}
-
-.emotion-5 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-5.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-5:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-6 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-8 {
-  display: grid;
-  gap: 4px;
-}
-
-.emotion-10 {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: 1fr max-content;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  padding: 0 8px;
-}
-
-.emotion-12 {
-  font-weight: 500;
-}
-
-.emotion-14 {
-  font-weight: 500;
-}
-
-.emotion-16 {
-  position: relative;
-  font-size: 0.75em;
-  padding: 4px 8px;
-  position: relative;
-  background-color: #eeeeee;
-}
-
-.emotion-18 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  width: 52.38095238095239%;
-}
-
-.emotion-20 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.emotion-32 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  background-color: #e91e63;
-  width: 47.61904761904761%;
-}
-
-.emotion-34 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-  color: #fff;
-}
-
-.emotion-36 {
-  font-size: 0.875em;
-  color: rgba(0, 0, 0, 0.38);
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <h1
@@ -445,153 +188,7 @@ exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
 
 exports[`Poll Block should render AnonymousVoting 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-2 {
-    font-size: 32px;
-  }
-}
-
-.emotion-5 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-5.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-5:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-6 {
-  display: grid;
-  gap: 12px;
-}
-
-.emotion-8 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 5px 15px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(233, 30, 99, 0.5);
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-}
-
-.emotion-8::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-8.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-8 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-8:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgba(233, 30, 99, 0.04);
-  border: 1px solid #e91e63;
-}
-
-@media (hover: none) {
-  .emotion-8:hover {
-    background-color: transparent;
-  }
-}
-
-.emotion-8.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  border: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.emotion-8:hover {
-  box-shadow: none;
-}
-
-.emotion-9 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-.emotion-12 {
-  font-size: 0.875em;
-  color: rgba(0, 0, 0, 0.38);
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <h1
@@ -628,7 +225,7 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
       class="emotion-6 emotion-7"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium emotion-8"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-8"
         tabindex="0"
         type="button"
       >
@@ -638,7 +235,7 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
         />
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium emotion-8"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-8"
         tabindex="0"
         type="button"
       >
@@ -677,7 +274,7 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
 +       class="css-h8emd-PollBlockVoteResultList ecm33wf1"
       >
 -       <button
--         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+-         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-kctgaw-MuiButtonBase-root-MuiButton-root"
 -         tabindex="0"
 -         type="button"
 +       <div
@@ -707,7 +304,7 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
             />
 -       </button>
 -       <button
--         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+-         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-kctgaw-MuiButtonBase-root-MuiButton-root"
 -         tabindex="0"
 -         type="button"
 +           <div
@@ -765,118 +362,7 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
 
 exports[`Poll Block should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-2 {
-    font-size: 32px;
-  }
-}
-
-.emotion-5 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-5.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-5:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-6 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-8 {
-  display: grid;
-  gap: 4px;
-}
-
-.emotion-10 {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: 1fr max-content;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  padding: 0 8px;
-}
-
-.emotion-12 {
-  font-weight: 500;
-}
-
-.emotion-14 {
-  font-weight: 500;
-}
-
-.emotion-16 {
-  position: relative;
-  font-size: 0.75em;
-  padding: 4px 8px;
-  position: relative;
-  background-color: #eeeeee;
-}
-
-.emotion-18 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  background-color: #e91e63;
-  width: 52.38095238095239%;
-}
-
-.emotion-20 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-  color: #fff;
-}
-
-.emotion-32 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  width: 47.61904761904761%;
-}
-
-.emotion-34 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.emotion-36 {
-  font-size: 0.875em;
-  color: rgba(0, 0, 0, 0.38);
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <h1
@@ -989,153 +475,7 @@ exports[`Poll Block should render Default 1`] = `
 
 exports[`Poll Block should render Voting 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-2 {
-    font-size: 32px;
-  }
-}
-
-.emotion-5 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-5.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-5:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-6 {
-  display: grid;
-  gap: 12px;
-}
-
-.emotion-8 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 5px 15px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(233, 30, 99, 0.5);
-  color: #e91e63;
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-}
-
-.emotion-8::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-8.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-8 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-8:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgba(233, 30, 99, 0.04);
-  border: 1px solid #e91e63;
-}
-
-@media (hover: none) {
-  .emotion-8:hover {
-    background-color: transparent;
-  }
-}
-
-.emotion-8.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  border: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.emotion-8:hover {
-  box-shadow: none;
-}
-
-.emotion-9 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-.emotion-12 {
-  font-size: 0.875em;
-  color: rgba(0, 0, 0, 0.38);
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <h1
@@ -1172,7 +512,7 @@ exports[`Poll Block should render Voting 1`] = `
       class="emotion-6 emotion-7"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium emotion-8"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-8"
         tabindex="0"
         type="button"
       >
@@ -1182,7 +522,7 @@ exports[`Poll Block should render Voting 1`] = `
         />
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium emotion-8"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-8"
         tabindex="0"
         type="button"
       >
@@ -1208,118 +548,7 @@ exports[`Poll Block should render Voting 1`] = `
 
 exports[`Poll Block should render VotingClosed 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-2 {
-    font-size: 32px;
-  }
-}
-
-.emotion-5 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-5.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-5:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-6 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-8 {
-  display: grid;
-  gap: 4px;
-}
-
-.emotion-10 {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: 1fr max-content;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  padding: 0 8px;
-}
-
-.emotion-12 {
-  font-weight: 500;
-}
-
-.emotion-14 {
-  font-weight: 500;
-}
-
-.emotion-16 {
-  position: relative;
-  font-size: 0.75em;
-  padding: 4px 8px;
-  position: relative;
-  background-color: #eeeeee;
-}
-
-.emotion-18 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  background-color: #e91e63;
-  width: 52.38095238095239%;
-}
-
-.emotion-20 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-  color: #fff;
-}
-
-.emotion-32 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  width: 47.61904761904761%;
-}
-
-.emotion-34 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.emotion-36 {
-  font-size: 0.875em;
-  color: rgba(0, 0, 0, 0.38);
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <h1
@@ -1440,7 +669,7 @@ exports[`Poll Block should render VotingPlay 1`] = `
 +       class="css-h8emd-PollBlockVoteResultList ecm33wf1"
       >
 -       <button
--         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+-         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-kctgaw-MuiButtonBase-root-MuiButton-root"
 -         tabindex="0"
 -         type="button"
 +       <div
@@ -1470,7 +699,7 @@ exports[`Poll Block should render VotingPlay 1`] = `
             />
 -       </button>
 -       <button
--         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+-         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-kctgaw-MuiButtonBase-root-MuiButton-root"
 -         tabindex="0"
 -         type="button"
 +           <div
@@ -1530,118 +759,7 @@ exports[`Poll Block should render WihtoutPoll 1`] = `<DocumentFragment />`;
 
 exports[`Poll Block should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-2 {
-    font-size: 32px;
-  }
-}
-
-.emotion-5 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-5.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-5:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-6 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-8 {
-  display: grid;
-  gap: 4px;
-}
-
-.emotion-10 {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: 1fr max-content;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  padding: 0 8px;
-}
-
-.emotion-12 {
-  font-weight: 500;
-}
-
-.emotion-14 {
-  font-weight: 500;
-}
-
-.emotion-16 {
-  position: relative;
-  font-size: 0.75em;
-  padding: 4px 8px;
-  position: relative;
-  background-color: #eeeeee;
-}
-
-.emotion-18 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  background-color: #e91e63;
-  width: 52.38095238095239%;
-}
-
-.emotion-20 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-  color: #fff;
-}
-
-.emotion-32 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  width: 47.61904761904761%;
-}
-
-.emotion-34 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.emotion-36 {
-  font-size: 0.875em;
-  color: rgba(0, 0, 0, 0.38);
-}
-
-<article
+  <article
     class="extra-classname emotion-0 emotion-1"
   >
     <h1
@@ -1754,118 +872,7 @@ exports[`Poll Block should render WithClassName 1`] = `
 
 exports[`Poll Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-2 {
-    font-size: 32px;
-  }
-}
-
-.emotion-5 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-5.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-5:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-6 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-8 {
-  display: grid;
-  gap: 4px;
-}
-
-.emotion-10 {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: 1fr max-content;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  padding: 0 8px;
-}
-
-.emotion-12 {
-  font-weight: 500;
-}
-
-.emotion-14 {
-  font-weight: 500;
-}
-
-.emotion-16 {
-  position: relative;
-  font-size: 0.75em;
-  padding: 4px 8px;
-  position: relative;
-  background-color: #eeeeee;
-}
-
-.emotion-18 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  background-color: #e91e63;
-  width: 52.38095238095239%;
-}
-
-.emotion-20 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-  color: #fff;
-}
-
-.emotion-32 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  width: 47.61904761904761%;
-}
-
-.emotion-34 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.emotion-36 {
-  font-size: 0.875em;
-  color: rgba(0, 0, 0, 0.38);
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <h1
@@ -1987,7 +994,7 @@ exports[`Poll Block should render WithError 1`] = `
         </div>
       </div>
       <div
-+       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorError MuiAlert-standardError MuiAlert-standard css-1iznk5b-MuiPaper-root-MuiAlert-root"
 +       role="alert"
 +     >
 +       <div
@@ -2012,7 +1019,7 @@ exports[`Poll Block should render WithError 1`] = `
 +       </div>
 +     </div>
 +     <div
-+       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorError MuiAlert-standardError MuiAlert-standard css-1iznk5b-MuiPaper-root-MuiAlert-root"
 +       role="alert"
 +     >
 +       <div
@@ -2040,6 +1047,6 @@ exports[`Poll Block should render WithError 1`] = `
         class="css-1e4oizq-PollBlockVoting ecm33wf2"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-kctgaw-MuiButtonBase-root-MuiButton-root"
           tabindex="0""
 `;

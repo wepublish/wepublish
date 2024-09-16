@@ -38,10 +38,8 @@ const userConsentQuery = `
         name
       }
       user {
+        __typename
         id
-        name
-        firstName
-        email
       }
     }
   }
@@ -69,10 +67,8 @@ const updateUserConsentMutation = `
         name
       }
       user {
+        __typename
         id
-        name
-        firstName
-        email
       }
     }
   }
@@ -250,12 +246,13 @@ describe('UserConsentResolver', () => {
           id: idToDelete
         }
       })
-      .expect(200)
       .expect(res => {
+        expect(res.body.errors).toBe(undefined)
         expect(res.body.data.deleteUserConsent).toMatchObject({
           id: userConsents[0].id
         })
       })
+      .expect(200)
   })
 
   test('only allow updating consent for the authorized user', async () => {
@@ -270,9 +267,9 @@ describe('UserConsentResolver', () => {
           value: false
         }
       })
-      .expect(200)
       .expect(res => {
         expect(res.body.errors[0].message).toBe('Unauthorized')
       })
+      .expect(200)
   })
 })

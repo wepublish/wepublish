@@ -17,12 +17,12 @@ import {GraphQLPageInfo} from './common'
 export const GraphQLMailLogState = new GraphQLEnumType({
   name: 'MailLogState',
   values: {
-    SUBMITTED: {value: MailLogState.submitted},
-    ACCEPTED: {value: MailLogState.accepted},
-    DELIVERED: {value: MailLogState.delivered},
-    DEFERRED: {value: MailLogState.deferred},
-    BOUNCED: {value: MailLogState.bounced},
-    REJECTED: {value: MailLogState.rejected}
+    [MailLogState.submitted]: {value: MailLogState.submitted},
+    [MailLogState.accepted]: {value: MailLogState.accepted},
+    [MailLogState.delivered]: {value: MailLogState.delivered},
+    [MailLogState.deferred]: {value: MailLogState.deferred},
+    [MailLogState.bounced]: {value: MailLogState.bounced},
+    [MailLogState.rejected]: {value: MailLogState.rejected}
   }
 })
 
@@ -52,8 +52,8 @@ export const GraphQLMailLogFilter = new GraphQLInputObjectType({
 export const GraphQLMailLogSort = new GraphQLEnumType({
   name: 'MailLogSort',
   values: {
-    CREATED_AT: {value: MailLogSort.CreatedAt},
-    MODIFIED_AT: {value: MailLogSort.ModifiedAt}
+    [MailLogSort.CreatedAt]: {value: MailLogSort.CreatedAt},
+    [MailLogSort.ModifiedAt]: {value: MailLogSort.ModifiedAt}
   }
 })
 
