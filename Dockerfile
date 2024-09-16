@@ -1,3 +1,4 @@
+ARG BUILD_IMAGE=node:18.19.1-bookworm-slim
 #######
 ## Base Image
 #######
@@ -14,7 +15,6 @@ RUN groupadd -r wepublish && \
     useradd -r -g wepublish -d /wepublish wepublish && \
     chown -R wepublish:wepublish /wepublish
 COPY --chown=wepublish:wepublish --from=base-image-build /wepublish/node_modules/ node_modules/
-
 
 #######
 ## Website
@@ -57,7 +57,6 @@ ENTRYPOINT ["/entrypoint.sh"]
 #######
 ## API
 #######
-
 FROM ${BUILD_IMAGE} as build-api
 WORKDIR /wepublish
 COPY . .
