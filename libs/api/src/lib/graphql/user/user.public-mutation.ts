@@ -141,7 +141,8 @@ export const updatePublicUser = async (
 
   email = email ? (email as string).toLowerCase() : email
 
-  await Validator.createUser().parse({address, name, email, birthday, firstName, preferredName})
+  await Validator.createUser.parse({name, email, birthday, firstName, preferredName})
+  await Validator.createAddress.parse(address)
 
   if (email && user.email !== email) {
     const userExists = await userClient.findUnique({

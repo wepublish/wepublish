@@ -89,7 +89,7 @@ exports[`MemberPlanPicker should render Default 1`] = `
             <small
               class="emotion-11 emotion-12"
             >
-              Ab €50.00 pro Monat
+              Ab EUR 50.00 pro Monat
             </small>
           </div>
           <span
@@ -336,7 +336,7 @@ exports[`MemberPlanPicker should render Selected 1`] = `
             <small
               class="emotion-11 emotion-12"
             >
-              Ab €50.00 pro Monat
+              Ab EUR 50.00 pro Monat
             </small>
           </div>
           <span
@@ -634,7 +634,7 @@ exports[`MemberPlanPicker should render WithClassName 1`] = `
             <small
               class="emotion-11 emotion-12"
             >
-              Ab €50.00 pro Monat
+              Ab EUR 50.00 pro Monat
             </small>
           </div>
           <span
@@ -880,7 +880,7 @@ exports[`MemberPlanPicker should render WithEmotion 1`] = `
             <small
               class="emotion-11 emotion-12"
             >
-              Ab €50.00 pro Monat
+              Ab EUR 50.00 pro Monat
             </small>
           </div>
           <span
@@ -1126,7 +1126,7 @@ exports[`MemberPlanPicker should render WithError 1`] = `
             <small
               class="emotion-11 emotion-12"
             >
-              Ab €50.00 pro Monat
+              Ab EUR 50.00 pro Monat
             </small>
           </div>
           <span
@@ -1372,7 +1372,7 @@ exports[`MemberPlanPicker should render WithLoading 1`] = `
             <small
               class="emotion-11 emotion-12"
             >
-              Ab €50.00 pro Monat
+              Ab EUR 50.00 pro Monat
             </small>
           </div>
           <span
