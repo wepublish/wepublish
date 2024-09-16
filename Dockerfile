@@ -1,15 +1,19 @@
 #######
 ## Base Image
 #######
+FROM node:18.19.1-bookworm-slim as base-image-build
+WORKDIR /wepublish
+COPY . .
+RUN npm ci
+
 FROM node:18.19.1-bookworm-slim as base-image
 MAINTAINER WePublish Foundation
 ENV NODE_ENV=production
 WORKDIR /wepublish
-COPY package-lock.json .
-COPY package.json .
-COPY .npmrc .
-COPY build/ ./build
-RUN npm ci
+RUN groupadd -r wepublish && \
+    useradd -r -g wepublish -d /wepublish wepublish && \
+    chown -R wepublish:wepublish /wepublish
+COPY --chown=wepublish:wepublish --from=base-image-build /wepublish/node_modules/ node_modules/
 
 
 #######
