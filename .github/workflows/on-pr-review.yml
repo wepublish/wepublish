@@ -23,7 +23,7 @@ jobs:
     name: Docker
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
     with:
-      editor_tags: |
+      base_image_tags: |
         ghcr.io/wepublish/base-image:${{ github.sha }}
     secrets: inherit
 
