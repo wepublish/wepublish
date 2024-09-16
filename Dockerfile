@@ -3,7 +3,7 @@ ARG PLIN_BUILD_IMAGE=node:18.19.1-bookworm-slim
 #######
 ## Base Image
 #######
-FROM ${PLIN_BUILD_IMAGE} as base-image-build
+FROM ${PLIN_BUILD_IMAGE} AS base-image-build
 WORKDIR /wepublish
 COPY . .
 
@@ -13,8 +13,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     npm ci
 
-FROM ${PLIN_BUILD_IMAGE} as base-image
-MAINTAINER WePublish Foundation
+FROM ${PLIN_BUILD_IMAGE} AS base-image
+LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 WORKDIR /wepublish
 RUN groupadd -r wepublish && \
@@ -26,15 +26,15 @@ COPY --chown=wepublish:wepublish --from=base-image-build /wepublish/node_modules
 ## Website
 #######
 
-FROM ${BUILD_IMAGE} as  build-website
+FROM ${BUILD_IMAGE} AS  build-website
 ### FRONT_ARG_REPLACER ###
 
 COPY . .
 RUN npx nx build ${NEXT_PROJECT}
 RUN bash /wepublish/deployment/map-secrets.sh clean
 
-FROM ${PLIN_BUILD_IMAGE} as website
-MAINTAINER WePublish Foundation
+FROM ${PLIN_BUILD_IMAGE} AS website
+LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOSTNAME=0.0.0.0
@@ -61,15 +61,15 @@ ENTRYPOINT ["/entrypoint.sh"]
 #######
 ## API
 #######
-FROM ${BUILD_IMAGE} as build-api
+FROM ${BUILD_IMAGE} AS build-api
 COPY . .
 RUN npm install -g pkg && \
     npx nx build api-example && \
     cp docker/api_build_package.json package.json && \
     pkg package.json
 
-FROM debian:bookworm-slim as api
-MAINTAINER WePublish Foundation
+FROM debian:bookworm-slim AS api
+LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
@@ -92,15 +92,15 @@ CMD /wepublish/api
 ## Editor
 #######
 
-FROM ${BUILD_IMAGE} as build-editor
+FROM ${BUILD_IMAGE} AS build-editor
 COPY . .
 RUN npm install -g pkg && \
     npx nx build editor && \
     cp docker/editor_build_package.json package.json && \
     pkg package.json
 
-FROM debian:bookworm-slim as editor
-MAINTAINER WePublish Foundation
+FROM debian:bookworm-slim AS editor
+LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
 ENV PORT=3000
@@ -117,7 +117,7 @@ CMD /wepublish/editor
 #######
 ## Migrations
 #######
-FROM ${PLIN_BUILD_IMAGE} as build-migration
+FROM ${PLIN_BUILD_IMAGE} AS build-migration
 ENV NODE_ENV=production
 WORKDIR /wepublish
 COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
@@ -127,9 +127,9 @@ COPY docker/tsconfig.yaml_seed tsconfig.yaml
 RUN npm install prisma @prisma/client @types/node bcrypt typescript && \
     npx tsc -p tsconfig.yaml
 
-FROM ${PLIN_BUILD_IMAGE} as migration
+FROM ${PLIN_BUILD_IMAGE} AS migration
 ENV NODE_ENV=production
-MAINTAINER WePublish Foundation
+LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
 COPY --from=build-migration /wepublish/dist ./dist
 COPY libs/api/prisma/migrations prisma/migrations
@@ -166,7 +166,7 @@ RUN npx nx build media
 
 FROM base-media AS media
 ENV NODE_ENV=production
-MAINTAINER WePublish Foundation
+LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 RUN groupadd -r wepublish && \
@@ -185,12 +185,12 @@ CMD ["node", "main.js"]
 ## Storybook
 ######
 
-FROM ${BUILD_IMAGE} as storybook-builder
+FROM ${BUILD_IMAGE} AS storybook-builder
 COPY . .
 RUN npx nx run website:build-storybook
 
 
-FROM nginx:alpine as storybook
+FROM nginx:alpine AS storybook
 COPY --from=storybook-builder /wepublish/dist/storybook/website /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
