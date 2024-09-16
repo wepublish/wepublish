@@ -23,10 +23,10 @@ import {EventSort} from './event.query'
 export const GraphQLEventStatus = new GraphQLEnumType({
   name: 'EventStatus',
   values: {
-    CANCELLED: {value: EventStatus.Cancelled},
-    RESCHEDULED: {value: EventStatus.Rescheduled},
-    POSTPONED: {value: EventStatus.Postponed},
-    SCHEDULED: {value: EventStatus.Scheduled}
+    [EventStatus.Cancelled]: {value: EventStatus.Cancelled},
+    [EventStatus.Rescheduled]: {value: EventStatus.Rescheduled},
+    [EventStatus.Postponed]: {value: EventStatus.Postponed},
+    [EventStatus.Scheduled]: {value: EventStatus.Scheduled}
   }
 })
 
@@ -102,9 +102,18 @@ export const GraphQLEventFilter = new GraphQLInputObjectType({
 export const GraphQLEventSort = new GraphQLEnumType({
   name: 'EventSort',
   values: {
-    STARTS_AT: {value: EventSort.StartsAt},
-    ENDS_AT: {value: EventSort.EndsAt},
-    CREATED_AT: {value: EventSort.CreatedAt},
-    MODIFIED_AT: {value: EventSort.ModifiedAt}
+    [EventSort.StartsAt]: {value: EventSort.StartsAt},
+    [EventSort.EndsAt]: {value: EventSort.EndsAt},
+    [EventSort.CreatedAt]: {value: EventSort.CreatedAt},
+    [EventSort.ModifiedAt]: {value: EventSort.ModifiedAt}
   }
 })
+
+export const GraphQLEventResolver = {
+  __resolveReference: async (reference, {loaders}) => {
+    const {id} = reference
+    const event = await loaders.eventById.load(id)
+    if (!event) throw new Error('Event not found')
+    return event
+  }
+}

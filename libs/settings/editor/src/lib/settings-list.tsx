@@ -196,7 +196,7 @@ function SettingList() {
   } as Record<SettingName, SettingWithLabel>)
 
   useEffect(() => {
-    settingListData?.settingsList.forEach(setSetting)
+    settingListData?.settings.forEach(setSetting)
   }, [settingListData])
 
   const [updateSetting, {error: updateSettingError}] = useUpdateSettingMutation({
@@ -205,9 +205,8 @@ function SettingList() {
   })
 
   const [changedSetting, setChangedSetting] = useState(
-    settingListData?.settingsList.filter(
-      setting => setting.value !== settings[setting.name].value
-    ) ?? []
+    settingListData?.settings.filter(setting => setting.value !== settings[setting.name].value) ??
+      []
   )
 
   useUnsavedChangesDialog(changedSetting.length > 0)
@@ -238,14 +237,13 @@ function SettingList() {
 
   useEffect(() => {
     setChangedSetting(
-      settingListData?.settingsList.filter(
-        setting => setting.value !== settings[setting.name].value
-      ) ?? []
+      settingListData?.settings.filter(setting => setting.value !== settings[setting.name].value) ??
+        []
     )
   }, [settingListData, settings])
 
   async function handleCancel() {
-    settingListData?.settingsList.forEach(setSetting)
+    settingListData?.settings.forEach(setSetting)
   }
 
   useEffect(() => {

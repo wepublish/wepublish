@@ -21,22 +21,22 @@ exports[`PeriodicityPicker should render Default 1`] = `
         id=":r0:"
       >
         <option
-          value="MONTHLY"
+          value="monthly"
         >
           Monatlich
         </option>
         <option
-          value="QUARTERLY"
+          value="quarterly"
         >
           Vierteljährlich
         </option>
         <option
-          value="BIANNUAL"
+          value="biannual"
         >
           Halbjährlich
         </option>
         <option
-          value="YEARLY"
+          value="yearly"
         >
           Jährlich
         </option>
@@ -90,22 +90,22 @@ exports[`PeriodicityPicker should render Selected 1`] = `
         id=":r1:"
       >
         <option
-          value="MONTHLY"
+          value="monthly"
         >
           Monatlich
         </option>
         <option
-          value="QUARTERLY"
+          value="quarterly"
         >
           Vierteljährlich
         </option>
         <option
-          value="BIANNUAL"
+          value="biannual"
         >
           Halbjährlich
         </option>
         <option
-          value="YEARLY"
+          value="yearly"
         >
           Jährlich
         </option>
@@ -161,22 +161,22 @@ exports[`PeriodicityPicker should render WithClassName 1`] = `
         id=":r3:"
       >
         <option
-          value="MONTHLY"
+          value="monthly"
         >
           Monatlich
         </option>
         <option
-          value="QUARTERLY"
+          value="quarterly"
         >
           Vierteljährlich
         </option>
         <option
-          value="BIANNUAL"
+          value="biannual"
         >
           Halbjährlich
         </option>
         <option
-          value="YEARLY"
+          value="yearly"
         >
           Jährlich
         </option>
@@ -230,22 +230,22 @@ exports[`PeriodicityPicker should render WithEmotion 1`] = `
         id=":r4:"
       >
         <option
-          value="MONTHLY"
+          value="monthly"
         >
           Monatlich
         </option>
         <option
-          value="QUARTERLY"
+          value="quarterly"
         >
           Vierteljährlich
         </option>
         <option
-          value="BIANNUAL"
+          value="biannual"
         >
           Halbjährlich
         </option>
         <option
-          value="YEARLY"
+          value="yearly"
         >
           Jährlich
         </option>
@@ -299,22 +299,22 @@ exports[`PeriodicityPicker should render WithError 1`] = `
         id=":r5:"
       >
         <option
-          value="MONTHLY"
+          value="monthly"
         >
           Monatlich
         </option>
         <option
-          value="QUARTERLY"
+          value="quarterly"
         >
           Vierteljährlich
         </option>
         <option
-          value="BIANNUAL"
+          value="biannual"
         >
           Halbjährlich
         </option>
         <option
-          value="YEARLY"
+          value="yearly"
         >
           Jährlich
         </option>
@@ -368,22 +368,22 @@ exports[`PeriodicityPicker should render WithLoading 1`] = `
         id=":r6:"
       >
         <option
-          value="MONTHLY"
+          value="monthly"
         >
           Monatlich
         </option>
         <option
-          value="QUARTERLY"
+          value="quarterly"
         >
           Vierteljährlich
         </option>
         <option
-          value="BIANNUAL"
+          value="biannual"
         >
           Halbjährlich
         </option>
         <option
-          value="YEARLY"
+          value="yearly"
         >
           Jährlich
         </option>

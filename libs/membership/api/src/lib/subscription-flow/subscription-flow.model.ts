@@ -6,7 +6,8 @@ import {
   PartialType,
   OmitType,
   registerEnumType,
-  PickType
+  PickType,
+  ID
 } from '@nestjs/graphql'
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
 
@@ -28,8 +29,8 @@ export class MailTemplateRef {
 }
 
 @ObjectType()
-class MemberPlanRef {
-  @Field()
+class MemberPlan {
+  @Field(() => ID)
   id!: string
 
   @Field()
@@ -37,8 +38,8 @@ class MemberPlanRef {
 }
 
 @ObjectType()
-export class PaymentMethodRef {
-  @Field()
+export class PaymentMethod {
+  @Field(() => ID)
   id!: string
 
   @Field()
@@ -68,11 +69,11 @@ export class SubscriptionFlowModel {
   @Field()
   default!: boolean
 
-  @Field(() => MemberPlanRef, {nullable: true})
-  memberPlan?: MemberPlanRef
+  @Field(() => MemberPlan, {nullable: true})
+  memberPlan?: MemberPlan
 
-  @Field(() => [PaymentMethodRef])
-  paymentMethods!: PaymentMethodRef[]
+  @Field(() => [PaymentMethod])
+  paymentMethods!: PaymentMethod[]
 
   @Field(() => [PaymentPeriodicity])
   periodicities!: PaymentPeriodicity[]

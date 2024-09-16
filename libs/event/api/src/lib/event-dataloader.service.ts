@@ -8,8 +8,8 @@ import DataLoader from 'dataloader'
 })
 export class EventDataloaderService implements Primeable<Event> {
   private readonly dataloader = new DataLoader<string, Event | null>(
-    async (ids: readonly string[]) =>
-      createOptionalsArray(
+    async (ids: readonly string[]) => {
+      return createOptionalsArray(
         ids as string[],
         await this.prisma.event.findMany({
           where: {
@@ -19,7 +19,8 @@ export class EventDataloaderService implements Primeable<Event> {
           }
         }),
         'id'
-      ),
+      )
+    },
     {name: 'EventDataLoader'}
   )
 

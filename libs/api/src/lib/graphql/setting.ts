@@ -15,7 +15,7 @@ import {Context} from '../context'
 import {Setting, SettingName} from '@wepublish/settings/api'
 
 export const GraphQLSettingValueType = new GraphQLScalarType({
-  name: 'Value',
+  name: 'GraphQLSettingValueType',
   serialize(Value) {
     return Value
   }
@@ -24,22 +24,34 @@ export const GraphQLSettingValueType = new GraphQLScalarType({
 export const GraphQLSettingName = new GraphQLEnumType({
   name: 'SettingName',
   values: {
-    ALLOW_GUEST_COMMENTING: {value: SettingName.ALLOW_GUEST_COMMENTING},
-    ALLOW_GUEST_COMMENT_RATING: {value: SettingName.ALLOW_GUEST_COMMENT_RATING},
-    ALLOW_GUEST_POLL_VOTING: {value: SettingName.ALLOW_GUEST_POLL_VOTING},
-    SEND_LOGIN_JWT_EXPIRES_MIN: {value: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN},
-    RESET_PASSWORD_JWT_EXPIRES_MIN: {value: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN},
-    PEERING_TIMEOUT_MS: {value: SettingName.PEERING_TIMEOUT_MS},
-    MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC: {value: SettingName.MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC},
-    MAKE_NEW_SUBSCRIBERS_API_PUBLIC: {value: SettingName.MAKE_NEW_SUBSCRIBERS_API_PUBLIC},
-    MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC: {value: SettingName.MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC},
-    MAKE_NEW_DEACTIVATIONS_API_PUBLIC: {value: SettingName.MAKE_NEW_DEACTIVATIONS_API_PUBLIC},
-    MAKE_EXPECTED_REVENUE_API_PUBLIC: {value: SettingName.MAKE_EXPECTED_REVENUE_API_PUBLIC},
-    MAKE_REVENUE_API_PUBLIC: {value: SettingName.MAKE_REVENUE_API_PUBLIC},
-    COMMENT_CHAR_LIMIT: {value: SettingName.COMMENT_CHAR_LIMIT},
-    ALLOW_COMMENT_EDITING: {value: SettingName.ALLOW_COMMENT_EDITING},
-    HEAD_SCRIPT: {value: SettingName.HEAD_SCRIPT},
-    BODY_SCRIPT: {value: SettingName.BODY_SCRIPT}
+    [SettingName.ALLOW_GUEST_COMMENTING]: {value: SettingName.ALLOW_GUEST_COMMENTING},
+    [SettingName.ALLOW_GUEST_COMMENT_RATING]: {value: SettingName.ALLOW_GUEST_COMMENT_RATING},
+    [SettingName.ALLOW_GUEST_POLL_VOTING]: {value: SettingName.ALLOW_GUEST_POLL_VOTING},
+    [SettingName.SEND_LOGIN_JWT_EXPIRES_MIN]: {value: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN},
+    [SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN]: {
+      value: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN
+    },
+    [SettingName.PEERING_TIMEOUT_MS]: {value: SettingName.PEERING_TIMEOUT_MS},
+    [SettingName.MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC]: {
+      value: SettingName.MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC
+    },
+    [SettingName.MAKE_NEW_SUBSCRIBERS_API_PUBLIC]: {
+      value: SettingName.MAKE_NEW_SUBSCRIBERS_API_PUBLIC
+    },
+    [SettingName.MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC]: {
+      value: SettingName.MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC
+    },
+    [SettingName.MAKE_NEW_DEACTIVATIONS_API_PUBLIC]: {
+      value: SettingName.MAKE_NEW_DEACTIVATIONS_API_PUBLIC
+    },
+    [SettingName.MAKE_EXPECTED_REVENUE_API_PUBLIC]: {
+      value: SettingName.MAKE_EXPECTED_REVENUE_API_PUBLIC
+    },
+    [SettingName.MAKE_REVENUE_API_PUBLIC]: {value: SettingName.MAKE_REVENUE_API_PUBLIC},
+    [SettingName.COMMENT_CHAR_LIMIT]: {value: SettingName.COMMENT_CHAR_LIMIT},
+    [SettingName.ALLOW_COMMENT_EDITING]: {value: SettingName.ALLOW_COMMENT_EDITING},
+    [SettingName.HEAD_SCRIPT]: {value: SettingName.HEAD_SCRIPT},
+    [SettingName.BODY_SCRIPT]: {value: SettingName.BODY_SCRIPT}
   }
 })
 

@@ -4,6 +4,7 @@
     "assets": [
       "node_modules/.prisma",
       "node_modules/axios/dist/node/axios.cjs",
+      "node_modules/es-get-iterator/node.js",
       "node_modules/i18n-iso-countries/langs"
     ],
     "targets": ["node16-linux"]
