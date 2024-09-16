@@ -58,13 +58,10 @@ ENTRYPOINT ["/entrypoint.sh"]
 ## API
 #######
 
-FROM node:18.19.1-bookworm-slim as build-api
+FROM ${BUILD_IMAGE} as build-api
 WORKDIR /wepublish
 COPY . .
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends openssl && \
-    npm ci && \
-    npm install -g pkg && \
+RUN npm install -g pkg && \
     npx nx build api-example && \
     cp docker/api_build_package.json package.json && \
     pkg package.json

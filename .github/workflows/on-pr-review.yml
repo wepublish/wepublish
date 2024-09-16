@@ -32,6 +32,7 @@ jobs:
     name: Docker
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
+      base_image_tag: ghcr.io/wepublish/base-image:${{ github.sha }}
       editor_tags: |
         ghcr.io/wepublish/editor:${{ github.sha }}
       api_tags: |
