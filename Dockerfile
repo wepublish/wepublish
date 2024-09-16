@@ -20,12 +20,11 @@ COPY --chown=wepublish:wepublish --from=base-image-build /wepublish/node_modules
 ## Website
 #######
 
-FROM node:18.19.1-bookworm-slim as build-website
+FROM ${BUILD_IMAGE} as  build-website
 ### FRONT_ARG_REPLACER ###
 
 WORKDIR /wepublish
 COPY . .
-RUN npm ci
 RUN npx nx build ${NEXT_PROJECT}
 RUN bash /wepublish/deployment/map-secrets.sh clean
 
@@ -89,11 +88,10 @@ CMD /wepublish/api
 ## Editor
 #######
 
-FROM node:18.19.1-bookworm-slim as build-editor
+FROM ${BUILD_IMAGE} as build-editor
 WORKDIR /wepublish
 COPY . .
-RUN npm ci && \
-    npm install -g pkg && \
+RUN npm install -g pkg && \
     npx nx build editor && \
     cp docker/editor_build_package.json package.json && \
     pkg package.json
@@ -184,20 +182,11 @@ CMD ["node", "main.js"]
 ## Storybook
 ######
 
-FROM ghcr.io/wepublish/node:18.1 as dependencies
-RUN apk update
-USER node
-RUN mkdir -p /home/node/wepublish
-WORKDIR /home/node/wepublish
-COPY --chown=node:node . .
-RUN rm -rf .env
-RUN npm ci
-
-FROM dependencies as storybook-builder
+FROM ${BUILD_IMAGE} as storybook-builder
 RUN npx nx run website:build-storybook
 
 
 FROM nginx:alpine as storybook
-COPY --from=storybook-builder /home/node/wepublish/dist/storybook/website /usr/share/nginx/html
+COPY --from=storybook-builder /wepublish/dist/storybook/website /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

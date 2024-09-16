@@ -300,6 +300,7 @@ jobs:
     strategy:
       matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
     with:
+      base_image_tag: ghcr.io/wepublish/base-image:${{ github.sha }}
       website_project: ${{ matrix.target }}
       api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
       environment: review

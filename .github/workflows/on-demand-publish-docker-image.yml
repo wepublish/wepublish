@@ -73,6 +73,8 @@ jobs:
           push: true
           tags: |
             ${{ inputs.editor_tags }}
+          build-args:
+            BUILD_IMAGE=${{ inputs.base_image_tag }}
   build-and-push-docker-migration:
     name: Build and push migration
     runs-on: ubuntu-latest

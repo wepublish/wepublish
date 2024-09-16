@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-and-push-base-image:
-    name: Build and push base Image
+    name: Build and push base image
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
