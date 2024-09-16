@@ -1,9 +1,9 @@
 ARG BUILD_IMAGE=node:18.19.1-bookworm-slim
-ARG PLIN_BUILD_IMAGE=node:18.19.1-bookworm-slim
+ARG PLAIN_BUILD_IMAGE=node:18.19.1-bookworm-slim
 #######
 ## Base Image
 #######
-FROM ${PLIN_BUILD_IMAGE} AS base-image-build
+FROM ${PLAIN_BUILD_IMAGE} AS base-image-build
 WORKDIR /wepublish
 COPY . .
 
@@ -13,10 +13,11 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     npm ci
 
-FROM ${PLIN_BUILD_IMAGE} AS base-image
+FROM ${PLAIN_BUILD_IMAGE} AS base-image
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 WORKDIR /wepublish
+COPY . .
 RUN groupadd -r wepublish && \
     useradd -r -g wepublish -d /wepublish wepublish && \
     chown -R wepublish:wepublish /wepublish
@@ -29,11 +30,10 @@ COPY --chown=wepublish:wepublish --from=base-image-build /wepublish/node_modules
 FROM ${BUILD_IMAGE} AS  build-website
 ### FRONT_ARG_REPLACER ###
 
-COPY . .
 RUN npx nx build ${NEXT_PROJECT}
 RUN bash /wepublish/deployment/map-secrets.sh clean
 
-FROM ${PLIN_BUILD_IMAGE} AS website
+FROM ${PLAIN_BUILD_IMAGE} AS website
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -62,7 +62,6 @@ ENTRYPOINT ["/entrypoint.sh"]
 ## API
 #######
 FROM ${BUILD_IMAGE} AS build-api
-COPY . .
 RUN npm install -g pkg && \
     npx nx build api-example && \
     cp docker/api_build_package.json package.json && \
@@ -93,7 +92,6 @@ CMD /wepublish/api
 #######
 
 FROM ${BUILD_IMAGE} AS build-editor
-COPY . .
 RUN npm install -g pkg && \
     npx nx build editor && \
     cp docker/editor_build_package.json package.json && \
@@ -117,7 +115,7 @@ CMD /wepublish/editor
 #######
 ## Migrations
 #######
-FROM ${PLIN_BUILD_IMAGE} AS build-migration
+FROM ${PLAIN_BUILD_IMAGE} AS build-migration
 ENV NODE_ENV=production
 WORKDIR /wepublish
 COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
@@ -127,7 +125,7 @@ COPY docker/tsconfig.yaml_seed tsconfig.yaml
 RUN npm install prisma @prisma/client @types/node bcrypt typescript && \
     npx tsc -p tsconfig.yaml
 
-FROM ${PLIN_BUILD_IMAGE} AS migration
+FROM ${PLAIN_BUILD_IMAGE} AS migration
 ENV NODE_ENV=production
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
@@ -186,7 +184,6 @@ CMD ["node", "main.js"]
 ######
 
 FROM ${BUILD_IMAGE} AS storybook-builder
-COPY . .
 RUN npx nx run website:build-storybook
 
 
