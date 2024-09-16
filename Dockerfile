@@ -1,8 +1,9 @@
 ARG BUILD_IMAGE=node:18.19.1-bookworm-slim
+ARG PLIN_BUILD_IMAGE=node:18.19.1-bookworm-slim
 #######
 ## Base Image
 #######
-FROM node:18.19.1-bookworm-slim as base-image-build
+FROM ${PLIN_BUILD_IMAGE} as base-image-build
 WORKDIR /wepublish
 COPY . .
 
@@ -12,7 +13,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     npm ci
 
-FROM node:18.19.1-bookworm-slim as base-image
+FROM ${PLIN_BUILD_IMAGE} as base-image
 MAINTAINER WePublish Foundation
 ENV NODE_ENV=production
 WORKDIR /wepublish
@@ -28,12 +29,11 @@ COPY --chown=wepublish:wepublish --from=base-image-build /wepublish/node_modules
 FROM ${BUILD_IMAGE} as  build-website
 ### FRONT_ARG_REPLACER ###
 
-WORKDIR /wepublish
 COPY . .
 RUN npx nx build ${NEXT_PROJECT}
 RUN bash /wepublish/deployment/map-secrets.sh clean
 
-FROM node:18.19.1-bookworm-slim as website
+FROM ${PLIN_BUILD_IMAGE} as website
 MAINTAINER WePublish Foundation
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -62,7 +62,6 @@ ENTRYPOINT ["/entrypoint.sh"]
 ## API
 #######
 FROM ${BUILD_IMAGE} as build-api
-WORKDIR /wepublish
 COPY . .
 RUN npm install -g pkg && \
     npx nx build api-example && \
@@ -94,7 +93,6 @@ CMD /wepublish/api
 #######
 
 FROM ${BUILD_IMAGE} as build-editor
-WORKDIR /wepublish
 COPY . .
 RUN npm install -g pkg && \
     npx nx build editor && \
@@ -119,7 +117,7 @@ CMD /wepublish/editor
 #######
 ## Migrations
 #######
-FROM node:18.19.1-bookworm-slim as build-migration
+FROM ${PLIN_BUILD_IMAGE} as build-migration
 ENV NODE_ENV=production
 WORKDIR /wepublish
 COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
@@ -129,7 +127,7 @@ COPY docker/tsconfig.yaml_seed tsconfig.yaml
 RUN npm install prisma @prisma/client @types/node bcrypt typescript && \
     npx tsc -p tsconfig.yaml
 
-FROM node:18.19.1-bookworm-slim as migration
+FROM ${PLIN_BUILD_IMAGE} as migration
 ENV NODE_ENV=production
 MAINTAINER WePublish Foundation
 WORKDIR /wepublish
@@ -188,7 +186,6 @@ CMD ["node", "main.js"]
 ######
 
 FROM ${BUILD_IMAGE} as storybook-builder
-WORKDIR /wepublish
 COPY . .
 RUN npx nx run website:build-storybook
 
