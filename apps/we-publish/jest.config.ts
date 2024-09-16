@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'we.publish',
+  displayName: 'we-publish',
   preset: '../../jest.preset.js',
   transform: {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
