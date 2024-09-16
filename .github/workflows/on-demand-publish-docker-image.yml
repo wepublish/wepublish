@@ -147,3 +147,5 @@ jobs:
           push: true
           tags: |
             ${{ inputs.storybook_tags }}
+          build-args:
+            BUILD_IMAGE=${{ inputs.base_image_tag }}
