@@ -11,7 +11,6 @@ jobs:
   build-and-push-base-image:
     name: Build and push base Image
     runs-on: ubuntu-latest
-    if: inputs.storybook_tags != ''
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v1
