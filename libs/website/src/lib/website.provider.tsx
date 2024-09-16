@@ -11,6 +11,7 @@ import {
 import {
   BildwurfAdBlock,
   BlockRenderer,
+  Blocks,
   BreakBlock,
   CommentBlock,
   EmbedBlock,
@@ -198,6 +199,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             Image
           }}
           blocks={{
+            Blocks,
             Renderer: BlockRenderer,
             Title: TitleBlock,
             Break: BreakBlock,
