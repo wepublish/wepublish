@@ -6,7 +6,7 @@ import {ConfigModule, ConfigService} from '@nestjs/config'
 import {readConfig} from '../readConfig'
 import {HealthModule} from '@wepublish/health'
 import {ScriptsModule} from '@wepublish/scripts/api'
-import {SystemInfoModule} from '@wepublish/system-info'
+import {HttpModule} from '@nestjs/axios'
 
 @Module({
   imports: [
@@ -52,6 +52,7 @@ import {SystemInfoModule} from '@wepublish/system-info'
         }
       }
     }),
+    HttpModule,
     HealthModule,
     ScriptsModule
   ]
