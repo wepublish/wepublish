@@ -109,15 +109,16 @@ export async function extractContentBox({$specialEl, $}: Node): Promise<BlockInp
 
   // extract image
   const $imageTag = $specialEl.find('img')
-  let imageID
   if ($imageTag.length) {
     const image = await ensureImageFromImg($imageTag)
-    imageID = image.id
     $imageTag.parentsUntil('.content-box, .content-box-gelb').remove()
+    blocks.push({
+      image: {
+        imageID: image.id,
+        caption: image.description
+      }
+    })
   }
-
-  // extract title
-  const title = $specialEl.find(':first-child').filter('h1, h2, h3').first().remove().text() ?? ''
 
   // extract potential iframes
   const $iframes = $specialEl.find('iframe')
@@ -126,13 +127,10 @@ export async function extractContentBox({$specialEl, $}: Node): Promise<BlockInp
   // extract richText
   const richText = (await convertHtmlToSlate($specialEl.html()!)) as unknown as SlateNode[]
 
-  // create line break block
+  // create rich text block
   blocks.push({
-    linkPageBreak: {
-      imageID,
-      text: title,
-      richText,
-      hideButton: true
+    richText: {
+      richText
     }
   })
 
