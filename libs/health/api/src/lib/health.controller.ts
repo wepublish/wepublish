@@ -27,4 +27,14 @@ export class HealthController {
       async () => this.http.pingCheck('media-server', `${process.env.MEDIA_SERVER_URL}/health`)
     ])
   }
+  @Get('readinessProbe')
+  @HealthCheck()
+  readinessProbe() {
+    return this.health.check([async () => this.db.pingCheck('database', this.prisma)])
+  }
+  @Get('livenessProbe')
+  @HealthCheck()
+  livenessProbe() {
+    return this.health.check([async () => this.db.pingCheck('database', this.prisma)])
+  }
 }
