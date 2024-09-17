@@ -4,12 +4,15 @@ import {Module} from '@nestjs/common'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {readConfig} from '../readConfig'
+import {HealthModule} from '@wepublish/health'
+import {ScriptsModule} from '@wepublish/scripts/api'
+import {SystemInfoModule} from '@wepublish/system-info'
 
 @Module({
   imports: [
     GraphQLModule.forRootAsync<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
-      imports: [ConfigModule],
+      imports: [ConfigModule, HealthModule, ScriptsModule, SystemInfoModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
@@ -49,6 +52,15 @@ import {readConfig} from '../readConfig'
         }
       }
     })
+  ],
+  exports: ['SYSTEM_INFO_KEY'],
+  providers: [
+    {
+      provide: 'SYSTEM_INFO_KEY',
+      useFactory: (config: ConfigService) => {
+        return config.get('SYSTEM_INFO_KEY')
+      }
+    }
   ]
 })
 export class GatewayModule {}
