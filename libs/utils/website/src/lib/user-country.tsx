@@ -1,4 +1,3 @@
-import getConfig from 'next/config'
 import {useEffect, useState} from 'react'
 
 const fetchUserCountry = (initArgs?: Parameters<typeof fetch>[1]) => {
@@ -6,7 +5,7 @@ const fetchUserCountry = (initArgs?: Parameters<typeof fetch>[1]) => {
 
   const url =
     process.env.NODE_ENV === 'production'
-      ? `${publicRuntimeConfig.API_ENV}/cdn-cgi/trace`
+      ? `/cdn-cgi/trace`
       : 'https://cloudflare-dns.com/cdn-cgi/trace'
 
   return fetch(url, initArgs).then(async res => {
