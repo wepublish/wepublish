@@ -1,8 +1,6 @@
 import {useEffect, useState} from 'react'
 
 const fetchUserCountry = (initArgs?: Parameters<typeof fetch>[1]) => {
-  const {publicRuntimeConfig} = getConfig()
-
   const url =
     process.env.NODE_ENV === 'production'
       ? `/cdn-cgi/trace`
