@@ -61,31 +61,31 @@ export async function migratePost(data: PreparedArticleData) {
       if ('img' === specialEl.tagName) {
         console.error('img...')
         blocks.push(...(await extractImageGallery(node)))
-        break
+        continue
       }
 
       // Figure
       if ('figure' === specialEl.tagName) {
         blocks.push(await extractFigure(node))
-        break
+        continue
       }
 
       // Iframe
       if ('iframe' === specialEl.tagName) {
         blocks.push(...(await extractIframe(node)))
-        break
+        continue
       }
 
       // Quotes
       if ('blockquote' === specialEl.tagName) {
         blocks.push(extractBlockquoteOrEmbed(node))
-        break
+        continue
       }
 
       // Content box
       if ($specialEl.filter('.content-box, .content-box-gelb').length) {
         blocks.push(...(await extractContentBox(node)))
-        break
+        continue
       }
     }
 
@@ -101,7 +101,7 @@ export async function migratePost(data: PreparedArticleData) {
           }
         })
       }
-      break
+      continue
     }
 
     // Use html to create RichText block or add it to the last block (if was RichText block)
