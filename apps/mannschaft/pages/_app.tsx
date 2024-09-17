@@ -29,8 +29,10 @@ import {CookieOrPay} from '../src/cookie-or-pay/cookie-or-pay'
 import {PURModel} from '../src/cookie-or-pay/pur-model'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {MainSpacer} from '../src/main-spacer'
+import {MannschaftArticle} from '../src/mannschaft-article'
 import {MannschaftArticleDateWithShare} from '../src/mannschaft-article-date-with-share'
 import {MannschaftBlockRenderer} from '../src/mannschaft-block-renderer'
+import {MannschaftBlocks} from '../src/mannschaft-blocks'
 import {MannschaftBreakBlock} from '../src/mannschaft-break-block'
 import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
 import {MannschaftPage} from '../src/mannschaft-page'
@@ -105,13 +107,15 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Head={Head}
             Script={Script}
             Page={MannschaftPage}
+            Article={MannschaftArticle}
             ArticleDate={MannschaftArticleDateWithShare}
             elements={{Link: NextWepublishLink}}
             blocks={{
+              Blocks: MannschaftBlocks,
+              Renderer: MannschaftBlockRenderer,
               Teaser: MannschaftTeaser,
               TeaserGrid: MannschaftTeaserGrid,
-              Break: MannschaftBreakBlock,
-              Renderer: MannschaftBlockRenderer
+              Break: MannschaftBreakBlock
             }}
             blockStyles={{
               FocusTeaser: MannschaftFocusTeaser
@@ -147,7 +151,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               <Spacer>
                 <NavBar
-                  categorySlugs={[['categories', 'about-us']]}
+                  categorySlugs={[['categories', 'other'], ['about-us']]}
                   slug="main"
                   headerSlug="header"
                 />
