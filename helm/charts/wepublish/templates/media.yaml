@@ -78,7 +78,7 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
-            failureThreshold: 5
+            failureThreshold: 9
             successThreshold: 1
           readinessProbe:
             httpGet:
