@@ -215,7 +215,7 @@ const fillCountry: StoryObj['play'] = async ({canvasElement, step}) => {
 
   await step('Enter country', async () => {
     await userEvent.click(input)
-    await userEvent.type(input, 'Schweiz')
+    await userEvent.type(input, 'Schweiz{enter}')
   })
 }
 

@@ -13,13 +13,18 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A hexidecimal color value. */
   Color: string;
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: string;
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
+  GraphQLSettingValueType: any;
   RichText: Node[];
   Slug: string;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: File;
-  Value: any;
+  /** A valid vote value */
   VoteValue: number;
 };
 
@@ -137,11 +142,11 @@ export type ArticleRevision = {
 };
 
 export enum ArticleSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  PublishedAt = 'PUBLISHED_AT',
-  PublishAt = 'PUBLISH_AT',
-  UpdatedAt = 'UPDATED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt',
+  PublishAt = 'publishAt',
+  PublishedAt = 'publishedAt',
+  UpdatedAt = 'updatedAt'
 }
 
 export type ArticleTeaser = {
@@ -232,9 +237,9 @@ export type AuthorLinkInput = {
 };
 
 export enum AuthorSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME'
+  Name = 'NAME',
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type AvailablePaymentMethod = {
@@ -318,10 +323,10 @@ export type Comment = {
 };
 
 export enum CommentAuthorType {
-  Author = 'Author',
-  GuestUser = 'GuestUser',
-  Team = 'Team',
-  VerifiedUser = 'VerifiedUser'
+  Author = 'author',
+  GuestUser = 'guestUser',
+  Team = 'team',
+  VerifiedUser = 'verifiedUser'
 }
 
 export type CommentBlock = {
@@ -371,9 +376,9 @@ export type CommentFilter = {
 };
 
 export enum CommentItemType {
-  Article = 'Article',
-  Page = 'Page',
-  PeerArticle = 'PeerArticle'
+  Article = 'article',
+  Page = 'page',
+  PeerArticle = 'peerArticle'
 }
 
 export type CommentRatingOverrideUpdateInput = {
@@ -390,8 +395,8 @@ export type CommentRatingSystemAnswer = {
 };
 
 export enum CommentRejectionReason {
-  Misconduct = 'Misconduct',
-  Spam = 'Spam'
+  Misconduct = 'misconduct',
+  Spam = 'spam'
 }
 
 export type CommentRevision = {
@@ -409,15 +414,15 @@ export type CommentRevisionUpdateInput = {
 };
 
 export enum CommentSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export enum CommentState {
-  Approved = 'Approved',
-  PendingApproval = 'PendingApproval',
-  PendingUserChanges = 'PendingUserChanges',
-  Rejected = 'Rejected'
+  Approved = 'approved',
+  PendingApproval = 'pendingApproval',
+  PendingUserChanges = 'pendingUserChanges',
+  Rejected = 'rejected'
 }
 
 export type CreatePeerInput = {
@@ -469,11 +474,11 @@ export type DateFilter = {
 };
 
 export enum DateFilterComparison {
-  Equal = 'EQUAL',
-  Greater = 'GREATER',
-  GreaterOrEqual = 'GREATER_OR_EQUAL',
-  Lower = 'LOWER',
-  LowerOrEqual = 'LOWER_OR_EQUAL'
+  Eq = 'eq',
+  Gt = 'gt',
+  Gte = 'gte',
+  Lt = 'lt',
+  Lte = 'lte'
 }
 
 export type EmbedBlock = {
@@ -560,17 +565,17 @@ export type EventFilter = {
 };
 
 export enum EventSort {
-  CreatedAt = 'CREATED_AT',
-  EndsAt = 'ENDS_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  StartsAt = 'STARTS_AT'
+  CreatedAt = 'CreatedAt',
+  EndsAt = 'EndsAt',
+  ModifiedAt = 'ModifiedAt',
+  StartsAt = 'StartsAt'
 }
 
 export enum EventStatus {
-  Cancelled = 'CANCELLED',
-  Postponed = 'POSTPONED',
-  Rescheduled = 'RESCHEDULED',
-  Scheduled = 'SCHEDULED'
+  Cancelled = 'Cancelled',
+  Postponed = 'Postponed',
+  Rescheduled = 'Rescheduled',
+  Scheduled = 'Scheduled'
 }
 
 export type EventTeaser = {
@@ -661,6 +666,12 @@ export type FlexTeaserInput = {
   teaser?: InputMaybe<TeaserInput>;
 };
 
+export type FocalPoint = {
+  __typename?: 'FocalPoint';
+  x: Scalars['Float'];
+  y: Scalars['Float'];
+};
+
 export type FullCommentRatingSystem = {
   __typename?: 'FullCommentRatingSystem';
   answers: Array<CommentRatingSystemAnswer>;
@@ -708,7 +719,7 @@ export type Image = {
   extension: Scalars['String'];
   fileSize: Scalars['Int'];
   filename?: Maybe<Scalars['String']>;
-  focalPoint?: Maybe<Point>;
+  focalPoint?: Maybe<FocalPoint>;
   format: Scalars['String'];
   height: Scalars['Int'];
   id: Scalars['ID'];
@@ -768,22 +779,22 @@ export type ImageGalleryBlockInput = {
 };
 
 export enum ImageOutput {
-  Jpeg = 'JPEG',
-  Png = 'PNG',
-  Webp = 'WEBP'
+  Jpeg = 'jpeg',
+  Png = 'png',
+  Webp = 'webp'
 }
 
 export enum ImageRotation {
-  Auto = 'AUTO',
-  Rotate_0 = 'ROTATE_0',
-  Rotate_90 = 'ROTATE_90',
-  Rotate_180 = 'ROTATE_180',
-  Rotate_270 = 'ROTATE_270'
+  Auto = 'Auto',
+  Rotate0 = 'Rotate0',
+  Rotate90 = 'Rotate90',
+  Rotate180 = 'Rotate180',
+  Rotate270 = 'Rotate270'
 }
 
 export enum ImageSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type ImageTransformation = {
@@ -868,9 +879,9 @@ export type InvoiceItemInput = {
 };
 
 export enum InvoiceSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  PaidAt = 'PAID_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt',
+  PaidAt = 'paidAt'
 }
 
 export type JwtToken = {
@@ -981,8 +992,8 @@ export type MemberPlanInput = {
 };
 
 export enum MemberPlanSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type Mutation = {
@@ -1663,11 +1674,11 @@ export type PageRevision = {
 };
 
 export enum PageSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  PublishedAt = 'PUBLISHED_AT',
-  PublishAt = 'PUBLISH_AT',
-  UpdatedAt = 'UPDATED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt',
+  PublishAt = 'publishAt',
+  PublishedAt = 'publishedAt',
+  UpdatedAt = 'updatedAt'
 }
 
 export type PageTeaser = {
@@ -1747,10 +1758,10 @@ export type PaymentMethodInput = {
 };
 
 export enum PaymentPeriodicity {
-  Biannual = 'BIANNUAL',
-  Monthly = 'MONTHLY',
-  Quarterly = 'QUARTERLY',
-  Yearly = 'YEARLY'
+  Biannual = 'biannual',
+  Monthly = 'monthly',
+  Quarterly = 'quarterly',
+  Yearly = 'yearly'
 }
 
 export type PaymentProvider = {
@@ -1766,18 +1777,18 @@ export type PaymentProviderCustomer = {
 };
 
 export enum PaymentSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export enum PaymentState {
-  Canceled = 'Canceled',
-  Created = 'Created',
-  Declined = 'Declined',
-  Paid = 'Paid',
-  Processing = 'Processing',
-  RequiresUserAction = 'RequiresUserAction',
-  Submitted = 'Submitted'
+  Canceled = 'canceled',
+  Created = 'created',
+  Declined = 'declined',
+  Paid = 'paid',
+  Processing = 'processing',
+  RequiresUserAction = 'requiresUserAction',
+  Submitted = 'submitted'
 }
 
 export type Peer = {
@@ -1861,12 +1872,6 @@ export type Permission = {
   id: Scalars['String'];
 };
 
-export type Point = {
-  __typename?: 'Point';
-  x: Scalars['Float'];
-  y: Scalars['Float'];
-};
-
 export type PolisConversationBlock = {
   __typename?: 'PolisConversationBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -1938,9 +1943,9 @@ export type PollFilter = {
 };
 
 export enum PollSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  OpensAt = 'OPENS_AT'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  OpensAt = 'OpensAt'
 }
 
 export type PollStartedAction = {
@@ -2330,7 +2335,7 @@ export type QuoteBlockInput = {
 };
 
 export enum RatingSystemType {
-  Star = 'STAR'
+  Star = 'star'
 }
 
 export type RichTextBlock = {
@@ -2366,26 +2371,26 @@ export type Setting = {
   id: Scalars['ID'];
   name: SettingName;
   settingRestriction?: Maybe<SettingRestriction>;
-  value: Scalars['Value'];
+  value: Scalars['GraphQLSettingValueType'];
 };
 
 export enum SettingName {
-  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
-  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
-  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
-  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
-  BodyScript = 'BODY_SCRIPT',
-  CommentCharLimit = 'COMMENT_CHAR_LIMIT',
-  HeadScript = 'HEAD_SCRIPT',
-  MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
-  MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
-  MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
-  MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
-  MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
-  MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
-  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
-  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
-  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
+  AllowCommentEditing = 'allowCommentEditing',
+  AllowGuestCommentRating = 'allowGuestCommentRating',
+  AllowGuestCommenting = 'allowGuestCommenting',
+  AllowGuestPollVoting = 'allowGuestPollVoting',
+  BodyScript = 'bodyScript',
+  CommentCharLimit = 'commentCharLimit',
+  HeadScript = 'headScript',
+  MakeActiveSubscribersApiPublic = 'makeActiveSubscribersApiPublic',
+  MakeExpectedRevenueApiPublic = 'makeExpectedRevenueApiPublic',
+  MakeNewDeactivationsApiPublic = 'makeNewDeactivationsApiPublic',
+  MakeNewSubscribersApiPublic = 'makeNewSubscribersApiPublic',
+  MakeRenewingSubscribersApiPublic = 'makeRenewingSubscribersApiPublic',
+  MakeRevenueApiPublic = 'makeRevenueApiPublic',
+  PeeringTimeoutInMs = 'peeringTimeoutInMs',
+  ResetPasswordJwtExpiresMin = 'resetPasswordJwtExpiresMin',
+  SendLoginJwtExpiresMin = 'sendLoginJwtExpiresMin'
 }
 
 export type SettingRestriction = {
@@ -2397,8 +2402,8 @@ export type SettingRestriction = {
 };
 
 export enum SortOrder {
-  Ascending = 'ASCENDING',
-  Descending = 'DESCENDING'
+  Ascending = 'Ascending',
+  Descending = 'Descending'
 }
 
 export type SoundCloudTrackBlock = {
@@ -2461,9 +2466,9 @@ export type SubscriptionDeactivationInput = {
 };
 
 export enum SubscriptionDeactivationReason {
-  InvoiceNotPaid = 'INVOICE_NOT_PAID',
-  None = 'NONE',
-  UserSelfDeactivated = 'USER_SELF_DEACTIVATED'
+  InvoiceNotPaid = 'invoiceNotPaid',
+  None = 'none',
+  UserSelfDeactivated = 'userSelfDeactivated'
 }
 
 export type SubscriptionFilter = {
@@ -2513,8 +2518,8 @@ export type SubscriptionPeriod = {
 };
 
 export enum SubscriptionSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export type Tag = {
@@ -2539,9 +2544,9 @@ export type TagFilter = {
 };
 
 export enum TagSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  Tag = 'TAG'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Tag = 'Tag'
 }
 
 export enum TagType {
@@ -2617,9 +2622,9 @@ export type TeaserListBlockInput = {
 };
 
 export enum TeaserStyle {
-  Default = 'DEFAULT',
-  Light = 'LIGHT',
-  Text = 'TEXT'
+  Default = 'default',
+  Light = 'light',
+  Text = 'text'
 }
 
 export enum TeaserType {
@@ -2730,7 +2735,7 @@ export type UpdatePollExternalVoteSources = {
 
 export type UpdateSettingArgs = {
   name: SettingName;
-  value: Scalars['Value'];
+  value: Scalars['GraphQLSettingValueType'];
 };
 
 export type UploadImageInput = {
@@ -2846,15 +2851,15 @@ export type UserRoleInput = {
 };
 
 export enum UserRoleSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
 }
 
 export enum UserSort {
-  CreatedAt = 'CREATED_AT',
-  FirstName = 'FIRST_NAME',
-  ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME'
+  CreatedAt = 'createdAt',
+  FirstName = 'firstName',
+  ModifiedAt = 'modifiedAt',
+  Name = 'name'
 }
 
 export type UserSubscription = {
@@ -3222,7 +3227,7 @@ export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, lar
 
 export type ImageRefFragment = { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
-export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null };
+export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null };
 
 export type ImageListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>;
@@ -3239,7 +3244,7 @@ export type ImageQueryVariables = Exact<{
 }>;
 
 
-export type ImageQuery = { __typename?: 'Query', image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null };
+export type ImageQuery = { __typename?: 'Query', image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type UploadImageMutationVariables = Exact<{
   input: UploadImageInput;
@@ -3254,14 +3259,14 @@ export type UpdateImageMutationVariables = Exact<{
 }>;
 
 
-export type UpdateImageMutation = { __typename?: 'Mutation', updateImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null };
+export type UpdateImageMutation = { __typename?: 'Mutation', updateImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type DeleteImageMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null };
+export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type FullNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> };
 

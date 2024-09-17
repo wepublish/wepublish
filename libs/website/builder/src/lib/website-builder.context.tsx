@@ -331,7 +331,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
 
   meta: {
     siteTitle: 'Newsroom Name',
-    locale: 'ch-DE'
+    locale: 'de-CH'
   },
 
   thirdParty: {}

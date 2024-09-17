@@ -12,7 +12,10 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2017", "dom"],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
@@ -68,18 +71,20 @@
       "@wepublish/testing": ["libs/testing/src/index.ts"],
       "@wepublish/ui": ["libs/ui/src/index.ts"],
       "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],
+      "@wepublish/user": ["libs/user/src/index.ts"],
       "@wepublish/user/api": ["libs/user/api/src/index.ts"],
       "@wepublish/user/website": ["libs/user/website/src/index.ts"],
-      "@wepublish/user/website/server": ["libs/user/website/src/server.ts"],
       "@wepublish/utils": ["libs/utils/src/index.ts"],
       "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
       "@wepublish/website": ["libs/website/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
-      "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
       "@wepublish/website/server": ["libs/website/src/server.ts"]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

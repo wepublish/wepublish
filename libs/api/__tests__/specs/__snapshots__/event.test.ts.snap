@@ -30,7 +30,7 @@ exports[`Events create can be created 1`] = `
   8015 Barfoo City",
       "name": "Test Event",
       "startsAt": 2020-11-25T20:00:00.000Z,
-      "status": "SCHEDULED",
+      "status": "Scheduled",
       "tags": ArrayContaining [
         ObjectContaining {
           "id": Any<String>,
@@ -61,7 +61,7 @@ exports[`Events create can be created with bare minimum 1`] = `
       "location": null,
       "name": "Test Event",
       "startsAt": 2020-11-25T20:00:00.000Z,
-      "status": "SCHEDULED",
+      "status": "Scheduled",
       "tags": [],
     },
   },
@@ -93,23 +93,6 @@ exports[`Events create can not be created with endsAt before startsAt 1`] = `
 `;
 
 exports[`Events query private can query a list of events within a timeframe 1`] = `
-[
-  {
-    "endsAt": null,
-    "startsAt": 2050-06-19T00:00:00.000Z,
-  },
-  {
-    "endsAt": 2050-06-19T00:00:00.000Z,
-    "startsAt": 2036-10-10T00:00:00.000Z,
-  },
-  {
-    "endsAt": 2036-10-10T00:00:00.000Z,
-    "startsAt": 2009-05-25T00:00:00.000Z,
-  },
-]
-`;
-
-exports[`Events query public can query a list of events within a timeframe 1`] = `
 [
   {
     "endsAt": null,

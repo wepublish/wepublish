@@ -16,17 +16,20 @@ import {Application} from 'express'
 import {DefaultURLAdapter} from '../urlAdapters'
 import {readConfig} from '../readConfig'
 import {MannschaftURLAdapter} from '../urlAdapters/URLAdapter-mannschaft'
+
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 type RunServerProps = {
-  expressApp: Application
+  privateExpressApp?: Application
+  publicExpressApp?: Application
   mediaAdapter: MediaAdapter
   paymentProviders: PaymentProvider[]
   mailProvider: MailProvider
 }
 
 export async function runServer({
-  expressApp,
+  privateExpressApp,
+  publicExpressApp,
   mediaAdapter,
   mailProvider,
   paymentProviders
@@ -161,7 +164,8 @@ export async function runServer({
       logger,
       challenge
     },
-    expressApp
+    privateExpressApp,
+    publicExpressApp
   )
 
   await server.listen(port, address)

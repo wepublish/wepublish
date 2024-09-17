@@ -1,11 +1,12 @@
-import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
+import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
 import {UserConsent, UserConsentInput, UserConsentFilter} from './user-consent.model'
 import {UserConsentService} from './user-consent.service'
 
 import {ForbiddenException, UseGuards} from '@nestjs/common'
 import {UserSession, AuthenticationGuard, CurrentUser} from '@wepublish/authentication/api'
+import {User} from '@wepublish/user/api'
 
-@Resolver()
+@Resolver(() => UserConsent)
 export class UserConsentResolver {
   constructor(private userConsents: UserConsentService) {}
 
@@ -72,5 +73,10 @@ export class UserConsentResolver {
   @UseGuards(AuthenticationGuard)
   deleteUserConsent(@Args('id') id: string, @CurrentUser() user: UserSession) {
     return this.userConsents.deleteUserConsent(id, user)
+  }
+
+  @ResolveField(returns => User)
+  user(@Parent() userConsent: UserConsent) {
+    return {__typename: 'User', id: userConsent.userId}
   }
 }

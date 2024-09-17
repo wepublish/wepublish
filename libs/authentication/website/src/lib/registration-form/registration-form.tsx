@@ -11,6 +11,7 @@ import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'
 import {UserForm} from './user-form'
 import {ApiAlert} from '@wepublish/errors/website'
+import {userCountryNames} from '@wepublish/user'
 
 export const RegistrationFormWrapper = styled('form')`
   display: grid;
@@ -72,7 +73,7 @@ export const defaultRegisterSchema = z.object({
     streetAddress: z.string().min(1),
     zipCode: z.string().min(1),
     city: z.string().min(1),
-    country: z.string().min(1)
+    country: z.enum(userCountryNames)
   }),
   password: z.string().min(8),
   passwordRepeated: z.string().min(8),

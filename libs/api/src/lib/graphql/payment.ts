@@ -21,13 +21,13 @@ import {GraphQLSlug} from './slug'
 export const GraphQLPaymentState = new GraphQLEnumType({
   name: 'PaymentState',
   values: {
-    Created: {value: PaymentState.created},
-    Submitted: {value: PaymentState.submitted},
-    RequiresUserAction: {value: PaymentState.requiresUserAction},
-    Processing: {value: PaymentState.processing},
-    Paid: {value: PaymentState.paid},
-    Canceled: {value: PaymentState.canceled},
-    Declined: {value: PaymentState.declined}
+    [PaymentState.created]: {value: PaymentState.created},
+    [PaymentState.submitted]: {value: PaymentState.submitted},
+    [PaymentState.requiresUserAction]: {value: PaymentState.requiresUserAction},
+    [PaymentState.processing]: {value: PaymentState.processing},
+    [PaymentState.paid]: {value: PaymentState.paid},
+    [PaymentState.canceled]: {value: PaymentState.canceled},
+    [PaymentState.declined]: {value: PaymentState.declined}
   }
 })
 
@@ -86,8 +86,8 @@ export const GraphQLPaymentFilter = new GraphQLInputObjectType({
 export const GraphQLPaymentSort = new GraphQLEnumType({
   name: 'PaymentSort',
   values: {
-    CREATED_AT: {value: PaymentSort.CreatedAt},
-    MODIFIED_AT: {value: PaymentSort.ModifiedAt}
+    [PaymentSort.CreatedAt]: {value: PaymentSort.CreatedAt},
+    [PaymentSort.ModifiedAt]: {value: PaymentSort.ModifiedAt}
   }
 })
 

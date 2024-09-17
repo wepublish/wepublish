@@ -19,7 +19,8 @@ export const createUser = async (
 ) => {
   const hashedPassword = await hashPassword(password, hashCostFactor)
   input.email = input.email.toLowerCase()
-  await Validator.createUser().parse(input)
+  await Validator.createUser.parse(input)
+  await Validator.createAddress.parse(address)
 
   const recipient = await prisma.user.create({
     data: {

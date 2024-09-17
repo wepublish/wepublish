@@ -97,8 +97,8 @@ export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
 export const GraphQLSubscriptionSort = new GraphQLEnumType({
   name: 'SubscriptionSort',
   values: {
-    CREATED_AT: {value: SubscriptionSort.CreatedAt},
-    MODIFIED_AT: {value: SubscriptionSort.ModifiedAt}
+    [SubscriptionSort.CreatedAt]: {value: SubscriptionSort.CreatedAt},
+    [SubscriptionSort.ModifiedAt]: {value: SubscriptionSort.ModifiedAt}
   }
 })
 

@@ -29,7 +29,7 @@ export const GraphQLCommentRatingSystem = new GraphQLObjectType<CommentRatingSys
 export const GraphQLRatingSystemType = new GraphQLEnumType({
   name: 'RatingSystemType',
   values: {
-    STAR: {value: RatingSystemType.star}
+    [RatingSystemType.star]: {value: RatingSystemType.star}
   }
 })
 

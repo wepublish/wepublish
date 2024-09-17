@@ -8,6 +8,7 @@ import {
 import {useReducer} from 'react'
 import {Controller} from 'react-hook-form'
 import {MdVisibility, MdVisibilityOff} from 'react-icons/md'
+import {CountrySelect} from './country-select'
 
 export const UserFormWrapper = styled('div')`
   display: grid;
@@ -281,15 +282,13 @@ export function UserForm<T extends BuilderUserFormFields>({
             name={'address.country'}
             control={control}
             render={({field, fieldState: {error}}) => (
-              <TextField
+              <CountrySelect
                 {...field}
                 value={field.value ?? ''}
-                fullWidth
+                onChange={field.onChange}
                 css={theme => countryStyles(theme as Theme)}
-                label={'Land'}
                 error={!!error}
                 helperText={error?.message}
-                autoComplete="country"
               />
             )}
           />

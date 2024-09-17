@@ -1,6 +1,7 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import {InputAdornment, Theme, css, styled, useTheme} from '@mui/material'
 import {requiredRegisterSchema, UserForm, zodAlwaysRefine} from '@wepublish/authentication/website'
+import {userCountryNames} from '@wepublish/user'
 import {
   BuilderPersonalDataFormFields,
   BuilderPersonalDataFormProps,
@@ -90,7 +91,7 @@ const defaultSchema = z.object({
     streetAddress: z.string().min(1),
     zipCode: z.string().min(1),
     city: z.string().min(1),
-    country: z.string().min(1)
+    country: z.enum(userCountryNames)
   }),
   password: z.string().min(8).optional().or(z.literal('')),
   passwordRepeated: z.string().min(8).optional().or(z.literal(''))

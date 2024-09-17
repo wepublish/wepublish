@@ -530,7 +530,8 @@
       "noUrlErrorMessage": "Please enter a url",
       "noUserErrorMessage": "Please select a user",
       "passwordTooShortErrorMessage": "Password must be at least 8 characters long",
-      "required": "This field is required"
+      "required": "This field is required",
+      "invalidCountry": "Please select a valid country"
     },
     "event": {
       "create": {

@@ -22,6 +22,7 @@ import {
   useAuthorisation,
   UserSubscriptionsList
 } from '@wepublish/ui/editor'
+import {userCountryNames} from '@wepublish/user'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useLocation, useNavigate, useParams} from 'react-router-dom'
@@ -37,6 +38,7 @@ import {
   Panel as RPanel,
   Row,
   Schema,
+  SelectPicker,
   toaster,
   Toggle as RToggle
 } from 'rsuite'
@@ -228,7 +230,8 @@ function UserEditView() {
     email: StringType()
       .isRequired(t('errorMessages.noEmailErrorMessage'))
       .isEmail(t('errorMessages.invalidEmailErrorMessage')),
-    password: validatePassword
+    password: validatePassword,
+    country: StringType().isOneOf(userCountryNames, t('errorMessages.invalidCountry'))
   })
 
   /**
@@ -355,7 +358,7 @@ function UserEditView() {
         onSubmit={validationPassed => validationPassed && createOrUpdateUser()}
         fluid
         model={validationModel}
-        formValue={{name, email, password}}>
+        formValue={{name, email, password, country: address?.country}}>
         <SingleViewTitle
           loading={false}
           title={titleView()}
@@ -557,11 +560,18 @@ function UserEditView() {
                     <Col xs={24}>
                       <Form.Group controlId="country">
                         <Form.ControlLabel>{t('userCreateOrEditView.country')}</Form.ControlLabel>
+
                         <Form.Control
                           name="country"
-                          value={address?.country || ''}
+                          accepter={SelectPicker}
+                          block
+                          cleanable
+                          searchable
+                          data={userCountryNames.map(item => ({label: item, value: item}))}
+                          placeholder={address?.country ?? undefined}
+                          value={address?.country ?? ''}
                           disabled={isDisabled}
-                          onChange={(value: string) =>
+                          onChange={value =>
                             updateAddressObject(address, setAddress, 'country', value)
                           }
                         />

@@ -238,10 +238,10 @@ export const GraphQLUserFilter = new GraphQLInputObjectType({
 export const GraphQLUserSort = new GraphQLEnumType({
   name: 'UserSort',
   values: {
-    CREATED_AT: {value: UserSort.CreatedAt},
-    MODIFIED_AT: {value: UserSort.ModifiedAt},
-    NAME: {value: UserSort.Name},
-    FIRST_NAME: {value: UserSort.FirstName}
+    [UserSort.CreatedAt]: {value: UserSort.CreatedAt},
+    [UserSort.ModifiedAt]: {value: UserSort.ModifiedAt},
+    [UserSort.Name]: {value: UserSort.Name},
+    [UserSort.FirstName]: {value: UserSort.FirstName}
   }
 })
 
