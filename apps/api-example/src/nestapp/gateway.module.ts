@@ -12,7 +12,7 @@ import {SystemInfoModule} from '@wepublish/system-info'
   imports: [
     GraphQLModule.forRootAsync<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
-      imports: [ConfigModule, HealthModule, ScriptsModule, SystemInfoModule],
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
@@ -51,16 +51,9 @@ import {SystemInfoModule} from '@wepublish/system-info'
           }
         }
       }
-    })
-  ],
-  exports: ['SYSTEM_INFO_KEY'],
-  providers: [
-    {
-      provide: 'SYSTEM_INFO_KEY',
-      useFactory: (config: ConfigService) => {
-        return config.get('SYSTEM_INFO_KEY')
-      }
-    }
+    }),
+    HealthModule,
+    ScriptsModule
   ]
 })
 export class GatewayModule {}
