@@ -16,6 +16,7 @@ export const PaywallBlockWrapper = styled('div')`
 
 export const PaywallBlockImage = styled(Image)`
   max-width: 100%;
+  height: auto;
 `
 
 const buttonStyles = (theme: Theme) => css`
