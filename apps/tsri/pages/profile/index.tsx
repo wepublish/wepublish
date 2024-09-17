@@ -45,7 +45,7 @@ function Profile() {
 
       <PersonalDataFormContainer
         mediaEmail="info@tsri.ch"
-        fields={['firstName', 'flair', 'address', 'password', 'image']}
+        fields={['firstName', 'address', 'password', 'image']}
       />
     </ProfileWrapper>
   )
