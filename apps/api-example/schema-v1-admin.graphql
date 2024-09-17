@@ -935,6 +935,7 @@ type TeaserListBlock {
   filter: TeaserListBlockFilter!
   take: Int
   skip: Int
+  sort: TeaserListBlockSort
   teasers: [Teaser]!
 }
 
@@ -949,6 +950,11 @@ enum TeaserType {
 type TeaserListBlockFilter {
   tags: [ID!]
   tagObjects: [Tag!]!
+}
+
+enum TeaserListBlockSort {
+  publishedAt
+  hotAndTrending
 }
 
 type ArticleNavigationLink implements BaseNavigationLink {
@@ -1886,6 +1892,7 @@ input TeaserListBlockInput {
   filter: TeaserListBlockFilterInput!
   take: Int
   skip: Int
+  sort: TeaserListBlockSort
 }
 
 input TeaserListBlockFilterInput {

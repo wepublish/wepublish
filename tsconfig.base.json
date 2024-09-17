@@ -12,15 +12,13 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "@wepublish/analytics": ["libs/analytics/src/index.ts"],
+      "@wepublish/google-analytics/api": ["libs/google-analytics/api/src/index.ts"],
       "@wepublish/api": ["libs/api/src/index.ts"],
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
       "@wepublish/article/website": ["libs/article/website/src/index.ts"],
@@ -80,11 +78,9 @@
       "@wepublish/website": ["libs/website/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
-      "@wepublish/website/server": ["libs/website/src/server.ts"]
+      "@wepublish/website/server": ["libs/website/src/server.ts"],
+      "@wepublish/article/api": ["libs/article/api/src/index.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

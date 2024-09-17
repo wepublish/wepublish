@@ -1541,6 +1541,12 @@ export type Query = {
   getImage: ImageV2;
   /**
    *
+   *       Returns the most viewed articles in descending order.
+   *
+   */
+  hotAndTrending: Array<Article>;
+  /**
+   *
    *       Returns a more detailed version of a single importable event, by id and source.
    *
    */
@@ -1752,6 +1758,12 @@ export type QueryExpectedRevenueArgs = {
 
 export type QueryGetImageArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryHotAndTrendingArgs = {
+  start?: InputMaybe<Scalars['DateTime']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -2303,7 +2315,7 @@ export type YouTubeVideoBlock = {
   videoID: Scalars['String'];
 };
 
-export type _Entity = Event | Image | MemberPlan | Page | PaymentMethod | PollVote | Tag | User;
+export type _Entity = Article | Event | Image | MemberPlan | Page | PaymentMethod | PollVote | Tag | User;
 
 export type _Service = {
   __typename?: '_Service';

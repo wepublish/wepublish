@@ -37,7 +37,7 @@ import {BlockValue, EmbedType} from './types'
 import {BlockType} from '@wepublish/editor/api-v2'
 import {isFunctionalUpdate} from '../utility'
 import {TeaserListBlock} from './teaserListBlock'
-import {TeaserType} from '@wepublish/editor/api'
+import {TeaserListBlockSort, TeaserType} from '@wepublish/editor/api'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
@@ -144,6 +144,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       teasers: [],
       skip: 0,
       take: 6,
+      sort: TeaserListBlockSort.PublishedAt,
       teaserType: TeaserType.Article
     },
     label: 'blocks.teaserList.label',
