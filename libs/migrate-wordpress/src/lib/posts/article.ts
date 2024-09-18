@@ -32,7 +32,7 @@ type EnsureArticleProps = {
 export async function ensureArticle(props: EnsureArticleProps) {
   const {tags, featuredImage, authors, slug, blocks, createdAt, modifiedAt, ...data} = props
 
-  console.log('  article create', slug)
+  console.debug('  article create', slug)
   logArticleBlocks(blocks)
 
   const article = await createArticle({
@@ -50,6 +50,7 @@ export async function ensureArticle(props: EnsureArticleProps) {
     imageID: featuredImage ? featuredImage.id : undefined
   })
   await publishArticle(article.id, createdAt, modifiedAt)
+  return article
 }
 
 function logArticleBlocks(blocks: BlockInput[]) {
@@ -62,7 +63,7 @@ function logArticleBlocks(blocks: BlockInput[]) {
       }
     })
     .map(b => JSON.stringify(b))
-    .forEach(b => console.log(`    ${b}`))
+    .forEach(b => console.debug(`    ${b}`))
 }
 
 // API

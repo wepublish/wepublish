@@ -18,9 +18,18 @@ export async function migrateSubscriptionsFromStream(stream: ReadStream) {
 
 export async function processRow(columns: string[]) {
   const row = convertColumnsToRow(columns)
-  const user = await migrateUser(row)
-  if (!user) {
-    throw new Error(`Could not find or create user "${row.email}"`)
+  try {
+    const user = await migrateUser(row)
+    if (!user) {
+      throw new Error(`Could not find or create user "${row.email}"`)
+    }
+
+    const subscription = await migrateSubscription(user, row)
+    console.log(
+      `Migrated subscription for user: ${user.email}, subscription: ${subscription.memberPlan.slug}`
+    )
+  } catch (e: any) {
+    console.error('Subscription import failed')
+    console.error(e.message)
   }
-  await migrateSubscription(user, row)
 }

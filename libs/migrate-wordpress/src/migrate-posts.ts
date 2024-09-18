@@ -1,7 +1,9 @@
-import {migratePostById, migratePosts, migratePostsFromCategory} from './lib/posts'
+import {migrateAllPosts, migratePostById, migratePostsFromCategory} from './lib/posts'
 
 export async function migrate() {
   await migratePostById(
+    206024,
+    205523, // paid, with header+paragraph
     203921, // hr surrounded links
     100273, // image gallery
     182908, // article references
@@ -21,7 +23,7 @@ export async function migrate() {
     202940,
     202666
   )
-  await migratePosts(200)
+  await migrateAllPosts()
   await migratePostsFromCategory(4371, 50)
   await migratePostsFromCategory(4950, 50)
 }

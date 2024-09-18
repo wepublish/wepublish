@@ -1,5 +1,8 @@
 import {migrate as migratePosts} from './migrate-posts'
 import {migrate as migrateSubscriptions} from './migrate-subscriptions'
+import {setupLogger} from './lib/logger'
+
+setupLogger()
 
 Promise.resolve()
   .then(() =>

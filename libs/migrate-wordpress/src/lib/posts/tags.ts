@@ -26,14 +26,14 @@ const ensureTag = async ({name, main = false}: TagInput): Promise<Tag | undefine
   const tag = name
   const existingTag = await getTagByName(tag)
   if (existingTag) {
-    console.log('  tag exists', tag)
+    console.debug('  tag exists', tag)
     if (existingTag.main != main) {
-      console.log('  tag update', tag)
+      console.debug('  tag update', tag)
       await updateTag({id: existingTag.id, main})
     }
     return existingTag
   }
-  console.log('  tag create', tag)
+  console.debug('  tag create', tag)
   return createTag({tag, main}).catch(e => {
     console.error(e)
     return undefined

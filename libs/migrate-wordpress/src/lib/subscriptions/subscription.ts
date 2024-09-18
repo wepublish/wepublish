@@ -15,12 +15,12 @@ export async function migrateSubscription(user: UserListQuery['users']['nodes'][
 
   const existingSubscription = user.subscriptions.find(s => s.memberPlan.id === memberPlan.id)
   if (existingSubscription) {
-    console.log(' subscription exists ', [email, memberPlan.slug].join(' / '))
-    return
+    console.debug(' subscription exists ', [email, memberPlan.slug].join(' / '))
+    return existingSubscription
   }
 
-  console.log(' subscription create ', [email, memberPlan.slug].join(' / '))
-  await createSubscription({
+  console.debug(' subscription create ', [email, memberPlan.slug].join(' / '))
+  return await createSubscription({
     autoRenew: false,
     deactivation: undefined,
     extendable: true,
@@ -39,7 +39,7 @@ export async function deleteUserSubscriptions(user: UserListQuery['users']['node
   const {email} = user
   await Promise.all(
     user.subscriptions.map(({id, memberPlan}) => {
-      console.log(' subscription delete ', [email, memberPlan.slug].join(' / '))
+      console.debug(' subscription delete ', [email, memberPlan.slug].join(' / '))
       return deleteSubscription(id)
     })
   )

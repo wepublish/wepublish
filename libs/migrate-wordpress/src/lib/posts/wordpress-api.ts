@@ -1,4 +1,4 @@
-import axios, {AxiosRequestConfig} from 'axios'
+import axios, {AxiosRequestConfig, AxiosResponseHeaders} from 'axios'
 import {cache} from './cache'
 
 export type WordpressTag = {
@@ -60,7 +60,7 @@ const categoriesCache = cache('categories')
 const tagsCache = cache('tags')
 
 const request = ({path, ...request}: Omit<AxiosRequestConfig, 'url'> & {path: string}) => {
-  // console.log(`${request.method ?? 'get'} ${path}`)
+  // console.debug(`${request.method ?? 'get'} ${path}`)
   return axios.request({
     url: WORDPRESS_URL + path,
     ...request
@@ -83,11 +83,16 @@ type FetchPostsProps = {
   categoryId?: number
 }
 
+type WordpressPostsResponse = {
+  items: WordpressPost[]
+  total: number
+}
+
 export const fetchPosts = async ({
   categoryId,
   perPage,
   page
-}: FetchPostsProps): Promise<WordpressPost[]> => {
+}: FetchPostsProps): Promise<WordpressPostsResponse> => {
   const params = {page, per_page: perPage, _embed: true} as any
   if (categoryId) {
     params.categories = categoryId.toString()
@@ -98,7 +103,11 @@ export const fetchPosts = async ({
     auth: fetchAuth(),
     params
   })
-  return response.data
+  const headers = response.headers as AxiosResponseHeaders
+  return {
+    items: response.data,
+    total: +headers.get('X-WP-Total')!
+  }
 }
 
 export const fetchPost = async (id: number): Promise<WordpressPost> => {

@@ -30,11 +30,11 @@ export const ensureImage = async (input: EnsureImageProps): Promise<Image> => {
   const foundImages = (await getImagesByTitle(title)).nodes
   const existingImage = foundImages.find(image => image.link === url)
   if (existingImage) {
-    console.log('  image exists', url)
+    console.debug('  image exists', url)
     return existingImage
   }
 
-  console.log('  create image', url)
+  console.debug('  create image', url)
   const image = await createImage({
     downloadUrl: url,
     filename: new URL(url).pathname.split('/').pop() as string,

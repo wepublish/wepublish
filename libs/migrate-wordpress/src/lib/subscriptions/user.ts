@@ -10,9 +10,9 @@ export async function migrateUser(row: Row) {
 
   const existingUser = await findUserByEmail(email)
   if (existingUser) {
-    console.log('         user exists ', email)
+    console.debug('         user exists ', email)
     if (deleteUserWhenFound) {
-      console.log('         user delete ', email)
+      console.debug('         user delete ', email)
       await deleteUserSubscriptions(existingUser)
       await deleteUser(existingUser.id)
     } else {
@@ -20,7 +20,7 @@ export async function migrateUser(row: Row) {
     }
   }
 
-  console.log('         user create ', email)
+  console.debug('         user create ', email)
   return await createUser({
     active: true,
     address: {

@@ -17,7 +17,7 @@ export const ensureAuthor = async (author: WordpressAuthor): Promise<Author> => 
 
   const existingAuthor = await getAuthorBySlug(author.slug)
   if (existingAuthor) {
-    console.log('  author exists', slug)
+    console.debug('  author exists', slug)
     return existingAuthor
   }
 
@@ -26,7 +26,7 @@ export const ensureAuthor = async (author: WordpressAuthor): Promise<Author> => 
     title: name
   })
 
-  console.log('  author create', slug)
+  console.debug('  author create', slug)
   return await createAuthor({
     name,
     slug,

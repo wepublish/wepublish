@@ -25,12 +25,12 @@ export async function migratePost(data: PreparedArticleData) {
 
   const existingArticle = await getArticleBySlug(slug)
   if (existingArticle) {
-    console.log('  article exists', slug)
+    console.debug('  article exists', slug)
     if (deleteBeforeMigrate) {
-      console.log('  article delete', slug)
+      console.debug('  article delete', slug)
       await deleteArticle(existingArticle.id)
     } else {
-      return
+      return existingArticle
     }
   }
 
@@ -59,7 +59,7 @@ export async function migratePost(data: PreparedArticleData) {
     if (specialEl) {
       // Img
       if ('img' === specialEl.tagName) {
-        console.error('img...')
+        console.error(`img tag, please check post ${data.id}`)
         blocks.push(...(await extractImageGallery(node)))
         continue
       }
@@ -107,6 +107,7 @@ export async function migratePost(data: PreparedArticleData) {
     // Use html to create RichText block or add it to the last block (if was RichText block)
     const slateContent = await convertNodeContentToRichText(node)
     const lastBlock = blocks[blocks.length - 1]
+    // console.dir({slateContent}, {depth: 4})
     if (lastBlock?.richText) {
       lastBlock?.richText.richText.push(...slateContent)
     } else {
