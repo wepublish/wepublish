@@ -7,7 +7,8 @@ import {
   useExtendSubscriptionMutation,
   useInvoicesQuery,
   usePaySubscriptionMutation,
-  useSubscriptionsQuery
+  useSubscriptionsQuery,
+  ExtendSubscriptionMutation
 } from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {produce} from 'immer'
@@ -47,8 +48,9 @@ export function SubscriptionListContainer({
   })
   const [cancel] = useCancelSubscriptionMutationWithCacheUpdate()
   const [extend] = useExtendSubscriptionMutation({
-    onCompleted(data) {
+    onCompleted(data: ExtendSubscriptionMutation) {
       if (!data.extendSubscription?.intentSecret) {
+        invoices.refetch()
         return
       }
 
