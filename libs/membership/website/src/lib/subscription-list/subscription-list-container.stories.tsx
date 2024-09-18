@@ -17,7 +17,7 @@ import {
   SubscriptionDeactivationReason,
   SubscriptionsDocument
 } from '@wepublish/website/api'
-import {WithCancelError, WithExtendError, WithPayError} from './subscription-list-item.stories'
+import {WithCancelError, WithExtendError} from './subscription-list-item.stories'
 import {waitFor, within} from '@storybook/testing-library'
 import {InvoiceListContainer} from '../invoice-list/invoice-list-container'
 
