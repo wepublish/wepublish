@@ -2,6 +2,8 @@ import {fetchPost, fetchPosts, WordpressPost} from './wordpress-api'
 import {migratePost} from './post'
 import {prepareArticleData, PreparedArticleData} from './prepare-data'
 import {mapLimit} from 'async'
+import chalk from 'chalk'
+import {logError} from './error-logger'
 
 async function prepareDataAndMigratePost(post: WordpressPost) {
   console.debug(`Migrating article ${post.slug}`)
@@ -10,8 +12,11 @@ async function prepareDataAndMigratePost(post: WordpressPost) {
   console.debug({title, slug, link})
   try {
     return await migratePost(data)
-  } catch (error) {
-    console.error(error)
+  } catch (error: any) {
+    console.error(chalk.bgRed.black(`Article postId: ${post.id} FAILED`))
+    await logError(post.id, `Article postId: ${post.id} FAILED`)
+    await logError(post.id, post.link)
+    await logError(post.id, error.stack ?? error.message)
     return
   }
 }
@@ -56,7 +61,11 @@ export const migratePosts = async (limit?: number, query?: Record<string, string
       postsMigrating++
       const result = await prepareDataAndMigratePost(post)
       if (result) {
-        console.log(`Migrated post id: ${post.id} (${++postsMigrated}/${totalCount})`)
+        console.log(
+          `Migrated post id: ${chalk.bgYellow(
+            post.id
+          )} (${++postsMigrated}/${totalCount}) ${chalk.bgGreen('DONE')}`
+        )
       }
     })
 
@@ -74,7 +83,11 @@ export const migratePostById = async (...ids: number[]) => {
     console.debug(`Migrating post id: ${id}`)
     const result = await prepareDataAndMigratePost(post)
     if (result) {
-      console.log(`Migrated article id: ${id} (${ids.indexOf(id) + 1}/${ids.length})`)
+      console.log(
+        `Migrated article id: ${chalk.bgYellow(id)} (${ids.indexOf(id) + 1}/${
+          ids.length
+        }) ${chalk.bgGreen('DONE')}`
+      )
     }
   })
 }
