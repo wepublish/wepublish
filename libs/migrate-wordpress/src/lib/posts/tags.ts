@@ -12,6 +12,8 @@ import {
   UpdateTagMutationVariables
 } from '../../api/private'
 import {PreparedArticleData} from './prepare-data'
+import {humanizeObject} from './utils'
+import {logError} from './error-logger'
 
 export type Tag = {
   id: string
@@ -34,8 +36,9 @@ const ensureTag = async ({name, main = false}: TagInput): Promise<Tag | undefine
     return existingTag
   }
   console.debug('  tag create', tag)
-  return createTag({tag, main}).catch(e => {
-    console.error(e)
+  return createTag({tag, main}).catch((e: any) => {
+    console.error(`Could not create tag: (${humanizeObject({tag, main})})`)
+    logError(`tag-${tag}`, e.stack || e.message)
     return undefined
   })
 }

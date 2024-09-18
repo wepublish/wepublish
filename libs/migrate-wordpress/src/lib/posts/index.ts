@@ -4,6 +4,7 @@ import {prepareArticleData, PreparedArticleData} from './prepare-data'
 import {mapLimit} from 'async'
 import chalk from 'chalk'
 import {logError} from './error-logger'
+import {humanizeObject} from './utils'
 
 async function prepareDataAndMigratePost(post: WordpressPost) {
   console.debug(`Migrating article ${post.slug}`)
@@ -14,18 +15,12 @@ async function prepareDataAndMigratePost(post: WordpressPost) {
     return await migratePost(data)
   } catch (error: any) {
     console.error(chalk.bgRed.black(`Article postId: ${post.id} FAILED`))
-    await logError(post.id, `Article postId: ${post.id} FAILED`)
-    await logError(post.id, post.link)
-    await logError(post.id, error.stack ?? error.message)
+    await logError(`article-${post.id}`, `Article postId: ${post.id} FAILED`)
+    await logError(`article-${post.id}`, post.link)
+    await logError(`article-${post.id}`, error.stack ?? error.message)
     return
   }
 }
-
-const humanizeObject = (obj: object) =>
-  Object.entries(obj)
-    .filter(([key, value]) => value)
-    .map(keyValue => keyValue.join(': '))
-    .join(',')
 
 export const migrateAllPosts = async (limit?: number) => {
   console.log(`Migrating general articles (${humanizeObject({limit})})`)
