@@ -1,5 +1,8 @@
-import {fetchAndParseKulturagenda, upcomingOnly} from './kulturagenda-parser'
+import {Test, TestingModule} from '@nestjs/testing'
+import {KulturagendaParser} from './kulturagenda-parser'
 import {XMLEventType} from './xmlTypes'
+import {HttpService} from '@nestjs/axios'
+import {of} from 'rxjs'
 
 const XMLEventMock: XMLEventType = {
   Title: ['Event 1'],
@@ -133,15 +136,6 @@ const mockedXMLData = {
   }
 }
 
-jest.mock('node-fetch', () => ({
-  __esModule: true,
-  default: jest.fn(() =>
-    Promise.resolve({
-      text: () => Promise.resolve(mockedXMLData)
-    })
-  )
-}))
-
 jest.mock('xml2js', () => ({
   Parser: jest.fn().mockImplementation(() => ({
     parseStringPromise: jest.fn(() => Promise.resolve(mockedXMLData))
@@ -149,11 +143,29 @@ jest.mock('xml2js', () => ({
 }))
 
 describe('fetchAndParseKulturagenda', () => {
+  let parser: KulturagendaParser
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        KulturagendaParser,
+        {
+          provide: HttpService,
+          useValue: {
+            get: () => of({data: mockedXMLData})
+          }
+        }
+      ]
+    }).compile()
+
+    parser = module.get<KulturagendaParser>(KulturagendaParser)
+  })
+
   it('should fetch XML data and parse upcoming events correctly', async () => {
     const url = 'https://example.com/events.xml'
     const source = 'Kulturagenda'
 
-    const events = await fetchAndParseKulturagenda(url, source)
+    const events = await parser.fetchAndParseKulturagenda(url, source)
 
     expect(events).toHaveLength(2)
 
@@ -186,7 +198,7 @@ describe('fetchAndParseKulturagenda', () => {
       ]
     }
 
-    const result = upcomingOnly(XMLEvent as XMLEventType)
+    const result = parser.upcomingOnly(XMLEvent as XMLEventType)
     expect(result).toBeUndefined()
   })
 })

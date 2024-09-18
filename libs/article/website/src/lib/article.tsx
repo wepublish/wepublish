@@ -1,7 +1,6 @@
 import {Chip, styled} from '@mui/material'
 import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Article as ArticleType, Block} from '@wepublish/website/api'
-import {Blocks} from '@wepublish/block-content/website'
 import {ArticleListWrapper} from './article-list/article-list'
 import {CommentListWrapper} from '@wepublish/comments/website'
 import {ContentWrapper} from '@wepublish/content/website'
@@ -36,7 +35,8 @@ export function Article({className, data, children, loading, error}: BuilderArti
     AuthorChip,
     ArticleSEO,
     ArticleDate,
-    elements: {Link}
+    elements: {Link},
+    blocks: {Blocks}
   } = useWebsiteBuilder()
 
   const article = data?.article

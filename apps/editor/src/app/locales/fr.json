@@ -331,7 +331,8 @@
         "link": "Lien",
         "remove": "Supprimer",
         "startWriting": "Commencez à écrire...",
-        "text": "Texte"
+        "text": "Texte",
+        "id": "ID"
       },
       "richTextTable": {
         "addBorders": "Ajouter des bordures",
@@ -534,7 +535,8 @@
       "noUrlErrorMessage": "Veuillez entrer une url",
       "noUserErrorMessage": "Veuillez sélectionner un·e utilisateur·trice",
       "passwordTooShortErrorMessage": "Le mot de passe doit comporter au moins 8 caractères.",
-      "required": "Ce champ est requis"
+      "required": "Ce champ est requis",
+      "invalidCountry": "Please select a valid country"
     },
     "event": {
       "create": {
@@ -969,6 +971,7 @@
       "closedAtNone": "Non fermé",
       "createNew": "Créer Sondage",
       "delete": "Supprimer",
+      "showVotes": "Afficher les votes",
       "hasBeenClosedAt": "Fermé le {{closedAt, ccc PP p}}",
       "noQuestion": "Aucune question saisie",
       "openedAt": "Débuté le {{openedAt, ccc PP p}}",
@@ -978,6 +981,13 @@
       "question": "Question",
       "state": "État",
       "title": "Sondages"
+    },
+    "pollVoteList": {
+      "createdAt": "Créé le",
+      "answerId": "Réponse",
+      "userId": "ID utilisateur",
+      "fingerprint": "Empreinte digitale",
+      "deleteItems": "Supprimer les éléments"
     },
     "pollStateIndication": {
       "closed": "Sondage fermé",
@@ -1278,6 +1288,9 @@
       "hideOnTeam": "Masquer sur la page de l'équipe",
       "hideOnArticle": "Masquer sur les articles",
       "hideOnTeaser": "Masquer sur les teasers"
+    },
+    "selectableItemsActions": {
+      "selectedItems": "{{numberOfItems}} éléments sélectionnés"
     }
   }
 }

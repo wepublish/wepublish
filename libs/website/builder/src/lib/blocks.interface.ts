@@ -35,6 +35,12 @@ export type BuilderBlockRendererProps = {
   count: number
   type: 'Page' | 'Article'
 }
+
+export type BuilderBlocksProps = {
+  blocks: Block[]
+  type: BuilderBlockRendererProps['type']
+}
+
 export type BuilderTitleBlockProps = TitleBlock & {className?: string}
 export type BuilderBreakBlockProps = LinkPageBreakBlock & {className?: string}
 export type BuilderImageBlockProps = ImageBlock & {className?: string}

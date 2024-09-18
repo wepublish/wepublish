@@ -355,7 +355,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanSendJWTLogin, roles)
 
         email = email.toLowerCase()
-        await Validator.login().parse({email})
+        await Validator.login.parse({email})
 
         const user = await prisma.user.findUnique({
           where: {email},
@@ -396,7 +396,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         {authenticate, prisma, generateJWT, mailContext, urlAdapter}
       ) {
         email = email.toLowerCase()
-        await Validator.login().parse({email})
+        await Validator.login.parse({email})
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
@@ -868,13 +868,18 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPaymentFromInvoice: {
       type: GraphQLPayment,
       args: {input: {type: new GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}},
-      resolve: (root, {input}, {authenticate, loaders, paymentProviders, prisma: {payment}}) =>
+      resolve: (
+        root,
+        {input},
+        {authenticate, loaders, paymentProviders, prisma: {payment, memberPlan}}
+      ) =>
         createPaymentFromInvoice(
           input,
           authenticate,
           paymentProviders,
           loaders.invoicesByID,
           loaders.paymentMethodsByID,
+          memberPlan,
           payment
         )
     },

@@ -325,7 +325,8 @@
         "link": "Link",
         "remove": "Remove",
         "startWriting": "Start writing ...",
-        "text": "Text"
+        "text": "Text",
+        "id": "ID"
       },
       "richTextTable": {
         "addBorders": "Add Borders",
@@ -529,7 +530,8 @@
       "noUrlErrorMessage": "Please enter a url",
       "noUserErrorMessage": "Please select a user",
       "passwordTooShortErrorMessage": "Password must be at least 8 characters long",
-      "required": "This field is required"
+      "required": "This field is required",
+      "invalidCountry": "Please select a valid country"
     },
     "event": {
       "create": {
@@ -685,6 +687,8 @@
     "memberPlanEdit": {
       "active": "Active",
       "activeDescription": "Makes the plan available",
+      "currency": "Currency",
+      "currencyRequired": "Currency required",
       "amountPerMonthMin": "Minimal amount / month",
       "amountPerMonthMinRequired": "Minimal amount required",
       "amountPerMonthMinZero": "Minimal amount cannot be less than 0",
@@ -1027,6 +1031,7 @@
       "closedAtNone": "Not closed",
       "createNew": "Create Poll",
       "delete": "Delete",
+      "showVotes": "Show votes",
       "hasBeenClosedAt": "Closed at {{closedAt, ccc PP p}}",
       "noQuestion": "No question captured",
       "openedAt": "Opened at {{openedAt, ccc PP p}}",
@@ -1036,6 +1041,13 @@
       "question": "Question",
       "state": "State",
       "title": "Polls"
+    },
+    "pollVoteList": {
+      "createdAt": "Created at",
+      "answerId": "Answer",
+      "userId": "User ID",
+      "fingerprint": "Fingerprint",
+      "deleteItems": "Delete items"
     },
     "pollStateIndication": {
       "closed": "Poll closed",
@@ -1421,6 +1433,9 @@
       "hideOnTeam": "Hide on team page",
       "hideOnArticle": "Hide on articles",
       "hideOnTeaser": "Hide on teasers"
+    },
+    "selectableItemsActions": {
+      "selectedItems": "Selected {{numberOfItems}} items"
     }
   }
 }

@@ -1,0 +1,2012 @@
+type Query {
+  remotePeerProfile(hostURL: String!, token: String!): PeerProfile
+  createJWTForUser(userId: String!, expiresInMinutes: Int!): JWTToken
+  peerProfile: PeerProfile!
+  peers: [Peer!]
+  peer(id: ID!): Peer
+  me: User
+  sessions: [Session!]!
+  authProviders(redirectUri: String): [AuthProvider!]!
+  user(id: ID): User
+  users(cursor: ID, take: Int = 10, skip: Int = 0, filter: UserFilter, sort: UserSort = modifiedAt, order: SortOrder = Descending): UserConnection!
+  subscription(id: ID!): Subscription
+  subscriptions(cursor: ID, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
+  subscriptionsAsCsv(filter: SubscriptionFilter): String
+  userRole(id: ID): UserRole
+  userRoles(cursor: ID, take: Int = 10, skip: Int = 0, filter: UserRoleFilter, sort: UserRoleSort = modifiedAt, order: SortOrder = Descending): UserRoleConnection!
+  permissions: [Permission!]
+  tokens: [Token!]!
+  navigation(id: ID, key: ID): Navigation
+  navigations: [Navigation!]!
+  author(id: ID, slug: Slug): Author
+  authors(cursor: ID, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = modifiedAt, order: SortOrder = Descending): AuthorConnection!
+  image(id: ID): Image
+  images(cursor: ID, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
+  comment(id: ID!): Comment
+  comments(cursor: ID, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
+  article(id: ID!): Article
+  articles(cursor: ID, take: Int = 10, skip: Int = 0, filter: ArticleFilter, sort: ArticleSort = modifiedAt, order: SortOrder = Descending): ArticleConnection!
+  peerArticle(peerID: ID!, id: ID!): Article
+  peerArticles(cursors: String, take: Int = 10, first: Int, skip: Int = 0, sort: ArticleSort = modifiedAt, order: SortOrder = Descending, peerFilter: String, filter: ArticleFilter): PeerArticleConnection!
+  articlePreviewLink(id: ID!, hours: Int!): String
+  page(id: ID): Page
+  pages(cursor: ID, take: Int = 10, skip: Int = 0, filter: PageFilter, sort: PageSort = modifiedAt, order: SortOrder = Descending): PageConnection!
+  pagePreviewLink(id: ID!, hours: Int!): String
+  memberPlan(id: ID, slug: Slug): MemberPlan
+  memberPlans(cursor: ID, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = modifiedAt, order: SortOrder = Descending): MemberPlanConnection!
+  paymentMethod(id: ID): PaymentMethod
+  paymentMethods: [PaymentMethod!]!
+  paymentProviders: [PaymentProvider!]!
+  invoice(id: ID): Invoice
+  invoices(cursor: ID, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
+  payment(id: ID): Payment
+  payments(cursor: ID, take: Int = 10, skip: Int = 0, filter: PaymentFilter, sort: PaymentSort = modifiedAt, order: SortOrder = Descending): PaymentConnection!
+  setting(name: String!): Setting
+  settings: [Setting!]!
+  ratingSystem: FullCommentRatingSystem!
+  tags(cursor: ID, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
+  polls(cursor: ID, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
+  poll(id: ID): FullPoll
+  events(cursor: ID, take: Int = 10, skip: Int = 0, filter: EventFilter, sort: EventSort = StartsAt, order: SortOrder = Descending): EventConnection
+  event(id: ID): Event
+
+  """This query returns a list of original ids of imported events"""
+  importedEventsIds: [String]
+  newSubscribersPerMonth(monthsBack: Int): [SubscribersPerMonth]
+  actions: [Action!]!
+}
+
+type PeerProfile {
+  name: String!
+  logo: Image
+  themeColor: Color!
+  themeFontColor: Color!
+  hostURL: String!
+  websiteURL: String!
+  callToActionText: RichText!
+  callToActionURL: String!
+  callToActionImageURL: String
+  callToActionImage: Image
+}
+
+type Image {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  filename: String
+  title: String
+  description: String
+  tags: [String!]!
+  link: String
+  source: String
+  license: String
+  fileSize: Int!
+  extension: String!
+  mimeType: String!
+  format: String!
+  width: Int!
+  height: Int!
+  focalPoint: FocalPoint
+  url: String
+  transformURL(input: ImageTransformation): String
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+type FocalPoint {
+  x: Float!
+  y: Float!
+}
+
+input ImageTransformation {
+  width: Int
+  height: Int
+  rotation: ImageRotation
+  quality: Float
+  output: ImageOutput
+}
+
+enum ImageRotation {
+  Auto
+  Rotate0
+  Rotate90
+  Rotate180
+  Rotate270
+}
+
+enum ImageOutput {
+  png
+  jpeg
+  webp
+}
+
+"""A hexidecimal color value."""
+scalar Color
+
+scalar RichText
+
+type JWTToken {
+  token: String!
+  expiresAt: String!
+}
+
+type Peer {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  name: String!
+  slug: String!
+  isDisabled: Boolean
+  hostURL: String!
+  profile: PeerProfile
+}
+
+type User {
+  id: String!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  name: String!
+  firstName: String
+  email: String!
+  emailVerifiedAt: DateTime
+  birthday: DateTime
+  preferredName: String
+  address: UserAddress
+  flair: String
+  userImage: Image
+  active: Boolean!
+  lastLogin: DateTime
+  properties: [Properties!]!
+  roles: [UserRole!]!
+  paymentProviderCustomers: [PaymentProviderCustomer!]!
+  oauth2Accounts: [OAuth2Account!]!
+  subscriptions: [UserSubscription!]!
+}
+
+type UserAddress {
+  company: String
+  streetAddress: String
+  streetAddress2: String
+  zipCode: String
+  city: String
+  country: String
+}
+
+type Properties {
+  key: String!
+  value: String!
+  public: Boolean!
+}
+
+type UserRole {
+  id: String!
+  name: String!
+  description: String
+  systemRole: Boolean!
+  permissions: [Permission!]!
+}
+
+type Permission {
+  id: String!
+  description: String!
+  deprecated: Boolean!
+}
+
+type PaymentProviderCustomer {
+  paymentProviderID: String!
+  customerID: String!
+}
+
+type OAuth2Account {
+  type: String!
+  provider: String!
+  scope: String!
+}
+
+type UserSubscription {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  paymentPeriodicity: PaymentPeriodicity!
+  monthlyAmount: Int!
+  autoRenew: Boolean!
+  startsAt: DateTime!
+  paidUntil: DateTime
+  properties: [Properties!]!
+  deactivation: SubscriptionDeactivation
+  periods: [SubscriptionPeriod!]!
+  memberPlan: MemberPlan!
+  invoices: [Invoice!]!
+}
+
+enum PaymentPeriodicity {
+  monthly
+  quarterly
+  biannual
+  yearly
+}
+
+type SubscriptionDeactivation {
+  date: DateTime!
+  reason: SubscriptionDeactivationReason!
+}
+
+enum SubscriptionDeactivationReason {
+  none
+  userSelfDeactivated
+  invoiceNotPaid
+}
+
+type SubscriptionPeriod {
+  id: ID!
+  invoiceID: ID!
+  amount: Int!
+  createdAt: DateTime!
+  startsAt: DateTime!
+  endsAt: DateTime!
+  paymentPeriodicity: PaymentPeriodicity!
+}
+
+type MemberPlan {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  name: String!
+  slug: String!
+  image: Image
+  description: RichText
+  tags: [String!]
+  active: Boolean!
+  amountPerMonthMin: Int!
+  currency: Currency!
+  maxCount: Int
+  extendable: Boolean!
+  availablePaymentMethods: [AvailablePaymentMethod!]!
+}
+
+enum Currency {
+  CHF
+  EUR
+}
+
+type AvailablePaymentMethod {
+  paymentMethods: [PaymentMethod!]!
+  paymentPeriodicities: [PaymentPeriodicity!]!
+  forceAutoRenewal: Boolean!
+}
+
+type PaymentMethod {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  name: String!
+  slug: Slug!
+  description: String!
+  paymentProvider: PaymentProvider
+  active: Boolean!
+  imageId: String
+  image: Image
+}
+
+scalar Slug
+
+type PaymentProvider {
+  id: ID!
+  name: String!
+}
+
+type Invoice {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  mail: String!
+  description: String
+  paidAt: DateTime
+  manuallySetAsPaidByUserId: ID
+  items: [InvoiceItem!]!
+  canceledAt: DateTime
+  total: Int!
+}
+
+type InvoiceItem {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  name: String!
+  description: String
+  quantity: Int!
+  amount: Int!
+  total: Int!
+}
+
+type Session {
+  id: ID!
+  user: User!
+  createdAt: DateTime!
+  expiresAt: DateTime!
+}
+
+type AuthProvider {
+  name: String!
+  url: String!
+}
+
+type UserConnection {
+  nodes: [User!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+input UserFilter {
+  name: String
+  text: String
+  userRole: [String]
+}
+
+enum UserSort {
+  createdAt
+  modifiedAt
+  name
+  firstName
+}
+
+enum SortOrder {
+  Ascending
+  Descending
+}
+
+type Subscription {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  user: User
+  memberPlan: MemberPlan!
+  paymentPeriodicity: PaymentPeriodicity!
+  monthlyAmount: Int!
+  autoRenew: Boolean!
+  extendable: Boolean!
+  startsAt: DateTime!
+  paidUntil: DateTime
+  paymentMethod: PaymentMethod!
+  properties: [Properties!]!
+  deactivation: SubscriptionDeactivation
+}
+
+type SubscriptionConnection {
+  nodes: [Subscription!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input SubscriptionFilter {
+  startsAt: DateFilter
+  paidUntil: DateFilter
+  startsAtFrom: DateFilter
+  startsAtTo: DateFilter
+  paidUntilFrom: DateFilter
+  paidUntilTo: DateFilter
+  deactivationDateFrom: DateFilter
+  deactivationDateTo: DateFilter
+  cancellationDateFrom: DateFilter
+  cancellationDateTo: DateFilter
+  deactivationReason: SubscriptionDeactivationReason
+  autoRenew: Boolean
+  paymentMethodID: String
+  memberPlanID: String
+  paymentPeriodicity: PaymentPeriodicity
+  userHasAddress: Boolean
+  userID: ID
+  extendable: Boolean
+}
+
+input DateFilter {
+  date: DateTime = null
+  comparison: DateFilterComparison!
+}
+
+enum DateFilterComparison {
+  gt
+  gte
+  eq
+  lt
+  lte
+}
+
+enum SubscriptionSort {
+  createdAt
+  modifiedAt
+}
+
+type UserRoleConnection {
+  nodes: [UserRole!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input UserRoleFilter {
+  name: String
+}
+
+enum UserRoleSort {
+  createdAt
+  modifiedAt
+}
+
+type Token {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+type Navigation {
+  id: ID!
+  key: String!
+  name: String!
+  links: [NavigationLink!]!
+}
+
+union NavigationLink = PageNavigationLink | ArticleNavigationLink | ExternalNavigationLink
+
+type PageNavigationLink implements BaseNavigationLink {
+  label: String!
+  page: Page
+}
+
+interface BaseNavigationLink {
+  label: String!
+}
+
+type Page {
+  id: ID!
+  shared: Boolean!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  draft: PageRevision
+  published: PageRevision
+  pending: PageRevision
+  latest: PageRevision!
+  tags: [Tag!]!
+}
+
+type PageRevision {
+  revision: Int!
+  createdAt: DateTime!
+  publishAt: DateTime
+  updatedAt: DateTime
+  publishedAt: DateTime
+  slug: Slug
+  title: String
+  description: String
+  tags: [String!]! @deprecated(reason: "Tags now live on the Page itself")
+  properties: [Properties!]!
+  url: String!
+  image: Image
+  socialMediaTitle: String
+  socialMediaDescription: String
+  socialMediaImage: Image
+  blocks: [Block!]!
+}
+
+union Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HTMLBlock | PollBlock | EventBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock
+
+type RichTextBlock {
+  blockStyle: String
+  richText: RichText!
+}
+
+type ImageBlock {
+  blockStyle: String
+  image: Image
+  caption: String
+  linkUrl: String
+}
+
+type ImageGalleryBlock {
+  blockStyle: String
+  images: [GalleryImageEdge!]!
+}
+
+type GalleryImageEdge {
+  caption: String
+  image: Image
+}
+
+type ListicleBlock {
+  blockStyle: String
+  items: [ListicleItem!]!
+}
+
+type ListicleItem {
+  title: String!
+  image: Image
+  richText: RichText!
+}
+
+type FacebookPostBlock {
+  blockStyle: String
+  userID: String!
+  postID: String!
+}
+
+type FacebookVideoBlock {
+  blockStyle: String
+  userID: String!
+  videoID: String!
+}
+
+type InstagramPostBlock {
+  blockStyle: String
+  postID: String!
+}
+
+type TwitterTweetBlock {
+  blockStyle: String
+  userID: String!
+  tweetID: String!
+}
+
+type VimeoVideoBlock {
+  blockStyle: String
+  videoID: String!
+}
+
+type YouTubeVideoBlock {
+  blockStyle: String
+  videoID: String!
+}
+
+type SoundCloudTrackBlock {
+  blockStyle: String
+  trackID: String!
+}
+
+type PolisConversationBlock {
+  blockStyle: String
+  conversationID: String!
+}
+
+type TikTokVideoBlock {
+  blockStyle: String
+  videoID: String!
+  userID: String!
+}
+
+type BildwurfAdBlock {
+  blockStyle: String
+  zoneID: String!
+}
+
+type EmbedBlock {
+  blockStyle: String
+  url: String
+  title: String
+  width: Int
+  height: Int
+  styleCustom: String
+  sandbox: String
+}
+
+type HTMLBlock {
+  blockStyle: String
+  html: String
+}
+
+type PollBlock {
+  blockStyle: String
+  poll: FullPoll
+}
+
+type FullPoll {
+  id: ID!
+  question: String
+  opensAt: DateTime!
+  closedAt: DateTime
+  infoText: RichText
+  answers: [PollAnswerWithVoteCount!]!
+  externalVoteSources: [PollExternalVoteSource!]!
+}
+
+type PollAnswerWithVoteCount {
+  id: ID!
+  pollId: ID!
+  answer: String
+  votes: Int!
+}
+
+type PollExternalVoteSource {
+  id: ID!
+  source: String
+  voteAmounts: [PollExternalVote!]!
+}
+
+type PollExternalVote {
+  id: ID!
+  answerId: ID!
+  amount: VoteValue!
+}
+
+"""A valid vote value"""
+scalar VoteValue
+
+type EventBlock {
+  blockStyle: String
+  filter: EventBlockFilter!
+  events: [Event!]!
+}
+
+type EventBlockFilter {
+  tags: [ID!]
+  events: [ID!]
+}
+
+type Event {
+  id: ID!
+  name: String!
+  lead: String
+  status: EventStatus!
+  description: RichText
+  location: String
+  startsAt: DateTime!
+  endsAt: DateTime
+  externalSourceId: String
+  externalSourceName: String
+  tags: [Tag!]!
+  image: Image
+  url: String!
+}
+
+enum EventStatus {
+  Cancelled
+  Rescheduled
+  Postponed
+  Scheduled
+}
+
+type Tag {
+  id: ID!
+  tag: String
+  type: TagType
+  main: Boolean!
+  url: String!
+}
+
+enum TagType {
+  Comment
+  Event
+  Author
+  Article
+  Page
+}
+
+type CommentBlock {
+  blockStyle: String
+  filter: CommentBlockFilter!
+  comments: [Comment!]!
+}
+
+type CommentBlockFilter {
+  item: ID
+  tags: [ID!]
+  comments: [ID!]
+}
+
+type Comment {
+  id: ID!
+  guestUsername: String
+  guestUserImage: Image
+  user: User
+  tags: [Tag!]!
+  authorType: CommentAuthorType!
+  itemID: ID!
+  itemType: CommentItemType!
+  peerId: ID
+  parentComment: Comment
+  revisions: [CommentRevision!]!
+  source: String
+  state: CommentState!
+  rejectionReason: CommentRejectionReason
+  featured: Boolean
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  overriddenRatings: [overriddenRating!]
+}
+
+enum CommentAuthorType {
+  author
+  team
+  verifiedUser
+  guestUser
+}
+
+enum CommentItemType {
+  article
+  peerArticle
+  page
+}
+
+type CommentRevision {
+  text: RichText
+  title: String
+  lead: String
+  createdAt: DateTime!
+}
+
+enum CommentState {
+  approved
+  pendingApproval
+  pendingUserChanges
+  rejected
+}
+
+enum CommentRejectionReason {
+  misconduct
+  spam
+}
+
+type overriddenRating {
+  answerId: ID!
+  value: Int
+}
+
+type LinkPageBreakBlock {
+  blockStyle: String
+  text: String
+  richText: RichText!
+  linkURL: String
+  linkText: String
+  linkTarget: String
+  hideButton: Boolean!
+  styleOption: String @deprecated(reason: "Use block styles instead of this")
+  layoutOption: String @deprecated(reason: "Use block styles instead of this")
+  templateOption: String @deprecated(reason: "Use block styles instead of this")
+  image: Image
+}
+
+type TitleBlock {
+  blockStyle: String
+  title: String
+  lead: String
+}
+
+type QuoteBlock {
+  blockStyle: String
+  quote: String
+  author: String
+  image: Image
+}
+
+type TeaserGridBlock {
+  blockStyle: String
+  teasers: [Teaser]!
+  numColumns: Int!
+}
+
+union Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
+
+type ArticleTeaser {
+  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
+  image: Image
+  preTitle: String
+  title: String
+  lead: String
+  article: Article
+}
+
+enum TeaserStyle {
+  default
+  light
+  text
+}
+
+type Article {
+  id: ID!
+  shared: Boolean!
+  hidden: Boolean
+  disableComments: Boolean
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  draft: ArticleRevision
+  published: ArticleRevision
+  pending: ArticleRevision
+  latest: ArticleRevision!
+  tags: [Tag!]!
+}
+
+type ArticleRevision {
+  revision: Int!
+  createdAt: DateTime!
+  publishAt: DateTime
+  updatedAt: DateTime
+  publishedAt: DateTime
+  hideAuthor: Boolean!
+  preTitle: String
+  title: String
+  lead: String
+  seoTitle: String
+  slug: String
+  tags: [String!]! @deprecated(reason: "Tags now live on the Article itself")
+  properties: [Properties!]!
+  canonicalUrl: String
+  url: String!
+  image: Image
+  authors: [Author!]!
+  breaking: Boolean!
+  socialMediaTitle: String
+  socialMediaDescription: String
+  socialMediaAuthors: [Author!]!
+  socialMediaImage: Image
+  blocks: [Block!]!
+}
+
+type Author {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  name: String!
+  slug: Slug!
+  url: String!
+  links: [AuthorLink!]
+  bio: RichText
+  jobTitle: String
+  image: Image
+  tags: [Tag!]!
+  hideOnArticle: Boolean
+  hideOnTeaser: Boolean
+  hideOnTeam: Boolean
+}
+
+type AuthorLink {
+  title: String!
+  url: String!
+}
+
+type PeerArticleTeaser {
+  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
+  image: Image
+  preTitle: String
+  title: String
+  lead: String
+  peer: Peer
+  articleID: ID!
+  article: Article
+}
+
+type PageTeaser {
+  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
+  image: Image
+  preTitle: String
+  title: String
+  lead: String
+  page: Page
+}
+
+type CustomTeaser {
+  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
+  image: Image
+  preTitle: String
+  title: String
+  lead: String
+  contentUrl: String
+  properties: [Properties!]
+}
+
+type EventTeaser {
+  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
+  image: Image
+  preTitle: String
+  title: String
+  lead: String
+  event: Event
+}
+
+type TeaserGridFlexBlock {
+  blockStyle: String
+  flexTeasers: [FlexTeaser]!
+}
+
+type FlexTeaser {
+  alignment: FlexAlignment!
+  teaser: Teaser
+}
+
+type FlexAlignment {
+  i: String!
+  x: Int!
+  y: Int!
+  w: Int!
+  h: Int!
+  static: Boolean!
+}
+
+type TeaserListBlock {
+  title: String
+  blockStyle: String
+  teaserType: TeaserType
+  filter: TeaserListBlockFilter!
+  take: Int
+  skip: Int
+  teasers: [Teaser]!
+}
+
+enum TeaserType {
+  article
+  peerArticle
+  event
+  page
+  custom
+}
+
+type TeaserListBlockFilter {
+  tags: [ID!]
+  tagObjects: [Tag!]!
+}
+
+type ArticleNavigationLink implements BaseNavigationLink {
+  label: String!
+  article: Article
+}
+
+type ExternalNavigationLink implements BaseNavigationLink {
+  label: String!
+  url: String!
+}
+
+type AuthorConnection {
+  nodes: [Author!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input AuthorFilter {
+  name: String
+  tagIds: [ID!]
+  hideOnTeam: Boolean
+}
+
+enum AuthorSort {
+  createdAt
+  modifiedAt
+  NAME
+}
+
+type ImageConnection {
+  nodes: [Image!]!
+  totalCount: Int!
+  pageInfo: PageInfo!
+}
+
+input ImageFilter {
+  title: String
+  tags: [String!]
+}
+
+enum ImageSort {
+  createdAt
+  modifiedAt
+}
+
+type CommentConnection {
+  nodes: [Comment!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input CommentFilter {
+  item: ID
+  tags: [ID!]
+  states: [CommentState!]
+  itemType: CommentItemType
+  itemID: ID
+}
+
+enum CommentSort {
+  modifiedAt
+  createdAt
+}
+
+type ArticleConnection {
+  nodes: [Article!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input ArticleFilter {
+  title: String
+  preTitle: String
+  lead: String
+  publicationDateFrom: DateFilter
+  publicationDateTo: DateFilter
+  draft: Boolean
+  published: Boolean
+  pending: Boolean
+  authors: [ID!]
+  tags: [String!]
+  includeHidden: Boolean
+  shared: Boolean
+}
+
+enum ArticleSort {
+  createdAt
+  modifiedAt
+  publishAt
+  publishedAt
+  updatedAt
+}
+
+type PeerArticleConnection {
+  nodes: [PeerArticle!]!
+  pageInfo: UnidirectionalPageInfo!
+  totalCount: Int!
+}
+
+type PeerArticle {
+  peer: Peer!
+  peeredArticleURL: String!
+  article: Article!
+}
+
+type UnidirectionalPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+}
+
+type PageConnection {
+  nodes: [Page!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input PageFilter {
+  title: String
+  draft: Boolean
+  description: String
+  publicationDateFrom: DateFilter
+  publicationDateTo: DateFilter
+  published: Boolean
+  pending: Boolean
+  tags: [String!]
+}
+
+enum PageSort {
+  createdAt
+  modifiedAt
+  publishAt
+  publishedAt
+  updatedAt
+}
+
+type MemberPlanConnection {
+  nodes: [MemberPlan!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input MemberPlanFilter {
+  name: String
+  active: Boolean
+  tags: [String!]
+}
+
+enum MemberPlanSort {
+  createdAt
+  modifiedAt
+}
+
+type InvoiceConnection {
+  nodes: [Invoice!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input InvoiceFilter {
+  mail: String
+  paidAt: Date
+  canceledAt: Date
+  userID: ID
+  subscriptionID: ID
+}
+
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
+
+enum InvoiceSort {
+  createdAt
+  modifiedAt
+  paidAt
+}
+
+type Payment {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  intentID: String
+  intentSecret: String
+  state: PaymentState!
+  invoice: Invoice!
+  intentData: String
+  paymentMethod: PaymentMethod!
+  paymentData: String
+}
+
+enum PaymentState {
+  created
+  submitted
+  requiresUserAction
+  processing
+  paid
+  canceled
+  declined
+}
+
+type PaymentConnection {
+  nodes: [Payment!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input PaymentFilter {
+  intentID: String
+}
+
+enum PaymentSort {
+  createdAt
+  modifiedAt
+}
+
+type Setting {
+  id: ID!
+  name: SettingName!
+  value: GraphQLSettingValueType!
+  settingRestriction: SettingRestriction
+}
+
+enum SettingName {
+  allowGuestCommenting
+  allowGuestCommentRating
+  allowGuestPollVoting
+  sendLoginJwtExpiresMin
+  resetPasswordJwtExpiresMin
+  peeringTimeoutInMs
+  makeActiveSubscribersApiPublic
+  makeNewSubscribersApiPublic
+  makeRenewingSubscribersApiPublic
+  makeNewDeactivationsApiPublic
+  makeExpectedRevenueApiPublic
+  makeRevenueApiPublic
+  commentCharLimit
+  allowCommentEditing
+  headScript
+  bodyScript
+}
+
+scalar GraphQLSettingValueType
+
+type SettingRestriction {
+  maxValue: Int
+  minValue: Int
+  inputLength: Int
+  allowedValues: AllowedSettingVals
+}
+
+type AllowedSettingVals {
+  stringChoice: [String]
+  boolChoice: Boolean
+}
+
+type FullCommentRatingSystem {
+  id: ID!
+  name: String
+  answers: [CommentRatingSystemAnswer!]!
+}
+
+type CommentRatingSystemAnswer {
+  id: ID!
+  ratingSystemId: ID!
+  answer: String
+  type: RatingSystemType!
+}
+
+enum RatingSystemType {
+  star
+}
+
+type TagConnection {
+  nodes: [Tag!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input TagFilter {
+  type: TagType
+  tag: String
+}
+
+enum TagSort {
+  CreatedAt
+  ModifiedAt
+  Tag
+}
+
+type PollConnection {
+  nodes: [Poll!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type Poll {
+  id: ID!
+  question: String
+  opensAt: DateTime!
+  closedAt: DateTime
+}
+
+input PollFilter {
+  openOnly: Boolean
+}
+
+enum PollSort {
+  OpensAt
+  CreatedAt
+  ModifiedAt
+}
+
+type EventConnection {
+  nodes: [Event!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input EventFilter {
+  upcomingOnly: Boolean
+  from: DateTime
+  to: DateTime
+  tags: [ID!]
+  name: String
+  location: String
+}
+
+enum EventSort {
+  StartsAt
+  EndsAt
+  CreatedAt
+  ModifiedAt
+}
+
+type SubscribersPerMonth {
+  month: String!
+  subscriberCount: Int!
+}
+
+union Action = ArticleCreatedAction | PageCreatedAction | CommentCreatedAction | PollStartedAction | SubscriptionCreatedAction | AuthorCreatedAction | UserCreatedAction | EventCreatedAction
+
+type ArticleCreatedAction {
+  date: DateTime!
+  article: Article!
+}
+
+type PageCreatedAction {
+  date: DateTime!
+  page: Page!
+}
+
+type CommentCreatedAction {
+  date: DateTime!
+  comment: Comment!
+}
+
+type PollStartedAction {
+  date: DateTime!
+  poll: Poll!
+}
+
+type SubscriptionCreatedAction {
+  date: DateTime!
+  subscription: Subscription!
+}
+
+type AuthorCreatedAction {
+  date: DateTime!
+  author: Author!
+}
+
+type UserCreatedAction {
+  date: DateTime!
+  user: User!
+}
+
+type EventCreatedAction {
+  date: DateTime!
+  event: Event!
+}
+
+type Mutation {
+  updatePeerProfile(input: PeerProfileInput!): PeerProfile!
+  createPeer(input: CreatePeerInput!): Peer!
+  updatePeer(id: ID!, input: UpdatePeerInput!): Peer!
+  deletePeer(id: ID!): Peer
+  createSession(email: String!, password: String!): SessionWithToken!
+  createSessionWithJWT(jwt: String!): SessionWithToken!
+  createSessionWithOAuth2Code(name: String!, code: String!, redirectUri: String!): SessionWithToken!
+  revokeSession(id: ID!): Boolean!
+  revokeActiveSession: Boolean!
+  sessions: [Session!]!
+  sendJWTLogin(url: String!, email: String!): String!
+  sendWebsiteLogin(email: String!): String!
+  createToken(input: TokenInput!): CreatedToken!
+  deleteToken(id: ID!): CreatedToken
+  createUser(input: UserInput!, password: String!): User
+  updateUser(id: ID!, input: UserInput!): User
+  resetUserPassword(id: ID!, password: String!, sendMail: Boolean): User
+  deleteUser(id: ID!): User
+  createSubscription(input: SubscriptionInput!): Subscription
+  renewSubscription(id: ID!): Invoice
+  updateSubscription(id: ID!, input: SubscriptionInput!): Subscription
+  deleteSubscription(id: ID!): Subscription
+  cancelSubscription(id: ID!, reason: SubscriptionDeactivationReason!): Subscription
+  createUserRole(input: UserRoleInput!): UserRole
+  updateUserRole(id: ID!, input: UserRoleInput!): UserRole
+  deleteUserRole(id: ID!): UserRole
+  createNavigation(input: NavigationInput!): Navigation
+  updateNavigation(id: ID!, input: NavigationInput!): Navigation
+  deleteNavigation(id: ID!): Navigation
+  createAuthor(input: AuthorInput!): Author
+  updateAuthor(id: ID!, input: AuthorInput!): Author
+  deleteAuthor(id: ID!): Author
+  uploadImage(input: UploadImageInput!): Image
+  updateImage(id: ID!, input: UpdateImageInput!): Image
+  deleteImage(id: ID!): Image
+  createArticle(input: ArticleInput!): Article!
+  updateArticle(id: ID!, input: ArticleInput!): Article
+  deleteArticle(id: ID!): Article
+  publishArticle(id: ID!, publishAt: DateTime, updatedAt: DateTime, publishedAt: DateTime): Article
+  unpublishArticle(id: ID!): Article
+  duplicateArticle(id: ID!): Article!
+  createPage(input: PageInput!): Page!
+  updatePage(id: ID!, input: PageInput!): Page
+  deletePage(id: ID!): Page
+  publishPage(id: ID!, publishAt: DateTime, updatedAt: DateTime, publishedAt: DateTime): Page
+  unpublishPage(id: ID!): Page
+  duplicatePage(id: ID!): Page!
+  createMemberPlan(input: MemberPlanInput!): MemberPlan
+  updateMemberPlan(id: ID!, input: MemberPlanInput!): MemberPlan
+  deleteMemberPlan(id: ID!): MemberPlan
+  createPaymentMethod(input: PaymentMethodInput!): PaymentMethod
+  updatePaymentMethod(id: ID!, input: PaymentMethodInput!): PaymentMethod
+  deletePaymentMethod(id: ID!): PaymentMethod
+  createInvoice(input: InvoiceInput!): Invoice
+  createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
+  updateInvoice(id: ID!, input: InvoiceInput!): Invoice
+  deleteInvoice(id: ID!): Invoice
+  markInvoiceAsPaid(id: ID!): Invoice
+  updateComment(id: ID!, revision: CommentRevisionUpdateInput, userID: ID, guestUsername: String, guestUserImageID: ID, featured: Boolean, source: String, tagIds: [ID!], ratingOverrides: [CommentRatingOverrideUpdateInput!]): Comment!
+  createComment(text: RichText, tagIds: [ID!], itemID: ID!, parentID: ID, itemType: CommentItemType!): Comment!
+  approveComment(id: ID!): Comment!
+  rejectComment(id: ID!, rejectionReason: CommentRejectionReason): Comment!
+  requestChangesOnComment(id: ID!, rejectionReason: CommentRejectionReason!): Comment!
+  deleteComment(id: ID!): Comment!
+  updateSettingList(value: [UpdateSettingArgs]): [Setting]
+  createRatingSystemAnswer(ratingSystemId: ID!, type: RatingSystemType = star, answer: String): CommentRatingSystemAnswer!
+  updateRatingSystem(ratingSystemId: ID!, name: String, answers: [UpdateCommentRatingSystemAnswer!]): FullCommentRatingSystem!
+  deleteRatingSystemAnswer(id: ID!): CommentRatingSystemAnswer!
+  createPoll(opensAt: DateTime, closedAt: DateTime, question: String): PollWithAnswers
+  createPollAnswer(pollId: ID!, answer: String): PollAnswer
+  createPollExternalVoteSource(pollId: ID!, source: String): PollExternalVoteSource
+  updatePoll(pollId: ID!, opensAt: DateTime, closedAt: DateTime, question: String, infoText: RichText, answers: [UpdatePollAnswer!], externalVoteSources: [UpdatePollExternalVoteSources!]): FullPoll
+  deletePoll(id: ID!): FullPoll
+  deletePollAnswer(id: ID!): PollAnswerWithVoteCount
+  deletePollExternalVoteSource(id: ID!): PollExternalVoteSource
+  createTag(tag: String, type: TagType!, main: Boolean): Tag
+  updateTag(id: ID!, tag: String, main: Boolean): Tag
+  deleteTag(id: ID!): Tag
+  createEvent(name: String!, lead: String, description: RichText, location: String, startsAt: DateTime!, endsAt: DateTime, imageId: ID, externalSourceId: String, externalSourceName: String, tagIds: [ID!]): Event
+  updateEvent(id: ID!, name: String, lead: String, description: RichText, status: EventStatus, location: String, startsAt: DateTime, endsAt: DateTime, imageId: ID, externalSourceId: String, externalSourceName: String, tagIds: [ID!]): Event
+  deleteEvent(id: ID!): Event
+}
+
+input PeerProfileInput {
+  name: String!
+  logoID: ID
+  themeColor: Color!
+  themeFontColor: Color!
+  callToActionText: RichText!
+  callToActionURL: String!
+  callToActionImageURL: String
+  callToActionImageID: ID
+}
+
+input CreatePeerInput {
+  name: String!
+  slug: String!
+  hostURL: String!
+  token: String!
+}
+
+input UpdatePeerInput {
+  name: String
+  slug: String
+  hostURL: String
+  isDisabled: Boolean
+  token: String
+}
+
+type SessionWithToken {
+  id: ID!
+  user: User!
+  token: String!
+  createdAt: DateTime!
+  expiresAt: DateTime!
+}
+
+type CreatedToken {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  name: String!
+  token: String!
+}
+
+input TokenInput {
+  name: String!
+}
+
+input UserInput {
+  name: String!
+  firstName: String
+  email: String!
+  emailVerifiedAt: DateTime
+  birthday: DateTime
+  preferredName: String
+  address: UserAddressInput
+  flair: String
+  userImageID: ID
+  active: Boolean!
+  properties: [PropertiesInput!]!
+  roleIDs: [String!]
+}
+
+input UserAddressInput {
+  company: String
+  streetAddress: String
+  streetAddress2: String
+  zipCode: String
+  city: String
+  country: String
+}
+
+input PropertiesInput {
+  key: String!
+  value: String!
+  public: Boolean!
+}
+
+input SubscriptionInput {
+  userID: ID!
+  memberPlanID: String!
+  paymentPeriodicity: PaymentPeriodicity!
+  monthlyAmount: Int!
+  autoRenew: Boolean!
+  startsAt: DateTime!
+  paidUntil: DateTime
+  paymentMethodID: String!
+  extendable: Boolean!
+  properties: [PropertiesInput!]!
+  deactivation: SubscriptionDeactivationInput
+}
+
+input SubscriptionDeactivationInput {
+  date: DateTime!
+  reason: SubscriptionDeactivationReason!
+}
+
+input UserRoleInput {
+  name: String!
+  description: String!
+  permissionIDs: [String!]
+}
+
+input NavigationInput {
+  key: String!
+  name: String!
+  links: [NavigationLinkInput!]!
+}
+
+input NavigationLinkInput {
+  page: PageNavigationLinkInput
+  article: ArticleNavigationLinkInput
+  external: ExternalNavigationLinkInput
+}
+
+input PageNavigationLinkInput {
+  label: String!
+  pageID: ID!
+}
+
+input ArticleNavigationLinkInput {
+  label: String!
+  articleID: ID!
+}
+
+input ExternalNavigationLinkInput {
+  label: String!
+  url: String!
+}
+
+input AuthorInput {
+  name: String!
+  slug: Slug!
+  links: [AuthorLinkInput!]
+  bio: RichText
+  jobTitle: String
+  imageID: ID
+  tagIds: [ID!]
+  hideOnArticle: Boolean
+  hideOnTeaser: Boolean
+  hideOnTeam: Boolean
+}
+
+input AuthorLinkInput {
+  title: String!
+  url: String!
+}
+
+input UploadImageInput {
+  file: Upload!
+  filename: String
+  title: String
+  description: String
+  tags: [String!]
+  link: String
+  source: String
+  license: String
+  focalPoint: InputPoint
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input InputPoint {
+  x: Float!
+  y: Float!
+}
+
+input UpdateImageInput {
+  filename: String
+  title: String
+  description: String
+  tags: [String!]
+  link: String
+  source: String
+  license: String
+  focalPoint: InputPoint
+}
+
+input ArticleInput {
+  slug: Slug
+  preTitle: String
+  title: String!
+  lead: String
+  seoTitle: String
+  tags: [String!]!
+  properties: [PropertiesInput!]!
+  canonicalUrl: String
+  imageID: ID
+  authorIDs: [ID!]!
+  shared: Boolean!
+  hidden: Boolean
+  disableComments: Boolean
+  breaking: Boolean!
+  hideAuthor: Boolean!
+  socialMediaTitle: String
+  socialMediaDescription: String
+  socialMediaAuthorIDs: [ID!]!
+  socialMediaImageID: ID
+  blocks: [BlockInput!]!
+}
+
+input BlockInput {
+  richText: RichTextBlockInput
+  image: ImageBlockInput
+  imageGallery: ImageGalleryBlockInput
+  listicle: ListicleBlockInput
+  title: TitleBlockInput
+  quote: QuoteBlockInput
+  facebookPost: FacebookPostBlockInput
+  facebookVideo: FacebookVideoBlockInput
+  instagramPost: InstagramPostBlockInput
+  twitterTweet: TwitterTweetBlockInput
+  vimeoVideo: VimeoVideoBlockInput
+  youTubeVideo: YouTubeVideoBlockInput
+  soundCloudTrack: SoundCloudTrackBlockInput
+  polisConversation: PolisConversationBlockInput
+  tikTokVideo: TikTokVideoBlockInput
+  bildwurfAd: BildwurfAdBlockInput
+  embed: EmbedBlockInput
+  html: HTMLBlockInput
+  poll: PollBlockInput
+  event: EventBlockInput
+  comment: CommentBlockInput
+  linkPageBreak: LinkPageBreakBlockInput
+  teaserGrid: TeaserGridBlockInput
+  teaserGridFlex: TeaserGridFlexBlockInput
+  teaserList: TeaserListBlockInput
+}
+
+input RichTextBlockInput {
+  blockStyle: String
+  richText: RichText!
+}
+
+input ImageBlockInput {
+  blockStyle: String
+  caption: String
+  linkUrl: String
+  imageID: ID
+}
+
+input ImageGalleryBlockInput {
+  blockStyle: String
+  images: [GalleryImageEdgeInput]
+}
+
+input GalleryImageEdgeInput {
+  caption: String
+  imageID: ID
+}
+
+input ListicleBlockInput {
+  blockStyle: String
+  items: [ListicleItemInput]
+}
+
+input ListicleItemInput {
+  title: String!
+  imageID: ID
+  richText: RichText!
+}
+
+input TitleBlockInput {
+  blockStyle: String
+  title: String
+  lead: String
+}
+
+input QuoteBlockInput {
+  blockStyle: String
+  quote: String
+  author: String
+  imageID: ID
+}
+
+input FacebookPostBlockInput {
+  blockStyle: String
+  userID: String!
+  postID: String!
+}
+
+input FacebookVideoBlockInput {
+  blockStyle: String
+  userID: String!
+  videoID: String!
+}
+
+input InstagramPostBlockInput {
+  blockStyle: String
+  postID: String!
+}
+
+input TwitterTweetBlockInput {
+  blockStyle: String
+  userID: String!
+  tweetID: String!
+}
+
+input VimeoVideoBlockInput {
+  blockStyle: String
+  videoID: String!
+}
+
+input YouTubeVideoBlockInput {
+  blockStyle: String
+  videoID: String!
+}
+
+input SoundCloudTrackBlockInput {
+  blockStyle: String
+  trackID: String!
+}
+
+input PolisConversationBlockInput {
+  blockStyle: String
+  conversationID: String!
+}
+
+input TikTokVideoBlockInput {
+  blockStyle: String
+  videoID: String!
+  userID: String!
+}
+
+input BildwurfAdBlockInput {
+  blockStyle: String
+  zoneID: String!
+}
+
+input EmbedBlockInput {
+  blockStyle: String
+  url: String
+  title: String
+  width: Int
+  height: Int
+  styleCustom: String
+  sandbox: String
+}
+
+input HTMLBlockInput {
+  blockStyle: String
+  html: String
+}
+
+input PollBlockInput {
+  blockStyle: String
+  pollId: ID
+}
+
+input EventBlockInput {
+  blockStyle: String
+  filter: EventBlockInputFilter!
+}
+
+input EventBlockInputFilter {
+  tags: [ID!]
+  events: [ID!]
+}
+
+input CommentBlockInput {
+  blockStyle: String
+  filter: CommentBlockInputFilter!
+}
+
+input CommentBlockInputFilter {
+  item: ID
+  tags: [ID!]
+  comments: [ID!]
+}
+
+input LinkPageBreakBlockInput {
+  blockStyle: String
+  text: String
+  richText: RichText!
+  linkURL: String
+  linkText: String
+  linkTarget: String
+  hideButton: Boolean!
+  styleOption: String
+  templateOption: String
+  layoutOption: String
+  imageID: ID
+}
+
+input TeaserGridBlockInput {
+  blockStyle: String
+  teasers: [TeaserInput]!
+  numColumns: Int!
+}
+
+input TeaserInput {
+  article: ArticleTeaserInput
+  peerArticle: PeerArticleTeaserInput
+  page: PageTeaserInput
+  event: EventTeaserInput
+  custom: CustomTeaserInput
+}
+
+input ArticleTeaserInput {
+  style: TeaserStyle
+  imageID: ID
+  preTitle: String
+  title: String
+  lead: String
+  articleID: ID!
+}
+
+input PeerArticleTeaserInput {
+  style: TeaserStyle
+  imageID: ID
+  preTitle: String
+  title: String
+  lead: String
+  peerID: ID!
+  articleID: ID!
+}
+
+input PageTeaserInput {
+  style: TeaserStyle
+  imageID: ID
+  preTitle: String
+  title: String
+  lead: String
+  pageID: ID!
+}
+
+input EventTeaserInput {
+  style: TeaserStyle
+  imageID: ID
+  preTitle: String
+  title: String
+  lead: String
+  eventID: ID!
+}
+
+input CustomTeaserInput {
+  style: TeaserStyle
+  imageID: ID
+  preTitle: String
+  title: String
+  lead: String
+  contentUrl: String
+  properties: [PropertiesInput!]!
+}
+
+input TeaserGridFlexBlockInput {
+  blockStyle: String
+  flexTeasers: [FlexTeaserInput!]!
+}
+
+input FlexTeaserInput {
+  blockStyle: String
+  teaser: TeaserInput
+  alignment: FlexAlignmentInput!
+}
+
+input FlexAlignmentInput {
+  i: String!
+  x: Int!
+  y: Int!
+  w: Int!
+  h: Int!
+  static: Boolean!
+}
+
+input TeaserListBlockInput {
+  title: String
+  blockStyle: String
+  teaserType: TeaserType
+  filter: TeaserListBlockFilterInput!
+  take: Int
+  skip: Int
+}
+
+input TeaserListBlockFilterInput {
+  tags: [ID!]
+}
+
+input PageInput {
+  slug: Slug!
+  title: String!
+  description: String
+  tags: [String!]!
+  properties: [PropertiesInput!]!
+  imageID: ID
+  socialMediaTitle: String
+  socialMediaDescription: String
+  socialMediaImageID: ID
+  blocks: [BlockInput!]!
+}
+
+input MemberPlanInput {
+  name: String!
+  slug: String!
+  imageID: ID
+  description: RichText
+  tags: [String!]
+  active: Boolean!
+  amountPerMonthMin: Int!
+  currency: Currency!
+  extendable: Boolean!
+  maxCount: Int
+  availablePaymentMethods: [AvailablePaymentMethodInput!]!
+}
+
+input AvailablePaymentMethodInput {
+  paymentMethodIDs: [String!]!
+  paymentPeriodicities: [PaymentPeriodicity!]!
+  forceAutoRenewal: Boolean!
+}
+
+input PaymentMethodInput {
+  name: String!
+  slug: Slug!
+  description: String!
+  paymentProviderID: String!
+  active: Boolean!
+  imageId: String
+}
+
+input InvoiceInput {
+  mail: String!
+  description: String
+  subscriptionID: ID
+  manuallySetAsPaidByUserId: ID
+  items: [InvoiceItemInput!]!
+}
+
+input InvoiceItemInput {
+  name: String!
+  description: String
+  quantity: Int!
+  amount: Int!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+input PaymentFromInvoiceInput {
+  invoiceID: ID!
+  paymentMethodID: ID
+  paymentMethodSlug: Slug
+  successURL: String
+  failureURL: String
+}
+
+input CommentRevisionUpdateInput {
+  text: RichText
+  title: String
+  lead: String
+}
+
+input CommentRatingOverrideUpdateInput {
+  answerId: ID!
+  value: Int
+}
+
+input UpdateSettingArgs {
+  name: SettingName!
+  value: GraphQLSettingValueType!
+}
+
+input UpdateCommentRatingSystemAnswer {
+  id: ID!
+  type: RatingSystemType
+  answer: String
+}
+
+type PollWithAnswers {
+  id: ID!
+  question: String
+  opensAt: DateTime!
+  closedAt: DateTime
+  answers: [PollAnswer!]
+}
+
+type PollAnswer {
+  id: ID!
+  pollId: ID!
+  answer: String
+}
+
+input UpdatePollAnswer {
+  id: ID!
+  answer: String
+}
+
+input UpdatePollExternalVoteSources {
+  id: ID!
+  source: String
+  voteAmounts: [UpdatePollExternalVote!]
+}
+
+input UpdatePollExternalVote {
+  id: ID!
+  amount: VoteValue
+}

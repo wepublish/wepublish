@@ -15,7 +15,7 @@ import {
   MdOutlinePayments,
   MdTimelapse
 } from 'react-icons/md'
-import {formatChf} from '../formatters/format-currency'
+import {formatCurrency} from '../formatters/format-currency'
 import {formatPaymentPeriod, formatPaymentTimeline} from '../formatters/format-payment-period'
 import {MembershipModal} from '../membership-modal/membership-modal'
 
@@ -65,7 +65,7 @@ export function SubscriptionListItem({
   paymentPeriodicity,
   monthlyAmount,
   deactivation,
-  memberPlan: {image, name},
+  memberPlan: {image, name, currency},
   url,
   canPay,
   pay,
@@ -165,7 +165,8 @@ export function SubscriptionListItem({
           )}
 
           <SubscriptionListItemMetaItem>
-            <MdAttachMoney /> Kostet {formatChf(monthlyAmount / 100, locale)} pro Monat
+            <MdAttachMoney /> Kostet {formatCurrency(monthlyAmount / 100, currency, locale)} pro
+            Monat
           </SubscriptionListItemMetaItem>
 
           <SubscriptionListItemMetaItem>

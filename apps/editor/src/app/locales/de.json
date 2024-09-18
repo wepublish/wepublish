@@ -325,7 +325,8 @@
         "link": "Link",
         "remove": "Entfernen",
         "startWriting": "Beginne zu schreiben ...",
-        "text": "Text"
+        "text": "Text",
+        "id": "ID"
       },
       "richTextTable": {
         "addBorders": "Rahmen hinzufügen",
@@ -528,7 +529,8 @@
       "noUrlErrorMessage": "Bitte URL eingeben",
       "noUserErrorMessage": "Bitte wähle den/die Benutzer:in",
       "passwordTooShortErrorMessage": "Das Passwort muss mindestens 8 Zeichen lang sein",
-      "required": "Dieses Feld ist erforderlich"
+      "required": "Dieses Feld ist erforderlich",
+      "invalidCountry": "Bitte ein gültiges Land auswählen"
     },
     "event": {
       "create": {
@@ -674,6 +676,8 @@
     "memberPlanEdit": {
       "active": "Aktiv",
       "activeDescription": "Plan verfügbar machen",
+      "currency": "Währung",
+      "currencyRequired": "Währung erforderlich",
       "amountPerMonthMin": "Minimaler Betrag / Monat",
       "amountPerMonthMinRequired": "Minimaler Betrag erforderlich",
       "amountPerMonthMinZero": "Minimaler Betrag muss mindestens 0 betragen",
@@ -1015,6 +1019,7 @@
       "closedAtNone": "Nicht geschlossen",
       "createNew": "Umfrage erstellen",
       "delete": "Löschen",
+      "showVotes": "Stimmen anzeigen",
       "hasBeenClosedAt": "Geschlossen am {{closedAt, ccc PP p}}",
       "noQuestion": "Keine Frage erfasst",
       "openedAt": "Begonnen am {{openedAt, ccc PP p}}",
@@ -1024,6 +1029,13 @@
       "question": "Frage",
       "state": "Status",
       "title": "Umfragen"
+    },
+    "pollVoteList": {
+      "createdAt": "Erstellt am",
+      "answerId": "Antwort",
+      "userId": "Benutzer-ID",
+      "fingerprint": "Fingerabdruck",
+      "deleteItems": "Elemente löschen"
     },
     "pollStateIndication": {
       "closed": "Umfrage geschlossen",
@@ -1325,6 +1337,9 @@
       "hideOnTeam": "Auf der Team-Seite ausblenden",
       "hideOnArticle": "Auf den Artikeln ausblenden",
       "hideOnTeaser": "Auf den Teasern ausblenden"
+    },
+    "selectableItemsActions": {
+      "selectedItems": "{{numberOfItems}} Elemente ausgewählt"
     }
   }
 }

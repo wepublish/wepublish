@@ -2,12 +2,16 @@
   "website": {
     "production": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "GA_ID": "G-VMRWDHWHEW"
+      },
       "secret_env": []
     },
     "staging": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "GA_ID": "G-VMRWDHWHEW"
+      },
       "secret_env": []
     },
     "review": {

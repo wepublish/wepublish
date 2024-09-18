@@ -50,7 +50,7 @@ export default function ArticleBySlugIdOrToken() {
               key={index}
               label={capitalize(tag.tag ?? '')}
               variant="outlined"
-              onClick={() => push(`/a/tag/${tag}`)}
+              onClick={() => push(tag.url)}
             />
           ))}
         </ArticleTagList>

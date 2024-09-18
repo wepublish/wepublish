@@ -27,6 +27,7 @@ import {
 import {
   BuilderBildwurfAdBlockProps,
   BuilderBlockRendererProps,
+  BuilderBlocksProps,
   BuilderBreakBlockProps,
   BuilderCommentBlockProps,
   BuilderEmbedBlockProps,
@@ -172,6 +173,7 @@ export type WebsiteBuilderProps = {
   }
 
   blocks: {
+    Blocks: ComponentType<BuilderBlocksProps>
     Renderer: ComponentType<BuilderBlockRendererProps>
     Title: ComponentType<BuilderTitleBlockProps>
     Image: ComponentType<BuilderImageBlockProps>
@@ -288,6 +290,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   },
 
   blocks: {
+    Blocks: NoComponent,
     Renderer: NoComponent,
     Title: NoComponent,
     Comment: NoComponent,
@@ -331,7 +334,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
 
   meta: {
     siteTitle: 'Newsroom Name',
-    locale: 'ch-DE'
+    locale: 'de-CH'
   },
 
   thirdParty: {}

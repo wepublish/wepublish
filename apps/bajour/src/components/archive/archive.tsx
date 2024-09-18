@@ -1,6 +1,6 @@
 import {css, styled} from '@mui/material'
 import {
-  ApiV2,
+  ApiV1,
   BuilderTeaserGridBlockProps,
   selectTeaserAuthors,
   selectTeaserLead,
@@ -193,7 +193,7 @@ const LinkWrapper = styled('div')`
 `
 
 const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
-  const {data} = ApiV2.useStatsQuery()
+  const {data} = ApiV1.useStatsQuery()
   const [currentTeaser, setCurrentTeaser] = useState(teasers[2])
 
   const title = currentTeaser && selectTeaserTitle(currentTeaser)
@@ -265,6 +265,6 @@ const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedArchive = ApiV2.createWithV2ApiClient(publicRuntimeConfig.env.API_URL!, [])(Archive)
+const ConnectedArchive = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [])(Archive)
 
 export {ConnectedArchive as Archive}

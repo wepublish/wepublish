@@ -2,50 +2,7 @@
 
 exports[`Invoice Item should render Canceled 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  container-type: inline-size;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  padding: 16px;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-5 {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.emotion-7 {
-  display: grid;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: start;
-  justify-content: start;
-  gap: 8px;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -173,50 +130,7 @@ exports[`Invoice Item should render Canceled 1`] = `
 
 exports[`Invoice Item should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  container-type: inline-size;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  padding: 16px;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-5 {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.emotion-7 {
-  display: grid;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: start;
-  justify-content: start;
-  gap: 8px;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -344,179 +258,7 @@ exports[`Invoice Item should render Default 1`] = `
 
 exports[`Invoice Item should render Unpaid 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  container-type: inline-size;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  padding: 16px;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-5 {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.emotion-7 {
-  display: grid;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: start;
-  justify-content: start;
-  gap: 8px;
-}
-
-.emotion-15 {
-  display: grid;
-  gap: 16px;
-}
-
-@container (min-width: 45ch) {
-  .emotion-15 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
-    justify-content: center;
-  }
-}
-
-.emotion-17 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-  font-weight: 700;
-}
-
-.emotion-17::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-17.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-17 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-17:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgb(163, 21, 69);
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
-}
-
-@media (hover: none) {
-  .emotion-17:hover {
-    background-color: #e91e63;
-  }
-}
-
-.emotion-17:active {
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
-}
-
-.emotion-17.Mui-focusVisible {
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-}
-
-.emotion-17.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.emotion-17:hover {
-  box-shadow: none;
-}
-
-.emotion-18 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -650,51 +392,136 @@ exports[`Invoice Item should render Unpaid 1`] = `
 
 exports[`Invoice Item should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  container-type: inline-size;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  padding: 16px;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-5 {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.emotion-7 {
-  display: grid;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: start;
-  justify-content: start;
-  gap: 8px;
-}
-
-<div
+  <div
     class="extra-classname emotion-0 emotion-1"
+  >
+    <div
+      class="emotion-2 emotion-3"
+    >
+      <h6
+        class="MuiTypography-root MuiTypography-h6 emotion-4"
+      >
+        Bezahlte Rechnung für Foobar Memberplan
+      </h6>
+      <ul
+        class="emotion-5 emotion-6"
+      >
+        <li
+          class="emotion-7 emotion-8"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0V0z"
+              fill="none"
+            />
+            <path
+              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+            />
+          </svg>
+           Rechnungs-Nr: 4321-4321
+        </li>
+        <li
+          class="emotion-7 emotion-8"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"
+            />
+          </svg>
+          <span>
+            Abgeschlossen am 
+            <time
+              datetime="2023-01-01"
+            >
+              01.01.2023 00:00
+            </time>
+          </span>
+        </li>
+        <li
+          class="emotion-7 emotion-8"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+            />
+          </svg>
+          <span>
+            Fällig am 
+            <time
+              datetime="2023-01-01"
+            >
+              01.01.2023 00:00
+            </time>
+          </span>
+        </li>
+        <li
+          class="emotion-7 emotion-8"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"
+            />
+          </svg>
+           Betrag von CHF 5.-
+        </li>
+      </ul>
+      <strong>
+        Bezahlt am 
+        <time
+          datetime="2023-01-01"
+        >
+          01.01.2023 00:00
+        </time>
+      </strong>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Invoice Item should render WithCurrency 1`] = `
+<DocumentFragment>
+  <div
+    class="emotion-0 emotion-1"
   >
     <div
       class="emotion-2 emotion-3"
@@ -821,50 +648,7 @@ exports[`Invoice Item should render WithClassName 1`] = `
 
 exports[`Invoice Item should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  container-type: inline-size;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  padding: 16px;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-5 {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.emotion-7 {
-  display: grid;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: start;
-  justify-content: start;
-  gap: 8px;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -1064,247 +848,7 @@ exports[`Invoice Item should render WithPayLoading 1`] = `
 
 exports[`Invoice Item should render WithPayrexxSubscriptionsWarning 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  container-type: inline-size;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  padding: 16px;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-5 {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.emotion-7 {
-  display: grid;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: start;
-  justify-content: start;
-  gap: 8px;
-}
-
-.emotion-15 {
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
-  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border-radius: 4px;
-  box-shadow: none;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  background-color: transparent;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 6px 16px;
-  color: rgb(102, 60, 0);
-  background-color: rgb(255, 244, 229);
-}
-
-.emotion-15 .MuiAlert-icon {
-  color: #ed6c02;
-}
-
-.emotion-16 {
-  margin-right: 12px;
-  padding: 7px 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  font-size: 22px;
-  opacity: 0.9;
-}
-
-.emotion-17 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  fill: currentColor;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: inherit;
-}
-
-.emotion-18 {
-  padding: 8px 0;
-  min-width: 0;
-  overflow: auto;
-}
-
-.emotion-19 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: flex-start;
-  -webkit-box-align: flex-start;
-  -ms-flex-align: flex-start;
-  align-items: flex-start;
-  padding: 4px 0 0 16px;
-  margin-left: auto;
-  margin-right: -8px;
-}
-
-.emotion-20 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-}
-
-.emotion-20:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-21 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-  font-weight: 700;
-}
-
-.emotion-21::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-21.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-21 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-21:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgb(163, 21, 69);
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
-}
-
-@media (hover: none) {
-  .emotion-21:hover {
-    background-color: #e91e63;
-  }
-}
-
-.emotion-21:active {
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
-}
-
-.emotion-21.Mui-focusVisible {
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-}
-
-.emotion-21.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.emotion-21:hover {
-  box-shadow: none;
-}
-
-.emotion-22 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div

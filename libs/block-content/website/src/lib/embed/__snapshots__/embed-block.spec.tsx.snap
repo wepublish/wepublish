@@ -2,15 +2,7 @@
 
 exports[`Embed Block should render Default 1`] = `
 <DocumentFragment>
-  .emotion-2 {
-  width: 100%;
-  border: 0;
-  aspect-ratio: 1.78343949044586;
-  background: #aaa;
-  padding: 50px;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <iframe
@@ -28,15 +20,7 @@ exports[`Embed Block should render Default 1`] = `
 
 exports[`Embed Block should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-2 {
-  width: 100%;
-  border: 0;
-  aspect-ratio: 1.78343949044586;
-  background: #aaa;
-  padding: 50px;
-}
-
-<div
+  <div
     class="extra-classname emotion-0 emotion-1"
   >
     <iframe
@@ -54,15 +38,7 @@ exports[`Embed Block should render WithClassName 1`] = `
 
 exports[`Embed Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-2 {
-  width: 100%;
-  border: 0;
-  aspect-ratio: 1.78343949044586;
-  background: #aaa;
-  padding: 50px;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <iframe

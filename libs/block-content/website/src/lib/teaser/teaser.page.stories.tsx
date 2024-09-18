@@ -38,7 +38,7 @@ const image = {
 
 const pageTeaser = {
   __typename: 'PageTeaser',
-  style: 'DEFAULT',
+  style: 'default',
   image,
   preTitle: 'Pre Title',
   title: 'Title',

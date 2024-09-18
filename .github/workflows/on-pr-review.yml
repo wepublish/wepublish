@@ -19,10 +19,20 @@ env:
 
 
 jobs:
+  publish_docker_base_image:
+    name: Docker base image
+    uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
+    with:
+      base_image_tags: |
+        ghcr.io/wepublish/base-image:${{ github.sha }}
+    secrets: inherit
+
   publish_docker_image:
-    name: Docker
+    needs: [publish_docker_base_image]
+    name: Docker backend images
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
+      base_image_tag: ghcr.io/wepublish/base-image:${{ github.sha }}
       editor_tags: |
         ghcr.io/wepublish/editor:${{ github.sha }}
       api_tags: |
@@ -284,12 +294,13 @@ jobs:
 
   publish_docker_website_image:
     name: Build Docker Website
-    needs: [setup-website-matrix, helm_deployment]
+    needs: [setup-website-matrix, helm_deployment, publish_docker_base_image]
     if: ${{ needs.helm_deployment.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
       matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
     with:
+      base_image_tag: ghcr.io/wepublish/base-image:${{ github.sha }}
       website_project: ${{ matrix.target }}
       api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
       environment: review

@@ -1029,6 +1029,7 @@ export async function contextFromRequest(
       const intent = await paymentProvider.createIntent({
         paymentID: payment.id,
         invoice,
+        currency: invoice.currency,
         saveCustomer,
         successURL,
         failureURL,

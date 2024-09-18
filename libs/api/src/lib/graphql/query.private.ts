@@ -175,11 +175,11 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         expiresInMinutes: {type: new GraphQLNonNull(GraphQLInt)}
       },
       async resolve(root, {userId, expiresInMinutes}, {authenticate, generateJWT, prisma}, info) {
-        const THIRTY_DAYS_IN_MIN = 30 * 24 * 60
+        const TWO_YEARS_IN_MIN = 2 * 365 * 24 * 60
         const {roles} = authenticate()
         authorise(CanLoginAsOtherUser, roles)
 
-        if (expiresInMinutes > THIRTY_DAYS_IN_MIN) {
+        if (expiresInMinutes > TWO_YEARS_IN_MIN) {
           throw new GivenTokeExpiryToLongError()
         }
 

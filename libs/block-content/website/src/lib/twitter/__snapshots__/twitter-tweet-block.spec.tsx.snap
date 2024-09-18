@@ -3,7 +3,7 @@
 exports[`Twitter Tweet Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="emotion-0 emotion-1"
+    class="css-126lgzk-TwitterTweetBlockWrapper emotion-0"
     data-theme="dark"
   >
     <div>
@@ -16,7 +16,7 @@ exports[`Twitter Tweet Block should render Default 1`] = `
 exports[`Twitter Tweet Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname emotion-0 emotion-1"
+    class="extra-classname css-126lgzk-TwitterTweetBlockWrapper emotion-0"
     data-theme="dark"
   >
     <div>

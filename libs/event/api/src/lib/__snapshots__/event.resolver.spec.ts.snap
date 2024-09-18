@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`EventService create 1`] = `
+exports[`EventResolver create 1`] = `
 [
   {
     "description": [],
@@ -16,11 +16,10 @@ exports[`EventService create 1`] = `
 ]
 `;
 
-exports[`EventService create 2`] = `
+exports[`EventResolver create 2`] = `
 {
   "id": "1234",
   "image": {
-    "filename": "123.webp",
     "id": "123",
   },
   "imageId": "123",
@@ -28,17 +27,16 @@ exports[`EventService create 2`] = `
 }
 `;
 
-exports[`EventService delete 1`] = `
+exports[`EventResolver delete 1`] = `
 [
   "1234",
 ]
 `;
 
-exports[`EventService delete 2`] = `
+exports[`EventResolver delete 2`] = `
 {
   "id": "1234",
   "image": {
-    "filename": "123.webp",
     "id": "123",
   },
   "imageId": "123",
@@ -46,23 +44,18 @@ exports[`EventService delete 2`] = `
 }
 `;
 
-exports[`EventService event 1`] = `
-[
-  "123",
-]
-`;
+exports[`EventResolver event 1`] = `undefined`;
 
-exports[`EventService event 2`] = `
+exports[`EventResolver event 2`] = `
 [
   "1234",
 ]
 `;
 
-exports[`EventService event 3`] = `
+exports[`EventResolver event 3`] = `
 {
   "id": "1234",
   "image": {
-    "filename": "123.webp",
     "id": "123",
   },
   "imageId": "123",
@@ -70,7 +63,7 @@ exports[`EventService event 3`] = `
 }
 `;
 
-exports[`EventService events 1`] = `
+exports[`EventResolver events 1`] = `
 [
   {
     "filter": {
@@ -91,7 +84,7 @@ exports[`EventService events 1`] = `
 ]
 `;
 
-exports[`EventService events 2`] = `
+exports[`EventResolver events 2`] = `
 {
   "nodes": [
     {
@@ -111,7 +104,7 @@ exports[`EventService events 2`] = `
 }
 `;
 
-exports[`EventService update 1`] = `
+exports[`EventResolver update 1`] = `
 [
   {
     "id": "1234",
@@ -120,11 +113,10 @@ exports[`EventService update 1`] = `
 ]
 `;
 
-exports[`EventService update 2`] = `
+exports[`EventResolver update 2`] = `
 {
   "id": "1234",
   "image": {
-    "filename": "123.webp",
     "id": "123",
   },
   "imageId": "123",

@@ -6,12 +6,7 @@ exports[`Bildwurf Ad Block should render Default 1`] = `
     data-testid="fake-script"
     src="https://media.online.bildwurf.ch/js/code.min.js"
   />
-  .emotion-0 #bildwurf-ad-in-content {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     
@@ -40,12 +35,7 @@ exports[`Bildwurf Ad Block should render WithClassName 1`] = `
     data-testid="fake-script"
     src="https://media.online.bildwurf.ch/js/code.min.js"
   />
-  .emotion-0 #bildwurf-ad-in-content {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-<div
+  <div
     class="extra-classname emotion-0 emotion-1"
   >
     

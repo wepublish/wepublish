@@ -11,6 +11,7 @@ import {
 import {
   BildwurfAdBlock,
   BlockRenderer,
+  Blocks,
   BreakBlock,
   CommentBlock,
   EmbedBlock,
@@ -89,7 +90,7 @@ import {
 } from '@wepublish/ui'
 import {ImageUpload, PersonalDataForm} from '@wepublish/user/website'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
-import {format} from 'date-fns'
+import {format, getDefaultOptions} from 'date-fns'
 import {PropsWithChildren, memo} from 'react'
 import {IconContext} from 'react-icons'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
@@ -102,9 +103,14 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 const styles = (theme: Theme) => css`
   html {
+    scroll-padding-top: ${theme.spacing(7)};
     font-family: ${theme.typography.fontFamily};
     hyphens: auto;
     word-break: break-word;
+
+    ${theme.breakpoints.up('lg')} {
+      scroll-padding-top: ${theme.spacing(12.5)};
+    }
   }
 
   * {
@@ -130,7 +136,9 @@ const styles = (theme: Theme) => css`
 export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
     <IconContext.Provider value={{}}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider
+        dateAdapter={AdapterDateFns}
+        adapterLocale={(getDefaultOptions() as {locale: Locale}).locale}>
         <WebsiteBuilderProvider
           Author={Author}
           AuthorLinks={AuthorLinks}
@@ -191,6 +199,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             Image
           }}
           blocks={{
+            Blocks,
             Renderer: BlockRenderer,
             Title: TitleBlock,
             Break: BreakBlock,
