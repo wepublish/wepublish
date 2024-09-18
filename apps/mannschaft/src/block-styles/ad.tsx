@@ -53,7 +53,7 @@ export const AdTeaserBlockStyle = (props: BuilderTeaserListBlockProps) => {
       __typename: 'CustomTeaser',
       properties: [],
       contentUrl: null,
-      preTitle: 'ad-300',
+      preTitle: 'ad-300x250',
       title: null,
       lead: null,
       image: null,

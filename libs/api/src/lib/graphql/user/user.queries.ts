@@ -310,7 +310,7 @@ export const getUserForCredentials = async (
   userClient: PrismaClient['user']
 ) => {
   email = email.toLowerCase()
-  await Validator.login().parse({email})
+  await Validator.login.parse({email})
 
   const user = await userClient.findUnique({
     where: {

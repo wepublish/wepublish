@@ -535,7 +535,8 @@
       "noUrlErrorMessage": "Veuillez entrer une url",
       "noUserErrorMessage": "Veuillez sélectionner un·e utilisateur·trice",
       "passwordTooShortErrorMessage": "Le mot de passe doit comporter au moins 8 caractères.",
-      "required": "Ce champ est requis"
+      "required": "Ce champ est requis",
+      "invalidCountry": "Please select a valid country"
     },
     "event": {
       "create": {

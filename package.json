@@ -281,6 +281,7 @@
     "graphql-upload": "^13.0.0",
     "helmet": "^7.1.0",
     "html-entities": "^2.5.2",
+    "i18n-iso-countries": "^7.11.3",
     "i18next": "23.0.2",
     "i18next-browser-languagedetector": "^7.0.2",
     "iframe-resizer-react": "^1.1.0",

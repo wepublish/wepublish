@@ -62,10 +62,12 @@ export class WepublishServer {
       context: ({req}) => contextFromRequest(req, this.opts)
     })
 
-    await fs.promises.writeFile(
-      './apps/api-example/schema-v1-admin.graphql',
-      printSchema(GraphQLWepublishSchema)
-    )
+    if (process.env['NODE_ENV'] !== 'production') {
+      await fs.promises.writeFile(
+        './apps/api-example/schema-v1-admin.graphql',
+        printSchema(GraphQLWepublishSchema)
+      )
+    }
 
     await adminServer.start()
 
@@ -157,6 +159,10 @@ export class WepublishServer {
     })
 
     await fs.promises.writeFile('./apps/api-example/schema-v1.graphql', printSchema(publicSchema))
+
+    if (process.env['NODE_ENV'] !== 'production') {
+      await fs.promises.writeFile('./apps/api-example/schema-v1.graphql', printSchema(publicSchema))
+    }
 
     await publicServer.start()
 
