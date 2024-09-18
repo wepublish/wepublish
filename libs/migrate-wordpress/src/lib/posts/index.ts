@@ -4,7 +4,8 @@ import {prepareArticleData, PreparedArticleData} from './prepare-data'
 import {mapLimit} from 'async'
 import chalk from 'chalk'
 import {logError} from './error-logger'
-import {humanizeObject} from './utils'
+import {createTimer, humanizeObject} from './utils'
+import {fixedMessage} from '../logger'
 
 async function prepareDataAndMigratePost(post: WordpressPost) {
   console.debug(`Migrating article ${post.slug}`)
@@ -33,6 +34,11 @@ export const migratePostsFromCategory = async (categoryId: number, limit?: numbe
 }
 
 export const migratePosts = async (limit?: number, query?: Record<string, string | number>) => {
+  const timer = createTimer()
+  fixedMessage('Running')
+  timer.onUpdate(() => {
+    fixedMessage(timer.message())
+  })
   let batchSize = process.env['BATCH_SIZE'] ?? 1
   let postsMigrating = 0
   let postsMigrated = 0
@@ -49,6 +55,7 @@ export const migratePosts = async (limit?: number, query?: Record<string, string
       perPage: +batchSize
     })
     totalCount = limit ? Math.min(+total, limit) : +total
+    timer.updateTotal(totalCount)
 
     if (batch.length === 0) break
 
@@ -61,7 +68,10 @@ export const migratePosts = async (limit?: number, query?: Record<string, string
             post.id
           )} (${++postsMigrated}/${totalCount}) ${chalk.bgGreen('DONE')}`
         )
+      } else {
+        postsMigrated++
       }
+      timer.updateDone(postsMigrated)
     })
 
     if (limit !== undefined && postsMigrated >= limit) {
