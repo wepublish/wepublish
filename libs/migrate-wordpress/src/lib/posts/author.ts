@@ -7,10 +7,16 @@ import {
   AuthorInput,
   CreateAuthor,
   CreateAuthorMutation,
-  CreateAuthorMutationVariables
+  CreateAuthorMutationVariables,
+  DeleteAuthor,
+  DeleteAuthorMutation,
+  DeleteAuthorMutationVariables
 } from '../../api/private'
+import {convertHtmlToSlate} from './convert-html-to-slate'
 
 export type Author = {id: string}
+
+const deleteBeforeMigrate = true
 
 export const ensureAuthor = async (author: WordpressAuthor): Promise<Author> => {
   const {slug, link, url, name, description, avatar_urls} = author
@@ -18,7 +24,13 @@ export const ensureAuthor = async (author: WordpressAuthor): Promise<Author> => 
   const existingAuthor = await getAuthorBySlug(author.slug)
   if (existingAuthor) {
     console.debug('  author exists', slug)
-    return existingAuthor
+
+    if (deleteBeforeMigrate) {
+      console.debug('  author delete', slug)
+      await deleteAuthor(existingAuthor.id)
+    } else {
+      return existingAuthor
+    }
   }
 
   const image = await ensureImage({
@@ -31,7 +43,8 @@ export const ensureAuthor = async (author: WordpressAuthor): Promise<Author> => 
     name,
     slug,
     links: [{title: 'Link', url: link}],
-    imageID: image.id
+    imageID: image.id,
+    bio: await convertHtmlToSlate(description)
   })
 }
 
@@ -51,4 +64,12 @@ async function createAuthor(input: AuthorInput) {
       input
     })
   ).createAuthor!
+}
+
+async function deleteAuthor(id: string) {
+  return (
+    await privateClient.request<DeleteAuthorMutation, DeleteAuthorMutationVariables>(DeleteAuthor, {
+      id
+    })
+  ).deleteAuthor!
 }
