@@ -1633,6 +1633,10 @@ exports[`InvoiceList should render WithLoading 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-  />
+  >
+    <span
+      class="MuiSkeleton-root MuiSkeleton-rectangular MuiSkeleton-pulse emotion-2"
+    />
+  </article>
 </DocumentFragment>
 `;

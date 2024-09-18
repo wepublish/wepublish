@@ -246,16 +246,6 @@ export const WithFilter: StoryObj = {
   }
 }
 
-export const Pay: StoryObj = {
-  ...Unpaid,
-  play: async ctx => {
-    const canvas = within(ctx.canvasElement)
-    await waitFor(() => canvas.getByText('Jetzt Bezahlen'))
-
-    await WithPayError.play?.(ctx)
-  }
-}
-
 export const Extend: StoryObj = {
   ...Default,
   play: async ctx => {

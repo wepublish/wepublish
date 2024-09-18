@@ -191,16 +191,6 @@ https://unsplash.it/200/100 200w"
               class="MuiTouchRipple-root emotion-25"
             />
           </button>
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-26"
-            tabindex="0"
-            type="button"
-          >
-            Jetzt Bezahlen
-            <span
-              class="MuiTouchRipple-root emotion-25"
-            />
-          </button>
         </div>
       </div>
     </div>
@@ -211,194 +201,6 @@ https://unsplash.it/200/100 200w"
 exports[`SubscriptionList Container should render Extend 1`] = `
 "Snapshot Diff:
 Compared values have no visual difference."
-`;
-
-exports[`SubscriptionList Container should render Pay 1`] = `
-"Snapshot Diff:
-- First value
-+ Second value
-
-@@ -1,10 +1,180 @@
-  <DocumentFragment>
-    <article
-      class="css-1lcio32-SubscriptionListWrapper e12e7g630"
-    >
-      <div
-+       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorError MuiAlert-standardError MuiAlert-standard css-1iznk5b-MuiPaper-root-MuiAlert-root"
-+       role="alert"
-+     >
-+       <div
-+         class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
-+       >
-+         <svg
-+           aria-hidden="true"
-+           class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
-+           data-testid="ErrorOutlineIcon"
-+           focusable="false"
-+           viewBox="0 0 24 24"
-+         >
-+           <path
-+             d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-+           />
-+         </svg>
-+       </div>
-+       <div
-+         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
-+       >
-+         No more mocked responses for the query: query Subscriptions {
-+   subscriptions {
-+     ...FullSubscription
-+     __typename
-+   }
-+ }
-+
-+ fragment FullSubscription on Subscription {
-+   id
-+   url
-+   paymentPeriodicity
-+   monthlyAmount
-+   autoRenew
-+   startsAt
-+   extendable
-+   paidUntil
-+   paymentMethod {
-+     ...FullPaymentMethod
-+     __typename
-+   }
-+   deactivation {
-+     ...FullSubscriptionDeactivation
-+     __typename
-+   }
-+   memberPlan {
-+     ...FullMemberPlan
-+     __typename
-+   }
-+   properties {
-+     ...FullProperty
-+     __typename
-+   }
-+   __typename
-+ }
-+
-+ fragment FullPaymentMethod on PaymentMethod {
-+   id
-+   paymentProviderID
-+   name
-+   slug
-+   description
-+   image {
-+     ...FullImage
-+     __typename
-+   }
-+   __typename
-+ }
-+
-+ fragment FullImage on Image {
-+   id
-+   createdAt
-+   modifiedAt
-+   filename
-+   format
-+   mimeType
-+   extension
-+   width
-+   height
-+   fileSize
-+   title
-+   description
-+   tags
-+   source
-+   link
-+   license
-+   focalPoint {
-+     x
-+     y
-+     __typename
-+   }
-+   ...ImageURLs
-+   __typename
-+ }
-+
-+ fragment ImageURLs on Image {
-+   url
-+   xl: transformURL(input: {width: 1200, output: png, quality: 0.8})
-+   l: transformURL(input: {width: 1000, output: png, quality: 0.8})
-+   m: transformURL(input: {width: 800, output: png, quality: 0.8})
-+   s: transformURL(input: {width: 500, output: png, quality: 0.8})
-+   xs: transformURL(input: {width: 300, output: png, quality: 0.8})
-+   xxs: transformURL(input: {width: 200, output: png, quality: 0.8})
-+   xlSquare: transformURL(
-+     input: {width: 1200, height: 1200, output: png, quality: 0.8}
-+   )
-+   lSquare: transformURL(
-+     input: {width: 1000, height: 1000, output: png, quality: 0.8}
-+   )
-+   mSquare: transformURL(
-+     input: {width: 800, height: 800, output: png, quality: 0.8}
-+   )
-+   sSquare: transformURL(
-+     input: {width: 500, height: 500, output: png, quality: 0.8}
-+   )
-+   xsSquare: transformURL(
-+     input: {width: 300, height: 300, output: png, quality: 0.8}
-+   )
-+   xxsSquare: transformURL(
-+     input: {width: 200, height: 200, output: png, quality: 0.8}
-+   )
-+   __typename
-+ }
-+
-+ fragment FullSubscriptionDeactivation on SubscriptionDeactivation {
-+   date
-+   reason
-+   __typename
-+ }
-+
-+ fragment FullMemberPlan on MemberPlan {
-+   id
-+   slug
-+   name
-+   tags
-+   description
-+   image {
-+     ...FullImage
-+     __typename
-+   }
-+   amountPerMonthMin
-+   currency
-+   availablePaymentMethods {
-+     ...FullAvailablePaymentMethod
-+     __typename
-+   }
-+   extendable
-+   __typename
-+ }
-+
-+ fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
-+   paymentMethods {
-+     ...FullPaymentMethod
-+     __typename
-+   }
-+   paymentPeriodicities
-+   forceAutoRenewal
-+   __typename
-+ }
-+
-+ fragment FullProperty on PublicProperties {
-+   key
-+   value
-+   __typename
-+ }
-+ Expected variables: {}
-+
-+       </div>
-+     </div>
-+     <div
-        class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
-      >
-        <img
-          alt="DSC07717"
-          class="css-cibo30-ImageWrapper e1shv2yg0""
 `;
 
 exports[`SubscriptionList Container should render Unpaid 1`] = `
@@ -571,16 +373,6 @@ https://unsplash.it/200/100 200w"
             type="button"
           >
             Abo Künden
-            <span
-              class="MuiTouchRipple-root emotion-25"
-            />
-          </button>
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-26"
-            tabindex="0"
-            type="button"
-          >
-            Jetzt Bezahlen
             <span
               class="MuiTouchRipple-root emotion-25"
             />
@@ -773,16 +565,6 @@ https://unsplash.it/200/100 200w"
               class="MuiTouchRipple-root emotion-25"
             />
           </button>
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-26"
-            tabindex="0"
-            type="button"
-          >
-            Jetzt Bezahlen
-            <span
-              class="MuiTouchRipple-root emotion-25"
-            />
-          </button>
         </div>
       </div>
     </div>
@@ -967,16 +749,6 @@ https://unsplash.it/200/100 200w"
             type="button"
           >
             Abo Künden
-            <span
-              class="MuiTouchRipple-root emotion-25"
-            />
-          </button>
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-26"
-            tabindex="0"
-            type="button"
-          >
-            Jetzt Bezahlen
             <span
               class="MuiTouchRipple-root emotion-25"
             />

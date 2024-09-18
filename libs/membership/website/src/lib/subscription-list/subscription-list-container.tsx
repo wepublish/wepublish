@@ -6,7 +6,6 @@ import {
   useCancelSubscriptionMutation,
   useExtendSubscriptionMutation,
   useInvoicesQuery,
-  usePaySubscriptionMutation,
   useSubscriptionsQuery,
   ExtendSubscriptionMutation
 } from '@wepublish/website/api'
@@ -31,21 +30,6 @@ export function SubscriptionListContainer({
   const {data, loading, error} = useSubscriptionsQuery()
   const invoices = useInvoicesQuery()
 
-  const [pay] = usePaySubscriptionMutation({
-    onCompleted(data) {
-      if (!data.createPaymentFromSubscription?.intentSecret) {
-        return
-      }
-
-      if (data.createPaymentFromSubscription.paymentMethod.paymentProviderID === 'stripe') {
-        setStripeClientSecret(data.createPaymentFromSubscription.intentSecret)
-      }
-
-      if (data.createPaymentFromSubscription.intentSecret.startsWith('http')) {
-        window.location.href = data.createPaymentFromSubscription.intentSecret
-      }
-    }
-  })
   const [cancel] = useCancelSubscriptionMutationWithCacheUpdate()
   const [extend] = useExtendSubscriptionMutation({
     onCompleted(data: ExtendSubscriptionMutation) {
@@ -101,15 +85,6 @@ export function SubscriptionListContainer({
         }}
         onExtend={async subscriptionId => {
           await extend({
-            variables: {
-              subscriptionId,
-              failureURL,
-              successURL
-            }
-          })
-        }}
-        onPay={async subscriptionId => {
-          await pay({
             variables: {
               subscriptionId,
               failureURL,
