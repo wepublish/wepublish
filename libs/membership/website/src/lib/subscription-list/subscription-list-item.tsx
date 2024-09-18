@@ -198,7 +198,7 @@ export function SubscriptionListItem({
                 onClick={() => setConfirmExtend(true)}
                 disabled={loading}
                 startIcon={<MdEventRepeat />}>
-                Jetzt verlängern
+                Jetzt Verlängern
               </Button>
             )}
           </SubscriptionListItemActions>
@@ -232,7 +232,7 @@ export function SubscriptionListItem({
           setConfirmExtend(false)
           await callAction(extend)()
         }}
-        submitText={'Jetzt verlängern'}>
+        submitText={'Jetzt Verlängern'}>
         <H5 component="h1">Abo frühzeitig verlängern?</H5>
         <Paragraph gutterBottom={false}>
           Wir freuen uns, dass du dein Abo frühzeitig um ein {subscriptionDuration} verlängern
