@@ -9,7 +9,11 @@ import {Editable, Slate, withReact} from 'slate-react'
 export const isRichTextBlock = (block: Block): block is RichTextBlockType =>
   block.__typename === 'RichTextBlock'
 
-export const RichTextBlockWrapper = styled('div')``
+export const RichTextBlockWrapper = styled('div')`
+  & + & {
+    margin-top: -${({theme}) => theme.spacing(4)};
+  }
+`
 
 export const RichTextBlock = ({className, richText}: BuilderRichTextBlockProps) => {
   const defaultValue = [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
