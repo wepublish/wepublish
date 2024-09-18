@@ -11,6 +11,7 @@ import {
   MdAutorenew,
   MdCalendarMonth,
   MdCancel,
+  MdEventRepeat,
   MdHistory,
   MdOutlinePayments,
   MdTimelapse
@@ -193,8 +194,11 @@ export function SubscriptionListItem({
             )}
 
             {canExtend && (
-              <Button onClick={() => setConfirmExtend(true)} disabled={loading}>
-                Jetzt Verlängern
+              <Button
+                onClick={() => setConfirmExtend(true)}
+                disabled={loading}
+                startIcon={<MdEventRepeat />}>
+                Jetzt verlängern
               </Button>
             )}
           </SubscriptionListItemActions>
@@ -228,10 +232,11 @@ export function SubscriptionListItem({
           setConfirmExtend(false)
           await callAction(extend)()
         }}
-        submitText={'Abo verlängern?'}>
-        <H5 component="h1">Abo vorzeitig verlängern?</H5>
+        submitText={'Jetzt verlängern'}>
+        <H5 component="h1">Abo frühzeitig verlängern?</H5>
         <Paragraph gutterBottom={false}>
-          Das Abo wird vorzeitig um {subscriptionDuration} verlängert. Weiterfahren?
+          Wir freuen uns, dass du dein Abo frühzeitig um ein {subscriptionDuration} verlängern
+          willst. Weiterfahren?
         </Paragraph>
       </MembershipModal>
     </SubscriptionListItemWrapper>
