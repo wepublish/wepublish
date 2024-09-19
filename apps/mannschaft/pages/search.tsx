@@ -1,0 +1,151 @@
+import {
+  useWebsiteBuilder,
+  ApiV1,
+  articleToTeaser,
+  Teaser,
+  alignmentForTeaserBlock
+} from '@wepublish/website'
+import {Box, Skeleton, styled, css} from '@mui/material'
+import {useRouter} from 'next/router'
+import {FormEvent, useEffect, useMemo, useState} from 'react'
+
+export const SearchForm = styled('form')`
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: ${({theme}) => theme.spacing(1)};
+`
+
+export const SearchResultsContainer = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${({theme}) => theme.spacing(2)};
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('sm')} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  `}
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('lg')} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  `}
+`
+
+const ITEMS_PER_PAGE = 12
+
+export default function Search() {
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [page, setPage] = useState<number>(1)
+
+  const router = useRouter()
+  const {
+    elements: {Button, TextField, Pagination}
+  } = useWebsiteBuilder()
+
+  function search(e: FormEvent) {
+    e?.preventDefault()
+    // reset page
+    setPage(1)
+    router.push({
+      pathname: '/search',
+      query: {q: searchTerm}
+    })
+  }
+
+  function changePage(newPage: number) {
+    setPage(newPage)
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  const searchQuery: string = (router.query.q as string) || ''
+
+  useEffect(() => {
+    setSearchTerm(searchQuery)
+  }, [searchQuery])
+
+  const {data, loading, error} = ApiV1.usePhraseQuery({
+    variables: {
+      query: searchQuery,
+      take: ITEMS_PER_PAGE,
+      skip: (page - 1) * ITEMS_PER_PAGE
+    }
+  })
+
+  const teasers = useMemo(() => {
+    const articles = data?.phrase?.articles?.nodes || ([] as ApiV1.Article[])
+    return articles.map(article => articleToTeaser(article as ApiV1.Article))
+  }, [data])
+
+  const count = useMemo(
+    () => Math.ceil((data?.phrase?.articles?.totalCount || 0) / ITEMS_PER_PAGE),
+    [data]
+  )
+
+  return (
+    <>
+      <SearchForm onSubmit={search}>
+        <TextField
+          value={searchTerm}
+          name="search"
+          type="text"
+          label="Suche"
+          onChange={event => setSearchTerm(event.target.value)}
+        />
+        <Button onClick={search} disabled={loading}>
+          {loading ? 'Suche läuft...' : 'Suche'}
+        </Button>
+      </SearchForm>
+
+      {loading && (
+        <h1>
+          Suche nach <i>{searchQuery}</i> läuft...
+        </h1>
+      )}
+
+      {error && (
+        <div>
+          <h1>Bei der Suche ist ein Fehler aufgetreten</h1>
+          <i>{error.message}</i>
+          <p>Versuch es doch mit einem anderen Suchbegriff</p>
+        </div>
+      )}
+
+      {teasers.length === 0 && !loading && (
+        <h1>Wir haben keine passenden Artikel zu deiner Suche gefunden.</h1>
+      )}
+
+      <SearchResultsContainer>
+        {loading && (
+          <>
+            {[1, 2, 3].map(index => (
+              <Box key={index}>
+                <Skeleton variant="rectangular" width="100%">
+                  <div style={{paddingTop: '60%'}} />
+                </Skeleton>
+              </Box>
+            ))}
+          </>
+        )}
+
+        {teasers.map((teaser, teaserIndex) => (
+          <div key={teaserIndex}>
+            <Teaser
+              teaser={teaser as ApiV1.Teaser}
+              blockStyle=""
+              alignment={alignmentForTeaserBlock(teaserIndex, 1)}
+            />
+          </div>
+        ))}
+      </SearchResultsContainer>
+
+      {!loading && !error && teasers.length > 0 && (
+        <Pagination count={count} page={page} onChange={(_, value) => changePage(value)} />
+      )}
+    </>
+  )
+}
