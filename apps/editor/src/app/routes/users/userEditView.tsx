@@ -118,7 +118,7 @@ function UserEditView() {
   const [active, setActive] = useState(true)
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
-  const [address, setAddress] = useState<UserAddress | null>(null)
+  const [address, setAddress] = useState<UserAddress | undefined>(undefined)
   const [userImage, setUserImage] = useState<ImageRefFragment | undefined>()
   const [user, setUser] = useState<FullUserFragment | undefined | null>(null)
   const [metaDataProperties, setMetadataProperties] = useState<ListValue<UserProperty>[]>([])
@@ -167,7 +167,7 @@ function UserEditView() {
     )
     setEmailVerifiedAt(tmpUser.emailVerifiedAt ? new Date(tmpUser.emailVerifiedAt) : null)
     setActive(tmpUser.active)
-    setAddress(tmpUser.address ? tmpUser.address : null)
+    setAddress(tmpUser.address ? tmpUser.address : undefined)
     setUserImage(tmpUser.userImage ? tmpUser.userImage : undefined)
     if (tmpUser.roles) {
       setRoles(tmpUser.roles as FullUserRoleFragment[])
@@ -198,8 +198,8 @@ function UserEditView() {
    * @param value
    */
   function updateAddressObject(
-    address: UserAddress | null,
-    setAddress: React.Dispatch<React.SetStateAction<UserAddress | null>>,
+    address: UserAddress | undefined,
+    setAddress: React.Dispatch<React.SetStateAction<UserAddress | undefined>>,
     key: 'company' | 'streetAddress' | 'streetAddress2' | 'zipCode' | 'city' | 'country',
     value: string | null
   ) {
