@@ -25,6 +25,7 @@ export class Validator {
     })
     .partial()
     .optional()
+    .nullable()
 
   static login = z.object({
     email: z.string().email()
