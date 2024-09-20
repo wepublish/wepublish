@@ -95,6 +95,7 @@ export default function Search() {
           value={searchTerm}
           name="search"
           type="text"
+          label="Suche"
           onChange={event => setSearchTerm(event.target.value)}
         />
         <Button onClick={search} disabled={loading}>
