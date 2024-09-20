@@ -36,13 +36,15 @@ export const SearchResultsContainer = styled('div')`
 const ITEMS_PER_PAGE = 12
 
 export default function Search() {
-  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
   const [page, setPage] = useState<number>(1)
 
   const router = useRouter()
   const {
     elements: {Button, TextField, Pagination}
   } = useWebsiteBuilder()
+
+  const [searchRequest, {error, data, loading}] = ApiV1.usePhraseLazyQuery()
 
   function search(e: FormEvent) {
     e?.preventDefault()
@@ -62,19 +64,19 @@ export default function Search() {
     })
   }
 
-  const searchQuery: string = (router.query.q as string) || ''
+  const searchQuery: string | undefined = (router.query.q as string) || undefined
 
   useEffect(() => {
     setSearchTerm(searchQuery)
-  }, [searchQuery])
-
-  const {data, loading, error} = ApiV1.usePhraseQuery({
-    variables: {
-      query: searchQuery,
-      take: ITEMS_PER_PAGE,
-      skip: (page - 1) * ITEMS_PER_PAGE
-    }
-  })
+    if (!searchQuery) return
+    searchRequest({
+      variables: {
+        query: searchQuery,
+        take: ITEMS_PER_PAGE,
+        skip: (page - 1) * ITEMS_PER_PAGE
+      }
+    })
+  }, [searchQuery, page])
 
   const teasers = useMemo(() => {
     const articles = data?.phrase?.articles?.nodes || ([] as ApiV1.Article[])
@@ -115,7 +117,7 @@ export default function Search() {
         </div>
       )}
 
-      {teasers.length === 0 && !loading && (
+      {teasers.length === 0 && !loading && !!searchQuery && (
         <h1>Wir haben keine passenden Artikel zu deiner Suche gefunden.</h1>
       )}
 
