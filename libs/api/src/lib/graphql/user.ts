@@ -116,7 +116,6 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
     emailVerifiedAt: {type: GraphQLDateTime},
     birthday: {type: GraphQLDateTime},
 
-    preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddress},
     flair: {type: GraphQLString},
 
@@ -188,7 +187,6 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
         email && isMeBySession(id, session) ? email : ''
       )
     },
-    preferredName: {type: GraphQLString},
     address: {
       type: GraphQLUserAddress,
       resolve: createProxyingResolver(({address, id}, _, {session}) =>
@@ -279,7 +277,6 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
     birthday: {
       type: GraphQLDateTime
     },
-    preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},
     flair: {type: GraphQLString},
 
@@ -301,7 +298,6 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
     name: {type: new GraphQLNonNull(GraphQLString)},
     firstName: {type: GraphQLString},
     email: {type: new GraphQLNonNull(GraphQLString)},
-    preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},
     flair: {type: GraphQLString},
     birthday: {

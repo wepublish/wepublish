@@ -1174,7 +1174,6 @@
       "password": "Passwort",
       "passwordChangeSuccess": "Passwort erfolgreich geändert!",
       "passwordHeader": "Passwörter & Zugänge",
-      "preferredName": "Bevorzugter Name",
       "properties": "Eigenschaften",
       "resetPassword": "Passwort zurücksetzen",
       "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",

@@ -566,7 +566,6 @@ type User {
   id: String!
   lastLogin: DateTime
   name: String!
-  preferredName: String
   roleIDs: [String!]
   userImageID: String
 }
