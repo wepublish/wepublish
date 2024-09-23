@@ -1,11 +1,4 @@
-import {
-  fetchCategoriesForPost,
-  fetchCategoryBranch,
-  fetchTag,
-  fetchTagsForPost,
-  WordpressAuthor,
-  WordpressPost
-} from './wordpress-api'
+import {fetchCategoryBranch, fetchTag, WordpressAuthor, WordpressPost} from './wordpress-api'
 import {decode} from 'html-entities'
 import {load} from 'cheerio'
 

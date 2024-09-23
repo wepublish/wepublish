@@ -1,5 +1,5 @@
 import {ensureImage} from './image'
-import cheerio, {Cheerio, CheerioAPI, load, html, Element} from 'cheerio'
+import cheerio, {Cheerio, CheerioAPI, load, Element} from 'cheerio'
 import {BlockInput, Image} from '../../api/private'
 import {convertHtmlToSlate} from './convert-html-to-slate'
 import {extractEmbed} from './embeds'
