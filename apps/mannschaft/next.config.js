@@ -6,6 +6,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: !!process.env.ANALYZE_BUNDLE,
   openAnalyzer: false
 })
+const redirects = require('./redirects.json')
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -17,6 +18,9 @@ const nextConfig = {
       API_URL: process.env.API_URL || '',
       GA_ID: process.env.GA_ID || ''
     }
+  },
+  async redirects() {
+    return redirects
   }
 }
 
