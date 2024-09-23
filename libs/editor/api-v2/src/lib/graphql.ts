@@ -943,7 +943,6 @@ export type User = {
   id: Scalars['String'];
   lastLogin?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
-  preferredName?: Maybe<Scalars['String']>;
   roleIDs?: Maybe<Array<Scalars['String']>>;
   userImageID?: Maybe<Scalars['String']>;
 };

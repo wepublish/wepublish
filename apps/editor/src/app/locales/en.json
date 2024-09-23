@@ -1263,7 +1263,6 @@
       "password": "Password",
       "passwordChangeSuccess": "Password successfuly changed!",
       "passwordHeader": "Passwords & Access",
-      "preferredName": "Preferred Name",
       "properties": "Properties",
       "resetPassword": "Reset Password",
       "resetPasswordFor": "Reset the password for {{userName}}",

@@ -70,7 +70,7 @@ import {
   GraphQLMetadataPropertyPublic
 } from './common'
 import {GraphQLEvent} from './event/event'
-import {ArticleSort, PublicArticle} from '../db/article'
+import {ArticleSort} from '../db/article'
 import {SortOrder} from '@wepublish/utils/api'
 import {getPublishedPages} from './page/page.public-queries'
 import {PageSort, PublicPage} from '../db/page'
@@ -734,10 +734,6 @@ export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBloc
                 : {
                     nodes: await hotAndTrendingDataSource.getMostViewedArticles({skip, take})
                   }
-
-            articles.nodes.forEach(article =>
-              loaders.publicArticles.prime(article.id, article as PublicArticle)
-            )
 
             return articles.nodes.map(
               article =>

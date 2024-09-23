@@ -459,7 +459,6 @@ type User {
   firstName: String
   birthday: DateTime
   email: String!
-  preferredName: String
   address: UserAddress
   flair: String
   paymentProviderCustomers: [PaymentProviderCustomer!]!
@@ -986,12 +985,12 @@ type Mutation {
   rateComment(commentId: ID!, answerId: ID!, value: Int!): Comment!
 
   """This mutation allows to register a new member,"""
-  registerMember(name: String!, firstName: String, preferredName: String, email: String!, address: UserAddressInput, password: String, birthday: DateTime, challengeAnswer: ChallengeInput!): Registration!
+  registerMember(name: String!, firstName: String, email: String!, address: UserAddressInput, password: String, birthday: DateTime, challengeAnswer: ChallengeInput!): Registration!
 
   """
   This mutation allows to register a new member, select a member plan, payment method and create an invoice. 
   """
-  registerMemberAndReceivePayment(name: String!, birthday: DateTime, firstName: String, preferredName: String, email: String!, address: UserAddressInput, password: String, memberPlanID: ID, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: ID, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, challengeAnswer: ChallengeInput!): RegistrationAndPayment!
+  registerMemberAndReceivePayment(name: String!, birthday: DateTime, firstName: String, email: String!, address: UserAddressInput, password: String, memberPlanID: ID, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: ID, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, challengeAnswer: ChallengeInput!): RegistrationAndPayment!
 
   """Allows authenticated users to create additional subscriptions"""
   createSubscription(memberPlanID: ID, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: ID, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, deactivateSubscriptionId: ID): Payment!
@@ -1126,7 +1125,6 @@ input UserInput {
   name: String!
   firstName: String
   email: String!
-  preferredName: String
   address: UserAddressInput
   flair: String
   birthday: DateTime

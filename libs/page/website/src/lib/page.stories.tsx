@@ -303,7 +303,6 @@ const comment = {
     name: 'User',
     firstName: 'Fallback',
     email: 'foobar@example.com',
-    preferredName: 'Signed Up',
     address: null,
     flair: 'Flair',
     paymentProviderCustomers: [],

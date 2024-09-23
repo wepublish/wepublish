@@ -153,7 +153,6 @@ type User {
   email: String!
   emailVerifiedAt: DateTime
   birthday: DateTime
-  preferredName: String
   address: UserAddress
   flair: String
   userImage: Image
@@ -1473,7 +1472,6 @@ input UserInput {
   email: String!
   emailVerifiedAt: DateTime
   birthday: DateTime
-  preferredName: String
   address: UserAddressInput
   flair: String
   userImageID: ID

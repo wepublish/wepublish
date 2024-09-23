@@ -24,7 +24,7 @@ export function Dashboard() {
   const {t} = useTranslation()
 
   const {data: me} = useMeQuery()
-  const name = me?.me?.preferredName ?? me?.me?.firstName ?? me?.me?.name ?? t('dashboard.user')
+  const name = me?.me?.firstName ?? me?.me?.name ?? t('dashboard.user')
 
   return (
     <>

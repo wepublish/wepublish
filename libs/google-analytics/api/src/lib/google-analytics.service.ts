@@ -3,8 +3,8 @@ import {PrismaClient} from '@prisma/client'
 import {BetaAnalyticsDataClient} from '@google-analytics/data'
 import {JWTInput} from 'google-auth-library'
 import {format} from 'date-fns'
-import {getMaxTake} from '@wepublish/utils/api'
 import {HotAndTrendingDataSource} from '@wepublish/article/api'
+import {getMaxTake} from '@wepublish/utils/api'
 
 export const GA_CLIENT_OPTIONS = Symbol('GA_CLIENT_OPTIONS')
 export type GoogleAnalyticsConfig = {
@@ -40,7 +40,6 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
     const thirtyDaysAgo = new Date(new Date().getTime() - 60 * 60 * 24 * 31 * 1000)
 
     const [{rows}] = await this.analyticsDataClient.runReport({
-      limit: getMaxTake(take ?? 10) + (skip ?? 0),
       property: `properties/${this.config.property}`,
       dateRanges: [
         {
@@ -60,24 +59,22 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
       ]
     })
 
-    const articleViewMap = (rows ?? [])
-      .slice(skip ?? 0)
-      .reduce((object, {dimensionValues, metricValues}) => {
-        if (!dimensionValues?.at(0) || !metricValues?.at(0)) {
-          return object
-        }
-
-        const [{value: slug}] = dimensionValues
-        const [{value: views}] = metricValues
-
-        if (!slug?.startsWith(this.config.articlePrefix) || !views) {
-          return object
-        }
-
-        object[slug.replace(this.config.articlePrefix, '')] = +views
-
+    const articleViewMap = (rows ?? []).reduce((object, {dimensionValues, metricValues}) => {
+      if (!dimensionValues?.at(0) || !metricValues?.at(0)) {
         return object
-      }, {} as Record<string, number>)
+      }
+
+      const [{value: slug}] = dimensionValues
+      const [{value: views}] = metricValues
+
+      if (!slug?.startsWith(this.config.articlePrefix) || !views) {
+        return object
+      }
+
+      object[slug.replace(this.config.articlePrefix, '')] = +views
+
+      return object
+    }, {} as Record<string, number>)
 
     const articles = await this.prisma.article.findMany({
       where: {
@@ -94,7 +91,9 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
             slug: true
           }
         }
-      }
+      },
+      take: getMaxTake(take ?? 10),
+      skip: skip ?? 0
     })
 
     return articles.sort((a, b) => {

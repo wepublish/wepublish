@@ -266,8 +266,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       return callAction(onSubscribe)(subscribeData)
     }
 
-    const {address, challengeAnswer, email, birthday, password, name, firstName, preferredName} =
-      data as z.infer<typeof loggedOutSchema>
+    const {address, challengeAnswer, email, birthday, password, name, firstName} = data as z.infer<
+      typeof loggedOutSchema
+    >
 
     const registerData = {
       birthday,
@@ -275,7 +276,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       password,
       name,
       firstName,
-      preferredName,
       address: address as UserAddressInput,
       challengeAnswer
     } as RegisterMutationVariables

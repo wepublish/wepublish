@@ -35,6 +35,8 @@ exports[`GoogleAnalyticsService should get articles by popularity 2`] = `
         },
       },
     },
+    "skip": 0,
+    "take": 10,
     "where": {
       "published": {
         "slug": {

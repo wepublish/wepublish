@@ -330,10 +330,10 @@ exports[`Registration Form Container should render Filled 1`] = `
                 <div
 -               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1y6ah8l-MuiInputBase-root-MuiOutlinedInput-root"
 +                 class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-16su6c8-MuiInputAdornment-root"
-                >
++               >
 +                 <span
 +                   class="notranslate"
-+                 >
+                  >
 +                   ​
 +                 </span>
 +                 <img
@@ -418,7 +418,7 @@ exports[`Registration Form Container should render Filled 1`] = `
           >
             Captcha
           </label>
-@@ -522,25 +560,198 @@
+@@ -522,25 +560,196 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":ra:"
@@ -465,11 +465,10 @@ exports[`Registration Form Container should render Filled 1`] = `
 +       <div
 +         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
 +       >
-+         No more mocked responses for the query: mutation Register($name: String!, $firstName: String, $preferredName: String, $birthday: DateTime, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
++         No more mocked responses for the query: mutation Register($name: String!, $firstName: String, $birthday: DateTime, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
 +   registerMember(
 +     name: $name
 +     firstName: $firstName
-+     preferredName: $preferredName
 +     birthday: $birthday
 +     address: $address
 +     email: $email
@@ -492,7 +491,6 @@ exports[`Registration Form Container should render Filled 1`] = `
 +   id
 +   name
 +   firstName
-+   preferredName
 +   flair
 +   birthday
 +   email
@@ -2551,10 +2549,10 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
                 <div
 -               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1y6ah8l-MuiInputBase-root-MuiOutlinedInput-root"
 +                 class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-16su6c8-MuiInputAdornment-root"
-                >
++               >
 +                 <span
 +                   class="notranslate"
-+                 >
+                  >
 +                   ​
 +                 </span>
 +                 <img
@@ -2639,7 +2637,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
           >
             Captcha
           </label>
-@@ -522,25 +560,198 @@
+@@ -522,25 +560,196 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r1l:"
@@ -2686,11 +2684,10 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 +       <div
 +         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
 +       >
-+         No more mocked responses for the query: mutation Register($name: String!, $firstName: String, $preferredName: String, $birthday: DateTime, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
++         No more mocked responses for the query: mutation Register($name: String!, $firstName: String, $birthday: DateTime, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
 +   registerMember(
 +     name: $name
 +     firstName: $firstName
-+     preferredName: $preferredName
 +     birthday: $birthday
 +     address: $address
 +     email: $email
@@ -2713,7 +2710,6 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 +   id
 +   name
 +   firstName
-+   preferredName
 +   flair
 +   birthday
 +   email

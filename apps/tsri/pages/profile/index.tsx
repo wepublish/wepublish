@@ -43,7 +43,10 @@ function Profile() {
         </SubscriptionLink>
       </ProfileHeading>
 
-      <PersonalDataFormContainer mediaEmail="info@tsri.ch" />
+      <PersonalDataFormContainer
+        mediaEmail="info@tsri.ch"
+        fields={['firstName', 'address', 'password', 'image']}
+      />
     </ProfileWrapper>
   )
 }

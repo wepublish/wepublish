@@ -6,6 +6,7 @@
   },
   "scripts": {
     "migrate": "prisma migrate deploy && prisma db seed",
+    "serve": "nx run-many  --parallel 10 -t serve --output-style stream",
     "dev": "run-s start:docker watch",
     "clean": "run-p --print-label clean:**",
     "clean:media": "docker volume rm wepublish_storage_data",
