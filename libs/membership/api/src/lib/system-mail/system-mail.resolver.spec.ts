@@ -47,7 +47,6 @@ const FAKE_USER: User = {
   roleIDs: [],
   emailVerifiedAt: new Date(),
   firstName: 'aaa',
-  preferredName: 'aaa',
   password: 'aaa',
   lastLogin: null,
   userImageID: null,

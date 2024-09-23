@@ -1972,7 +1972,6 @@ type UserFactoryDefineInput = {
     emailVerifiedAt?: Date | null;
     name?: string;
     firstName?: string | null;
-    preferredName?: string | null;
     flair?: string | null;
     password?: string;
     active?: boolean;

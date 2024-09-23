@@ -89,7 +89,6 @@ const verifiedUserComment = {
     name: 'User',
     firstName: 'Fallback',
     email: 'foobar@example.com',
-    preferredName: 'Signed Up',
     address: null,
     flair: 'Flair',
     paymentProviderCustomers: [],
@@ -177,18 +176,6 @@ export const WithoutSource: StoryObj = {
     user: {
       ...verifiedUserComment.user,
       flair: null
-    }
-  }
-}
-
-export const WithoutPreferredName: StoryObj = {
-  ...Default,
-  args: {
-    ...Default.args,
-    ...verifiedUserComment,
-    user: {
-      ...verifiedUserComment.user,
-      preferredName: null
     }
   }
 }
