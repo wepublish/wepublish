@@ -70,7 +70,6 @@ export function UserSearch({
     let userLabel = ''
     if (user.firstName) userLabel += `${user.firstName} `
     if (user.name) userLabel += `${user.name} `
-    if (user.preferredName) userLabel += `(${user.preferredName}) `
     if (user.email) userLabel += `| ${user.email} `
     if (user.address?.streetAddress) userLabel += `| ${user.address.streetAddress} `
     if (user.address?.zipCode) userLabel += `| ${user.address.zipCode} `

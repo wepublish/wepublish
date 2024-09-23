@@ -863,7 +863,6 @@ model User {
   emailVerifiedAt DateTime?
   name            String
   firstName       String?
-  preferredName   String?
   flair           String?
   password        String
   active          Boolean
