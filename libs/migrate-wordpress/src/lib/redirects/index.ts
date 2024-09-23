@@ -17,14 +17,14 @@ async function init() {
     saveFile(nextJsCompatibleRoutes)
     console.log('congrats, all done!')
   } catch (e) {
-    console.log('# Bei der Transformation der Redirects ist ein Fehler aufgetreten', e)
+    console.log('# while migrating the redirects an error occurred', e)
   }
 }
 
 function readFile(): any[] {
   const data = fs.readFileSync(IMPORT_PATH, 'utf8')
   const originalRedirects = JSON.parse(data)?.redirects
-  if (!originalRedirects) throw new Error('No redirects found.')
+  if (!originalRedirects) throw new Error('no redirects found.')
   return originalRedirects
 }
 
