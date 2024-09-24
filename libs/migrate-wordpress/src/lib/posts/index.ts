@@ -1,6 +1,6 @@
 import {fetchPost, fetchPosts, WordpressPost} from './wordpress-api'
 import {migratePost} from './post'
-import {prepareArticleData, PreparedArticleData} from './prepare-data'
+import {prepareArticleData} from './prepare-data'
 import {mapLimit} from 'async'
 import chalk from 'chalk'
 import {logError} from './error-logger'

@@ -1,4 +1,4 @@
-import {addSeconds, differenceInMinutes, differenceInSeconds, format, startOfDay} from 'date-fns'
+import {addSeconds, differenceInSeconds, format, startOfDay} from 'date-fns'
 
 export const humanizeObject = (obj: object) =>
   Object.entries(obj)
