@@ -6,10 +6,13 @@ const BASE_PATH = './libs/migrate-wordpress/src/lib/redirects'
 const IMPORT_PATH = BASE_PATH + '/import-redirects.json'
 const EXPORT_PATH = BASE_PATH + '/redirects.json'
 
+type NextJsRedirectsMap = {
+  [key: string]: NextJsRoute
+}
+
 interface NextJsRoute {
-  source: string
   destination: string
-  permanent: boolean
+  permanent?: boolean
 }
 
 init()
@@ -19,11 +22,13 @@ async function init() {
     console.log('read file...')
     const originalRedirects = readFile()
     console.log('transform redirects...')
-    const nextJsCompatibleRoutes: NextJsRoute[] = transformData(originalRedirects)
+    const nextJsCompatibleRoutes: NextJsRedirectsMap = transformData(originalRedirects)
     console.log('fetching wordpress posts...')
-    const wpArticleRedirects: NextJsRoute[] = await getRedirectsFromWpArticles()
+    const wpArticleRedirects: NextJsRedirectsMap = await getRedirectsFromWpArticles()
+    console.log('resolve redirects...')
+    const nextJsRoutes = resolveRedirects({...nextJsCompatibleRoutes, ...wpArticleRedirects})
     console.log('write file...')
-    saveFile([...nextJsCompatibleRoutes, ...wpArticleRedirects])
+    saveFile(nextJsRoutes)
     console.log('congrats, all done!')
   } catch (e) {
     console.log('# while migrating the redirects an error occurred', e)
@@ -37,29 +42,27 @@ function readFile(): any[] {
   return originalRedirects
 }
 
-function transformData(inputData: any[]): NextJsRoute[] {
-  const nextJsCompatibleRoutes: NextJsRoute[] = []
+function transformData(inputData: any[]): NextJsRedirectsMap {
+  const nextJsCompatibleRoutes: NextJsRedirectsMap = {}
   for (const redirect of inputData) {
     const source = getPathname(redirect?.url)
     const destination = getPathname(redirect?.action_data?.url)
     if (!source || !destination)
       throw new Error(`old or new url not provided in redirect with id ${redirect?.id}`)
-    nextJsCompatibleRoutes.push({
-      source,
-      destination,
-      permanent: false
-    })
+    nextJsCompatibleRoutes[source] = {
+      destination
+    }
   }
   return nextJsCompatibleRoutes
 }
 
-function saveFile(data: NextJsRoute[]) {
+function saveFile(data: NextJsRedirectsMap) {
   const jsonData = JSON.stringify(data, null, 2)
   fs.writeFileSync(EXPORT_PATH, jsonData, 'utf8')
 }
 
-async function getRedirectsFromWpArticles(): Promise<NextJsRoute[]> {
-  let wpArticleRedirects: NextJsRoute[] = []
+async function getRedirectsFromWpArticles(): Promise<NextJsRedirectsMap> {
+  let wpArticleRedirects: NextJsRedirectsMap = {}
   const perPage = 100
 
   // get first batch of posts
@@ -79,22 +82,20 @@ async function getRedirectsFromWpArticles(): Promise<NextJsRoute[]> {
       page,
       perPage
     })
-    wpArticleRedirects = [...wpArticleRedirects, ...getRedirectsFromPosts(items)]
+    wpArticleRedirects = {...wpArticleRedirects, ...getRedirectsFromPosts(items)}
   }
 
   return wpArticleRedirects
 }
 
-function getRedirectsFromPosts(posts: WordpressPost[]): NextJsRoute[] {
-  const wpArticleRedirects: NextJsRoute[] = []
+function getRedirectsFromPosts(posts: WordpressPost[]): NextJsRedirectsMap {
+  const wpArticleRedirects: NextJsRedirectsMap = {}
   for (const post of posts) {
     const source = getPathname(post.link)
     const destination = `/a${getPathname(post.link)}`
-    wpArticleRedirects.push({
-      source,
-      destination,
-      permanent: false
-    })
+    wpArticleRedirects[source] = {
+      destination
+    }
   }
   return wpArticleRedirects
 }
@@ -103,4 +104,19 @@ function getPathname(rawUrl: string): string {
   // remove trailing slash
   // remove base url
   return rawUrl?.replace(BASE_URL, '')?.replace(/\/$/, '') || '/'
+}
+
+function resolveRedirects(redirects: NextJsRedirectsMap): NextJsRedirectsMap {
+  const resolvedRedirects: NextJsRedirectsMap = {...redirects}
+
+  for (const key in resolvedRedirects) {
+    let currentRoute = resolvedRedirects[key]
+
+    while (resolvedRedirects[currentRoute.destination]) {
+      const nextRoute = resolvedRedirects[currentRoute.destination]
+      currentRoute.destination = nextRoute.destination
+    }
+  }
+
+  return resolvedRedirects
 }
