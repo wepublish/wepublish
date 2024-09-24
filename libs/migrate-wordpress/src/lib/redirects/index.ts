@@ -110,7 +110,7 @@ function resolveRedirects(redirects: NextJsRedirectsMap): NextJsRedirectsMap {
   const resolvedRedirects: NextJsRedirectsMap = {...redirects}
 
   for (const key in resolvedRedirects) {
-    let currentRoute = resolvedRedirects[key]
+    const currentRoute = resolvedRedirects[key]
 
     while (resolvedRedirects[currentRoute.destination]) {
       const nextRoute = resolvedRedirects[currentRoute.destination]
