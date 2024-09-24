@@ -19,35 +19,14 @@ export const MannschaftContentBox = (
     blocks: {Image, RichText, Embed}
   } = useWebsiteBuilder()
 
-  if (props.__typename === 'ImageBlock') {
-    return (
-      <MannschaftContentBoxWrapper>
-        <Image {...props} />
-      </MannschaftContentBoxWrapper>
-    )
-  }
-  if (props.__typename === 'RichTextBlock') {
-    return (
-      <MannschaftContentBoxWrapper>
-        <RichText {...props} />
-      </MannschaftContentBoxWrapper>
-    )
-  }
-  if (props.__typename === 'EmbedBlock') {
-    return (
-      <MannschaftContentBoxWrapper>
-        <Embed {...props} />
-      </MannschaftContentBoxWrapper>
-    )
-  }
-}
-
-export const isContentBoxBlock = (
-  block: ApiV1.Block
-): block is ApiV1.ImageBlock | ApiV1.RichTextBlock | ApiV1.EmbedBlock =>
-  allPass([anyPass([isImageBlock, isRichTextBlock, isEmbedBlock]), hasBlockStyle('ContentBox')])(
-    block
+  return (
+    <MannschaftContentBoxWrapper>
+      {isImageBlock(props) && <Image {...props} />}
+      {isRichTextBlock(props) && <RichText {...props} />}
+      {isEmbedBlock(props) && <Embed {...props} />}
+    </MannschaftContentBoxWrapper>
   )
+}
 
 const MannschaftContentBoxWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(3)};
@@ -57,3 +36,10 @@ const MannschaftContentBoxWrapper = styled('div')`
     margin-top: -${({theme}) => theme.spacing(9)};
   }
 `
+
+export const isContentBoxBlock = (
+  block: ApiV1.Block
+): block is ApiV1.ImageBlock | ApiV1.RichTextBlock | ApiV1.EmbedBlock =>
+  allPass([anyPass([isImageBlock, isRichTextBlock, isEmbedBlock]), hasBlockStyle('ContentBox')])(
+    block
+  )
