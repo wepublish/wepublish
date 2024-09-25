@@ -19,15 +19,13 @@ import {ensureAuthor} from './author'
 import {PreparedArticleData} from './prepare-data'
 import {deleteExistingPosts} from './index'
 
-const deleteBeforeMigrate = deleteExistingPosts
-
 export async function migratePost(data: PreparedArticleData) {
   const {title, lead, content, createdAt, modifiedAt, slug, link, featuredMedia} = data
 
   const existingArticle = await getArticleBySlug(slug)
   if (existingArticle) {
     console.debug('  article exists', slug)
-    if (deleteBeforeMigrate) {
+    if (deleteExistingPosts) {
       console.debug('  article delete', slug)
       await deleteArticle(existingArticle.id)
     } else {

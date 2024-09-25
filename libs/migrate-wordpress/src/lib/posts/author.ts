@@ -13,10 +13,9 @@ import {
   DeleteAuthorMutationVariables
 } from '../../api/private'
 import {convertHtmlToSlate} from './convert-html-to-slate'
+import {deleteExistingAuthors} from './index'
 
 export type Author = {id: string}
-
-const deleteBeforeMigrate = false
 
 export const ensureAuthor = async (author: WordpressAuthor): Promise<Author> => {
   const {slug, link, url, name, description, avatar_urls} = author
@@ -25,7 +24,7 @@ export const ensureAuthor = async (author: WordpressAuthor): Promise<Author> => 
   if (existingAuthor) {
     console.debug('  author exists', slug)
 
-    if (deleteBeforeMigrate) {
+    if (deleteExistingAuthors) {
       console.debug('  author delete', slug)
       await deleteAuthor(existingAuthor.id)
     } else {

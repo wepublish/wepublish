@@ -9,6 +9,7 @@ import {fixedMessage} from '../logger'
 import {getArticleBySlug} from './article'
 
 export const deleteExistingPosts = false
+export const deleteExistingAuthors = false
 
 const terminalLink = (uri: string, label: string) => `\x1b]8;;${uri}\x1b\\${label}\x1b]8;;\x1b\\`
 
