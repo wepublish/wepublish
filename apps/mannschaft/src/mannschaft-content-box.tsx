@@ -30,7 +30,7 @@ export const MannschaftContentBox = (
 
 const MannschaftContentBoxWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(3)};
-  background-color: lightyellow;
+  background-color: ${({theme}) => theme.palette.grey['200']};
 
   & + & {
     margin-top: -${({theme}) => theme.spacing(9)};
