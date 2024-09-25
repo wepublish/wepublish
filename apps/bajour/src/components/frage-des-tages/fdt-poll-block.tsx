@@ -6,7 +6,7 @@ import {useCallback, useEffect, useState} from 'react'
 import {CommentListContainer} from '../website-builder-overwrites/blocks/comment-list-container/comment-list-container-fdt'
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
 import {AuthorBox} from './author-box'
-import {TopComments} from './frage-des-tages'
+import {FdtArticleImage, TopComments} from './frage-des-tages'
 import {ReactComponent as FrageDesTagesLogo} from './frage-des-tages.svg'
 import {InfoBox} from './info-box'
 
@@ -162,9 +162,8 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
     <PollBlockProvider>
       <FrageDesTagesContainer>
         <FrageDesTagesWrapper>
-          <FDTLogo width={110} aria-label="Frage des Tages Logo" />
-
           <PollWrapper>
+            {articleData?.article?.image && <FdtArticleImage image={articleData.article.image} />}
             <PollBlockStyled poll={poll} />
           </PollWrapper>
 

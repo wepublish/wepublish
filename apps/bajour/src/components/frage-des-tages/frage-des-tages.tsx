@@ -5,7 +5,8 @@ import {
   BuilderCommentProps,
   BuilderTeaserListBlockProps,
   Comment,
-  isPollBlock
+  isPollBlock,
+  Image
 } from '@wepublish/website'
 import Link from 'next/link'
 import {useMemo} from 'react'
@@ -134,6 +135,11 @@ export const StyledComment = styled(Comment)`
   }
 `
 
+export const FdtArticleImage = styled(Image)`
+  grid-column-start: 5;
+  grid-column-end: 9;
+`
+
 export const FDTLogo = styled(FrageDesTagesLogo)`
   grid-column: -1 / 1;
   justify-self: end;
@@ -169,8 +175,7 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
   return (
     <FrageDesTagesContainer>
       <FrageDesTagesWrapper className={className}>
-        <FDTLogo width={110} aria-label="Frage des Tages Logo" />
-
+        {article?.image && <FdtArticleImage image={article.image} />}
         <PollWrapper>
           <PollBlock poll={pollToPass} />
         </PollWrapper>
