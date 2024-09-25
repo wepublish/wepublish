@@ -18,6 +18,7 @@ import {Node as SlateNode} from 'slate'
 import {ensureAuthor} from './author'
 import {PreparedArticleData} from './prepare-data'
 import {deleteExistingPosts} from './index'
+import {isSlateNodeEmpty} from './utils'
 
 export async function migratePost(data: PreparedArticleData) {
   const {title, lead, content, createdAt, modifiedAt, slug, link, featuredMedia} = data
@@ -48,7 +49,9 @@ export async function migratePost(data: PreparedArticleData) {
   let featuredImage
   if (featuredMedia) {
     featuredImage = await ensureImage(featuredMedia)
-    blocks.push(prepareImageBlock(featuredImage))
+    if (featuredImage) {
+      blocks.push(prepareImageBlock(featuredImage))
+    }
   }
 
   const nodes = extractContentNodes(content)
@@ -64,7 +67,7 @@ export async function migratePost(data: PreparedArticleData) {
 
       // Figure
       if ('figure' === specialEl.tagName) {
-        blocks.push(await extractFigure(node))
+        blocks.push(...(await await extractFigure(node)))
         continue
       }
 
@@ -103,26 +106,12 @@ export async function migratePost(data: PreparedArticleData) {
     }
 
     const slateContent = await convertNodeContentToRichText(node)
-
-    const isSlateNodeEmpty = (slateNode: any[]) => {
-      const isEmpty = (node: any): boolean => {
-        if (node?.text === '') {
-          return true
-        }
-        if (node?.type === 'paragraph' && node?.children?.every(isEmpty)) {
-          return true
-        }
-        return false
-      }
-      return slateNode.every(isEmpty)
-    }
     if (isSlateNodeEmpty(slateContent)) {
       continue
     }
-
     const lastBlock = blocks[blocks.length - 1]
     const hasParagraphs = (block: BlockInput) =>
-      block.richText && block.richText.richText.some((node: any) => node.type === 'paragraph')
+      block.richText && block.richText.richText?.some((node: any) => node.type === 'paragraph')
     if (lastBlock?.richText && !hasParagraphs(lastBlock)) {
       lastBlock?.richText.richText.push(...slateContent)
     } else {

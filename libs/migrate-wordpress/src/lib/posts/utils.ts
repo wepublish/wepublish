@@ -1,5 +1,25 @@
 import {addSeconds, differenceInSeconds, format, startOfDay} from 'date-fns'
 
+export const normalizeSlug = (slug: string): string => {
+  return slug.replace(/_/g, '-').replace(/%/g, '')
+}
+
+export const isSlateNodeEmpty = (slateNode: any[] | undefined) => {
+  if (slateNode === undefined || slateNode.length === 0) {
+    return true
+  }
+  const isEmpty = (node: any): boolean => {
+    if (node?.text === '') {
+      return true
+    }
+    if (node?.type === 'paragraph' && node?.children?.every(isEmpty)) {
+      return true
+    }
+    return false
+  }
+  return slateNode.every(isEmpty)
+}
+
 export const humanizeObject = (obj: object) =>
   Object.entries(obj)
     .filter(([key, value]) => value)

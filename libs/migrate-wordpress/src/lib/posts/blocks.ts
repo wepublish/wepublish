@@ -4,6 +4,7 @@ import {BlockInput, Image} from '../../api/private'
 import {convertHtmlToSlate} from './convert-html-to-slate'
 import {extractEmbed} from './embeds'
 import {Node as SlateNode} from 'slate'
+import {isSlateNodeEmpty} from './utils'
 
 type Node = {
   $: CheerioAPI
@@ -51,53 +52,39 @@ export async function extractImageGallery({$element}: Node): Promise<BlockInput[
   const imageGallery = imgElements.length > 1
   const imageSingles = imgElements.length === 1
 
+  const images = (
+    await Promise.all(
+      imgElements.map(async (i, img) => {
+        const $img = $element.find(img)
+        return await ensureImageFromImg($img)
+      })
+    )
+  ).filter(i => i) as Image[]
+
   if (imageGallery) {
-    return [
-      {
-        imageGallery: {
-          images: await Promise.all(
-            imgElements.map(async (i, img) => {
-              const $img = $element.find(img)
-              const image = await ensureImageFromImg($img)
-              return {
-                imageID: image.id
-              }
-            })
-          )
-        }
-      }
-    ]
+    return [{imageGallery: {images: images.map(({id}) => ({imageID: id}))}}]
   }
 
   if (imageSingles) {
-    return await Promise.all(
-      imgElements.map(async (i, img) => {
-        const $img = $element.find(img)
-        const image = await ensureImage({
-          url: $img.attr('data-src')!,
-          title: $img.attr('alt')!,
-          description: $img.attr('alt')!
-        })
-        return {
-          image: {
-            imageID: image.id
-          }
-        }
-      })
-    )
+    return await Promise.all(images.map(({id}) => ({image: {imageID: id}})))
   }
   return []
 }
 
-export async function extractFigure({$specialEl}: Node): Promise<BlockInput> {
+export async function extractFigure({$specialEl}: Node): Promise<BlockInput[]> {
   const $img = $specialEl.find('img')
   const image = await ensureImageFromImg($img)
-  return {
-    image: {
-      imageID: image.id,
-      caption: image.description
-    }
+  if (!image) {
+    return []
   }
+  return [
+    {
+      image: {
+        imageID: image.id,
+        caption: image.description
+      }
+    }
+  ]
 }
 
 export async function extractIframe({$, $specialEl}: Node): Promise<BlockInput[]> {
@@ -115,13 +102,15 @@ export async function extractContentBox({$specialEl, $}: Node): Promise<BlockInp
   if ($imageTag.length) {
     const image = await ensureImageFromImg($imageTag)
     $imageTag.parentsUntil('.content-box, .content-box-gelb').remove()
-    blocks.push({
-      image: {
-        imageID: image.id,
-        caption: image.description,
-        blockStyle: 'ContentBox'
-      }
-    })
+    if (image) {
+      blocks.push({
+        image: {
+          imageID: image.id,
+          caption: image.description,
+          blockStyle: 'ContentBox'
+        }
+      })
+    }
   }
 
   // extract potential iframes
@@ -132,12 +121,14 @@ export async function extractContentBox({$specialEl, $}: Node): Promise<BlockInp
   const richText = (await convertHtmlToSlate($specialEl.html()!)) as unknown as SlateNode[]
 
   // create rich text block
-  blocks.push({
-    richText: {
-      richText,
-      blockStyle: 'ContentBox'
-    }
-  })
+  if (!isSlateNodeEmpty(richText)) {
+    blocks.push({
+      richText: {
+        richText,
+        blockStyle: 'ContentBox'
+      }
+    })
+  }
 
   // create iframe blocks
   $iframes.map((i, iframe) => {

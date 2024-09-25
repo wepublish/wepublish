@@ -1,5 +1,8 @@
 import {
   ArticleInput,
+  ArticleList,
+  ArticleListQuery,
+  ArticleListQueryVariables,
   BlockInput,
   CreateArticle,
   CreateArticleMutation,
@@ -109,4 +112,12 @@ export async function getArticleBySlug(slug: string) {
       slug
     })
   ).article
+}
+
+export async function getArticleIdByTitle(title: string) {
+  return (
+    await privateClient.request<ArticleListQuery, ArticleListQueryVariables>(ArticleList, {
+      filter: title
+    })
+  ).articles?.nodes[0]?.id
 }

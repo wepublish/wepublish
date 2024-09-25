@@ -43,10 +43,12 @@ export async function prepareArticleData(post: WordpressPost): Promise<PreparedA
   let featuredMedia
   if (_embedded?.['wp:featuredmedia']?.length) {
     const featuredMediaData = _embedded?.['wp:featuredmedia'][0]
-    featuredMedia = {
-      url: featuredMediaData.source_url,
-      title: featuredMediaData.title.rendered,
-      description: removeLinks(featuredMediaData.caption?.rendered ?? '')
+    if (featuredMediaData.source_url && featuredMediaData.title) {
+      featuredMedia = {
+        url: featuredMediaData.source_url,
+        title: featuredMediaData.title.rendered,
+        description: removeLinks(featuredMediaData.caption?.rendered ?? '')
+      }
     }
   }
 

@@ -1,6 +1,6 @@
 import {URL} from 'url'
 import {Readable} from 'stream'
-import axios from 'axios'
+import axios, {AxiosRequestConfig} from 'axios'
 import FormData from 'form-data'
 import {print} from 'graphql'
 import {privateClient, privateGraphqlEndpoint, privateToken} from '../api/clients'
@@ -24,7 +24,7 @@ type EnsureImageProps = {
   description?: string
 }
 
-export const ensureImage = async (input: EnsureImageProps): Promise<Image> => {
+export const ensureImage = async (input: EnsureImageProps): Promise<Image | undefined> => {
   const {url, title, description} = input
 
   const foundImages = (await getImagesByTitle(title)).nodes
@@ -35,17 +35,21 @@ export const ensureImage = async (input: EnsureImageProps): Promise<Image> => {
   }
 
   console.debug('  create image', url)
-  const image = await createImage({
-    downloadUrl: url,
-    filename: new URL(url).pathname.split('/').pop() as string,
-    title,
-    link: url,
-    description
-  })
-  return {
-    id: image.id!,
-    title,
-    description
+  try {
+    const image = await createImage({
+      downloadUrl: url,
+      filename: new URL(url).pathname.split('/').pop() as string,
+      title,
+      link: url,
+      description
+    })
+    return {
+      id: image.id!,
+      title,
+      description
+    }
+  } catch (e) {
+    return undefined
   }
 }
 
@@ -66,13 +70,12 @@ async function createImage({downloadUrl, ...input}: CreateImageInput) {
 }
 
 async function getDownloadStream(fileUrl: string): Promise<Readable> {
-  const response = await axios({
+  const requestConfig: AxiosRequestConfig = {
     url: fileUrl,
     method: 'GET',
     responseType: 'stream'
-  })
-
-  return response.data
+  }
+  return (await axios(requestConfig)).data
 }
 
 function prepareFileInput(stream: Readable, input: UploadStreamInput) {

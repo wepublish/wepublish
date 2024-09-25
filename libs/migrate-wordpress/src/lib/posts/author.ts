@@ -42,7 +42,7 @@ export const ensureAuthor = async (author: WordpressAuthor): Promise<Author> => 
     name,
     slug,
     links: [{title: 'Link', url: link}],
-    imageID: image.id,
+    imageID: image?.id,
     bio: await convertHtmlToSlate(description)
   })
 }
