@@ -87,6 +87,8 @@ type FetchPostsProps = {
   page: number
   perPage: number
   categoryId?: number
+  orderby?: string
+  order?: string
 }
 
 export type WordpressPostsResponse = {
@@ -95,14 +97,12 @@ export type WordpressPostsResponse = {
 }
 
 export const fetchPosts = async ({
-  categoryId,
   perPage,
-  page
+  page,
+  ...query
 }: FetchPostsProps): Promise<WordpressPostsResponse> => {
-  const params = {page, per_page: perPage, _embed: true} as any
-  if (categoryId) {
-    params.categories = categoryId.toString()
-  }
+  const params = {page, per_page: perPage, _embed: true, ...query} as any
+
   const response = await request({
     method: 'get',
     path: '/posts',

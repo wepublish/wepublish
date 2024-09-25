@@ -66,7 +66,9 @@ export const migratePosts = async (limit?: number, query?: Record<string, string
     const {items: batch, total} = await fetchPosts({
       ...query,
       page,
-      perPage: +batchSize
+      perPage: +batchSize,
+      orderby: 'modified',
+      order: 'desc'
     })
     totalCount = limit ? Math.min(+total, limit) : +total
     timer.updateTotal(totalCount)

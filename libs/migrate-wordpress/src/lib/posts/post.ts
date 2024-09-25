@@ -58,7 +58,6 @@ export async function migratePost(data: PreparedArticleData) {
     if (specialEl) {
       // Img
       if ('img' === specialEl.tagName) {
-        console.error(`img tag, please check post ${data.id}`)
         blocks.push(...(await extractImageGallery(node)))
         continue
       }
