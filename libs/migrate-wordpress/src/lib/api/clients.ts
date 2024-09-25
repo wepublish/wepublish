@@ -7,7 +7,7 @@ export const publicClient = new GraphQLClient(publicGraphqlEndpoint, {
   }
 })
 
-export const privateToken = process.env['TOKEN']
+export const privateToken = process.env['WEPUBLISH_TOKEN']
 export const privateGraphqlEndpoint = publicGraphqlEndpoint + '/admin'
 export const privateClient = new GraphQLClient(privateGraphqlEndpoint, {
   headers: {

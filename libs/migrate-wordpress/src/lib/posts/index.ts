@@ -39,7 +39,8 @@ export const migratePosts = async (limit?: number, query?: Record<string, string
   timer.onUpdate(() => {
     fixedMessage(timer.message())
   })
-  let batchSize = process.env['BATCH_SIZE'] ?? 1
+  let batchSize = process.env['WORDPRESS_BATCH_SIZE'] ?? 10
+  const concurrency = process.env['PROCESSOR_CONCURRENCY'] ?? 5
   let postsMigrating = 0
   let postsMigrated = 0
   let totalCount: number
@@ -59,7 +60,7 @@ export const migratePosts = async (limit?: number, query?: Record<string, string
 
     if (batch.length === 0) break
 
-    await mapLimit(batch, 5, async (post: WordpressPost) => {
+    await mapLimit(batch, +concurrency, async (post: WordpressPost) => {
       postsMigrating++
       const result = await prepareDataAndMigratePost(post)
       if (result) {
