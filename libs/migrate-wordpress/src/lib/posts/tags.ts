@@ -43,9 +43,7 @@ const ensureTag = async ({name, main = false}: TagInput): Promise<Tag | undefine
     if (existingTag) {
       return existingTag
     }
-    console.error(`Could not create tag: (${humanizeObject({tag, main})})`)
-    logError(`tag-${tag}`, e?.stack || e?.message)
-    return undefined
+    throw e
   }
 }
 
