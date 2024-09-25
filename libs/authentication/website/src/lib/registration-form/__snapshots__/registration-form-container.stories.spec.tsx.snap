@@ -282,7 +282,7 @@ exports[`Registration Form Container should render Filled 1`] = `
             >
               Ort / Stadt
             </label>
-@@ -350,61 +350,99 @@
+@@ -350,60 +350,98 @@
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r7:"
@@ -324,16 +324,16 @@ exports[`Registration Form Container should render Filled 1`] = `
               >
                 Land
               </label>
-+             <div
+              <div
+-               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1y6ah8l-MuiInputBase-root-MuiOutlinedInput-root"
 +               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-fv07na-MuiInputBase-root-MuiOutlinedInput-root"
 +             >
-                <div
--               class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1y6ah8l-MuiInputBase-root-MuiOutlinedInput-root"
++               <div
 +                 class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-16su6c8-MuiInputAdornment-root"
-+               >
+                >
 +                 <span
 +                   class="notranslate"
-                  >
++                 >
 +                   ​
 +                 </span>
 +                 <img
@@ -361,8 +361,8 @@ exports[`Registration Form Container should render Filled 1`] = `
                 />
                 <div
                   class="MuiAutocomplete-endAdornment css-p1olib-MuiAutocomplete-endAdornment"
-                >
-                  <button
++               >
++                 <button
 +                   aria-label="Clear"
 +                   class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-clearIndicator css-1glvl0p-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-clearIndicator"
 +                   tabindex="-1"
@@ -375,7 +375,7 @@ exports[`Registration Form Container should render Filled 1`] = `
 +                     data-testid="CloseIcon"
 +                     focusable="false"
 +                     viewBox="0 0 24 24"
-+                   >
+                    >
 +                     <path
 +                       d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
 +                     />
@@ -384,12 +384,11 @@ exports[`Registration Form Container should render Filled 1`] = `
 +                     class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
 +                   />
 +                 </button>
-+                 <button
+                  <button
                     aria-label="Open"
                     class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-qzbt6i-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator"
                     tabindex="-1"
                     title="Open"
-                    type="button"
 @@ -428,11 +466,11 @@
                 <fieldset
                   aria-hidden="true"
@@ -418,7 +417,7 @@ exports[`Registration Form Container should render Filled 1`] = `
           >
             Captcha
           </label>
-@@ -522,25 +560,196 @@
+@@ -522,25 +560,230 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":ra:"
@@ -440,7 +439,7 @@ exports[`Registration Form Container should render Filled 1`] = `
                 </span>
               </legend>
             </fieldset>
-+         </div>
+          </div>
 +       </div>
 +     </div>
 +     <div
@@ -461,7 +460,41 @@ exports[`Registration Form Container should render Filled 1`] = `
 +             d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
 +           />
 +         </svg>
-        </div>
++       </div>
++       <div
++         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
++       >
++         No more mocked responses for the query: query Challenge {
++   challenge {
++     challengeID
++     challenge
++     validUntil
++     __typename
++   }
++ }
++ Expected variables: {}
++
++       </div>
++     </div>
++     <div
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorError MuiAlert-standardError MuiAlert-standard css-1iznk5b-MuiPaper-root-MuiAlert-root"
++       role="alert"
++     >
++       <div
++         class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
++       >
++         <svg
++           aria-hidden="true"
++           class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
++           data-testid="ErrorOutlineIcon"
++           focusable="false"
++           viewBox="0 0 24 24"
++         >
++           <path
++             d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
++           />
++         </svg>
++       </div>
 +       <div
 +         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
 +       >
