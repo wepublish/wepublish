@@ -1,0 +1,12 @@
+fragment ArticleRef on Article {
+    id
+}
+
+query Article($slug: Slug!) {
+    article(slug: $slug) {
+        id
+        url
+    }
+}
+
+
