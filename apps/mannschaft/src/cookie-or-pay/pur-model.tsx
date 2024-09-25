@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import {useEffect} from 'react'
 
 import {useHasSubscription} from '../paywall/has-subscription'
@@ -15,13 +16,16 @@ export const PURModel = () => {
   const hasSubscription = useHasSubscription()
 
   useEffect(() => {
-    window.cmp_pur_enable = true
-    window.cmp_pur_mode = 0
-
-    if (hasSubscription) {
-      window.cmp_pur_loggedin = true
-    }
+    window.cmp_pur_loggedin = hasSubscription
   }, [hasSubscription])
 
-  return null
+  return (
+    <Head>
+      <script>{`
+          window.cmp_waitforimport = true;
+          window.cmp_pur_enable = false; // disable for now
+          window.cmp_pur_mode = 0;
+      `}</script>
+    </Head>
+  )
 }

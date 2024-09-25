@@ -18,8 +18,8 @@ import {useHasSubscription} from '../../src/paywall/has-subscription'
 import {PaywallBlock} from '../../src/paywall/paywall-block'
 
 const paywallCss = css`
-  // Shows the first 4 blocks (usually title, image, richtext + ad) and hides the rest
-  & > :nth-child(n + 5):not(:is(${ArticleInfoWrapper})) {
+  // Shows the first 3 blocks (usually title, image, richtext) and hides the rest
+  & > :nth-child(n + 4):not(:is(${ArticleInfoWrapper})) {
     display: none;
   }
 `
