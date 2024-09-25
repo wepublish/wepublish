@@ -115,7 +115,8 @@ export async function extractContentBox({$specialEl, $}: Node): Promise<BlockInp
     blocks.push({
       image: {
         imageID: image.id,
-        caption: image.description
+        caption: image.description,
+        blockStyle: 'ContentBox'
       }
     })
   }
@@ -130,13 +131,14 @@ export async function extractContentBox({$specialEl, $}: Node): Promise<BlockInp
   // create rich text block
   blocks.push({
     richText: {
-      richText
+      richText,
+      blockStyle: 'ContentBox'
     }
   })
 
   // create iframe blocks
   $iframes.map((i, iframe) => {
-    blocks.push(extractEmbed($.html(iframe).toString()))
+    blocks.push(extractEmbed($.html(iframe).toString(), 'ContentBox'))
   })
   return blocks
 }

@@ -1,7 +1,7 @@
 import {BlockInput} from '../../api/private'
 import cheerio from 'cheerio'
 
-export function extractEmbed(input: string): BlockInput {
+export function extractEmbed(input: string, blockStyle?: string): BlockInput {
   const facebookPostMatch = input.match(/facebook.com\/(.+)\/posts\/([0-9]+)/)
   const facebookVideoMatch = input.match(/facebook.com\/(.+)\/videos\/([0-9]+)/)
   const instagramMatch = input.match(/instagram.com\/p\/([0-9a-zA-Z-_]+)/)
@@ -16,37 +16,37 @@ export function extractEmbed(input: string): BlockInput {
 
   if (facebookPostMatch) {
     const [, userID, postID] = facebookPostMatch
-    return {facebookPost: {userID, postID}}
+    return {facebookPost: {userID, postID, blockStyle}}
   } else if (facebookVideoMatch) {
     const [, userID, videoID] = facebookVideoMatch
-    return {facebookVideo: {userID, videoID}}
+    return {facebookVideo: {userID, videoID, blockStyle}}
   } else if (instagramMatch) {
     const [, postID] = instagramMatch
-    return {instagramPost: {postID}}
+    return {instagramPost: {postID, blockStyle}}
   } else if (instagramReelMatch) {
     const [, postID] = instagramReelMatch
-    return {instagramPost: {postID}}
+    return {instagramPost: {postID, blockStyle}}
   } else if (twitterMatch) {
     const [, userID, tweetID] = twitterMatch
-    return {twitterTweet: {userID, tweetID}}
+    return {twitterTweet: {userID, tweetID, blockStyle}}
   } else if (vimeoMatch) {
     const [, videoID] = vimeoMatch
-    return {vimeoVideo: {videoID}}
+    return {vimeoVideo: {videoID, blockStyle}}
   } else if (youTubeMatch) {
     const [, videoID] = youTubeMatch
-    return {youTubeVideo: {videoID}}
+    return {youTubeVideo: {videoID, blockStyle}}
   } else if (polisMatch) {
     const [, conversationID] = polisMatch
-    return {polisConversation: {conversationID}}
+    return {polisConversation: {conversationID, blockStyle}}
   } else if (tikTokMatch) {
     const [, userID, videoID] = tikTokMatch
-    return {tikTokVideo: {userID, videoID}}
+    return {tikTokVideo: {userID, videoID, blockStyle}}
   } else if (bildwurfAdMatch) {
     const [, zoneID] = bildwurfAdMatch
-    return {bildwurfAd: {zoneID}}
+    return {bildwurfAd: {zoneID, blockStyle}}
   } else if (soundCloudMatch) {
     const [, trackID] = soundCloudMatch
-    return {soundCloudTrack: {trackID}}
+    return {soundCloudTrack: {trackID, blockStyle}}
   } else {
     if (input) {
       const $ = cheerio.load(input)
@@ -59,13 +59,14 @@ export function extractEmbed(input: string): BlockInput {
             url: source,
             title: iframe.attr('title'),
             width: iframe.attr('width') ? parseInt(iframe.attr('width')!) : undefined,
-            height: iframe.attr('height') ? parseInt(iframe.attr('height')!) : undefined
+            height: iframe.attr('height') ? parseInt(iframe.attr('height')!) : undefined,
+            blockStyle
           }
         }
       }
 
       try {
-        return {embed: {url: new URL(input).toString()}}
+        return {embed: {url: new URL(input).toString(), blockStyle}}
       } catch {
         return {embed: {}}
       }
