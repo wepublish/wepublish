@@ -78,6 +78,7 @@ import {EventSort, getEvents} from './event/event.query'
 import {getArticles} from './article/article.queries'
 import {getPages} from './page/page.queries'
 import {GraphQLTag} from './tag/tag'
+import {Article} from '@prisma/client'
 
 export const GraphQLTeaserStyle = new GraphQLEnumType({
   name: 'TeaserStyle',
@@ -600,25 +601,32 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
           {loaders, prisma, hotAndTrendingDataSource}
         ) => {
           if (teaserType === TeaserType.Article) {
-            const articles =
-              sort === TeaserListBlockSort.PublishedAt
-                ? await getArticles(
-                    {
-                      published: true,
-                      tags: filter.tags
-                    },
-                    ArticleSort.PublishedAt,
-                    SortOrder.Descending,
-                    undefined,
-                    skip,
-                    take,
-                    prisma.article
-                  )
-                : {
-                    nodes: await hotAndTrendingDataSource.getMostViewedArticles({skip, take})
-                  }
+            let articles: Article[] = []
 
-            return articles.nodes.map(
+            if (sort === TeaserListBlockSort.HotAndTrending) {
+              try {
+                articles = await hotAndTrendingDataSource.getMostViewedArticles({skip, take})
+              } catch (e) {
+                console.error(e)
+              }
+            } else {
+              articles = (
+                await getArticles(
+                  {
+                    published: true,
+                    tags: filter.tags
+                  },
+                  ArticleSort.PublishedAt,
+                  SortOrder.Descending,
+                  undefined,
+                  skip,
+                  take,
+                  prisma.article
+                )
+              )?.nodes
+            }
+
+            return articles.map(
               article =>
                 ({
                   articleID: article.id,
@@ -718,24 +726,31 @@ export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBloc
           {loaders, hotAndTrendingDataSource, prisma}
         ) => {
           if (teaserType === TeaserType.Article) {
-            const articles =
-              sort === TeaserListBlockSort.PublishedAt
-                ? await getArticles(
-                    {
-                      tags: filter.tags
-                    },
-                    ArticleSort.PublishedAt,
-                    SortOrder.Descending,
-                    undefined,
-                    skip,
-                    take,
-                    prisma.article
-                  )
-                : {
-                    nodes: await hotAndTrendingDataSource.getMostViewedArticles({skip, take})
-                  }
+            let articles: Article[]
 
-            return articles.nodes.map(
+            if (sort === TeaserListBlockSort.HotAndTrending) {
+              try {
+                articles = await hotAndTrendingDataSource.getMostViewedArticles({skip, take})
+              } catch (e) {
+                console.error(e)
+              }
+            } else {
+              articles = (
+                await getArticles(
+                  {
+                    tags: filter.tags
+                  },
+                  ArticleSort.PublishedAt,
+                  SortOrder.Descending,
+                  undefined,
+                  skip,
+                  take,
+                  prisma.article
+                )
+              )?.nodes
+            }
+
+            return articles.map(
               article =>
                 ({
                   articleID: article.id,
