@@ -2,12 +2,12 @@ import {
   useWebsiteBuilder,
   ApiV1,
   articleToTeaser,
-  Teaser,
   alignmentForTeaserBlock
 } from '@wepublish/website'
 import {Box, Skeleton, styled, css} from '@mui/material'
 import {useRouter} from 'next/router'
-import {FormEvent, useEffect, useMemo, useState} from 'react'
+import {FormEvent, useEffect, useMemo, useRef, useState} from 'react'
+import {MannschaftBaseTeaser} from '../src/mannschaft-base-teaser'
 
 export const SearchForm = styled('form')`
   display: grid;
@@ -65,6 +65,13 @@ export default function Search() {
   }
 
   const searchQuery: string | undefined = (router.query.q as string) || undefined
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  })
 
   useEffect(() => {
     setSearchTerm(searchQuery)
@@ -97,6 +104,7 @@ export default function Search() {
           type="text"
           label="Suche"
           onChange={event => setSearchTerm(event.target.value)}
+          inputRef={inputRef}
         />
         <Button onClick={search} disabled={loading}>
           {loading ? 'Suche läuft...' : 'Suche'}
@@ -136,7 +144,7 @@ export default function Search() {
 
         {teasers.map((teaser, teaserIndex) => (
           <div key={teaserIndex}>
-            <Teaser
+            <MannschaftBaseTeaser
               teaser={teaser as ApiV1.Teaser}
               blockStyle=""
               alignment={alignmentForTeaserBlock(teaserIndex, 1)}
