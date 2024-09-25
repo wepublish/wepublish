@@ -54,17 +54,23 @@ export type WordpressPost = {
   }
 }
 
-const WORDPRESS_URL = process.env['WORDPRESS_URL'] || 'https://mannschaft.com' + '/wp-json/wp/v2'
+const WORDPRESS_URL = (process.env['WORDPRESS_URL'] || 'https://mannschaft.com') + '/wp-json/wp/v2'
 
 const categoriesCache = cache('categories')
 const tagsCache = cache('tags')
 
-const request = ({path, ...request}: Omit<AxiosRequestConfig, 'url'> & {path: string}) => {
-  // console.debug(`${request.method ?? 'get'} ${path}`)
-  return axios.request({
+const request = async ({path, ...request}: Omit<AxiosRequestConfig, 'url'> & {path: string}) => {
+  const requestConfig: AxiosRequestConfig = {
     url: WORDPRESS_URL + path,
     ...request
-  })
+  }
+  try {
+    return await axios.request(requestConfig)
+  } catch (e) {
+    console.error('Request to wordpress API failed')
+    console.error(requestConfig)
+    throw e
+  }
 }
 
 const fetchAuth = () => {

@@ -5,10 +5,16 @@ let fixedMessageText: string
 
 export function setupLogger() {
   console.log = (...datas) =>
-    datas.map(data => writeWithFixedMessage(() => console.dir(data, {depth: 4})))
+    datas.map(data =>
+      writeWithFixedMessage(() => process.stdout.write(util.inspect(data, {depth: 4})))
+    )
 
-  console.error = data => {
-    writeWithFixedMessage(() => process.stdout.write(chalk.bgRed.black(util.inspect(data)) + '\n'))
+  console.error = (...datas) => {
+    datas.map(data =>
+      writeWithFixedMessage(() =>
+        process.stdout.write(chalk.bgRed.black(util.inspect(data, {depth: 4})) + '\n')
+      )
+    )
   }
 }
 
