@@ -12,8 +12,6 @@ import {
   UpdateTagMutationVariables
 } from '../../api/private'
 import {PreparedArticleData} from './prepare-data'
-import {humanizeObject} from './utils'
-import {logError} from './error-logger'
 
 export type Tag = {
   id: string
