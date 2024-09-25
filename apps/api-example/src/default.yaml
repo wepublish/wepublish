@@ -98,3 +98,7 @@ challenge:
   targetSymbol: '?'
 mediaServer:
   type: 'nova'
+ga:
+  credentials:
+  property:
+  articlePrefix: /a/

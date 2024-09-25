@@ -24,6 +24,7 @@ import {GraphQLImageResolver} from './graphql/image'
 import {GraphQLObjectType, GraphQLUnionType, printSchema} from 'graphql'
 import {GraphQLEventResolver} from './graphql/event/event'
 import * as fs from 'fs'
+import {GraphQLPublicArticleResolver} from './graphql/article'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -92,6 +93,7 @@ export class WepublishServer {
         name: String!
       ) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
+      extend type Article @key(fields: "id")
       extend type Page @key(fields: "id")
       extend type Tag @key(fields: "id")
       extend type Image @key(fields: "id")
@@ -136,12 +138,15 @@ export class WepublishServer {
           .filter(([name, resolvers]) => Object.keys(resolvers).length > 0)
       )
     }
+
     const federatedResolvers = {
+      Article: GraphQLPublicArticleResolver,
       Page: GraphQLPublicPageResolver,
       Tag: GraphQLTagResolver,
       Image: GraphQLImageResolver,
       Event: GraphQLEventResolver
     }
+
     for (const type in federatedResolvers) {
       resolvers[type] = {...resolvers[type], ...federatedResolvers[type]}
     }

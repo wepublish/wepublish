@@ -267,11 +267,16 @@ export interface CustomTeaser {
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
 
+export enum TeaserListBlockSort {
+  PublishedAt = 'publishedAt',
+  HotAndTrending = 'hotAndTrending'
+}
 export interface TeaserListBlock extends BaseBlock {
   type: BlockType.TeaserList
   teaserType: TeaserType
   skip: number
   take: number
+  sort?: TeaserListBlockSort
   filter: Partial<{
     tags: string[]
   }>
