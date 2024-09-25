@@ -27,6 +27,10 @@ type AllowedSettingVals {
   stringChoice: [String!]
 }
 
+type Article {
+  id: ID!
+}
+
 type BlockStyle {
   blocks: [BlockType!]!
   createdAt: DateTime!
@@ -403,6 +407,9 @@ type Query {
 
   """Returns an image by id."""
   getImage(id: String!): ImageV2!
+
+  "\n      Returns the most viewed articles in descending order.\n    "
+  hotAndTrending(start: DateTime, take: Int = 10): [Article!]!
 
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): EventFromSource!

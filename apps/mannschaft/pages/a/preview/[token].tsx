@@ -2,7 +2,7 @@ import {ApiV1} from '@wepublish/website'
 import {GetServerSideProps} from 'next'
 import getConfig from 'next/config'
 
-import ArticleBySlugIdOrToken from '../[...slug]'
+import ArticleBySlugIdOrToken from '../[slug]'
 
 export default function PreviewArticleByToken() {
   return <ArticleBySlugIdOrToken />

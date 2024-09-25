@@ -1,6 +1,7 @@
 import fs from 'fs'
 import YAML from 'yaml'
 import {MappedReplacer} from 'mapped-replacer'
+import {GoogleAnalyticsConfig} from '@wepublish/api'
 
 type General = {
   apolloPlayground: boolean
@@ -131,6 +132,7 @@ type Config = {
   paymentProviders: PaymentProvider[]
   mediaServer: karmaMediaServer | novaMediaServer
   challenge: Challenge
+  ga?: GoogleAnalyticsConfig
 }
 
 function extractReplacer(input: string): string[] {

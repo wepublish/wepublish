@@ -26,6 +26,12 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
     client.query({
       query: ApiV1.PeerProfileDocument
+    }),
+    client.query({
+      query: ApiV1.HotAndTrendingDocument,
+      variables: {
+        take: 5
+      }
     })
   ])
 

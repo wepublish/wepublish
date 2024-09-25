@@ -29,6 +29,11 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
+export type Article = {
+  __typename?: 'Article';
+  id: Scalars['ID'];
+};
+
 export type BlockStyle = {
   __typename?: 'BlockStyle';
   blocks: Array<BlockType>;
@@ -602,6 +607,12 @@ export type Query = {
   getImage: ImageV2;
   /**
    *
+   *       Returns the most viewed articles in descending order.
+   *
+   */
+  hotAndTrending: Array<Article>;
+  /**
+   *
    *       Returns a more detailed version of a single importable event, by id and source.
    *
    */
@@ -725,6 +736,12 @@ export type QueryExpectedRevenueArgs = {
 
 export type QueryGetImageArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryHotAndTrendingArgs = {
+  start?: InputMaybe<Scalars['DateTime']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 

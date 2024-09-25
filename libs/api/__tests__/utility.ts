@@ -211,7 +211,10 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
         paymentProviders: [mockPaymentProvider],
-        challenge
+        challenge,
+        hotAndTrendingDataSource: {
+          getMostViewedArticles: () => []
+        }
       })
   })
 
@@ -232,7 +235,10 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
         paymentProviders: [mockPaymentProvider],
-        challenge
+        challenge,
+        hotAndTrendingDataSource: {
+          getMostViewedArticles: () => []
+        }
       })
   })
 
