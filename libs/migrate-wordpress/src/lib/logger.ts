@@ -4,16 +4,23 @@ import * as util from 'node:util'
 let fixedMessageText: string
 
 export function setupLogger() {
+  if (!process.env['DEBUG']) {
+    console.debug = data => {}
+  }
+
+  const inspect = (data: any) => {
+    if (typeof data === 'object') {
+      return util.inspect(data, {depth: 5})
+    }
+    return data
+  }
+
   console.log = (...datas) =>
-    datas.map(data =>
-      writeWithFixedMessage(() => process.stdout.write(util.inspect(data, {depth: 4})))
-    )
+    datas.map(data => writeWithFixedMessage(() => process.stdout.write(inspect(data) + '\n')))
 
   console.error = (...datas) => {
     datas.map(data =>
-      writeWithFixedMessage(() =>
-        process.stdout.write(chalk.bgRed.black(util.inspect(data, {depth: 4})) + '\n')
-      )
+      writeWithFixedMessage(() => process.stdout.write(chalk.bgRed.black(inspect(data)) + '\n'))
     )
   }
 }
