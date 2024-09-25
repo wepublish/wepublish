@@ -46,14 +46,17 @@ export function extractContentNodes(content: string): Node[] {
 }
 
 export async function extractImageGallery({$element}: Node): Promise<BlockInput[]> {
-  const imageGallery = true
-  const imageSingles = false
+  const imgElements = $element.find('img')
+
+  const imageGallery = imgElements.length > 1
+  const imageSingles = imgElements.length === 1
+
   if (imageGallery) {
     return [
       {
         imageGallery: {
           images: await Promise.all(
-            $element.find('img').map(async (i, img) => {
+            imgElements.map(async (i, img) => {
               const $img = $element.find(img)
               const image = await ensureImageFromImg($img)
               return {
@@ -68,7 +71,7 @@ export async function extractImageGallery({$element}: Node): Promise<BlockInput[
 
   if (imageSingles) {
     return await Promise.all(
-      $element.find('img').map(async (i, img) => {
+      imgElements.map(async (i, img) => {
         const $img = $element.find(img)
         const image = await ensureImage({
           url: $img.attr('data-src')!,
