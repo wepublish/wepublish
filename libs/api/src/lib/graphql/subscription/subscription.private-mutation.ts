@@ -126,9 +126,9 @@ export const createSubscription = async (
     properties,
     input['autoRenew'],
     input['extendable'],
-    input['startsAt'],
-    input['paidUntil']
+    input['startsAt']
   )
+
   return subscription
 }
 
