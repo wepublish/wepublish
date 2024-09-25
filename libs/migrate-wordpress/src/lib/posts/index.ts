@@ -14,17 +14,17 @@ export const deleteExistingAuthors = false
 const terminalLink = (uri: string, label: string) => `\x1b]8;;${uri}\x1b\\${label}\x1b]8;;\x1b\\`
 
 async function prepareDataAndMigratePost(post: WordpressPost) {
-  console.debug(`Migrating article ${post.slug}`)
-
-  const existingArticle = await getArticleBySlug(post.slug)
-  if (!deleteExistingPosts && existingArticle) {
-    return existingArticle
-  }
-
-  const data = await prepareArticleData(post)
-  const {title, slug, link} = data
-  console.debug({title, slug, link})
   try {
+    console.debug(`Migrating article ${post.slug}`)
+
+    const existingArticle = await getArticleBySlug(post.slug)
+    if (!deleteExistingPosts && existingArticle) {
+      return existingArticle
+    }
+
+    const data = await prepareArticleData(post)
+    const {title, slug, link} = data
+    console.debug({title, slug, link})
     return await migratePost(data)
   } catch (error: any) {
     const logDirectory = await logError(`article-${post.id}`, `Article postId: ${post.id} FAILED`)
