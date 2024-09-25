@@ -65,7 +65,7 @@ export default function Search() {
   }
 
   const searchQuery: string | undefined = (router.query.q as string) || undefined
-  const inputRef = useRef(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (inputRef.current) {
