@@ -1,4 +1,4 @@
-import {promises as fs} from 'fs'
+import {promises as fs, existsSync} from 'fs'
 import * as path from 'path'
 
 let logsDirectory: string
@@ -13,7 +13,7 @@ export const logError = async (id: string | number, content: string | any) => {
     const date = new Date().toISOString()
     logsDirectory = path.join(mainLogsDirectory, date)
     await fs.mkdir(logsDirectory)
-    if (await fs.stat(latest)) {
+    if (existsSync(latest)) {
       await fs.unlink(latest)
     }
     await fs.symlink(date, latest)
