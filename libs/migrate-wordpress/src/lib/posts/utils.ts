@@ -28,7 +28,8 @@ export const createTimer = () => {
 
   const progress = () => (total ? `${done}/${total}` : undefined)
   const secondsElapsed = () => differenceInSeconds(new Date(), start)
-  const secondsLeft = () => (done && total ? (secondsElapsed() / done) * total : undefined)
+  const secondsLeft = () =>
+    done && total ? (secondsElapsed() / done) * total - +secondsElapsed : undefined
 
   return {
     updateTotal: (newTotal: number | string) => {
