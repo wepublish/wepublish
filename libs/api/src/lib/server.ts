@@ -163,8 +163,6 @@ export class WepublishServer {
       allowBatchedHttpRequests: true
     })
 
-    await fs.promises.writeFile('./apps/api-example/schema-v1.graphql', printSchema(publicSchema))
-
     if (process.env['NODE_ENV'] !== 'production') {
       await fs.promises.writeFile('./apps/api-example/schema-v1.graphql', printSchema(publicSchema))
     }
