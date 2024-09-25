@@ -7,6 +7,7 @@ import {PaymentsService} from '@wepublish/payment/api'
 import {MailContext} from '@wepublish/mail/api'
 import helmet from 'helmet'
 import {GatewayModule} from './nestapp/gateway.module'
+import {HOT_AND_TRENDING_DATA_SOURCE, HotAndTrendingDataSource} from '@wepublish/api'
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000
@@ -22,6 +23,9 @@ async function bootstrap() {
   const paymentProviders = nestApp.get(PaymentsService).paymentProviders
   const mailProvider = nestApp.get(MailContext).mailProvider
   const privateExpressApp = nestApp.getHttpAdapter().getInstance()
+  const hotAndTrendingDataSource = nestApp.get<HotAndTrendingDataSource>(
+    HOT_AND_TRENDING_DATA_SOURCE
+  )
 
   const gatewayApp = await NestFactory.create(GatewayModule)
   gatewayApp.enableCors({
@@ -35,7 +39,8 @@ async function bootstrap() {
     publicExpressApp,
     mediaAdapter,
     paymentProviders,
-    mailProvider
+    mailProvider,
+    hotAndTrendingDataSource
   }).catch(err => {
     console.error(err)
     process.exit(1)

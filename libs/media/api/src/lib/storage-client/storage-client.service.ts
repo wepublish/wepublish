@@ -41,6 +41,7 @@ export class StorageClient {
   public deleteFile(...params: Parameters<Client['removeObject']>) {
     return this.client.removeObject(...params)
   }
+
   public async listFiles(...params: Parameters<Client['listObjects']>): Promise<BucketItem[]> {
     const data: BucketItem[] = []
     return new Promise((resolve, reject) => {
@@ -56,6 +57,7 @@ export class StorageClient {
       })
     })
   }
+
   public deleteFiles(...params: Parameters<Client['removeObjects']>) {
     return this.client.removeObjects(...params)
   }

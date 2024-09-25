@@ -22,6 +22,7 @@ import {
 } from './block-styles/ad'
 import {HighlightBlockStyle, isHighlightTeasers} from './block-styles/highlight'
 import {HotAndTrendingBlockStyle, isHotAndTrendingTeasers} from './block-styles/hot-and-trending'
+import {MannschaftContentBox, isContentBoxBlock} from './mannschaft-content-box'
 import {MainSpacer} from './main-spacer'
 import {
   isAccentBreakBlock,
@@ -57,7 +58,8 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
           anyPass([isFirstAdTeaser, isSecondAdTeaser, isThirdAdTeaser]),
           (block: ApiV1.TeaserListBlock) => <AdTeaserBlockStyle {...block} />
         ],
-        [isHighlightTeasers, block => <HighlightBlockStyle {...block} />]
+        [isHighlightTeasers, block => <HighlightBlockStyle {...block} />],
+        [isContentBoxBlock, block => <MannschaftContentBox {...block} />]
       ]),
     []
   )

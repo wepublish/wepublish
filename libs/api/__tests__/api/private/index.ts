@@ -2596,6 +2596,7 @@ export type TeaserListBlock = {
   blockStyle?: Maybe<Scalars['String']>;
   filter: TeaserListBlockFilter;
   skip?: Maybe<Scalars['Int']>;
+  sort?: Maybe<TeaserListBlockSort>;
   take?: Maybe<Scalars['Int']>;
   teaserType?: Maybe<TeaserType>;
   teasers: Array<Maybe<Teaser>>;
@@ -2616,10 +2617,16 @@ export type TeaserListBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   filter: TeaserListBlockFilterInput;
   skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<TeaserListBlockSort>;
   take?: InputMaybe<Scalars['Int']>;
   teaserType?: InputMaybe<TeaserType>;
   title?: InputMaybe<Scalars['String']>;
 };
+
+export enum TeaserListBlockSort {
+  HotAndTrending = 'hotAndTrending',
+  PublishedAt = 'publishedAt'
+}
 
 export enum TeaserStyle {
   Default = 'default',

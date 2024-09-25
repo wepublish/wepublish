@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GoogleAnalyticsService should get articles by popularity 1`] = `
+[
+  {
+    "published": {
+      "slug": "foobaz",
+    },
+  },
+  {
+    "published": {
+      "slug": "bazfoo",
+    },
+  },
+  {
+    "published": {
+      "slug": "barfoo",
+    },
+  },
+  {
+    "published": {
+      "slug": "foobar",
+    },
+  },
+]
+`;
+
+exports[`GoogleAnalyticsService should get articles by popularity 2`] = `
+[
+  {
+    "include": {
+      "published": {
+        "select": {
+          "slug": true,
+        },
+      },
+    },
+    "skip": 0,
+    "take": 10,
+    "where": {
+      "published": {
+        "slug": {
+          "in": [],
+          "mode": "insensitive",
+        },
+      },
+    },
+  },
+]
+`;

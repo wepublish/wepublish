@@ -36,6 +36,7 @@ import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
 import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
+import {MannschaftRichtextBlock} from '../src/mannschaft-richtext-block'
 import theme from '../src/theme'
 
 setDefaultOptions({
@@ -112,7 +113,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Renderer: MannschaftBlockRenderer,
               Teaser: MannschaftTeaser,
               TeaserGrid: MannschaftTeaserGrid,
-              Break: MannschaftBreakBlock
+              Break: MannschaftBreakBlock,
+              RichText: MannschaftRichtextBlock
             }}
             blockStyles={{
               FocusTeaser: MannschaftFocusTeaser
