@@ -1,14 +1,14 @@
 import chalk from 'chalk'
+import * as util from 'node:util'
 
 let fixedMessageText: string
 
 export function setupLogger() {
-  console.log = data => {
-    writeWithFixedMessage(() => process.stdout.write(data + '\n'))
-  }
+  console.log = (...datas) =>
+    datas.map(data => writeWithFixedMessage(() => console.dir(data, {depth: 4})))
 
   console.error = data => {
-    writeWithFixedMessage(() => process.stdout.write(chalk.bgRed.black(data) + '\n'))
+    writeWithFixedMessage(() => process.stdout.write(chalk.bgRed.black(util.inspect(data)) + '\n'))
   }
 }
 
