@@ -5,7 +5,7 @@ let fixedMessageText: string
 
 export function setupLogger() {
   if (!process.env['DEBUG']) {
-    console.debug = data => {}
+    console.debug = data => undefined
   }
 
   const inspect = (data: any) => {
