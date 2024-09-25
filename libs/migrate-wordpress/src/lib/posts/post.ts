@@ -107,18 +107,10 @@ export async function migratePost(data: PreparedArticleData) {
     // Use html to create RichText block or add it to the last block (if was RichText block)
     const slateContent = await convertNodeContentToRichText(node)
     const lastBlock = blocks[blocks.length - 1]
-    const richTextBlockCount = blocks.filter(b => b.richText).length
-    const isRichTextBlockWithParagraphs = (block: BlockInput) => {
-      return (
-        block.richText && block.richText.richText.some((node: any) => node.type === 'paragraph')
-      )
-    }
-    // This will add content to last block if it exists,
-    // but only if it is not the only richtext block, or the block has no paragraphs yet
-    if (
-      lastBlock?.richText &&
-      (richTextBlockCount > 1 || !isRichTextBlockWithParagraphs(lastBlock))
-    ) {
+    const hasParagraphs = (block: BlockInput) =>
+      block.richText && block.richText.richText.some((node: any) => node.type === 'paragraph')
+
+    if (lastBlock?.richText && !hasParagraphs(lastBlock)) {
       lastBlock?.richText.richText.push(...slateContent)
     } else {
       blocks.push({richText: {richText: slateContent}})
