@@ -80,7 +80,7 @@ const theme = createTheme(WePTheme, {
   components: {
     MuiLink: {
       styleOverrides: {
-        root: ({theme}) => {
+        root: ({theme}: {theme: Theme}) => {
           const baseStyles: CSSObject = {
             color: theme.palette.secondary.main,
             textDecoration: 'none'
