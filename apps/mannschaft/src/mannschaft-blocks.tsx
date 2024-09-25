@@ -50,9 +50,9 @@ export const MannschaftBlocks = ({blocks, type}: BuilderBlocksProps) => {
     if (richtextBlocks.length > 6) {
       blocksWithAds = insert(
         // insert an ad **after** the 6th richtext block
-        findIndex(block => block === richtextBlocks[5])(blocks) + 1,
+        findIndex(block => block === richtextBlocks[5])(blocks) + 2,
         createNewAdTeaser(),
-        blocks
+        blocksWithAds
       )
     }
 

@@ -23,7 +23,7 @@ export const PURModel = () => {
     <Head>
       <script>{`
           window.cmp_waitforimport = true;
-          window.cmp_pur_enable = true;
+          window.cmp_pur_enable = false; // disable for now
           window.cmp_pur_mode = 0;
       `}</script>
     </Head>
