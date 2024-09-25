@@ -1,4 +1,4 @@
-import {migrateAllPosts, migratePostById, migratePostsFromCategory} from './lib/posts'
+import {migrateAllPosts} from './lib/posts'
 
 export async function migrate() {
   await migrateAllPosts()
