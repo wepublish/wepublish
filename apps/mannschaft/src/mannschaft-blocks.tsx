@@ -1,5 +1,5 @@
-import {ApiV1, Blocks, BuilderBlocksProps} from '@wepublish/website'
-import {insert} from 'ramda'
+import {ApiV1, Blocks, BuilderBlocksProps, hasBlockStyle, isRichTextBlock} from '@wepublish/website'
+import {allPass, complement, findIndex, insert} from 'ramda'
 import {useMemo} from 'react'
 
 export const createNewAdTeaser = (): ApiV1.TeaserGridBlock => ({
@@ -25,14 +25,27 @@ export const MannschaftBlocks = ({blocks, type}: BuilderBlocksProps) => {
       return blocks
     }
 
+    const richtextBlocks = blocks.filter(
+      // We ignore content boxes here as we do not want to break them apart
+      allPass([isRichTextBlock, complement(hasBlockStyle('ContentBox'))])
+    )
+
     let blocksWithAds = blocks
 
-    if (blocks.length > 3) {
-      blocksWithAds = insert(2, createNewAdTeaser(), blocks)
+    if (richtextBlocks.length > 3) {
+      blocksWithAds = insert(
+        findIndex(block => block === richtextBlocks[2])(blocks) + 1,
+        createNewAdTeaser(),
+        blocks
+      )
     }
 
-    if (blocks.length > 6) {
-      blocksWithAds = insert(5, createNewAdTeaser(), blocks)
+    if (richtextBlocks.length > 6) {
+      blocksWithAds = insert(
+        findIndex(block => block === richtextBlocks[5])(blocks) + 1,
+        createNewAdTeaser(),
+        blocks
+      )
     }
 
     return blocksWithAds
