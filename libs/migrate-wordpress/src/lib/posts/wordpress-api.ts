@@ -54,7 +54,7 @@ export type WordpressPost = {
   }
 }
 
-const WORDPRESS_URL = process.env['WORDPRESS_URL'] + '/wp-json/wp/v2'
+const WORDPRESS_URL = process.env['WORDPRESS_URL'] || 'https://mannschaft.com' + '/wp-json/wp/v2'
 
 const categoriesCache = cache('categories')
 const tagsCache = cache('tags')
@@ -83,7 +83,7 @@ type FetchPostsProps = {
   categoryId?: number
 }
 
-type WordpressPostsResponse = {
+export type WordpressPostsResponse = {
   items: WordpressPost[]
   total: number
 }

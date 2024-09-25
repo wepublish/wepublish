@@ -837,7 +837,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
             keyboard={false}
             onClose={() => setDeactivationPanelOpen(false)}>
             <UserSubscriptionDeactivatePanel
-              displayName={user.preferredName || user.name || user.email}
+              displayName={user.name || user.email}
               userEmail={user.email}
               paidUntil={paidUntil ?? undefined}
               onDeactivate={async data => {

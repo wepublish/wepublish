@@ -209,12 +209,6 @@ const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput =>
     return {
       OR: [
         {
-          preferredName: {
-            contains: filter.text,
-            mode: 'insensitive'
-          }
-        },
-        {
           email: {
             contains: filter.text,
             mode: 'insensitive'

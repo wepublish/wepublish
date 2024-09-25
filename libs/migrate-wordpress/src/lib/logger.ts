@@ -3,9 +3,6 @@ import chalk from 'chalk'
 let fixedMessageText: string
 
 export function setupLogger() {
-  if (!process.env['DEBUG']) {
-    console.debug = data => {}
-  }
   console.log = data => {
     writeWithFixedMessage(() => process.stdout.write(data + '\n'))
   }

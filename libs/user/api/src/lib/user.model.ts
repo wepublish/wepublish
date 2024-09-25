@@ -21,9 +21,6 @@ export class User {
   firstName?: string
 
   @Field({nullable: true})
-  preferredName?: string
-
-  @Field({nullable: true})
   lastLogin?: Date
 
   @Field(type => [String], {nullable: true})
