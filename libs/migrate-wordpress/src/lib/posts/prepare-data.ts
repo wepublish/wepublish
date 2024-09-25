@@ -46,7 +46,7 @@ export async function prepareArticleData(post: WordpressPost): Promise<PreparedA
     featuredMedia = {
       url: featuredMediaData.source_url,
       title: featuredMediaData.title.rendered,
-      description: removeLinks(featuredMediaData.caption.rendered)
+      description: removeLinks(featuredMediaData.caption?.rendered ?? '')
     }
   }
 

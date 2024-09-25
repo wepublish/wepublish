@@ -2504,6 +2504,7 @@ export type TeaserListBlock = {
   blockStyle?: Maybe<Scalars['String']>
   filter: TeaserListBlockFilter
   skip?: Maybe<Scalars['Int']>
+  sort?: Maybe<TeaserListBlockSort>
   take?: Maybe<Scalars['Int']>
   teaserType?: Maybe<TeaserType>
   teasers: Array<Maybe<Teaser>>
@@ -2524,9 +2525,15 @@ export type TeaserListBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>
   filter: TeaserListBlockFilterInput
   skip?: InputMaybe<Scalars['Int']>
+  sort?: InputMaybe<TeaserListBlockSort>
   take?: InputMaybe<Scalars['Int']>
   teaserType?: InputMaybe<TeaserType>
   title?: InputMaybe<Scalars['String']>
+}
+
+export enum TeaserListBlockSort {
+  HotAndTrending = 'hotAndTrending',
+  PublishedAt = 'publishedAt'
 }
 
 export enum TeaserStyle {
@@ -2674,7 +2681,6 @@ export type User = {
   name: Scalars['String']
   oauth2Accounts: Array<OAuth2Account>
   paymentProviderCustomers: Array<PaymentProviderCustomer>
-  preferredName?: Maybe<Scalars['String']>
   properties: Array<Properties>
   roles: Array<UserRole>
   subscriptions: Array<UserSubscription>
@@ -2728,7 +2734,6 @@ export type UserInput = {
   firstName?: InputMaybe<Scalars['String']>
   flair?: InputMaybe<Scalars['String']>
   name: Scalars['String']
-  preferredName?: InputMaybe<Scalars['String']>
   properties: Array<PropertiesInput>
   roleIDs?: InputMaybe<Array<Scalars['String']>>
   userImageID?: InputMaybe<Scalars['ID']>
@@ -2834,6 +2839,7 @@ export type MutationArticleFragment = {
     publishedAt?: string | null
     updatedAt?: string | null
     revision: number
+    url: string
   } | null
   latest: {
     __typename?: 'ArticleRevision'
@@ -2862,6 +2868,7 @@ export type ArticleRefFragment = {
     publishedAt?: string | null
     updatedAt?: string | null
     revision: number
+    url: string
   } | null
   latest: {
     __typename?: 'ArticleRevision'
@@ -2917,6 +2924,7 @@ export type ArticleListQuery = {
         publishedAt?: string | null
         updatedAt?: string | null
         revision: number
+        url: string
       } | null
       latest: {
         __typename?: 'ArticleRevision'
@@ -2980,6 +2988,7 @@ export type CreateArticleMutation = {
       publishedAt?: string | null
       updatedAt?: string | null
       revision: number
+      url: string
     } | null
     latest: {
       __typename?: 'ArticleRevision'
@@ -3020,6 +3029,7 @@ export type UpdateArticleMutation = {
       publishedAt?: string | null
       updatedAt?: string | null
       revision: number
+      url: string
     } | null
     latest: {
       __typename?: 'ArticleRevision'
@@ -3062,6 +3072,7 @@ export type PublishArticleMutation = {
       publishedAt?: string | null
       updatedAt?: string | null
       revision: number
+      url: string
     } | null
     latest: {
       __typename?: 'ArticleRevision'
@@ -3101,6 +3112,7 @@ export type UnpublishArticleMutation = {
       publishedAt?: string | null
       updatedAt?: string | null
       revision: number
+      url: string
     } | null
     latest: {
       __typename?: 'ArticleRevision'
@@ -3140,6 +3152,7 @@ export type DeleteArticleMutation = {
       publishedAt?: string | null
       updatedAt?: string | null
       revision: number
+      url: string
     } | null
     latest: {
       __typename?: 'ArticleRevision'
@@ -3172,6 +3185,7 @@ export type ArticleQuery = {
       __typename?: 'ArticleRevision'
       publishedAt?: string | null
       updatedAt?: string | null
+      url: string
     } | null
     latest: {
       __typename?: 'ArticleRevision'
@@ -3442,6 +3456,7 @@ export type ArticleQuery = {
                       publishedAt?: string | null
                       updatedAt?: string | null
                       revision: number
+                      url: string
                     } | null
                     latest: {
                       __typename?: 'ArticleRevision'
@@ -3567,6 +3582,7 @@ export type ArticleQuery = {
                       publishedAt?: string | null
                       updatedAt?: string | null
                       revision: number
+                      url: string
                     } | null
                     latest: {
                       __typename?: 'ArticleRevision'
@@ -3903,6 +3919,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
       publishedAt?: string | null
       updatedAt?: string | null
       revision: number
+      url: string
     } | null
     latest: {
       __typename?: 'ArticleRevision'
@@ -4032,6 +4049,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
       publishedAt?: string | null
       updatedAt?: string | null
       revision: number
+      url: string
     } | null
     latest: {
       __typename?: 'ArticleRevision'
@@ -4264,6 +4282,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
             publishedAt?: string | null
             updatedAt?: string | null
             revision: number
+            url: string
           } | null
           latest: {
             __typename?: 'ArticleRevision'
@@ -4389,6 +4408,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
             publishedAt?: string | null
             updatedAt?: string | null
             revision: number
+            url: string
           } | null
           latest: {
             __typename?: 'ArticleRevision'
@@ -5061,6 +5081,7 @@ export const MutationArticle = gql`
       publishedAt
       updatedAt
       revision
+      url
     }
     latest {
       publishedAt
@@ -5146,6 +5167,7 @@ export const ArticleRef = gql`
       publishedAt
       updatedAt
       revision
+      url
     }
     latest {
       publishedAt
@@ -5458,6 +5480,7 @@ export const Article = gql`
       published {
         publishedAt
         updatedAt
+        url
       }
       latest {
         publishedAt

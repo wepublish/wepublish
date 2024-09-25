@@ -1023,7 +1023,6 @@ export type MutationRegisterMemberArgs = {
   firstName?: InputMaybe<Scalars['String']>
   name: Scalars['String']
   password?: InputMaybe<Scalars['String']>
-  preferredName?: InputMaybe<Scalars['String']>
 }
 
 export type MutationRegisterMemberAndReceivePaymentArgs = {
@@ -1042,7 +1041,6 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
   paymentMethodID?: InputMaybe<Scalars['ID']>
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>
   paymentPeriodicity: PaymentPeriodicity
-  preferredName?: InputMaybe<Scalars['String']>
   subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>
   successURL?: InputMaybe<Scalars['String']>
 }
@@ -1473,6 +1471,8 @@ export type Query = {
   expectedRevenue: Array<DashboardInvoice>
   /** Returns an image by id. */
   getImage: ImageV2
+  /** Returns the most viewed articles in descending order. */
+  hotAndTrending: Array<Article>
   /** Returns a more detailed version of a single importable event, by id and source. */
   importedEvent: EventFromSource
   /** Returns a list of imported events from external sources, transformed to match our model. */
@@ -1626,6 +1626,11 @@ export type QueryExpectedRevenueArgs = {
 
 export type QueryGetImageArgs = {
   id: Scalars['String']
+}
+
+export type QueryHotAndTrendingArgs = {
+  start?: InputMaybe<Scalars['DateTime']>
+  take?: InputMaybe<Scalars['Int']>
 }
 
 export type QueryImportedEventArgs = {
@@ -2075,7 +2080,6 @@ export type User = {
   name: Scalars['String']
   oauth2Accounts: Array<OAuth2Account>
   paymentProviderCustomers: Array<PaymentProviderCustomer>
-  preferredName?: Maybe<Scalars['String']>
   properties: Array<PublicProperties>
   roleIDs?: Maybe<Array<Scalars['String']>>
   userImageID?: Maybe<Scalars['String']>
@@ -2124,7 +2128,6 @@ export type UserInput = {
   firstName?: InputMaybe<Scalars['String']>
   flair?: InputMaybe<Scalars['String']>
   name: Scalars['String']
-  preferredName?: InputMaybe<Scalars['String']>
   uploadImageInput?: InputMaybe<UploadImageInput>
 }
 
@@ -2166,7 +2169,7 @@ export type ArticleQueryVariables = Exact<{
 
 export type ArticleQuery = {
   __typename?: 'Query'
-  article?: {__typename?: 'Article'; id: string} | null
+  article?: {__typename?: 'Article'; id: string; url: string} | null
 }
 
 export const ArticleRef = gql`
@@ -2178,6 +2181,7 @@ export const Article = gql`
   query Article($slug: Slug!) {
     article(slug: $slug) {
       id
+      url
     }
   }
 `

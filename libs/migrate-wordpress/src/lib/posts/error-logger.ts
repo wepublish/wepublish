@@ -18,5 +18,7 @@ export const logError = async (id: string | number, content: string | any) => {
     }
     await fs.symlink(date, latest)
   }
-  await fs.writeFile(path.join(logsDirectory, `${id}`), content + '\n', {flag: 'a'})
+  const idLogDirectory = path.join(logsDirectory, `${id}`)
+  await fs.writeFile(idLogDirectory, content + '\n', {flag: 'a'})
+  return idLogDirectory
 }

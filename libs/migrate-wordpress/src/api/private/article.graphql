@@ -22,6 +22,7 @@ fragment MutationArticle on Article {
         publishedAt
         updatedAt
         revision
+        url
     }
 
     latest {
@@ -63,6 +64,7 @@ fragment ArticleRef on Article {
         publishedAt
         updatedAt
         revision
+        url
     }
 
     latest {
@@ -148,6 +150,7 @@ query Article($id: ID!) {
         published {
             publishedAt
             updatedAt
+            url
         }
 
         latest {

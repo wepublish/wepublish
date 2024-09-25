@@ -5,6 +5,7 @@ fragment ArticleRef on Article {
 query Article($slug: Slug!) {
     article(slug: $slug) {
         id
+        url
     }
 }
 

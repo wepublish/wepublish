@@ -17,8 +17,9 @@ import {convertHtmlToSlate} from './convert-html-to-slate'
 import {Node as SlateNode} from 'slate'
 import {ensureAuthor} from './author'
 import {PreparedArticleData} from './prepare-data'
+import {deleteExistingPosts} from './index'
 
-const deleteBeforeMigrate = true
+const deleteBeforeMigrate = deleteExistingPosts
 
 export async function migratePost(data: PreparedArticleData) {
   const {title, lead, content, createdAt, modifiedAt, slug, link, featuredMedia} = data

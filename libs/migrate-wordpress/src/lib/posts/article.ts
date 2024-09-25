@@ -49,8 +49,7 @@ export async function ensureArticle(props: EnsureArticleProps) {
     slug,
     imageID: featuredImage ? featuredImage.id : undefined
   })
-  await publishArticle(article.id, createdAt, modifiedAt)
-  return article
+  return await publishArticle(article.id, createdAt, modifiedAt)
 }
 
 function logArticleBlocks(blocks: BlockInput[]) {
@@ -91,15 +90,17 @@ export async function deleteArticle(id: string) {
 }
 
 export async function publishArticle(id: string, publishDate: Date, lastModifiedDate: Date) {
-  return await privateClient.request<PublishArticleMutation, PublishArticleMutationVariables>(
-    PublishArticle,
-    {
-      id,
-      publishAt: publishDate.toISOString(),
-      publishedAt: publishDate.toISOString(),
-      updatedAt: lastModifiedDate.toISOString()
-    }
-  )
+  return (
+    await privateClient.request<PublishArticleMutation, PublishArticleMutationVariables>(
+      PublishArticle,
+      {
+        id,
+        publishAt: publishDate.toISOString(),
+        publishedAt: publishDate.toISOString(),
+        updatedAt: lastModifiedDate.toISOString()
+      }
+    )
+  ).publishArticle!.published!
 }
 
 export async function getArticleBySlug(slug: string) {

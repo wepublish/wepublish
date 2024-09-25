@@ -16,7 +16,7 @@ import {convertHtmlToSlate} from './convert-html-to-slate'
 
 export type Author = {id: string}
 
-const deleteBeforeMigrate = true
+const deleteBeforeMigrate = false
 
 export const ensureAuthor = async (author: WordpressAuthor): Promise<Author> => {
   const {slug, link, url, name, description, avatar_urls} = author

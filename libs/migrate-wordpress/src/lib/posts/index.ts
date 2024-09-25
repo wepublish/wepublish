@@ -6,17 +6,29 @@ import chalk from 'chalk'
 import {logError} from './error-logger'
 import {createTimer, humanizeObject} from './utils'
 import {fixedMessage} from '../logger'
+import {getArticleBySlug} from './article'
+
+export const deleteExistingPosts = false
+
+const terminalLink = (uri: string, label: string) => `\x1b]8;;${uri}\x1b\\${label}\x1b]8;;\x1b\\`
 
 async function prepareDataAndMigratePost(post: WordpressPost) {
   console.debug(`Migrating article ${post.slug}`)
+
+  const existingArticle = await getArticleBySlug(post.slug)
+  if (!deleteExistingPosts && existingArticle) {
+    return existingArticle
+  }
+
   const data = await prepareArticleData(post)
   const {title, slug, link} = data
   console.debug({title, slug, link})
   try {
     return await migratePost(data)
   } catch (error: any) {
-    console.error(chalk.bgRed.black(`Article postId: ${post.id} FAILED`))
-    await logError(`article-${post.id}`, `Article postId: ${post.id} FAILED`)
+    const logDirectory = await logError(`article-${post.id}`, `Article postId: ${post.id} FAILED`)
+    const logsLink = terminalLink(`file://${process.cwd()}/${logDirectory}`, ' /logs')
+    console.error(chalk.bgRed.black(`Article postId: ${post.id} FAILED${logsLink}`))
     await logError(`article-${post.id}`, post.link)
     await logError(`article-${post.id}`, error.stack ?? error.message)
     return
@@ -67,7 +79,7 @@ export const migratePosts = async (limit?: number, query?: Record<string, string
         console.log(
           `Migrated post id: ${chalk.bgYellow(
             post.id
-          )} (${++postsMigrated}/${totalCount}) ${chalk.bgGreen('DONE')}`
+          )} (${++postsMigrated}/${totalCount}) ${chalk.bgGreen('DONE')} ${result.url}`
         )
       } else {
         postsMigrated++
@@ -92,7 +104,7 @@ export const migratePostById = async (...ids: number[]) => {
       console.log(
         `Migrated article id: ${chalk.bgYellow(id)} (${ids.indexOf(id) + 1}/${
           ids.length
-        }) ${chalk.bgGreen('DONE')}`
+        }) ${chalk.bgGreen('DONE')} ${result.url}`
       )
     }
   })
