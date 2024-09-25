@@ -1,4 +1,4 @@
-import {createTheme, Theme, ThemeOptions} from '@mui/material'
+import {createTheme, CSSObject, Theme, ThemeOptions} from '@mui/material'
 import {theme as WePTheme} from '@wepublish/ui'
 import localFont from 'next/font/local'
 import {PartialDeep} from 'type-fest'
@@ -76,6 +76,19 @@ const theme = createTheme(WePTheme, {
       fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(',')
     },
     fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(',')
+  },
+  components: {
+    MuiLink: {
+      styleOverrides: {
+        root: ({theme}) => {
+          const baseStyles: CSSObject = {
+            color: theme.palette.secondary.main,
+            textDecoration: 'none'
+          }
+          return baseStyles
+        }
+      }
+    }
   }
 } as PartialDeep<Theme> | ThemeOptions)
 
