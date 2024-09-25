@@ -36,11 +36,17 @@ const ensureTag = async ({name, main = false}: TagInput): Promise<Tag | undefine
     return existingTag
   }
   console.debug('  tag create', tag)
-  return createTag({tag, main}).catch((e: any) => {
+  try {
+    return createTag({tag, main})
+  } catch (e: any) {
+    const existingTag = await getTagByName(tag)
+    if (existingTag) {
+      return existingTag
+    }
     console.error(`Could not create tag: (${humanizeObject({tag, main})})`)
-    logError(`tag-${tag}`, e.stack || e.message)
+    logError(`tag-${tag}`, e?.stack || e?.message)
     return undefined
-  })
+  }
 }
 
 export async function ensureTags({tags}: PreparedArticleData): Promise<Tag[]> {
