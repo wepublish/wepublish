@@ -258,7 +258,6 @@ export const TeaserContentWrapper = styled('div')`
 
 export const TeaserTitle = styled('h1')`
   grid-area: title;
-  margin-bottom: ${({theme}) => theme.spacing(1)};
 `
 
 export const TeaserLead = styled('p')`
@@ -385,7 +384,9 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
         )}
         {!preTitle && <TeaserPreTitleNoContent />}
 
-        <H4 component={TeaserTitle}>{title}</H4>
+        <H4 component={TeaserTitle} gutterBottom>
+          {title}
+        </H4>
         {lead && <Paragraph component={TeaserLead}>{lead}</Paragraph>}
 
         <TeaserMetadata>

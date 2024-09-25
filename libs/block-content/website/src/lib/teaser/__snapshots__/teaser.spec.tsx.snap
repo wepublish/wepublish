@@ -46,7 +46,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -122,7 +122,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -198,7 +198,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -274,7 +274,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -345,7 +345,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -421,7 +421,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -491,7 +491,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -548,7 +548,7 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-11 emotion-12"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11 emotion-12"
         >
           Title
         </h1>
@@ -624,7 +624,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -700,7 +700,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -776,7 +776,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title on the article
         </h1>
@@ -852,7 +852,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Teambesprechung vom 23.05.
         </h1>
@@ -916,7 +916,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Teambesprechung vom 23.05.
         </h1>
@@ -961,7 +961,7 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-11 emotion-12"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11 emotion-12"
         >
           Teambesprechung vom 23.05.
         </h1>
@@ -1019,7 +1019,7 @@ https://unsplash.it/200/100 200w"
           class="emotion-9 emotion-10"
         />
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-11 emotion-12"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11 emotion-12"
         >
           Teambesprechung vom 23.05.
         </h1>
@@ -1083,7 +1083,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         />
         <p
           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-15 emotion-16"
@@ -1145,7 +1145,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -1216,7 +1216,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -1287,7 +1287,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -1358,7 +1358,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -1424,7 +1424,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -1476,7 +1476,7 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-11 emotion-12"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11 emotion-12"
         >
           Title
         </h1>
@@ -1541,7 +1541,7 @@ https://unsplash.it/200/100 200w"
           class="emotion-9 emotion-10"
         />
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-11 emotion-12"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11 emotion-12"
         >
           Title
         </h1>
@@ -1612,7 +1612,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Name of Event
         </h1>
@@ -1683,7 +1683,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -1747,7 +1747,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -1811,7 +1811,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -1875,7 +1875,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -1939,7 +1939,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -2003,7 +2003,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -2067,7 +2067,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -2131,7 +2131,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title on the page
         </h1>
@@ -2195,7 +2195,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -2271,7 +2271,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -2347,7 +2347,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -2418,7 +2418,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -2494,7 +2494,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -2564,7 +2564,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -2621,7 +2621,7 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-11 emotion-12"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11 emotion-12"
         >
           Title
         </h1>
@@ -2697,7 +2697,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title
         </h1>
@@ -2773,7 +2773,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Title on the article
         </h1>
@@ -2849,7 +2849,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Teambesprechung vom 23.05.
         </h1>
@@ -2913,7 +2913,7 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
         >
           Teambesprechung vom 23.05.
         </h1>
@@ -2971,7 +2971,7 @@ https://unsplash.it/200/100 200w"
           class="emotion-9 emotion-10"
         />
         <h1
-          class="MuiTypography-root MuiTypography-h4 emotion-11 emotion-12"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11 emotion-12"
         >
           Teambesprechung vom 23.05.
         </h1>
