@@ -82,6 +82,7 @@ paymentProviders:
     name: No Charge
     offSessionPayments: true
 challenge:
+  type: 'algebraic'
   secret: 'secret'
   validTime: 600
   width: 200

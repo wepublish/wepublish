@@ -148,7 +148,7 @@ export const GraphQLChallengeInput = new GraphQLInputObjectType({
   name: 'ChallengeInput',
   fields: {
     challengeID: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: GraphQLString
     },
     challengeSolution: {
       type: new GraphQLNonNull(GraphQLString)

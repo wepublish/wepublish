@@ -500,6 +500,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       async resolve(_, {input}, {challenge}) {
         const c = await challenge.generateChallenge()
         return {
+          type: c.type,
           challenge: c.challenge,
           challengeID: c.challengeID,
           validUntil: c.validUntil

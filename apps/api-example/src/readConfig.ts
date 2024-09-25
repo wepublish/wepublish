@@ -109,7 +109,8 @@ type novaMediaServer = {
 
 type PaymentProvider = Payrexx | PayrexxSubscription | Stripe | StripeCheckout | Bexio | noCharge
 
-type Challenge = {
+type AlgebraicCaptcha = {
+  type: 'algebraic'
   secret: string
   validTime: number
   width: number
@@ -124,13 +125,18 @@ type Challenge = {
   targetSymbol: string
 }
 
+type Turnstile = {
+  type: 'turnstile'
+  secret: string
+}
+
 type Config = {
   general: General
   mailProvider: MailProvider
   OAuthProviders: OAuthProvider[]
   paymentProviders: PaymentProvider[]
   mediaServer: karmaMediaServer | novaMediaServer
-  challenge: Challenge
+  challenge: AlgebraicCaptcha | Turnstile
 }
 
 function extractReplacer(input: string): string[] {
