@@ -37,7 +37,7 @@ const ensureTag = async ({name, main = false}: TagInput): Promise<Tag | undefine
   }
   console.debug('  tag create', tag)
   try {
-    return createTag({tag, main})
+    return await createTag({tag, main})
   } catch (e: any) {
     const existingTag = await getTagByName(tag)
     if (existingTag) {
