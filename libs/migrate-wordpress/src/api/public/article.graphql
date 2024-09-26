@@ -6,6 +6,12 @@ query Article($slug: Slug!) {
     article(slug: $slug) {
         id
         url
+        blocks {
+            __typename
+            ... on RichTextBlock {
+                richText
+            }
+        }
     }
 }
 

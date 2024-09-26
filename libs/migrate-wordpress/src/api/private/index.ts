@@ -13,13 +13,18 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
+  /** A hexidecimal color value. */
   Color: string
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: string
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string
   GraphQLSettingValueType: any
   RichText: Node[]
   Slug: string
+  /** The `Upload` scalar type represents a file upload. */
   Upload: File
+  /** A valid vote value */
   VoteValue: number
 }
 
@@ -2869,6 +2874,33 @@ export type ArticleRefFragment = {
     updatedAt?: string | null
     revision: number
     url: string
+    blocks: Array<
+      | {__typename: 'BildwurfAdBlock'}
+      | {__typename: 'CommentBlock'}
+      | {__typename: 'EmbedBlock'}
+      | {__typename: 'EventBlock'}
+      | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
+      | {__typename: 'HTMLBlock'}
+      | {__typename: 'ImageBlock'}
+      | {__typename: 'ImageGalleryBlock'}
+      | {__typename: 'InstagramPostBlock'}
+      | {__typename: 'LinkPageBreakBlock'}
+      | {__typename: 'ListicleBlock'}
+      | {__typename: 'PolisConversationBlock'}
+      | {__typename: 'PollBlock'}
+      | {__typename: 'QuoteBlock'}
+      | {__typename: 'RichTextBlock'; richText: Node[]}
+      | {__typename: 'SoundCloudTrackBlock'}
+      | {__typename: 'TeaserGridBlock'}
+      | {__typename: 'TeaserGridFlexBlock'}
+      | {__typename: 'TeaserListBlock'}
+      | {__typename: 'TikTokVideoBlock'}
+      | {__typename: 'TitleBlock'}
+      | {__typename: 'TwitterTweetBlock'}
+      | {__typename: 'VimeoVideoBlock'}
+      | {__typename: 'YouTubeVideoBlock'}
+    >
   } | null
   latest: {
     __typename?: 'ArticleRevision'
@@ -2903,6 +2935,7 @@ export type ArticleRefFragment = {
 export type ArticleListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>
   cursor?: InputMaybe<Scalars['ID']>
+  skip?: InputMaybe<Scalars['Int']>
   take?: InputMaybe<Scalars['Int']>
 }>
 
@@ -2925,6 +2958,33 @@ export type ArticleListQuery = {
         updatedAt?: string | null
         revision: number
         url: string
+        blocks: Array<
+          | {__typename: 'BildwurfAdBlock'}
+          | {__typename: 'CommentBlock'}
+          | {__typename: 'EmbedBlock'}
+          | {__typename: 'EventBlock'}
+          | {__typename: 'FacebookPostBlock'}
+          | {__typename: 'FacebookVideoBlock'}
+          | {__typename: 'HTMLBlock'}
+          | {__typename: 'ImageBlock'}
+          | {__typename: 'ImageGalleryBlock'}
+          | {__typename: 'InstagramPostBlock'}
+          | {__typename: 'LinkPageBreakBlock'}
+          | {__typename: 'ListicleBlock'}
+          | {__typename: 'PolisConversationBlock'}
+          | {__typename: 'PollBlock'}
+          | {__typename: 'QuoteBlock'}
+          | {__typename: 'RichTextBlock'; richText: Node[]}
+          | {__typename: 'SoundCloudTrackBlock'}
+          | {__typename: 'TeaserGridBlock'}
+          | {__typename: 'TeaserGridFlexBlock'}
+          | {__typename: 'TeaserListBlock'}
+          | {__typename: 'TikTokVideoBlock'}
+          | {__typename: 'TitleBlock'}
+          | {__typename: 'TwitterTweetBlock'}
+          | {__typename: 'VimeoVideoBlock'}
+          | {__typename: 'YouTubeVideoBlock'}
+        >
       } | null
       latest: {
         __typename?: 'ArticleRevision'
@@ -3457,6 +3517,33 @@ export type ArticleQuery = {
                       updatedAt?: string | null
                       revision: number
                       url: string
+                      blocks: Array<
+                        | {__typename: 'BildwurfAdBlock'}
+                        | {__typename: 'CommentBlock'}
+                        | {__typename: 'EmbedBlock'}
+                        | {__typename: 'EventBlock'}
+                        | {__typename: 'FacebookPostBlock'}
+                        | {__typename: 'FacebookVideoBlock'}
+                        | {__typename: 'HTMLBlock'}
+                        | {__typename: 'ImageBlock'}
+                        | {__typename: 'ImageGalleryBlock'}
+                        | {__typename: 'InstagramPostBlock'}
+                        | {__typename: 'LinkPageBreakBlock'}
+                        | {__typename: 'ListicleBlock'}
+                        | {__typename: 'PolisConversationBlock'}
+                        | {__typename: 'PollBlock'}
+                        | {__typename: 'QuoteBlock'}
+                        | {__typename: 'RichTextBlock'; richText: Node[]}
+                        | {__typename: 'SoundCloudTrackBlock'}
+                        | {__typename: 'TeaserGridBlock'}
+                        | {__typename: 'TeaserGridFlexBlock'}
+                        | {__typename: 'TeaserListBlock'}
+                        | {__typename: 'TikTokVideoBlock'}
+                        | {__typename: 'TitleBlock'}
+                        | {__typename: 'TwitterTweetBlock'}
+                        | {__typename: 'VimeoVideoBlock'}
+                        | {__typename: 'YouTubeVideoBlock'}
+                      >
                     } | null
                     latest: {
                       __typename?: 'ArticleRevision'
@@ -3583,6 +3670,33 @@ export type ArticleQuery = {
                       updatedAt?: string | null
                       revision: number
                       url: string
+                      blocks: Array<
+                        | {__typename: 'BildwurfAdBlock'}
+                        | {__typename: 'CommentBlock'}
+                        | {__typename: 'EmbedBlock'}
+                        | {__typename: 'EventBlock'}
+                        | {__typename: 'FacebookPostBlock'}
+                        | {__typename: 'FacebookVideoBlock'}
+                        | {__typename: 'HTMLBlock'}
+                        | {__typename: 'ImageBlock'}
+                        | {__typename: 'ImageGalleryBlock'}
+                        | {__typename: 'InstagramPostBlock'}
+                        | {__typename: 'LinkPageBreakBlock'}
+                        | {__typename: 'ListicleBlock'}
+                        | {__typename: 'PolisConversationBlock'}
+                        | {__typename: 'PollBlock'}
+                        | {__typename: 'QuoteBlock'}
+                        | {__typename: 'RichTextBlock'; richText: Node[]}
+                        | {__typename: 'SoundCloudTrackBlock'}
+                        | {__typename: 'TeaserGridBlock'}
+                        | {__typename: 'TeaserGridFlexBlock'}
+                        | {__typename: 'TeaserListBlock'}
+                        | {__typename: 'TikTokVideoBlock'}
+                        | {__typename: 'TitleBlock'}
+                        | {__typename: 'TwitterTweetBlock'}
+                        | {__typename: 'VimeoVideoBlock'}
+                        | {__typename: 'YouTubeVideoBlock'}
+                      >
                     } | null
                     latest: {
                       __typename?: 'ArticleRevision'
@@ -3920,6 +4034,33 @@ type FullTeaser_ArticleTeaser_Fragment = {
       updatedAt?: string | null
       revision: number
       url: string
+      blocks: Array<
+        | {__typename: 'BildwurfAdBlock'}
+        | {__typename: 'CommentBlock'}
+        | {__typename: 'EmbedBlock'}
+        | {__typename: 'EventBlock'}
+        | {__typename: 'FacebookPostBlock'}
+        | {__typename: 'FacebookVideoBlock'}
+        | {__typename: 'HTMLBlock'}
+        | {__typename: 'ImageBlock'}
+        | {__typename: 'ImageGalleryBlock'}
+        | {__typename: 'InstagramPostBlock'}
+        | {__typename: 'LinkPageBreakBlock'}
+        | {__typename: 'ListicleBlock'}
+        | {__typename: 'PolisConversationBlock'}
+        | {__typename: 'PollBlock'}
+        | {__typename: 'QuoteBlock'}
+        | {__typename: 'RichTextBlock'; richText: Node[]}
+        | {__typename: 'SoundCloudTrackBlock'}
+        | {__typename: 'TeaserGridBlock'}
+        | {__typename: 'TeaserGridFlexBlock'}
+        | {__typename: 'TeaserListBlock'}
+        | {__typename: 'TikTokVideoBlock'}
+        | {__typename: 'TitleBlock'}
+        | {__typename: 'TwitterTweetBlock'}
+        | {__typename: 'VimeoVideoBlock'}
+        | {__typename: 'YouTubeVideoBlock'}
+      >
     } | null
     latest: {
       __typename?: 'ArticleRevision'
@@ -4050,6 +4191,33 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
       updatedAt?: string | null
       revision: number
       url: string
+      blocks: Array<
+        | {__typename: 'BildwurfAdBlock'}
+        | {__typename: 'CommentBlock'}
+        | {__typename: 'EmbedBlock'}
+        | {__typename: 'EventBlock'}
+        | {__typename: 'FacebookPostBlock'}
+        | {__typename: 'FacebookVideoBlock'}
+        | {__typename: 'HTMLBlock'}
+        | {__typename: 'ImageBlock'}
+        | {__typename: 'ImageGalleryBlock'}
+        | {__typename: 'InstagramPostBlock'}
+        | {__typename: 'LinkPageBreakBlock'}
+        | {__typename: 'ListicleBlock'}
+        | {__typename: 'PolisConversationBlock'}
+        | {__typename: 'PollBlock'}
+        | {__typename: 'QuoteBlock'}
+        | {__typename: 'RichTextBlock'; richText: Node[]}
+        | {__typename: 'SoundCloudTrackBlock'}
+        | {__typename: 'TeaserGridBlock'}
+        | {__typename: 'TeaserGridFlexBlock'}
+        | {__typename: 'TeaserListBlock'}
+        | {__typename: 'TikTokVideoBlock'}
+        | {__typename: 'TitleBlock'}
+        | {__typename: 'TwitterTweetBlock'}
+        | {__typename: 'VimeoVideoBlock'}
+        | {__typename: 'YouTubeVideoBlock'}
+      >
     } | null
     latest: {
       __typename?: 'ArticleRevision'
@@ -4283,6 +4451,33 @@ type FullBlock_TeaserGridBlock_Fragment = {
             updatedAt?: string | null
             revision: number
             url: string
+            blocks: Array<
+              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'CommentBlock'}
+              | {__typename: 'EmbedBlock'}
+              | {__typename: 'EventBlock'}
+              | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
+              | {__typename: 'HTMLBlock'}
+              | {__typename: 'ImageBlock'}
+              | {__typename: 'ImageGalleryBlock'}
+              | {__typename: 'InstagramPostBlock'}
+              | {__typename: 'LinkPageBreakBlock'}
+              | {__typename: 'ListicleBlock'}
+              | {__typename: 'PolisConversationBlock'}
+              | {__typename: 'PollBlock'}
+              | {__typename: 'QuoteBlock'}
+              | {__typename: 'RichTextBlock'; richText: Node[]}
+              | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'TeaserGridBlock'}
+              | {__typename: 'TeaserGridFlexBlock'}
+              | {__typename: 'TeaserListBlock'}
+              | {__typename: 'TikTokVideoBlock'}
+              | {__typename: 'TitleBlock'}
+              | {__typename: 'TwitterTweetBlock'}
+              | {__typename: 'VimeoVideoBlock'}
+              | {__typename: 'YouTubeVideoBlock'}
+            >
           } | null
           latest: {
             __typename?: 'ArticleRevision'
@@ -4409,6 +4604,33 @@ type FullBlock_TeaserGridBlock_Fragment = {
             updatedAt?: string | null
             revision: number
             url: string
+            blocks: Array<
+              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'CommentBlock'}
+              | {__typename: 'EmbedBlock'}
+              | {__typename: 'EventBlock'}
+              | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
+              | {__typename: 'HTMLBlock'}
+              | {__typename: 'ImageBlock'}
+              | {__typename: 'ImageGalleryBlock'}
+              | {__typename: 'InstagramPostBlock'}
+              | {__typename: 'LinkPageBreakBlock'}
+              | {__typename: 'ListicleBlock'}
+              | {__typename: 'PolisConversationBlock'}
+              | {__typename: 'PollBlock'}
+              | {__typename: 'QuoteBlock'}
+              | {__typename: 'RichTextBlock'; richText: Node[]}
+              | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'TeaserGridBlock'}
+              | {__typename: 'TeaserGridFlexBlock'}
+              | {__typename: 'TeaserListBlock'}
+              | {__typename: 'TikTokVideoBlock'}
+              | {__typename: 'TitleBlock'}
+              | {__typename: 'TwitterTweetBlock'}
+              | {__typename: 'VimeoVideoBlock'}
+              | {__typename: 'YouTubeVideoBlock'}
+            >
           } | null
           latest: {
             __typename?: 'ArticleRevision'
@@ -5168,6 +5390,12 @@ export const ArticleRef = gql`
       updatedAt
       revision
       url
+      blocks {
+        __typename
+        ... on RichTextBlock {
+          richText
+        }
+      }
     }
     latest {
       publishedAt
@@ -5398,8 +5626,8 @@ export const FullUser = gql`
   }
 `
 export const ArticleList = gql`
-  query ArticleList($filter: String, $cursor: ID, $take: Int) {
-    articles(take: $take, cursor: $cursor, filter: {title: $filter}) {
+  query ArticleList($filter: String, $cursor: ID, $skip: Int, $take: Int) {
+    articles(take: $take, skip: $skip, cursor: $cursor, filter: {title: $filter}) {
       nodes {
         ...ArticleRef
       }

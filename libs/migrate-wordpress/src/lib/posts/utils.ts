@@ -1,8 +1,13 @@
 import {addSeconds, differenceInSeconds, format, startOfDay} from 'date-fns'
+import {Article, ArticleQuery} from '../../api/public'
 
 export const normalizeSlug = (slug: string): string => {
   return slug.replace(/_/g, '-').replace(/%/g, '')
 }
+
+export const hasEmptyBlocks = (article: ArticleQuery['article']) =>
+  article &&
+  article.blocks.some(b => b.__typename === 'RichTextBlock' && isSlateNodeEmpty(b.richText))
 
 export const isSlateNodeEmpty = (slateNode: any[] | undefined) => {
   if (slateNode === undefined || slateNode.length === 0) {
