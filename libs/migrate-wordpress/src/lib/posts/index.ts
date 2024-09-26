@@ -6,7 +6,7 @@ import chalk from 'chalk'
 import {logError} from './error-logger'
 import {createTimer, humanizeObject, normalizeSlug} from './utils'
 import {fixedMessage} from '../logger'
-import {getArticleBySlug, getArticleIdByTitle, publishArticle} from './article'
+import {getArticleBySlug} from './article'
 
 export const deleteExistingPosts = false
 export const deleteExistingAuthors = false
