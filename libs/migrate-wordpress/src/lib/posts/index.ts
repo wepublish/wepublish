@@ -4,9 +4,10 @@ import {prepareArticleData} from './prepare-data'
 import {mapLimit} from 'async'
 import chalk from 'chalk'
 import {logError} from './error-logger'
-import {createTimer, humanizeObject, normalizeSlug} from './utils'
+import {createTimer, humanizeObject} from './utils'
 import {fixedMessage} from '../logger'
 import {getArticleBySlug} from './article'
+import {slugify} from '@wepublish/utils'
 
 export const deleteExistingPosts = false
 export const deleteExistingAuthors = false
@@ -17,7 +18,7 @@ async function prepareDataAndMigratePost(post: WordpressPost) {
   try {
     console.debug(`Migrating article ${post.slug}`)
 
-    const slug = normalizeSlug(post.slug)
+    const slug = slugify(post.slug)
     const existingArticle = await getArticleBySlug(slug)
     if (!deleteExistingPosts && existingArticle) {
       return existingArticle

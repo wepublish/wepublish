@@ -1,9 +1,5 @@
 import {addSeconds, differenceInSeconds, format, startOfDay} from 'date-fns'
-import {Article, ArticleQuery} from '../../api/public'
-
-export const normalizeSlug = (slug: string): string => {
-  return slug.replace(/_/g, '-').replace(/%/g, '')
-}
+import {ArticleQuery} from '../../api/public'
 
 export const hasEmptyBlocks = (article: ArticleQuery['article']) =>
   article &&

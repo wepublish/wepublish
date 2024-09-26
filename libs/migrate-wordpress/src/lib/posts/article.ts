@@ -19,6 +19,7 @@ import {privateClient, publicClient} from '../api/clients'
 import {Author} from './author'
 import {Tag} from './tags'
 import {Image} from './image'
+import {slugify} from '@wepublish/utils'
 
 type EnsureArticleProps = {
   title: string
@@ -109,7 +110,7 @@ export async function publishArticle(id: string, publishDate: Date, lastModified
 export async function getArticleBySlug(slug: string) {
   return (
     await publicClient.request<ArticleQuery, ArticleQueryVariables>(Article, {
-      slug
+      slug: slugify(slug)
     })
   ).article
 }
