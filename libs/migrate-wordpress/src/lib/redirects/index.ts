@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import {fetchPosts, WordpressPost} from '../posts/wordpress-api'
+import {slugify} from '@wepublish/utils'
 
 const BASE_URL: string = process.env['WORDPRESS_URL'] || 'https://mannschaft.com'
 const BASE_PATH = './libs/migrate-wordpress/src/lib/redirects'
@@ -45,8 +46,8 @@ function readFile(): any[] {
 function transformData(inputData: any[]): NextJsRedirectsMap {
   const nextJsCompatibleRoutes: NextJsRedirectsMap = {}
   for (const redirect of inputData) {
-    const source = getPathname(redirect?.url)
-    const destination = getPathname(redirect?.action_data?.url)
+    const source = getSourcePath(redirect?.url)
+    const destination = getDestinationPath(redirect?.action_data?.url)
     if (!source || !destination)
       throw new Error(`old or new url not provided in redirect with id ${redirect?.id}`)
     nextJsCompatibleRoutes[source] = {
@@ -91,8 +92,8 @@ async function getRedirectsFromWpArticles(): Promise<NextJsRedirectsMap> {
 function getRedirectsFromPosts(posts: WordpressPost[]): NextJsRedirectsMap {
   const wpArticleRedirects: NextJsRedirectsMap = {}
   for (const post of posts) {
-    const source = getPathname(post.link)
-    const destination = `/a${getPathname(post.link)}`
+    const source = getSourcePath(post.link)
+    const destination = getDestinationPath(`/a${getSourcePath(post.link)}`)
     wpArticleRedirects[source] = {
       destination
     }
@@ -100,10 +101,14 @@ function getRedirectsFromPosts(posts: WordpressPost[]): NextJsRedirectsMap {
   return wpArticleRedirects
 }
 
-function getPathname(rawUrl: string): string {
+function getSourcePath(rawUrl: string): string {
   // remove trailing slash
   // remove base url
   return rawUrl?.replace(BASE_URL, '')?.replace(/\/$/, '') || '/'
+}
+
+function getDestinationPath(rawUrl: string): string {
+  return slugify(rawUrl?.replace(BASE_URL, '')?.replace(/\/$/, '') || '/')
 }
 
 function resolveRedirects(redirects: NextJsRedirectsMap): NextJsRedirectsMap {
