@@ -6,6 +6,7 @@ const BASE_URL: string = process.env['WORDPRESS_URL'] || 'https://mannschaft.com
 const BASE_PATH = './libs/migrate-wordpress/src/lib/redirects'
 const IMPORT_PATH = BASE_PATH + '/import-redirects.json'
 const EXPORT_PATH = BASE_PATH + '/redirects.json'
+const EXPORT_PATH_WARNS = BASE_PATH + '/warns.json'
 
 type NextJsRedirectsMap = {
   [key: string]: NextJsRoute
@@ -15,6 +16,8 @@ interface NextJsRoute {
   destination: string
   permanent?: boolean
 }
+
+const exportWarns: NextJsRedirectsMap = {}
 
 init()
 
@@ -29,7 +32,9 @@ async function init() {
     console.log('resolve redirects...')
     const nextJsRoutes = resolveRedirects({...nextJsCompatibleRoutes, ...wpArticleRedirects})
     console.log('write file...')
-    saveFile(nextJsRoutes)
+    saveFile(nextJsRoutes, EXPORT_PATH)
+    console.log('write warning file...')
+    saveFile(exportWarns, EXPORT_PATH_WARNS)
     console.log('congrats, all done!')
   } catch (e) {
     console.log('# while migrating the redirects an error occurred', e)
@@ -55,9 +60,9 @@ function transformData(inputData: any[]): NextJsRedirectsMap {
   return nextJsCompatibleRoutes
 }
 
-function saveFile(data: NextJsRedirectsMap) {
+function saveFile(data: NextJsRedirectsMap, exportPath: string) {
   const jsonData = JSON.stringify(data, null, 2)
-  fs.writeFileSync(EXPORT_PATH, jsonData, 'utf8')
+  fs.writeFileSync(exportPath, jsonData, 'utf8')
 }
 
 async function getRedirectsFromWpArticles(): Promise<NextJsRedirectsMap> {
@@ -162,6 +167,9 @@ function checkIntegrity(source: string, destination: string) {
   }
 
   if (!destination.startsWith('/a/') && destination !== '/') {
+    exportWarns[source] = {
+      destination
+    }
     console.log(`Redirection with destination maybe not working: ${destination}`)
   }
 }
