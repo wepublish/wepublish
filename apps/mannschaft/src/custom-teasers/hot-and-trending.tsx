@@ -51,7 +51,7 @@ export const HotAndTrendingTeaser = ({alignment, teaser}: BuilderTeaserProps) =>
   return (
     <TeaserWrapper {...alignment}>
       <HotAndTrendingTeaserWrapper>
-        <H4 component={HotAndTrendingTitle}>{teaser?.title || 'Hot & Trending'}</H4>
+        <H4 component={HotAndTrendingTitle}>{teaser?.title || 'Trending'}</H4>
 
         <HotAndTrendingLinkList>
           {data?.hotAndTrending.map(article => (
