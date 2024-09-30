@@ -273,7 +273,7 @@ import {PollModule} from '@wepublish/poll/api'
             const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
 
             return {
-              credentials: configFile?.ga.credentials,
+              credentials: configFile.ga?.credentials,
               property: configFile.ga?.property,
               articlePrefix: configFile.ga?.articlePrefix
             }
