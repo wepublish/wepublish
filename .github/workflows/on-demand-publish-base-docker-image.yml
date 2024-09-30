@@ -17,7 +17,7 @@ jobs:
         id: hash
         run: |
           if [ -f package-lock.json ]; then
-            echo "HASH=$(sha256sum package-lock.json | awk '{print $1}')" >> $GITHUB_ENV
+            echo "HASH=$(cat package-lock.json Dockerfile | sha256sum | awk '{print $1}')" >> $GITHUB_ENV
           else
             echo "package-lock.json not found, exiting."
             exit 1
