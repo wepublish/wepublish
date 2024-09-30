@@ -2,11 +2,22 @@ import {Row} from './row'
 import {createUser, deleteUser, findUserByEmail} from './private-api'
 import {randomUUID} from 'crypto'
 import {deleteUserSubscriptions} from './subscription'
+import {UserInput} from '../../api/private'
+import {slugify} from '../posts/utils'
 
-const deleteUserWhenFound = true
+const deleteUserWhenFound = false
 
 export async function migrateUser(row: Row) {
-  const {email, streetAddress, zipCode, city, country, firstName, companyOrLastName} = row
+  const {streetAddress, zipCode, city, country, firstName, companyOrLastName, dateOfBirth} = row
+  let {email} = row
+
+  email = email.trim().toLowerCase()
+
+  if (!email || email === '0') {
+    email = `user+${slugify(
+      [firstName, companyOrLastName].filter(e => e).join('-')
+    )}@mannschaft.com`
+  }
 
   const existingUser = await findUserByEmail(email)
   if (existingUser) {
@@ -19,25 +30,35 @@ export async function migrateUser(row: Row) {
       return existingUser
     }
   }
-
-  console.debug('         user create ', email)
-  return await createUser({
+  const input: UserInput = {
     active: true,
     address: {
       streetAddress,
       zipCode,
       city,
-      country
+      country: mapCountry(country)
     },
     email,
     emailVerifiedAt: new Date().toISOString(),
     firstName,
     flair: undefined,
-    name: companyOrLastName,
-    preferredName: undefined,
+    name: companyOrLastName.substring(0, 50),
     properties: [],
     roleIDs: undefined,
     userImageID: undefined,
-    password: randomUUID()
-  })
+    birthday: dateOfBirth ? dateOfBirth.toISOString() : undefined
+  }
+  console.debug('         user create ', email)
+  return await createUser({...input, password: randomUUID()})
+}
+
+const countryMappings: {[key: string]: string} = {
+  Grossbritannien: 'Großbritannien'
+}
+
+const mapCountry = (country: string) => {
+  if (country in countryMappings) {
+    return countryMappings[country]
+  }
+  return country
 }

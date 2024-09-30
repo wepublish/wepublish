@@ -21,6 +21,7 @@ import {
   MemberPlanList
 } from '../../api/private'
 import {privateClient} from '../api/clients'
+import {Row} from './row'
 
 export async function createUser({
   password,
@@ -80,4 +81,13 @@ export async function findMemberPlanByName(name: string) {
       filter: name
     })
   ).memberPlans.nodes.find(mp => mp.name === name)
+}
+
+export async function getMemberPlans() {
+  return (
+    await privateClient.request<MemberPlanListQuery, MemberPlanListQueryVariables>(
+      MemberPlanList,
+      {}
+    )
+  ).memberPlans.nodes
 }

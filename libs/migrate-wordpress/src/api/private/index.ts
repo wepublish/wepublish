@@ -5020,6 +5020,7 @@ export type FullMemberPlanFragment = {
   __typename?: 'MemberPlan'
   tags?: Array<string> | null
   amountPerMonthMin: number
+  currency: Currency
   extendable: boolean
   maxCount?: number | null
   id: string
@@ -5071,6 +5072,7 @@ export type MemberPlanListQuery = {
       __typename?: 'MemberPlan'
       tags?: Array<string> | null
       amountPerMonthMin: number
+      currency: Currency
       extendable: boolean
       maxCount?: number | null
       id: string
@@ -5643,6 +5645,7 @@ export const FullMemberPlan = gql`
   fragment FullMemberPlan on MemberPlan {
     tags
     amountPerMonthMin
+    currency
     availablePaymentMethods {
       paymentMethods {
         id

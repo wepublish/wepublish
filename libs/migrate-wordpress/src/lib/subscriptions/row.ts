@@ -11,7 +11,7 @@ export type Row = {
   contactNumber: string
   contactType: string
   issue: string
-  dateOfBirth: string
+  dateOfBirth: Date | undefined
   companyOrLastName: string
   firstName: string
   streetAddress: string
@@ -35,8 +35,10 @@ export function convertColumnsToRow(row: string[]) {
     vatRateOnPosition,
     currency,
     contactNumber,
+    contactNumberDe,
     contactType,
     issue,
+    email,
     dateOfBirth,
     companyOrLastName,
     firstName,
@@ -45,8 +47,7 @@ export function convertColumnsToRow(row: string[]) {
     city,
     country,
     start,
-    end,
-    email
+    end
   ] = row
   return {
     status,
@@ -61,7 +62,7 @@ export function convertColumnsToRow(row: string[]) {
     contactNumber,
     contactType,
     issue,
-    dateOfBirth,
+    dateOfBirth: extractDate(dateOfBirth),
     companyOrLastName,
     firstName,
     streetAddress,
@@ -72,4 +73,23 @@ export function convertColumnsToRow(row: string[]) {
     end,
     email
   }
+}
+
+export function extractDate(dateString: string) {
+  if (!dateString || dateString === '0' || dateString === '00.01.00') {
+    return undefined
+  }
+  const [day, month, yearString] = dateString.split('.')
+
+  const year =
+    +yearString > 1900 ? +yearString : +yearString > 15 ? 1900 + +yearString : 2000 + +yearString
+  const date = new Date()
+  date.setUTCDate(+day)
+  date.setUTCMonth(+month - 1)
+  date.setUTCFullYear(year)
+  date.setUTCHours(12)
+  date.setUTCMinutes(0)
+  date.setUTCSeconds(0)
+  date.setUTCMilliseconds(0)
+  return date
 }

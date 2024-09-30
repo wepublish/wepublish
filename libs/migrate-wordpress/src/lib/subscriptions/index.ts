@@ -10,7 +10,7 @@ export async function migrateSubscriptionsFromStream(stream: ReadStream) {
   return new Promise((resolve, reject) => {
     const parser = stream.pipe(parse({delimiter: ';', fromLine: 2}))
     parser
-      .on('data', streamLimit<string[]>(parser, processRow, 5))
+      .on('data', streamLimit<string[]>(parser, processRow, 1))
       .on('end', resolve)
       .on('error', reject)
   })
