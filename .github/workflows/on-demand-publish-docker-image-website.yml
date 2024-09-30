@@ -3,9 +3,6 @@ name: Publish docker website image
 on:
   workflow_call:
     inputs:
-      base_image_tag:
-        required: true
-        type: string
       website_project:
         required: true
         type: string

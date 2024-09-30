@@ -2,10 +2,6 @@ name: Publish docker base image
 
 on:
   workflow_call:
-    inputs:
-      base_image_tags:
-        required: true
-        type: string
 
 jobs:
   build-and-push-base-image:

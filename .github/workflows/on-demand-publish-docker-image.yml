@@ -3,9 +3,6 @@ name: Publish docker image
 on:
   workflow_call:
     inputs:
-      base_image_tag:
-        required: true
-        type: string
       editor_tags:
         required: false
         type: string
