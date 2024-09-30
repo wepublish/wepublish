@@ -18,7 +18,10 @@ import {
   DeleteSubscriptionMutationVariables,
   MemberPlanListQuery,
   MemberPlanListQueryVariables,
-  MemberPlanList
+  MemberPlanList,
+  ImportSubscriptionMutation,
+  ImportSubscriptionMutationVariables,
+  ImportSubscription
 } from '../../api/private'
 import {privateClient} from '../api/clients'
 import {Row} from './row'
@@ -53,15 +56,15 @@ export async function deleteUser(userId: string) {
   ).deleteUser
 }
 
-export async function createSubscription(input: SubscriptionInput) {
+export async function importSubscription(input: SubscriptionInput) {
   return (
-    await privateClient.request<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>(
-      CreateSubscription,
+    await privateClient.request<ImportSubscriptionMutation, ImportSubscriptionMutationVariables>(
+      ImportSubscription,
       {
         input
       }
     )
-  ).createSubscription!
+  ).importSubscription!
 }
 
 export async function deleteSubscription(id: string) {

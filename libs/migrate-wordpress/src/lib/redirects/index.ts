@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import {fetchPosts, WordpressPost} from '../posts/wordpress-api'
-import {slugify} from '@wepublish/utils'
+import {slugify} from '../posts/utils'
 
 const BASE_URL: string = process.env['WORDPRESS_URL'] || 'https://mannschaft.com'
 const BASE_PATH = './libs/migrate-wordpress/src/lib/redirects'

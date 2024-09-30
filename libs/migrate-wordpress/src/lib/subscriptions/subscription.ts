@@ -1,7 +1,7 @@
 import {extractDate, Row} from './row'
 import {PaymentPeriodicity, UserListQuery} from '../../api/private'
 import {differenceInDays, differenceInMonths, differenceInYears} from 'date-fns'
-import {createSubscription, deleteSubscription, getMemberPlans} from './private-api'
+import {importSubscription, deleteSubscription, getMemberPlans} from './private-api'
 
 export async function migrateSubscription(user: UserListQuery['users']['nodes'][number], row: Row) {
   const {productName, email} = row
@@ -20,7 +20,7 @@ export async function migrateSubscription(user: UserListQuery['users']['nodes'][
   }
 
   console.debug(' subscription create ', [email, memberPlan.slug].join(' / '))
-  return await createSubscription({
+  return await importSubscription({
     autoRenew: false,
     deactivation: undefined,
     extendable: true,
