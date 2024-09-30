@@ -15,6 +15,7 @@ projects:
   migration-v1:
     schema:
       - 'apps/api-example/schema-v1.graphql'
+      - 'apps/api-example/schema-v2.graphql'
     documents: 'libs/migrate-wordpress/src/api/public/**/*.graphql'
   migration-v1-admin:
     schema:

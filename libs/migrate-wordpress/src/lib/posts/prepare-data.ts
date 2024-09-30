@@ -92,7 +92,7 @@ async function prepareTags(tagIds: number[], categoryIds: number[]) {
   ]
 }
 
-function removeLinks(html: string) {
+export function removeLinks(html: string) {
   const $ = load(html)
   $('a').remove()
   return decode($.text())

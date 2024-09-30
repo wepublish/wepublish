@@ -1,0 +1,13 @@
+fragment FullBlockStyle on BlockStyle {
+    id
+    createdAt
+    modifiedAt
+    name
+    blocks
+}
+
+query BlockStyles {
+    blockStyles {
+        ...FullBlockStyle
+    }
+}

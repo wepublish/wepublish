@@ -7,6 +7,10 @@ import {privateClient, privateGraphqlEndpoint, privateToken} from '../api/client
 import {
   ImageList,
   ImageListQuery,
+  ImageListQueryVariables,
+  UpdateImage,
+  UpdateImageMutation,
+  UpdateImageMutationVariables,
   UploadImage,
   UploadImageInput,
   UploadImageMutationVariables
@@ -25,13 +29,20 @@ type EnsureImageProps = {
 }
 
 export const ensureImage = async (input: EnsureImageProps): Promise<Image | undefined> => {
-  const {url, title, description} = input
+  const {url, title} = input
+  const description = input.description?.trim()
 
-  const foundImages = (await getImagesByTitle(title)).nodes
-  const existingImage = foundImages.find(image => image.link === url)
+  const existingImage = await findImage(input)
   if (existingImage) {
     console.debug('  image exists', url)
-    return existingImage
+    return await updateImage({
+      id: existingImage.id,
+      input: {
+        focalPoint: existingImage.focalPoint,
+        title,
+        description
+      }
+    })
   }
 
   console.debug('  create image', url)
@@ -53,15 +64,30 @@ export const ensureImage = async (input: EnsureImageProps): Promise<Image | unde
   }
 }
 
+export async function findImage({title, url}: Pick<EnsureImageProps, 'title' | 'url'>) {
+  const filename = url.split('/').pop()!
+  const foundImages = (await getImagesByTitle(filename)).nodes
+  return foundImages.find(image => image.link === url)
+}
+
 // API
 
 export async function getImagesByTitle(title: string) {
   return (
-    await privateClient.request<ImageListQuery>(ImageList, {
+    await privateClient.request<ImageListQuery, ImageListQueryVariables>(ImageList, {
       filter: title,
-      offset: 100
+      take: 100
     })
   ).images
+}
+
+export async function updateImage(variables: UpdateImageMutationVariables) {
+  return (
+    await privateClient.request<UpdateImageMutation, UpdateImageMutationVariables>(
+      UpdateImage,
+      variables
+    )
+  ).updateImage!
 }
 
 async function createImage({downloadUrl, ...input}: CreateImageInput) {
