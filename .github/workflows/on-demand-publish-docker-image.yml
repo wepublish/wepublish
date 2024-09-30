@@ -3,9 +3,6 @@ name: Publish docker image
 on:
   workflow_call:
     inputs:
-      base_image_tag:
-        required: true
-        type: string
       editor_tags:
         required: false
         type: string
@@ -23,9 +20,30 @@ on:
         type: string
 
 jobs:
+  calculate-base-image-tag:
+    name: Calculate hash for base image
+    runs-on: ubuntu-latest
+    outputs:
+      hashed_tag: ${{ steps.hash.outputs.hashed_tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Calculate hash of package-lock.json
+        id: hash
+        run: |
+          if [ -f package-lock.json ]; then
+            HASH=$(cat package-lock.json Dockerfile | sha256sum | awk '{print $1}')
+            echo "::set-output name=hashed_tag::ghcr.io/wepublish/base-image:${HASH}"
+          else
+            echo "package-lock.json not found, exiting."
+            exit 1
+          fi
+
   build-and-push-docker-api:
     name: Build and push api
     runs-on: ubuntu-latest
+    needs: calculate-base-image-tag
+    env:
+      BUILD_IMAGE_TAG: ${{ needs.calculate-base-image-tag.outputs.hashed_tag }}
     if: inputs.api_tags != ''
     steps:
       - uses: actions/checkout@v4
@@ -48,10 +66,13 @@ jobs:
           tags: |
             ${{ inputs.api_tags }}
           build-args:
-            BUILD_IMAGE=${{ inputs.base_image_tag }}
+            BUILD_IMAGE=${{ env.BUILD_IMAGE_TAG }}
   build-and-push-docker-editor:
     name: Build and push editor
     runs-on: ubuntu-latest
+    needs: calculate-base-image-tag
+    env:
+      BUILD_IMAGE_TAG: ${{ needs.calculate-base-image-tag.outputs.hashed_tag }}
     if: inputs.editor_tags != ''
     steps:
       - uses: actions/checkout@v4
@@ -74,7 +95,7 @@ jobs:
           tags: |
             ${{ inputs.editor_tags }}
           build-args:
-            BUILD_IMAGE=${{ inputs.base_image_tag }}
+            BUILD_IMAGE=${{ env.BUILD_IMAGE_TAG }}
   build-and-push-docker-migration:
     name: Build and push migration
     runs-on: ubuntu-latest
@@ -126,6 +147,9 @@ jobs:
   build-and-push-storybook:
     name: Build and push storybook
     runs-on: ubuntu-latest
+    needs: calculate-base-image-tag
+    env:
+      BUILD_IMAGE_TAG: ${{ needs.calculate-base-image-tag.outputs.hashed_tag }}
     if: inputs.storybook_tags != ''
     steps:
       - uses: actions/checkout@v4
@@ -148,4 +172,4 @@ jobs:
           tags: |
             ${{ inputs.storybook_tags }}
           build-args:
-            BUILD_IMAGE=${{ inputs.base_image_tag }}
+            BUILD_IMAGE=${{ env.BUILD_IMAGE_TAG }}
