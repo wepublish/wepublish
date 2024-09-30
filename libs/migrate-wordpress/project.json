@@ -5,12 +5,6 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "redirects": {
-      "executor": "@nx:node",
-      "options": {
-        "command": "ts-node ./src/lib/redirects/index.tx"
-      }
-    },
     "lint": {
       "executor": "@nx/eslint:lint"
     },
