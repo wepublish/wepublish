@@ -41,6 +41,7 @@ jobs:
           else
             echo "Image with hash ${{ env.HASH }} does not exist."
             echo "::set-output name=image-exists::false"
+          fi
 
       - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
