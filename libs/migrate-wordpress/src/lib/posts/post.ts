@@ -13,24 +13,25 @@ import {
   prepareTitleBlock
 } from './blocks'
 import {ensureImage} from './image'
-import {convertHtmlToSlate} from './convert-html-to-slate'
-import {Node as SlateNode} from 'slate'
 import {ensureAuthor} from './author'
 import {PreparedArticleData} from './prepare-data'
-import {deleteExistingPosts} from './index'
-import {isSlateNodeEmpty} from './utils'
+import {deleteExistingPosts, updateExistingArticles} from './index'
+import {isSlateNodeEmpty, transformHtmlToSlate} from './utils'
 
 export async function migratePost(data: PreparedArticleData) {
   const {title, lead, content, createdAt, modifiedAt, slug, link, featuredMedia} = data
 
-  const existingArticle = await getArticleBySlug(slug)
+  let existingArticle = await getArticleBySlug(slug)
   if (existingArticle) {
     console.debug('  article exists', slug)
     if (deleteExistingPosts) {
       console.debug('  article delete', slug)
       await deleteArticle(existingArticle.id)
+      existingArticle = undefined
     } else {
-      return existingArticle
+      if (!updateExistingArticles) {
+        return existingArticle
+      }
     }
   }
 
@@ -94,7 +95,7 @@ export async function migratePost(data: PreparedArticleData) {
     if ($element.filter('p').length && $element.prev('hr').length && $element.next('hr').length) {
       const skipHrSurroundedLinks = true
       if (!skipHrSurroundedLinks) {
-        const richText = await convertHtmlToSlate<SlateNode>($element.html()!)
+        const richText = await transformHtmlToSlate($element.html()!)
         blocks.push({
           linkPageBreak: {
             richText,
@@ -120,6 +121,7 @@ export async function migratePost(data: PreparedArticleData) {
   }
 
   return await ensureArticle({
+    id: existingArticle?.id,
     title,
     lead,
     slug,

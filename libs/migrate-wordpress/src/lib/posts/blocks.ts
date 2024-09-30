@@ -1,10 +1,11 @@
 import {ensureImage} from './image'
 import cheerio, {Cheerio, CheerioAPI, load, Element} from 'cheerio'
 import {BlockInput, Image} from '../../api/private'
-import {convertHtmlToSlate} from './convert-html-to-slate'
 import {extractEmbed} from './embeds'
-import {Node as SlateNode} from 'slate'
-import {isSlateNodeEmpty} from './utils'
+import {isSlateNodeEmpty, transformHtmlToSlate} from './utils'
+import {removeLinks} from './prepare-data'
+import {publicClient} from '../api/clients'
+import {BlockStyles, BlockStylesQuery} from '../../api/public'
 
 type Node = {
   $: CheerioAPI
@@ -54,26 +55,50 @@ export async function extractImageGallery({$element}: Node): Promise<BlockInput[
 
   const images = (
     await Promise.all(
-      imgElements.map(async (i, img) => {
-        const $img = $element.find(img)
-        return await ensureImageFromImg($img)
-      })
+      imgElements
+        .map(async (i, img) => {
+          const $img = $element.find(img)
+          if ($img.attr('width') === '1' || $img.attr('height') === '1') {
+            return
+          }
+          return await ensureImageFromImg($img)
+        })
+        .filter(img => !!img)
     )
   ).filter(i => i) as Image[]
 
+  const blocks: BlockInput[] = []
+
+  imgElements.remove()
   if (imageGallery) {
-    return [{imageGallery: {images: images.map(({id}) => ({imageID: id}))}}]
+    blocks.push({imageGallery: {images: images.map(({id}) => ({imageID: id}))}})
   }
 
   if (imageSingles) {
-    return await Promise.all(images.map(({id}) => ({image: {imageID: id}})))
+    blocks.push(...(await Promise.all(images.map(({id}) => ({image: {imageID: id}})))))
   }
-  return []
+
+  const contentLeft = await transformHtmlToSlate($element.html()!)
+  if (contentLeft.length) {
+    blocks.push({
+      richText: {
+        richText: contentLeft
+      }
+    })
+  }
+
+  return blocks
 }
 
 export async function extractFigure({$specialEl}: Node): Promise<BlockInput[]> {
   const $img = $specialEl.find('img')
-  const image = await ensureImageFromImg($img)
+  const $figCaption = $specialEl.find('figcaption')
+
+  const image = await ensureImage({
+    url: $img.attr('data-src')!,
+    title: $img.attr('alt')!,
+    description: removeLinks($figCaption.text())
+  })
   if (!image) {
     return []
   }
@@ -97,6 +122,12 @@ export async function extractIframe({$, $specialEl}: Node): Promise<BlockInput[]
 export async function extractContentBox({$specialEl, $}: Node): Promise<BlockInput[]> {
   const blocks: BlockInput[] = []
 
+  // get ContentBox ID
+  const blockStyle = await findBlockStyle('ContentBox')
+  if (!blockStyle) {
+    throw new Error('ContentBox block style not found')
+  }
+
   // extract image
   const $imageTag = $specialEl.find('img')
   if ($imageTag.length) {
@@ -107,7 +138,7 @@ export async function extractContentBox({$specialEl, $}: Node): Promise<BlockInp
         image: {
           imageID: image.id,
           caption: image.description,
-          blockStyle: 'ContentBox'
+          blockStyle: blockStyle.id
         }
       })
     }
@@ -118,21 +149,21 @@ export async function extractContentBox({$specialEl, $}: Node): Promise<BlockInp
   $iframes.parent().remove()
 
   // extract richText
-  const richText = (await convertHtmlToSlate($specialEl.html()!)) as unknown as SlateNode[]
+  const richText = await transformHtmlToSlate($specialEl.html()!)
 
   // create rich text block
   if (!isSlateNodeEmpty(richText)) {
     blocks.push({
       richText: {
         richText,
-        blockStyle: 'ContentBox'
+        blockStyle: blockStyle.id
       }
     })
   }
 
   // create iframe blocks
   $iframes.map((i, iframe) => {
-    blocks.push(extractEmbed($.html(iframe).toString(), 'ContentBox'))
+    blocks.push(extractEmbed($.html(iframe).toString(), blockStyle.id))
   })
   return blocks
 }
@@ -177,5 +208,11 @@ export function prepareTitleBlock({title, subtitle}: {title: string; subtitle: s
 }
 
 export async function convertNodeContentToRichText({element, $}: Node) {
-  return (await convertHtmlToSlate($.html(element).toString())) as unknown as SlateNode[]
+  return await transformHtmlToSlate($.html(element).toString())
+}
+
+async function findBlockStyle(name: string) {
+  return (await publicClient.request<BlockStylesQuery>(BlockStyles)).blockStyles.find(
+    blockStyle => blockStyle.name === name
+  )
 }

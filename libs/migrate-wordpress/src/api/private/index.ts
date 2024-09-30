@@ -2928,6 +2928,7 @@ export type ArticleRefFragment = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   }
 }
@@ -3012,6 +3013,7 @@ export type ArticleListQuery = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
       }
     }>
@@ -3278,6 +3280,7 @@ export type ArticleQuery = {
         previewURL?: string | null
         column1URL?: string | null
         column6URL?: string | null
+        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
       } | null
       properties: Array<{__typename?: 'Properties'; key: string; value: string; public: boolean}>
       authors: Array<{
@@ -3302,6 +3305,7 @@ export type ArticleQuery = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
       }>
       socialMediaAuthors: Array<{
@@ -3326,6 +3330,7 @@ export type ArticleQuery = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
       }>
       socialMediaImage?: {
@@ -3346,6 +3351,7 @@ export type ArticleQuery = {
         previewURL?: string | null
         column1URL?: string | null
         column6URL?: string | null
+        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
       } | null
       blocks: Array<
         | {__typename: 'BildwurfAdBlock'}
@@ -3384,6 +3390,7 @@ export type ArticleQuery = {
               previewURL?: string | null
               column1URL?: string | null
               column6URL?: string | null
+              focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
             } | null
           }
         | {
@@ -3409,6 +3416,7 @@ export type ArticleQuery = {
                 previewURL?: string | null
                 column1URL?: string | null
                 column6URL?: string | null
+                focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
               } | null
             }>
           }
@@ -3443,6 +3451,7 @@ export type ArticleQuery = {
                 previewURL?: string | null
                 column1URL?: string | null
                 column6URL?: string | null
+                focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
               } | null
             }>
           }
@@ -3470,6 +3479,7 @@ export type ArticleQuery = {
               previewURL?: string | null
               column1URL?: string | null
               column6URL?: string | null
+              focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
             } | null
           }
         | {__typename: 'RichTextBlock'; richText: Node[]}
@@ -3502,6 +3512,7 @@ export type ArticleQuery = {
                     previewURL?: string | null
                     column1URL?: string | null
                     column6URL?: string | null
+                    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
                   } | null
                   article?: {
                     __typename?: 'Article'
@@ -3571,6 +3582,7 @@ export type ArticleQuery = {
                         previewURL?: string | null
                         column1URL?: string | null
                         column6URL?: string | null
+                        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
                       } | null
                     }
                   } | null
@@ -3600,6 +3612,7 @@ export type ArticleQuery = {
                     previewURL?: string | null
                     column1URL?: string | null
                     column6URL?: string | null
+                    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
                   } | null
                   event?: {__typename?: 'Event'; id: string} | null
                 }
@@ -3627,6 +3640,7 @@ export type ArticleQuery = {
                     previewURL?: string | null
                     column1URL?: string | null
                     column6URL?: string | null
+                    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
                   } | null
                   page?: {__typename?: 'Page'; id: string} | null
                 }
@@ -3655,6 +3669,7 @@ export type ArticleQuery = {
                     previewURL?: string | null
                     column1URL?: string | null
                     column6URL?: string | null
+                    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
                   } | null
                   article?: {
                     __typename?: 'Article'
@@ -3724,6 +3739,7 @@ export type ArticleQuery = {
                         previewURL?: string | null
                         column1URL?: string | null
                         column6URL?: string | null
+                        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
                       } | null
                     }
                   } | null
@@ -3765,6 +3781,7 @@ export type AuthorRefFragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -3793,6 +3810,7 @@ export type FullAuthorFragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -3833,6 +3851,7 @@ export type AuthorListQuery = {
         previewURL?: string | null
         column1URL?: string | null
         column6URL?: string | null
+        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
       } | null
     }>
     pageInfo: {
@@ -3876,6 +3895,7 @@ export type AuthorQuery = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   } | null
 }
@@ -3911,6 +3931,7 @@ export type CreateAuthorMutation = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   } | null
 }
@@ -3947,6 +3968,7 @@ export type UpdateAuthorMutation = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   } | null
 }
@@ -3982,6 +4004,7 @@ export type DeleteAuthorMutation = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   } | null
 }
@@ -4019,6 +4042,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
   article?: {
     __typename?: 'Article'
@@ -4088,6 +4112,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
         previewURL?: string | null
         column1URL?: string | null
         column6URL?: string | null
+        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
       } | null
     }
   } | null
@@ -4119,6 +4144,7 @@ type FullTeaser_EventTeaser_Fragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
   event?: {__typename?: 'Event'; id: string} | null
 }
@@ -4147,6 +4173,7 @@ type FullTeaser_PageTeaser_Fragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
   page?: {__typename?: 'Page'; id: string} | null
 }
@@ -4176,6 +4203,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
   article?: {
     __typename?: 'Article'
@@ -4245,6 +4273,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
         previewURL?: string | null
         column1URL?: string | null
         column6URL?: string | null
+        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
       } | null
     }
   } | null
@@ -4308,6 +4337,7 @@ type FullBlock_ImageBlock_Fragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -4334,6 +4364,7 @@ type FullBlock_ImageGalleryBlock_Fragment = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   }>
 }
@@ -4371,6 +4402,7 @@ type FullBlock_ListicleBlock_Fragment = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   }>
 }
@@ -4401,6 +4433,7 @@ type FullBlock_QuoteBlock_Fragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -4436,6 +4469,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
         article?: {
           __typename?: 'Article'
@@ -4505,6 +4539,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
               previewURL?: string | null
               column1URL?: string | null
               column6URL?: string | null
+              focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
             } | null
           }
         } | null
@@ -4534,6 +4569,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
         event?: {__typename?: 'Event'; id: string} | null
       }
@@ -4561,6 +4597,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
         page?: {__typename?: 'Page'; id: string} | null
       }
@@ -4589,6 +4626,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
         article?: {
           __typename?: 'Article'
@@ -4658,6 +4696,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
               previewURL?: string | null
               column1URL?: string | null
               column6URL?: string | null
+              focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
             } | null
           }
         } | null
@@ -4745,6 +4784,7 @@ export type ImageRefFragment = {
   previewURL?: string | null
   column1URL?: string | null
   column6URL?: string | null
+  focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
 }
 
 export type FullImageFragment = {
@@ -4803,6 +4843,7 @@ export type ImageListQuery = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     }>
     pageInfo: {
       __typename?: 'PageInfo'
@@ -4872,6 +4913,7 @@ export type UploadImageMutation = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -4970,6 +5012,7 @@ export type MemberPlanRefFragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -5008,6 +5051,7 @@ export type FullMemberPlanFragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -5063,6 +5107,7 @@ export type MemberPlanListQuery = {
         previewURL?: string | null
         column1URL?: string | null
         column6URL?: string | null
+        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
       } | null
     }>
     pageInfo: {
@@ -5344,6 +5389,10 @@ export const ImageRef = gql`
     description
     width
     height
+    focalPoint {
+      x
+      y
+    }
     ...ImageURLs
   }
   ${ImageUrLs}

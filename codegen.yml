@@ -143,7 +143,9 @@ generates:
         RichText: Node[]
         Upload: File
   ./libs/migrate-wordpress/src/api/public/index.ts:
-    schema: ./apps/api-example/schema-v1.graphql
+    schema:
+      - ./apps/api-example/schema-v1.graphql
+      - ./apps/api-example/schema-v2.graphql
     documents: ./libs/migrate-wordpress/src/api/public/*.graphql
     plugins:
       - add:
