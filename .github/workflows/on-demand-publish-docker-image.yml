@@ -32,7 +32,6 @@ jobs:
         run: |
           if [ -f package-lock.json ]; then
             HASH=$(cat package-lock.json Dockerfile | sha256sum | awk '{print $1}')
-            echo "HASHED_TAG=ghcr.io/wepublish/base-image:${HASH}" >> $GITHUB_ENV
             echo "::set-output name=hashed_tag::ghcr.io/wepublish/base-image:${HASH}"
           else
             echo "package-lock.json not found, exiting."
