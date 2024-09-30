@@ -240,13 +240,13 @@
     "destination": "/a/weg-mit-schwuchteln-der-holocaust-gedenktag-2019"
   },
   "/tag/gaysomecomic": {
-    "destination": "/a/category/happy-hour/comic-happy-hour"
+    "destination": "/category/happy-hour/comic-happy-hour"
   },
   "/tag/gedichte": {
     "destination": "/a/queere-lyrik-jetzt-erst-recht"
   },
   "/tag/gewinnspiel": {
-    "destination": "/a/category/happy-hour/verlosungen"
+    "destination": "/category/happy-hour/verlosungen"
   },
   "/tag/giant-little-ones": {
     "destination": "/a/verlosung-giant-little-ones-als-dvd-und-blue-ray"
@@ -432,7 +432,7 @@
     "destination": "/a/wir-bekennen-farbe-was-es-heisst-ginger-zu-sein"
   },
   "/tag/tickets": {
-    "destination": "/a/category/happy-hour/verlosungen"
+    "destination": "/category/happy-hour/verlosungen"
   },
   "/tag/totalrasur": {
     "destination": "/a/dr-gay-stark-behaart-und-nun-filzlaeuse-was-tun-ausser-einer-totalrasur"
@@ -885,7 +885,7 @@
     "destination": "/a/shwule-gruesse-vom-balkan-des-frommen-paters-unzuechtige-schlange"
   },
   "/sommer-ausgabe": {
-    "destination": "/a/product-category/einzelausgaben"
+    "destination": "/product-category/einzelausgaben"
   },
   "/tag/mamma-mia-2": {
     "destination": "/a/tag/mamma-mia"
@@ -897,7 +897,7 @@
     "destination": "/"
   },
   "/kategorien": {
-    "destination": "/a/category/mannschaft"
+    "destination": "/category/mannschaft"
   },
   "/dr-gay-hiv-risiko-beim-blasen": {
     "destination": "/a/dr-gay-ohne-kondom-geblasen-brauche-ich-die-pep"
@@ -1018,6 +1018,9 @@
   },
   "/dr-gay-wie-sicher-sind-kondome-wirklich": {
     "destination": "/a/dr-gay-schuetzen-kondome-vor-sti"
+  },
+  "/wegen-homosexualitaet-zwei-personen-in-afghanistan-ausgepeitscht": {
+    "destination": "/a/wegen-homosexualitaet-zwei-personen-in-afghanistan-ausgepeitscht"
   },
   "/stoeraktionen-in-zuerich-sechs-mitglieder-der-jungen-tat-verurteilt": {
     "destination": "/a/stoeraktionen-in-zuerich-sechs-mitglieder-der-jungen-tat-verurteilt"
@@ -40315,8 +40318,5 @@
   },
   "/us-studie-homophobe-menschen-sterben-frueher": {
     "destination": "/a/us-studie-homophobe-menschen-sterben-frueher"
-  },
-  "/homophobie-soll-strafbar-werden": {
-    "destination": "/a/homophobie-soll-strafbar-werden"
   }
 }
