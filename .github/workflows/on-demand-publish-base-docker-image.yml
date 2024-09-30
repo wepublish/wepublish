@@ -37,16 +37,16 @@ jobs:
         run: |
           IMAGE_EXISTS=$(curl -s -o /dev/null -w "%{http_code}" -u "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" https://ghcr.io/v2/${{ github.actor }}/base/manifests/${{ env.HASH }})
           if [ "$IMAGE_EXISTS" -eq 200 ]; then
-            echo "Image with hash ${{ env.HASH }} already exists. Skipping build."
-            exit 0
+            echo "Image with hash ${{ env.HASH }} already exists."
+            echo "::set-output name=image-exists::true"
           else
-            echo "Image with hash ${{ env.HASH }} does not exist. Proceeding with build."
-          fi
+            echo "Image with hash ${{ env.HASH }} does not exist."
+            echo "::set-output name=image-exists::false"
 
       - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
       - uses: docker/build-push-action@v2
-        if: steps.check-image.outputs.result != '0'
+        if: steps.check-image.outputs.image-exists == 'false'
         with:
           target: base-image
           push: true
