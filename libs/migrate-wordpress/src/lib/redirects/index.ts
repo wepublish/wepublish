@@ -44,15 +44,13 @@ function readFile(): any[] {
 }
 
 function transformData(inputData: any[]): NextJsRedirectsMap {
-  const nextJsCompatibleRoutes: NextJsRedirectsMap = {}
+  let nextJsCompatibleRoutes: NextJsRedirectsMap = {}
   for (const redirect of inputData) {
-    const source = getSourcePath(redirect?.url)
-    const destination = getDestinationPath(redirect?.action_data?.url)
-    if (!source || !destination)
-      throw new Error(`old or new url not provided in redirect with id ${redirect?.id}`)
-    nextJsCompatibleRoutes[source] = {
-      destination
-    }
+    nextJsCompatibleRoutes = addRedirectToMap(
+      nextJsCompatibleRoutes,
+      redirect?.url,
+      redirect?.action_data?.url
+    )
   }
   return nextJsCompatibleRoutes
 }
@@ -90,25 +88,82 @@ async function getRedirectsFromWpArticles(): Promise<NextJsRedirectsMap> {
 }
 
 function getRedirectsFromPosts(posts: WordpressPost[]): NextJsRedirectsMap {
-  const wpArticleRedirects: NextJsRedirectsMap = {}
+  let wpArticleRedirects: NextJsRedirectsMap = {}
   for (const post of posts) {
-    const source = getSourcePath(post.link)
-    const destination = getDestinationPath(`/a${getSourcePath(post.link)}`)
-    wpArticleRedirects[source] = {
-      destination
-    }
+    wpArticleRedirects = addRedirectToMap(wpArticleRedirects, post.link, post.link)
   }
   return wpArticleRedirects
 }
 
 function getSourcePath(rawUrl: string): string {
-  // remove trailing slash
-  // remove base url
-  return rawUrl?.replace(BASE_URL, '')?.replace(/\/$/, '') || '/'
+  return standardizeRawUrl(rawUrl)
 }
 
 function getDestinationPath(rawUrl: string): string {
-  return slugify(rawUrl?.replace(BASE_URL, '')?.replace(/\/$/, '') || '/')
+  let newDestination = standardizeRawUrl(rawUrl)
+
+  // preserve search params
+  const {pathname, searchParams} = new URL(`${BASE_URL}/${newDestination}`)
+
+  // slugify every part of the path name separately. otherwise slashes / would be deleted by the slugify method
+  newDestination = pathname
+    .split('/')
+    .filter(pathnameBit => !!pathnameBit) // remove empty strings
+    .map(pathnameBit => slugify(pathnameBit)) // slugify each pathname bit
+    .join('/') // re-join the pathname
+
+  // add search params again to the url
+  if (searchParams.size) {
+    newDestination += `?${new URLSearchParams(searchParams).toString()}`
+  }
+
+  // every pathname should start with /
+  // empty path would also get a slash
+  if (!newDestination.startsWith('/')) {
+    newDestination = `/${newDestination}`
+  }
+
+  // add /a/ to the pathname only if
+  // - one slug is available (article)
+  // - or pathname consists of 2 parts and starts with /tag/
+  const pathNameParts = newDestination.split('/').filter(pathNamePart => !!pathNamePart)
+  if (
+    pathNameParts.length === 1 ||
+    (pathNameParts.length === 2 && newDestination.startsWith('/tag/'))
+  ) {
+    newDestination = `/a${newDestination}`
+  }
+
+  return newDestination
+}
+
+// common helper function for destination and source path
+function standardizeRawUrl(rawUrl: string): string {
+  // remove base url
+  // remove trailing slash
+  return rawUrl?.replace(BASE_URL, '')?.replace(/\/$/, '')
+}
+
+function addRedirectToMap(map: NextJsRedirectsMap, rawSource: string, rawDestination: string) {
+  const source = getSourcePath(rawSource)
+  const destination = getDestinationPath(rawDestination)
+  checkIntegrity(source, destination)
+  map[source] = {
+    destination
+  }
+  return map
+}
+
+function checkIntegrity(source: string, destination: string) {
+  if (!source || !destination) {
+    throw new Error(
+      `Source or destination url not provided. source: ${source} | destination: ${destination}`
+    )
+  }
+
+  if (!destination.startsWith('/a/') && destination !== '/') {
+    console.log(`Redirection with destination maybe not working: ${destination}`)
+  }
 }
 
 function resolveRedirects(redirects: NextJsRedirectsMap): NextJsRedirectsMap {
