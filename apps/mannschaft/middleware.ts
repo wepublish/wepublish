@@ -11,7 +11,7 @@ type Redirect = {
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
-  const redirect: Redirect = redirects.get(pathname)
+  const redirect = redirects.get(pathname) as Redirect
 
   if (redirect) {
     const statusCode = redirect.permanent ? 301 : 307
