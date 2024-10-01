@@ -537,7 +537,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           memberContext,
           prisma.subscription,
           prisma.user,
-          paymentProviders
+          paymentProviders,
+          prisma.memberPlan
         )
     },
 
