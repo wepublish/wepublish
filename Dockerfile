@@ -26,7 +26,7 @@ COPY --chown=wepublish:wepublish --from=base-image-build /wepublish/node_modules
 
 #######
 ## Website
-#######^
+#######
 
 FROM ${BUILD_IMAGE} AS  build-website
 ### FRONT_ARG_REPLACER ###
