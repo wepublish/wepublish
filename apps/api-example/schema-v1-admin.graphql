@@ -1356,6 +1356,7 @@ type Mutation {
   resetUserPassword(id: ID!, password: String!, sendMail: Boolean): User
   deleteUser(id: ID!): User
   createSubscription(input: SubscriptionInput!): Subscription
+  importSubscription(input: SubscriptionInput!): Subscription
   renewSubscription(id: ID!): Invoice
   updateSubscription(id: ID!, input: SubscriptionInput!): Subscription
   deleteSubscription(id: ID!): Subscription

@@ -35,9 +35,6 @@ jobs:
     if: ${{ needs.date_sha_tag.result == 'success' }}
     needs: date_sha_tag
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
-    with:
-      base_image_tags: |
-        ghcr.io/wepublish/base-image:master-${{ needs.date_sha_tag.outputs.tag }}
     secrets: inherit
 
   publish_master_docker:
@@ -45,7 +42,6 @@ jobs:
     if: ${{ needs.publish-docker-base-image.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
-      base_image_tag: ghcr.io/wepublish/base-image:master-${{ needs.date_sha_tag.outputs.tag }}
       migration_tags: |
         ghcr.io/wepublish/migration:master-${{ needs.date_sha_tag.outputs.tag }}
         ghcr.io/wepublish/migration:master
@@ -76,7 +72,6 @@ jobs:
     strategy:
       matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
     with:
-      base_image_tag: ghcr.io/wepublish/base-image:master-${{ needs.date_sha_tag.outputs.tag }}
       website_project: ${{ matrix.target }}
       api_url: https://api-${{ matrix.target }}.wepublish.dev
       environment: staging

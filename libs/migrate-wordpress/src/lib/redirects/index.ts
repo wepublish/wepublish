@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import {fetchPosts, WordpressPost} from '../posts/wordpress-api'
+import {slugify} from '@wepublish/utils'
 
 const BASE_URL: string = process.env['WORDPRESS_URL'] || 'https://mannschaft.com'
 const BASE_PATH = './libs/migrate-wordpress/src/lib/redirects'
@@ -15,6 +16,8 @@ interface NextJsRoute {
   permanent?: boolean
 }
 
+type destinationPathMode = 'wp-posts' | 'redirect-import'
+
 init()
 
 async function init() {
@@ -28,7 +31,7 @@ async function init() {
     console.log('resolve redirects...')
     const nextJsRoutes = resolveRedirects({...nextJsCompatibleRoutes, ...wpArticleRedirects})
     console.log('write file...')
-    saveFile(nextJsRoutes)
+    saveFile(nextJsRoutes, EXPORT_PATH)
     console.log('congrats, all done!')
   } catch (e) {
     console.log('# while migrating the redirects an error occurred', e)
@@ -43,22 +46,21 @@ function readFile(): any[] {
 }
 
 function transformData(inputData: any[]): NextJsRedirectsMap {
-  const nextJsCompatibleRoutes: NextJsRedirectsMap = {}
+  let nextJsCompatibleRoutes: NextJsRedirectsMap = {}
   for (const redirect of inputData) {
-    const source = getPathname(redirect?.url)
-    const destination = getPathname(redirect?.action_data?.url)
-    if (!source || !destination)
-      throw new Error(`old or new url not provided in redirect with id ${redirect?.id}`)
-    nextJsCompatibleRoutes[source] = {
-      destination
-    }
+    nextJsCompatibleRoutes = addRedirectToMap(
+      nextJsCompatibleRoutes,
+      redirect?.url,
+      redirect?.action_data?.url,
+      'redirect-import'
+    )
   }
   return nextJsCompatibleRoutes
 }
 
-function saveFile(data: NextJsRedirectsMap) {
+function saveFile(data: NextJsRedirectsMap, exportPath: string) {
   const jsonData = JSON.stringify(data, null, 2)
-  fs.writeFileSync(EXPORT_PATH, jsonData, 'utf8')
+  fs.writeFileSync(exportPath, jsonData, 'utf8')
 }
 
 async function getRedirectsFromWpArticles(): Promise<NextJsRedirectsMap> {
@@ -89,21 +91,83 @@ async function getRedirectsFromWpArticles(): Promise<NextJsRedirectsMap> {
 }
 
 function getRedirectsFromPosts(posts: WordpressPost[]): NextJsRedirectsMap {
-  const wpArticleRedirects: NextJsRedirectsMap = {}
+  let wpArticleRedirects: NextJsRedirectsMap = {}
   for (const post of posts) {
-    const source = getPathname(post.link)
-    const destination = `/a${getPathname(post.link)}`
-    wpArticleRedirects[source] = {
-      destination
-    }
+    wpArticleRedirects = addRedirectToMap(wpArticleRedirects, post.link, post.link, 'wp-posts')
   }
   return wpArticleRedirects
 }
 
-function getPathname(rawUrl: string): string {
-  // remove trailing slash
+function getSourcePath(rawUrl: string): string {
+  return standardizeRawUrl(rawUrl)
+}
+
+function getDestinationPath(rawUrl: string, mode: destinationPathMode): string {
+  let newDestination = standardizeRawUrl(rawUrl)
+
+  if (mode === 'wp-posts') {
+    // preserve search params
+    const {pathname, searchParams} = new URL(`${BASE_URL}/${newDestination}`)
+
+    // slugify every part of the path name separately. otherwise slashes / would be deleted by the slugify method
+    newDestination = pathname
+      .split('/')
+      .filter(pathnameBit => !!pathnameBit) // remove empty strings
+      .map(pathnameBit => slugify(pathnameBit)) // slugify each pathname bit
+      .join('/') // re-join the pathname
+
+    // add search params again to the url
+    if (searchParams.size) {
+      newDestination += `?${new URLSearchParams(searchParams).toString()}`
+    }
+
+    // every pathname should start with /
+    // empty path would also get a slash
+    if (!newDestination.startsWith('/')) {
+      newDestination = `/${newDestination}`
+    }
+
+    // add /a/ to the pathname (for the WP imports)
+    newDestination = `/a${newDestination}`
+  }
+
+  // every pathname should start with /
+  // empty path would also get a slash
+  if (!newDestination.startsWith('/')) {
+    newDestination = `/${newDestination}`
+  }
+
+  return newDestination
+}
+
+// common helper function for destination and source path
+function standardizeRawUrl(rawUrl: string): string {
   // remove base url
-  return rawUrl?.replace(BASE_URL, '')?.replace(/\/$/, '') || '/'
+  // remove trailing slash
+  return rawUrl?.replace(BASE_URL, '')?.replace(/\/$/, '')
+}
+
+function addRedirectToMap(
+  map: NextJsRedirectsMap,
+  rawSource: string,
+  rawDestination: string,
+  mode: destinationPathMode
+) {
+  const source = getSourcePath(rawSource)
+  const destination = getDestinationPath(rawDestination, mode)
+  checkIntegrity(source, destination)
+  map[source] = {
+    destination
+  }
+  return map
+}
+
+function checkIntegrity(source: string, destination: string) {
+  if (!source || !destination) {
+    throw new Error(
+      `Source or destination url not provided. source: ${source} | destination: ${destination}`
+    )
+  }
 }
 
 function resolveRedirects(redirects: NextJsRedirectsMap): NextJsRedirectsMap {
