@@ -10,7 +10,7 @@ export async function migrateSubscriptionsFromStream(stream: ReadStream) {
   return new Promise((resolve, reject) => {
     const parser = stream.pipe(parse({delimiter: ';', fromLine: 2}))
     parser
-      .on('data', streamLimit<string[]>(parser, processRow, 1))
+      .on('data', streamLimit<string[]>(parser, processRow, 10))
       .on('end', resolve)
       .on('error', reject)
   })
@@ -31,5 +31,6 @@ export async function processRow(columns: string[]) {
   } catch (e: any) {
     console.error('Subscription import failed')
     console.error(e.message)
+    console.error(row)
   }
 }

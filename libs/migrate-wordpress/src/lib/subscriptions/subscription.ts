@@ -1,12 +1,12 @@
-import {extractDate, Row} from './row'
-import {PaymentPeriodicity, UserListQuery} from '../../api/private'
+import {Row} from './row'
+import {PaymentPeriodicity, SubscriptionInput, UserListQuery} from '../../api/private'
 import {differenceInDays, differenceInMonths, differenceInYears} from 'date-fns'
 import {importSubscription, deleteSubscription, getMemberPlans} from './private-api'
 
 export async function migrateSubscription(user: UserListQuery['users']['nodes'][number], row: Row) {
   const {productName, email} = row
   const {startsAt, paidUntil} = extractPaidUntil(row)
-  const {paymentPeriodicity, monthlyAmount} = extractPeriodicityAndMonthlyAmount(row)
+  const {paymentPeriodicity} = extractPeriodicityAndMonthlyAmount(row)
 
   const memberPlan = await findMemberPlanByRow(row)
   if (!memberPlan) {
@@ -18,10 +18,8 @@ export async function migrateSubscription(user: UserListQuery['users']['nodes'][
     console.debug(' subscription exists ', [email, memberPlan.slug].join(' / '))
     return existingSubscription
   }
-
-  console.debug(' subscription create ', [email, memberPlan.slug].join(' / '))
-  return await importSubscription({
-    autoRenew: false,
+  const subscriptionInput: SubscriptionInput = {
+    autoRenew: true,
     deactivation: undefined,
     extendable: true,
     memberPlanID: memberPlan.id,
@@ -32,7 +30,9 @@ export async function migrateSubscription(user: UserListQuery['users']['nodes'][
     properties: [],
     startsAt,
     userID: user.id
-  })
+  }
+  console.debug(' subscription create ', [email, memberPlan.slug].join(' / '))
+  return await importSubscription(subscriptionInput)
 }
 
 export async function deleteUserSubscriptions(user: UserListQuery['users']['nodes'][number]) {
@@ -80,12 +80,12 @@ function extractPeriodicityAndMonthlyAmount(row: Row): {
 }
 
 function extractPaidUntil(row: Row) {
-  const {start, end, status} = row
+  const {start, end} = row
   const startsAt = convertToDate(start).toISOString()
   const endDate = convertToDate(end).toISOString()
   return {
     startsAt,
-    paidUntil: status === 'Bezahlt' ? endDate : undefined
+    paidUntil: endDate
   }
 }
 
