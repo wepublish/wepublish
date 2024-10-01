@@ -1,5 +1,4 @@
-import styled from '@emotion/styled'
-import {Typography} from '@mui/material'
+import {styled} from '@mui/material'
 import {IntendedRouteStorageKey} from '@wepublish/website'
 import {
   ApiV1,
@@ -17,6 +16,9 @@ import {useEffect} from 'react'
 const LoginWrapper = styled('div')`
   display: grid;
   justify-content: center;
+  gap: ${({theme}) => theme.spacing(4)};
+  max-width: 600px;
+  justify-self: center;
 `
 
 type LoginProps = {sessionToken?: ApiV1.UserSession}
@@ -24,7 +26,7 @@ type LoginProps = {sessionToken?: ApiV1.UserSession}
 export default function Login({sessionToken}: LoginProps) {
   const {hasUser, setToken} = useUser()
   const {
-    elements: {H3, Link}
+    elements: {H3, H6, Link, Alert}
   } = useWebsiteBuilder()
   const router = useRouter()
 
@@ -46,9 +48,16 @@ export default function Login({sessionToken}: LoginProps) {
     <LoginWrapper>
       <H3 component="h1">Login für Abonnent*innen</H3>
 
-      <Typography variant="body1" paragraph>
-        (Falls du noch keinen Account hast, <Link href={'/signup'}>klicke hier.</Link>)
-      </Typography>
+      <Alert severity={'warning'}>
+        <b>
+          Wir arbeiten an der neuen Website, deshalb ist ein Login kurzfristig nicht möglich. Ab
+          heute Abend kannst du dich hier anmelden und wie gewohnt alle Mannschaft+ Beiträge lesen.
+        </b>
+      </Alert>
+
+      {/* <Typography variant="body1" paragraph>
+        (Falls du noch keinen Account hast, <Link href={'/mitmachen'}>klicke hier.</Link>)
+      </Typography> */}
 
       <LoginFormContainer />
     </LoginWrapper>
