@@ -1,4 +1,4 @@
-import styled from '@emotion/styled'
+import {styled} from '@mui/material'
 import {IntendedRouteStorageKey} from '@wepublish/website'
 import {
   ApiV1,
