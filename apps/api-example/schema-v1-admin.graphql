@@ -307,6 +307,7 @@ type Invoice {
   manuallySetAsPaidByUserId: ID
   items: [InvoiceItem!]!
   canceledAt: DateTime
+  currency: Currency!
   total: Int!
 }
 
@@ -378,6 +379,7 @@ type Subscription {
   paymentMethod: PaymentMethod!
   properties: [Properties!]!
   deactivation: SubscriptionDeactivation
+  currency: Currency!
 }
 
 type SubscriptionConnection {

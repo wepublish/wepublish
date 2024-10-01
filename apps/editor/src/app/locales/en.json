@@ -517,7 +517,7 @@
       "invalidEmailErrorMessage": "Please enter a valid email address",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
       "invalidUrlErrorMessage": "Please enter a valid url",
-      "minimalAmountPerMonth": "The minimal amount / month is defined as {{amount}} chf.",
+      "minimalAmountPerMonth": "The minimal amount / month is defined as {{amount}} {{currency}}.",
       "noAmountErrorMessage": "Default amount will be set to 5.00 CHF if empty",
       "noCallToActionImageErrorMessage": "Please enter a call to action image",
       "noEmailErrorMessage": "Please enter an email address",

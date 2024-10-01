@@ -516,7 +516,7 @@
       "invalidEmailErrorMessage": "Bitte eine gültige E-Mail eingeben",
       "invalidRange": "Ungültiger Wert. Bitte Zahl zwischen {{min}} und {{max}} eingeben.",
       "invalidUrlErrorMessage": "Bitte eine gültige URL eingeben",
-      "minimalAmountPerMonth": "Der Minimalbetrag / Monat ist {{amount}} chf.",
+      "minimalAmountPerMonth": "Der Minimalbetrag / Monat ist {{amount}} {{currency}}.",
       "noAmountErrorMessage": "Der Betrag ist 5 CHF, wenn Du nichts eingibst",
       "noCallToActionImageErrorMessage": "Bitte erfasse einen Call-To-Action-Bild",
       "noEmailErrorMessage": "Bitte E-Mail eingeben",
@@ -638,7 +638,7 @@
       },
       "payManually": "Manuell bezahlen",
       "total": "Rechnungsbetrag",
-      "unpaid": "unbezahlt",
+      "unpaid": "(unbezahlt)",
       "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden."
     },
     "linkPageBreakEditPanel": {

@@ -825,6 +825,7 @@ export type Invoice = {
   __typename?: 'Invoice';
   canceledAt?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
+  currency: Currency;
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   items: Array<InvoiceItem>;
@@ -2433,6 +2434,7 @@ export type Subscription = {
   __typename?: 'Subscription';
   autoRenew: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
+  currency: Currency;
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean'];
   id: Scalars['ID'];

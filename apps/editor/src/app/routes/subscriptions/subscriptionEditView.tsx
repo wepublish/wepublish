@@ -221,7 +221,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     )
     setDeactivation(subscription.deactivation)
     setExtendable(subscription.extendable)
-    setCurrency(subscription.memberPlan.currency)
+    setCurrency(subscription.currency)
   }
 
   const {
@@ -494,7 +494,8 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
       .min(
         memberPlan?.amountPerMonthMin || 0,
         t(`errorMessages.minimalAmountPerMonth`, {
-          amount: (memberPlan?.amountPerMonthMin || 0) / 100
+          amount: (memberPlan?.amountPerMonthMin || 0) / 100,
+          currency: memberPlan?.currency
         })
       ),
     paymentPeriodicity: StringType().isRequired(
@@ -642,7 +643,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                               <DescriptionList>
                                 <DescriptionListItem
                                   label={t('userSubscriptionEdit.memberPlanMonthlyAmount', {
-                                    currency
+                                    currency: memberPlan?.currency
                                   })}>
                                   {(memberPlan.amountPerMonthMin / 100).toFixed(2)}
                                 </DescriptionListItem>

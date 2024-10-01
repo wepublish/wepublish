@@ -17,6 +17,7 @@ fragment Invoice on Invoice {
   canceledAt
   modifiedAt
   createdAt
+  currency
 }
 
 query Invoices(

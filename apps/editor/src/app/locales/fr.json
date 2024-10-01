@@ -522,7 +522,7 @@
       "invalidEmailErrorMessage": "Veuillez entrer une adresse email valide",
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
       "invalidUrlErrorMessage": "Veuillez entrer une adresse url valide",
-      "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} chf.",
+      "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} {{currency}}.",
       "noAmountErrorMessage": "Le montant par défaut sera fixé à 5.00 CHF si le champ est laissé vide",
       "noCallToActionImageErrorMessage": "Veuillez entrer une image pour le Call to Action",
       "noEmailErrorMessage": "Veuillez entrer une adresse email",
