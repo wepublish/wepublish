@@ -24,6 +24,7 @@ fragment FullSubscription on Subscription {
     ...Deactivation
   }
   extendable
+  currency
 }
 
 fragment Deactivation on SubscriptionDeactivation {

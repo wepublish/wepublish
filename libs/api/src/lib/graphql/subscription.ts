@@ -20,7 +20,7 @@ import {
   GraphQLMetadataPropertyInput,
   GraphQLPageInfo
 } from './common'
-import {GraphQLMemberPlan, GraphQLPaymentPeriodicity} from './memberPlan'
+import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLSupportedCurrency} from './memberPlan'
 import {GraphQLPaymentMethod} from './paymentMethod'
 import {
   GraphQLSubscriptionDeactivation,
@@ -66,7 +66,8 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
     properties: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataProperty)))
     },
-    deactivation: {type: GraphQLSubscriptionDeactivation}
+    deactivation: {type: GraphQLSubscriptionDeactivation},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)}
   }
 })
 

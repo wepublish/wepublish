@@ -516,8 +516,8 @@
       "invalidEmailErrorMessage": "Bitte eine gültige E-Mail eingeben",
       "invalidRange": "Ungültiger Wert. Bitte Zahl zwischen {{min}} und {{max}} eingeben.",
       "invalidUrlErrorMessage": "Bitte eine gültige URL eingeben",
-      "minimalAmountPerMonth": "Der Minimalbetrag / Monat ist {{amount}} chf.",
-      "noAmountErrorMessage": "Der Betrag ist 5 CHF, wenn Du nichts eingibst",
+      "minimalAmountPerMonth": "Der Minimalbetrag / Monat ist {{amount}} {{currency}}.",
+      "noAmountErrorMessage": "Der Betrag ist 5, wenn Du nichts eingibst",
       "noCallToActionImageErrorMessage": "Bitte erfasse einen Call-To-Action-Bild",
       "noEmailErrorMessage": "Bitte E-Mail eingeben",
       "noImageErrorMessage": "Bild fehlt",
@@ -638,7 +638,7 @@
       },
       "payManually": "Manuell bezahlen",
       "total": "Rechnungsbetrag",
-      "unpaid": "unbezahlt",
+      "unpaid": "(unbezahlt)",
       "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden."
     },
     "linkPageBreakEditPanel": {
@@ -710,10 +710,10 @@
       "paymentMethods": "Mögliche Zahlungsmethoden",
       "paymentPeriodicities": "Zahlungsperiodizitäten",
       "paymentPeriodicity": {
-        "BIANNUAL": "Halbjährlich",
-        "MONTHLY": "Monatlich",
-        "QUARTERLY": "Vierteljährlich",
-        "YEARLY": "Jährlich"
+        "biannual": "Halbjährlich",
+        "monthly": "Monatlich",
+        "quarterly": "Vierteljährlich",
+        "yearly": "Jährlich"
       },
       "title": "Abo Pläne"
     },
@@ -1262,7 +1262,7 @@
         "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
       },
       "editTitle": "Abonnement bearbeiten",
-      "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag (CHF)",
+      "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag ({{currency}})",
       "monthlyAmount": "Monatlicher Betrag",
       "paidUntil": "Bezahlt bis",
       "paymentMethod": "Zahlungsmethode",
@@ -1285,12 +1285,12 @@
       "invoiceNr": "Rechnung Nr. {{invoiceId}}",
       "invoicePaid": "bezahlt",
       "invoiceUnpaid": "unbezahlt",
-      "monthlyAmount": "Monatlicher Betrag: {{monthlyAmount}} CHF",
+      "monthlyAmount": "Monatlicher Betrag: {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "Subscription läuft aus, keine automatische Erneuerung",
       "noDeactivation": "Keine Deaktivierung.",
       "paidUntil": "Bezahlt bis am {{date}}",
       "paymentPeriodicity": "Zahlungsperiodizität: {{paymentPeriodicity}}",
-      "periodAmount": "Betrag: {{amount}} CHF",
+      "periodAmount": "Betrag: {{amount}} {{currency}}",
       "periodCreatedAt": "Erstellt am {{date}}",
       "periodEndsAt": "bis {{date}}",
       "periods": "Perioden",
@@ -1319,7 +1319,9 @@
       "nonExtendableNotCompatibleWithAutoRenew": "Ein automatisch erneuerndes Abo muss verlängerbar sein. Ändere einen dieser Parameter.",
       "configureAsTrialSubscription": "Als Probeabo konfigurieren",
       "subscriptionTrialNotPossible": "Das Abo kann nicht als Probeabo konfiguriert werden. Ändere hierzu die Einstellungen des Abo-Plans.",
-      "extendableWasChanged": "Die Option «Verlängerbar» wurde entsprechend dem Abo-Plan angepasst."
+      "extendableWasChanged": "Die Option «Verlängerbar» wurde entsprechend dem Abo-Plan angepasst.",
+      "extendModalTitle": "Abo frühzeitig verlängern?",
+      "extendModalBody": "Das Abo wird frühzeitig um die nächst mögliche Periode verlängert. Es wird eine Rechnung erstellt."
     },
     "subscriptionListFilter": {
       "extendable": "Verlängerbar"
