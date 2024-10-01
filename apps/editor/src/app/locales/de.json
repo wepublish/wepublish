@@ -710,10 +710,10 @@
       "paymentMethods": "Mögliche Zahlungsmethoden",
       "paymentPeriodicities": "Zahlungsperiodizitäten",
       "paymentPeriodicity": {
-        "BIANNUAL": "Halbjährlich",
-        "MONTHLY": "Monatlich",
-        "QUARTERLY": "Vierteljährlich",
-        "YEARLY": "Jährlich"
+        "biannual": "Halbjährlich",
+        "monthly": "Monatlich",
+        "quarterly": "Vierteljährlich",
+        "yearly": "Jährlich"
       },
       "title": "Abo Pläne"
     },

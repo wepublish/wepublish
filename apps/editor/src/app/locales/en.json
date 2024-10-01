@@ -721,10 +721,10 @@
       "paymentMethods": "Possible Payment Methods",
       "paymentPeriodicities": "Payment Periodicities",
       "paymentPeriodicity": {
-        "BIANNUAL": "Biannual",
-        "MONTHLY": "Monthly",
-        "QUARTERLY": "Quarterly",
-        "YEARLY": "Yearly"
+        "biannual": "Biannual",
+        "monthly": "Monthly",
+        "quarterly": "Quarterly",
+        "yearly": "Yearly"
       },
       "title": "Member Plans"
     },
