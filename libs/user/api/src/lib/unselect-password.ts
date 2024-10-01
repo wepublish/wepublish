@@ -29,7 +29,6 @@ export const unselectPassword: Record<
   emailVerifiedAt: true,
   name: true,
   firstName: true,
-  preferredName: true,
   flair: true,
   userImageID: true,
   password: false,

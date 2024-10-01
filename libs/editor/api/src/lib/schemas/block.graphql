@@ -265,6 +265,7 @@ fragment FullBlock on Block {
     }
     take
     skip
+    sort
     filter {
       tags
       tagObjects {

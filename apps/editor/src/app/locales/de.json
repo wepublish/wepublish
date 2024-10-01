@@ -230,7 +230,9 @@
         "takeLabel": "Wieviele Teaser sollten geladen werden",
         "tags": "Nur mit diesen Tags anzeigen: {{tags}}",
         "tagsLabel": "Welche Tags sollten geladen werden",
-        "edit": "Teaser Liste bearbeiten"
+        "edit": "Teaser Liste bearbeiten",
+        "sort": "Sortiert nach {{sort}}",
+        "sortLabel": "Sortieren nach"
       },
       "embeds": {
         "label": "Embed",
@@ -1174,7 +1176,6 @@
       "password": "Passwort",
       "passwordChangeSuccess": "Passwort erfolgreich geändert!",
       "passwordHeader": "Passwörter & Zugänge",
-      "preferredName": "Bevorzugter Name",
       "properties": "Eigenschaften",
       "resetPassword": "Passwort zurücksetzen",
       "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",
@@ -1330,6 +1331,10 @@
         "page": "Seite",
         "event": "Event",
         "custom": "Benutzerdefinierte"
+      },
+      "teaserSort": {
+        "hotAndTrending": "Beliebtheit",
+        "publishedAt": "Publikationsdatum"
       }
     },
     "authorEditPanel": {

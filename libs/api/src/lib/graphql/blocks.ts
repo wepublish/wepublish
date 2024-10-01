@@ -53,7 +53,8 @@ import {
   TwitterTweetBlock,
   VimeoVideoBlock,
   YouTubeVideoBlock,
-  TeaserListBlock
+  TeaserListBlock,
+  TeaserListBlockSort
 } from '../db/block'
 
 import {createProxyingIsTypeOf, createProxyingResolver, delegateToPeerSchema} from '../utility'
@@ -69,8 +70,7 @@ import {
   GraphQLMetadataPropertyPublic
 } from './common'
 import {GraphQLEvent} from './event/event'
-import {getPublishedArticles} from './article/article.public-queries'
-import {ArticleSort, PublicArticle} from '../db/article'
+import {ArticleSort} from '../db/article'
 import {SortOrder} from '@wepublish/utils/api'
 import {getPublishedPages} from './page/page.public-queries'
 import {PageSort, PublicPage} from '../db/page'
@@ -78,6 +78,7 @@ import {EventSort, getEvents} from './event/event.query'
 import {getArticles} from './article/article.queries'
 import {getPages} from './page/page.queries'
 import {GraphQLTag} from './tag/tag'
+import {Article} from '@prisma/client'
 
 export const GraphQLTeaserStyle = new GraphQLEnumType({
   name: 'TeaserStyle',
@@ -568,6 +569,14 @@ export const GraphQLTeaserListBlockFilterInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLTeaserListBlockSort = new GraphQLEnumType({
+  name: 'TeaserListBlockSort',
+  values: {
+    [TeaserListBlockSort.PublishedAt]: {value: TeaserListBlockSort.PublishedAt},
+    [TeaserListBlockSort.HotAndTrending]: {value: TeaserListBlockSort.HotAndTrending}
+  }
+})
+
 export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Context>({
   name: 'TeaserListBlock',
   fields: {
@@ -582,25 +591,41 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
     filter: {type: new GraphQLNonNull(GraphQLTeaserListBlockFilter)},
     take: {type: GraphQLInt},
     skip: {type: GraphQLInt},
+    sort: {type: GraphQLTeaserListBlockSort},
     teasers: {
       type: new GraphQLNonNull(new GraphQLList(GraphQLTeaser)),
       resolve: createProxyingResolver(
-        async ({filter, skip, take, teaserType}, _, {loaders, prisma}) => {
+        async (
+          {filter, sort, skip, take, teaserType},
+          _,
+          {loaders, prisma, hotAndTrendingDataSource}
+        ) => {
           if (teaserType === TeaserType.Article) {
-            const articles = await getArticles(
-              {
-                published: true,
-                tags: filter.tags
-              },
-              ArticleSort.PublishedAt,
-              SortOrder.Descending,
-              undefined,
-              skip,
-              take,
-              prisma.article
-            )
+            let articles: Article[] = []
 
-            return articles.nodes.map(
+            if (sort === TeaserListBlockSort.HotAndTrending) {
+              try {
+                articles = await hotAndTrendingDataSource.getMostViewedArticles({skip, take})
+              } catch (e) {
+                console.error(e)
+              }
+            } else {
+              articles = (
+                await getArticles(
+                  {
+                    tags: filter.tags
+                  },
+                  ArticleSort.PublishedAt,
+                  SortOrder.Descending,
+                  undefined,
+                  skip,
+                  take,
+                  prisma.article
+                )
+              )?.nodes
+            }
+
+            return articles.map(
               article =>
                 ({
                   articleID: article.id,
@@ -694,25 +719,38 @@ export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBloc
     teasers: {
       type: new GraphQLNonNull(new GraphQLList(GraphQLPublicTeaser)),
       resolve: createProxyingResolver(
-        async ({filter, skip, take, teaserType}, _, {loaders, prisma}) => {
+        async (
+          {filter, skip, sort, take, teaserType},
+          _,
+          {loaders, hotAndTrendingDataSource, prisma}
+        ) => {
           if (teaserType === TeaserType.Article) {
-            const articles = await getPublishedArticles(
-              {
-                tags: filter.tags
-              },
-              ArticleSort.PublishedAt,
-              SortOrder.Descending,
-              undefined,
-              skip,
-              take,
-              prisma.article
-            )
+            let articles: Article[]
 
-            articles.nodes.forEach(article =>
-              loaders.publicArticles.prime(article.id, article as PublicArticle)
-            )
+            if (sort === TeaserListBlockSort.HotAndTrending) {
+              try {
+                articles = await hotAndTrendingDataSource.getMostViewedArticles({skip, take})
+              } catch (e) {
+                console.error(e)
+              }
+            } else {
+              articles = (
+                await getArticles(
+                  {
+                    published: true,
+                    tags: filter.tags
+                  },
+                  ArticleSort.PublishedAt,
+                  SortOrder.Descending,
+                  undefined,
+                  skip,
+                  take,
+                  prisma.article
+                )
+              )?.nodes
+            }
 
-            return articles.nodes.map(
+            return articles.map(
               article =>
                 ({
                   articleID: article.id,
@@ -801,7 +839,8 @@ export const GraphQLTeaserListBlockInput = new GraphQLInputObjectType({
     },
     filter: {type: new GraphQLNonNull(GraphQLTeaserListBlockFilterInput)},
     take: {type: GraphQLInt},
-    skip: {type: GraphQLInt}
+    skip: {type: GraphQLInt},
+    sort: {type: GraphQLTeaserListBlockSort}
   }
 })
 

@@ -18,7 +18,6 @@ fragment FullUser on User {
   id
   name
   firstName
-  preferredName
   flair
   birthday
   email
@@ -90,7 +89,6 @@ mutation LoginWithJWT($jwt: String!) {
 mutation Register(
   $name: String!
   $firstName: String
-  $preferredName: String
   $birthday: DateTime
   $address: UserAddressInput
   $email: String!
@@ -100,7 +98,6 @@ mutation Register(
   registerMember(
     name: $name
     firstName: $firstName
-    preferredName: $preferredName
     birthday: $birthday
     address: $address
     email: $email

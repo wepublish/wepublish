@@ -24,7 +24,6 @@ fragment FullCommentUser on User {
   id
   name
   firstName
-  preferredName
   flair
   email
 }

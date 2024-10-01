@@ -3,14 +3,14 @@
     "production": {
       "deployment": true,
       "env": {
-        "GA_ID": "G-VMRWDHWHEW"
+        "GTM_ID": "GTM-WPT97GP"
       },
       "secret_env": []
     },
     "staging": {
       "deployment": true,
       "env": {
-        "GA_ID": "G-VMRWDHWHEW"
+        "GTM_ID": "GTM-WPT97GP"
       },
       "secret_env": []
     },

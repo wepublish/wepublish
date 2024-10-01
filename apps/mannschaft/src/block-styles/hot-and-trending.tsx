@@ -32,7 +32,7 @@ export const HotAndTrendingBlockStyle = ({
       properties: [],
       contentUrl: '',
       preTitle: 'hot-and-trending',
-      title: 'Hot & Trending',
+      title: 'Trending',
       lead: null,
       image: null,
       style: ApiV1.TeaserStyle.Default

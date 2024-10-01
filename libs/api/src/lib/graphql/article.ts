@@ -418,3 +418,15 @@ export const GraphQLPublicArticleConnection = new GraphQLObjectType({
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
+
+export const GraphQLPublicArticleResolver = {
+  __resolveReference: async ({id}, {loaders}: Context) => {
+    const article = await loaders.publicArticles.load(id)
+
+    if (!article) {
+      throw new Error('Article not found')
+    }
+
+    return article
+  }
+}

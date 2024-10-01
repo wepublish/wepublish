@@ -2,10 +2,6 @@ name: Publish docker base image
 
 on:
   workflow_call:
-    inputs:
-      base_image_tags:
-        required: true
-        type: string
 
 jobs:
   build-and-push-base-image:
@@ -13,16 +9,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: docker/setup-qemu-action@v1
-      - uses: docker/setup-buildx-action@v1
+      - name: Calculate hash of package-lock.json
+        id: hash
+        run: |
+          if [ -f package-lock.json ]; then
+            echo "HASH=$(cat package-lock.json Dockerfile | sha256sum | awk '{print $1}')" >> $GITHUB_ENV
+          else
+            echo "package-lock.json not found, exiting."
+            exit 1
+          fi
+
+      - name: Set hash tag
+        run: echo "HASHED_TAG=ghcr.io/wepublish/base-image:${{ env.HASH }}" >> $GITHUB_ENV
+
       - uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if image exists
+        id: check-image
+        run: |
+          if docker manifest inspect ${{ env.HASHED_TAG }} > /dev/null 2>&1; then
+            echo "Image with hash ${{ env.HASH }} already exists."
+            echo "::set-output name=image-exists::true"
+          else
+            echo "Image with hash ${{ env.HASH }} does not exist."
+            echo "::set-output name=image-exists::false"
+          fi
+
+      - uses: docker/setup-qemu-action@v1
+      - uses: docker/setup-buildx-action@v1
       - uses: docker/build-push-action@v2
+        if: steps.check-image.outputs.image-exists == 'false'
         with:
           target: base-image
           push: true
           tags: |
-            ${{ inputs.base_image_tags }}
+            ${{ env.HASHED_TAG }}

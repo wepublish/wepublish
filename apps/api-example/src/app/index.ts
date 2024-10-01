@@ -1,6 +1,7 @@
 import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
+  HotAndTrendingDataSource,
   MailProvider,
   MediaAdapter,
   Oauth2Provider,
@@ -25,6 +26,7 @@ type RunServerProps = {
   mediaAdapter: MediaAdapter
   paymentProviders: PaymentProvider[]
   mailProvider: MailProvider
+  hotAndTrendingDataSource: HotAndTrendingDataSource
 }
 
 export async function runServer({
@@ -32,7 +34,8 @@ export async function runServer({
   publicExpressApp,
   mediaAdapter,
   mailProvider,
-  paymentProviders
+  paymentProviders,
+  hotAndTrendingDataSource
 }: RunServerProps) {
   /*
    * Load User specific configuration
@@ -162,7 +165,8 @@ export async function runServer({
         ? config.general.apolloIntrospection
         : false,
       logger,
-      challenge
+      challenge,
+      hotAndTrendingDataSource
     },
     privateExpressApp,
     publicExpressApp

@@ -224,6 +224,8 @@
         "teasers": "{{count}} Teasers loaded",
         "teaserType": "Loading {{teaserType}} teasers",
         "teaserTypeLabel": "Teaser Type",
+        "sort": "Sorted by {{sort}}",
+        "sortLabel": "Sort by",
         "skip": "Skipping the first {{skip}} teasers",
         "skipLabel": "How many teasers should be skipped",
         "take": "Showing up to {{take}} teasers",
@@ -1261,7 +1263,6 @@
       "password": "Password",
       "passwordChangeSuccess": "Password successfuly changed!",
       "passwordHeader": "Passwords & Access",
-      "preferredName": "Preferred Name",
       "properties": "Properties",
       "resetPassword": "Reset Password",
       "resetPasswordFor": "Reset the password for {{userName}}",
@@ -1426,6 +1427,10 @@
         "page": "Page",
         "event": "Event",
         "custom": "Custom"
+      },
+      "teaserSort": {
+        "hotAndTrending": "Hot & Trending",
+        "publishedAt": "Publication date"
       }
     },
     "authorEditPanel": {

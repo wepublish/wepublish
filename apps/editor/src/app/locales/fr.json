@@ -236,7 +236,9 @@
         "takeLabel": "How many teasers should be loaded",
         "tags": "Only showing with tags: {{tags}}",
         "tagsLabel": "Which tags should be loaded",
-        "edit": "Edit teaser list block"
+        "edit": "Edit teaser list block",
+        "sort": "Sorted by {{sort}}",
+        "sortLabel": "Sort by"
       },
       "embeds": {
         "label": "Intégration",
@@ -1126,7 +1128,6 @@
       "password": "Mot de passe",
       "passwordChangeSuccess": "Le mot de passe a été changé avec succès !",
       "passwordHeader": "Mots de passe & accès",
-      "preferredName": "Nom préféré",
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
       "selectUserImage": "Choisir une photo de profil",
@@ -1281,6 +1282,10 @@
         "page": "Page",
         "event": "Event",
         "custom": "Custom"
+      },
+      "teaserSort": {
+        "hotAndTrending": "Hot & Trending",
+        "publishedAt": "Publication date"
       }
     },
     "authorEditPanel": {
