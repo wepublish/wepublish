@@ -166,12 +166,7 @@ function SubscriptionList() {
       return t('subscriptionList.overview.deleted')
     }
 
-    return (
-      <>
-        <span>{user.firstName} </span>
-        <span>{user.name}</span>
-      </>
-    )
+    return [user.firstName, user.name].join(' ')
   }
 
   return (
