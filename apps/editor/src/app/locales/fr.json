@@ -1213,7 +1213,7 @@
         "willBeDeactivated": "L'abonnement sera désactivé le {{date, ccc PP p}}"
       },
       "editTitle": "Modifier l'abonnement",
-      "memberPlanMonthlyAmount": "Montant mensuel minimum (CHF)",
+      "memberPlanMonthlyAmount": "Montant mensuel minimum ({{currency}})",
       "monthlyAmount": "Montant mensuel",
       "paidUntil": "Payé jusqu'à",
       "paymentMethod": "Mode de paiement",

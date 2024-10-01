@@ -2,6 +2,7 @@ import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
 import {Alert} from '@mui/material'
 import {
+  Currency,
   DeactivationFragment,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
@@ -139,6 +140,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
   const [invoices, setInvoices] = useState<InvoiceFragment[] | undefined>(undefined)
+  const [currency, setCurrency] = useState<Currency>(Currency.Chf)
 
   /**
    * Loading the subscription
@@ -219,6 +221,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     )
     setDeactivation(subscription.deactivation)
     setExtendable(subscription.extendable)
+    setCurrency(subscription.memberPlan.currency)
   }
 
   const {
@@ -627,6 +630,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                                 const foundMemberPlan = memberPlans.find(mp => mp.id === value)
                                 if (!foundMemberPlan) return
                                 setMonthlyAmount(foundMemberPlan.amountPerMonthMin)
+                                setCurrency(foundMemberPlan.currency)
                                 return foundMemberPlan
                               })
                             }
@@ -637,7 +641,9 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                             <HelpText>
                               <DescriptionList>
                                 <DescriptionListItem
-                                  label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
+                                  label={t('userSubscriptionEdit.memberPlanMonthlyAmount', {
+                                    currency
+                                  })}>
                                   {(memberPlan.amountPerMonthMin / 100).toFixed(2)}
                                 </DescriptionListItem>
                               </DescriptionList>
@@ -674,7 +680,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
 
                           <CurrencyInput
                             name="currency"
-                            currency="CHF"
+                            currency={currency}
                             centAmount={monthlyAmount}
                             onChange={centAmount => {
                               setMonthlyAmount(centAmount)

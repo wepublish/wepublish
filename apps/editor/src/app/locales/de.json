@@ -1262,7 +1262,7 @@
         "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
       },
       "editTitle": "Abonnement bearbeiten",
-      "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag (CHF)",
+      "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag ({{currency}})",
       "monthlyAmount": "Monatlicher Betrag",
       "paidUntil": "Bezahlt bis",
       "paymentMethod": "Zahlungsmethode",
