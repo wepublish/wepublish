@@ -40,6 +40,7 @@ fragment UserSubscription on UserSubscription {
   modifiedAt
   paymentPeriodicity
   monthlyAmount
+  currency
   autoRenew
   startsAt
   paidUntil

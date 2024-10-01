@@ -211,6 +211,7 @@ type UserSubscription {
   modifiedAt: DateTime!
   paymentPeriodicity: PaymentPeriodicity!
   monthlyAmount: Int!
+  currency: Currency!
   autoRenew: Boolean!
   startsAt: DateTime!
   paidUntil: DateTime
@@ -226,6 +227,11 @@ enum PaymentPeriodicity {
   quarterly
   biannual
   yearly
+}
+
+enum Currency {
+  CHF
+  EUR
 }
 
 type SubscriptionDeactivation {
@@ -264,11 +270,6 @@ type MemberPlan {
   maxCount: Int
   extendable: Boolean!
   availablePaymentMethods: [AvailablePaymentMethod!]!
-}
-
-enum Currency {
-  CHF
-  EUR
 }
 
 type AvailablePaymentMethod {

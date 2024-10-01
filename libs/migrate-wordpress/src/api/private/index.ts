@@ -2788,6 +2788,7 @@ export type UserSubscription = {
   __typename?: 'UserSubscription'
   autoRenew: Scalars['Boolean']
   createdAt: Scalars['DateTime']
+  currency: Currency
   deactivation?: Maybe<SubscriptionDeactivation>
   id: Scalars['ID']
   invoices: Array<Invoice>

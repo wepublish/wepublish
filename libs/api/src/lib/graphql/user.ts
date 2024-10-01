@@ -21,7 +21,7 @@ import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLPublicPayment} from './payment'
 import {Subscription, User} from '@prisma/client'
-import {GraphQLMemberPlan, GraphQLPaymentPeriodicity} from './memberPlan'
+import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLSupportedCurrency} from './memberPlan'
 import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
 import {GraphQLSubscriptionPeriod} from './subscriptionPeriods'
 import {GraphQLInvoice} from './invoice'
@@ -66,6 +66,7 @@ const GraphQLUserSubscription = new GraphQLObjectType<Subscription, Context>({
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
     monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
     autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     paidUntil: {type: GraphQLDateTime},
