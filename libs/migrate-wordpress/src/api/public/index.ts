@@ -2286,6 +2286,8 @@ export type ArticleQuery = {
     __typename?: 'Article'
     id: string
     url: string
+    authors: Array<{__typename?: 'Author'; id: string}>
+    tags: Array<{__typename?: 'Tag'; id: string}>
     blocks: Array<
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
@@ -2358,6 +2360,12 @@ export const Article = gql`
     article(slug: $slug) {
       id
       url
+      authors {
+        id
+      }
+      tags {
+        id
+      }
       blocks {
         __typename
         ... on RichTextBlock {
