@@ -65,6 +65,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 #######
 FROM ${BUILD_IMAGE} AS build-api
 RUN npm install -g pkg && \
+    npm run generate-api && \
     npx nx build api-example && \
     cp docker/api_build_package.json package.json && \
     pkg package.json
