@@ -3,9 +3,6 @@ name: Publish docker website image
 on:
   workflow_call:
     inputs:
-      base_image_tag:
-        required: true
-        type: string
       website_project:
         required: true
         type: string
@@ -25,6 +22,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Calculate hash of package-lock.json
+        id: hash
+        run: |
+          if [ -f package-lock.json ]; then
+            HASH=$(cat package-lock.json Dockerfile | sha256sum | awk '{print $1}')
+            echo "BUILD_IMAGE_TAG=ghcr.io/wepublish/base-image:${HASH}" >> $GITHUB_ENV
+          else
+            echo "package-lock.json not found, exiting."
+            exit 1
+          fi
       - name: Get environment variables
         id: get-env
         run: |
@@ -50,7 +57,7 @@ jobs:
           context: .
           target: website
           build-args: |
-            BUILD_IMAGE=${{ inputs.base_image_tag }}
+            BUILD_IMAGE=${{ env.BUILD_IMAGE_TAG }}
             ${{ steps.get-env.outputs.envvars }}
           push: true
           tags: |

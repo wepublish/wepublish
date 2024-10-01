@@ -1,0 +1,146 @@
+import {Test, TestingModule} from '@nestjs/testing'
+import {PrismaClient} from '@prisma/client'
+import {
+  GA_CLIENT_OPTIONS,
+  GoogleAnalyticsConfig,
+  GoogleAnalyticsService
+} from './google-analytics.service'
+
+const runReportSpy = jest.fn()
+
+jest.mock('@google-analytics/data', () => ({
+  BetaAnalyticsDataClient: jest.fn().mockImplementation(() => ({
+    runReport: runReportSpy
+  }))
+}))
+
+describe('GoogleAnalyticsService', () => {
+  let config: GoogleAnalyticsConfig
+  let service: GoogleAnalyticsService
+  let prismaMock: {
+    article: {[method in keyof PrismaClient['article']]?: jest.Mock}
+  }
+
+  beforeAll(() => {
+    jest.useFakeTimers()
+    jest.setSystemTime(new Date('2023-01-01'))
+  })
+
+  afterAll(() => {
+    jest.useRealTimers()
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  beforeEach(async () => {
+    config = {
+      credentials: {},
+      articlePrefix: '/a/',
+      property: '1234'
+    }
+
+    prismaMock = {
+      article: {
+        count: jest.fn(),
+        findMany: jest.fn(),
+        findUnique: jest.fn(),
+        delete: jest.fn(),
+        create: jest.fn(),
+        update: jest.fn()
+      }
+    }
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        GoogleAnalyticsService,
+        {provide: PrismaClient, useValue: prismaMock},
+        {
+          provide: GA_CLIENT_OPTIONS,
+          useValue: config
+        }
+      ]
+    }).compile()
+
+    service = module.get<GoogleAnalyticsService>(GoogleAnalyticsService)
+  })
+
+  it('should return an empty array when property is not set', async () => {
+    config.property = undefined
+    const result = await service.getMostViewedArticles({})
+
+    expect(result).toHaveLength(0)
+    expect(runReportSpy).not.toHaveBeenCalled()
+  })
+
+  it('should return  an empty array when credentials is not set', async () => {
+    config.credentials = undefined
+    const result = await service.getMostViewedArticles({})
+
+    expect(result).toHaveLength(0)
+    expect(runReportSpy).not.toHaveBeenCalled()
+  })
+
+  it('should not allow take to be bigger than 100', async () => {
+    runReportSpy.mockReturnValue(
+      Promise.resolve([
+        {
+          rows: []
+        }
+      ])
+    )
+    prismaMock.article.findMany?.mockReturnValue([])
+
+    const result = await service.getMostViewedArticles({
+      take: 101,
+      skip: 0
+    })
+
+    expect(result).toHaveLength(0)
+    expect(prismaMock.article.findMany).toHaveBeenCalledWith({
+      where: expect.any(Object),
+      include: expect.any(Object),
+      take: 100,
+      skip: 0
+    })
+  })
+
+  it('should get articles by popularity', async () => {
+    runReportSpy.mockReturnValue(
+      Promise.resolve([
+        {
+          rows: [
+            {
+              dimensionValues: [{value: 'foobar'}],
+              metricValues: [{value: '123'}]
+            },
+            {
+              dimensionValues: [{value: 'barfoo'}],
+              metricValues: [{value: '1234'}]
+            },
+            {
+              dimensionValues: [{value: 'bazfoo'}],
+              metricValues: [{value: '123456'}]
+            },
+            {
+              dimensionValues: [{value: 'foobaz'}],
+              metricValues: [{value: '12345'}]
+            }
+          ]
+        }
+      ])
+    )
+    prismaMock.article.findMany?.mockReturnValue([
+      {published: {slug: 'foobar'}},
+      {published: {slug: 'barfoo'}},
+      {published: {slug: 'bazfoo'}},
+      {published: {slug: 'foobaz'}}
+    ])
+
+    const result = await service.getMostViewedArticles({})
+
+    expect(result).toMatchSnapshot()
+    expect(prismaMock.article.findMany?.mock.calls[0]).toMatchSnapshot()
+  })
+})

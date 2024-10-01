@@ -934,6 +934,7 @@ type TeaserListBlock {
   filter: TeaserListBlockFilter!
   take: Int
   skip: Int
+  sort: TeaserListBlockSort
   teasers: [Teaser]!
 }
 
@@ -948,6 +949,11 @@ enum TeaserType {
 type TeaserListBlockFilter {
   tags: [ID!]
   tagObjects: [Tag!]!
+}
+
+enum TeaserListBlockSort {
+  publishedAt
+  hotAndTrending
 }
 
 type ArticleNavigationLink implements BaseNavigationLink {
@@ -1350,6 +1356,7 @@ type Mutation {
   resetUserPassword(id: ID!, password: String!, sendMail: Boolean): User
   deleteUser(id: ID!): User
   createSubscription(input: SubscriptionInput!): Subscription
+  importSubscription(input: SubscriptionInput!): Subscription
   renewSubscription(id: ID!): Invoice
   updateSubscription(id: ID!, input: SubscriptionInput!): Subscription
   deleteSubscription(id: ID!): Subscription
@@ -1884,6 +1891,7 @@ input TeaserListBlockInput {
   filter: TeaserListBlockFilterInput!
   take: Int
   skip: Int
+  sort: TeaserListBlockSort
 }
 
 input TeaserListBlockFilterInput {

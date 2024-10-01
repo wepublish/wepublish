@@ -1,7 +1,7 @@
 import {EmotionCache} from '@emotion/cache'
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {GoogleAnalytics} from '@next/third-parties/google'
+import {GoogleTagManager} from '@next/third-parties/google'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -18,14 +18,12 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
-import {useState} from 'react'
 import {AdConfig} from 'react-ad-manager'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {CookieOrPay} from '../src/cookie-or-pay/cookie-or-pay'
 import {PURModel} from '../src/cookie-or-pay/pur-model'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {MainSpacer} from '../src/main-spacer'
@@ -38,6 +36,7 @@ import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
 import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
+import {MannschaftRichtextBlock} from '../src/mannschaft-richtext-block'
 import theme from '../src/theme'
 
 setDefaultOptions({
@@ -97,7 +96,6 @@ type CustomAppProps = AppProps<{
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'Mannschaft'
-  const [showAds, setShowAds] = useState(false)
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
@@ -115,7 +113,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Renderer: MannschaftBlockRenderer,
               Teaser: MannschaftTeaser,
               TeaserGrid: MannschaftTeaserGrid,
-              Break: MannschaftBreakBlock
+              Break: MannschaftBreakBlock,
+              RichText: MannschaftRichtextBlock
             }}
             blockStyles={{
               FocusTeaser: MannschaftFocusTeaser
@@ -169,12 +168,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 </FooterContainer>
               </Spacer>
 
-              <CookieOrPay
-                onCookie={() => {
-                  setShowAds(true)
-                }}
-              />
-
               <Script
                 src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
                 strategy="afterInteractive"
@@ -185,19 +178,17 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 strategy="lazyOnload"
               />
 
-              {showAds && (
-                <Script
-                  strategy="lazyOnload"
-                  src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
-                />
-              )}
-
-              {publicRuntimeConfig.env.GA_ID && (
+              {publicRuntimeConfig.env.GTM_ID && (
                 <>
-                  <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
                   <PURModel />
+                  <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
                 </>
               )}
+
+              <Script
+                strategy="lazyOnload"
+                src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
+              />
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>

@@ -236,7 +236,9 @@
         "takeLabel": "How many teasers should be loaded",
         "tags": "Only showing with tags: {{tags}}",
         "tagsLabel": "Which tags should be loaded",
-        "edit": "Edit teaser list block"
+        "edit": "Edit teaser list block",
+        "sort": "Sorted by {{sort}}",
+        "sortLabel": "Sort by"
       },
       "embeds": {
         "label": "Intégration",
@@ -1280,6 +1282,10 @@
         "page": "Page",
         "event": "Event",
         "custom": "Custom"
+      },
+      "teaserSort": {
+        "hotAndTrending": "Hot & Trending",
+        "publishedAt": "Publication date"
       }
     },
     "authorEditPanel": {

@@ -1,5 +1,5 @@
 import {IconButton, InputAdornment, Theme, css, styled} from '@mui/material'
-import {DatePicker} from '@mui/x-date-pickers'
+import {MobileDatePicker} from '@mui/x-date-pickers'
 import {
   BuilderUserFormFields,
   BuilderUserFormProps,
@@ -142,7 +142,7 @@ export function UserForm<T extends BuilderUserFormFields>({
           name={'birthday'}
           control={control}
           render={({field, fieldState: {error}}) => (
-            <DatePicker
+            <MobileDatePicker
               {...field}
               value={field.value ? new Date(field.value) : null}
               onClose={field.onBlur}
