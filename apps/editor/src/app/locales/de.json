@@ -1319,7 +1319,9 @@
       "nonExtendableNotCompatibleWithAutoRenew": "Ein automatisch erneuerndes Abo muss verlängerbar sein. Ändere einen dieser Parameter.",
       "configureAsTrialSubscription": "Als Probeabo konfigurieren",
       "subscriptionTrialNotPossible": "Das Abo kann nicht als Probeabo konfiguriert werden. Ändere hierzu die Einstellungen des Abo-Plans.",
-      "extendableWasChanged": "Die Option «Verlängerbar» wurde entsprechend dem Abo-Plan angepasst."
+      "extendableWasChanged": "Die Option «Verlängerbar» wurde entsprechend dem Abo-Plan angepasst.",
+      "extendModalTitle": "Abo frühzeitig verlängern?",
+      "extendModalBody": "Das Abo wird frühzeitig um die nächst mögliche Periode verlängert. Es wird eine Rechnung erstellt."
     },
     "subscriptionListFilter": {
       "extendable": "Verlängerbar"

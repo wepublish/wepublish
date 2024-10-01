@@ -1270,7 +1270,9 @@
       "nonExtendableNotCompatibleWithAutoRenew": "Un abonnement à renouvellement automatique doit pouvoir être prolongé. Modifie l'un de ces paramètres.",
       "configureAsTrialSubscription": "Configurer comme abonnement d'essai",
       "subscriptionTrialNotPossible": "L'abonnement ne peut pas être configuré comme abonnement d'essai. Pour ce faire, modifie les paramètres du plan d'abonnement.",
-      "extendableWasChanged": "L'option «Extensible» a été adaptée en fonction du plan d'abonnement."
+      "extendableWasChanged": "L'option «Extensible» a été adaptée en fonction du plan d'abonnement.",
+      "extendModalTitle": "Renouveler l'abonnement plus tôt?",
+      "extendModalBody": "L'abonnement est prolongé en temps utile pour la prochaine période possible. Une facture est établie."
     },
     "subscriptionListFilter": {
       "extendable": "Extensible"

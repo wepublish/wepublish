@@ -142,6 +142,8 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
   const [invoices, setInvoices] = useState<InvoiceFragment[] | undefined>(undefined)
   const [currency, setCurrency] = useState<Currency>(Currency.Chf)
 
+  const [extendModal, setExtendModal] = useState<boolean>(false)
+
   /**
    * Loading the subscription
    */
@@ -472,6 +474,9 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
   async function handleRenewal() {
     if (!id) return
 
+    // close modal
+    setExtendModal(false)
+
     try {
       await renewSubscription({
         variables: {
@@ -733,7 +738,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                             appearance="ghost"
                             color="red"
                             loading={isDisabled}
-                            onClick={() => handleRenewal()}>
+                            onClick={() => setExtendModal(true)}>
                             {t('userSubscriptionEdit.renewNow')}
                           </Button>
                         </Col>
@@ -855,6 +860,22 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
             />
           </Modal>
         )}
+
+        {/* ask user to really extend the subscripion */}
+        <Modal open={extendModal} size="sm" backdrop="static" onClose={() => setExtendModal(false)}>
+          <Modal.Header>
+            <Modal.Title>{t('subscriptionEditView.extendModalTitle')}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{t('subscriptionEditView.extendModalBody')}</Modal.Body>
+          <Modal.Footer>
+            <Button onClick={() => handleRenewal()} appearance="primary">
+              {t('userSubscriptionEdit.renewNow')}
+            </Button>
+            <Button onClick={() => setExtendModal(false)} appearance="subtle">
+              {t('cancel')}
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </Form>
     </TableWrapper>
   )

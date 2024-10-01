@@ -1415,7 +1415,9 @@
       "nonExtendableNotCompatibleWithAutoRenew": "An automatically renewing subscription must be renewable. Change one of these parameters.",
       "configureAsTrialSubscription": "Configure as a trial subscription",
       "subscriptionTrialNotPossible": "The subscription cannot be configured as a trial subscription. To do so, change the settings of the subscription plan.",
-      "extendableWasChanged": "The «Extendable» option has been adjusted according to the subscription plan."
+      "extendableWasChanged": "The «Extendable» option has been adjusted according to the subscription plan.",
+      "extendModalTitle": "Extend your subscription early?",
+      "extendModalBody": "The subscription will be extended prematurely for the next possible period. An invoice will be issued."
     },
     "subscriptionListFilter": {
       "extendable": "Extendable"
