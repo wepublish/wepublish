@@ -1,6 +1,7 @@
 import {Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
-import {Banner, BannerArgs, NewBannerInput, UpdateBannerInput} from './banner.model'
+import {Page, PrismaClient} from '@prisma/client'
+import {Banner, CreateBannerInput, UpdateBannerInput} from './banner.model'
+import {PaginationArgs} from './pagination.model'
 
 @Injectable()
 export class BannerService {
@@ -14,34 +15,72 @@ export class BannerService {
     })
   }
 
-  async findAll(args: BannerArgs): Promise<Banner[]> {
+  async findAll(args: PaginationArgs): Promise<Banner[]> {
     return this.prisma.banner.findMany({
       skip: args.skip,
       take: args.take
     })
   }
 
-  async create(input: NewBannerInput): Promise<Banner> {
+  async findFirst(): Promise<Banner | null> {
+    return this.prisma.banner.findFirst()
+  }
+
+  async findPages(id: string): Promise<Page[]> {
+    const banner = await this.prisma.banner.findUnique({
+      where: {
+        id: id
+      },
+      select: {
+        showOnPages: true
+      }
+    })
+
+    if (!banner) {
+      return []
+    }
+
+    return banner.showOnPages
+  }
+
+  async create(args: CreateBannerInput): Promise<Banner> {
+    const {actions, showOnPages, ...bannerInputs} = args
     return this.prisma.banner.create({
-      data: input
+      data: {
+        ...bannerInputs,
+        actions: {
+          create: actions
+        },
+        showOnPages: {
+          create: showOnPages
+        }
+      }
     })
   }
 
-  async update(params: UpdateBannerInput): Promise<Banner> {
-    const {id, ...params_without_id} = params
+  async update(args: UpdateBannerInput): Promise<Banner> {
+    const {id, actions, showOnPages, ...args_without_id} = args
 
     return this.prisma.banner.update({
       where: {
         id
       },
       data: {
-        ...params_without_id
+        ...args_without_id,
+        actions: {
+          deleteMany: {},
+          create: actions
+        },
+        showOnPages: {
+          deleteMany: {},
+          create: showOnPages
+        }
       }
     })
   }
 
-  async delete(id: string): Promise<Banner> {
-    return this.prisma.banner.delete({
+  async delete(id: string): Promise<undefined> {
+    this.prisma.banner.delete({
       where: {
         id
       }

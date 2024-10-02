@@ -1,19 +1,25 @@
-import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
+import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
 import {BannerService} from './banner.service'
-import {Banner, BannerArgs, NewBannerInput, UpdateBannerInput} from './banner.model'
+import {Banner, CreateBannerInput, PageModel, UpdateBannerInput} from './banner.model'
 import {NotFoundException} from '@nestjs/common'
+import {BannerActionService} from './banner-action.service'
+import {BannerAction} from './banner-action.model'
+import {PaginationArgs} from './pagination.model'
 
-@Resolver('Banner')
+@Resolver(() => Banner)
 export class BannerResolver {
-  constructor(private readonly bannerService: BannerService) {}
+  constructor(
+    private readonly bannerService: BannerService,
+    private readonly bannerActionService: BannerActionService
+  ) {}
 
-  @Query('banners')
-  async posts(@Args() args: BannerArgs): Promise<Banner[]> {
+  @Query(() => [Banner])
+  async banners(@Args() args: PaginationArgs): Promise<Banner[]> {
     return this.bannerService.findAll(args)
   }
 
-  @Query('banner')
-  async post(@Args('id') args: string): Promise<Banner> {
+  @Query(() => Banner)
+  async banner(@Args('id') args: string): Promise<Banner> {
     const banner = await this.bannerService.findOne(args)
     if (!banner) {
       throw new NotFoundException()
@@ -21,18 +27,48 @@ export class BannerResolver {
     return banner
   }
 
-  @Mutation('createBanner')
-  async create(@Args('input') args: NewBannerInput): Promise<Banner> {
+  @Query(() => Banner)
+  async primaryBanner(): Promise<Banner> {
+    const banner = await this.bannerService.findFirst()
+    if (!banner) {
+      throw new NotFoundException()
+    }
+    return banner
+  }
+
+  @ResolveField(() => [BannerAction])
+  async actions(@Parent() banner: Banner) {
+    const {id} = banner
+    return this.bannerActionService.findAll({bannerId: id})
+  }
+
+  @ResolveField(() => [PageModel])
+  async showOnPages(@Parent() banner: Banner) {
+    const {id} = banner
+    return this.bannerService.findPages(id)
+  }
+
+  /*@ResolveField(() => Image, {nullable: true})
+  public image(@Parent() banner: Banner) {
+    const {imageId} = banner
+    if (!imageId) {
+      return null
+    }
+    return {__typename: 'Image', id: imageId}
+  }*/
+
+  @Mutation(() => Banner)
+  async createBanner(@Args('input') args: CreateBannerInput): Promise<Banner> {
     return await this.bannerService.create(args)
   }
 
-  @Mutation('updateBanner')
-  async update(@Args('input') args: UpdateBannerInput): Promise<Banner> {
+  @Mutation(() => Banner)
+  async updateBanner(@Args('input') args: UpdateBannerInput): Promise<Banner> {
     return this.bannerService.update(args)
   }
 
-  @Mutation('deleteBanner')
-  async delete(@Args('id') args: string): Promise<Banner> {
-    return this.bannerService.delete(args)
+  @Mutation(() => Banner)
+  async deleteBanner(@Args('id') args: string): Promise<undefined> {
+    this.bannerService.delete(args)
   }
 }

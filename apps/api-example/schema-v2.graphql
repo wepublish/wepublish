@@ -27,6 +27,25 @@ type AllowedSettingVals {
   stringChoice: [String!]
 }
 
+type Banner {
+  actions: [BannerAction!]
+  active: Boolean!
+  id: ID!
+  imageId: String
+  showOnArticles: Boolean!
+  showOnPages: [PageModel!]
+  tags: [String!]!
+  text: String!
+  title: String!
+}
+
+type BannerAction {
+  id: ID!
+  label: String!
+  style: String!
+  url: String!
+}
+
 type BlockStyle {
   blocks: [BlockType!]!
   createdAt: DateTime!
@@ -67,6 +86,23 @@ input ConsentFilter {
   defaultValue: Boolean
   name: String
   slug: String
+}
+
+input CreateBannerActionInput {
+  label: String!
+  style: String!
+  url: String!
+}
+
+input CreateBannerInput {
+  actions: [CreateBannerActionInput!]
+  active: Boolean!
+  imageId: String
+  showOnArticles: Boolean!
+  showOnPages: [PageModelInput!]
+  tags: [String!]!
+  text: String!
+  title: String!
 }
 
 type DashboardInvoice {
@@ -229,6 +265,8 @@ type MemberPlan {
 }
 
 type Mutation {
+  createBanner(input: CreateBannerInput!): Banner!
+
   """Creates a new block style."""
   createBlockStyle(blocks: [BlockType!]!, name: String!): BlockStyle!
 
@@ -246,6 +284,7 @@ type Mutation {
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
+  deleteBanner(id: String!): Banner!
 
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
@@ -274,6 +313,7 @@ type Mutation {
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
+  updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
   updateBlockStyle(blocks: [BlockType!], id: String!, name: String): BlockStyle!
@@ -309,6 +349,14 @@ type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
+}
+
+type PageModel {
+  id: ID!
+}
+
+input PageModelInput {
+  id: ID!
 }
 
 type PaginatedEvents {
@@ -379,6 +427,8 @@ enum PollVoteSort {
 type Query {
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
+  banner(id: String!): Banner!
+  banners(skip: Int!, take: Int!): [Banner!]!
 
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
@@ -428,6 +478,7 @@ type Query {
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: ID, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
+  primaryBanner: Banner!
   provider: MailProviderModel!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
@@ -557,6 +608,18 @@ type SystemMailModel {
 
 type Tag {
   id: ID!
+}
+
+input UpdateBannerInput {
+  actions: [CreateBannerActionInput!]
+  active: Boolean!
+  id: ID!
+  imageId: String
+  showOnArticles: Boolean!
+  showOnPages: [PageModelInput!]
+  tags: [String!]!
+  text: String!
+  title: String!
 }
 
 type User {

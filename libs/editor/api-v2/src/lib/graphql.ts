@@ -29,6 +29,27 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
+export type Banner = {
+  __typename?: 'Banner';
+  actions?: Maybe<Array<BannerAction>>;
+  active: Scalars['Boolean'];
+  id: Scalars['ID'];
+  imageId?: Maybe<Scalars['String']>;
+  showOnArticles: Scalars['Boolean'];
+  showOnPages?: Maybe<Array<PageModel>>;
+  tags: Array<Scalars['String']>;
+  text: Scalars['String'];
+  title: Scalars['String'];
+};
+
+export type BannerAction = {
+  __typename?: 'BannerAction';
+  id: Scalars['ID'];
+  label: Scalars['String'];
+  style: Scalars['String'];
+  url: Scalars['String'];
+};
+
 export type BlockStyle = {
   __typename?: 'BlockStyle';
   blocks: Array<BlockType>;
@@ -71,6 +92,23 @@ export type ConsentFilter = {
   defaultValue?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
+};
+
+export type CreateBannerActionInput = {
+  label: Scalars['String'];
+  style: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type CreateBannerInput = {
+  actions?: InputMaybe<Array<CreateBannerActionInput>>;
+  active: Scalars['Boolean'];
+  imageId?: InputMaybe<Scalars['String']>;
+  showOnArticles: Scalars['Boolean'];
+  showOnPages?: InputMaybe<Array<PageModelInput>>;
+  tags: Array<Scalars['String']>;
+  text: Scalars['String'];
+  title: Scalars['String'];
 };
 
 export type DashboardInvoice = {
@@ -238,6 +276,7 @@ export type MemberPlan = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createBanner: Banner;
   /** Creates a new block style. */
   createBlockStyle: BlockStyle;
   /**
@@ -259,6 +298,7 @@ export type Mutation = {
    *
    */
   createUserConsent: UserConsent;
+  deleteBanner: Banner;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
   /**
@@ -292,6 +332,7 @@ export type Mutation = {
   syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
+  updateBanner: Banner;
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle;
   /**
@@ -317,6 +358,11 @@ export type Mutation = {
    *
    */
   updateUserConsent: UserConsent;
+};
+
+
+export type MutationCreateBannerArgs = {
+  input: CreateBannerInput;
 };
 
 
@@ -368,6 +414,11 @@ export type MutationCreateUserConsentArgs = {
 };
 
 
+export type MutationDeleteBannerArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteBlockStyleArgs = {
   id: Scalars['String'];
 };
@@ -411,6 +462,11 @@ export type MutationImportEventArgs = {
 
 export type MutationTestSystemMailArgs = {
   event: UserEvent;
+};
+
+
+export type MutationUpdateBannerArgs = {
+  input: UpdateBannerInput;
 };
 
 
@@ -485,6 +541,15 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
   startCursor?: Maybe<Scalars['String']>;
+};
+
+export type PageModel = {
+  __typename?: 'PageModel';
+  id: Scalars['ID'];
+};
+
+export type PageModelInput = {
+  id: Scalars['ID'];
 };
 
 export type PaginatedEvents = {
@@ -567,6 +632,8 @@ export type Query = {
    *
    */
   activeSubscribers: Array<DashboardSubscription>;
+  banner: Banner;
+  banners: Array<Banner>;
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>;
   /**
@@ -639,6 +706,7 @@ export type Query = {
   periodicJobLog: Array<PeriodicJob>;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
+  primaryBanner: Banner;
   provider: MailProviderModel;
   /**
    *
@@ -689,6 +757,17 @@ export type Query = {
    */
   userConsents: Array<UserConsent>;
   versionInformation: VersionInformation;
+};
+
+
+export type QueryBannerArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryBannersArgs = {
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
 };
 
 
@@ -918,6 +997,18 @@ export type Tag = {
   id: Scalars['ID'];
 };
 
+export type UpdateBannerInput = {
+  actions?: InputMaybe<Array<CreateBannerActionInput>>;
+  active: Scalars['Boolean'];
+  id: Scalars['ID'];
+  imageId?: InputMaybe<Scalars['String']>;
+  showOnArticles: Scalars['Boolean'];
+  showOnPages?: InputMaybe<Array<PageModelInput>>;
+  tags: Array<Scalars['String']>;
+  text: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   email: Scalars['String'];
@@ -952,6 +1043,41 @@ export type VersionInformation = {
   __typename?: 'VersionInformation';
   version: Scalars['String'];
 };
+
+export type BannersQueryVariables = Exact<{
+  take: Scalars['Int'];
+  skip: Scalars['Int'];
+}>;
+
+
+export type BannersQuery = { __typename?: 'Query', banners: Array<{ __typename?: 'Banner', id: string, title: string, text: string, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null }> };
+
+export type BannerQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type BannerQuery = { __typename?: 'Query', banner: { __typename?: 'Banner', id: string, title: string, text: string, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
+
+export type CreateBannerMutationVariables = Exact<{
+  input: CreateBannerInput;
+}>;
+
+
+export type CreateBannerMutation = { __typename?: 'Mutation', createBanner: { __typename?: 'Banner', id: string, title: string, text: string, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
+
+export type UpdateBannerMutationVariables = Exact<{
+  input: UpdateBannerInput;
+}>;
+
+
+export type UpdateBannerMutation = { __typename?: 'Mutation', updateBanner: { __typename?: 'Banner', id: string, title: string, text: string, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
+
+export type PageRefFragment = { __typename?: 'PageModel', id: string };
+
+export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null };
+
+export type FullBannerActionFragment = { __typename?: 'BannerAction', id: string, label: string, url: string, style: string };
 
 export type FullBlockStyleFragment = { __typename?: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<BlockType> };
 
@@ -1263,6 +1389,36 @@ export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type VersionInformationQuery = { __typename?: 'Query', versionInformation: { __typename?: 'VersionInformation', version: string } };
 
+export const PageRefFragmentDoc = gql`
+    fragment PageRef on PageModel {
+  id
+}
+    `;
+export const FullBannerActionFragmentDoc = gql`
+    fragment FullBannerAction on BannerAction {
+  id
+  label
+  url
+  style
+}
+    `;
+export const FullBannerFragmentDoc = gql`
+    fragment FullBanner on Banner {
+  id
+  title
+  text
+  active
+  tags
+  showOnArticles
+  showOnPages {
+    ...PageRef
+  }
+  actions {
+    ...FullBannerAction
+  }
+}
+    ${PageRefFragmentDoc}
+${FullBannerActionFragmentDoc}`;
 export const FullBlockStyleFragmentDoc = gql`
     fragment FullBlockStyle on BlockStyle {
   id
@@ -1417,6 +1573,143 @@ export const SystemMailFragmentDoc = gql`
   }
 }
     ${MailTemplateRefFragmentDoc}`;
+export const BannersDocument = gql`
+    query Banners($take: Int!, $skip: Int!) {
+  banners(take: $take, skip: $skip) {
+    ...FullBanner
+  }
+}
+    ${FullBannerFragmentDoc}`;
+
+/**
+ * __useBannersQuery__
+ *
+ * To run a query within a React component, call `useBannersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBannersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBannersQuery({
+ *   variables: {
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useBannersQuery(baseOptions: Apollo.QueryHookOptions<BannersQuery, BannersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BannersQuery, BannersQueryVariables>(BannersDocument, options);
+      }
+export function useBannersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BannersQuery, BannersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BannersQuery, BannersQueryVariables>(BannersDocument, options);
+        }
+export type BannersQueryHookResult = ReturnType<typeof useBannersQuery>;
+export type BannersLazyQueryHookResult = ReturnType<typeof useBannersLazyQuery>;
+export type BannersQueryResult = Apollo.QueryResult<BannersQuery, BannersQueryVariables>;
+export const BannerDocument = gql`
+    query Banner($id: String!) {
+  banner(id: $id) {
+    ...FullBanner
+  }
+}
+    ${FullBannerFragmentDoc}`;
+
+/**
+ * __useBannerQuery__
+ *
+ * To run a query within a React component, call `useBannerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBannerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBannerQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useBannerQuery(baseOptions: Apollo.QueryHookOptions<BannerQuery, BannerQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BannerQuery, BannerQueryVariables>(BannerDocument, options);
+      }
+export function useBannerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BannerQuery, BannerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BannerQuery, BannerQueryVariables>(BannerDocument, options);
+        }
+export type BannerQueryHookResult = ReturnType<typeof useBannerQuery>;
+export type BannerLazyQueryHookResult = ReturnType<typeof useBannerLazyQuery>;
+export type BannerQueryResult = Apollo.QueryResult<BannerQuery, BannerQueryVariables>;
+export const CreateBannerDocument = gql`
+    mutation CreateBanner($input: CreateBannerInput!) {
+  createBanner(input: $input) {
+    ...FullBanner
+  }
+}
+    ${FullBannerFragmentDoc}`;
+export type CreateBannerMutationFn = Apollo.MutationFunction<CreateBannerMutation, CreateBannerMutationVariables>;
+
+/**
+ * __useCreateBannerMutation__
+ *
+ * To run a mutation, you first call `useCreateBannerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBannerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBannerMutation, { data, loading, error }] = useCreateBannerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateBannerMutation(baseOptions?: Apollo.MutationHookOptions<CreateBannerMutation, CreateBannerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBannerMutation, CreateBannerMutationVariables>(CreateBannerDocument, options);
+      }
+export type CreateBannerMutationHookResult = ReturnType<typeof useCreateBannerMutation>;
+export type CreateBannerMutationResult = Apollo.MutationResult<CreateBannerMutation>;
+export type CreateBannerMutationOptions = Apollo.BaseMutationOptions<CreateBannerMutation, CreateBannerMutationVariables>;
+export const UpdateBannerDocument = gql`
+    mutation UpdateBanner($input: UpdateBannerInput!) {
+  updateBanner(input: $input) {
+    ...FullBanner
+  }
+}
+    ${FullBannerFragmentDoc}`;
+export type UpdateBannerMutationFn = Apollo.MutationFunction<UpdateBannerMutation, UpdateBannerMutationVariables>;
+
+/**
+ * __useUpdateBannerMutation__
+ *
+ * To run a mutation, you first call `useUpdateBannerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateBannerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateBannerMutation, { data, loading, error }] = useUpdateBannerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateBannerMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBannerMutation, UpdateBannerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateBannerMutation, UpdateBannerMutationVariables>(UpdateBannerDocument, options);
+      }
+export type UpdateBannerMutationHookResult = ReturnType<typeof useUpdateBannerMutation>;
+export type UpdateBannerMutationResult = Apollo.MutationResult<UpdateBannerMutation>;
+export type UpdateBannerMutationOptions = Apollo.BaseMutationOptions<UpdateBannerMutation, UpdateBannerMutationVariables>;
 export const BlockStylesDocument = gql`
     query BlockStyles {
   blockStyles {

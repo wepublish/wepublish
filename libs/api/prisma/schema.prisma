@@ -1259,7 +1259,7 @@ model BannerAction {
   createdAt           DateTime        @default(now())
   modifiedAt          DateTime        @updatedAt
 
-  banner              Banner          @relation(fields: [bannerId], references: [id])
+  banner              Banner          @relation(fields: [bannerId], references: [id], onDelete: Cascade)
   bannerId            String          @db.Uuid
 
   label               String

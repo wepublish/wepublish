@@ -208,6 +208,29 @@
         "tags": "Tags"
       }
     },
+    "banner": {
+      "edit": {
+        "title": "Edit banner"
+      },
+      "form": {
+        "title": "Title",
+        "text": "Text",
+        "active": "Active",
+        "showOnArticles": "Display on articles",
+        "showOnPages": "Display on those pages",
+        "actions": "Actions",
+        "image": "Image",
+        "action": {
+          "add": "Add new action",
+          "label": "Label",
+          "url": "URL",
+          "style": "Style"
+        }
+      },
+      "actions": {
+        "add": "Add action"
+      }
+    },
     "blocks": {
       "comment": {
         "cherryPick": "Select specific comments",

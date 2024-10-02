@@ -7,6 +7,7 @@ import {
   AgendaBaselService,
   AuthenticationModule,
   BexioPaymentProvider,
+  BannerApiModule,
   ConsentModule,
   StatsModule,
   DashboardModule,
@@ -260,7 +261,8 @@ import {PollModule} from '@wepublish/poll/api'
     ConfigModule.forRoot(),
     HealthModule,
     SystemInfoModule,
-    PollModule
+    PollModule,
+    BannerApiModule
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [

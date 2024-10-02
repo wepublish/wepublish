@@ -150,6 +150,27 @@ export type AvailablePaymentMethod = {
   paymentPeriodicities: Array<PaymentPeriodicity>;
 };
 
+export type Banner = {
+  __typename?: 'Banner';
+  actions?: Maybe<Array<BannerAction>>;
+  active: Scalars['Boolean'];
+  id: Scalars['ID'];
+  imageId?: Maybe<Scalars['String']>;
+  showOnArticles: Scalars['Boolean'];
+  showOnPages?: Maybe<Array<PageModel>>;
+  tags: Array<Scalars['String']>;
+  text: Scalars['String'];
+  title: Scalars['String'];
+};
+
+export type BannerAction = {
+  __typename?: 'BannerAction';
+  id: Scalars['ID'];
+  label: Scalars['String'];
+  style: Scalars['String'];
+  url: Scalars['String'];
+};
+
 export type BaseNavigationLink = {
   label: Scalars['String'];
 };
@@ -320,6 +341,23 @@ export type ConsentFilter = {
   defaultValue?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
+};
+
+export type CreateBannerActionInput = {
+  label: Scalars['String'];
+  style: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type CreateBannerInput = {
+  actions?: InputMaybe<Array<CreateBannerActionInput>>;
+  active: Scalars['Boolean'];
+  imageId?: InputMaybe<Scalars['String']>;
+  showOnArticles: Scalars['Boolean'];
+  showOnPages?: InputMaybe<Array<PageModelInput>>;
+  tags: Array<Scalars['String']>;
+  text: Scalars['String'];
+  title: Scalars['String'];
 };
 
 export enum Currency {
@@ -763,6 +801,7 @@ export type Mutation = {
   addComment: Comment;
   /** This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now */
   cancelUserSubscription?: Maybe<Subscription>;
+  createBanner: Banner;
   /** Creates a new block style. */
   createBlockStyle: BlockStyle;
   /** Create a new consent. */
@@ -787,6 +826,7 @@ export type Mutation = {
    * Returns created userConsent.
    */
   createUserConsent: UserConsent;
+  deleteBanner: Banner;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
   /** Deletes an existing consent. */
@@ -824,6 +864,7 @@ export type Mutation = {
   syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
+  updateBanner: Banner;
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle;
   /** This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text. */
@@ -867,6 +908,11 @@ export type MutationAddCommentArgs = {
 
 export type MutationCancelUserSubscriptionArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationCreateBannerArgs = {
+  input: CreateBannerInput;
 };
 
 
@@ -960,6 +1006,11 @@ export type MutationCreateUserConsentArgs = {
   consentId: Scalars['String'];
   userId: Scalars['String'];
   value: Scalars['Boolean'];
+};
+
+
+export type MutationDeleteBannerArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -1059,6 +1110,11 @@ export type MutationSendWebsiteLoginArgs = {
 
 export type MutationTestSystemMailArgs = {
   event: UserEvent;
+};
+
+
+export type MutationUpdateBannerArgs = {
+  input: UpdateBannerInput;
 };
 
 
@@ -1207,6 +1263,15 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
   startCursor?: Maybe<Scalars['String']>;
+};
+
+export type PageModel = {
+  __typename?: 'PageModel';
+  id: Scalars['ID'];
+};
+
+export type PageModelInput = {
+  id: Scalars['ID'];
 };
 
 export type PageNavigationLink = BaseNavigationLink & {
@@ -1469,6 +1534,8 @@ export type Query = {
   author?: Maybe<Author>;
   /** This query is to get the authors. */
   authors: AuthorConnection;
+  banner: Banner;
+  banners: Array<Banner>;
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>;
   /** This query generates a challenge which can be used to access protected endpoints. */
@@ -1543,6 +1610,7 @@ export type Query = {
   poll: FullPoll;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
+  primaryBanner: Banner;
   provider: MailProviderModel;
   ratingSystem: FullCommentRatingSystem;
   /** Returns all renewing subscribers in a given timeframe. */
@@ -1612,6 +1680,17 @@ export type QueryAuthorsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<AuthorSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryBannerArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryBannersArgs = {
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
 };
 
 
@@ -2108,6 +2187,18 @@ export type TwitterTweetBlock = {
   userID: Scalars['String'];
 };
 
+export type UpdateBannerInput = {
+  actions?: InputMaybe<Array<CreateBannerActionInput>>;
+  active: Scalars['Boolean'];
+  id: Scalars['ID'];
+  imageId?: InputMaybe<Scalars['String']>;
+  showOnArticles: Scalars['Boolean'];
+  showOnPages?: InputMaybe<Array<PageModelInput>>;
+  tags: Array<Scalars['String']>;
+  text: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type UploadImageInput = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
@@ -2272,6 +2363,13 @@ export type AuthorListQueryVariables = Exact<{
 
 
 export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', id: string, name: string, jobTitle?: string | null, slug: string, bio?: Node[] | null, url: string, createdAt: string, modifiedAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null, main: boolean, url: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string };
+
+export type PrimaryBannerQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PrimaryBannerQuery = { __typename?: 'Query', primaryBanner: { __typename?: 'Banner', id: string, title: string, text: string } };
 
 type BlockWithoutTeaser_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock', blockStyle?: string | null, zoneID: string };
 
@@ -3276,6 +3374,13 @@ export const FullArticleFragmentDoc = gql`
 }
     ${ArticleWithoutBlocksFragmentDoc}
 ${FullBlockFragmentDoc}`;
+export const FullBannerFragmentDoc = gql`
+    fragment FullBanner on Banner {
+  id
+  title
+  text
+}
+    `;
 export const FullAddressFragmentDoc = gql`
     fragment FullAddress on UserAddress {
   company
@@ -3839,6 +3944,40 @@ export function useAuthorListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type AuthorListQueryHookResult = ReturnType<typeof useAuthorListQuery>;
 export type AuthorListLazyQueryHookResult = ReturnType<typeof useAuthorListLazyQuery>;
 export type AuthorListQueryResult = Apollo.QueryResult<AuthorListQuery, AuthorListQueryVariables>;
+export const PrimaryBannerDocument = gql`
+    query PrimaryBanner {
+  primaryBanner {
+    ...FullBanner
+  }
+}
+    ${FullBannerFragmentDoc}`;
+
+/**
+ * __usePrimaryBannerQuery__
+ *
+ * To run a query within a React component, call `usePrimaryBannerQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePrimaryBannerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePrimaryBannerQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePrimaryBannerQuery(baseOptions?: Apollo.QueryHookOptions<PrimaryBannerQuery, PrimaryBannerQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PrimaryBannerQuery, PrimaryBannerQueryVariables>(PrimaryBannerDocument, options);
+      }
+export function usePrimaryBannerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PrimaryBannerQuery, PrimaryBannerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PrimaryBannerQuery, PrimaryBannerQueryVariables>(PrimaryBannerDocument, options);
+        }
+export type PrimaryBannerQueryHookResult = ReturnType<typeof usePrimaryBannerQuery>;
+export type PrimaryBannerLazyQueryHookResult = ReturnType<typeof usePrimaryBannerLazyQuery>;
+export type PrimaryBannerQueryResult = Apollo.QueryResult<PrimaryBannerQuery, PrimaryBannerQueryVariables>;
 export const ChallengeDocument = gql`
     query Challenge {
   challenge {

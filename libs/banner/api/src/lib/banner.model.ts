@@ -1,40 +1,91 @@
-import {Optional} from '@nestjs/common'
-import {ArgsType, Field, ID, InputType, Int, ObjectType} from '@nestjs/graphql'
+import {
+  ArgsType,
+  Directive,
+  Field,
+  ID,
+  InputType,
+  Int,
+  IntersectionType,
+  ObjectType
+} from '@nestjs/graphql'
+import {BannerAction, CreateBannerActionInput, UpdateBannerActionInput} from './banner-action.model'
 
-@ObjectType({description: 'Banner'})
-export class Banner {
+/*
+This is only here to provide the interface for the "showOnPages" field
+and can be removed when Pages are moved to APIv2
+*/
+@ObjectType()
+export class PageModel {
+  @Field(type => ID)
+  id!: string
+}
+
+@ObjectType()
+@Directive('@extends')
+@Directive('@key(fields: "id")')
+export class Image {
+  @Field(() => ID)
+  @Directive('@external')
+  id!: string
+}
+
+@ObjectType()
+@InputType()
+export class BannerFields {
+  @Field()
+  title!: string
+
+  @Field()
+  text!: string
+
+  @Field({})
+  active!: boolean
+
+  @Field(() => [String])
+  tags!: string[]
+
+  @Field()
+  showOnArticles!: boolean
+
+  @Field(() => String, {nullable: true})
+  imageId?: string | undefined | null
+}
+
+@ObjectType()
+export class Banner extends BannerFields {
   @Field(type => ID)
   id!: string
 
-  @Field()
-  title!: string
+  @Field(() => [PageModel], {nullable: true})
+  showOnPages?: PageModel[]
 
-  @Field({nullable: true})
-  text!: string
-}
-
-@ArgsType()
-export class BannerArgs {}
-
-@InputType()
-export class NewBannerInput {
-  @Field()
-  title!: string
-
-  @Field()
-  text!: string
+  @Field(() => [BannerAction], {nullable: true})
+  actions?: BannerAction[]
 }
 
 @InputType()
-export class UpdateBannerInput {
-  @Field()
+export class CreateBannerInput extends BannerFields {
+  @Field(() => [CreateBannerActionInput], {nullable: true})
+  actions?: CreateBannerActionInput[]
+
+  @Field(() => [PageModelInput], {nullable: true})
+  showOnPages?: PageModelInput[]
+}
+
+@InputType()
+export class UpdateBannerInput extends BannerFields {
+  @Field(type => ID)
   id!: string
 
-  @Field()
-  @Optional()
-  title!: string
+  @Field(() => [CreateBannerActionInput], {nullable: true})
+  actions?: CreateBannerActionInput[]
 
-  @Field()
-  @Optional()
-  text!: string
+  @Field(() => [PageModelInput], {nullable: true})
+  showOnPages?: PageModelInput[]
+}
+
+@InputType()
+export class PageModelInput {
+  @Field(type => ID)
+  id!: string
 }

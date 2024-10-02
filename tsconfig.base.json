@@ -25,6 +25,7 @@
       "@wepublish/authentication/website": ["libs/authentication/website/src/index.ts"],
       "@wepublish/author/website": ["libs/author/website/src/index.ts"],
       "@wepublish/banner/api": ["libs/banner/api/src/index.ts"],
+      "@wepublish/banner/editor": ["libs/banner/editor/src/index.ts"],
       "@wepublish/block-content/api": ["libs/block-content/api/src/index.ts"],
       "@wepublish/block-content/website": ["libs/block-content/website/src/index.ts"],
       "@wepublish/comments/website": ["libs/comments/website/src/index.ts"],
