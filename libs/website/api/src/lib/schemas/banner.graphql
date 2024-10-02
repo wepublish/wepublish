@@ -1,0 +1,11 @@
+fragment FullBanner on Banner {
+    id
+    title
+    text
+}
+
+query PrimaryBanner {
+    primaryBanner {
+        ...FullBanner
+    }
+}

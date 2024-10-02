@@ -1,0 +1,84 @@
+query Banners($take: Int!, $skip: Int!) {
+  banners(take: $take, skip: $skip) {
+    ...FullBanner
+  }
+}
+
+query Banner($id: String!) {
+  banner(id: $id) {
+    ...FullBanner
+  }
+}
+
+mutation CreateBanner($input: CreateBannerInput!) {
+  createBanner(input: $input) {
+    ...FullBanner
+  }
+}
+
+mutation UpdateBanner($input: UpdateBannerInput!) {
+  updateBanner(input: $input) {
+    ...FullBanner
+  }
+}
+
+input CreateBannerInput {
+  title: string!
+  text: string!
+  active: boolean!
+  tags: [string]!
+  showOnArticles: boolean!
+  actions: [CreateBannerActionInput]!
+  imageId: ID!
+}
+
+input CreateBannerActionInput {
+  label: string!
+  url: string!
+  style: string!
+}
+
+input UpdateBannerInput {
+  id: string!
+  title: string!
+  text: string!
+  active: boolean!
+  tags: [string]!
+  showOnArticles: boolean!
+  actions: [CreateBannerActionInput]!
+  imageId: ID!
+}
+
+fragment PageRef on PageModel {
+  id
+}
+
+fragment FullBanner on Banner {
+  id
+  title
+  text
+
+  #image {
+  #  ...ImageRef
+  #}
+
+  active
+
+  tags
+
+  showOnArticles
+  showOnPages {
+    ...PageRef
+  }
+
+  actions {
+    ...FullBannerAction
+  }
+}
+
+fragment FullBannerAction on BannerAction {
+  id
+  label
+  url
+  style
+}
