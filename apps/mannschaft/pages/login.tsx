@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import {styled, Typography} from '@mui/material'
 import {IntendedRouteStorageKey} from '@wepublish/website'
 import {
   ApiV1,
@@ -16,7 +16,7 @@ import {useEffect} from 'react'
 const LoginWrapper = styled('div')`
   display: grid;
   justify-content: center;
-  gap: ${({theme}) => theme.spacing(4)};
+  gap: ${({theme}) => theme.spacing(3)};
   max-width: 600px;
   justify-self: center;
 `
@@ -26,7 +26,7 @@ type LoginProps = {sessionToken?: ApiV1.UserSession}
 export default function Login({sessionToken}: LoginProps) {
   const {hasUser, setToken} = useUser()
   const {
-    elements: {H3, H6, Link, Alert}
+    elements: {H3, Link}
   } = useWebsiteBuilder()
   const router = useRouter()
 
@@ -48,16 +48,16 @@ export default function Login({sessionToken}: LoginProps) {
     <LoginWrapper>
       <H3 component="h1">Login für Abonnent*innen</H3>
 
-      <Alert severity={'warning'}>
-        <b>
-          Wir arbeiten an der neuen Website, deshalb ist ein Login kurzfristig nicht möglich. Ab
-          heute Abend kannst du dich hier anmelden und wie gewohnt alle Mannschaft+ Beiträge lesen.
-        </b>
-      </Alert>
+      <Typography variant="h6" paragraph>
+        «MAIL-LOGIN»: Beim ersten Login kannst du dich mit deiner bei uns hinterlegten
+        E-Mail-Adresse (ohne Passwort) anmelden. Lege danach ein Passwort in deinem Nutzerprofil
+        fest für zukünftiges Einloggen unter «LOGIN MIT PASSWORT»
+      </Typography>
 
-      {/* <Typography variant="body1" paragraph>
-        (Falls du noch keinen Account hast, <Link href={'/mitmachen'}>klicke hier.</Link>)
-      </Typography> */}
+      <Typography variant="body1" paragraph>
+        Du hast noch kein Abo und möchtest LGBTIQ-Journalismus unterstützen?
+        <Link href={'/mitmachen'}> Hier kannst du dein Abo wählen.</Link>
+      </Typography>
 
       <LoginFormContainer />
     </LoginWrapper>
