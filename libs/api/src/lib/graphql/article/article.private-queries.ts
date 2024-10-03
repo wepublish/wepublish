@@ -79,7 +79,7 @@ export const getAdminArticles = async (
 
   if (canGetArticles || canGetSharedArticles) {
     return getArticles(
-      {...filter, shared: !canGetArticles ? true : undefined},
+      {...filter, shared: !canGetArticles ? true : undefined, includeHidden: true},
       sortedField,
       order,
       cursorId,
