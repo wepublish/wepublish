@@ -52,6 +52,7 @@ import {
   CommentRatings
 } from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
+import {Banner as PageBanner} from '@wepublish/banner/website'
 import {Image} from '@wepublish/image/website'
 import {
   InvoiceList,
@@ -148,6 +149,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Article={Article}
           ArticleDate={ArticleDate}
           ArticleSEO={ArticleSEO}
+          Banner={PageBanner}
           PeerInformation={PeerInformation}
           Navbar={Navbar}
           Footer={Footer}

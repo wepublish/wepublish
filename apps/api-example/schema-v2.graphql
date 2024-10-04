@@ -30,7 +30,9 @@ type AllowedSettingVals {
 type Banner {
   actions: [BannerAction!]
   active: Boolean!
+  cta: String
   id: ID!
+  image: Image
   imageId: String
   showOnArticles: Boolean!
   showOnPages: [PageModel!]
@@ -97,6 +99,7 @@ input CreateBannerActionInput {
 input CreateBannerInput {
   actions: [CreateBannerActionInput!]
   active: Boolean!
+  cta: String
   imageId: String
   showOnArticles: Boolean!
   showOnPages: [PageModelInput!]
@@ -613,6 +616,7 @@ type Tag {
 input UpdateBannerInput {
   actions: [CreateBannerActionInput!]
   active: Boolean!
+  cta: String
   id: ID!
   imageId: String
   showOnArticles: Boolean!

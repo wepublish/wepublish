@@ -1240,6 +1240,7 @@ model Banner {
 
   title               String
   text                String
+  cta                 String?
 
   imageId             String?
   image               Image?          @relation(fields: [imageId], references: [id])

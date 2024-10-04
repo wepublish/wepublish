@@ -1,14 +1,6 @@
-import {
-  ArgsType,
-  Directive,
-  Field,
-  ID,
-  InputType,
-  Int,
-  IntersectionType,
-  ObjectType
-} from '@nestjs/graphql'
-import {BannerAction, CreateBannerActionInput, UpdateBannerActionInput} from './banner-action.model'
+import {Directive, Field, ID, InputType, ObjectType} from '@nestjs/graphql'
+import {BannerAction, CreateBannerActionInput} from './banner-action.model'
+import {Image} from '@wepublish/image/api'
 
 /*
 This is only here to provide the interface for the "showOnPages" field
@@ -21,15 +13,6 @@ export class PageModel {
 }
 
 @ObjectType()
-@Directive('@extends')
-@Directive('@key(fields: "id")')
-export class Image {
-  @Field(() => ID)
-  @Directive('@external')
-  id!: string
-}
-
-@ObjectType()
 @InputType()
 export class BannerFields {
   @Field()
@@ -37,6 +20,9 @@ export class BannerFields {
 
   @Field()
   text!: string
+
+  @Field({nullable: true})
+  cta?: string
 
   @Field({})
   active!: boolean
@@ -58,6 +44,9 @@ export class Banner extends BannerFields {
 
   @Field(() => [PageModel], {nullable: true})
   showOnPages?: PageModel[]
+
+  @Field(() => Image, {nullable: true})
+  image?: Image
 
   @Field(() => [BannerAction], {nullable: true})
   actions?: BannerAction[]

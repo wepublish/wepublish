@@ -26,6 +26,7 @@
       "@wepublish/author/website": ["libs/author/website/src/index.ts"],
       "@wepublish/banner/api": ["libs/banner/api/src/index.ts"],
       "@wepublish/banner/editor": ["libs/banner/editor/src/index.ts"],
+      "@wepublish/banner/website": ["libs/banner/website/src/index.ts"],
       "@wepublish/block-content/api": ["libs/block-content/api/src/index.ts"],
       "@wepublish/block-content/website": ["libs/block-content/website/src/index.ts"],
       "@wepublish/comments/website": ["libs/comments/website/src/index.ts"],
@@ -79,7 +80,8 @@
       "@wepublish/website": ["libs/website/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
-      "@wepublish/website/server": ["libs/website/src/server.ts"]
+      "@wepublish/website/server": ["libs/website/src/server.ts"],
+      "banner-website": ["libs/banner/website/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

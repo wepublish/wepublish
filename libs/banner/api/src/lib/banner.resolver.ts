@@ -48,14 +48,16 @@ export class BannerResolver {
     return this.bannerService.findPages(id)
   }
 
-  /*@ResolveField(() => Image, {nullable: true})
+  @ResolveField(() => Image, {nullable: true})
   public image(@Parent() banner: Banner) {
     const {imageId} = banner
+
     if (!imageId) {
       return null
     }
+
     return {__typename: 'Image', id: imageId}
-  }*/
+  }
 
   @Mutation(() => Banner)
   async createBanner(@Args('input') args: CreateBannerInput): Promise<Banner> {

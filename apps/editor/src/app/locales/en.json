@@ -215,6 +215,7 @@
       "form": {
         "title": "Title",
         "text": "Text",
+        "cta": "Call to action",
         "active": "Active",
         "showOnArticles": "Display on articles",
         "showOnPages": "Display on those pages",

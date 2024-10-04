@@ -1,6 +1,7 @@
 export * from './lib/article.interface'
 export * from './lib/authentication.interface'
 export * from './lib/author.interface'
+export * from './lib/banner.interface'
 export * from './lib/blocks.interface'
 export * from './lib/block-styles.interface'
 export * from './lib/comment.interface'

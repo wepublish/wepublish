@@ -64,6 +64,10 @@ export const BannerForm = (props: BannerFormProps) => {
           <Form.ControlLabel>{t('banner.form.text')}</Form.ControlLabel>
           <Form.Control name="text" value={props.banner.text} onChange={handleChange} rows={3} />
         </Form.Group>
+        <Form.Group controlId="cta">
+          <Form.ControlLabel>{t('banner.form.cta')}</Form.ControlLabel>
+          <Form.Control name="cta" value={props.banner.cta} onChange={handleChange} />
+        </Form.Group>
         <Form.Group controlId="images">
           <Form.ControlLabel>{t('banner.form.image')}</Form.ControlLabel>
           <Form.Control

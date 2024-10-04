@@ -2793,6 +2793,7 @@ type BannerFactoryDefineInput = {
     modifiedAt?: Date;
     title?: string;
     text?: string;
+    cta?: string | null;
     active?: boolean;
     tags?: Prisma.BannerCreatetagsInput | Prisma.Enumerable<string>;
     showOnArticles?: boolean;

@@ -33,7 +33,9 @@ export type Banner = {
   __typename?: 'Banner';
   actions?: Maybe<Array<BannerAction>>;
   active: Scalars['Boolean'];
+  cta?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: Maybe<Array<PageModel>>;
@@ -103,6 +105,7 @@ export type CreateBannerActionInput = {
 export type CreateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>;
   active: Scalars['Boolean'];
+  cta?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['String']>;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
@@ -1000,6 +1003,7 @@ export type Tag = {
 export type UpdateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>;
   active: Scalars['Boolean'];
+  cta?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
   imageId?: InputMaybe<Scalars['String']>;
   showOnArticles: Scalars['Boolean'];
@@ -1050,32 +1054,34 @@ export type BannersQueryVariables = Exact<{
 }>;
 
 
-export type BannersQuery = { __typename?: 'Query', banners: Array<{ __typename?: 'Banner', id: string, title: string, text: string, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null }> };
+export type BannersQuery = { __typename?: 'Query', banners: Array<{ __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null }> };
 
 export type BannerQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type BannerQuery = { __typename?: 'Query', banner: { __typename?: 'Banner', id: string, title: string, text: string, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
+export type BannerQuery = { __typename?: 'Query', banner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
 
 export type CreateBannerMutationVariables = Exact<{
   input: CreateBannerInput;
 }>;
 
 
-export type CreateBannerMutation = { __typename?: 'Mutation', createBanner: { __typename?: 'Banner', id: string, title: string, text: string, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
+export type CreateBannerMutation = { __typename?: 'Mutation', createBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
 
 export type UpdateBannerMutationVariables = Exact<{
   input: UpdateBannerInput;
 }>;
 
 
-export type UpdateBannerMutation = { __typename?: 'Mutation', updateBanner: { __typename?: 'Banner', id: string, title: string, text: string, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
+export type UpdateBannerMutation = { __typename?: 'Mutation', updateBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
 
 export type PageRefFragment = { __typename?: 'PageModel', id: string };
 
-export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null };
+export type FullImageFragment = { __typename?: 'Image', id: string };
+
+export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null };
 
 export type FullBannerActionFragment = { __typename?: 'BannerAction', id: string, label: string, url: string, style: string };
 
@@ -1394,6 +1400,11 @@ export const PageRefFragmentDoc = gql`
   id
 }
     `;
+export const FullImageFragmentDoc = gql`
+    fragment FullImage on Image {
+  id
+}
+    `;
 export const FullBannerActionFragmentDoc = gql`
     fragment FullBannerAction on BannerAction {
   id
@@ -1407,17 +1418,22 @@ export const FullBannerFragmentDoc = gql`
   id
   title
   text
+  cta
   active
   tags
   showOnArticles
   showOnPages {
     ...PageRef
   }
+  image {
+    ...FullImage
+  }
   actions {
     ...FullBannerAction
   }
 }
     ${PageRefFragmentDoc}
+${FullImageFragmentDoc}
 ${FullBannerActionFragmentDoc}`;
 export const FullBlockStyleFragmentDoc = gql`
     fragment FullBlockStyle on BlockStyle {

@@ -24,6 +24,7 @@ export const EditBannerForm = () => {
     id: '',
     title: '',
     text: '',
+    cta: '',
     active: false,
     showOnArticles: false,
     tags: [],
@@ -37,7 +38,10 @@ export const EditBannerForm = () => {
       id: id!
     },
     skip: !id,
-    onCompleted: data => setBanner(data.banner)
+    onCompleted: data => {
+      const {__typename, ...input} = data.banner
+      setBanner(input)
+    }
   })
 
   const {StringType, BooleanType} = Schema.Types

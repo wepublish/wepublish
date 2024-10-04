@@ -152,7 +152,9 @@ export type Banner = {
   __typename?: 'Banner';
   actions?: Maybe<Array<BannerAction>>;
   active: Scalars['Boolean'];
+  cta?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: Maybe<Array<PageModel>>;
@@ -350,6 +352,7 @@ export type CreateBannerActionInput = {
 export type CreateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>;
   active: Scalars['Boolean'];
+  cta?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['String']>;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
@@ -2188,6 +2191,7 @@ export type TwitterTweetBlock = {
 export type UpdateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>;
   active: Scalars['Boolean'];
+  cta?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
   imageId?: InputMaybe<Scalars['String']>;
   showOnArticles: Scalars['Boolean'];

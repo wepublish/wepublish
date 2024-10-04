@@ -53,22 +53,26 @@ fragment PageRef on PageModel {
   id
 }
 
+fragment FullImage on Image {
+  id
+}
+
 fragment FullBanner on Banner {
   id
   title
   text
-
-  #image {
-  #  ...ImageRef
-  #}
+  cta
 
   active
 
   tags
-
   showOnArticles
   showOnPages {
     ...PageRef
+  }
+
+  image {
+    ...FullImage
   }
 
   actions {
