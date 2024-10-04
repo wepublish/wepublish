@@ -1,6 +1,12 @@
 import {Injectable} from '@nestjs/common'
 import {Page, PrismaClient} from '@prisma/client'
-import {Banner, CreateBannerInput, UpdateBannerInput} from './banner.model'
+import {
+  Banner,
+  BannerDocumentType,
+  CreateBannerInput,
+  PrimaryBannerArgs,
+  UpdateBannerInput
+} from './banner.model'
 import {PaginationArgs} from './pagination.model'
 
 @Injectable()
@@ -22,8 +28,26 @@ export class BannerService {
     })
   }
 
-  async findFirst(): Promise<Banner | null> {
-    return this.prisma.banner.findFirst()
+  async findFirst(args: PrimaryBannerArgs): Promise<Banner | undefined> {
+    if (args.documentType === BannerDocumentType.ARTICLE) {
+      return this.prisma.banner.findFirst({
+        where: {
+          active: true,
+          showOnArticles: true
+        }
+      })
+    } else if (args.documentType === BannerDocumentType.PAGE) {
+      return this.prisma.banner.findFirst({
+        where: {
+          active: true,
+          showOnPages: {
+            some: {
+              id: args.documentId
+            }
+          }
+        }
+      })
+    }
   }
 
   async findPages(id: string): Promise<Page[]> {

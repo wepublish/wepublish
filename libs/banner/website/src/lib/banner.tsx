@@ -12,6 +12,7 @@ const BannerContainer = styled('div')<BannerContainerProps & {theme?: Theme}>`
   position: relative;
   display: grid;
   grid-template-columns: ${props => (props.hasImage ? 'minmax(auto, 50%) 1fr' : '1fr')};
+  background-color: #ddd;
 `
 
 const BannerImage = styled('div')`
@@ -69,19 +70,18 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
   useEffect(() => {
     const lastClosedTime = Number(localStorage.getItem(storageKey)) ?? 0
     const currentTime = new Date().getTime()
-    if (differenceInHours(currentTime, lastClosedTime) > 24) {
-      setDisplay(true)
-    } else {
-      setDisplay(false)
-    }
-  }, [])
+
+    const isNotClosedRecently = differenceInHours(currentTime, lastClosedTime) > 24
+
+    setDisplay(isNotClosedRecently)
+  }, [data])
 
   const handleClose = () => {
     setDisplay(false)
     localStorage.setItem(storageKey, new Date().getTime().toString())
   }
 
-  if (loading || error || !display) {
+  if (!data?.primaryBanner || loading || error || !display) {
     return <></>
   }
 

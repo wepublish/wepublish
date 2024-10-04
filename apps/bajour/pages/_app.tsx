@@ -40,6 +40,7 @@ import {
   BajourTeaserList
 } from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
+import {BajourBanner} from '../src/components/website-builder-overwrites/banner/bajour-banner'
 
 setDefaultOptions({
   locale: de

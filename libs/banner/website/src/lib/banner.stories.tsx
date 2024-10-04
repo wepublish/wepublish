@@ -8,6 +8,8 @@ const banner = {
   title: 'Bla',
   text: 'We need money. You are our only hope.',
   cta: 'Subscribe now!',
+  active: true,
+  showOnArticles: true,
   actions: [{label: 'Foo'}, {label: 'Bar'}],
   image: {
     __typename: 'Image',

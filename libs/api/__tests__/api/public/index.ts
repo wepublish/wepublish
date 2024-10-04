@@ -171,6 +171,11 @@ export type BannerAction = {
   url: Scalars['String'];
 };
 
+export enum BannerDocumentType {
+  Article = 'ARTICLE',
+  Page = 'PAGE'
+}
+
 export type BaseNavigationLink = {
   label: Scalars['String'];
 };
@@ -1849,6 +1854,12 @@ export type QueryPollVotesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<PollVoteSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPrimaryBannerArgs = {
+  documentId: Scalars['ID'];
+  documentType: BannerDocumentType;
 };
 
 

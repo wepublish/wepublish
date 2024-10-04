@@ -1,4 +1,12 @@
-import {Directive, Field, ID, InputType, ObjectType} from '@nestjs/graphql'
+import {
+  ArgsType,
+  Directive,
+  Field,
+  ID,
+  InputType,
+  ObjectType,
+  registerEnumType
+} from '@nestjs/graphql'
 import {BannerAction, CreateBannerActionInput} from './banner-action.model'
 import {Image} from '@wepublish/image/api'
 
@@ -34,7 +42,7 @@ export class BannerFields {
   showOnArticles!: boolean
 
   @Field(() => String, {nullable: true})
-  imageId?: string | undefined | null
+  imageId?: string
 }
 
 @ObjectType()
@@ -77,4 +85,22 @@ export class UpdateBannerInput extends BannerFields {
 export class PageModelInput {
   @Field(type => ID)
   id!: string
+}
+
+export enum BannerDocumentType {
+  PAGE,
+  ARTICLE
+}
+
+registerEnumType(BannerDocumentType, {
+  name: 'BannerDocumentType'
+})
+
+@ArgsType()
+export class PrimaryBannerArgs {
+  @Field(() => BannerDocumentType)
+  documentType!: BannerDocumentType
+
+  @Field(() => ID)
+  documentId!: string
 }

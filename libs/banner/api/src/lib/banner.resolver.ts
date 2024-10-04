@@ -1,6 +1,12 @@
 import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
 import {BannerService} from './banner.service'
-import {Banner, CreateBannerInput, PageModel, UpdateBannerInput} from './banner.model'
+import {
+  Banner,
+  CreateBannerInput,
+  PageModel,
+  PrimaryBannerArgs,
+  UpdateBannerInput
+} from './banner.model'
 import {NotFoundException} from '@nestjs/common'
 import {BannerActionService} from './banner-action.service'
 import {BannerAction} from './banner-action.model'
@@ -28,8 +34,8 @@ export class BannerResolver {
   }
 
   @Query(() => Banner)
-  async primaryBanner(): Promise<Banner> {
-    const banner = await this.bannerService.findFirst()
+  async primaryBanner(@Args() args: PrimaryBannerArgs): Promise<Banner> {
+    const banner = await this.bannerService.findFirst(args)
     if (!banner) {
       throw new NotFoundException()
     }

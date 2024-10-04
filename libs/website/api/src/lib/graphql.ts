@@ -173,6 +173,11 @@ export type BannerAction = {
   url: Scalars['String'];
 };
 
+export enum BannerDocumentType {
+  Article = 'ARTICLE',
+  Page = 'PAGE'
+}
+
 export type BaseNavigationLink = {
   label: Scalars['String'];
 };
@@ -1854,6 +1859,12 @@ export type QueryPollVotesArgs = {
 };
 
 
+export type QueryPrimaryBannerArgs = {
+  documentId: Scalars['ID'];
+  documentType: BannerDocumentType;
+};
+
+
 export type QueryRenewingSubscribersArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
@@ -2374,7 +2385,10 @@ export type FullBannerActionFragment = { __typename?: 'BannerAction', id: string
 
 export type PageRefFragment = { __typename?: 'PageModel', id: string };
 
-export type PrimaryBannerQueryVariables = Exact<{ [key: string]: never; }>;
+export type PrimaryBannerQueryVariables = Exact<{
+  documentType: BannerDocumentType;
+  documentId: Scalars['ID'];
+}>;
 
 
 export type PrimaryBannerQuery = { __typename?: 'Query', primaryBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, tags: Array<string>, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
@@ -3980,8 +3994,8 @@ export type AuthorListQueryHookResult = ReturnType<typeof useAuthorListQuery>;
 export type AuthorListLazyQueryHookResult = ReturnType<typeof useAuthorListLazyQuery>;
 export type AuthorListQueryResult = Apollo.QueryResult<AuthorListQuery, AuthorListQueryVariables>;
 export const PrimaryBannerDocument = gql`
-    query PrimaryBanner {
-  primaryBanner {
+    query PrimaryBanner($documentType: BannerDocumentType!, $documentId: ID!) {
+  primaryBanner(documentType: $documentType, documentId: $documentId) {
     ...FullBanner
   }
 }
@@ -3999,10 +4013,12 @@ export const PrimaryBannerDocument = gql`
  * @example
  * const { data, loading, error } = usePrimaryBannerQuery({
  *   variables: {
+ *      documentType: // value for 'documentType'
+ *      documentId: // value for 'documentId'
  *   },
  * });
  */
-export function usePrimaryBannerQuery(baseOptions?: Apollo.QueryHookOptions<PrimaryBannerQuery, PrimaryBannerQueryVariables>) {
+export function usePrimaryBannerQuery(baseOptions: Apollo.QueryHookOptions<PrimaryBannerQuery, PrimaryBannerQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<PrimaryBannerQuery, PrimaryBannerQueryVariables>(PrimaryBannerDocument, options);
       }
