@@ -19,7 +19,20 @@ const merriweather = Merriweather({
   preload: true
 })
 
+const {
+  palette: {augmentColor}
+} = WePTheme
+
 const theme = createTheme(WePTheme, {
+  palette: {
+    primary: augmentColor({color: {main: '#B2D7AF'}}),
+    secondary: augmentColor({color: {main: '#B2D7AF'}}),
+    accent: augmentColor({color: {main: '#00AEC2', light: '#FFEE00'}}),
+    error: augmentColor({color: {main: '#e4002c'}}),
+    warning: augmentColor({color: {main: '#f07d24'}}),
+    info: augmentColor({color: {main: '#1e398f'}}),
+    success: augmentColor({color: {main: '#0aa537'}})
+  },
   typography: {
     h1: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')

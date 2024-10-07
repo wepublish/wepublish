@@ -92,7 +92,7 @@ type CustomAppProps = AppProps<{
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
-  const siteTitle = 'We.Publish'
+  const siteTitle = 'Zwölf'
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
