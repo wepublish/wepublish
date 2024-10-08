@@ -130,12 +130,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               </Head>
 
               <Spacer>
-                <NavBar
-                  categorySlugs={[['categories', 'about-us']]}
-                  slug="main"
-                  headerSlug="header"
-                  loginUrl={''}
-                />
+                <NavBar categorySlugs={[['abo']]} slug="main" headerSlug="header" loginUrl={''} />
 
                 <main>
                   <MainSpacer maxWidth="lg">
@@ -143,7 +138,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </MainSpacer>
                 </main>
 
-                <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
+                <FooterContainer slug="main" categorySlugs={[['abo']]}>
                   <LogoLink href="/" aria-label="Startseite">
                     <LogoWrapper />
                   </LogoLink>
