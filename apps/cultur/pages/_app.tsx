@@ -132,7 +132,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
 
             <Spacer>
               <NavBar
-                categorySlugs={[['categories', 'about-us']]}
+                categorySlugs={[['categories']]}
                 slug="main"
                 headerSlug="header"
                 loginUrl={''}
