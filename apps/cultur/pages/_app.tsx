@@ -144,7 +144,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 </MainSpacer>
               </main>
 
-              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
+              <FooterContainer slug="footer" categorySlugs={[['categories']]}>
                 <LogoLink href="/" aria-label="Startseite">
                   <LogoWrapper />
                 </LogoLink>
