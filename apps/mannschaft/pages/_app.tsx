@@ -38,6 +38,8 @@ import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
 import {MannschaftRichtextBlock} from '../src/mannschaft-richtext-block'
 import theme from '../src/theme'
+import {MdFacebook, MdSearch} from 'react-icons/md'
+import {FaInstagram} from 'react-icons/fa6'
 
 setDefaultOptions({
   locale: de
@@ -89,6 +91,10 @@ const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
+
+const ButtonLink = styled('a')`
+  color: ${({theme}) => theme.palette.primary.contrastText};
+`
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
@@ -152,8 +158,19 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <NavBar
                   categorySlugs={[['categories', 'other'], ['about-us']]}
                   slug="main"
-                  headerSlug="header"
-                />
+                  headerSlug="header">
+                  <ButtonLink href="/search">
+                    <MdSearch size="32" />
+                  </ButtonLink>
+
+                  <ButtonLink href="https://www.facebook.com/mannschaftmagazin">
+                    <MdFacebook size="32" />
+                  </ButtonLink>
+
+                  <ButtonLink href="https://www.instagram.com/mannschaftmagazin/">
+                    <FaInstagram size="32" />
+                  </ButtonLink>
+                </NavBar>
 
                 <main>
                   <MainSpacer maxWidth="lg">
