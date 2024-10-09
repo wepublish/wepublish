@@ -39,7 +39,7 @@ import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
 import {MannschaftRichtextBlock} from '../src/mannschaft-richtext-block'
 import theme from '../src/theme'
 import {MdFacebook, MdSearch} from 'react-icons/md'
-import {FaInstagram} from 'react-icons/fa6'
+import {FaInstagram, FaBluesky, FaTiktok} from 'react-icons/fa6'
 
 setDefaultOptions({
   locale: de
@@ -167,8 +167,16 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                     <MdFacebook size="32" />
                   </ButtonLink>
 
-                  <ButtonLink href="https://www.instagram.com/mannschaftmagazin/">
+                  <ButtonLink href="https://www.instagram.com/mannschaftmagazin">
                     <FaInstagram size="32" />
+                  </ButtonLink>
+
+                  <ButtonLink href="https://bsky.app/profile/mannschaftmagazin.bsky.social">
+                    <FaBluesky size="32" />
+                  </ButtonLink>
+
+                  <ButtonLink href="https://www.tiktok.com/@mannschaftmagazin">
+                    <FaTiktok size="32" />
                   </ButtonLink>
                 </NavBar>
 
