@@ -12,8 +12,8 @@ import {
   DeleteAuthorMutation,
   DeleteAuthorMutationVariables
 } from '../../api/private'
-import {convertHtmlToSlate} from './convert-html-to-slate'
 import {deleteExistingAuthors} from './index'
+import {transformHtmlToSlate} from './utils'
 
 export type Author = {id: string}
 
@@ -42,8 +42,8 @@ export const ensureAuthor = async (author: WordpressAuthor): Promise<Author> => 
     name,
     slug,
     links: [{title: 'Link', url: link}],
-    imageID: image.id,
-    bio: await convertHtmlToSlate(description)
+    imageID: image?.id,
+    bio: await transformHtmlToSlate(description)
   })
 }
 
