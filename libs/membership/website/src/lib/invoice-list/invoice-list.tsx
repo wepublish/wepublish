@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import {Skeleton, styled} from '@mui/material'
 import {BuilderInvoiceListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {InvoiceListItemContent, InvoiceListItemWrapper} from './invoice-list-item'
 import {Invoice} from '@wepublish/website/api'
@@ -22,6 +22,8 @@ export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInv
 
   return (
     <InvoiceListWrapper className={className}>
+      {loading && <Skeleton variant={'rectangular'} />}
+
       {!loading && !error && !data?.invoices?.length && (
         <InvoiceListItemWrapper>
           <InvoiceListItemContent>
@@ -32,18 +34,19 @@ export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInv
 
       {error && <Alert severity="error">{error.message}</Alert>}
 
-      {data?.invoices?.map(invoice => (
-        <InvoiceListItem
-          key={invoice.id}
-          {...invoice}
-          canPay={canPayInvoice(invoice)}
-          pay={async () => {
-            if (invoice?.subscription) {
-              return await onPay?.(invoice.id, invoice.subscription.paymentMethod.id)
-            }
-          }}
-        />
-      ))}
+      {!loading &&
+        data?.invoices?.map(invoice => (
+          <InvoiceListItem
+            key={invoice.id}
+            {...invoice}
+            canPay={canPayInvoice(invoice)}
+            pay={async () => {
+              if (invoice?.subscription) {
+                return await onPay?.(invoice.id, invoice.subscription.paymentMethod.id)
+              }
+            }}
+          />
+        ))}
     </InvoiceListWrapper>
   )
 }
