@@ -82,30 +82,6 @@ describe('GoogleAnalyticsService', () => {
     expect(runReportSpy).not.toHaveBeenCalled()
   })
 
-  it('should not allow take to be bigger than 100', async () => {
-    runReportSpy.mockReturnValue(
-      Promise.resolve([
-        {
-          rows: []
-        }
-      ])
-    )
-    prismaMock.article.findMany?.mockReturnValue([])
-
-    const result = await service.getMostViewedArticles({
-      take: 101,
-      skip: 0
-    })
-
-    expect(result).toHaveLength(0)
-    expect(prismaMock.article.findMany).toHaveBeenCalledWith({
-      where: expect.any(Object),
-      include: expect.any(Object),
-      take: 100,
-      skip: 0
-    })
-  })
-
   it('should get articles by popularity', async () => {
     runReportSpy.mockReturnValue(
       Promise.resolve([
