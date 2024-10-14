@@ -1,15 +1,40 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`GoogleAnalyticsService should filter pages out 1`] = `
+[
+  {
+    "include": {
+      "published": {
+        "select": {
+          "slug": true,
+        },
+      },
+    },
+    "where": {
+      "published": {
+        "slug": {
+          "in": [
+            "barfoo",
+            "bazfoo",
+          ],
+          "mode": "insensitive",
+        },
+      },
+    },
+  },
+]
+`;
+
 exports[`GoogleAnalyticsService should get articles by popularity 1`] = `
 [
   {
     "published": {
-      "slug": "foobaz",
+      "slug": "bazfoo",
     },
   },
   {
     "published": {
-      "slug": "bazfoo",
+      "slug": "foobaz",
     },
   },
   {
@@ -38,7 +63,37 @@ exports[`GoogleAnalyticsService should get articles by popularity 2`] = `
     "where": {
       "published": {
         "slug": {
-          "in": [],
+          "in": [
+            "foobar",
+            "barfoo",
+            "bazfoo",
+            "foobaz",
+          ],
+          "mode": "insensitive",
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`GoogleAnalyticsService should have a working pagination 1`] = `
+[
+  {
+    "include": {
+      "published": {
+        "select": {
+          "slug": true,
+        },
+      },
+    },
+    "where": {
+      "published": {
+        "slug": {
+          "in": [
+            "barfoo",
+            "bazfoo",
+          ],
           "mode": "insensitive",
         },
       },

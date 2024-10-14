@@ -82,7 +82,7 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
     }, {} as Record<string, number>)
 
     const slicedArticleViewMap = Object.fromEntries(
-      Object.entries(articleViewMap).slice(skip ?? 0, getMaxTake(take ?? 10))
+      Object.entries(articleViewMap).slice(skip ?? 0, (skip ?? 0) + getMaxTake(take ?? 10))
     )
 
     const articles = await this.prisma.article.findMany({
