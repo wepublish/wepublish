@@ -138,6 +138,8 @@ export const StyledComment = styled(Comment)`
 export const FdtArticleImage = styled(Image)`
   grid-column-start: 5;
   grid-column-end: 9;
+  margin-bottom: ${({theme}) => theme.spacing(4)};
+  border-radius: ${({theme}) => theme.spacing(2.5)};
 `
 
 export const FDTLogo = styled(FrageDesTagesLogo)`
@@ -175,8 +177,8 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
   return (
     <FrageDesTagesContainer>
       <FrageDesTagesWrapper className={className}>
-        {article?.image && <FdtArticleImage image={article.image} />}
         <PollWrapper>
+          {article?.image && <FdtArticleImage image={article.image} />}
           <PollBlock poll={pollToPass} />
         </PollWrapper>
 
