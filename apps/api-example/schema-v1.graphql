@@ -1189,4 +1189,4 @@ type _Service {
   sdl: String
 }
 
-union _Entity = Event | Image | MemberPlan | Page | PaymentMethod | PollVote | Tag | User
+union _Entity = Article | Event | Image | MemberPlan | Page | PaymentMethod | PollVote | Tag | User

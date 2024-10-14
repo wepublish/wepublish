@@ -110,7 +110,7 @@ export const GraphQLEventSort = new GraphQLEnumType({
 })
 
 export const GraphQLEventResolver = {
-  __resolveReference: async (reference, {loaders}) => {
+  __resolveReference: async (reference, {loaders}: Context) => {
     const {id} = reference
     const event = await loaders.eventById.load(id)
     if (!event) throw new Error('Event not found')

@@ -284,7 +284,7 @@ export const GraphQLPublicPageConnection = new GraphQLObjectType({
 })
 
 export const GraphQLPublicPageResolver = {
-  __resolveReference: async (reference, {loaders}) => {
+  __resolveReference: async (reference, {loaders}: Context) => {
     const {id} = reference
     const page = await loaders.publicPagesByID.load(id)
     if (!page) throw new Error('Page not found')

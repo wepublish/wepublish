@@ -1417,56 +1417,33 @@ exports[`Registration Form should render OnlyBirthday 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-13"
             data-shrink="false"
-            for=":r1j:"
-            id=":r1j:-label"
+            for=":r1k:"
+            id=":r1k:-label"
           >
             Geburtstag
           </label>
           <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd emotion-14"
+            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd Mui-readOnly MuiInputBase-readOnly emotion-14"
           >
             <input
               aria-invalid="false"
+              aria-label="Choose date"
               autocomplete="off"
-              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-15"
-              id=":r1j:"
+              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd Mui-readOnly MuiInputBase-readOnly emotion-15"
+              id=":r1k:"
               inputmode="text"
               name="birthday"
               placeholder="MMMM DD, YYYY"
+              readonly=""
               type="text"
               value=""
             />
-            <div
-              class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-16"
-            >
-              <button
-                aria-label="Choose date"
-                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-17"
-                tabindex="0"
-                type="button"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-18"
-                  data-testid="CalendarIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"
-                  />
-                </svg>
-                <span
-                  class="MuiTouchRipple-root emotion-19"
-                />
-              </button>
-            </div>
             <fieldset
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline emotion-10"
             >
               <legend
-                class="emotion-21"
+                class="emotion-17"
               >
                 <span>
                   Geburtstag
@@ -1477,27 +1454,27 @@ exports[`Registration Form should render OnlyBirthday 1`] = `
         </div>
       </div>
       <div
-        class="emotion-22 emotion-23"
+        class="emotion-18 emotion-19"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-24"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-20"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-7"
             data-shrink="true"
-            for=":r1l:"
-            id=":r1l:-label"
+            for=":r1m:"
+            id=":r1m:-label"
           >
             Email (nicht bearbeitbar)
           </label>
           <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl emotion-26"
+            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl emotion-22"
           >
             <input
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input Mui-disabled emotion-9"
               disabled=""
-              id=":r1l:"
+              id=":r1m:"
               name="email"
               type="email"
               value="some-example@mail.com"
@@ -1519,13 +1496,13 @@ exports[`Registration Form should render OnlyBirthday 1`] = `
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-30"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-26"
       tabindex="0"
       type="submit"
     >
       Save
       <span
-        class="MuiTouchRipple-root emotion-19"
+        class="MuiTouchRipple-root emotion-27"
       />
     </button>
   </form>
@@ -1540,7 +1517,7 @@ exports[`Registration Form should render OnlyBirthdayFilled 1`] = `
 @@ -27,11 +27,11 @@
                 autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r1m:"
+                id=":r1n:"
                 name="name"
                 type="text"
 -               value="Wasyl"
@@ -1549,80 +1526,7 @@ exports[`Registration Form should render OnlyBirthdayFilled 1`] = `
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-              >
-@@ -47,12 +47,12 @@
-          </div>
-          <div
-            class="MuiFormControl-root MuiTextField-root css-z3c6am-MuiFormControl-root-MuiTextField-root"
-          >
-            <label
--             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
--             data-shrink="false"
-+             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-+             data-shrink="true"
-              for=":r1n:"
-              id=":r1n:-label"
-            >
-              Geburtstag
-            </label>
-@@ -66,17 +66,42 @@
-                id=":r1n:"
-                inputmode="text"
-                name="birthday"
-                placeholder="MMMM DD, YYYY"
-                type="text"
--               value=""
-+               value="Sep 08, 1994"
-+             />
-+             <div
-+               class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1azk567-MuiInputAdornment-root"
-+             >
-+               <button
-+                 class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium clearButton css-78trlr-MuiButtonBase-root-MuiIconButton-root"
-+                 tabindex="0"
-+                 title="Clear value"
-+                 type="button"
-+               >
-+                 <svg
-+                   aria-hidden="true"
-+                   class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
-+                   data-testid="ClearIcon"
-+                   focusable="false"
-+                   viewBox="0 0 24 24"
-+                 >
-+                   <path
-+                     d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-+                   />
-+                 </svg>
-+                 <span
-+                   class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                  />
-+               </button>
-+             </div>
-              <div
-                class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
-              >
-                <button
--                 aria-label="Choose date"
-+                 aria-label="Choose date, selected date is Sep 8, 1994"
-                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root"
-                  tabindex="0"
-                  type="button"
-                >
-                  <svg
-@@ -98,11 +123,11 @@
-              <fieldset
-                aria-hidden="true"
-                class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-              >
-                <legend
--                 class="css-yjsfm1"
-+                 class="css-14lo706"
-                >
-                  <span>
-                    Geburtstag
-                  </span>
-                </legend>"
+              >"
 `;
 
 exports[`Registration Form should render OnlyFirstName 1`] = `
@@ -1642,8 +1546,8 @@ exports[`Registration Form should render OnlyFirstName 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-7"
             data-shrink="true"
-            for=":r1q:"
-            id=":r1q:-label"
+            for=":r1t:"
+            id=":r1t:-label"
           >
             Vorname
           </label>
@@ -1654,7 +1558,7 @@ exports[`Registration Form should render OnlyFirstName 1`] = `
               aria-invalid="false"
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-9"
-              id=":r1q:"
+              id=":r1t:"
               name="firstName"
               type="text"
               value="Kamil"
@@ -1679,8 +1583,8 @@ exports[`Registration Form should render OnlyFirstName 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-7"
             data-shrink="true"
-            for=":r1r:"
-            id=":r1r:-label"
+            for=":r1u:"
+            id=":r1u:-label"
           >
             Nachname
           </label>
@@ -1691,7 +1595,7 @@ exports[`Registration Form should render OnlyFirstName 1`] = `
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-9"
-              id=":r1r:"
+              id=":r1u:"
               name="name"
               type="text"
               value="Wasyl"
@@ -1720,8 +1624,8 @@ exports[`Registration Form should render OnlyFirstName 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-7"
             data-shrink="true"
-            for=":r1s:"
-            id=":r1s:-label"
+            for=":r1v:"
+            id=":r1v:-label"
           >
             Email (nicht bearbeitbar)
           </label>
@@ -1732,7 +1636,7 @@ exports[`Registration Form should render OnlyFirstName 1`] = `
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input Mui-disabled emotion-9"
               disabled=""
-              id=":r1s:"
+              id=":r1v:"
               name="email"
               type="email"
               value="some-example@mail.com"
@@ -1775,7 +1679,7 @@ exports[`Registration Form should render OnlyFirstNameFilled 1`] = `
 @@ -27,11 +27,11 @@
                 autocomplete="firstname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r1t:"
+                id=":r20:"
                 name="firstName"
                 type="text"
 -               value="Kamil"
@@ -1788,7 +1692,7 @@ exports[`Registration Form should render OnlyFirstNameFilled 1`] = `
 @@ -64,11 +64,11 @@
                 autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r1u:"
+                id=":r21:"
                 name="name"
                 type="text"
 -               value="Wasyl"
@@ -1817,8 +1721,8 @@ exports[`Registration Form should render OnlyFlair 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-7"
             data-shrink="true"
-            for=":r20:"
-            id=":r20:-label"
+            for=":r23:"
+            id=":r23:-label"
           >
             Funktion / Beruf
           </label>
@@ -1828,7 +1732,7 @@ exports[`Registration Form should render OnlyFlair 1`] = `
             <input
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-9"
-              id=":r20:"
+              id=":r23:"
               name="flair"
               type="text"
               value="Financial Advisor & CEO"
@@ -1853,8 +1757,8 @@ exports[`Registration Form should render OnlyFlair 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-7"
             data-shrink="true"
-            for=":r21:"
-            id=":r21:-label"
+            for=":r24:"
+            id=":r24:-label"
           >
             Nachname
           </label>
@@ -1865,7 +1769,7 @@ exports[`Registration Form should render OnlyFlair 1`] = `
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-9"
-              id=":r21:"
+              id=":r24:"
               name="name"
               type="text"
               value="Wasyl"
@@ -1894,8 +1798,8 @@ exports[`Registration Form should render OnlyFlair 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-7"
             data-shrink="true"
-            for=":r22:"
-            id=":r22:-label"
+            for=":r25:"
+            id=":r25:-label"
           >
             Email (nicht bearbeitbar)
           </label>
@@ -1906,7 +1810,7 @@ exports[`Registration Form should render OnlyFlair 1`] = `
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input Mui-disabled emotion-9"
               disabled=""
-              id=":r22:"
+              id=":r25:"
               name="email"
               type="email"
               value="some-example@mail.com"
@@ -1949,7 +1853,7 @@ exports[`Registration Form should render OnlyFlairFilled 1`] = `
 @@ -26,11 +26,11 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r23:"
+                id=":r26:"
                 name="flair"
                 type="text"
 -               value="Financial Advisor & CEO"
@@ -1962,7 +1866,7 @@ exports[`Registration Form should render OnlyFlairFilled 1`] = `
 @@ -63,11 +63,11 @@
                 autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r24:"
+                id=":r27:"
                 name="name"
                 type="text"
 -               value="Wasyl"
@@ -1991,8 +1895,8 @@ exports[`Registration Form should render OnlyPassword 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-7"
             data-shrink="true"
-            for=":r26:"
-            id=":r26:-label"
+            for=":r29:"
+            id=":r29:-label"
           >
             Nachname
           </label>
@@ -2003,7 +1907,7 @@ exports[`Registration Form should render OnlyPassword 1`] = `
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-9"
-              id=":r26:"
+              id=":r29:"
               name="name"
               type="text"
               value="Wasyl"
@@ -2037,8 +1941,8 @@ exports[`Registration Form should render OnlyPassword 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-16"
             data-shrink="false"
-            for=":r27:"
-            id=":r27:-label"
+            for=":r2a:"
+            id=":r2a:-label"
           >
             Passwort
           </label>
@@ -2049,7 +1953,7 @@ exports[`Registration Form should render OnlyPassword 1`] = `
               aria-invalid="false"
               autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-18"
-              id=":r27:"
+              id=":r2a:"
               name="password"
               type="password"
               value=""
@@ -2104,8 +2008,8 @@ exports[`Registration Form should render OnlyPassword 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-16"
             data-shrink="false"
-            for=":r28:"
-            id=":r28:-label"
+            for=":r2b:"
+            id=":r2b:-label"
           >
             Passwort wiederholen
           </label>
@@ -2116,7 +2020,7 @@ exports[`Registration Form should render OnlyPassword 1`] = `
               aria-invalid="false"
               autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-18"
-              id=":r28:"
+              id=":r2b:"
               name="passwordRepeated"
               type="password"
               value=""
@@ -2175,8 +2079,8 @@ exports[`Registration Form should render OnlyPassword 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-7"
             data-shrink="true"
-            for=":r29:"
-            id=":r29:-label"
+            for=":r2c:"
+            id=":r2c:-label"
           >
             Email (nicht bearbeitbar)
           </label>
@@ -2187,7 +2091,7 @@ exports[`Registration Form should render OnlyPassword 1`] = `
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input Mui-disabled emotion-9"
               disabled=""
-              id=":r29:"
+              id=":r2c:"
               name="email"
               type="email"
               value="some-example@mail.com"
@@ -2230,7 +2134,7 @@ exports[`Registration Form should render OnlyPasswordFilled 1`] = `
 @@ -27,11 +27,11 @@
                 autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r2a:"
+                id=":r2d:"
                 name="name"
                 type="text"
 -               value="Wasyl"
@@ -2250,15 +2154,15 @@ exports[`Registration Form should render OnlyPasswordFilled 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r2b:"
-              id=":r2b:-label"
+              for=":r2e:"
+              id=":r2e:-label"
             >
               Passwort
             </label>
 @@ -73,11 +73,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r2b:"
+                id=":r2e:"
                 name="password"
                 type="password"
 -               value=""
@@ -2291,15 +2195,15 @@ exports[`Registration Form should render OnlyPasswordFilled 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r2c:"
-              id=":r2c:-label"
+              for=":r2f:"
+              id=":r2f:-label"
             >
               Passwort wiederholen
             </label>
 @@ -140,11 +140,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r2c:"
+                id=":r2f:"
                 name="passwordRepeated"
                 type="password"
 -               value=""
@@ -2346,8 +2250,8 @@ exports[`Registration Form should render OnlyRequired 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-7"
             data-shrink="true"
-            for=":r2i:"
-            id=":r2i:-label"
+            for=":r2l:"
+            id=":r2l:-label"
           >
             Nachname
           </label>
@@ -2358,7 +2262,7 @@ exports[`Registration Form should render OnlyRequired 1`] = `
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-9"
-              id=":r2i:"
+              id=":r2l:"
               name="name"
               type="text"
               value="Wasyl"
@@ -2387,8 +2291,8 @@ exports[`Registration Form should render OnlyRequired 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-7"
             data-shrink="true"
-            for=":r2j:"
-            id=":r2j:-label"
+            for=":r2m:"
+            id=":r2m:-label"
           >
             Email (nicht bearbeitbar)
           </label>
@@ -2399,7 +2303,7 @@ exports[`Registration Form should render OnlyRequired 1`] = `
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input Mui-disabled emotion-9"
               disabled=""
-              id=":r2j:"
+              id=":r2m:"
               name="email"
               type="email"
               value="some-example@mail.com"
@@ -2442,7 +2346,7 @@ exports[`Registration Form should render OnlyRequiredFilled 1`] = `
 @@ -27,11 +27,11 @@
                 autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r2k:"
+                id=":r2n:"
                 name="name"
                 type="text"
 -               value="Wasyl"
@@ -2468,8 +2372,8 @@ exports[`Registration Form should render WithCustomValidation 1`] = `
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r2n:"
-              id=":r2n:-label"
+              for=":r2q:"
+              id=":r2q:-label"
             >
               Passwort
             </label>
@@ -2479,11 +2383,11 @@ exports[`Registration Form should render WithCustomValidation 1`] = `
             >
               <input
 -               aria-invalid="false"
-+               aria-describedby=":r2n:-helper-text"
++               aria-describedby=":r2q:-helper-text"
 +               aria-invalid="true"
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r2n:"
+                id=":r2q:"
                 name="password"
                 type="password"
 @@ -118,10 +119,16 @@
@@ -2494,7 +2398,7 @@ exports[`Registration Form should render WithCustomValidation 1`] = `
             </div>
 +           <p
 +             class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1612nlz-MuiFormHelperText-root"
-+             id=":r2n:-helper-text"
++             id=":r2q:-helper-text"
 +           >
 +             Required
 +           </p>
@@ -2613,7 +2517,7 @@ https://unsplash.it/200/100 200w"
             <input
               accept="image/*"
               class="emotion-12"
-              id=":r3i:"
+              id=":r3l:"
               type="file"
             />
           </div>
@@ -2686,8 +2590,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-22"
             data-shrink="true"
-            for=":r3j:"
-            id=":r3j:-label"
+            for=":r3m:"
+            id=":r3m:-label"
           >
             Vorname
           </label>
@@ -2698,7 +2602,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-24"
-              id=":r3j:"
+              id=":r3m:"
               name="firstName"
               type="text"
               value="Kamil"
@@ -2723,8 +2627,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-22"
             data-shrink="true"
-            for=":r3k:"
-            id=":r3k:-label"
+            for=":r3n:"
+            id=":r3n:-label"
           >
             Funktion / Beruf
           </label>
@@ -2734,7 +2638,7 @@ https://unsplash.it/200/100 200w"
             <input
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-24"
-              id=":r3k:"
+              id=":r3n:"
               name="flair"
               type="text"
               value="Financial Advisor & CEO"
@@ -2759,8 +2663,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-22"
             data-shrink="true"
-            for=":r3l:"
-            id=":r3l:-label"
+            for=":r3o:"
+            id=":r3o:-label"
           >
             Nachname
           </label>
@@ -2771,7 +2675,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-24"
-              id=":r3l:"
+              id=":r3o:"
               name="name"
               type="text"
               value="Wasyl"
@@ -2799,8 +2703,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-22"
               data-shrink="true"
-              for=":r3m:"
-              id=":r3m:-label"
+              for=":r3p:"
+              id=":r3p:-label"
             >
               Strasse und Hausnummer
             </label>
@@ -2811,7 +2715,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input emotion-24"
-                id=":r3m:"
+                id=":r3p:"
                 name="address.streetAddress"
                 type="text"
                 value="Cool Street"
@@ -2836,8 +2740,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-22"
               data-shrink="true"
-              for=":r3n:"
-              id=":r3n:-label"
+              for=":r3q:"
+              id=":r3q:-label"
             >
               PLZ
             </label>
@@ -2848,7 +2752,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input emotion-24"
-                id=":r3n:"
+                id=":r3q:"
                 name="address.zipCode"
                 type="text"
                 value="12345"
@@ -2873,8 +2777,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-22"
               data-shrink="true"
-              for=":r3o:"
-              id=":r3o:-label"
+              for=":r3r:"
+              id=":r3r:-label"
             >
               Ort / Stadt
             </label>
@@ -2885,7 +2789,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input emotion-24"
-                id=":r3o:"
+                id=":r3r:"
                 name="address.city"
                 type="text"
                 value="Surfers Paradise"
@@ -2914,8 +2818,8 @@ https://unsplash.it/200/100 200w"
               <label
                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-61"
                 data-shrink="false"
-                for=":r3p:"
-                id=":r3p:-label"
+                for=":r3s:"
+                id=":r3s:-label"
               >
                 Land
               </label>
@@ -2929,7 +2833,7 @@ https://unsplash.it/200/100 200w"
                   autocapitalize="none"
                   autocomplete="nothing"
                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-63"
-                  id=":r3p:"
+                  id=":r3s:"
                   role="combobox"
                   spellcheck="false"
                   type="text"
@@ -2992,8 +2896,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-61"
             data-shrink="false"
-            for=":r3r:"
-            id=":r3r:-label"
+            for=":r3u:"
+            id=":r3u:-label"
           >
             Passwort
           </label>
@@ -3004,7 +2908,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-63"
-              id=":r3r:"
+              id=":r3u:"
               name="password"
               type="password"
               value=""
@@ -3059,8 +2963,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-61"
             data-shrink="false"
-            for=":r3s:"
-            id=":r3s:-label"
+            for=":r3v:"
+            id=":r3v:-label"
           >
             Passwort wiederholen
           </label>
@@ -3071,7 +2975,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-63"
-              id=":r3s:"
+              id=":r3v:"
               name="passwordRepeated"
               type="password"
               value=""
@@ -3130,8 +3034,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-22"
             data-shrink="true"
-            for=":r3t:"
-            id=":r3t:-label"
+            for=":r40:"
+            id=":r40:-label"
           >
             Email (nicht bearbeitbar)
           </label>
@@ -3142,7 +3046,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input Mui-disabled emotion-24"
               disabled=""
-              id=":r3t:"
+              id=":r40:"
               name="email"
               type="email"
               value="some-example@mail.com"
@@ -3195,7 +3099,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
 @@ -121,11 +121,11 @@
                 autocomplete="firstname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r3v:"
+                id=":r42:"
                 name="firstName"
                 type="text"
 -               value="Kamil"
@@ -3208,7 +3112,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
 @@ -194,11 +194,11 @@
                 autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r41:"
+                id=":r44:"
                 name="name"
                 type="text"
 -               value="Wasyl"
@@ -3221,7 +3125,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
 @@ -234,11 +234,11 @@
                   autocomplete="address"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                  id=":r42:"
+                  id=":r45:"
                   name="address.streetAddress"
                   type="text"
 -                 value="Cool Street"
@@ -3234,7 +3138,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
 @@ -271,11 +271,11 @@
                   autocomplete="zip"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                  id=":r43:"
+                  id=":r46:"
                   name="address.zipCode"
                   type="text"
 -                 value="12345"
@@ -3247,7 +3151,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
 @@ -308,11 +308,11 @@
                   autocomplete="city"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                  id=":r44:"
+                  id=":r47:"
                   name="address.city"
                   type="text"
 -                 value="Surfers Paradise"
@@ -3275,8 +3179,8 @@ exports[`Registration Form should render WithUpdateError 1`] = `
 -                 data-shrink="false"
 +                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +                 data-shrink="true"
-                  for=":r45:"
-                  id=":r45:-label"
+                  for=":r48:"
+                  id=":r48:-label"
                 >
                   Land
                 </label>
@@ -3308,7 +3212,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
                     autocomplete="nothing"
 -                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
 +                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-152mnda-MuiInputBase-input-MuiOutlinedInput-input"
-                    id=":r45:"
+                    id=":r48:"
                     role="combobox"
                     spellcheck="false"
                     type="text"
@@ -3369,15 +3273,15 @@ exports[`Registration Form should render WithUpdateError 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r47:"
-              id=":r47:-label"
+              for=":r4a:"
+              id=":r4a:-label"
             >
               Passwort
             </label>
 @@ -427,11 +465,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r47:"
+                id=":r4a:"
                 name="password"
                 type="password"
 -               value=""
@@ -3410,15 +3314,15 @@ exports[`Registration Form should render WithUpdateError 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r48:"
-              id=":r48:-label"
+              for=":r4b:"
+              id=":r4b:-label"
             >
               Passwort wiederholen
             </label>
 @@ -494,11 +532,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r48:"
+                id=":r4b:"
                 name="passwordRepeated"
                 type="password"
 -               value=""
@@ -3487,7 +3391,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
 @@ -121,11 +121,11 @@
                 autocomplete="firstname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r4b:"
+                id=":r4e:"
                 name="firstName"
                 type="text"
 -               value="Kamil"
@@ -3500,7 +3404,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
 @@ -194,11 +194,11 @@
                 autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r4d:"
+                id=":r4g:"
                 name="name"
                 type="text"
 -               value="Wasyl"
@@ -3513,7 +3417,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
 @@ -234,11 +234,11 @@
                   autocomplete="address"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                  id=":r4e:"
+                  id=":r4h:"
                   name="address.streetAddress"
                   type="text"
 -                 value="Cool Street"
@@ -3526,7 +3430,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
 @@ -271,11 +271,11 @@
                   autocomplete="zip"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                  id=":r4f:"
+                  id=":r4i:"
                   name="address.zipCode"
                   type="text"
 -                 value="12345"
@@ -3539,7 +3443,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
 @@ -308,11 +308,11 @@
                   autocomplete="city"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                  id=":r4g:"
+                  id=":r4j:"
                   name="address.city"
                   type="text"
 -                 value="Surfers Paradise"
@@ -3567,8 +3471,8 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
 -                 data-shrink="false"
 +                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +                 data-shrink="true"
-                  for=":r4h:"
-                  id=":r4h:-label"
+                  for=":r4k:"
+                  id=":r4k:-label"
                 >
                   Land
                 </label>
@@ -3600,7 +3504,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
                     autocomplete="nothing"
 -                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
 +                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-152mnda-MuiInputBase-input-MuiOutlinedInput-input"
-                    id=":r4h:"
+                    id=":r4k:"
                     role="combobox"
                     spellcheck="false"
                     type="text"
@@ -3660,15 +3564,15 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r4j:"
-              id=":r4j:-label"
+              for=":r4m:"
+              id=":r4m:-label"
             >
               Passwort
             </label>
 @@ -427,11 +465,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r4j:"
+                id=":r4m:"
                 name="password"
                 type="password"
 -               value=""
@@ -3701,15 +3605,15 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r4k:"
-              id=":r4k:-label"
+              for=":r4n:"
+              id=":r4n:-label"
             >
               Passwort wiederholen
             </label>
 @@ -494,11 +532,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r4k:"
+                id=":r4n:"
                 name="passwordRepeated"
                 type="password"
 -               value=""

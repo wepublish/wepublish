@@ -1,5 +1,5 @@
 import {css} from '@mui/material'
-import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
+import {getPagePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
   ArticleContainer,
@@ -9,7 +9,7 @@ import {
   CommentListContainer,
   useWebsiteBuilder
 } from '@wepublish/website'
-import {GetStaticPaths, GetStaticProps} from 'next'
+import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
@@ -18,7 +18,7 @@ import {useHasSubscription} from '../../src/paywall/has-subscription'
 import {PaywallBlock} from '../../src/paywall/paywall-block'
 
 const paywallCss = css`
-  // Shows the first 3 blocks and hides the rest
+  // Shows the first 3 blocks (usually title, image, richtext) and hides the rest
   & > :nth-child(n + 4):not(:is(${ArticleInfoWrapper})) {
     display: none;
   }
@@ -81,29 +81,10 @@ export default function ArticleBySlugIdOrToken() {
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async ctx => {
-  const result = await getArticlePathsBasedOnPage('')(ctx)
-
-  result.paths = result.paths.map(path => {
-    if (typeof path === 'object') {
-      return {
-        params: {
-          slug: [path.params.tag, path.params.slug].filter((param): param is string =>
-            Boolean(param)
-          )
-        }
-      }
-    }
-
-    return path
-  })
-
-  return result
-}
+export const getStaticPaths = getPagePathsBasedOnPage('')
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug: slugs} = params || {}
-  const slug = typeof slugs === 'object' ? slugs.reverse()[0] : slugs
+  const {slug} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
