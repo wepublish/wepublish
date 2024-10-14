@@ -3348,12 +3348,12 @@ https://unsplash.it/200/100 200w"
     class="emotion-0 emotion-1"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h4 emotion-2"
+      class="MuiTypography-root MuiTypography-h4 emotion-2 emotion-3"
     >
       Question
     </h1>
     <div
-      class="emotion-3 emotion-4"
+      class="emotion-4 emotion-5"
     >
       <div
         data-gramm="false"
@@ -3362,7 +3362,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-5"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
           data-slate-node="element"
         >
           <span
@@ -3378,63 +3378,63 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-6 emotion-7"
+      class="emotion-7 emotion-8"
     >
       <div
-        class="emotion-8 emotion-9"
+        class="emotion-9 emotion-10"
       >
         <div
-          class="emotion-10 emotion-11"
+          class="emotion-11 emotion-12"
         >
           <div
-            class="emotion-12 emotion-13"
+            class="emotion-13 emotion-14"
           >
             Ja
           </div>
           <div
-            class="emotion-14 emotion-15"
+            class="emotion-15 emotion-16"
           >
             52%
           </div>
         </div>
         <div
-          class="emotion-16 emotion-17"
+          class="emotion-17 emotion-18"
         >
           <div
-            class="emotion-18 emotion-19"
+            class="emotion-19 emotion-20"
           />
           <div
-            class="emotion-20 emotion-21"
+            class="emotion-21 emotion-22"
           >
             11 Stimmen
           </div>
         </div>
       </div>
       <div
-        class="emotion-8 emotion-9"
+        class="emotion-9 emotion-10"
       >
         <div
-          class="emotion-10 emotion-11"
+          class="emotion-11 emotion-12"
         >
           <div
-            class="emotion-12 emotion-13"
+            class="emotion-13 emotion-14"
           >
             Nein
           </div>
           <div
-            class="emotion-14 emotion-15"
+            class="emotion-15 emotion-16"
           >
             48%
           </div>
         </div>
         <div
-          class="emotion-16 emotion-17"
+          class="emotion-17 emotion-18"
         >
           <div
-            class="emotion-32 emotion-19"
+            class="emotion-33 emotion-20"
           />
           <div
-            class="emotion-34 emotion-21"
+            class="emotion-35 emotion-22"
           >
             10 Stimmen
           </div>
@@ -3442,7 +3442,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-36 emotion-37"
+      class="emotion-37 emotion-38"
     >
       21 Stimmen – Schliesst am 
       <time
@@ -7012,7 +7012,7 @@ https://unsplash.it/200/100 200w"
       class="emotion-863 emotion-864"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h4 emotion-157"
+        class="MuiTypography-root MuiTypography-h4 emotion-865 emotion-866"
       >
         Question
       </h1>
@@ -7042,63 +7042,63 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-869 emotion-870"
+        class="emotion-870 emotion-871"
       >
         <div
-          class="emotion-871 emotion-872"
+          class="emotion-872 emotion-873"
         >
           <div
-            class="emotion-873 emotion-874"
+            class="emotion-874 emotion-875"
           >
             <div
-              class="emotion-875 emotion-876"
+              class="emotion-876 emotion-877"
             >
               Ja
             </div>
             <div
-              class="emotion-877 emotion-878"
+              class="emotion-878 emotion-879"
             >
               52%
             </div>
           </div>
           <div
-            class="emotion-879 emotion-880"
+            class="emotion-880 emotion-881"
           >
             <div
-              class="emotion-881 emotion-882"
+              class="emotion-882 emotion-883"
             />
             <div
-              class="emotion-883 emotion-884"
+              class="emotion-884 emotion-885"
             >
               11 Stimmen
             </div>
           </div>
         </div>
         <div
-          class="emotion-871 emotion-872"
+          class="emotion-872 emotion-873"
         >
           <div
-            class="emotion-873 emotion-874"
+            class="emotion-874 emotion-875"
           >
             <div
-              class="emotion-875 emotion-876"
+              class="emotion-876 emotion-877"
             >
               Nein
             </div>
             <div
-              class="emotion-877 emotion-878"
+              class="emotion-878 emotion-879"
             >
               48%
             </div>
           </div>
           <div
-            class="emotion-879 emotion-880"
+            class="emotion-880 emotion-881"
           >
             <div
-              class="emotion-895 emotion-882"
+              class="emotion-896 emotion-883"
             />
             <div
-              class="emotion-897 emotion-884"
+              class="emotion-898 emotion-885"
             >
               10 Stimmen
             </div>
@@ -7106,7 +7106,7 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-899 emotion-900"
+        class="emotion-900 emotion-901"
       >
         21 Stimmen – Schliesst am 
         <time
@@ -7117,20 +7117,20 @@ https://unsplash.it/200/100 200w"
       </div>
     </article>
     <article
-      class="emotion-901 emotion-902"
+      class="emotion-902 emotion-903"
     />
     <aside
-      class="emotion-903 emotion-904"
+      class="emotion-904 emotion-905"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-905"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-906"
         href="https://example.com"
       >
         <article
-          class="emotion-906 emotion-907"
+          class="emotion-907 emotion-908"
         >
           <div
-            class="emotion-908 emotion-909"
+            class="emotion-909 emotion-910"
           >
             <img
               alt="DSC07717"
@@ -7152,13 +7152,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-912 emotion-913"
+            class="emotion-913 emotion-914"
           >
             <div
-              class="emotion-914 emotion-915"
+              class="emotion-915 emotion-916"
             >
               <div
-                class="emotion-916 emotion-917"
+                class="emotion-917 emotion-918"
               >
                 <svg
                   fill="currentColor"
