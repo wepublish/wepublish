@@ -48,7 +48,10 @@ const createTypeFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInput => 
 const createTagNameFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInput => {
   if (filter?.tag) {
     return {
-      tag: filter.tag
+      tag: {
+        mode: 'insensitive',
+        equals: filter.tag
+      }
     }
   }
 
