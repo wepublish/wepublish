@@ -14,7 +14,6 @@ import {MdForum} from 'react-icons/md'
 
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
 import {AuthorBox} from './author-box'
-import {ReactComponent as FrageDesTagesLogo} from './frage-des-tages.svg'
 import {InfoBox} from './info-box'
 
 interface CommentWithChildren extends ApiV1.Comment {
@@ -140,11 +139,6 @@ export const FdtArticleImage = styled(Image)`
   grid-column-end: 9;
   margin-bottom: ${({theme}) => theme.spacing(4)};
   border-radius: ${({theme}) => theme.spacing(2.5)};
-`
-
-export const FDTLogo = styled(FrageDesTagesLogo)`
-  grid-column: -1 / 1;
-  justify-self: end;
 `
 
 export const ReadMoreLink = styled(Link)`

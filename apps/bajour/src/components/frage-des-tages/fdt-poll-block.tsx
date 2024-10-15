@@ -7,7 +7,6 @@ import {CommentListContainer} from '../website-builder-overwrites/blocks/comment
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
 import {AuthorBox} from './author-box'
 import {FdtArticleImage, TopComments} from './frage-des-tages'
-import {ReactComponent as FrageDesTagesLogo} from './frage-des-tages.svg'
 import {InfoBox} from './info-box'
 
 export const FrageDesTagesContainer = styled('div')`
@@ -75,17 +74,6 @@ export const AuthorAndContext = styled('div')`
       ${theme.breakpoints.up('sm')} {
         gap: ${theme.spacing(6)};
         grid-template-columns: repeat(2, 1fr);
-      }
-    `}
-`
-
-export const FDTLogo = styled(FrageDesTagesLogo)`
-  grid-column: 10 / 13;
-
-  ${({theme}) =>
-    css`
-      ${theme.breakpoints.up('sm')} {
-        grid-column: 1 / 2;
       }
     `}
 `
