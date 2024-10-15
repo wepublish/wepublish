@@ -5,7 +5,8 @@ import {
   BuilderCommentProps,
   BuilderTeaserListBlockProps,
   Comment,
-  isPollBlock
+  isPollBlock,
+  Image
 } from '@wepublish/website'
 import Link from 'next/link'
 import {useMemo} from 'react'
@@ -13,7 +14,6 @@ import {MdForum} from 'react-icons/md'
 
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
 import {AuthorBox} from './author-box'
-import {ReactComponent as FrageDesTagesLogo} from './frage-des-tages.svg'
 import {InfoBox} from './info-box'
 
 interface CommentWithChildren extends ApiV1.Comment {
@@ -134,9 +134,11 @@ export const StyledComment = styled(Comment)`
   }
 `
 
-export const FDTLogo = styled(FrageDesTagesLogo)`
-  grid-column: -1 / 1;
-  justify-self: end;
+export const FdtArticleImage = styled(Image)`
+  grid-column-start: 5;
+  grid-column-end: 9;
+  margin-bottom: ${({theme}) => theme.spacing(4)};
+  border-radius: ${({theme}) => theme.spacing(2.5)};
 `
 
 export const ReadMoreLink = styled(Link)`
@@ -169,9 +171,8 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
   return (
     <FrageDesTagesContainer>
       <FrageDesTagesWrapper className={className}>
-        <FDTLogo width={110} aria-label="Frage des Tages Logo" />
-
         <PollWrapper>
+          {article?.image && <FdtArticleImage image={article.image} />}
           <PollBlock poll={pollToPass} />
         </PollWrapper>
 
