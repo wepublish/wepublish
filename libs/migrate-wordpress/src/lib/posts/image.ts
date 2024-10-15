@@ -1,12 +1,16 @@
 import {URL} from 'url'
 import {Readable} from 'stream'
-import axios from 'axios'
+import axios, {AxiosRequestConfig} from 'axios'
 import FormData from 'form-data'
 import {print} from 'graphql'
 import {privateClient, privateGraphqlEndpoint, privateToken} from '../api/clients'
 import {
   ImageList,
   ImageListQuery,
+  ImageListQueryVariables,
+  UpdateImage,
+  UpdateImageMutation,
+  UpdateImageMutationVariables,
   UploadImage,
   UploadImageInput,
   UploadImageMutationVariables
@@ -24,40 +28,66 @@ type EnsureImageProps = {
   description?: string
 }
 
-export const ensureImage = async (input: EnsureImageProps): Promise<Image> => {
-  const {url, title, description} = input
+export const ensureImage = async (input: EnsureImageProps): Promise<Image | undefined> => {
+  const {url, title} = input
+  const description = input.description?.trim()
 
-  const foundImages = (await getImagesByTitle(title)).nodes
-  const existingImage = foundImages.find(image => image.link === url)
+  const existingImage = await findImage(input)
   if (existingImage) {
     console.debug('  image exists', url)
-    return existingImage
+    return await updateImage({
+      id: existingImage.id,
+      input: {
+        focalPoint: existingImage.focalPoint,
+        title,
+        description
+      }
+    })
   }
 
   console.debug('  create image', url)
-  const image = await createImage({
-    downloadUrl: url,
-    filename: new URL(url).pathname.split('/').pop() as string,
-    title,
-    link: url,
-    description
-  })
-  return {
-    id: image.id!,
-    title,
-    description
+  try {
+    const image = await createImage({
+      downloadUrl: url,
+      filename: new URL(url).pathname.split('/').pop() as string,
+      title,
+      link: url,
+      description
+    })
+    return {
+      id: image.id!,
+      title,
+      description
+    }
+  } catch (e) {
+    return undefined
   }
+}
+
+export async function findImage({title, url}: Pick<EnsureImageProps, 'title' | 'url'>) {
+  const filename = url.split('/').pop()!
+  const foundImages = (await getImagesByTitle(filename)).nodes
+  return foundImages.find(image => image.link === url)
 }
 
 // API
 
 export async function getImagesByTitle(title: string) {
   return (
-    await privateClient.request<ImageListQuery>(ImageList, {
+    await privateClient.request<ImageListQuery, ImageListQueryVariables>(ImageList, {
       filter: title,
-      offset: 100
+      take: 100
     })
   ).images
+}
+
+export async function updateImage(variables: UpdateImageMutationVariables) {
+  return (
+    await privateClient.request<UpdateImageMutation, UpdateImageMutationVariables>(
+      UpdateImage,
+      variables
+    )
+  ).updateImage!
 }
 
 async function createImage({downloadUrl, ...input}: CreateImageInput) {
@@ -66,13 +96,12 @@ async function createImage({downloadUrl, ...input}: CreateImageInput) {
 }
 
 async function getDownloadStream(fileUrl: string): Promise<Readable> {
-  const response = await axios({
+  const requestConfig: AxiosRequestConfig = {
     url: fileUrl,
     method: 'GET',
     responseType: 'stream'
-  })
-
-  return response.data
+  }
+  return (await axios(requestConfig)).data
 }
 
 function prepareFileInput(stream: Readable, input: UploadStreamInput) {
