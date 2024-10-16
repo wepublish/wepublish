@@ -26,7 +26,7 @@ exports[`Context Box should render Default 1`] = `
     <div
       class="emotion-4 emotion-5"
     >
-      Darum geht’s:
+      Break block test
     </div>
     <div
       class="emotion-6 emotion-7"
@@ -37,13 +37,8 @@ exports[`Context Box should render Default 1`] = `
       <div
         class="emotion-10 emotion-11"
       >
-        Break block test
-      </div>
-      <div
-        class="emotion-12 emotion-13"
-      >
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
           <div
             data-gramm="false"
@@ -52,7 +47,7 @@ exports[`Context Box should render Default 1`] = `
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -66,7 +61,7 @@ exports[`Context Box should render Default 1`] = `
               </span>
             </p>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -80,7 +75,7 @@ exports[`Context Box should render Default 1`] = `
               </span>
             </h4>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -96,7 +91,7 @@ exports[`Context Box should render Default 1`] = `
               </span>
             </h4>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -151,13 +146,13 @@ exports[`Context Box should render Default 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-20"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-18"
         tabindex="0"
         type="button"
       >
         Alles lesen
         <span
-          class="MuiTouchRipple-root emotion-21"
+          class="MuiTouchRipple-root emotion-19"
         />
       </button>
     </div>
@@ -191,7 +186,7 @@ exports[`Context Box should render WithClassName 1`] = `
     <div
       class="emotion-4 emotion-5"
     >
-      Darum geht’s:
+      Break block test
     </div>
     <div
       class="emotion-6 emotion-7"
@@ -202,13 +197,8 @@ exports[`Context Box should render WithClassName 1`] = `
       <div
         class="emotion-10 emotion-11"
       >
-        Break block test
-      </div>
-      <div
-        class="emotion-12 emotion-13"
-      >
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
           <div
             data-gramm="false"
@@ -217,7 +207,7 @@ exports[`Context Box should render WithClassName 1`] = `
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -231,7 +221,7 @@ exports[`Context Box should render WithClassName 1`] = `
               </span>
             </p>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -245,7 +235,7 @@ exports[`Context Box should render WithClassName 1`] = `
               </span>
             </h4>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -261,7 +251,7 @@ exports[`Context Box should render WithClassName 1`] = `
               </span>
             </h4>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -316,13 +306,13 @@ exports[`Context Box should render WithClassName 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-20"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-18"
         tabindex="0"
         type="button"
       >
         Alles lesen
         <span
-          class="MuiTouchRipple-root emotion-21"
+          class="MuiTouchRipple-root emotion-19"
         />
       </button>
     </div>
@@ -356,7 +346,7 @@ exports[`Context Box should render WithEmotion 1`] = `
     <div
       class="emotion-4 emotion-5"
     >
-      Darum geht’s:
+      Break block test
     </div>
     <div
       class="emotion-6 emotion-7"
@@ -367,13 +357,8 @@ exports[`Context Box should render WithEmotion 1`] = `
       <div
         class="emotion-10 emotion-11"
       >
-        Break block test
-      </div>
-      <div
-        class="emotion-12 emotion-13"
-      >
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
           <div
             data-gramm="false"
@@ -382,7 +367,7 @@ exports[`Context Box should render WithEmotion 1`] = `
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -396,7 +381,7 @@ exports[`Context Box should render WithEmotion 1`] = `
               </span>
             </p>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -410,7 +395,7 @@ exports[`Context Box should render WithEmotion 1`] = `
               </span>
             </h4>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -426,7 +411,7 @@ exports[`Context Box should render WithEmotion 1`] = `
               </span>
             </h4>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -481,13 +466,13 @@ exports[`Context Box should render WithEmotion 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-20"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-18"
         tabindex="0"
         type="button"
       >
         Alles lesen
         <span
-          class="MuiTouchRipple-root emotion-21"
+          class="MuiTouchRipple-root emotion-19"
         />
       </button>
     </div>
