@@ -143,37 +143,33 @@ type ArticleRevisionsocialMediaImageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutArticleRevisionSocialMediaImagesInput["create"]>;
 };
+type ArticleRevisionarticleFactory = {
+    _factoryFor: "Article";
+    build: () => PromiseLike<Prisma.ArticleCreateNestedOneWithoutRevisionsInput["create"]>;
+};
 type ArticleRevisionFactoryDefineInput = {
     id?: string;
+    createdAt?: Date;
     preTitle?: string | null;
     title?: string | null;
     lead?: string | null;
     seoTitle?: string | null;
-    slug?: string | null;
-    tags?: Prisma.ArticleRevisionCreatetagsInput | Prisma.Enumerable<string>;
     canonicalUrl?: string | null;
     breaking?: boolean;
     blocks?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
     hideAuthor?: boolean;
     socialMediaTitle?: string | null;
     socialMediaDescription?: string | null;
-    revision?: number;
-    createdAt?: Date;
-    modifiedAt?: Date | null;
-    updatedAt?: Date | null;
-    publishAt?: Date | null;
     publishedAt?: Date | null;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutArticleRevisionInput;
-    image?: ArticleRevisionimageFactory | Prisma.ImageCreateNestedOneWithoutArticleRevisionImagesInput;
     authors?: Prisma.ArticleRevisionAuthorCreateNestedManyWithoutRevisionInput;
     socialMediaAuthors?: Prisma.ArticleRevisionSocialMediaAuthorCreateNestedManyWithoutRevisionInput;
+    image?: ArticleRevisionimageFactory | Prisma.ImageCreateNestedOneWithoutArticleRevisionImagesInput;
     socialMediaImage?: ArticleRevisionsocialMediaImageFactory | Prisma.ImageCreateNestedOneWithoutArticleRevisionSocialMediaImagesInput;
-    PublishedArticle?: Prisma.ArticleCreateNestedManyWithoutPublishedInput;
-    PendingArticle?: Prisma.ArticleCreateNestedManyWithoutPendingInput;
-    DraftArticle?: Prisma.ArticleCreateNestedManyWithoutDraftInput;
+    article: ArticleRevisionarticleFactory | Prisma.ArticleCreateNestedOneWithoutRevisionsInput;
 };
 type ArticleRevisionFactoryDefineOptions = {
-    defaultData?: Resolver<ArticleRevisionFactoryDefineInput, BuildDataOptions>;
+    defaultData: Resolver<ArticleRevisionFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
             data: Resolver<Partial<ArticleRevisionFactoryDefineInput>, BuildDataOptions>;
@@ -200,7 +196,7 @@ export interface ArticleRevisionFactoryInterface<TOptions extends ArticleRevisio
  * @param options
  * @returns factory {@link ArticleRevisionFactoryInterface}
  */
-export declare function defineArticleRevisionFactory<TOptions extends ArticleRevisionFactoryDefineOptions>(options?: TOptions): ArticleRevisionFactoryInterface<TOptions>;
+export declare function defineArticleRevisionFactory<TOptions extends ArticleRevisionFactoryDefineOptions>(options: TOptions): ArticleRevisionFactoryInterface<TOptions>;
 type ArticleRevisionAuthorrevisionFactory = {
     _factoryFor: "ArticleRevision";
     build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutAuthorsInput["create"]>;
@@ -283,30 +279,18 @@ export interface ArticleRevisionSocialMediaAuthorFactoryInterface<TOptions exten
  * @returns factory {@link ArticleRevisionSocialMediaAuthorFactoryInterface}
  */
 export declare function defineArticleRevisionSocialMediaAuthorFactory<TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions>(options: TOptions): ArticleRevisionSocialMediaAuthorFactoryInterface<TOptions>;
-type ArticlepublishedFactory = {
-    _factoryFor: "ArticleRevision";
-    build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutPublishedArticleInput["create"]>;
-};
-type ArticlependingFactory = {
-    _factoryFor: "ArticleRevision";
-    build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutPendingArticleInput["create"]>;
-};
-type ArticledraftFactory = {
-    _factoryFor: "ArticleRevision";
-    build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutDraftArticleInput["create"]>;
-};
 type ArticleFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
+    publishedAt?: Date | null;
+    slug?: string | null;
     shared?: boolean;
     hidden?: boolean;
     disableComments?: boolean;
-    published?: ArticlepublishedFactory | Prisma.ArticleRevisionCreateNestedOneWithoutPublishedArticleInput;
-    pending?: ArticlependingFactory | Prisma.ArticleRevisionCreateNestedOneWithoutPendingArticleInput;
-    draft?: ArticledraftFactory | Prisma.ArticleRevisionCreateNestedOneWithoutDraftArticleInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutArticleInput;
     tags?: Prisma.TaggedArticlesCreateNestedManyWithoutArticleInput;
+    revisions?: Prisma.ArticleRevisionCreateNestedManyWithoutArticleInput;
 };
 type ArticleFactoryDefineOptions = {
     defaultData?: Resolver<ArticleFactoryDefineInput, BuildDataOptions>;

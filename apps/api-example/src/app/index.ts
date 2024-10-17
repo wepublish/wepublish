@@ -17,6 +17,7 @@ import {Application} from 'express'
 import {DefaultURLAdapter} from '../urlAdapters'
 import {readConfig} from '../readConfig'
 import {MannschaftURLAdapter} from '../urlAdapters/URLAdapter-mannschaft'
+import {ArticleService} from '@wepublish/article/api'
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
@@ -27,6 +28,7 @@ type RunServerProps = {
   paymentProviders: PaymentProvider[]
   mailProvider: MailProvider
   hotAndTrendingDataSource: HotAndTrendingDataSource
+  articleService: ArticleService
 }
 
 export async function runServer({
@@ -35,7 +37,8 @@ export async function runServer({
   mediaAdapter,
   mailProvider,
   paymentProviders,
-  hotAndTrendingDataSource
+  hotAndTrendingDataSource,
+  articleService
 }: RunServerProps) {
   /*
    * Load User specific configuration
@@ -166,7 +169,8 @@ export async function runServer({
         : false,
       logger,
       challenge,
-      hotAndTrendingDataSource
+      hotAndTrendingDataSource,
+      articleService
     },
     privateExpressApp,
     publicExpressApp

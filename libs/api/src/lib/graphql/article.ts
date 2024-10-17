@@ -16,24 +16,19 @@ import {Context} from '../context'
 
 import {GraphQLImage} from './image'
 import {GraphQLAuthor} from './author'
-import {PublicArticle, ArticleRevision, Article, ArticleSort, PeerArticle} from '../db/article'
+import {PublicArticle, ArticleRevision, Article, PeerArticle} from '../db/article'
 import {GraphQLSlug} from './slug'
 import {
   GraphQLDateFilter,
   GraphQLMetadataProperty,
   GraphQLMetadataPropertyInput,
-  GraphQLMetadataPropertyPublic,
   GraphQLPageInfo,
   GraphQLUnidirectionalPageInfo
 } from './common'
-import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPeer} from './peer'
-import {GraphQLPublicComment} from './comment/comment'
-import {AuthSessionType} from '@wepublish/authentication/api'
-import {getPublicCommentsForItemById} from './comment/comment.public-queries'
-import {SortOrder} from '@wepublish/utils/api'
 import {GraphQLTag} from './tag/tag'
+import {ArticleSort} from '@wepublish/article/api'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -68,9 +63,7 @@ export const GraphQLArticleSort = new GraphQLEnumType({
   values: {
     [ArticleSort.CreatedAt]: {value: ArticleSort.CreatedAt},
     [ArticleSort.ModifiedAt]: {value: ArticleSort.ModifiedAt},
-    [ArticleSort.PublishAt]: {value: ArticleSort.PublishAt},
-    [ArticleSort.PublishedAt]: {value: ArticleSort.PublishedAt},
-    [ArticleSort.UpdatedAt]: {value: ArticleSort.UpdatedAt}
+    [ArticleSort.PublishedAt]: {value: ArticleSort.PublishedAt}
   }
 })
 
@@ -78,7 +71,7 @@ export const GraphQLPublicArticleSort = new GraphQLEnumType({
   name: 'ArticleSort',
   values: {
     [ArticleSort.PublishedAt]: {value: ArticleSort.PublishedAt},
-    [ArticleSort.UpdatedAt]: {value: ArticleSort.UpdatedAt}
+    [ArticleSort.ModifiedAt]: {value: ArticleSort.ModifiedAt}
   }
 })
 
@@ -114,11 +107,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     socialMediaAuthorIDs: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLID)))
     },
-    socialMediaImageID: {type: GraphQLID},
-
-    blocks: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlockInput)))
-    }
+    socialMediaImageID: {type: GraphQLID}
   }
 })
 
@@ -200,9 +189,7 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
       resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}) => {
         return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
       })
-    },
-
-    blocks: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlock)))}
+    }
   }
 })
 
@@ -292,121 +279,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
   new GraphQLObjectType<PublicArticle, Context>({
     name: 'Article',
     fields: {
-      id: {type: new GraphQLNonNull(GraphQLID)},
-
-      updatedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-      publishedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-
-      slug: {type: new GraphQLNonNull(GraphQLSlug)},
-
-      url: {
-        type: new GraphQLNonNull(GraphQLString),
-        resolve: createProxyingResolver(async (article, _, {urlAdapter}) => {
-          return await urlAdapter.getPublicArticleURL(article)
-        })
-      },
-      peeredArticleURL: {
-        type: GraphQLString
-      },
-
-      disableComments: {type: GraphQLBoolean},
-      preTitle: {type: GraphQLString},
-      title: {type: new GraphQLNonNull(GraphQLString)},
-      lead: {type: GraphQLString},
-      seoTitle: {type: GraphQLString},
-      tags: {
-        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
-        resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
-          const tags = await tag.findMany({
-            where: {
-              articles: {
-                some: {
-                  articleId: id
-                }
-              }
-            }
-          })
-
-          return tags
-        })
-      },
-
-      canonicalUrl: {type: GraphQLString},
-
-      properties: {
-        type: new GraphQLNonNull(
-          new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublic))
-        ),
-        resolve: ({properties}) => {
-          return properties
-            .filter(property => property.public)
-            .map(({key, value}) => ({key, value}))
-        }
-      },
-
-      image: {
-        type: GraphQLImage,
-        resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
-          return imageID ? loaders.images.load(imageID) : null
-        })
-      },
-
-      authors: {
-        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAuthor))),
-        resolve: createProxyingResolver(async ({authors, hideAuthor}, args, {loaders}) => {
-          if (hideAuthor) {
-            return []
-          }
-          return (await loaders.authorsByID.loadMany(authors.map(({authorId}) => authorId))).filter(
-            Boolean
-          )
-        })
-      },
-
-      breaking: {type: new GraphQLNonNull(GraphQLBoolean)},
-
-      socialMediaTitle: {type: GraphQLString},
-      socialMediaDescription: {type: GraphQLString},
-      socialMediaAuthors: {
-        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAuthor))),
-        resolve: createProxyingResolver(
-          async ({socialMediaAuthors, hideAuthor}, args, {loaders}) => {
-            if (hideAuthor) {
-              return []
-            }
-
-            return (
-              await loaders.authorsByID.loadMany(socialMediaAuthors.map(({authorId}) => authorId))
-            ).filter(Boolean)
-          }
-        )
-      },
-      socialMediaImage: {
-        type: GraphQLImage,
-        resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}) => {
-          return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
-        })
-      },
-
-      blocks: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicBlock)))},
-
-      comments: {
-        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicComment))),
-        resolve: createProxyingResolver(
-          async ({id}, _, {session, prisma: {comment}, loaders: {commentRatingSystemAnswers}}) => {
-            const userId = session?.type === AuthSessionType.User ? session.user.id : null
-
-            return getPublicCommentsForItemById(
-              id,
-              userId,
-              null,
-              SortOrder.Descending,
-              commentRatingSystemAnswers,
-              comment
-            )
-          }
-        )
-      }
+      id: {type: new GraphQLNonNull(GraphQLID)}
     }
   })
 
@@ -418,15 +291,3 @@ export const GraphQLPublicArticleConnection = new GraphQLObjectType({
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
-
-export const GraphQLPublicArticleResolver = {
-  __resolveReference: async ({id}, {loaders}: Context) => {
-    const article = await loaders.publicArticles.load(id)
-
-    if (!article) {
-      throw new Error('Article not found')
-    }
-
-    return article
-  }
-}

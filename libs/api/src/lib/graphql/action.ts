@@ -9,25 +9,29 @@ import {GraphQLComment} from './comment/comment'
 import {GraphQLSubscription} from './subscription'
 import {GraphQLUser} from './user'
 import {GraphQLEvent} from './event/event'
+import {Context} from '../context'
 
 const actionFields = {
   date: {type: new GraphQLNonNull(GraphQLDateTime)}
 }
 
-const GraphQLArticleCreatedAction = new GraphQLObjectType<Action>({
+const GraphQLArticleCreatedAction = new GraphQLObjectType<Action, Context>({
   name: 'ArticleCreatedAction',
   fields: {
     ...actionFields,
     article: {
       type: new GraphQLNonNull(GraphQLArticle),
       async resolve({id}, args, {loaders}) {
-        return await loaders.articles.load(id)
+        return {
+          __typename: 'Article',
+          id
+        }
       }
     }
   }
 })
 
-const GraphQLPageCreatedAction = new GraphQLObjectType<Action>({
+const GraphQLPageCreatedAction = new GraphQLObjectType<Action, Context>({
   name: 'PageCreatedAction',
   fields: {
     ...actionFields,
@@ -40,7 +44,7 @@ const GraphQLPageCreatedAction = new GraphQLObjectType<Action>({
   }
 })
 
-const GraphQLCommentCreatedAction = new GraphQLObjectType<Action>({
+const GraphQLCommentCreatedAction = new GraphQLObjectType<Action, Context>({
   name: 'CommentCreatedAction',
   fields: {
     ...actionFields,
@@ -53,7 +57,7 @@ const GraphQLCommentCreatedAction = new GraphQLObjectType<Action>({
   }
 })
 
-const GraphQLPollStartedAction = new GraphQLObjectType<Action>({
+const GraphQLPollStartedAction = new GraphQLObjectType<Action, Context>({
   name: 'PollStartedAction',
   fields: {
     ...actionFields,
@@ -66,7 +70,7 @@ const GraphQLPollStartedAction = new GraphQLObjectType<Action>({
   }
 })
 
-const GraphQLSubscriptionCreatedAction = new GraphQLObjectType<Action>({
+const GraphQLSubscriptionCreatedAction = new GraphQLObjectType<Action, Context>({
   name: 'SubscriptionCreatedAction',
   fields: {
     ...actionFields,
@@ -79,7 +83,7 @@ const GraphQLSubscriptionCreatedAction = new GraphQLObjectType<Action>({
   }
 })
 
-const GraphQLAuthorCreatedAction = new GraphQLObjectType<Action>({
+const GraphQLAuthorCreatedAction = new GraphQLObjectType<Action, Context>({
   name: 'AuthorCreatedAction',
   fields: {
     ...actionFields,
@@ -92,7 +96,7 @@ const GraphQLAuthorCreatedAction = new GraphQLObjectType<Action>({
   }
 })
 
-const GraphQLUserCreatedAction = new GraphQLObjectType<Action>({
+const GraphQLUserCreatedAction = new GraphQLObjectType<Action, Context>({
   name: 'UserCreatedAction',
   fields: {
     ...actionFields,
@@ -105,7 +109,7 @@ const GraphQLUserCreatedAction = new GraphQLObjectType<Action>({
   }
 })
 
-const GraphQLEventCreatedAction = new GraphQLObjectType<Action>({
+const GraphQLEventCreatedAction = new GraphQLObjectType<Action, Context>({
   name: 'EventCreatedAction',
   fields: {
     ...actionFields,

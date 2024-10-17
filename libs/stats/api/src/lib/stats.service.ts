@@ -12,8 +12,12 @@ export class StatsService {
   async getArticlesCount(): Promise<number> {
     return await this.prisma.article.count({
       where: {
-        publishedId: {
-          not: null
+        revisions: {
+          some: {
+            publishedAt: {
+              not: null
+            }
+          }
         }
       }
     })

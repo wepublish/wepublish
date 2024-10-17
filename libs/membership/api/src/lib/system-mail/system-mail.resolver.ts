@@ -1,9 +1,9 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {PrismaClient, User, UserEvent, UserFlowMail} from '@prisma/client'
-import {CurrentUser} from '../user.decorator'
+import {PrismaClient, UserEvent, UserFlowMail} from '@prisma/client'
 import {SystemMailModel, SystemMailUpdateInput} from './system-mail.model'
 import {MailContext, mailLogType} from '@wepublish/mail/api'
 import {NotFoundException} from '@nestjs/common'
+import {CurrentUser, UserSession} from '@wepublish/authentication/api'
 
 @Resolver(() => SystemMailModel)
 export class SystemMailResolver {
@@ -42,14 +42,14 @@ export class SystemMailResolver {
     description: `Sends a test email for the given event`
   })
   async testSystemMail(
-    @CurrentUser() user: User,
+    @CurrentUser() user: UserSession,
     @Args('event', {type: () => UserEvent}) event: UserEvent
   ) {
     const externalMailTemplateId = await this.mailContext.getUserTemplateName(event)
 
     await this.mailContext.sendMail({
       mailType: mailLogType.SystemMail,
-      recipient: user,
+      recipient: user.user,
       optionalData: {},
       externalMailTemplateId: externalMailTemplateId || ''
     })

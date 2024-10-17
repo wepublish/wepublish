@@ -126,3 +126,16 @@ export const GraphQLAuthorInput = new GraphQLInputObjectType({
     hideOnTeam: {type: GraphQLBoolean}
   }
 })
+
+export const GraphQLAuthorResolver = {
+  __resolveReference: async (reference, {loaders}: Context) => {
+    const {id} = reference
+    const author = await loaders.authorsByID.load(id)
+
+    if (!author) {
+      throw new Error('Author not found')
+    }
+
+    return author
+  }
+}

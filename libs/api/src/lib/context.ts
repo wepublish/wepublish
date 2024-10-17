@@ -12,7 +12,6 @@ import {
   PaymentState,
   Peer,
   PrismaClient,
-  TaggedArticles,
   TaggedPages,
   User,
   UserRole
@@ -40,11 +39,6 @@ import NodeCache from 'node-cache'
 import fetch from 'node-fetch'
 import {Client, Issuer} from 'openid-client'
 import {ChallengeProvider} from './challenges/challengeProvider'
-import {
-  ArticleWithRevisions,
-  PublicArticle,
-  articleWithRevisionsToPublicArticle
-} from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
@@ -58,7 +52,7 @@ import {Hooks} from './hooks'
 import {MemberContext} from './memberContext'
 import {URLAdapter} from './urlAdapter'
 import {BlockStylesDataloaderService} from '@wepublish/block-content/api'
-import {HotAndTrendingDataSource} from '@wepublish/article/api'
+import {ArticleService, HotAndTrendingDataSource} from '@wepublish/article/api'
 
 /**
  * Peered article cache configuration and setup
@@ -80,9 +74,6 @@ export interface DataLoaderContext {
   readonly authorsBySlug: DataLoader<string, Author | null>
 
   readonly images: DataLoader<string, Image | null>
-
-  readonly articles: DataLoader<string, (ArticleWithRevisions & {tags: TaggedArticles[]}) | null>
-  readonly publicArticles: DataLoader<string, PublicArticle | null>
 
   readonly pages: DataLoader<string, (PageWithRevisions & {tags: TaggedPages[]}) | null>
   readonly publicPagesByID: DataLoader<string, PublicPage | null>
@@ -136,6 +127,7 @@ export interface Context {
   readonly session: AuthSession | null
   readonly loaders: DataLoaderContext
   readonly hotAndTrendingDataSource: HotAndTrendingDataSource
+  readonly articleService: ArticleService
 
   readonly mailContext: MailContext
   readonly memberContext: MemberContext
@@ -207,6 +199,7 @@ export interface ContextOptions {
   readonly hooks?: Hooks
   readonly challenge: ChallengeProvider
   readonly hotAndTrendingDataSource: HotAndTrendingDataSource
+  readonly articleService: ArticleService
 }
 
 export interface SendMailFromProviderProps {
@@ -243,7 +236,8 @@ export async function contextFromRequest(
     challenge,
     sessionTTL,
     hashCostFactor,
-    hotAndTrendingDataSource
+    hotAndTrendingDataSource,
+    articleService
   }: ContextOptions
 ): Promise<Context> {
   const authService = new AuthenticationService(prisma)
@@ -348,87 +342,6 @@ export async function contextFromRequest(
             focalPoint: true
           }
         }),
-        'id'
-      )
-    ),
-
-    articles: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        await prisma.article.findMany({
-          where: {
-            id: {
-              in: ids as string[]
-            }
-          },
-          include: {
-            tags: true,
-            draft: {
-              include: {
-                properties: true,
-                authors: true,
-                socialMediaAuthors: true
-              }
-            },
-            pending: {
-              include: {
-                properties: true,
-                authors: true,
-                socialMediaAuthors: true
-              }
-            },
-            published: {
-              include: {
-                properties: true,
-                authors: true,
-                socialMediaAuthors: true
-              }
-            }
-          }
-        }),
-        'id'
-      )
-    ),
-    publicArticles: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        (
-          await prisma.article.findMany({
-            where: {
-              id: {
-                in: ids as string[]
-              },
-              OR: [
-                {
-                  publishedId: {
-                    not: null
-                  }
-                },
-                {
-                  pendingId: {
-                    not: null
-                  }
-                }
-              ]
-            },
-            include: {
-              published: {
-                include: {
-                  properties: true,
-                  authors: true,
-                  socialMediaAuthors: true
-                }
-              },
-              pending: {
-                include: {
-                  properties: true,
-                  authors: true,
-                  socialMediaAuthors: true
-                }
-              }
-            }
-          })
-        ).map(articleWithRevisionsToPublicArticle),
         'id'
       )
     ),
@@ -930,6 +843,7 @@ export async function contextFromRequest(
     oauth2Providers,
     paymentProviders,
     hotAndTrendingDataSource,
+    articleService,
     hooks,
     requestIP,
     fingerprint,

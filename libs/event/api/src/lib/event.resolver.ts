@@ -11,12 +11,12 @@ import {
   EventId,
   EventListArgs,
   PaginatedEvents,
-  Tag,
   UpdateEventInput
 } from './event.model'
 import {EventService} from './event.service'
 import {Image} from '@wepublish/image/api'
 import {EventDataloaderService} from './event-dataloader.service'
+import {Tag} from '@wepublish/tag/api'
 
 @Resolver(() => Event)
 export class EventResolver {
@@ -25,37 +25,37 @@ export class EventResolver {
     private eventDataloader: EventDataloaderService
   ) {}
 
-  @Query(returns => PaginatedEvents, {
+  @Query(() => PaginatedEvents, {
     description: `Returns a paginated list of events based on the filters given.`
   })
   public events(@Args() filter: EventListArgs) {
     return this.eventService.getEvents(filter)
   }
 
-  @Query(returns => Event, {description: `Returns a event by id.`})
+  @Query(() => Event, {description: `Returns a event by id.`})
   public event(@Args() {id}: EventId) {
     return this.eventDataloader.load(id)
   }
 
-  @Mutation(returns => Event, {description: `Creates a new event.`})
+  @Mutation(() => Event, {description: `Creates a new event.`})
   @Permissions(CanCreateEvent)
   public createEvent(@Args() event: CreateEventInput) {
     return this.eventService.createEvent(event)
   }
 
-  @Mutation(returns => Event, {description: `Updates an existing event.`})
+  @Mutation(() => Event, {description: `Updates an existing event.`})
   @Permissions(CanUpdateEvent)
   public updateEvent(@Args() event: UpdateEventInput) {
     return this.eventService.updateEvent(event)
   }
 
-  @Mutation(returns => Event, {description: `Deletes an existing event.`})
+  @Mutation(() => Event, {description: `Deletes an existing event.`})
   @Permissions(CanDeleteEvent)
   public deleteEvent(@Args('id') id: string) {
     return this.eventService.deleteEvent(id)
   }
 
-  @ResolveField(returns => Image, {nullable: true})
+  @ResolveField(() => Image, {nullable: true})
   public image(@Parent() event: Event) {
     const {imageId} = event
 

@@ -1,7 +1,12 @@
 import {Invoice, Prisma, PrismaClient} from '@prisma/client'
-import {ConnectionResult, DateFilterComparison} from '../../db/common'
+import {ConnectionResult} from '../../db/common'
 import {InvoiceFilter, InvoiceSort} from '../../db/invoice'
-import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
+import {
+  DateFilterComparison,
+  SortOrder,
+  getMaxTake,
+  graphQLSortOrderToPrisma
+} from '@wepublish/utils/api'
 
 export const createInvoiceOrder = (
   field: InvoiceSort,

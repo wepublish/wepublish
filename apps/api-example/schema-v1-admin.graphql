@@ -24,11 +24,8 @@ type Query {
   images(cursor: ID, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
   comment(id: ID!): Comment
   comments(cursor: ID, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
-  article(id: ID!): Article
-  articles(cursor: ID, take: Int = 10, skip: Int = 0, filter: ArticleFilter, sort: ArticleSort = modifiedAt, order: SortOrder = Descending): ArticleConnection!
   peerArticle(peerID: ID!, id: ID!): Article
-  peerArticles(cursors: String, take: Int = 10, first: Int, skip: Int = 0, sort: ArticleSort = modifiedAt, order: SortOrder = Descending, peerFilter: String, filter: ArticleFilter): PeerArticleConnection!
-  articlePreviewLink(id: ID!, hours: Int!): String
+  peerArticles(cursors: String, take: Int = 10, first: Int, skip: Int = 0, sort: ArticleSort = ModifiedAt, order: SortOrder = Descending, peerFilter: String, filter: ArticleFilter): PeerArticleConnection!
   page(id: ID): Page
   pages(cursor: ID, take: Int = 10, skip: Int = 0, filter: PageFilter, sort: PageSort = modifiedAt, order: SortOrder = Descending): PageConnection!
   pagePreviewLink(id: ID!, hours: Int!): String
@@ -496,182 +493,6 @@ type PageRevision {
   socialMediaTitle: String
   socialMediaDescription: String
   socialMediaImage: Image
-  blocks: [Block!]!
-}
-
-union Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HTMLBlock | PollBlock | EventBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock
-
-type RichTextBlock {
-  blockStyle: String
-  richText: RichText!
-}
-
-type ImageBlock {
-  blockStyle: String
-  image: Image
-  caption: String
-  linkUrl: String
-}
-
-type ImageGalleryBlock {
-  blockStyle: String
-  images: [GalleryImageEdge!]!
-}
-
-type GalleryImageEdge {
-  caption: String
-  image: Image
-}
-
-type ListicleBlock {
-  blockStyle: String
-  items: [ListicleItem!]!
-}
-
-type ListicleItem {
-  title: String!
-  image: Image
-  richText: RichText!
-}
-
-type FacebookPostBlock {
-  blockStyle: String
-  userID: String!
-  postID: String!
-}
-
-type FacebookVideoBlock {
-  blockStyle: String
-  userID: String!
-  videoID: String!
-}
-
-type InstagramPostBlock {
-  blockStyle: String
-  postID: String!
-}
-
-type TwitterTweetBlock {
-  blockStyle: String
-  userID: String!
-  tweetID: String!
-}
-
-type VimeoVideoBlock {
-  blockStyle: String
-  videoID: String!
-}
-
-type YouTubeVideoBlock {
-  blockStyle: String
-  videoID: String!
-}
-
-type SoundCloudTrackBlock {
-  blockStyle: String
-  trackID: String!
-}
-
-type PolisConversationBlock {
-  blockStyle: String
-  conversationID: String!
-}
-
-type TikTokVideoBlock {
-  blockStyle: String
-  videoID: String!
-  userID: String!
-}
-
-type BildwurfAdBlock {
-  blockStyle: String
-  zoneID: String!
-}
-
-type EmbedBlock {
-  blockStyle: String
-  url: String
-  title: String
-  width: Int
-  height: Int
-  styleCustom: String
-  sandbox: String
-}
-
-type HTMLBlock {
-  blockStyle: String
-  html: String
-}
-
-type PollBlock {
-  blockStyle: String
-  poll: FullPoll
-}
-
-type FullPoll {
-  id: ID!
-  question: String
-  opensAt: DateTime!
-  closedAt: DateTime
-  infoText: RichText
-  answers: [PollAnswerWithVoteCount!]!
-  externalVoteSources: [PollExternalVoteSource!]!
-}
-
-type PollAnswerWithVoteCount {
-  id: ID!
-  pollId: ID!
-  answer: String
-  votes: Int!
-}
-
-type PollExternalVoteSource {
-  id: ID!
-  source: String
-  voteAmounts: [PollExternalVote!]!
-}
-
-type PollExternalVote {
-  id: ID!
-  answerId: ID!
-  amount: VoteValue!
-}
-
-"""A valid vote value"""
-scalar VoteValue
-
-type EventBlock {
-  blockStyle: String
-  filter: EventBlockFilter!
-  events: [Event!]!
-}
-
-type EventBlockFilter {
-  tags: [ID!]
-  events: [ID!]
-}
-
-type Event {
-  id: ID!
-  name: String!
-  lead: String
-  status: EventStatus!
-  description: RichText
-  location: String
-  startsAt: DateTime!
-  endsAt: DateTime
-  externalSourceId: String
-  externalSourceName: String
-  tags: [Tag!]!
-  image: Image
-  url: String!
-}
-
-enum EventStatus {
-  Cancelled
-  Rescheduled
-  Postponed
-  Scheduled
 }
 
 type Tag {
@@ -690,16 +511,109 @@ enum TagType {
   Page
 }
 
-type CommentBlock {
-  blockStyle: String
-  filter: CommentBlockFilter!
-  comments: [Comment!]!
+type ArticleNavigationLink implements BaseNavigationLink {
+  label: String!
+  article: Article
 }
 
-type CommentBlockFilter {
-  item: ID
-  tags: [ID!]
-  comments: [ID!]
+type Article {
+  id: ID!
+  shared: Boolean!
+  hidden: Boolean
+  disableComments: Boolean
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  draft: ArticleRevision
+  published: ArticleRevision
+  pending: ArticleRevision
+  latest: ArticleRevision!
+  tags: [Tag!]!
+}
+
+type ArticleRevision {
+  revision: Int!
+  createdAt: DateTime!
+  publishAt: DateTime
+  updatedAt: DateTime
+  publishedAt: DateTime
+  hideAuthor: Boolean!
+  preTitle: String
+  title: String
+  lead: String
+  seoTitle: String
+  slug: String
+  tags: [String!]! @deprecated(reason: "Tags now live on the Article itself")
+  properties: [Properties!]!
+  canonicalUrl: String
+  url: String!
+  image: Image
+  authors: [Author!]!
+  breaking: Boolean!
+  socialMediaTitle: String
+  socialMediaDescription: String
+  socialMediaAuthors: [Author!]!
+  socialMediaImage: Image
+}
+
+type Author {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  name: String!
+  slug: Slug!
+  url: String!
+  links: [AuthorLink!]
+  bio: RichText
+  jobTitle: String
+  image: Image
+  tags: [Tag!]!
+  hideOnArticle: Boolean
+  hideOnTeaser: Boolean
+  hideOnTeam: Boolean
+}
+
+type AuthorLink {
+  title: String!
+  url: String!
+}
+
+type ExternalNavigationLink implements BaseNavigationLink {
+  label: String!
+  url: String!
+}
+
+type AuthorConnection {
+  nodes: [Author!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input AuthorFilter {
+  name: String
+  tagIds: [ID!]
+  hideOnTeam: Boolean
+}
+
+enum AuthorSort {
+  createdAt
+  modifiedAt
+  NAME
+}
+
+type ImageConnection {
+  nodes: [Image!]!
+  totalCount: Int!
+  pageInfo: PageInfo!
+}
+
+input ImageFilter {
+  title: String
+  tags: [String!]
+}
+
+enum ImageSort {
+  createdAt
+  modifiedAt
 }
 
 type Comment {
@@ -760,249 +674,6 @@ type overriddenRating {
   value: Int
 }
 
-type LinkPageBreakBlock {
-  blockStyle: String
-  text: String
-  richText: RichText!
-  linkURL: String
-  linkText: String
-  linkTarget: String
-  hideButton: Boolean!
-  styleOption: String @deprecated(reason: "Use block styles instead of this")
-  layoutOption: String @deprecated(reason: "Use block styles instead of this")
-  templateOption: String @deprecated(reason: "Use block styles instead of this")
-  image: Image
-}
-
-type TitleBlock {
-  blockStyle: String
-  title: String
-  lead: String
-}
-
-type QuoteBlock {
-  blockStyle: String
-  quote: String
-  author: String
-  image: Image
-}
-
-type TeaserGridBlock {
-  blockStyle: String
-  teasers: [Teaser]!
-  numColumns: Int!
-}
-
-union Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
-
-type ArticleTeaser {
-  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
-  image: Image
-  preTitle: String
-  title: String
-  lead: String
-  article: Article
-}
-
-enum TeaserStyle {
-  default
-  light
-  text
-}
-
-type Article {
-  id: ID!
-  shared: Boolean!
-  hidden: Boolean
-  disableComments: Boolean
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  draft: ArticleRevision
-  published: ArticleRevision
-  pending: ArticleRevision
-  latest: ArticleRevision!
-  tags: [Tag!]!
-}
-
-type ArticleRevision {
-  revision: Int!
-  createdAt: DateTime!
-  publishAt: DateTime
-  updatedAt: DateTime
-  publishedAt: DateTime
-  hideAuthor: Boolean!
-  preTitle: String
-  title: String
-  lead: String
-  seoTitle: String
-  slug: String
-  tags: [String!]! @deprecated(reason: "Tags now live on the Article itself")
-  properties: [Properties!]!
-  canonicalUrl: String
-  url: String!
-  image: Image
-  authors: [Author!]!
-  breaking: Boolean!
-  socialMediaTitle: String
-  socialMediaDescription: String
-  socialMediaAuthors: [Author!]!
-  socialMediaImage: Image
-  blocks: [Block!]!
-}
-
-type Author {
-  id: ID!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  slug: Slug!
-  url: String!
-  links: [AuthorLink!]
-  bio: RichText
-  jobTitle: String
-  image: Image
-  tags: [Tag!]!
-  hideOnArticle: Boolean
-  hideOnTeaser: Boolean
-  hideOnTeam: Boolean
-}
-
-type AuthorLink {
-  title: String!
-  url: String!
-}
-
-type PeerArticleTeaser {
-  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
-  image: Image
-  preTitle: String
-  title: String
-  lead: String
-  peer: Peer
-  articleID: ID!
-  article: Article
-}
-
-type PageTeaser {
-  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
-  image: Image
-  preTitle: String
-  title: String
-  lead: String
-  page: Page
-}
-
-type CustomTeaser {
-  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
-  image: Image
-  preTitle: String
-  title: String
-  lead: String
-  contentUrl: String
-  properties: [Properties!]
-}
-
-type EventTeaser {
-  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
-  image: Image
-  preTitle: String
-  title: String
-  lead: String
-  event: Event
-}
-
-type TeaserGridFlexBlock {
-  blockStyle: String
-  flexTeasers: [FlexTeaser]!
-}
-
-type FlexTeaser {
-  alignment: FlexAlignment!
-  teaser: Teaser
-}
-
-type FlexAlignment {
-  i: String!
-  x: Int!
-  y: Int!
-  w: Int!
-  h: Int!
-  static: Boolean!
-}
-
-type TeaserListBlock {
-  title: String
-  blockStyle: String
-  teaserType: TeaserType
-  filter: TeaserListBlockFilter!
-  take: Int
-  skip: Int
-  sort: TeaserListBlockSort
-  teasers: [Teaser]!
-}
-
-enum TeaserType {
-  article
-  peerArticle
-  event
-  page
-  custom
-}
-
-type TeaserListBlockFilter {
-  tags: [ID!]
-  tagObjects: [Tag!]!
-}
-
-enum TeaserListBlockSort {
-  publishedAt
-  hotAndTrending
-}
-
-type ArticleNavigationLink implements BaseNavigationLink {
-  label: String!
-  article: Article
-}
-
-type ExternalNavigationLink implements BaseNavigationLink {
-  label: String!
-  url: String!
-}
-
-type AuthorConnection {
-  nodes: [Author!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input AuthorFilter {
-  name: String
-  tagIds: [ID!]
-  hideOnTeam: Boolean
-}
-
-enum AuthorSort {
-  createdAt
-  modifiedAt
-  NAME
-}
-
-type ImageConnection {
-  nodes: [Image!]!
-  totalCount: Int!
-  pageInfo: PageInfo!
-}
-
-input ImageFilter {
-  title: String
-  tags: [String!]
-}
-
-enum ImageSort {
-  createdAt
-  modifiedAt
-}
-
 type CommentConnection {
   nodes: [Comment!]!
   pageInfo: PageInfo!
@@ -1022,35 +693,6 @@ enum CommentSort {
   createdAt
 }
 
-type ArticleConnection {
-  nodes: [Article!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input ArticleFilter {
-  title: String
-  preTitle: String
-  lead: String
-  publicationDateFrom: DateFilter
-  publicationDateTo: DateFilter
-  draft: Boolean
-  published: Boolean
-  pending: Boolean
-  authors: [ID!]
-  tags: [String!]
-  includeHidden: Boolean
-  shared: Boolean
-}
-
-enum ArticleSort {
-  createdAt
-  modifiedAt
-  publishAt
-  publishedAt
-  updatedAt
-}
-
 type PeerArticleConnection {
   nodes: [PeerArticle!]!
   pageInfo: UnidirectionalPageInfo!
@@ -1066,6 +708,27 @@ type PeerArticle {
 type UnidirectionalPageInfo {
   endCursor: String
   hasNextPage: Boolean!
+}
+
+enum ArticleSort {
+  CreatedAt
+  ModifiedAt
+  PublishedAt
+}
+
+input ArticleFilter {
+  title: String
+  preTitle: String
+  lead: String
+  publicationDateFrom: DateFilter
+  publicationDateTo: DateFilter
+  draft: Boolean
+  published: Boolean
+  pending: Boolean
+  authors: [ID!]
+  tags: [String!]
+  includeHidden: Boolean
+  shared: Boolean
 }
 
 type PageConnection {
@@ -1270,10 +933,65 @@ enum PollSort {
   ModifiedAt
 }
 
+type FullPoll {
+  id: ID!
+  question: String
+  opensAt: DateTime!
+  closedAt: DateTime
+  infoText: RichText
+  answers: [PollAnswerWithVoteCount!]!
+  externalVoteSources: [PollExternalVoteSource!]!
+}
+
+type PollAnswerWithVoteCount {
+  id: ID!
+  pollId: ID!
+  answer: String
+  votes: Int!
+}
+
+type PollExternalVoteSource {
+  id: ID!
+  source: String
+  voteAmounts: [PollExternalVote!]!
+}
+
+type PollExternalVote {
+  id: ID!
+  answerId: ID!
+  amount: VoteValue!
+}
+
+"""A valid vote value"""
+scalar VoteValue
+
 type EventConnection {
   nodes: [Event!]!
   pageInfo: PageInfo!
   totalCount: Int!
+}
+
+type Event {
+  id: ID!
+  name: String!
+  lead: String
+  status: EventStatus!
+  description: RichText
+  location: String
+  startsAt: DateTime!
+  endsAt: DateTime
+  externalSourceId: String
+  externalSourceName: String
+  tags: [Tag!]!
+  image: Image
+  url: String!
+}
+
+enum EventStatus {
+  Cancelled
+  Rescheduled
+  Postponed
+  Scheduled
 }
 
 input EventFilter {
@@ -1376,12 +1094,6 @@ type Mutation {
   uploadImage(input: UploadImageInput!): Image
   updateImage(id: ID!, input: UpdateImageInput!): Image
   deleteImage(id: ID!): Image
-  createArticle(input: ArticleInput!): Article!
-  updateArticle(id: ID!, input: ArticleInput!): Article
-  deleteArticle(id: ID!): Article
-  publishArticle(id: ID!, publishAt: DateTime, updatedAt: DateTime, publishedAt: DateTime): Article
-  unpublishArticle(id: ID!): Article
-  duplicateArticle(id: ID!): Article!
   createPage(input: PageInput!): Page!
   updatePage(id: ID!, input: PageInput!): Page
   deletePage(id: ID!): Page
@@ -1600,307 +1312,6 @@ input UpdateImageInput {
   focalPoint: InputPoint
 }
 
-input ArticleInput {
-  slug: Slug
-  preTitle: String
-  title: String!
-  lead: String
-  seoTitle: String
-  tags: [String!]!
-  properties: [PropertiesInput!]!
-  canonicalUrl: String
-  imageID: ID
-  authorIDs: [ID!]!
-  shared: Boolean!
-  hidden: Boolean
-  disableComments: Boolean
-  breaking: Boolean!
-  hideAuthor: Boolean!
-  socialMediaTitle: String
-  socialMediaDescription: String
-  socialMediaAuthorIDs: [ID!]!
-  socialMediaImageID: ID
-  blocks: [BlockInput!]!
-}
-
-input BlockInput {
-  richText: RichTextBlockInput
-  image: ImageBlockInput
-  imageGallery: ImageGalleryBlockInput
-  listicle: ListicleBlockInput
-  title: TitleBlockInput
-  quote: QuoteBlockInput
-  facebookPost: FacebookPostBlockInput
-  facebookVideo: FacebookVideoBlockInput
-  instagramPost: InstagramPostBlockInput
-  twitterTweet: TwitterTweetBlockInput
-  vimeoVideo: VimeoVideoBlockInput
-  youTubeVideo: YouTubeVideoBlockInput
-  soundCloudTrack: SoundCloudTrackBlockInput
-  polisConversation: PolisConversationBlockInput
-  tikTokVideo: TikTokVideoBlockInput
-  bildwurfAd: BildwurfAdBlockInput
-  embed: EmbedBlockInput
-  html: HTMLBlockInput
-  poll: PollBlockInput
-  event: EventBlockInput
-  comment: CommentBlockInput
-  linkPageBreak: LinkPageBreakBlockInput
-  teaserGrid: TeaserGridBlockInput
-  teaserGridFlex: TeaserGridFlexBlockInput
-  teaserList: TeaserListBlockInput
-}
-
-input RichTextBlockInput {
-  blockStyle: String
-  richText: RichText!
-}
-
-input ImageBlockInput {
-  blockStyle: String
-  caption: String
-  linkUrl: String
-  imageID: ID
-}
-
-input ImageGalleryBlockInput {
-  blockStyle: String
-  images: [GalleryImageEdgeInput]
-}
-
-input GalleryImageEdgeInput {
-  caption: String
-  imageID: ID
-}
-
-input ListicleBlockInput {
-  blockStyle: String
-  items: [ListicleItemInput]
-}
-
-input ListicleItemInput {
-  title: String!
-  imageID: ID
-  richText: RichText!
-}
-
-input TitleBlockInput {
-  blockStyle: String
-  title: String
-  lead: String
-}
-
-input QuoteBlockInput {
-  blockStyle: String
-  quote: String
-  author: String
-  imageID: ID
-}
-
-input FacebookPostBlockInput {
-  blockStyle: String
-  userID: String!
-  postID: String!
-}
-
-input FacebookVideoBlockInput {
-  blockStyle: String
-  userID: String!
-  videoID: String!
-}
-
-input InstagramPostBlockInput {
-  blockStyle: String
-  postID: String!
-}
-
-input TwitterTweetBlockInput {
-  blockStyle: String
-  userID: String!
-  tweetID: String!
-}
-
-input VimeoVideoBlockInput {
-  blockStyle: String
-  videoID: String!
-}
-
-input YouTubeVideoBlockInput {
-  blockStyle: String
-  videoID: String!
-}
-
-input SoundCloudTrackBlockInput {
-  blockStyle: String
-  trackID: String!
-}
-
-input PolisConversationBlockInput {
-  blockStyle: String
-  conversationID: String!
-}
-
-input TikTokVideoBlockInput {
-  blockStyle: String
-  videoID: String!
-  userID: String!
-}
-
-input BildwurfAdBlockInput {
-  blockStyle: String
-  zoneID: String!
-}
-
-input EmbedBlockInput {
-  blockStyle: String
-  url: String
-  title: String
-  width: Int
-  height: Int
-  styleCustom: String
-  sandbox: String
-}
-
-input HTMLBlockInput {
-  blockStyle: String
-  html: String
-}
-
-input PollBlockInput {
-  blockStyle: String
-  pollId: ID
-}
-
-input EventBlockInput {
-  blockStyle: String
-  filter: EventBlockInputFilter!
-}
-
-input EventBlockInputFilter {
-  tags: [ID!]
-  events: [ID!]
-}
-
-input CommentBlockInput {
-  blockStyle: String
-  filter: CommentBlockInputFilter!
-}
-
-input CommentBlockInputFilter {
-  item: ID
-  tags: [ID!]
-  comments: [ID!]
-}
-
-input LinkPageBreakBlockInput {
-  blockStyle: String
-  text: String
-  richText: RichText!
-  linkURL: String
-  linkText: String
-  linkTarget: String
-  hideButton: Boolean!
-  styleOption: String
-  templateOption: String
-  layoutOption: String
-  imageID: ID
-}
-
-input TeaserGridBlockInput {
-  blockStyle: String
-  teasers: [TeaserInput]!
-  numColumns: Int!
-}
-
-input TeaserInput {
-  article: ArticleTeaserInput
-  peerArticle: PeerArticleTeaserInput
-  page: PageTeaserInput
-  event: EventTeaserInput
-  custom: CustomTeaserInput
-}
-
-input ArticleTeaserInput {
-  style: TeaserStyle
-  imageID: ID
-  preTitle: String
-  title: String
-  lead: String
-  articleID: ID!
-}
-
-input PeerArticleTeaserInput {
-  style: TeaserStyle
-  imageID: ID
-  preTitle: String
-  title: String
-  lead: String
-  peerID: ID!
-  articleID: ID!
-}
-
-input PageTeaserInput {
-  style: TeaserStyle
-  imageID: ID
-  preTitle: String
-  title: String
-  lead: String
-  pageID: ID!
-}
-
-input EventTeaserInput {
-  style: TeaserStyle
-  imageID: ID
-  preTitle: String
-  title: String
-  lead: String
-  eventID: ID!
-}
-
-input CustomTeaserInput {
-  style: TeaserStyle
-  imageID: ID
-  preTitle: String
-  title: String
-  lead: String
-  contentUrl: String
-  properties: [PropertiesInput!]!
-}
-
-input TeaserGridFlexBlockInput {
-  blockStyle: String
-  flexTeasers: [FlexTeaserInput!]!
-}
-
-input FlexTeaserInput {
-  blockStyle: String
-  teaser: TeaserInput
-  alignment: FlexAlignmentInput!
-}
-
-input FlexAlignmentInput {
-  i: String!
-  x: Int!
-  y: Int!
-  w: Int!
-  h: Int!
-  static: Boolean!
-}
-
-input TeaserListBlockInput {
-  title: String
-  blockStyle: String
-  teaserType: TeaserType
-  filter: TeaserListBlockFilterInput!
-  take: Int
-  skip: Int
-  sort: TeaserListBlockSort
-}
-
-input TeaserListBlockFilterInput {
-  tags: [ID!]
-}
-
 input PageInput {
   slug: Slug!
   title: String!
@@ -1911,7 +1322,6 @@ input PageInput {
   socialMediaTitle: String
   socialMediaDescription: String
   socialMediaImageID: ID
-  blocks: [BlockInput!]!
 }
 
 input MemberPlanInput {

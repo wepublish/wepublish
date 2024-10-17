@@ -27,10 +27,6 @@ const modelFieldDefinitions = [{
                 type: "MetadataProperty",
                 relationName: "ArticleRevisionToMetadataProperty"
             }, {
-                name: "image",
-                type: "Image",
-                relationName: "articleRevisionImage"
-            }, {
                 name: "authors",
                 type: "ArticleRevisionAuthor",
                 relationName: "ArticleRevisionToArticleRevisionAuthor"
@@ -39,21 +35,17 @@ const modelFieldDefinitions = [{
                 type: "ArticleRevisionSocialMediaAuthor",
                 relationName: "ArticleRevisionToArticleRevisionSocialMediaAuthor"
             }, {
+                name: "image",
+                type: "Image",
+                relationName: "articleRevisionImage"
+            }, {
                 name: "socialMediaImage",
                 type: "Image",
                 relationName: "articleRevisionSocialMediaImage"
             }, {
-                name: "PublishedArticle",
+                name: "article",
                 type: "Article",
-                relationName: "publishedArticleRevision"
-            }, {
-                name: "PendingArticle",
-                type: "Article",
-                relationName: "pendingArticleRevision"
-            }, {
-                name: "DraftArticle",
-                type: "Article",
-                relationName: "draftArticleRevision"
+                relationName: "ArticleToArticleRevision"
             }]
     }, {
         name: "ArticleRevisionAuthor",
@@ -80,18 +72,6 @@ const modelFieldDefinitions = [{
     }, {
         name: "Article",
         fields: [{
-                name: "published",
-                type: "ArticleRevision",
-                relationName: "publishedArticleRevision"
-            }, {
-                name: "pending",
-                type: "ArticleRevision",
-                relationName: "pendingArticleRevision"
-            }, {
-                name: "draft",
-                type: "ArticleRevision",
-                relationName: "draftArticleRevision"
-            }, {
                 name: "navigations",
                 type: "NavigationLink",
                 relationName: "ArticleToNavigationLink"
@@ -99,6 +79,10 @@ const modelFieldDefinitions = [{
                 name: "tags",
                 type: "TaggedArticles",
                 relationName: "ArticleToTaggedArticles"
+            }, {
+                name: "revisions",
+                type: "ArticleRevision",
+                relationName: "ArticleToArticleRevision"
             }]
     }, {
         name: "TaggedArticles",
@@ -905,6 +889,9 @@ function isArticleRevisionimageFactory(x) {
 function isArticleRevisionsocialMediaImageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
+function isArticleRevisionarticleFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Article";
+}
 function autoGenerateArticleRevisionScalarsOrEnums({ seq }) {
     return {
         breaking: getScalarFieldValueGenerator().Boolean({ modelName: "ArticleRevision", fieldName: "breaking", isId: false, isUnique: false, seq }),
@@ -934,7 +921,10 @@ function defineArticleRevisionFactoryInternal({ defaultData: defaultDataResolver
                 } : defaultData.image,
                 socialMediaImage: isArticleRevisionsocialMediaImageFactory(defaultData.socialMediaImage) ? {
                     create: yield defaultData.socialMediaImage.build()
-                } : defaultData.socialMediaImage
+                } : defaultData.socialMediaImage,
+                article: isArticleRevisionarticleFactory(defaultData.article) ? {
+                    create: yield defaultData.article.build()
+                } : defaultData.article
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -973,7 +963,7 @@ function defineArticleRevisionFactoryInternal({ defaultData: defaultDataResolver
  * @returns factory {@link ArticleRevisionFactoryInterface}
  */
 export function defineArticleRevisionFactory(options) {
-    return defineArticleRevisionFactoryInternal(options !== null && options !== void 0 ? options : {});
+    return defineArticleRevisionFactoryInternal(options);
 }
 function isArticleRevisionAuthorrevisionFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
@@ -1121,15 +1111,6 @@ function defineArticleRevisionSocialMediaAuthorFactoryInternal({ defaultData: de
 export function defineArticleRevisionSocialMediaAuthorFactory(options) {
     return defineArticleRevisionSocialMediaAuthorFactoryInternal(options);
 }
-function isArticlepublishedFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
-}
-function isArticlependingFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
-}
-function isArticledraftFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
-}
 function autoGenerateArticleScalarsOrEnums({ seq }) {
     return {
         shared: getScalarFieldValueGenerator().Boolean({ modelName: "Article", fieldName: "shared", isId: false, isUnique: false, seq })
@@ -1151,17 +1132,7 @@ function defineArticleFactoryInternal({ defaultData: defaultDataResolver, traits
                 const traitData = yield resolveTraitValue({ seq });
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
-            const defaultAssociations = {
-                published: isArticlepublishedFactory(defaultData.published) ? {
-                    create: yield defaultData.published.build()
-                } : defaultData.published,
-                pending: isArticlependingFactory(defaultData.pending) ? {
-                    create: yield defaultData.pending.build()
-                } : defaultData.pending,
-                draft: isArticledraftFactory(defaultData.draft) ? {
-                    create: yield defaultData.draft.build()
-                } : defaultData.draft
-            };
+            const defaultAssociations = {};
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
         });

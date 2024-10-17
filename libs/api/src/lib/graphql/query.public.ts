@@ -10,19 +10,12 @@ import {
   GraphQLString
 } from 'graphql'
 import {Context} from '../context'
-import {ArticleSort} from '../db/article'
 import {AuthorSort} from '../db/author'
 import {MemberPlanSort} from '../db/memberPlan'
 import {PageSort, PublicPage} from '../db/page'
 import {NotFound} from '../error'
 import {delegateToPeerSchema} from '../utility'
-import {
-  GraphQLPublicArticle,
-  GraphQLPublicArticleConnection,
-  GraphQLPublicArticleFilter,
-  GraphQLPublicArticleSort
-} from './article'
-import {getPublishedArticleByIdOrSlug, getPublishedArticles} from './article/article.public-queries'
+import {GraphQLPublicArticle, GraphQLPublicArticleSort} from './article'
 import {GraphQLAuthProvider} from './auth'
 import {
   GraphQLAuthor,
@@ -68,6 +61,7 @@ import {GraphQLPublicSubscription} from './subscription-public'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
 import {TagSort, getTags} from './tag/tag.query'
 import {GraphQLPublicUser} from './user'
+import {ArticleSort} from '@wepublish/article/api'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -138,49 +132,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       description: 'This query is to get the authors.',
       resolve: (root, {filter, sort, order, take, skip, cursor}, {prisma: {author}}) =>
         getPublicAuthors(filter, sort, order, cursor, skip, take, author)
-    },
-
-    // Article
-    // =======
-
-    article: {
-      type: GraphQLPublicArticle,
-      args: {
-        id: {type: GraphQLID},
-        slug: {type: GraphQLSlug},
-        token: {type: GraphQLString}
-      },
-      description: 'This query takes either the ID, slug or token and returns the article.',
-      resolve: (
-        root,
-        {id, slug, token},
-        {session, loaders: {articles, publicArticles}, prisma: {article}, verifyJWT}
-      ) =>
-        getPublishedArticleByIdOrSlug(
-          id,
-          slug,
-          token,
-          session,
-          verifyJWT,
-          publicArticles,
-          articles,
-          article
-        )
-    },
-
-    articles: {
-      type: new GraphQLNonNull(GraphQLPublicArticleConnection),
-      args: {
-        cursor: {type: GraphQLID},
-        take: {type: GraphQLInt, defaultValue: 10},
-        skip: {type: GraphQLInt, defaultValue: 0},
-        filter: {type: GraphQLPublicArticleFilter},
-        sort: {type: GraphQLPublicArticleSort, defaultValue: ArticleSort.PublishedAt},
-        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
-      },
-      description: 'This query returns the articles.',
-      resolve: (root, {filter, sort, order, skip, take, cursor}, {prisma: {article}}) =>
-        getPublishedArticles(filter, sort, order, cursor, skip, take, article)
     },
 
     // Peer Article
@@ -571,17 +522,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       resolve: (root, {query, take, skip, pageSort, articleSort, order}, {prisma, loaders}) =>
-        queryPhrase(
-          query,
-          prisma,
-          loaders.publicArticles,
-          loaders.publicPagesByID,
-          take,
-          skip,
-          pageSort,
-          articleSort,
-          order
-        )
+        queryPhrase(query, prisma, take, skip, pageSort, articleSort, order)
     }
   }
 })

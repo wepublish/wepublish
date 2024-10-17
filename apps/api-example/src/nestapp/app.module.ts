@@ -45,9 +45,13 @@ import Mailgun from 'mailgun.js'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 import {readConfig} from '../readConfig'
-import {BlockStylesModule} from '@wepublish/block-content/api'
+import {BlockContentModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
+import {PageModule} from '@wepublish/page/api'
+import {PeerModule} from '@wepublish/peering/api'
+import {CommentModule} from '@wepublish/comments/api'
+import {ArticleModule} from '@wepublish/article/api'
 
 @Global()
 @Module({
@@ -58,6 +62,7 @@ import {PollModule} from '@wepublish/poll/api'
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+
         return {
           resolvers: {RichText: GraphQLRichText},
           autoSchemaFile: './apps/api-example/schema-v2.graphql',
@@ -251,7 +256,12 @@ import {PollModule} from '@wepublish/poll/api'
     SettingModule,
     ScriptsModule,
     EventModule,
-    BlockStylesModule,
+    PageModule,
+    PeerModule,
+    CommentModule,
+    ArticleModule,
+    BlockContentModule,
+    PollModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
         agendaBasel,
@@ -263,7 +273,6 @@ import {PollModule} from '@wepublish/poll/api'
     ConfigModule.forRoot(),
     HealthModule,
     SystemInfoModule,
-    PollModule,
     HotAndTrendingModule.registerAsync({
       imports: [
         GoogleAnalyticsModule.registerAsync({

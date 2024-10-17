@@ -9,23 +9,13 @@ import {
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
-import {Block, BlockMap, BlockType} from '../db/block'
+import {Block, BlockMap} from '../db/block'
 import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
 import {NotFound} from '../error'
 import {Validator} from '../validator'
-import {GraphQLArticle, GraphQLArticleInput} from './article'
-import {
-  createArticle,
-  deleteArticleById,
-  duplicateArticle,
-  publishArticle,
-  unpublishArticle,
-  updateArticle
-} from './article/article.private-mutation'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {createAuthor, deleteAuthorById, updateAuthor} from './author/author.private-mutation'
-import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {
   GraphQLComment,
   GraphQLCommentItemType,
@@ -165,66 +155,6 @@ import {
 import {CanSendJWTLogin} from '@wepublish/permissions/api'
 import {mailLogType} from '@wepublish/mail/api'
 import {GraphQLSubscriptionDeactivationReason} from './subscriptionDeactivation'
-
-function mapTeaserUnionMap(value: any) {
-  if (!value) return null
-
-  const valueKeys = Object.keys(value)
-
-  if (valueKeys.length === 0) {
-    throw new Error(`Received no teaser types in ${GraphQLTeaserInput.name}.`)
-  }
-
-  if (valueKeys.length > 1) {
-    throw new Error(
-      `Received multiple teaser types (${JSON.stringify(Object.keys(value))}) in ${
-        GraphQLTeaserInput.name
-      }, they're mutually exclusive.`
-    )
-  }
-
-  const type = Object.keys(value)[0] as keyof BlockMap
-  const teaserValue = value[type]
-
-  return {type, ...teaserValue} as Block
-}
-
-function mapBlockUnionMap(value: any) {
-  const valueKeys = Object.keys(value)
-
-  if (valueKeys.length === 0) {
-    throw new Error(`Received no block types in ${GraphQLBlockInput.name}.`)
-  }
-
-  if (valueKeys.length > 1) {
-    throw new Error(
-      `Received multiple block types (${JSON.stringify(Object.keys(value))}) in ${
-        GraphQLBlockInput.name
-      }, they're mutually exclusive.`
-    )
-  }
-
-  const type = Object.keys(value)[0] as keyof BlockMap
-  const blockValue = value[type]
-
-  switch (type) {
-    case BlockType.TeaserGrid:
-      return {type, ...blockValue, teasers: blockValue.teasers.map(mapTeaserUnionMap)}
-
-    case BlockType.TeaserGridFlex:
-      return {
-        type,
-        ...blockValue,
-        flexTeasers: blockValue.flexTeasers.map(({teaser, ...value}: any) => ({
-          ...value,
-          teaser: mapTeaserUnionMap(teaser)
-        }))
-      }
-
-    default:
-      return {type, ...blockValue} as Block
-  }
-}
 
 function mapNavigationLinkInput(value: any) {
   const valueKeys = Object.keys(value)
@@ -687,66 +617,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         deleteImageById(id, authenticate, image, mediaAdapter)
     },
 
-    // Article
-    // =======
-
-    createArticle: {
-      type: new GraphQLNonNull(GraphQLArticle),
-      args: {input: {type: new GraphQLNonNull(GraphQLArticleInput)}},
-      resolve: (root, {input}, {authenticate, prisma: {article}}) =>
-        createArticle({...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, article)
-    },
-
-    updateArticle: {
-      type: GraphQLArticle,
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLID)},
-        input: {type: new GraphQLNonNull(GraphQLArticleInput)}
-      },
-      resolve: (root, {id, input}, {authenticate, prisma: {article}, loaders}) =>
-        updateArticle(
-          id,
-          {...input, blocks: input.blocks.map(mapBlockUnionMap)},
-          authenticate,
-          article,
-          loaders.articles
-        )
-    },
-
-    deleteArticle: {
-      type: GraphQLArticle,
-      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma}) => deleteArticleById(id, authenticate, prisma)
-    },
-
-    publishArticle: {
-      type: GraphQLArticle,
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLID)},
-        publishAt: {type: GraphQLDateTime},
-        updatedAt: {type: GraphQLDateTime},
-        publishedAt: {type: GraphQLDateTime}
-      },
-      resolve: (root, {id, publishAt, updatedAt, publishedAt}, {authenticate, prisma}) =>
-        publishArticle(id, {publishAt, updatedAt, publishedAt}, authenticate, prisma)
-    },
-
-    unpublishArticle: {
-      type: GraphQLArticle,
-      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma: {article}}) =>
-        unpublishArticle(id, authenticate, article)
-    },
-
-    duplicateArticle: {
-      type: new GraphQLNonNull(GraphQLArticle),
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLID)}
-      },
-      resolve: (root, {id}, {authenticate, prisma: {article}, loaders: {articles}}) =>
-        duplicateArticle(id, authenticate, articles, article)
-    },
-
     // Page
     // =======
 
@@ -754,7 +624,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: new GraphQLNonNull(GraphQLPage),
       args: {input: {type: new GraphQLNonNull(GraphQLPageInput)}},
       resolve: (root, {input}, {authenticate, prisma: {page}}) =>
-        createPage({...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, page)
+        createPage(input, authenticate, page)
     },
 
     updatePage: {
@@ -764,13 +634,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: new GraphQLNonNull(GraphQLPageInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {page}, loaders}) =>
-        updatePage(
-          id,
-          {...input, blocks: input.blocks.map(mapBlockUnionMap)},
-          authenticate,
-          page,
-          loaders.pages
-        )
+        updatePage(id, input, authenticate, page, loaders.pages)
     },
 
     deletePage: {

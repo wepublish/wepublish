@@ -3,7 +3,7 @@ import express, {Application, NextFunction, Request, Response} from 'express'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
 import {contextFromRequest, ContextOptions} from './context'
-import {onFindArticle, onFindPage} from './events'
+import {onFindPage} from './events'
 import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/schema'
 import {MAIL_WEBHOOK_PATH_PREFIX} from '@wepublish/mail/api'
 import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments'
@@ -22,9 +22,11 @@ import {GraphQLPublicPageResolver} from './graphql/page'
 import {GraphQLTagResolver} from './graphql/tag/tag'
 import {GraphQLImageResolver} from './graphql/image'
 import {GraphQLObjectType, GraphQLUnionType, printSchema} from 'graphql'
-import {GraphQLEventResolver} from './graphql/event/event'
 import * as fs from 'fs'
-import {GraphQLPublicArticleResolver} from './graphql/article'
+import {GraphQLAuthorResolver} from './graphql/author'
+import {GraphQLPollResolver} from './graphql/poll/poll'
+import {GraphQLCommentResolver} from './graphql/comment/comment'
+import {GraphQLPeerResolver} from './graphql/peer'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -93,11 +95,13 @@ export class WepublishServer {
         name: String!
       ) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
-      extend type Article @key(fields: "id")
+      extend type Author @key(fields: "id")
+      extend type Comment @key(fields: "id")
+      extend type FullPoll @key(fields: "id")
       extend type Page @key(fields: "id")
+      extend type Peer @key(fields: "id")
       extend type Tag @key(fields: "id")
       extend type Image @key(fields: "id")
-      extend type Event @key(fields: "id")
       extend type PaymentMethod @key(fields: "id")
       extend type MemberPlan @key(fields: "id")
       extend type User @key(fields: "id")
@@ -110,6 +114,7 @@ export class WepublishServer {
           .filter(type => type instanceof GraphQLObjectType || type instanceof GraphQLUnionType)
           .map(type => {
             const resolvers = {}
+
             if (type instanceof GraphQLObjectType) {
               const fields = type.getFields()
               for (const name in fields) {
@@ -117,10 +122,12 @@ export class WepublishServer {
                   resolvers[name] = fields[name].resolve
                 }
               }
+
               if (type.isTypeOf) {
                 resolvers['isTypeOf'] = type.isTypeOf
               }
             }
+
             if (type instanceof GraphQLUnionType) {
               if (type.resolveType) {
                 resolvers['__resolveType'] = type.resolveType
@@ -140,11 +147,13 @@ export class WepublishServer {
     }
 
     const federatedResolvers = {
-      Article: GraphQLPublicArticleResolver,
+      Author: GraphQLAuthorResolver,
+      Comment: GraphQLCommentResolver,
+      FullPoll: GraphQLPollResolver,
       Page: GraphQLPublicPageResolver,
+      Peer: GraphQLPeerResolver,
       Tag: GraphQLTagResolver,
-      Image: GraphQLImageResolver,
-      Event: GraphQLEventResolver
+      Image: GraphQLImageResolver
     }
 
     for (const type in federatedResolvers) {
@@ -220,7 +229,6 @@ export class WepublishServer {
   }
 
   private async setupPrismaMiddlewares(): Promise<void> {
-    this.opts.prisma.$use(onFindArticle(this.opts.prisma))
     this.opts.prisma.$use(onFindPage(this.opts.prisma))
   }
 }

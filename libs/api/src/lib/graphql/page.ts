@@ -25,7 +25,6 @@ import {
   GraphQLPageInfo
 } from './common'
 
-import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
 import {GraphQLTag} from './tag/tag'
 
@@ -86,11 +85,7 @@ export const GraphQLPageInput = new GraphQLInputObjectType({
 
     socialMediaTitle: {type: GraphQLString},
     socialMediaDescription: {type: GraphQLString},
-    socialMediaImageID: {type: GraphQLID},
-
-    blocks: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlockInput)))
-    }
+    socialMediaImageID: {type: GraphQLID}
   })
 })
 
@@ -147,9 +142,7 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
       resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}) => {
         return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
       })
-    },
-
-    blocks: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlock)))}
+    }
   })
 })
 
@@ -268,9 +261,7 @@ export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
       resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}) => {
         return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
       })
-    },
-
-    blocks: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicBlock)))}
+    }
   })
 })
 

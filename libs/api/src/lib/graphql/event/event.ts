@@ -113,7 +113,11 @@ export const GraphQLEventResolver = {
   __resolveReference: async (reference, {loaders}: Context) => {
     const {id} = reference
     const event = await loaders.eventById.load(id)
-    if (!event) throw new Error('Event not found')
+
+    if (!event) {
+      throw new Error('Event not found')
+    }
+
     return event
   }
 }

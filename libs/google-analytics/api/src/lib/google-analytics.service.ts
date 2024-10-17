@@ -4,7 +4,8 @@ import {BetaAnalyticsDataClient} from '@google-analytics/data'
 import {JWTInput} from 'google-auth-library'
 import {format} from 'date-fns'
 import {HotAndTrendingDataSource} from '@wepublish/article/api'
-import {getMaxTake} from '@wepublish/utils/api'
+import {getMaxTake, PrimeDataLoader} from '@wepublish/utils/api'
+import {ArticleDataloaderService} from '@wepublish/article/api'
 
 export const GA_CLIENT_OPTIONS = Symbol('GA_CLIENT_OPTIONS')
 export type GoogleAnalyticsConfig = {
@@ -25,6 +26,7 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
     private config: GoogleAnalyticsConfig
   ) {}
 
+  @PrimeDataLoader(ArticleDataloaderService)
   async getMostViewedArticles({
     start,
     take,
@@ -34,6 +36,7 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
       console.warn(
         'GoogleAnalyticsService.getMostViewedArticles: No Google Analytics credentials set, returning empty array'
       )
+
       return []
     }
 
@@ -87,34 +90,40 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
 
     const articles = await this.prisma.article.findMany({
       where: {
-        published: {
-          slug: {
-            in: Object.keys(slicedArticleViewMap),
-            mode: 'insensitive'
+        slug: {
+          in: Object.keys(slicedArticleViewMap),
+          mode: 'insensitive'
+        },
+        revisions: {
+          some: {
+            publishedAt: {
+              not: null
+            }
           }
         }
       },
       include: {
-        published: {
-          select: {
-            slug: true
-          }
+        revisions: {
+          orderBy: {
+            publishedAt: 'desc'
+          },
+          take: 1
         }
       }
     })
 
     return articles.sort((a, b) => {
-      if (!a.published?.slug || !articleViewMap[a.published.slug]) {
+      if (!a?.slug || !articleViewMap[a.slug]) {
         return -1
       }
 
-      if (!b.published?.slug || !articleViewMap[b.published.slug]) {
+      if (!b?.slug || !articleViewMap[b.slug]) {
         return 1
       }
 
-      return articleViewMap[a.published.slug] > articleViewMap[b.published.slug]
+      return articleViewMap[a.slug] > articleViewMap[b.slug]
         ? -1
-        : articleViewMap[b.published.slug] > articleViewMap[a.published.slug]
+        : articleViewMap[b.slug] > articleViewMap[a.slug]
         ? 1
         : 0
     })
