@@ -2,7 +2,7 @@ import {Injectable, CanActivate, ExecutionContext} from '@nestjs/common'
 import {Reflector} from '@nestjs/core'
 import {PERMISSIONS_METADATA_KEY} from './permission.decorator'
 import {GqlExecutionContext} from '@nestjs/graphql'
-import {Permission} from './permissions'
+import {Guest, Permission} from './permissions'
 import {hasPermission} from './has-permission'
 
 @Injectable()
@@ -18,6 +18,10 @@ export class PermissionsGuard implements CanActivate {
     ])
 
     if (!permissions.length) {
+      return false
+    }
+
+    if (permissions.some(permission => permission.id === Guest.id)) {
       return true
     }
 

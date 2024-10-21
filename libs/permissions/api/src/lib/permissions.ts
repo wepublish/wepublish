@@ -4,6 +4,12 @@ export type Permission = {
   deprecated: boolean
 }
 
+export const Guest: Permission = {
+  id: 'GUEST',
+  description: 'Allows guest access',
+  deprecated: false
+}
+
 export const CanGetNavigation: Permission = {
   id: 'CAN_GET_NAVIGATION',
   description: 'Allows to get navigation',
