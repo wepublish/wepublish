@@ -48,8 +48,7 @@ import {readConfig} from '../readConfig'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
-import {SentryModule, SentryGlobalFilter} from '@sentry/nestjs/setup'
-import {APP_FILTER} from '@nestjs/core'
+import {SentryModule} from '@sentry/nestjs/setup'
 
 @Global()
 @Module({
