@@ -5,6 +5,9 @@ import {MediaServiceModule, StorageClientModule, TokenModule} from '@wepublish/m
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {MulterModule} from '@nestjs/platform-express'
 import {PassportModule} from '@nestjs/passport'
+import {SentryModule} from '@sentry/nestjs/setup'
+import {APP_FILTER} from '@nestjs/core'
+import {SentryGlobalFilter} from '@sentry/nestjs/setup'
 
 @Module({
   imports: [
@@ -14,6 +17,7 @@ import {PassportModule} from '@nestjs/passport'
     MulterModule.register({}),
     MediaServiceModule.forRootAsync({
       imports: [
+        SentryModule.forRoot(),
         StorageClientModule.forRootAsync({
           imports: [ConfigModule],
           useFactory: (config: ConfigService) => ({
@@ -42,6 +46,12 @@ import {PassportModule} from '@nestjs/passport'
       inject: [ConfigService]
     })
   ],
-  controllers: [AppController]
+  controllers: [AppController],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: SentryGlobalFilter
+    }
+  ]
 })
 export class AppModule {}

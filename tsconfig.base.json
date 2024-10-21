@@ -76,11 +76,13 @@
       "@wepublish/utils": ["libs/utils/src/index.ts"],
       "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
+      "@wepublish/utils/website/sentry/edge": ["libs/utils/website/src/lib/sentry.edge.config.ts"],
+      "@wepublish/utils/website/sentry/server": ["libs/utils/website/src/lib/sentry.server.config.ts"],
       "@wepublish/website": ["libs/website/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
       "@wepublish/website/server": ["libs/website/src/server.ts"],
-      "@wepublish/article/api": ["libs/article/api/src/index.ts"]
+      "@wepublish/article/api": ["libs/article/api/src/index.ts"],
     }
   },
   "exclude": ["node_modules", "tmp"]

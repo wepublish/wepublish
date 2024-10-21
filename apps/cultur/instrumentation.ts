@@ -2,11 +2,11 @@ import * as Sentry from '@sentry/nextjs'
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
-    await import('../../libs/utils/website/src/lib/sentry.server.config')
+    await import('@wepublish/utils/website/sentry/server')
   }
 
   if (process.env.NEXT_RUNTIME === 'edge') {
-    await import('../../libs/utils/website/src/lib/sentry.edge.config')
+    await import('@wepublish/utils/website/sentry/edge')
   }
 }
 
