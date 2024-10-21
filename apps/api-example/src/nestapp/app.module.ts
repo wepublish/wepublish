@@ -290,10 +290,6 @@ import {APP_FILTER} from '@nestjs/core'
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [
     {
-      provide: APP_FILTER,
-      useClass: SentryGlobalFilter
-    },
-    {
       provide: MediaAdapterService,
       useFactory: async (config: ConfigService) => {
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
