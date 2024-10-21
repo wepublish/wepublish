@@ -48,7 +48,8 @@ import {readConfig} from '../readConfig'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
-import {SentryModule} from '@sentry/nestjs/setup'
+import {SentryModule, SentryGlobalFilter} from '@sentry/nestjs/setup'
+import {APP_FILTER} from '@nestjs/core'
 
 @Global()
 @Module({
@@ -288,6 +289,10 @@ import {SentryModule} from '@sentry/nestjs/setup'
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: SentryGlobalFilter
+    },
     {
       provide: MediaAdapterService,
       useFactory: async (config: ConfigService) => {

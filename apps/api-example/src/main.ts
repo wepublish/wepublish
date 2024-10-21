@@ -8,9 +8,22 @@ import {MailContext} from '@wepublish/mail/api'
 import helmet from 'helmet'
 import {GatewayModule} from './nestapp/gateway.module'
 import {HOT_AND_TRENDING_DATA_SOURCE, HotAndTrendingDataSource} from '@wepublish/api'
-import './instrument'
+import * as Sentry from '@sentry/nestjs'
+import {nodeProfilingIntegration} from '@sentry/profiling-node'
 
 async function bootstrap() {
+  if (process.env.SENTRY_DSN) {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+      integrations: [nodeProfilingIntegration()],
+      // Tracing
+      tracesSampleRate: 1.0, //  Capture 100% of the transactions
+
+      // Set sampling rate for profiling - this is relative to tracesSampleRate
+      profilesSampleRate: 1.0
+    })
+  }
+
   const port = process.env.PORT ?? 4000
   const privatePort = +port + 1
 
