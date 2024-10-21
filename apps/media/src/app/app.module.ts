@@ -5,9 +5,8 @@ import {MediaServiceModule, StorageClientModule, TokenModule} from '@wepublish/m
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {MulterModule} from '@nestjs/platform-express'
 import {PassportModule} from '@nestjs/passport'
-import {SentryModule} from '@sentry/nestjs/setup'
+import {SentryModule, SentryGlobalFilter} from '@sentry/nestjs/setup'
 import {APP_FILTER} from '@nestjs/core'
-import {SentryGlobalFilter} from '@sentry/nestjs/setup'
 
 @Module({
   imports: [
