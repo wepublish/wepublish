@@ -6,7 +6,7 @@
       "node_modules/axios/dist/node/axios.cjs",
       "node_modules/es-get-iterator/node.js",
       "node_modules/i18n-iso-countries/langs",
-      "node_modules/@sentry"
+      "node_modules/@sentry/nestjs"
     ],
     "targets": ["node16-linux"]
   },
