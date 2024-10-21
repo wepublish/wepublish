@@ -48,13 +48,10 @@ import {readConfig} from '../readConfig'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
-import {SentryModule, SentryGlobalFilter} from '@sentry/nestjs/setup'
-import {APP_FILTER} from '@nestjs/core'
 
 @Global()
 @Module({
   imports: [
-    SentryModule.forRoot(),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloFederationDriver,
       imports: [ConfigModule],
@@ -289,10 +286,6 @@ import {APP_FILTER} from '@nestjs/core'
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [
-    {
-      provide: APP_FILTER,
-      useClass: SentryGlobalFilter
-    },
     {
       provide: MediaAdapterService,
       useFactory: async (config: ConfigService) => {
