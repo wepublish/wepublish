@@ -965,6 +965,29 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         })
         if (blockingPaymnet) throw new PaymentAlreadyRunning(blockingPaymnet.id)
 
+        // update subscription's payment provider in case user changed it along with the payment
+        const subscriptionPaymentMethod = await loaders.activePaymentMethodsByID.load(
+          subscription.paymentMethodID
+        )
+        if (!subscriptionPaymentMethod) {
+          throw new Error(`Could not find subscription's current payment method.`)
+        }
+        // only update if payment method changed
+        if (paymentMethod.id !== subscriptionPaymentMethod.id) {
+          const updatedSubscription = await prisma.subscription.update({
+            data: {
+              paymentMethodID: paymentMethod.id
+            },
+            where: {
+              id: subscription.id
+            }
+          })
+
+          if (!updatedSubscription) {
+            throw new Error('Could not update payment provider for this subscription!')
+          }
+        }
+
         return await createPaymentWithProvider({
           paymentMethodID: paymentMethod.id,
           invoice,
