@@ -17,6 +17,15 @@ import {IconContext} from 'react-icons'
 import {App} from './app/app'
 import {initI18N} from './app/i18n'
 import {ElementID} from './shared/elementID'
+import * as Sentry from '@sentry/react'
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+  tracesSampleRate: 1.0,
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0
+})
 
 // See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
 export async function fetchIntrospectionQueryResultData(url: string) {
