@@ -2350,6 +2350,7 @@ export type PeerArticleQuery = { __typename?: 'Query', peerArticle?: { __typenam
 
 export type HotAndTrendingQueryVariables = Exact<{
   take?: InputMaybe<Scalars['Int']>;
+  start?: InputMaybe<Scalars['DateTime']>;
 }>;
 
 
@@ -3806,8 +3807,8 @@ export type PeerArticleQueryHookResult = ReturnType<typeof usePeerArticleQuery>;
 export type PeerArticleLazyQueryHookResult = ReturnType<typeof usePeerArticleLazyQuery>;
 export type PeerArticleQueryResult = Apollo.QueryResult<PeerArticleQuery, PeerArticleQueryVariables>;
 export const HotAndTrendingDocument = gql`
-    query HotAndTrending($take: Int) {
-  hotAndTrending(take: $take) {
+    query HotAndTrending($take: Int, $start: DateTime) {
+  hotAndTrending(take: $take, start: $start) {
     ...ArticleWithoutBlocks
   }
 }
@@ -3826,6 +3827,7 @@ export const HotAndTrendingDocument = gql`
  * const { data, loading, error } = useHotAndTrendingQuery({
  *   variables: {
  *      take: // value for 'take'
+ *      start: // value for 'start'
  *   },
  * });
  */
