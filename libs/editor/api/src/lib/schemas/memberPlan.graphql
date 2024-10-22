@@ -24,6 +24,7 @@ fragment FullMemberPlan on MemberPlan {
   ...MemberPlanRef
   extendable
   maxCount
+  migrateToTargetPMid
 }
 
 query MemberPlanList($filter: String, $cursor: ID, $take: Int, $skip: Int) {

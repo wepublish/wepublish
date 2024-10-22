@@ -123,7 +123,8 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
     availablePaymentMethods: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethod)))
-    }
+    },
+    migrateToTargetPMid: {type: GraphQLID}
   }
 })
 
@@ -219,6 +220,7 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
       type: new GraphQLNonNull(
         new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethodInput))
       )
-    }
+    },
+    migrateToTargetPMid: {type: GraphQLID}
   }
 })

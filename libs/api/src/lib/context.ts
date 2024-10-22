@@ -7,12 +7,12 @@ import {
   Event,
   Image,
   MailLog,
+  MemberPlan,
   Payment,
   PaymentMethod,
   PaymentState,
   Peer,
   PrismaClient,
-  Subscription,
   TaggedArticles,
   TaggedPages,
   User,
@@ -223,10 +223,10 @@ export interface CreatePaymentWithProvider {
   paymentMethodID: string
   invoice: InvoiceWithItems
   saveCustomer: boolean
-  subscription: Subscription
   successURL?: string
   failureURL?: string
   user?: User
+  migrateToTargetPMid?: string
 }
 
 export async function contextFromRequest(
@@ -1003,12 +1003,14 @@ export async function contextFromRequest(
       paymentMethodID,
       invoice,
       saveCustomer,
-      subscription,
       failureURL,
       successURL,
-      user
+      user,
+      migrateToTargetPMid
     }: CreatePaymentWithProvider): Promise<Payment> {
-      const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
+      const paymentMethod = await loaders.activePaymentMethodsByID.load(
+        migrateToTargetPMid || paymentMethodID
+      )
       const paymentProvider = paymentProviders.find(
         pp => pp.id === paymentMethod?.paymentProviderID
       )
@@ -1017,15 +1019,18 @@ export async function contextFromRequest(
         throw new Error('paymentProvider not found')
       }
 
-      // update subscription's payment provider in case user changed it along with the payment
-      // https://wepublish.atlassian.net/browse/TSRI-98
-      if (paymentMethod.id !== subscription.paymentMethodID) {
+      /**
+       * Gradually migrate subscription's payment method.
+       * Mainly used in mutation.public.ts
+       * Requirements written down here https://wepublish.atlassian.net/browse/TSRI-98
+       */
+      if (migrateToTargetPMid) {
         const updatedSubscription = await prisma.subscription.update({
           data: {
-            paymentMethodID: paymentMethod.id
+            paymentMethodID: migrateToTargetPMid
           },
           where: {
-            id: subscription.id
+            id: invoice.subscriptionID
           }
         })
 

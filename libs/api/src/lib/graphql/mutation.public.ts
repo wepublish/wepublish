@@ -1,4 +1,10 @@
-import {PaymentState, SubscriptionDeactivationReason, UserEvent, Subscription} from '@prisma/client'
+import {
+  PaymentState,
+  SubscriptionDeactivationReason,
+  UserEvent,
+  Subscription,
+  MemberPlan
+} from '@prisma/client'
 import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
 import * as crypto from 'crypto'
@@ -419,10 +425,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           payment: await createPaymentWithProvider({
             invoice,
             saveCustomer: true,
-            subscription,
             paymentMethodID: paymentMethod.id,
             successURL,
-            failureURL
+            failureURL,
+            migrateToTargetPMid: memberPlan.migrateToTargetPMid
           }),
           user,
           session
@@ -548,11 +554,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         return await createPaymentWithProvider({
           invoice,
           saveCustomer: true,
-          subscription,
           paymentMethodID: paymentMethod.id,
           successURL,
           failureURL,
-          user
+          user,
+          migrateToTargetPMid: memberPlan.migrateToTargetPMid
         })
       }
     },
@@ -583,8 +589,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const subscription = (await prisma.subscription.findUnique({
           where: {
             id: subscriptionId
+          },
+          include: {
+            memberPlan: true
           }
-        })) as SubscriptionWithRelations
+        })) as SubscriptionWithRelations & {memberPlan: MemberPlan}
         // Allow only valid and subscription belonging to the user to early extend
         if (!subscription || subscription.userID !== user.id) {
           logger('extendSubscription').error(
@@ -693,10 +702,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         return await createPaymentWithProvider({
           invoice,
           saveCustomer: true,
-          subscription,
           paymentMethodID: subscription.paymentMethodID,
           successURL,
-          failureURL
+          failureURL,
+          migrateToTargetPMid: subscription.memberPlan.migrateToTargetPMid
         })
       }
     },
@@ -947,7 +956,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           include: {
             deactivation: true,
             periods: true,
-            properties: true
+            properties: true,
+            memberPlan: true
           }
         })
 
@@ -971,11 +981,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         return await createPaymentWithProvider({
           paymentMethodID: paymentMethod.id,
           invoice,
-          subscription,
           saveCustomer: true,
           successURL,
           failureURL,
-          user
+          user,
+          migrateToTargetPMid: subscription.memberPlan.migrateToTargetPMid
         })
       }
     },
@@ -1003,7 +1013,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           },
           include: {
             items: true,
-            subscription: true
+            subscription: {
+              include: {
+                memberPlan: true
+              }
+            }
           }
         })
 
@@ -1018,10 +1032,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         return await createPaymentWithProvider({
           paymentMethodID: invoice.subscription.paymentMethodID,
           invoice,
-          subscription: invoice.subscription,
           saveCustomer: true,
           successURL,
-          failureURL
+          failureURL,
+          migrateToTargetPMid: invoice.subscription.memberPlan.migrateToTargetPMid
         })
       }
     },

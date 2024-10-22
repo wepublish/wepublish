@@ -5,6 +5,7 @@ import {
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   PaymentMethod,
+  UpdateMemberPlanMutation,
   useCreateMemberPlanMutation,
   useMemberPlanLazyQuery,
   usePaymentMethodListQuery,
@@ -154,7 +155,8 @@ function MemberPlanEdit() {
       currency: memberPlan.currency,
       amountPerMonthMin: memberPlan.amountPerMonthMin,
       extendable: memberPlan.extendable,
-      maxCount: memberPlan.maxCount
+      maxCount: memberPlan.maxCount,
+      migrateToTargetPMid: memberPlan.migrateToTargetPMid
     }
 
     // update member plan
