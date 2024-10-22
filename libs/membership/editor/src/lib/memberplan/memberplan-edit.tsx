@@ -5,7 +5,6 @@ import {
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   PaymentMethod,
-  UpdateMemberPlanMutation,
   useCreateMemberPlanMutation,
   useMemberPlanLazyQuery,
   usePaymentMethodListQuery,
