@@ -15,6 +15,7 @@ import {
   PrimeDataLoader,
   SortOrder
 } from '@wepublish/utils/api'
+import {mapBlockUnionMap} from '@wepublish/block-content/api'
 
 @Injectable()
 export class ArticleService {
@@ -75,6 +76,7 @@ export class ArticleService {
     socialMediaAuthorIds,
     tagIds,
     properties,
+    blocks,
     ...revision
   }: CreateArticleInput) {
     return this.prisma.article.create({
@@ -94,7 +96,7 @@ export class ArticleService {
         revisions: {
           create: {
             ...revision,
-            blocks: [], // @TODO
+            blocks: blocks.map(mapBlockUnionMap) as any[],
             properties: {
               createMany: {
                 data: properties
@@ -127,6 +129,7 @@ export class ArticleService {
     socialMediaAuthorIds,
     tagIds,
     properties,
+    blocks,
     ...revision
   }: UpdateArticleInput) {
     const article = await this.prisma.article.findUnique({
@@ -150,7 +153,7 @@ export class ArticleService {
         revisions: {
           create: {
             ...revision,
-            blocks: [], // @TODO:
+            blocks: blocks.map(mapBlockUnionMap) as any[],
             properties: {
               createMany: {
                 data: properties.map(property => ({
@@ -224,6 +227,7 @@ export class ArticleService {
       throw new NotFoundException(`Article with id ${id} not found`)
     }
 
+    // @TODO: Unpublish future (based on input publishedAt) revisions
     return this.prisma.article.update({
       where: {
         id

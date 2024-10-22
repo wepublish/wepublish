@@ -98,6 +98,15 @@ type ArticleTeaser implements BaseTeaser & HasArticle & HasImage {
   type: String!
 }
 
+input ArticleTeaserInput {
+  imageID: ID
+  lead: String
+  preTitle: String
+  style: TeaserStyle!
+  title: String
+  type: String!
+}
+
 type Author {
   id: ID!
 }
@@ -123,7 +132,41 @@ type BildwurfAdBlock implements BaseBlock {
   zoneID: String
 }
 
+input BildwurfAdBlockInput {
+  blockStyle: ID
+  type: String!
+  zoneID: String
+}
+
 union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+
+input BlockContentInput {
+  bildwurfAd: BildwurfAdBlockInput
+  comment: CommentBlockInput
+  embed: IFrameBlockInput
+  event: EventBlockInput
+  facebookPost: FacebookPostBlockInput
+  facebookVideo: FacebookVideoBlockInput
+  html: HTMLBlockInput
+  image: ImageBlockInput
+  imageGallery: ImageGalleryBlockInput
+  instagramPost: InstagramPostBlockInput
+  linkPageBreak: BreakBlockInput
+  listicle: ListicleBlockInput
+  polisConversation: PolisConversationBlockInput
+  poll: PollBlockInput
+  quote: QuoteBlockInput
+  richText: RichTextBlockInput
+  soundCloudTrack: SoundCloudTrackBlockInput
+  teaserGrid: TeaserGridBlockInput
+  teaserGridFlex: TeaserGridFlexBlockInput
+  teaserList: TeaserGridFlexBlockInput
+  tikTokVideo: TikTokVideoBlockInput
+  title: TitleBlockInput
+  twitterTweet: TwitterTweetBlockInput
+  vimeoVideo: VimeoVideoBlockInput
+  youTubeVideo: YouTubeVideoBlockInput
+}
 
 type BlockStyle {
   blocks: [BlockType!]!
@@ -165,6 +208,17 @@ type BreakBlock implements BaseBlock & HasImage {
   type: String!
 }
 
+input BreakBlockInput {
+  blockStyle: ID
+  hideButton: Boolean
+  linkTarget: String
+  linkText: String
+  linkURL: String
+  richText: RichText!
+  text: String
+  type: String!
+}
+
 type Comment {
   id: ID!
 }
@@ -180,6 +234,16 @@ type CommentBlockFilter {
   comments: [ID!]!
   item: ID!
   tags: [ID!]!
+}
+
+input CommentBlockFilterInput {
+  comments: [ID!]!
+  item: ID!
+  tags: [ID!]!
+}
+
+input CommentBlockInput {
+  filter: CommentBlockFilterInput!
 }
 
 type Consent {
@@ -204,6 +268,17 @@ type CustomTeaser implements BaseTeaser & HasImage {
   lead: String
   preTitle: String
   properties: [Property!]!
+  style: TeaserStyle!
+  title: String
+  type: String!
+}
+
+input CustomTeaserInput {
+  contentUrl: String
+  imageID: ID
+  lead: String
+  preTitle: String
+  properties: [PropertyInput!]! = []
   style: TeaserStyle!
   title: String
   type: String!
@@ -275,6 +350,15 @@ type EventBlockFilter {
   tags: [ID!]!
 }
 
+input EventBlockFilterInput {
+  events: [ID!]!
+  tags: [ID!]!
+}
+
+input EventBlockInput {
+  filter: EventBlockFilterInput!
+}
+
 input EventFilter {
   from: DateTime
   location: String
@@ -326,6 +410,15 @@ type EventTeaser implements BaseTeaser & HasEvent & HasImage {
   type: String!
 }
 
+input EventTeaserInput {
+  imageID: ID
+  lead: String
+  preTitle: String
+  style: TeaserStyle!
+  title: String
+  type: String!
+}
+
 type FacebookPostBlock implements BaseBlock {
   blockStyle: ID
   postID: String
@@ -333,7 +426,21 @@ type FacebookPostBlock implements BaseBlock {
   userID: String
 }
 
+input FacebookPostBlockInput {
+  blockStyle: ID
+  postID: String
+  type: String!
+  userID: String
+}
+
 type FacebookVideoBlock implements BaseBlock {
+  blockStyle: ID
+  type: String!
+  userID: String
+  videoID: String
+}
+
+input FacebookVideoBlockInput {
   blockStyle: ID
   type: String!
   userID: String
@@ -349,9 +456,23 @@ type FlexAlignment {
   y: Int!
 }
 
+input FlexAlignmentInput {
+  h: Int!
+  i: Int!
+  static: Boolean!
+  w: Int!
+  x: Int!
+  y: Int!
+}
+
 type FlexTeaser {
   alignment: FlexAlignment!
   teaser: Teaser!
+}
+
+input FlexTeaserInput {
+  alignment: FlexAlignmentInput!
+  teaser: TeaserInput!
 }
 
 type FocalPoint {
@@ -367,6 +488,12 @@ type FullPoll {
 scalar GraphQLSettingValueType
 
 type HTMLBlock implements BaseBlock {
+  blockStyle: ID
+  html: String
+  type: String!
+}
+
+input HTMLBlockInput {
   blockStyle: ID
   html: String
   type: String!
@@ -412,6 +539,17 @@ type IFrameBlock implements BaseBlock {
   width: Int
 }
 
+input IFrameBlockInput {
+  blockStyle: ID
+  height: Int
+  sandbox: String
+  styleCustom: String
+  title: String
+  type: String!
+  url: String
+  width: Int
+}
+
 type Image {
   id: ID!
 }
@@ -425,16 +563,31 @@ type ImageBlock implements BaseBlock & HasImage {
   type: String!
 }
 
+input ImageBlockInput {
+  blockStyle: ID
+  caption: String
+  linkUrl: String
+  type: String!
+}
+
 type ImageGalleryBlock implements BaseBlock {
   blockStyle: ID
   images: [ImageGalleryImage!]!
   type: String!
 }
 
+input ImageGalleryBlockInput {
+  images: [ImageGalleryImageInput!]!
+}
+
 type ImageGalleryImage implements HasImage {
   caption: String
   image: Image
   imageID: ID
+}
+
+input ImageGalleryImageInput {
+  caption: String
 }
 
 type ImageV2 {
@@ -484,15 +637,30 @@ type InstagramPostBlock implements BaseBlock {
   type: String!
 }
 
+input InstagramPostBlockInput {
+  blockStyle: ID
+  postID: String
+  type: String!
+}
+
 type ListicleBlock implements BaseBlock {
   blockStyle: ID
   items: [ListicleItem!]!
   type: String!
 }
 
+input ListicleBlockInput {
+  items: [ListicleItemInput!]!
+}
+
 type ListicleItem implements HasImage {
   image: Image
   imageID: ID
+  richText: RichText!
+  title: String
+}
+
+input ListicleItemInput {
   richText: RichText!
   title: String
 }
@@ -563,10 +731,19 @@ type Mutation {
 
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
+
+  """Publishes an article at the given time."""
+  publishArticle(id: String!, publishedAt: DateTime!): Article!
   syncTemplates: Boolean
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
+
+  """Unpublishes all revisions of an article."""
+  unpublishArticle(id: String!): Article!
+
+  """Updates an article."""
+  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String!, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Updates an existing block style."""
   updateBlockStyle(blocks: [BlockType!], id: String!, name: String): BlockStyle!
@@ -610,6 +787,15 @@ type PageTeaser implements BaseTeaser & HasImage & HasPage {
   lead: String
   page: Page
   pageID: ID
+  preTitle: String
+  style: TeaserStyle!
+  title: String
+  type: String!
+}
+
+input PageTeaserInput {
+  imageID: ID
+  lead: String
   preTitle: String
   style: TeaserStyle!
   title: String
@@ -664,6 +850,16 @@ type PeerArticleTeaser implements BaseTeaser & HasImage & HasPeer {
   type: String!
 }
 
+input PeerArticleTeaserInput {
+  articleID: ID
+  imageID: ID
+  lead: String
+  preTitle: String
+  style: TeaserStyle!
+  title: String
+  type: String!
+}
+
 type PeriodicJob {
   createdAt: DateTime!
   date: DateTime!
@@ -682,6 +878,12 @@ type PolisConversationBlock implements BaseBlock {
   type: String!
 }
 
+input PolisConversationBlockInput {
+  blockStyle: ID
+  conversationID: String
+  type: String!
+}
+
 type PollAnswerInVote {
   answer: String!
   id: ID!
@@ -691,6 +893,12 @@ type PollBlock implements BaseBlock {
   blockStyle: ID
   image: Image
   poll: FullPoll
+  pollId: String
+  type: String!
+}
+
+input PollBlockInput {
+  blockStyle: ID
   pollId: String
   type: String!
 }
@@ -720,6 +928,13 @@ enum PollVoteSort {
 }
 
 type Property {
+  id: String!
+  key: String!
+  public: Boolean!
+  value: String!
+}
+
+input PropertyInput {
   id: String!
   key: String!
   public: Boolean!
@@ -831,9 +1046,22 @@ type QuoteBlock implements BaseBlock & HasImage {
   type: String!
 }
 
+input QuoteBlockInput {
+  author: String
+  blockStyle: ID
+  quote: String
+  type: String!
+}
+
 scalar RichText
 
 type RichTextBlock implements BaseBlock {
+  blockStyle: ID
+  richText: RichText!
+  type: String!
+}
+
+input RichTextBlockInput {
   blockStyle: ID
   richText: RichText!
   type: String!
@@ -888,6 +1116,12 @@ enum SortOrder {
 }
 
 type SoundCloudTrackBlock implements BaseBlock {
+  blockStyle: ID
+  trackID: String
+  type: String!
+}
+
+input SoundCloudTrackBlockInput {
   blockStyle: ID
   trackID: String
   type: String!
@@ -951,10 +1185,31 @@ type TeaserGridBlock implements BaseBlock {
   type: String!
 }
 
+input TeaserGridBlockInput {
+  blockStyle: ID
+  numColumns: Int!
+  teasers: [TeaserInput!]!
+  type: String!
+}
+
 type TeaserGridFlexBlock implements BaseBlock {
   blockStyle: ID
   flexTeasers: [FlexTeaser!]!
   type: String!
+}
+
+input TeaserGridFlexBlockInput {
+  blockStyle: ID
+  flexTeasers: [FlexTeaserInput!]!
+  type: String!
+}
+
+input TeaserInput {
+  article: ArticleTeaserInput
+  custom: CustomTeaserInput
+  event: EventTeaserInput
+  page: PageTeaserInput
+  peerArticle: PeerArticleTeaserInput
 }
 
 enum TeaserStyle {
@@ -970,6 +1225,13 @@ type TikTokVideoBlock implements BaseBlock {
   videoID: String
 }
 
+input TikTokVideoBlockInput {
+  blockStyle: ID
+  type: String!
+  userID: String
+  videoID: String
+}
+
 type TitleBlock implements BaseBlock {
   blockStyle: ID
   lead: String
@@ -977,7 +1239,21 @@ type TitleBlock implements BaseBlock {
   type: String!
 }
 
+input TitleBlockInput {
+  blockStyle: ID
+  lead: String
+  title: String
+  type: String!
+}
+
 type TwitterTweetBlock implements BaseBlock {
+  blockStyle: ID
+  tweetID: String
+  type: String!
+  userID: String
+}
+
+input TwitterTweetBlockInput {
   blockStyle: ID
   tweetID: String
   type: String!
@@ -1026,7 +1302,19 @@ type VimeoVideoBlock implements BaseBlock {
   videoID: String
 }
 
+input VimeoVideoBlockInput {
+  blockStyle: ID
+  type: String!
+  videoID: String
+}
+
 type YouTubeVideoBlock implements BaseBlock {
+  blockStyle: ID
+  type: String!
+  videoID: String
+}
+
+input YouTubeVideoBlockInput {
   blockStyle: ID
   type: String!
   videoID: String

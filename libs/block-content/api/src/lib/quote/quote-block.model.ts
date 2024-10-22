@@ -1,4 +1,4 @@
-import {Field, ObjectType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {Image} from '@wepublish/image/api'
 import {BaseBlock} from '../base-block.model'
 import {BlockType} from '../block-type.model'
@@ -17,3 +17,6 @@ export class QuoteBlock extends BaseBlock<typeof BlockType.Quote> implements Has
   imageID?: string
   image?: Image
 }
+
+@InputType()
+export class QuoteBlockInput extends OmitType(QuoteBlock, ['image'] as const, InputType) {}

@@ -71,7 +71,8 @@ import {ArticleModule} from '@wepublish/article/api'
           cache: 'bounded',
           introspection: configFile.general.apolloIntrospection,
           playground: configFile.general.apolloPlayground,
-          allowBatchedHttpRequests: true
+          allowBatchedHttpRequests: true,
+          inheritResolversFromInterfaces: true
         }
       }
     }),

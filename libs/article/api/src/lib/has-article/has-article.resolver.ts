@@ -3,7 +3,7 @@ import {HasArticle} from './has-article.model'
 import {Article} from '../article.model'
 import {ArticleDataloaderService} from '../article-dataloader.service'
 
-@Resolver(() => HasArticle)
+@Resolver(HasArticle)
 export class HasArticleResolver {
   constructor(private dataloader: ArticleDataloaderService) {}
 

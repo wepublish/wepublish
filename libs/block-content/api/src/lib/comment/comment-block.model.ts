@@ -1,4 +1,4 @@
-import {Field, ID, ObjectType} from '@nestjs/graphql'
+import {Field, ID, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {BaseBlock} from '../base-block.model'
 import {BlockType} from '../block-type.model'
 import {Comment} from '@wepublish/comments/api'
@@ -15,6 +15,9 @@ export class CommentBlockFilter {
   comments!: string[]
 }
 
+@InputType()
+export class CommentBlockFilterInput extends OmitType(CommentBlockFilter, [] as const, InputType) {}
+
 @ObjectType({
   implements: BaseBlock
 })
@@ -24,4 +27,10 @@ export class CommentBlock extends BaseBlock<typeof BlockType.HTML> {
 
   @Field(() => [Comment])
   comments!: Comment[]
+}
+
+@InputType()
+export class CommentBlockInput {
+  @Field(() => CommentBlockFilterInput)
+  filter!: CommentBlockFilterInput
 }

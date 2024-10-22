@@ -1,29 +1,39 @@
-import {createUnionType, Field, InterfaceType} from '@nestjs/graphql'
-import {QuoteBlock} from './quote/quote-block.model'
-import {RichTextBlock} from './richtext/richtext-block.model'
+import {createUnionType, Field, InputType, InterfaceType} from '@nestjs/graphql'
+import {QuoteBlock, QuoteBlockInput} from './quote/quote-block.model'
+import {RichTextBlock, RichTextBlockInput} from './richtext/richtext-block.model'
 import {BaseBlock, UnknownBlock} from './base-block.model'
-import {HTMLBlock} from './html/html-block.model'
-import {TitleBlock} from './title/title-block.model'
-import {ImageBlock} from './image/image-block.model'
-import {BreakBlock} from './break/break-block.model'
-import {EventBlock} from './event/event-block.model'
-import {CommentBlock} from './comment/comment-block.model'
-import {PollBlock} from './poll/poll.model'
-import {ImageGalleryBlock} from './image/image-gallery-block.model'
+import {HTMLBlock, HTMLBlockInput} from './html/html-block.model'
+import {TitleBlock, TitleBlockInput} from './title/title-block.model'
+import {ImageBlock, ImageBlockInput} from './image/image-block.model'
+import {BreakBlock, BreakBlockInput} from './break/break-block.model'
+import {EventBlock, EventBlockInput} from './event/event-block.model'
+import {CommentBlock, CommentBlockInput} from './comment/comment-block.model'
+import {PollBlock, PollBlockInput} from './poll/poll.model'
+import {ImageGalleryBlock, ImageGalleryBlockInput} from './image/image-gallery-block.model'
 import {BlockType} from './block-type.model'
-import {IFrameBlock} from './embed/iframe-block.model'
-import {BildwurfAdBlock} from './embed/bildwurf-block.model'
-import {FacebookPostBlock, FacebookVideoBlock} from './embed/facebook-block.model'
-import {InstagramPostBlock} from './embed/instagram-block.model'
-import {PolisConversationBlock} from './embed/polis-block.model'
-import {SoundCloudTrackBlock} from './embed/soundcloud-block.model'
-import {TikTokVideoBlock} from './embed/tiktok-block.model'
-import {TwitterTweetBlock} from './embed/twitter-block.model'
-import {VimeoVideoBlock} from './embed/vimeo-block.model'
-import {YouTubeVideoBlock} from './embed/youtube-block.model'
-import {ListicleBlock} from './listicle/listicle.model'
-import {TeaserGridBlock} from './teaser/teaser-grid.model'
-import {TeaserGridFlexBlock} from './teaser/teaser-flex.model'
+import {IFrameBlock, IFrameBlockInput} from './embed/iframe-block.model'
+import {BildwurfAdBlock, BildwurfAdBlockInput} from './embed/bildwurf-block.model'
+import {
+  FacebookPostBlock,
+  FacebookPostBlockInput,
+  FacebookVideoBlock,
+  FacebookVideoBlockInput
+} from './embed/facebook-block.model'
+import {InstagramPostBlock, InstagramPostBlockInput} from './embed/instagram-block.model'
+import {PolisConversationBlock, PolisConversationBlockInput} from './embed/polis-block.model'
+import {SoundCloudTrackBlock, SoundCloudTrackBlockInput} from './embed/soundcloud-block.model'
+import {TikTokVideoBlock, TikTokVideoBlockInput} from './embed/tiktok-block.model'
+import {TwitterTweetBlock, TwitterTweetBlockInput} from './embed/twitter-block.model'
+import {VimeoVideoBlock, VimeoVideoBlockInput} from './embed/vimeo-block.model'
+import {YouTubeVideoBlock, YouTubeVideoBlockInput} from './embed/youtube-block.model'
+import {ListicleBlock, ListicleBlockInput} from './listicle/listicle.model'
+import {TeaserGridBlock, TeaserGridBlockInput} from './teaser/teaser-grid.model'
+import {
+  TeaserGridFlexBlock,
+  FlexTeaserInput,
+  TeaserGridFlexBlockInput
+} from './teaser/teaser-flex.model'
+import {Teaser, TeaserInput, TeaserType} from './teaser/teaser.model'
 
 export const BlockContent = createUnionType({
   name: 'BlockContent',
@@ -112,6 +122,120 @@ export const BlockContent = createUnionType({
     return UnknownBlock.name
   }
 })
+
+@InputType()
+export class BlockContentInput {
+  @Field(() => RichTextBlockInput, {nullable: true})
+  [BlockType.RichText]?: RichTextBlockInput;
+  @Field(() => QuoteBlockInput, {nullable: true})
+  [BlockType.Quote]?: QuoteBlockInput;
+  @Field(() => ListicleBlockInput, {nullable: true})
+  [BlockType.Listicle]?: ListicleBlockInput;
+  @Field(() => HTMLBlockInput, {nullable: true})
+  [BlockType.HTML]?: HTMLBlockInput;
+  @Field(() => TitleBlockInput, {nullable: true})
+  [BlockType.Title]?: TitleBlockInput;
+
+  @Field(() => ImageBlockInput, {nullable: true})
+  [BlockType.Image]?: ImageBlockInput;
+  @Field(() => ImageGalleryBlockInput, {nullable: true})
+  [BlockType.ImageGallery]?: ImageGalleryBlockInput;
+
+  @Field(() => BreakBlockInput, {nullable: true})
+  [BlockType.LinkPageBreak]?: BreakBlockInput;
+  @Field(() => PollBlockInput, {nullable: true})
+  [BlockType.Poll]?: PollBlockInput;
+  @Field(() => EventBlockInput, {nullable: true})
+  [BlockType.Event]?: EventBlockInput;
+  @Field(() => CommentBlockInput, {nullable: true})
+  [BlockType.Comment]?: CommentBlockInput;
+
+  @Field(() => IFrameBlockInput, {nullable: true})
+  [BlockType.Embed]?: IFrameBlockInput;
+  @Field(() => BildwurfAdBlockInput, {nullable: true})
+  [BlockType.BildwurfAd]?: BildwurfAdBlockInput;
+  @Field(() => FacebookPostBlockInput, {nullable: true})
+  [BlockType.FacebookPost]?: FacebookPostBlockInput;
+  @Field(() => FacebookVideoBlockInput, {nullable: true})
+  [BlockType.FacebookVideo]?: FacebookVideoBlockInput;
+  @Field(() => InstagramPostBlockInput, {nullable: true})
+  [BlockType.InstagramPost]?: InstagramPostBlockInput;
+  @Field(() => PolisConversationBlockInput, {nullable: true})
+  [BlockType.PolisConversation]?: PolisConversationBlockInput;
+  @Field(() => SoundCloudTrackBlockInput, {nullable: true})
+  [BlockType.SoundCloudTrack]?: SoundCloudTrackBlockInput;
+  @Field(() => TikTokVideoBlockInput, {nullable: true})
+  [BlockType.TikTokVideo]?: TikTokVideoBlockInput;
+  @Field(() => TwitterTweetBlockInput, {nullable: true})
+  [BlockType.TwitterTweet]?: TwitterTweetBlockInput;
+  @Field(() => VimeoVideoBlockInput, {nullable: true})
+  [BlockType.VimeoVideo]?: VimeoVideoBlockInput;
+  @Field(() => YouTubeVideoBlockInput, {nullable: true})
+  [BlockType.YouTubeVideo]?: YouTubeVideoBlockInput;
+
+  @Field(() => TeaserGridBlockInput, {nullable: true})
+  [BlockType.TeaserGrid]?: TeaserGridBlockInput;
+  @Field(() => TeaserGridFlexBlockInput, {nullable: true})
+  [BlockType.TeaserGridFlex]?: TeaserGridFlexBlockInput;
+  @Field(() => TeaserGridFlexBlockInput, {nullable: true})
+  [BlockType.TeaserList]?: any
+}
+
+export function mapTeaserUnionMap(value: TeaserInput): typeof Teaser {
+  const valueKeys = Object.keys(value) as TeaserType[]
+
+  if (valueKeys.length === 0) {
+    throw new Error(`Received no teaser types.`)
+  }
+
+  if (valueKeys.length > 1) {
+    throw new Error(
+      `Received multiple teaser types (${JSON.stringify(valueKeys)}), they're mutually exclusive.`
+    )
+  }
+
+  const type = valueKeys[0]
+  const teaserValue = value[type]
+
+  return {type, ...teaserValue} as typeof Teaser
+}
+
+export function mapBlockUnionMap(value: BlockContentInput): typeof BlockContent {
+  const valueKeys = Object.keys(value)
+
+  if (valueKeys.length === 0) {
+    throw new Error(`Received no block types.`)
+  }
+
+  if (valueKeys.length > 1) {
+    throw new Error(
+      `Received multiple block types (${JSON.stringify(
+        Object.keys(value)
+      )}), they're mutually exclusive.`
+    )
+  }
+
+  const type = Object.keys(value)[0] as BlockType
+  const blockValue = value[type]
+
+  switch (type) {
+    case BlockType.TeaserGrid:
+      return {type, ...blockValue, teasers: blockValue.teasers.map(mapTeaserUnionMap)}
+
+    case BlockType.TeaserGridFlex:
+      return {
+        type,
+        ...blockValue,
+        flexTeasers: blockValue.flexTeasers.map(({teaser, ...value}: FlexTeaserInput) => ({
+          ...value,
+          teaser: mapTeaserUnionMap(teaser)
+        }))
+      }
+
+    default:
+      return {type, ...blockValue}
+  }
+}
 
 @InterfaceType()
 export class HasBlockContent {

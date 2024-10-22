@@ -13,7 +13,9 @@ import {Image} from '@wepublish/image/api'
 import {Author} from '@wepublish/author/api'
 import {Tag} from '@wepublish/tag/api'
 import {DateFilter, PaginatedType, SortOrder} from '@wepublish/utils/api'
-import {BlockContent, HasBlockContent} from '@wepublish/block-content/api'
+// Circular dependency is intended as articles can have blocks, which can have article teasers
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import {BlockContent, BlockContentInput, HasBlockContent} from '@wepublish/block-content/api'
 
 export enum ArticleSort {
   CreatedAt = 'CreatedAt',
@@ -28,6 +30,24 @@ registerEnumType(SortOrder, {
 registerEnumType(ArticleSort, {
   name: 'ArticleSort'
 })
+
+@ObjectType()
+export class Property {
+  @Field()
+  id!: string
+
+  @Field()
+  key!: string
+
+  @Field()
+  value!: string
+
+  @Field()
+  public!: boolean
+}
+
+@InputType()
+export class PropertyInput extends OmitType(Property, [] as const, InputType) {}
 
 @ObjectType({
   implements: () => [HasBlockContent]
@@ -126,21 +146,6 @@ export class Article {
 @ObjectType()
 export class PaginatedArticles extends PaginatedType(Article) {}
 
-@ObjectType()
-export class Property {
-  @Field()
-  id!: string
-
-  @Field()
-  key!: string
-
-  @Field()
-  value!: string
-
-  @Field()
-  public!: boolean
-}
-
 @ArgsType()
 export class CreateArticleInput extends OmitType(
   ArticleRevision,
@@ -151,7 +156,9 @@ export class CreateArticleInput extends OmitType(
     'image',
     'socialMediaImage',
     'authors',
-    'socialMediaAuthors'
+    'socialMediaAuthors',
+    'blocks',
+    'properties'
   ] as const,
   ArgsType
 ) {
@@ -162,14 +169,20 @@ export class CreateArticleInput extends OmitType(
   @Field()
   disableComments!: boolean
 
-  @Field(type => [String])
+  @Field(() => [BlockContentInput])
+  blocks!: BlockContentInput[]
+
+  @Field(() => [String])
   tagIds!: string[]
 
-  @Field(type => [String])
+  @Field(() => [String])
   authorIds!: string[]
 
-  @Field(type => [String])
+  @Field(() => [String])
   socialMediaAuthorIds!: string[]
+
+  @Field(() => [PropertyInput])
+  properties!: PropertyInput[]
 }
 
 @ArgsType()

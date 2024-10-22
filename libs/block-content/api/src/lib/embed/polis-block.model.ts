@@ -1,4 +1,4 @@
-import {Field, ObjectType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {BaseBlock} from '../base-block.model'
 import {BlockType} from '../block-type.model'
 
@@ -9,3 +9,10 @@ export class PolisConversationBlock extends BaseBlock<typeof BlockType.PolisConv
   @Field({nullable: true})
   conversationID?: string
 }
+
+@InputType()
+export class PolisConversationBlockInput extends OmitType(
+  PolisConversationBlock,
+  [] as const,
+  InputType
+) {}

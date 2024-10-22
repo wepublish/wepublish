@@ -1,4 +1,4 @@
-import {Field, ObjectType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {BaseBlock} from '../base-block.model'
 import {BlockType} from '@prisma/client'
 import {HasImage, Image} from '@wepublish/image/api'
@@ -19,10 +19,19 @@ export class ListicleItem implements HasImage {
   title?: string
 }
 
+@InputType()
+export class ListicleItemInput extends OmitType(ListicleItem, ['image'] as const, InputType) {}
+
 @ObjectType({
   implements: BaseBlock
 })
 export class ListicleBlock extends BaseBlock<typeof BlockType.Listicle> {
   @Field(() => [ListicleItem])
   items!: ListicleItem[]
+}
+
+@InputType()
+export class ListicleBlockInput extends BaseBlock<typeof BlockType.Listicle> {
+  @Field(() => [ListicleItemInput])
+  items!: ListicleItemInput[]
 }

@@ -1,4 +1,4 @@
-import {Field, ObjectType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {BaseBlock} from '../base-block.model'
 import {BlockType} from '../block-type.model'
 
@@ -12,3 +12,6 @@ export class TwitterTweetBlock extends BaseBlock<typeof BlockType.TwitterTweet> 
   @Field({nullable: true})
   tweetID?: string
 }
+
+@InputType()
+export class TwitterTweetBlockInput extends OmitType(TwitterTweetBlock, [] as const, InputType) {}

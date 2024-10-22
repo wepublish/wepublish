@@ -1,4 +1,4 @@
-import {Field, Int, ObjectType} from '@nestjs/graphql'
+import {Field, InputType, Int, ObjectType, OmitType} from '@nestjs/graphql'
 import {BaseBlock} from '../base-block.model'
 import {BlockType} from '../block-type.model'
 
@@ -21,3 +21,6 @@ export class IFrameBlock extends BaseBlock<typeof BlockType.Embed> {
   @Field({nullable: true})
   sandbox?: string
 }
+
+@InputType()
+export class IFrameBlockInput extends OmitType(IFrameBlock, [] as const, InputType) {}

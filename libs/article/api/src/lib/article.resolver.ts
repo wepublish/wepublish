@@ -1,6 +1,12 @@
-import {Args, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
+import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
 import {ArticleDataloaderService} from './article-dataloader.service'
-import {Article, ArticleListArgs, ArticleRevision, PaginatedArticles} from './article.model'
+import {
+  Article,
+  ArticleListArgs,
+  ArticleRevision,
+  PaginatedArticles,
+  UpdateArticleInput
+} from './article.model'
 import {Tag} from '@wepublish/tag/api'
 import {ArticleService} from './article.service'
 import {ArticleRevisionDataloaderService} from './article-revision-dataloader.service'
@@ -23,6 +29,27 @@ export class ArticleResolver {
   })
   public articles(@Args() filter: ArticleListArgs) {
     return this.articleService.getArticles(filter)
+  }
+
+  @Mutation(() => Article, {
+    description: `Updates an article.`
+  })
+  public updateArticle(@Args() input: UpdateArticleInput) {
+    return this.articleService.updateArticle(input)
+  }
+
+  @Mutation(() => Article, {
+    description: `Publishes an article at the given time.`
+  })
+  public publishArticle(@Args('id') id: string, @Args('publishedAt') publishedAt: Date) {
+    return this.articleService.publishArticle(id, publishedAt)
+  }
+
+  @Mutation(() => Article, {
+    description: `Unpublishes all revisions of an article.`
+  })
+  public unpublishArticle(@Args('id') id: string) {
+    return this.articleService.unpublishArticle(id)
   }
 
   @ResolveField(() => ArticleRevision, {nullable: true})

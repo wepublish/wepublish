@@ -2,13 +2,15 @@ import {
   createUnionType,
   Field,
   ID,
+  InputType,
   InterfaceType,
   ObjectType,
+  OmitType,
   registerEnumType
 } from '@nestjs/graphql'
 // Intended
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import {Article, HasArticle, Property} from '@wepublish/article/api'
+import {Article, HasArticle, Property, PropertyInput} from '@wepublish/article/api'
 import {HasPage, Page} from '@wepublish/page/api'
 import {HasPeer, Peer} from '@wepublish/peering/api'
 import {HasImage} from '@wepublish/image/api'
@@ -62,6 +64,13 @@ export class ArticleTeaser extends BaseTeaser<TeaserType.Article> implements Has
   article?: Article
 }
 
+@InputType()
+export class ArticleTeaserInput extends OmitType(
+  ArticleTeaser,
+  ['article', 'image'] as const,
+  InputType
+) {}
+
 @ObjectType({
   implements: () => [BaseTeaser, HasPeer]
 })
@@ -75,6 +84,13 @@ export class PeerArticleTeaser extends BaseTeaser<TeaserType.PeerArticle> implem
   article?: Article
 }
 
+@InputType()
+export class PeerArticleTeaserInput extends OmitType(
+  PeerArticleTeaser,
+  ['article', 'image', 'peer'] as const,
+  InputType
+) {}
+
 @ObjectType({
   implements: () => [BaseTeaser, HasPage]
 })
@@ -83,6 +99,9 @@ export class PageTeaser extends BaseTeaser<TeaserType.Page> implements HasPage {
   page?: Page
 }
 
+@InputType()
+export class PageTeaserInput extends OmitType(PageTeaser, ['page', 'image'] as const, InputType) {}
+
 @ObjectType({
   implements: () => [BaseTeaser, HasEvent]
 })
@@ -90,6 +109,13 @@ export class EventTeaser extends BaseTeaser<TeaserType.Event> implements HasEven
   eventID?: string
   event?: Event
 }
+
+@InputType()
+export class EventTeaserInput extends OmitType(
+  EventTeaser,
+  ['event', 'image'] as const,
+  InputType
+) {}
 
 @ObjectType({
   implements: () => [BaseTeaser]
@@ -100,6 +126,16 @@ export class CustomTeaser extends BaseTeaser<TeaserType.Custom> {
 
   @Field(() => [Property], {defaultValue: []})
   properties!: Property[]
+}
+
+@InputType()
+export class CustomTeaserInput extends OmitType(
+  CustomTeaser,
+  ['image', 'properties'] as const,
+  InputType
+) {
+  @Field(() => [PropertyInput], {defaultValue: []})
+  properties!: PropertyInput[]
 }
 
 export const Teaser = createUnionType({
@@ -124,3 +160,17 @@ export const Teaser = createUnionType({
     return CustomTeaser.name
   }
 })
+
+@InputType()
+export class TeaserInput {
+  @Field(() => ArticleTeaserInput, {nullable: true})
+  [TeaserType.Article]?: ArticleTeaserInput;
+  @Field(() => PeerArticleTeaserInput, {nullable: true})
+  [TeaserType.PeerArticle]?: PeerArticleTeaserInput;
+  @Field(() => PageTeaserInput, {nullable: true})
+  [TeaserType.Page]?: PageTeaserInput;
+  @Field(() => EventTeaserInput, {nullable: true})
+  [TeaserType.Event]?: EventTeaserInput;
+  @Field(() => CustomTeaserInput, {nullable: true})
+  [TeaserType.Custom]?: CustomTeaserInput
+}
