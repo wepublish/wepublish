@@ -10,16 +10,12 @@ export class PermissionsGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   public canActivate(context: ExecutionContext): boolean {
-    console.log('wot')
-
     const ctx = GqlExecutionContext.create(context)
 
     const permissions = this.reflector.getAllAndMerge<Permission[]>(PERMISSIONS_METADATA_KEY, [
       context.getHandler(),
       context.getClass()
     ])
-
-    console.log({permissions})
 
     if (!permissions.length) {
       return false
