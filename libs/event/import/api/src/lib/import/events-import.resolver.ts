@@ -9,12 +9,7 @@ import {
 } from './events-import.model'
 import {EventsImportService} from './events-import.service'
 import {SortOrder} from '@wepublish/utils/api'
-import {
-  CanCreateEvent,
-  CanGetEvent,
-  CanGetImportedEvents,
-  Permissions
-} from '@wepublish/permissions/api'
+import {CanCreateEvent, CanGetImportedEvents, Permissions} from '@wepublish/permissions/api'
 
 @Resolver()
 export class EventsImportResolver {

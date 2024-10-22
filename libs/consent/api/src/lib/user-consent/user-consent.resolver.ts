@@ -5,7 +5,7 @@ import {UserConsentService} from './user-consent.service'
 import {ForbiddenException} from '@nestjs/common'
 import {UserSession, CurrentUser} from '@wepublish/authentication/api'
 import {User} from '@wepublish/user/api'
-import {Authenticated, CanGetEvent, Permissions, Public} from '@wepublish/permissions/api'
+import {Authenticated, Public} from '@wepublish/permissions/api'
 
 @Resolver(() => UserConsent)
 export class UserConsentResolver {

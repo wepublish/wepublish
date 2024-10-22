@@ -20,9 +20,9 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {CulturTeaser} from '../src/components/cultur-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
-import {CulturTeaser} from '../src/components/cultur-teaser'
 
 setDefaultOptions({
   locale: de
