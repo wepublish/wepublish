@@ -59,6 +59,8 @@ function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
       return ArticleSort.ModifiedAt
     case 'publishAt':
       return ArticleSort.PublishAt
+    case 'publishedAt':
+      return ArticleSort.PublishedAt
     default:
       return null
   }
@@ -215,7 +217,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
 
           <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('articles.overview.publicationDate')}</HeaderCell>
-            <Cell dataKey="published">
+            <Cell dataKey="publishedAt">
               {(articleRef: RowDataType<ArticleRefFragment>) =>
                 articleRef.published?.publishedAt
                   ? t('articleEditor.overview.publishedAt', {

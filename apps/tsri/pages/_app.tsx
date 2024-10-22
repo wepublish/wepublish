@@ -33,6 +33,7 @@ import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {TsriContextBox} from '../src/components/tsri-context-box'
 
 setDefaultOptions({
   locale: de
@@ -122,6 +123,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Quote: TsriQuoteBlock,
               RichText: TsriRichText,
               Title: TsriTitle
+            }}
+            blockStyles={{
+              ContextBox: TsriContextBox
             }}
             date={{format: dateFormatter}}
             meta={{siteTitle}}

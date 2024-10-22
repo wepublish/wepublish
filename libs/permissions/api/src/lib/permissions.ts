@@ -679,6 +679,12 @@ export const CanUpdateSystemMails: Permission = {
   deprecated: false
 }
 
+export const CanTestSystemMails: Permission = {
+  id: 'CAN_TEST_SYSTEM_MAILS',
+  description: 'Allows user to test a system mail.',
+  deprecated: false
+}
+
 /**
  * Periodic Job
  */
@@ -813,6 +819,7 @@ export const AllPermissions: Permission[] = [
   CanSyncMailTemplates,
   CanGetSystemMails,
   CanUpdateSystemMails,
+  CanTestSystemMails,
   CanCreateApprovedComment,
   CanCreateBlockStyle,
   CanUpdateBlockStyle,
