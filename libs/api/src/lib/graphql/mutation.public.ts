@@ -419,6 +419,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           payment: await createPaymentWithProvider({
             invoice,
             saveCustomer: true,
+            subscription,
             paymentMethodID: paymentMethod.id,
             successURL,
             failureURL
@@ -547,6 +548,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         return await createPaymentWithProvider({
           invoice,
           saveCustomer: true,
+          subscription,
           paymentMethodID: paymentMethod.id,
           successURL,
           failureURL,
@@ -691,6 +693,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         return await createPaymentWithProvider({
           invoice,
           saveCustomer: true,
+          subscription,
           paymentMethodID: subscription.paymentMethodID,
           successURL,
           failureURL
@@ -965,26 +968,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         })
         if (blockingPaymnet) throw new PaymentAlreadyRunning(blockingPaymnet.id)
 
-        // update subscription's payment provider in case user changed it along with the payment
-        if (paymentMethod.id !== subscription.paymentMethodID) {
-          const updatedSubscription = await prisma.subscription.update({
-            data: {
-              paymentMethodID: paymentMethod.id
-            },
-            where: {
-              id: subscription.id
-            }
-          })
-
-          if (!updatedSubscription) {
-            throw new Error('Could not update payment provider for this subscription!')
-          }
-        }
-
         return await createPaymentWithProvider({
           paymentMethodID: paymentMethod.id,
           invoice,
-          saveCustomer: false,
+          subscription,
+          saveCustomer: true,
           successURL,
           failureURL,
           user
@@ -1030,7 +1018,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         return await createPaymentWithProvider({
           paymentMethodID: invoice.subscription.paymentMethodID,
           invoice,
-          saveCustomer: false,
+          subscription: invoice.subscription,
+          saveCustomer: true,
           successURL,
           failureURL
         })

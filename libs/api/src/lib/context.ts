@@ -12,6 +12,7 @@ import {
   PaymentState,
   Peer,
   PrismaClient,
+  Subscription,
   TaggedArticles,
   TaggedPages,
   User,
@@ -222,6 +223,7 @@ export interface CreatePaymentWithProvider {
   paymentMethodID: string
   invoice: InvoiceWithItems
   saveCustomer: boolean
+  subscription: Subscription
   successURL?: string
   failureURL?: string
   user?: User
@@ -1001,6 +1003,7 @@ export async function contextFromRequest(
       paymentMethodID,
       invoice,
       saveCustomer,
+      subscription,
       failureURL,
       successURL,
       user
@@ -1012,6 +1015,23 @@ export async function contextFromRequest(
 
       if (!paymentProvider) {
         throw new Error('paymentProvider not found')
+      }
+
+      // update subscription's payment provider in case user changed it along with the payment
+      // https://wepublish.atlassian.net/browse/TSRI-98
+      if (paymentMethod.id !== subscription.paymentMethodID) {
+        const updatedSubscription = await prisma.subscription.update({
+          data: {
+            paymentMethodID: paymentMethod.id
+          },
+          where: {
+            id: subscription.id
+          }
+        })
+
+        if (!updatedSubscription) {
+          throw new Error('Could not update payment provider for this subscription!')
+        }
       }
 
       const payment = await prisma.payment.create({
