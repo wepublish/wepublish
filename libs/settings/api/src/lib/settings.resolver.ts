@@ -1,5 +1,5 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {CanGetSettings, CanUpdateSettings, Permissions} from '@wepublish/permissions/api'
+import {CanGetSettings, CanUpdateSettings, Permissions, Public} from '@wepublish/permissions/api'
 import {Setting, UpdateSettingInput, SettingFilter} from './settings.model'
 import {SettingsService} from './settings.service'
 
@@ -7,6 +7,7 @@ import {SettingsService} from './settings.service'
 export class SettingsResolver {
   constructor(private settingsService: SettingsService) {}
 
+  @Public()
   @Query(returns => [Setting], {
     name: 'settings',
     description: `
@@ -17,6 +18,7 @@ export class SettingsResolver {
     return this.settingsService.settingsList(filter)
   }
 
+  @Public()
   @Query(returns => Setting, {
     name: 'setting',
     description: `
@@ -27,22 +29,22 @@ export class SettingsResolver {
     return this.settingsService.settingByName(name)
   }
 
+  @Permissions(CanGetSettings)
   @Query(returns => Setting, {
     name: 'settingById',
     description: `
       Returns a single setting by id.
     `
   })
-  @Permissions(CanGetSettings)
   settingById(@Args('id') id: string) {
     return this.settingsService.setting(id)
   }
 
+  @Permissions(CanUpdateSettings)
   @Mutation(returns => Setting, {
     name: 'updateSetting',
     description: 'Updates an existing setting.'
   })
-  @Permissions(CanUpdateSettings)
   updateSetting(@Args() input: UpdateSettingInput) {
     return this.settingsService.updateSetting(input)
   }

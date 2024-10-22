@@ -9,11 +9,18 @@ import {
 } from './events-import.model'
 import {EventsImportService} from './events-import.service'
 import {SortOrder} from '@wepublish/utils/api'
+import {
+  CanCreateEvent,
+  CanGetEvent,
+  CanGetImportedEvents,
+  Permissions
+} from '@wepublish/permissions/api'
 
 @Resolver()
 export class EventsImportResolver {
   constructor(private events: EventsImportService) {}
 
+  @Permissions(CanGetImportedEvents)
   @Query(returns => ImportedEventsDocument, {
     name: 'importedEvents',
     description: `
@@ -30,6 +37,7 @@ export class EventsImportResolver {
     return this.events.importedEvents({filter, order, skip, take, sort})
   }
 
+  @Permissions(CanGetImportedEvents)
   @Query(returns => EventFromSource, {
     description: `
       Returns a more detailed version of a single importable event, by id and source.
@@ -39,6 +47,7 @@ export class EventsImportResolver {
     return this.events.importedEvent(filter)
   }
 
+  @Permissions(CanGetImportedEvents)
   @Query(returns => [String], {
     description: `
       Returns a list of external source ids of already imported events.
@@ -48,6 +57,7 @@ export class EventsImportResolver {
     return this.events.importedEventsIds()
   }
 
+  @Permissions(CanGetImportedEvents)
   @Query(returns => [String], {
     description: `
       Returns a list of Importable Event Providers
@@ -57,6 +67,7 @@ export class EventsImportResolver {
     return this.events.getProviders()
   }
 
+  @Permissions(CanCreateEvent)
   @Mutation(returns => String, {
     description: `
       Creates and event based on data from importable events list and an id and provider.
