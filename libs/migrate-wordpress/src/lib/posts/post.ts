@@ -13,31 +13,33 @@ import {
   prepareTitleBlock
 } from './blocks'
 import {ensureImage} from './image'
-import {convertHtmlToSlate} from './convert-html-to-slate'
-import {Node as SlateNode} from 'slate'
 import {ensureAuthor} from './author'
 import {PreparedArticleData} from './prepare-data'
-import {deleteExistingPosts} from './index'
+import {deleteExistingPosts, updateExistingArticles} from './index'
+import {isSlateNodeEmpty, transformHtmlToSlate} from './utils'
 
 export async function migratePost(data: PreparedArticleData) {
   const {title, lead, content, createdAt, modifiedAt, slug, link, featuredMedia} = data
 
-  const existingArticle = await getArticleBySlug(slug)
+  let existingArticle = await getArticleBySlug(slug)
   if (existingArticle) {
     console.debug('  article exists', slug)
     if (deleteExistingPosts) {
       console.debug('  article delete', slug)
       await deleteArticle(existingArticle.id)
+      existingArticle = undefined
     } else {
-      return existingArticle
+      if (!updateExistingArticles) {
+        return existingArticle
+      }
     }
   }
 
   // Tags
-  const tags = await ensureTags(data)
+  const tags = existingArticle ? existingArticle.tags : await ensureTags(data)
 
   // Authors
-  const authors = await ensureAuthors(data)
+  const authors = existingArticle ? existingArticle.authors : await ensureAuthors(data)
 
   const blocks: BlockInput[] = []
 
@@ -48,7 +50,9 @@ export async function migratePost(data: PreparedArticleData) {
   let featuredImage
   if (featuredMedia) {
     featuredImage = await ensureImage(featuredMedia)
-    blocks.push(prepareImageBlock(featuredImage))
+    if (featuredImage) {
+      blocks.push(prepareImageBlock(featuredImage))
+    }
   }
 
   const nodes = extractContentNodes(content)
@@ -64,7 +68,7 @@ export async function migratePost(data: PreparedArticleData) {
 
       // Figure
       if ('figure' === specialEl.tagName) {
-        blocks.push(await extractFigure(node))
+        blocks.push(...(await await extractFigure(node)))
         continue
       }
 
@@ -91,7 +95,7 @@ export async function migratePost(data: PreparedArticleData) {
     if ($element.filter('p').length && $element.prev('hr').length && $element.next('hr').length) {
       const skipHrSurroundedLinks = true
       if (!skipHrSurroundedLinks) {
-        const richText = await convertHtmlToSlate<SlateNode>($element.html()!)
+        const richText = await transformHtmlToSlate($element.html()!)
         blocks.push({
           linkPageBreak: {
             richText,
@@ -103,26 +107,12 @@ export async function migratePost(data: PreparedArticleData) {
     }
 
     const slateContent = await convertNodeContentToRichText(node)
-
-    const isSlateNodeEmpty = (slateNode: any[]) => {
-      const isEmpty = (node: any): boolean => {
-        if (node?.text === '') {
-          return true
-        }
-        if (node?.type === 'paragraph' && node?.children?.every(isEmpty)) {
-          return true
-        }
-        return false
-      }
-      return slateNode.every(isEmpty)
-    }
     if (isSlateNodeEmpty(slateContent)) {
       continue
     }
-
     const lastBlock = blocks[blocks.length - 1]
     const hasParagraphs = (block: BlockInput) =>
-      block.richText && block.richText.richText.some((node: any) => node.type === 'paragraph')
+      block.richText && block.richText.richText?.some((node: any) => node.type === 'paragraph')
     if (lastBlock?.richText && !hasParagraphs(lastBlock)) {
       lastBlock?.richText.richText.push(...slateContent)
     } else {
@@ -131,6 +121,7 @@ export async function migratePost(data: PreparedArticleData) {
   }
 
   return await ensureArticle({
+    id: existingArticle?.id,
     title,
     lead,
     slug,

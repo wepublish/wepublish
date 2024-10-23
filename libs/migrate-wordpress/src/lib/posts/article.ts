@@ -1,5 +1,8 @@
 import {
   ArticleInput,
+  ArticleList,
+  ArticleListQuery,
+  ArticleListQueryVariables,
   BlockInput,
   CreateArticle,
   CreateArticleMutation,
@@ -9,15 +12,20 @@ import {
   DeleteArticleMutationVariables,
   PublishArticle,
   PublishArticleMutation,
-  PublishArticleMutationVariables
+  PublishArticleMutationVariables,
+  UpdateArticle,
+  UpdateArticleMutation,
+  UpdateArticleMutationVariables
 } from '../../api/private'
 import {Article, ArticleQuery, ArticleQueryVariables} from '../../api/public'
 import {privateClient, publicClient} from '../api/clients'
 import {Author} from './author'
 import {Tag} from './tags'
 import {Image} from './image'
+import {slugify} from './utils'
 
 type EnsureArticleProps = {
+  id?: string
   title: string
   lead: string
   slug: string
@@ -30,13 +38,14 @@ type EnsureArticleProps = {
 }
 
 export async function ensureArticle(props: EnsureArticleProps) {
-  const {tags, featuredImage, authors, slug, blocks, createdAt, modifiedAt, ...data} = props
+  const {id, tags, featuredImage, authors, slug, blocks, createdAt, modifiedAt, lead, title} = props
 
   console.debug('  article create', slug)
   logArticleBlocks(blocks)
 
-  const article = await createArticle({
-    ...data,
+  const input: ArticleInput = {
+    lead,
+    title,
     authorIDs: authors.map(a => a.id),
     breaking: false,
     hideAuthor: false,
@@ -48,7 +57,9 @@ export async function ensureArticle(props: EnsureArticleProps) {
     blocks,
     slug,
     imageID: featuredImage ? featuredImage.id : undefined
-  })
+  }
+
+  const article = id ? await updateArticle({id, input}) : await createArticle({input})
   return await publishArticle(article.id, createdAt, modifiedAt)
 }
 
@@ -56,7 +67,7 @@ function logArticleBlocks(blocks: BlockInput[]) {
   blocks
     .map(block => {
       if (block.richText) {
-        return {richtext: {richtext: '<content>'}}
+        return {richtext: {...block.richText, richText: '<content>'}}
       } else {
         return block
       }
@@ -67,15 +78,22 @@ function logArticleBlocks(blocks: BlockInput[]) {
 
 // API
 
-export async function createArticle(input: ArticleInput) {
+export async function createArticle(variables: CreateArticleMutationVariables) {
   return (
     await privateClient.request<CreateArticleMutation, CreateArticleMutationVariables>(
       CreateArticle,
-      {
-        input
-      }
+      variables
     )
   ).createArticle!
+}
+
+export async function updateArticle(variables: UpdateArticleMutationVariables) {
+  return (
+    await privateClient.request<UpdateArticleMutation, UpdateArticleMutationVariables>(
+      UpdateArticle,
+      variables
+    )
+  ).updateArticle!
 }
 
 export async function deleteArticle(id: string) {
@@ -106,7 +124,15 @@ export async function publishArticle(id: string, publishDate: Date, lastModified
 export async function getArticleBySlug(slug: string) {
   return (
     await publicClient.request<ArticleQuery, ArticleQueryVariables>(Article, {
-      slug
+      slug: slugify(slug)
     })
   ).article
+}
+
+export async function getArticleIdByTitle(title: string) {
+  return (
+    await privateClient.request<ArticleListQuery, ArticleListQueryVariables>(ArticleList, {
+      filter: title
+    })
+  ).articles?.nodes[0]?.id
 }
