@@ -101,19 +101,6 @@ const fillFirstName: StoryObj['play'] = async ({canvasElement, step}) => {
   })
 }
 
-const fillPreferredName: StoryObj['play'] = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement)
-
-  const input = canvas.getByLabelText('Bevorzugter Name', {
-    selector: 'input'
-  })
-
-  await step('Enter preferred name', async () => {
-    await userEvent.click(input)
-    await userEvent.type(input, 'Baz')
-  })
-}
-
 const fillFlair: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
@@ -228,7 +215,7 @@ const fillCountry: StoryObj['play'] = async ({canvasElement, step}) => {
 
   await step('Enter country', async () => {
     await userEvent.click(input)
-    await userEvent.type(input, 'Schweiz')
+    await userEvent.type(input, 'Schweiz{enter}')
   })
 }
 
@@ -330,23 +317,6 @@ export const OnlyFirstNameFilled: StoryObj = {
   play: async ctx => {
     await fillRequired(ctx)
     await fillFirstName(ctx)
-    await clickUpdate(ctx)
-  }
-}
-
-export const OnlyPreferredName: StoryObj = {
-  args: {
-    onUpdate: action('onUpdate'),
-    update: {},
-    fields: ['preferredName']
-  }
-}
-
-export const OnlyPreferredNameFilled: StoryObj = {
-  ...OnlyPreferredName,
-  play: async ctx => {
-    await fillRequired(ctx)
-    await fillPreferredName(ctx)
     await clickUpdate(ctx)
   }
 }

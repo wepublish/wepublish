@@ -66,19 +66,19 @@ export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
 export const GraphQLArticleSort = new GraphQLEnumType({
   name: 'ArticleSort',
   values: {
-    CREATED_AT: {value: ArticleSort.CreatedAt},
-    MODIFIED_AT: {value: ArticleSort.ModifiedAt},
-    PUBLISH_AT: {value: ArticleSort.PublishAt},
-    PUBLISHED_AT: {value: ArticleSort.PublishedAt},
-    UPDATED_AT: {value: ArticleSort.UpdatedAt}
+    [ArticleSort.CreatedAt]: {value: ArticleSort.CreatedAt},
+    [ArticleSort.ModifiedAt]: {value: ArticleSort.ModifiedAt},
+    [ArticleSort.PublishAt]: {value: ArticleSort.PublishAt},
+    [ArticleSort.PublishedAt]: {value: ArticleSort.PublishedAt},
+    [ArticleSort.UpdatedAt]: {value: ArticleSort.UpdatedAt}
   }
 })
 
 export const GraphQLPublicArticleSort = new GraphQLEnumType({
   name: 'ArticleSort',
   values: {
-    PUBLISHED_AT: {value: ArticleSort.PublishedAt},
-    UPDATED_AT: {value: ArticleSort.UpdatedAt}
+    [ArticleSort.PublishedAt]: {value: ArticleSort.PublishedAt},
+    [ArticleSort.UpdatedAt]: {value: ArticleSort.UpdatedAt}
   }
 })
 
@@ -357,7 +357,6 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
           if (hideAuthor) {
             return []
           }
-
           return (await loaders.authorsByID.loadMany(authors.map(({authorId}) => authorId))).filter(
             Boolean
           )
@@ -419,3 +418,15 @@ export const GraphQLPublicArticleConnection = new GraphQLObjectType({
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
+
+export const GraphQLPublicArticleResolver = {
+  __resolveReference: async ({id}, {loaders}: Context) => {
+    const article = await loaders.publicArticles.load(id)
+
+    if (!article) {
+      throw new Error('Article not found')
+    }
+
+    return article
+  }
+}

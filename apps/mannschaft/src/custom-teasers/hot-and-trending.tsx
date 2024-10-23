@@ -1,6 +1,8 @@
 import {styled} from '@mui/material'
-import {BuilderTeaserProps, TeaserWrapper, useWebsiteBuilder} from '@wepublish/website'
+import {ApiV1, BuilderTeaserProps, TeaserWrapper, useWebsiteBuilder} from '@wepublish/website'
+import {startOfDay, subDays} from 'date-fns'
 import {allPass} from 'ramda'
+import {useMemo} from 'react'
 
 export const isHotAndTrendingTeaser = allPass([
   ({teaser}: BuilderTeaserProps) => teaser?.__typename === 'CustomTeaser',
@@ -43,12 +45,29 @@ export const HotAndTrendingTeaser = ({alignment, teaser}: BuilderTeaserProps) =>
     elements: {H4, Link}
   } = useWebsiteBuilder()
 
+  const yesterday = useMemo(() => startOfDay(subDays(new Date(), 1)).toISOString(), [])
+
+  const {data} = ApiV1.useHotAndTrendingQuery({
+    variables: {
+      take: 5,
+      start: yesterday
+    }
+  })
+
   return (
     <TeaserWrapper {...alignment}>
       <HotAndTrendingTeaserWrapper>
-        <H4 component={HotAndTrendingTitle}>{teaser?.title || 'Hot & Trending'}</H4>
+        <H4 component={HotAndTrendingTitle}>{teaser?.title || 'Trending'}</H4>
 
-        <HotAndTrendingLinkList></HotAndTrendingLinkList>
+        <HotAndTrendingLinkList>
+          {data?.hotAndTrending.map(article => (
+            <HotAndTrendingLink key={article.id}>
+              <Link href={article.url} color="inherit" underline="none">
+                {article.title}
+              </Link>
+            </HotAndTrendingLink>
+          ))}
+        </HotAndTrendingLinkList>
       </HotAndTrendingTeaserWrapper>
     </TeaserWrapper>
   )

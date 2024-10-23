@@ -36,10 +36,8 @@ describe('UserConsentService', () => {
           name: 'Newsletter'
         },
         user: {
-          id: 'clfb7nce50264cvrxlliyxung',
-          name: 'ssss',
-          firstName: null,
-          email: 'asdf@asdf.pl'
+          __typename: 'User',
+          id: 'clfb7nce50264cvrxlliyxung'
         }
       },
       {
@@ -53,10 +51,8 @@ describe('UserConsentService', () => {
           name: 'new 2'
         },
         user: {
-          id: 'clesor2a50105kgrxh0kyxmxy',
-          name: 'Editor User',
-          firstName: null,
-          email: 'editor@wepublish.ch'
+          __typename: 'User',
+          id: 'clesor2a50105kgrxh0kyxmxy'
         }
       }
     ])
@@ -83,10 +79,8 @@ describe('UserConsentService', () => {
           name: 'Newsletter'
         },
         user: {
-          id: 'clfb7nce50264cvrxlliyxung',
-          name: 'ssss',
-          firstName: null,
-          email: 'asdf@asdf.pl'
+          __typename: 'User',
+          id: 'clfb7nce50264cvrxlliyxung'
         }
       },
       {
@@ -100,10 +94,8 @@ describe('UserConsentService', () => {
           name: 'new 2'
         },
         user: {
-          id: 'clesor2a50105kgrxh0kyxmxy',
-          name: 'Editor User',
-          firstName: null,
-          email: 'editor@wepublish.ch'
+          __typename: 'User',
+          id: 'clesor2a50105kgrxh0kyxmxy'
         }
       }
     ])
@@ -133,10 +125,8 @@ describe('UserConsentService', () => {
           name: 'Newsletter'
         },
         user: {
-          id: 'clfb7nce50264cvrxlliyxung',
-          name: 'ssss',
-          firstName: null,
-          email: 'asdf@asdf.pl'
+          __typename: 'User',
+          id: 'clfb7nce50264cvrxlliyxung'
         }
       }
     ])

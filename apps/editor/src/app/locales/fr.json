@@ -236,7 +236,9 @@
         "takeLabel": "How many teasers should be loaded",
         "tags": "Only showing with tags: {{tags}}",
         "tagsLabel": "Which tags should be loaded",
-        "edit": "Edit teaser list block"
+        "edit": "Edit teaser list block",
+        "sort": "Sorted by {{sort}}",
+        "sortLabel": "Sort by"
       },
       "embeds": {
         "label": "Intégration",
@@ -520,8 +522,8 @@
       "invalidEmailErrorMessage": "Veuillez entrer une adresse email valide",
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
       "invalidUrlErrorMessage": "Veuillez entrer une adresse url valide",
-      "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} chf.",
-      "noAmountErrorMessage": "Le montant par défaut sera fixé à 5.00 CHF si le champ est laissé vide",
+      "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} {{currency}}.",
+      "noAmountErrorMessage": "Le montant par défaut sera fixé à 5.00 si le champ est laissé vide",
       "noCallToActionImageErrorMessage": "Veuillez entrer une image pour le Call to Action",
       "noEmailErrorMessage": "Veuillez entrer une adresse email",
       "noImageErrorMessage": "Veuillez ajouter une image",
@@ -535,7 +537,8 @@
       "noUrlErrorMessage": "Veuillez entrer une url",
       "noUserErrorMessage": "Veuillez sélectionner un·e utilisateur·trice",
       "passwordTooShortErrorMessage": "Le mot de passe doit comporter au moins 8 caractères.",
-      "required": "Ce champ est requis"
+      "required": "Ce champ est requis",
+      "invalidCountry": "Please select a valid country"
     },
     "event": {
       "create": {
@@ -684,10 +687,10 @@
       "paymentMethods": "Méthodes de paiement possibles",
       "paymentPeriodicities": "Périodicités de paiement",
       "paymentPeriodicity": {
-        "BIANNUAL": "Bi-annuelles",
-        "MONTHLY": "Mensuelles",
-        "QUARTERLY": "Trimestrielles",
-        "YEARLY": "Annuelles"
+        "biannual": "Bi-annuelles",
+        "monthly": "Mensuelles",
+        "quarterly": "Trimestrielles",
+        "yearly": "Annuelles"
       },
       "title": "Plans membres"
     },
@@ -1125,7 +1128,6 @@
       "password": "Mot de passe",
       "passwordChangeSuccess": "Le mot de passe a été changé avec succès !",
       "passwordHeader": "Mots de passe & accès",
-      "preferredName": "Nom préféré",
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
       "selectUserImage": "Choisir une photo de profil",
@@ -1211,7 +1213,7 @@
         "willBeDeactivated": "L'abonnement sera désactivé le {{date, ccc PP p}}"
       },
       "editTitle": "Modifier l'abonnement",
-      "memberPlanMonthlyAmount": "Montant mensuel minimum (CHF)",
+      "memberPlanMonthlyAmount": "Montant mensuel minimum ({{currency}})",
       "monthlyAmount": "Montant mensuel",
       "paidUntil": "Payé jusqu'à",
       "paymentMethod": "Mode de paiement",
@@ -1234,12 +1236,12 @@
       "invoiceNr": "N° de facture {{invoiceId}}",
       "invoicePaid": "payée",
       "invoiceUnpaid": "non payée",
-      "monthlyAmount": "Montant mensuel : {{monthlyAmount}} CHF",
+      "monthlyAmount": "Montant mensuel : {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "L'abonnement expire, pas de renouvellement automatique",
       "noDeactivation": "Pas de désactivation.",
       "paidUntil": "Payé jusqu'au {{date}}",
       "paymentPeriodicity": "Périodicité des paiements : {{paymentPeriodicity}}",
-      "periodAmount": "Montant : {{amount}} CHF",
+      "periodAmount": "Montant : {{amount}} {{currency}}",
       "periodCreatedAt": "Créé le {{date}}",
       "periodEndsAt": "jusqu'à {{date}}",
       "periods": "Périodes",
@@ -1268,7 +1270,9 @@
       "nonExtendableNotCompatibleWithAutoRenew": "Un abonnement à renouvellement automatique doit pouvoir être prolongé. Modifie l'un de ces paramètres.",
       "configureAsTrialSubscription": "Configurer comme abonnement d'essai",
       "subscriptionTrialNotPossible": "L'abonnement ne peut pas être configuré comme abonnement d'essai. Pour ce faire, modifie les paramètres du plan d'abonnement.",
-      "extendableWasChanged": "L'option «Extensible» a été adaptée en fonction du plan d'abonnement."
+      "extendableWasChanged": "L'option «Extensible» a été adaptée en fonction du plan d'abonnement.",
+      "extendModalTitle": "Renouveler l'abonnement plus tôt?",
+      "extendModalBody": "L'abonnement est prolongé en temps utile pour la prochaine période possible. Une facture est établie."
     },
     "subscriptionListFilter": {
       "extendable": "Extensible"
@@ -1280,6 +1284,10 @@
         "page": "Page",
         "event": "Event",
         "custom": "Custom"
+      },
+      "teaserSort": {
+        "hotAndTrending": "Hot & Trending",
+        "publishedAt": "Publication date"
       }
     },
     "authorEditPanel": {

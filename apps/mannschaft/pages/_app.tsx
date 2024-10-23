@@ -1,6 +1,7 @@
 import {EmotionCache} from '@emotion/cache'
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
+import {GoogleTagManager} from '@next/third-parties/google'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -17,25 +18,28 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
-import {useState} from 'react'
 import {AdConfig} from 'react-ad-manager'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {CookieOrPay} from '../src/cookie-or-pay/cookie-or-pay'
+import {PURModel} from '../src/cookie-or-pay/pur-model'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {MainSpacer} from '../src/main-spacer'
+import {MannschaftArticle} from '../src/mannschaft-article'
 import {MannschaftArticleDateWithShare} from '../src/mannschaft-article-date-with-share'
 import {MannschaftBlockRenderer} from '../src/mannschaft-block-renderer'
+import {MannschaftBlocks} from '../src/mannschaft-blocks'
 import {MannschaftBreakBlock} from '../src/mannschaft-break-block'
 import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
 import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
+import {MannschaftRichtextBlock} from '../src/mannschaft-richtext-block'
 import theme from '../src/theme'
-import {GoogleAnalytics} from '@next/third-parties/google'
+import {MdFacebook, MdSearch} from 'react-icons/md'
+import {FaInstagram, FaBluesky, FaTiktok} from 'react-icons/fa6'
 
 setDefaultOptions({
   locale: de
@@ -88,13 +92,16 @@ const dateFormatter = (date: Date, includeTime = true) =>
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
 
+const ButtonLink = styled('a')`
+  color: ${({theme}) => theme.palette.primary.contrastText};
+`
+
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'Mannschaft'
-  const [showAds, setShowAds] = useState(false)
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
@@ -104,13 +111,16 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Head={Head}
             Script={Script}
             Page={MannschaftPage}
+            Article={MannschaftArticle}
             ArticleDate={MannschaftArticleDateWithShare}
             elements={{Link: NextWepublishLink}}
             blocks={{
+              Blocks: MannschaftBlocks,
+              Renderer: MannschaftBlockRenderer,
               Teaser: MannschaftTeaser,
               TeaserGrid: MannschaftTeaserGrid,
               Break: MannschaftBreakBlock,
-              Renderer: MannschaftBlockRenderer
+              RichText: MannschaftRichtextBlock
             }}
             blockStyles={{
               FocusTeaser: MannschaftFocusTeaser
@@ -146,10 +156,29 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               <Spacer>
                 <NavBar
-                  categorySlugs={[['categories', 'about-us']]}
+                  categorySlugs={[['categories', 'other'], ['about-us']]}
                   slug="main"
-                  headerSlug="header"
-                />
+                  headerSlug="header">
+                  <ButtonLink href="/search">
+                    <MdSearch size="32" />
+                  </ButtonLink>
+
+                  <ButtonLink href="https://www.facebook.com/mannschaftmagazin">
+                    <MdFacebook size="32" />
+                  </ButtonLink>
+
+                  <ButtonLink href="https://www.instagram.com/mannschaftmagazin">
+                    <FaInstagram size="32" />
+                  </ButtonLink>
+
+                  <ButtonLink href="https://bsky.app/profile/mannschaftmagazin.bsky.social">
+                    <FaBluesky size="32" />
+                  </ButtonLink>
+
+                  <ButtonLink href="https://www.tiktok.com/@mannschaftmagazin">
+                    <FaTiktok size="32" />
+                  </ButtonLink>
+                </NavBar>
 
                 <main>
                   <MainSpacer maxWidth="lg">
@@ -164,12 +193,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 </FooterContainer>
               </Spacer>
 
-              <CookieOrPay
-                onCookie={() => {
-                  setShowAds(true)
-                }}
-              />
-
               <Script
                 src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
                 strategy="afterInteractive"
@@ -180,16 +203,17 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 strategy="lazyOnload"
               />
 
-              {showAds && (
-                <Script
-                  strategy="lazyOnload"
-                  src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
-                />
+              {publicRuntimeConfig.env.GTM_ID && (
+                <>
+                  <PURModel />
+                  <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
+                </>
               )}
 
-              {publicRuntimeConfig.env.GA_ID && (
-                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
-              )}
+              <Script
+                strategy="lazyOnload"
+                src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
+              />
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>

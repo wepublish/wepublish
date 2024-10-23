@@ -9,7 +9,7 @@ import {
 } from '@wepublish/permissions/api'
 import {SubscriptionFlowService} from './subscription-flow.service'
 import {
-  PaymentMethodRef,
+  PaymentMethod,
   SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
@@ -77,7 +77,7 @@ export class SubscriptionFlowResolver {
   }
 
   @Permissions(CanGetPaymentMethods)
-  @Query(() => [PaymentMethodRef], {description: `Returns all payment methods`})
+  @Query(() => [PaymentMethod], {description: `Returns all payment methods`})
   async paymentMethods() {
     return await this.prismaService.paymentMethod.findMany({})
   }

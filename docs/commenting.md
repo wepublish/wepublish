@@ -48,7 +48,6 @@ and define CommentsData fragment as:
     user {
       id
       name
-      preferredName
     }
   }
 ```

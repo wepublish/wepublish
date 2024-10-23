@@ -3,7 +3,8 @@ import {
   FullImageFragment,
   FullInvoiceFragment,
   PaymentPeriodicity,
-  FullSubscriptionFragment
+  FullSubscriptionFragment,
+  Currency
 } from '@wepublish/website/api'
 import {InvoiceListItem} from './invoice-list-item'
 import {Meta, StoryObj} from '@storybook/react'
@@ -78,7 +79,8 @@ const subscription = {
   memberPlan: {
     image,
     name: 'Foobar Memberplan',
-    extendable: true
+    extendable: true,
+    currency: Currency.Chf
   },
   extendable: true
 } as Exact<FullSubscriptionFragment>
@@ -162,6 +164,23 @@ export const WithPayrexxSubscriptionsWarning: StoryObj = {
       ...subscription,
       paymentMethod: {
         slug: 'payrexx-subscription'
+      }
+    }
+  }
+}
+
+export const WithCurrency: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    invoice: {
+      ...invoice,
+      subscription: {
+        ...invoice.subscription,
+        memberPlan: {
+          ...invoice.subscription!.memberPlan,
+          currency: Currency.Eur
+        }
       }
     }
   }

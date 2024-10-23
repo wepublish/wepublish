@@ -47,6 +47,7 @@ export class MediaService {
       stream.on('error', reject)
     })
   }
+
   public async getRemoteEtag(image: string) {
     return (await this.storage.getFileInformation(this.config.transformationBucket, image)).etag
   }

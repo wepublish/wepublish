@@ -113,6 +113,7 @@ export function transformCssStringToObject(styleCustom: string): Record<string, 
 }
 
 export type SortType = 'asc' | 'desc' | null
+
 export function mapTableSortTypeToGraphQLSortOrder(sortType: SortType): SortOrder | null {
   switch (sortType) {
     case 'desc':
@@ -198,7 +199,7 @@ const authLink = new ApolloLink((operation, forward) => {
 export function getApiClientV2() {
   const {apiURL} = getSettings()
   return new ApolloClient({
-    link: authLink.concat(createHttpLink({uri: `${apiURL}/v2`, fetch})),
+    link: authLink.concat(createHttpLink({uri: `${apiURL}/v1`, fetch})),
     cache: new InMemoryCache()
   })
 }

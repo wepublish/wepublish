@@ -1,5 +1,5 @@
 import {IconButton, InputAdornment, Theme, css, styled} from '@mui/material'
-import {DatePicker} from '@mui/x-date-pickers'
+import {MobileDatePicker} from '@mui/x-date-pickers'
 import {
   BuilderUserFormFields,
   BuilderUserFormProps,
@@ -8,6 +8,7 @@ import {
 import {useReducer} from 'react'
 import {Controller} from 'react-hook-form'
 import {MdVisibility, MdVisibilityOff} from 'react-icons/md'
+import {CountrySelect} from './country-select'
 
 export const UserFormWrapper = styled('div')`
   display: grid;
@@ -87,22 +88,6 @@ export function UserForm<T extends BuilderUserFormFields>({
         />
       )}
 
-      {fieldsToDisplay.preferredName && (
-        <Controller
-          name={'preferredName'}
-          control={control}
-          render={({field, fieldState: {error}}) => (
-            <TextField
-              {...field}
-              value={field.value ?? ''}
-              label={'Bevorzugter Name'}
-              error={!!error}
-              helperText={error?.message}
-            />
-          )}
-        />
-      )}
-
       {fieldsToDisplay.flair && (
         <Controller
           name={'flair'}
@@ -157,7 +142,7 @@ export function UserForm<T extends BuilderUserFormFields>({
           name={'birthday'}
           control={control}
           render={({field, fieldState: {error}}) => (
-            <DatePicker
+            <MobileDatePicker
               {...field}
               value={field.value ? new Date(field.value) : null}
               onClose={field.onBlur}
@@ -297,15 +282,13 @@ export function UserForm<T extends BuilderUserFormFields>({
             name={'address.country'}
             control={control}
             render={({field, fieldState: {error}}) => (
-              <TextField
+              <CountrySelect
                 {...field}
                 value={field.value ?? ''}
-                fullWidth
+                onChange={field.onChange}
                 css={theme => countryStyles(theme as Theme)}
-                label={'Land'}
                 error={!!error}
                 helperText={error?.message}
-                autoComplete="country"
               />
             )}
           />

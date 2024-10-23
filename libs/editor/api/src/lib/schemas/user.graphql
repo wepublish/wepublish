@@ -1,13 +1,9 @@
-#import './invoice.graphql'
-#import './memberPlan.graphql'
-
 fragment FullUser on User {
   id
   createdAt
   modifiedAt
   name
   firstName
-  preferredName
   address {
     company
     streetAddress
@@ -44,6 +40,7 @@ fragment UserSubscription on UserSubscription {
   modifiedAt
   paymentPeriodicity
   monthlyAmount
+  currency
   autoRenew
   startsAt
   paidUntil

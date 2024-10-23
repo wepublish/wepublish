@@ -58,6 +58,7 @@ import {Hooks} from './hooks'
 import {MemberContext} from './memberContext'
 import {URLAdapter} from './urlAdapter'
 import {BlockStylesDataloaderService} from '@wepublish/block-content/api'
+import {HotAndTrendingDataSource} from '@wepublish/article/api'
 
 /**
  * Peered article cache configuration and setup
@@ -134,6 +135,7 @@ export interface Context {
 
   readonly session: AuthSession | null
   readonly loaders: DataLoaderContext
+  readonly hotAndTrendingDataSource: HotAndTrendingDataSource
 
   readonly mailContext: MailContext
   readonly memberContext: MemberContext
@@ -204,6 +206,7 @@ export interface ContextOptions {
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
   readonly challenge: ChallengeProvider
+  readonly hotAndTrendingDataSource: HotAndTrendingDataSource
 }
 
 export interface SendMailFromProviderProps {
@@ -239,7 +242,8 @@ export async function contextFromRequest(
     paymentProviders,
     challenge,
     sessionTTL,
-    hashCostFactor
+    hashCostFactor,
+    hotAndTrendingDataSource
   }: ContextOptions
 ): Promise<Context> {
   const authService = new AuthenticationService(prisma)
@@ -925,6 +929,7 @@ export async function contextFromRequest(
     urlAdapter,
     oauth2Providers,
     paymentProviders,
+    hotAndTrendingDataSource,
     hooks,
     requestIP,
     fingerprint,
@@ -1029,6 +1034,7 @@ export async function contextFromRequest(
       const intent = await paymentProvider.createIntent({
         paymentID: payment.id,
         invoice,
+        currency: invoice.currency,
         saveCustomer,
         successURL,
         failureURL,

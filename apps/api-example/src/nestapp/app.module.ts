@@ -1,4 +1,4 @@
-import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
+import {ApolloDriverConfig, ApolloFederationDriver} from '@nestjs/apollo'
 import {Global, Module} from '@nestjs/common'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {GraphQLModule} from '@nestjs/graphql'
@@ -32,7 +32,11 @@ import {
   NeverChargePaymentProvider,
   KarmaMediaAdapter,
   ScriptsModule,
-  SystemInfoModule
+  SystemInfoModule,
+  HotAndTrendingModule,
+  GoogleAnalyticsService,
+  GoogleAnalyticsModule,
+  EventModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -41,7 +45,6 @@ import Mailgun from 'mailgun.js'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 import {readConfig} from '../readConfig'
-import {EventModule} from '@wepublish/event/api'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
@@ -49,17 +52,25 @@ import {PollModule} from '@wepublish/poll/api'
 @Global()
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      resolvers: {RichText: GraphQLRichText},
-      autoSchemaFile: './apps/api-example/schema-v2.graphql',
-      sortSchema: true,
-      path: 'v2',
-      cache: 'bounded',
-      playground: process.env.NODE_ENV === 'development',
-      allowBatchedHttpRequests: true,
-      introspection: true
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloFederationDriver,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+        return {
+          resolvers: {RichText: GraphQLRichText},
+          autoSchemaFile: './apps/api-example/schema-v2.graphql',
+          sortSchema: true,
+          path: 'v2',
+          cache: 'bounded',
+          introspection: configFile.general.apolloIntrospection,
+          playground: configFile.general.apolloPlayground,
+          allowBatchedHttpRequests: true
+        }
+      }
     }),
+
     PrismaModule,
     MailsModule.registerAsync({
       imports: [ConfigModule],
@@ -252,7 +263,26 @@ import {PollModule} from '@wepublish/poll/api'
     ConfigModule.forRoot(),
     HealthModule,
     SystemInfoModule,
-    PollModule
+    PollModule,
+    HotAndTrendingModule.registerAsync({
+      imports: [
+        GoogleAnalyticsModule.registerAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: async (config: ConfigService) => {
+            const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+
+            return {
+              credentials: configFile.ga?.credentials,
+              property: configFile.ga?.property,
+              articlePrefix: configFile.ga?.articlePrefix
+            }
+          }
+        })
+      ],
+      useFactory: (datasource: GoogleAnalyticsService) => datasource,
+      inject: [GoogleAnalyticsService]
+    })
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [

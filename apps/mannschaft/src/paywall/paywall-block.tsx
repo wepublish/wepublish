@@ -1,9 +1,5 @@
-import {css} from '@emotion/react'
-import {styled, Theme} from '@mui/material'
+import {styled} from '@mui/material'
 import {useWebsiteBuilder} from '@wepublish/website'
-import Image from 'next/image'
-
-import PaywallImage from './liebe-zeigen-abo.png'
 
 export const PaywallBlockWrapper = styled('div')`
   display: grid !important; // exception as it should always be shown
@@ -14,51 +10,46 @@ export const PaywallBlockWrapper = styled('div')`
   align-items: center;
 `
 
-export const PaywallBlockImage = styled(Image)`
-  max-width: 100%;
-`
+const PaywallButtonWrapper = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: ${({theme}) => theme.spacing(4)};
+  row-gap: ${({theme}) => theme.spacing(2)};
 
-const buttonStyles = (theme: Theme) => css`
-  width: fit-content;
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    grid-template-columns: 1fr 1fr;
+  }
+`
+const ParagraphBeneathTitle = styled('p')`
+  padding-top: ${({theme}) => theme.spacing(1)};
+  padding-bottom: ${({theme}) => theme.spacing(1)};
+  row-gap: unset;
 `
 
 export const PaywallBlock = () => {
   const {
-    elements: {Button, Link, Paragraph}
+    elements: {Button, Link, H3}
   } = useWebsiteBuilder()
 
   return (
     <PaywallBlockWrapper>
-      <PaywallBlockImage
-        alt="Mannschaft+ Teaser"
-        src={PaywallImage.src}
-        height={PaywallImage.height}
-        width={PaywallImage.width}
-      />
+      <H3>Unterstütze LGBTIQ-Journalismus</H3>
 
-      <Paragraph>
-        Jetzt alle Artikel auf MANNSCHAFT.com lesen: Für diesen Artikel benötigst du ein
-        Digital-Abo, zu finden in unserem <Link href="/mitmachen">Abo-Shop</Link>.
-      </Paragraph>
+      <ParagraphBeneathTitle>
+        Unsere Inhalte sind für dich gemacht, aber wir sind auf deinen Support angewiesen. Mit einem
+        Abo erhältst du Zugang zu allen Artikeln – und hilfst uns dabei, weiterhin unabhängige
+        Berichterstattung zu liefern. Werde jetzt Teil der MANNSCHAFT!
+      </ParagraphBeneathTitle>
 
-      <Paragraph>
-        Hast du bereits ein Abo? <Link href="/login">Hier geht&apos;s lang zum Log-in.</Link>
-      </Paragraph>
+      <PaywallButtonWrapper>
+        <Button variant="contained" LinkComponent={Link} href={'/mitmachen'}>
+          Abonnent*in werden
+        </Button>
 
-      <Paragraph>
-        Abonnent*innen der Print-Ausgabe können ihr Digital-Abo kostenlos freischalten: Deine
-        Mailadresse ist hinterlegt, du bekommst mit <Link href="/login">Login mit Email</Link>{' '}
-        zugriff. Melde dich bitte bei kontakt (at) mannschaft.com falls deine Mailadresse nicht
-        hinterlegt ist.
-      </Paragraph>
-
-      <Button
-        variant="contained"
-        LinkComponent={Link}
-        href={'/mitmachen'}
-        css={theme => buttonStyles(theme as Theme)}>
-        Abo lösen
-      </Button>
+        <Button variant="outlined" LinkComponent={Link} href={'/login'}>
+          Login
+        </Button>
+      </PaywallButtonWrapper>
     </PaywallBlockWrapper>
   )
 }

@@ -122,16 +122,7 @@ type UpdateUserInput = Prisma.UserUncheckedUpdateInput & {
 } & {uploadImageInput: CreateImageInput}
 
 export const updatePublicUser = async (
-  {
-    address,
-    name,
-    email,
-    birthday,
-    firstName,
-    preferredName,
-    flair,
-    uploadImageInput
-  }: UpdateUserInput,
+  {address, name, email, birthday, firstName, flair, uploadImageInput}: UpdateUserInput,
   authenticateUser: Context['authenticateUser'],
   mediaAdapter: Context['mediaAdapter'],
   userClient: PrismaClient['user'],
@@ -141,7 +132,8 @@ export const updatePublicUser = async (
 
   email = email ? (email as string).toLowerCase() : email
 
-  await Validator.createUser().parse({address, name, email, birthday, firstName, preferredName})
+  await Validator.createUser.parse({name, email, birthday, firstName})
+  await Validator.createAddress.parse(address)
 
   if (email && user.email !== email) {
     const userExists = await userClient.findUnique({
@@ -166,7 +158,6 @@ export const updatePublicUser = async (
       birthday,
       name,
       firstName,
-      preferredName,
       address: address
         ? {
             upsert: {

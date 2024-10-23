@@ -2,9 +2,33 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+directive @extends on INTERFACE | OBJECT
+
+directive @external on FIELD_DEFINITION | OBJECT
+
+directive @inaccessible on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
+
+directive @key(fields: String!, resolvable: Boolean = true) repeatable on INTERFACE | OBJECT
+
+directive @link(import: [link__Import], url: String!) on SCHEMA
+
+directive @override(from: String!) on FIELD_DEFINITION
+
+directive @provides(fields: String!) on FIELD_DEFINITION
+
+directive @requires(fields: String!) on FIELD_DEFINITION
+
+directive @shareable on FIELD_DEFINITION | OBJECT
+
+directive @tag(name: String!) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
+
 type AllowedSettingVals {
   boolChoice: Boolean
   stringChoice: [String!]
+}
+
+type Article {
+  id: ID!
 }
 
 type BlockStyle {
@@ -78,15 +102,17 @@ type Event {
   endsAt: DateTime
   externalSourceId: String
   externalSourceName: String
-  id: String!
+  id: ID!
   image: Image
   imageId: String
   lead: String
   location: String
   modifiedAt: DateTime!
   name: String!
+  page: Page
   startsAt: DateTime!
   status: EventStatus!
+  tags: [Tag!]
 }
 
 input EventFilter {
@@ -104,12 +130,13 @@ type EventFromSource {
   endsAt: DateTime
   externalSourceId: String
   externalSourceName: String
-  id: String!
+  id: ID!
   imageUrl: String
   lead: String
   location: String
   modifiedAt: DateTime!
   name: String!
+  page: Page
   startsAt: DateTime!
   status: EventStatus!
 }
@@ -137,6 +164,10 @@ type FocalPoint {
 scalar GraphQLSettingValueType
 
 type Image {
+  id: ID!
+}
+
+type ImageV2 {
   createdAt: DateTime!
   description: RichText
   extension: String!
@@ -145,7 +176,7 @@ type Image {
   focalPoint: FocalPoint
   format: String!
   height: Int!
-  id: String!
+  id: ID!
   license: String
   link: String
   mimeType: String!
@@ -196,8 +227,8 @@ type MailTemplateWithUrlAndStatusModel {
   url: String!
 }
 
-type MemberPlanRef {
-  id: String!
+type MemberPlan {
+  id: ID!
   name: String!
 }
 
@@ -273,6 +304,10 @@ type Mutation {
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
 }
 
+type Page {
+  id: ID!
+}
+
 type PageInfo {
   endCursor: String
   hasNextPage: Boolean!
@@ -292,8 +327,8 @@ type PaginatedPollVotes {
   totalCount: Float!
 }
 
-type PaymentMethodRef {
-  id: String!
+type PaymentMethod {
+  id: ID!
   name: String!
 }
 
@@ -325,7 +360,7 @@ type PollVote {
   answer: PollAnswerInVote!
   answerId: ID!
   createdAt: DateTime!
-  disabled: String!
+  disabled: Boolean!
   fingerprint: String
   id: ID!
   pollId: ID!
@@ -359,19 +394,22 @@ type Query {
   consents(filter: ConsentFilter): [Consent!]!
 
   """Returns a event by id."""
-  event(id: String!): Event!
+  event(id: ID!): Event!
 
   "\n      Returns a list of Importable Event Providers\n    "
   eventProviders: [String!]!
 
   """Returns a paginated list of events based on the filters given."""
-  events(cursorId: String, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
+  events(cursorId: ID, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
   """Returns an image by id."""
-  image(id: String!): Image!
+  getImage(id: String!): ImageV2!
+
+  "\n      Returns the most viewed articles in descending order.\n    "
+  hotAndTrending(start: DateTime, take: Int = 10): [Article!]!
 
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): EventFromSource!
@@ -392,7 +430,7 @@ type Query {
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
   """Returns all payment methods"""
-  paymentMethods: [PaymentMethodRef!]!
+  paymentMethods: [PaymentMethod!]!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
 
   """Returns a paginated list of poll votes"""
@@ -405,11 +443,14 @@ type Query {
   "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
+  "\n      Returns a single setting by name.\n    "
+  setting(name: String!): Setting!
+
   "\n      Returns a single setting by id.\n    "
-  setting(id: String!): Setting!
+  settingById(id: String!): Setting!
 
   "\n      Returns all settings.\n    "
-  settingsList(filter: SettingFilter): [Setting!]!
+  settings(filter: SettingFilter): [Setting!]!
   stats: Stats
 
   """Returns all subscription flows"""
@@ -503,9 +544,9 @@ type SubscriptionFlowModel {
   default: Boolean!
   id: String!
   intervals: [SubscriptionInterval!]!
-  memberPlan: MemberPlanRef
+  memberPlan: MemberPlan
   numberOfSubscriptions: Int!
-  paymentMethods: [PaymentMethodRef!]!
+  paymentMethods: [PaymentMethod!]!
   periodicities: [PaymentPeriodicity!]!
 }
 
@@ -521,19 +562,18 @@ type SystemMailModel {
   mailTemplate: MailTemplateRef
 }
 
+type Tag {
+  id: ID!
+}
+
 type User {
-  active: Boolean!
-  createdAt: DateTime!
   email: String!
   emailVerifiedAt: DateTime
   firstName: String
   id: String!
   lastLogin: DateTime
-  modifiedAt: DateTime!
   name: String!
-  password: String!
-  preferredName: String
-  roleIDs: [String!]!
+  roleIDs: [String!]
   userImageID: String
 }
 
@@ -556,3 +596,5 @@ enum UserEvent {
 type VersionInformation {
   version: String!
 }
+
+scalar link__Import

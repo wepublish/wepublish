@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HotAndTrendingResolver hotAndTrending query 1`] = `
+[
+  {
+    "__typename": "Article",
+    "id": "123",
+  },
+  {
+    "__typename": "Article",
+    "id": "123-123",
+  },
+  {
+    "__typename": "Article",
+    "id": "123-123-123",
+  },
+]
+`;

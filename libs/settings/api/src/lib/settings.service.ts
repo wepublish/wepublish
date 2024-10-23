@@ -33,6 +33,20 @@ export class SettingsService {
     return data
   }
 
+  async settingByName(name: string): Promise<Setting> {
+    const data = await this.prisma.setting.findUnique({
+      where: {
+        name
+      }
+    })
+
+    if (!data) {
+      throw Error(`Setting with name ${name} not found`)
+    }
+
+    return data
+  }
+
   async updateSetting(input: UpdateSettingInput) {
     const {name, value} = input
     const fullSetting = await this.prisma.setting.findUnique({

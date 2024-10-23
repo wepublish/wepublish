@@ -125,7 +125,7 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
       <FlexboxGrid justify="space-between" align="middle">
         <FlexboxGrid.Item>
           {`${t('invoice.invoiceNo')} ${invoice.id}`}{' '}
-          {!invoice.paidAt && <span>({t('invoice.unpaid')})</span>}
+          {!invoice.paidAt && <span>{t('invoice.unpaid')}</span>}
         </FlexboxGrid.Item>
         <FlexboxItem>{invoiceIconView()}</FlexboxItem>
       </FlexboxGrid>
@@ -147,7 +147,7 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
       <Panel bordered header={invoiceHeaderView()}>
         <p>{invoice.description}</p>
         <p>
-          {t('invoice.total')} {(invoice.total / 100).toFixed(2)} {t('currency.chf')}
+          {t('invoice.total')} {(invoice.total / 100).toFixed(2)} {invoice.currency}
         </p>
         {invoiceActionView()}
       </Panel>

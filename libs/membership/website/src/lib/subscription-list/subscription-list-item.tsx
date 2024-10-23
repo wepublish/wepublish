@@ -11,11 +11,12 @@ import {
   MdAutorenew,
   MdCalendarMonth,
   MdCancel,
+  MdEventRepeat,
   MdHistory,
   MdOutlinePayments,
   MdTimelapse
 } from 'react-icons/md'
-import {formatChf} from '../formatters/format-currency'
+import {formatCurrency} from '../formatters/format-currency'
 import {formatPaymentPeriod, formatPaymentTimeline} from '../formatters/format-payment-period'
 import {MembershipModal} from '../membership-modal/membership-modal'
 
@@ -65,7 +66,7 @@ export function SubscriptionListItem({
   paymentPeriodicity,
   monthlyAmount,
   deactivation,
-  memberPlan: {image, name},
+  memberPlan: {image, name, currency},
   url,
   canPay,
   pay,
@@ -88,6 +89,7 @@ export function SubscriptionListItem({
   const subscriptionDuration = formatPaymentPeriod(paymentPeriodicity)
 
   const [confirmCancel, setConfirmCancel] = useState(false)
+  const [confirmExtend, setConfirmExtend] = useState<boolean>(false)
 
   return (
     <SubscriptionListItemWrapper className={className}>
@@ -164,7 +166,8 @@ export function SubscriptionListItem({
           )}
 
           <SubscriptionListItemMetaItem>
-            <MdAttachMoney /> Kostet {formatChf(monthlyAmount / 100, locale)} pro Monat
+            <MdAttachMoney /> Kostet {formatCurrency(monthlyAmount / 100, currency, locale)} pro
+            Monat
           </SubscriptionListItemMetaItem>
 
           <SubscriptionListItemMetaItem>
@@ -191,7 +194,10 @@ export function SubscriptionListItem({
             )}
 
             {canExtend && (
-              <Button onClick={callAction(extend)} disabled={loading}>
+              <Button
+                onClick={() => setConfirmExtend(true)}
+                disabled={loading}
+                startIcon={<MdEventRepeat />}>
                 Jetzt Verlängern
               </Button>
             )}
@@ -199,6 +205,7 @@ export function SubscriptionListItem({
         )}
       </SubscriptionListItemContent>
 
+      {/* confirm cancel */}
       <MembershipModal
         open={!!confirmCancel}
         onSubmit={async () => {
@@ -214,6 +221,22 @@ export function SubscriptionListItem({
         <Paragraph gutterBottom={false}>
           Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene
           Rechnungen des Abos werden storniert.
+        </Paragraph>
+      </MembershipModal>
+
+      {/* confirm extend */}
+      <MembershipModal
+        open={confirmExtend}
+        onCancel={() => setConfirmExtend(false)}
+        onSubmit={async () => {
+          setConfirmExtend(false)
+          await callAction(extend)()
+        }}
+        submitText={'Jetzt Verlängern'}>
+        <H5 component="h1">Abo frühzeitig verlängern?</H5>
+        <Paragraph gutterBottom={false}>
+          Wir freuen uns, dass du dein Abo frühzeitig um ein {subscriptionDuration} verlängern
+          willst. Weiterfahren?
         </Paragraph>
       </MembershipModal>
     </SubscriptionListItemWrapper>

@@ -19,8 +19,14 @@ env:
 
 
 jobs:
+  publish_docker_base_image:
+    name: Docker base image
+    uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
+    secrets: inherit
+
   publish_docker_image:
-    name: Docker
+    needs: [publish_docker_base_image]
+    name: Docker backend images
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
       editor_tags: |
@@ -284,7 +290,7 @@ jobs:
 
   publish_docker_website_image:
     name: Build Docker Website
-    needs: [setup-website-matrix, helm_deployment]
+    needs: [setup-website-matrix, helm_deployment, publish_docker_base_image]
     if: ${{ needs.helm_deployment.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:

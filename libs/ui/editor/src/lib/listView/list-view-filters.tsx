@@ -497,11 +497,11 @@ export function ListViewFilters({
                   updateFilter({
                     publicationDateFrom: {
                       date: value[0]?.toISOString(),
-                      comparison: DateFilterComparison.Greater
+                      comparison: DateFilterComparison.Gt
                     },
                     publicationDateTo: {
                       date: value[1]?.toISOString(),
-                      comparison: DateFilterComparison.Lower
+                      comparison: DateFilterComparison.Lte
                     }
                   })
                 }

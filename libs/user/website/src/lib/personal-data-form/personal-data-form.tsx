@@ -1,6 +1,7 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import {InputAdornment, Theme, css, styled, useTheme} from '@mui/material'
 import {requiredRegisterSchema, UserForm, zodAlwaysRefine} from '@wepublish/authentication/website'
+import {userCountryNames} from '@wepublish/user'
 import {
   BuilderPersonalDataFormFields,
   BuilderPersonalDataFormProps,
@@ -84,21 +85,20 @@ const requiredSchema = requiredRegisterSchema.omit({
 
 const defaultSchema = z.object({
   firstName: z.string().optional().or(z.literal('')),
-  preferredName: z.string().optional().or(z.literal('')),
   flair: z.string().optional().or(z.literal('')),
   birthday: z.coerce.date().max(new Date()).optional(),
   address: z.object({
     streetAddress: z.string().min(1),
     zipCode: z.string().min(1),
     city: z.string().min(1),
-    country: z.string().min(1)
+    country: z.enum(userCountryNames)
   }),
   password: z.string().min(8).optional().or(z.literal('')),
   passwordRepeated: z.string().min(8).optional().or(z.literal(''))
 })
 
 export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
-  fields = ['firstName', 'name', 'flair', 'address', 'password', 'preferredName', 'image'] as T[],
+  fields = ['firstName', 'flair', 'address', 'password', 'image'] as T[],
   className,
   user,
   schema = defaultSchema,
@@ -152,7 +152,6 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
       },
       email: user.email,
       firstName: user.firstName || '',
-      preferredName: user.preferredName || '',
       name: user.name,
       flair: user.flair || '',
       birthday: user.birthday

@@ -53,7 +53,7 @@ export const AdTeaserBlockStyle = (props: BuilderTeaserListBlockProps) => {
       __typename: 'CustomTeaser',
       properties: [],
       contentUrl: null,
-      preTitle: 'ad-300',
+      preTitle: 'ad-300x250',
       title: null,
       lead: null,
       image: null,
@@ -61,5 +61,5 @@ export const AdTeaserBlockStyle = (props: BuilderTeaserListBlockProps) => {
     } as ApiV1.CustomTeaser)
   )(props.teasers as ApiV1.Teaser[])
 
-  return <AdTeaserList {...props} teasers={teasers} title={null} />
+  return <AdTeaserList {...props} teasers={teasers} />
 }

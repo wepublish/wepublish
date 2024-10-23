@@ -1,0 +1,49 @@
+fragment FullUser on User {
+    id
+    name
+    email
+    emailVerifiedAt
+    subscriptions {
+        id
+        memberPlan {
+            id
+            slug
+        }
+    }
+    flair
+}
+
+query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    users(filter: {text: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+        nodes {
+            ...FullUser
+        }
+
+        pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+        }
+
+        totalCount
+    }
+}
+
+mutation CreateUser($input: UserInput!, $password: String!) {
+    createUser(input: $input, password: $password) {
+        ...FullUser
+    }
+}
+
+mutation UpdateUser($id: ID!, $input: UserInput!) {
+    updateUser(id: $id, input: $input) {
+        ...FullUser
+    }
+}
+
+mutation DeleteUser($id: ID!) {
+    deleteUser(id: $id) {
+        ...FullUser
+    }
+}

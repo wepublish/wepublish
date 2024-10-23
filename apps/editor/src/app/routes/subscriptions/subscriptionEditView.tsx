@@ -2,6 +2,7 @@ import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
 import {Alert} from '@mui/material'
 import {
+  Currency,
   DeactivationFragment,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
@@ -139,6 +140,9 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
   const [invoices, setInvoices] = useState<InvoiceFragment[] | undefined>(undefined)
+  const [currency, setCurrency] = useState<Currency>(Currency.Chf)
+
+  const [extendModal, setExtendModal] = useState<boolean>(false)
 
   /**
    * Loading the subscription
@@ -219,6 +223,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     )
     setDeactivation(subscription.deactivation)
     setExtendable(subscription.extendable)
+    setCurrency(subscription.currency)
   }
 
   const {
@@ -469,6 +474,9 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
   async function handleRenewal() {
     if (!id) return
 
+    // close modal
+    setExtendModal(false)
+
     try {
       await renewSubscription({
         variables: {
@@ -491,7 +499,8 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
       .min(
         memberPlan?.amountPerMonthMin || 0,
         t(`errorMessages.minimalAmountPerMonth`, {
-          amount: (memberPlan?.amountPerMonthMin || 0) / 100
+          amount: (memberPlan?.amountPerMonthMin || 0) / 100,
+          currency: memberPlan?.currency
         })
       ),
     paymentPeriodicity: StringType().isRequired(
@@ -627,6 +636,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                                 const foundMemberPlan = memberPlans.find(mp => mp.id === value)
                                 if (!foundMemberPlan) return
                                 setMonthlyAmount(foundMemberPlan.amountPerMonthMin)
+                                setCurrency(foundMemberPlan.currency)
                                 return foundMemberPlan
                               })
                             }
@@ -637,7 +647,9 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                             <HelpText>
                               <DescriptionList>
                                 <DescriptionListItem
-                                  label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
+                                  label={t('userSubscriptionEdit.memberPlanMonthlyAmount', {
+                                    currency: memberPlan?.currency
+                                  })}>
                                   {(memberPlan.amountPerMonthMin / 100).toFixed(2)}
                                 </DescriptionListItem>
                               </DescriptionList>
@@ -674,7 +686,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
 
                           <CurrencyInput
                             name="currency"
-                            currency="CHF"
+                            currency={currency}
                             centAmount={monthlyAmount}
                             onChange={centAmount => {
                               setMonthlyAmount(centAmount)
@@ -726,7 +738,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                             appearance="ghost"
                             color="red"
                             loading={isDisabled}
-                            onClick={() => handleRenewal()}>
+                            onClick={() => setExtendModal(true)}>
                             {t('userSubscriptionEdit.renewNow')}
                           </Button>
                         </Col>
@@ -837,7 +849,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
             keyboard={false}
             onClose={() => setDeactivationPanelOpen(false)}>
             <UserSubscriptionDeactivatePanel
-              displayName={user.preferredName || user.name || user.email}
+              displayName={user.name || user.email}
               userEmail={user.email}
               paidUntil={paidUntil ?? undefined}
               onDeactivate={async data => {
@@ -848,6 +860,22 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
             />
           </Modal>
         )}
+
+        {/* ask user to really extend the subscripion */}
+        <Modal open={extendModal} size="sm" backdrop="static" onClose={() => setExtendModal(false)}>
+          <Modal.Header>
+            <Modal.Title>{t('subscriptionEditView.extendModalTitle')}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{t('subscriptionEditView.extendModalBody')}</Modal.Body>
+          <Modal.Footer>
+            <Button onClick={() => handleRenewal()} appearance="primary">
+              {t('userSubscriptionEdit.renewNow')}
+            </Button>
+            <Button onClick={() => setExtendModal(false)} appearance="subtle">
+              {t('cancel')}
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </Form>
     </TableWrapper>
   )

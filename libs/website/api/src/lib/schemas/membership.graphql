@@ -29,6 +29,7 @@ fragment FullMemberPlan on MemberPlan {
   }
 
   amountPerMonthMin
+  currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
   }

@@ -21,7 +21,7 @@ import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLPublicPayment} from './payment'
 import {Subscription, User} from '@prisma/client'
-import {GraphQLMemberPlan, GraphQLPaymentPeriodicity} from './memberPlan'
+import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLSupportedCurrency} from './memberPlan'
 import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
 import {GraphQLSubscriptionPeriod} from './subscriptionPeriods'
 import {GraphQLInvoice} from './invoice'
@@ -66,6 +66,7 @@ const GraphQLUserSubscription = new GraphQLObjectType<Subscription, Context>({
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
     monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
     autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     paidUntil: {type: GraphQLDateTime},
@@ -116,7 +117,6 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
     emailVerifiedAt: {type: GraphQLDateTime},
     birthday: {type: GraphQLDateTime},
 
-    preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddress},
     flair: {type: GraphQLString},
 
@@ -188,7 +188,6 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
         email && isMeBySession(id, session) ? email : ''
       )
     },
-    preferredName: {type: GraphQLString},
     address: {
       type: GraphQLUserAddress,
       resolve: createProxyingResolver(({address, id}, _, {session}) =>
@@ -240,10 +239,10 @@ export const GraphQLUserFilter = new GraphQLInputObjectType({
 export const GraphQLUserSort = new GraphQLEnumType({
   name: 'UserSort',
   values: {
-    CREATED_AT: {value: UserSort.CreatedAt},
-    MODIFIED_AT: {value: UserSort.ModifiedAt},
-    NAME: {value: UserSort.Name},
-    FIRST_NAME: {value: UserSort.FirstName}
+    [UserSort.CreatedAt]: {value: UserSort.CreatedAt},
+    [UserSort.ModifiedAt]: {value: UserSort.ModifiedAt},
+    [UserSort.Name]: {value: UserSort.Name},
+    [UserSort.FirstName]: {value: UserSort.FirstName}
   }
 })
 
@@ -279,7 +278,6 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
     birthday: {
       type: GraphQLDateTime
     },
-    preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},
     flair: {type: GraphQLString},
 
@@ -301,7 +299,6 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
     name: {type: new GraphQLNonNull(GraphQLString)},
     firstName: {type: GraphQLString},
     email: {type: new GraphQLNonNull(GraphQLString)},
-    preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},
     flair: {type: GraphQLString},
     birthday: {

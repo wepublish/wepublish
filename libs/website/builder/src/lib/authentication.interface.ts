@@ -22,11 +22,11 @@ export type BuilderLoginFormProps = {
   onSubmitLoginWithCredentials: (email: string, password: string) => void
 }
 
-type AddressShape = z.ZodObject<{
+export type AddressShape = z.ZodObject<{
   streetAddress: z.ZodString | z.ZodOptional<z.ZodString>
   zipCode: z.ZodString | z.ZodOptional<z.ZodString>
   city: z.ZodString | z.ZodOptional<z.ZodString>
-  country: z.ZodString | z.ZodOptional<z.ZodString>
+  country: z.ZodEnum<[string, ...string[]]> | z.ZodOptional<z.ZodEnum<[string, ...string[]]>>
 }>
 
 export type BuilderRegistrationFormProps<
@@ -37,7 +37,6 @@ export type BuilderRegistrationFormProps<
     Partial<{
       password: z.ZodString | z.ZodOptional<z.ZodString>
       passwordRepeated: z.ZodString | z.ZodOptional<z.ZodString>
-      preferredName: z.ZodString | z.ZodOptional<z.ZodString>
       firstName: z.ZodString | z.ZodOptional<z.ZodString>
       address: AddressShape | z.ZodOptional<AddressShape>
       birthday: z.ZodDate | z.ZodOptional<z.ZodDate>

@@ -429,6 +429,7 @@ model Invoice {
   scheduledDeactivationAt   DateTime
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
+  currency                  Currency
 
   subscriptionID String?
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
@@ -490,6 +491,11 @@ model AvailablePaymentMethod {
   @@map("member.plans.payment-methods")
 }
 
+enum Currency {
+  CHF @map("CHF")
+  EUR @map("EUR")
+}
+
 model MemberPlan {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
@@ -500,6 +506,7 @@ model MemberPlan {
   tags                    String[]
   description             Json
   active                  Boolean
+  currency                Currency
   amountPerMonthMin       Float
   availablePaymentMethods AvailablePaymentMethod[]
   extendable              Boolean                  @default(true)
@@ -776,6 +783,7 @@ model Subscription {
   properties         MetadataProperty[]
   deactivation       SubscriptionDeactivation?
   extendable         Boolean                   @default(true)
+  currency           Currency
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
@@ -855,7 +863,6 @@ model User {
   emailVerifiedAt DateTime?
   name            String
   firstName       String?
-  preferredName   String?
   flair           String?
   password        String
   active          Boolean
