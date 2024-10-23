@@ -356,7 +356,7 @@ const modelFieldDefinitions = [{
             }, {
                 name: "migrateToTargetPM",
                 type: "PaymentMethod",
-                relationName: "MemberPlanToPaymentMethod"
+                relationName: "PaymentMethodMigration"
             }, {
                 name: "image",
                 type: "Image",
@@ -472,9 +472,9 @@ const modelFieldDefinitions = [{
                 type: "SubscriptionFlow",
                 relationName: "PaymentMethodToSubscriptionFlow"
             }, {
-                name: "MemberPlan",
+                name: "migrateFromPlans",
                 type: "MemberPlan",
-                relationName: "MemberPlanToPaymentMethod"
+                relationName: "PaymentMethodMigration"
             }]
     }, {
         name: "Payment",

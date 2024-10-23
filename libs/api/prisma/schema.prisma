@@ -509,7 +509,7 @@ model MemberPlan {
   currency                Currency
   amountPerMonthMin       Float
   availablePaymentMethods AvailablePaymentMethod[]
-  migrateToTargetPM       PaymentMethod?           @relation(fields: [migrateToTargetPMid], references: [id])
+  migrateToTargetPM       PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPMid], references: [id])
   migrateToTargetPMid     String?
   extendable              Boolean                  @default(true)
   maxCount                Int?
@@ -642,7 +642,7 @@ model PaymentMethod {
   Subscription      Subscription[]
   Payment           Payment[]
   subscriptionFlows SubscriptionFlow[]
-  MemberPlan        MemberPlan[]
+  migrateFromPlans  MemberPlan[] @relation("PaymentMethodMigration")
 
   @@map("payment.methods")
 }
