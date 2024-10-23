@@ -1,14 +1,24 @@
-import React, {useMemo, useState} from 'react'
-import {TextField, Button, Box} from '@mui/material'
+import {Box, Button, TextField} from '@mui/material'
+import React, {useEffect, useState} from 'react'
 
 type MailchimpSubscribeFormProps = {
   signupUrl: string
+  defaultEmail?: string
+  defaultFirstName?: string
+  defaultLastName?: string
 }
 
-export default function MailchimpSubscribeForm({signupUrl}: MailchimpSubscribeFormProps) {
-  const [email, setEmail] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
+export default function MailchimpSubscribeForm(props: MailchimpSubscribeFormProps) {
+  const {signupUrl, defaultEmail, defaultFirstName, defaultLastName} = props
+  const [email, setEmail] = useState(defaultEmail || '')
+  const [firstName, setFirstName] = useState(defaultFirstName || '')
+  const [lastName, setLastName] = useState(defaultLastName || '')
+
+  useEffect(() => {
+    setEmail(defaultEmail || '')
+    setFirstName(defaultFirstName || '')
+    setLastName(defaultLastName || '')
+  }, [defaultEmail, defaultFirstName, defaultLastName])
 
   return (
     <Box maxWidth="sm" display={'flex'} flexDirection={'column'}>
