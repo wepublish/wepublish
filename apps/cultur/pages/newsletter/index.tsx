@@ -1,15 +1,25 @@
-import MailchimpSubscribeForm from '../../src/components/newsletter/mailchimp-form'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
+import {useRouter} from 'next/router'
+
+import MailchimpSubscribeForm from '../../src/components/newsletter/mailchimp-form'
 
 type NewsletterPageProps = {
   mailchimpSignupUrl: string
 }
 
 export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps) {
+  const {query} = useRouter()
+  const {firstname, lastname, email} = query
+
   return (
     <>
-      <MailchimpSubscribeForm signupUrl={mailchimpSignupUrl} />
+      <MailchimpSubscribeForm
+        signupUrl={mailchimpSignupUrl}
+        defaultEmail={(email as string) || undefined}
+        defaultFirstName={(firstname as string) || undefined}
+        defaultLastName={(lastname as string) || undefined}
+      />
     </>
   )
 }
