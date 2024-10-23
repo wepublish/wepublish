@@ -71,16 +71,25 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
         return object
       }
 
+      // Don't include sub pages of the article prefix
+      if (slug?.split('/').length !== this.config.articlePrefix.split('/').length) {
+        return object
+      }
+
       object[slug.replace(this.config.articlePrefix, '')] = +views
 
       return object
     }, {} as Record<string, number>)
 
+    const slicedArticleViewMap = Object.fromEntries(
+      Object.entries(articleViewMap).slice(skip ?? 0, (skip ?? 0) + getMaxTake(take ?? 10))
+    )
+
     const articles = await this.prisma.article.findMany({
       where: {
         published: {
           slug: {
-            in: Object.keys(articleViewMap),
+            in: Object.keys(slicedArticleViewMap),
             mode: 'insensitive'
           }
         }
@@ -91,9 +100,7 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
             slug: true
           }
         }
-      },
-      take: getMaxTake(take ?? 10),
-      skip: skip ?? 0
+      }
     })
 
     return articles.sort((a, b) => {

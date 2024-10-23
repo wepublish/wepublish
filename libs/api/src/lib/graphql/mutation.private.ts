@@ -134,6 +134,7 @@ import {
   cancelSubscriptionById,
   createSubscription,
   deleteSubscriptionById,
+  importSubscription,
   renewSubscription,
   updateAdminSubscription
 } from './subscription/subscription.private-mutation'
@@ -504,6 +505,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         createSubscription(input, authenticate, memberContext, prisma)
     },
 
+    importSubscription: {
+      type: GraphQLSubscription,
+      args: {
+        input: {type: new GraphQLNonNull(GraphQLSubscriptionInput)}
+      },
+      resolve: (root, {input}, {authenticate, prisma, memberContext}) =>
+        importSubscription(input, authenticate, memberContext, prisma)
+    },
+
     renewSubscription: {
       type: GraphQLInvoice,
       args: {
@@ -527,7 +537,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           memberContext,
           prisma.subscription,
           prisma.user,
-          paymentProviders
+          paymentProviders,
+          prisma.memberPlan
         )
     },
 

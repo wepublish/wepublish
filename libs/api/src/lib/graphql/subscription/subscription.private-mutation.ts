@@ -128,7 +128,31 @@ export const createSubscription = async (
     input['extendable'],
     input['startsAt']
   )
+  return subscription
+}
 
+export const importSubscription = async (
+  {properties, ...input}: CreateSubscriptionInput,
+  authenticate: Context['authenticate'],
+  memberContext: Context['memberContext'],
+  prismaClient: PrismaClient
+) => {
+  const {roles} = authenticate()
+  authorise(CanCreateSubscription, roles)
+
+  const {subscription} = await memberContext.importSubscription(
+    prismaClient,
+    input['userID'],
+    input['paymentMethodID'],
+    input['paymentPeriodicity'],
+    input['monthlyAmount'],
+    input['memberPlanID'],
+    properties,
+    input['autoRenew'],
+    input['extendable'],
+    input['startsAt'],
+    input['paidUntil']
+  )
   return subscription
 }
 
@@ -176,7 +200,8 @@ export const updateAdminSubscription = async (
   memberContext: Context['memberContext'],
   subscriptionClient: PrismaClient['subscription'],
   userClient: PrismaClient['user'],
-  paymentProviders: PaymentProvider[]
+  paymentProviders: PaymentProvider[],
+  memberPlanClient: PrismaClient['memberPlan']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateSubscription, roles)
@@ -221,10 +246,25 @@ export const updateAdminSubscription = async (
 
   if (!user) throw new Error('Can not update subscription without user')
 
+  const memberPlan = await memberPlanClient.findUnique({
+    where: {
+      id: input.memberPlanID as string
+    },
+    select: {
+      currency: true
+    }
+  })
+
+  if (!memberPlan)
+    throw new Error(
+      `Can not update subscription. Memberplan with id ${input.memberPlanID} not found.`
+    )
+
   const updatedSubscription = await subscriptionClient.update({
     where: {id},
     data: {
       ...input,
+      currency: memberPlan.currency,
       properties: {
         deleteMany: {
           subscriptionId: id

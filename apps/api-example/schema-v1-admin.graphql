@@ -211,6 +211,7 @@ type UserSubscription {
   modifiedAt: DateTime!
   paymentPeriodicity: PaymentPeriodicity!
   monthlyAmount: Int!
+  currency: Currency!
   autoRenew: Boolean!
   startsAt: DateTime!
   paidUntil: DateTime
@@ -226,6 +227,11 @@ enum PaymentPeriodicity {
   quarterly
   biannual
   yearly
+}
+
+enum Currency {
+  CHF
+  EUR
 }
 
 type SubscriptionDeactivation {
@@ -266,11 +272,6 @@ type MemberPlan {
   availablePaymentMethods: [AvailablePaymentMethod!]!
 }
 
-enum Currency {
-  CHF
-  EUR
-}
-
 type AvailablePaymentMethod {
   paymentMethods: [PaymentMethod!]!
   paymentPeriodicities: [PaymentPeriodicity!]!
@@ -307,6 +308,7 @@ type Invoice {
   manuallySetAsPaidByUserId: ID
   items: [InvoiceItem!]!
   canceledAt: DateTime
+  currency: Currency!
   total: Int!
 }
 
@@ -378,6 +380,7 @@ type Subscription {
   paymentMethod: PaymentMethod!
   properties: [Properties!]!
   deactivation: SubscriptionDeactivation
+  currency: Currency!
 }
 
 type SubscriptionConnection {
@@ -1356,6 +1359,7 @@ type Mutation {
   resetUserPassword(id: ID!, password: String!, sendMail: Boolean): User
   deleteUser(id: ID!): User
   createSubscription(input: SubscriptionInput!): Subscription
+  importSubscription(input: SubscriptionInput!): Subscription
   renewSubscription(id: ID!): Invoice
   updateSubscription(id: ID!, input: SubscriptionInput!): Subscription
   deleteSubscription(id: ID!): Subscription

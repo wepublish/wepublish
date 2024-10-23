@@ -16,6 +16,7 @@ import {InvoiceWithItems} from '@wepublish/payment/api'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
 import {GraphQLPublicSubscription} from './subscription-public'
+import {GraphQLSupportedCurrency} from './memberPlan'
 
 export const GraphQLInvoiceItem = new GraphQLObjectType<InvoiceItem, Context>({
   name: 'InvoiceItem',
@@ -49,6 +50,7 @@ export const GraphQLInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
     manuallySetAsPaidByUserId: {type: GraphQLID},
     items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItem)))},
     canceledAt: {type: GraphQLDateTime},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
     total: {
       type: new GraphQLNonNull(GraphQLInt),
       resolve: createProxyingResolver(({items}) => {

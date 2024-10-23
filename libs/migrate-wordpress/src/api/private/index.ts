@@ -857,6 +857,7 @@ export type Invoice = {
   __typename?: 'Invoice'
   canceledAt?: Maybe<Scalars['DateTime']>
   createdAt: Scalars['DateTime']
+  currency: Currency
   description?: Maybe<Scalars['String']>
   id: Scalars['ID']
   items: Array<InvoiceItem>
@@ -1077,6 +1078,7 @@ export type Mutation = {
   deleteUserRole?: Maybe<UserRole>
   duplicateArticle: Article
   duplicatePage: Page
+  importSubscription?: Maybe<Subscription>
   markInvoiceAsPaid?: Maybe<Invoice>
   publishArticle?: Maybe<Article>
   publishPage?: Maybe<Page>
@@ -1325,6 +1327,10 @@ export type MutationDuplicateArticleArgs = {
 
 export type MutationDuplicatePageArgs = {
   id: Scalars['ID']
+}
+
+export type MutationImportSubscriptionArgs = {
+  input: SubscriptionInput
 }
 
 export type MutationMarkInvoiceAsPaidArgs = {
@@ -2340,6 +2346,7 @@ export type Subscription = {
   __typename?: 'Subscription'
   autoRenew: Scalars['Boolean']
   createdAt: Scalars['DateTime']
+  currency: Currency
   deactivation?: Maybe<SubscriptionDeactivation>
   extendable: Scalars['Boolean']
   id: Scalars['ID']
@@ -2786,6 +2793,7 @@ export type UserSubscription = {
   __typename?: 'UserSubscription'
   autoRenew: Scalars['Boolean']
   createdAt: Scalars['DateTime']
+  currency: Currency
   deactivation?: Maybe<SubscriptionDeactivation>
   id: Scalars['ID']
   invoices: Array<Invoice>

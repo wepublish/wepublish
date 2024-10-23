@@ -517,8 +517,8 @@
       "invalidEmailErrorMessage": "Please enter a valid email address",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
       "invalidUrlErrorMessage": "Please enter a valid url",
-      "minimalAmountPerMonth": "The minimal amount / month is defined as {{amount}} chf.",
-      "noAmountErrorMessage": "Default amount will be set to 5.00 CHF if empty",
+      "minimalAmountPerMonth": "The minimal amount / month is defined as {{amount}} {{currency}}.",
+      "noAmountErrorMessage": "Default amount will be set to 5.00 if empty",
       "noCallToActionImageErrorMessage": "Please enter a call to action image",
       "noEmailErrorMessage": "Please enter an email address",
       "noImageErrorMessage": "Please enter an image",
@@ -721,10 +721,10 @@
       "paymentMethods": "Possible Payment Methods",
       "paymentPeriodicities": "Payment Periodicities",
       "paymentPeriodicity": {
-        "BIANNUAL": "Biannual",
-        "MONTHLY": "Monthly",
-        "QUARTERLY": "Quarterly",
-        "YEARLY": "Yearly"
+        "biannual": "Biannual",
+        "monthly": "Monthly",
+        "quarterly": "Quarterly",
+        "yearly": "Yearly"
       },
       "title": "Member Plans"
     },
@@ -1349,7 +1349,7 @@
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
       },
       "editTitle": "Edit Subscription",
-      "memberPlanMonthlyAmount": "Minimal Monthly Amount (CHF)",
+      "memberPlanMonthlyAmount": "Minimal Monthly Amount ({{currency}})",
       "monthlyAmount": "Monthly amount",
       "paidUntil": "Paid Until",
       "paymentMethod": "Payment Method",
@@ -1372,12 +1372,12 @@
       "invoiceNr": "Invoice No. {{invoiceId}}",
       "invoicePaid": "paid",
       "invoiceUnpaid": "unpaid",
-      "monthlyAmount": "Monthly amount: {{monthlyAmount}} CHF",
+      "monthlyAmount": "Monthly amount: {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "Subscription expires, no automatic renewal",
       "noDeactivation": "No deactivation.",
       "paidUntil": "Paid until {{date}}",
       "paymentPeriodicity": "Payment periodicity: {{paymentPeriodicity}}",
-      "periodAmount": "Amount: {{amount}} CHF",
+      "periodAmount": "Amount: {{amount}} {{currency}}",
       "periodCreatedAt": "Created at {{date}}",
       "periodEndsAt": "until {{date}}",
       "periods": "Periods",
@@ -1415,7 +1415,9 @@
       "nonExtendableNotCompatibleWithAutoRenew": "An automatically renewing subscription must be renewable. Change one of these parameters.",
       "configureAsTrialSubscription": "Configure as a trial subscription",
       "subscriptionTrialNotPossible": "The subscription cannot be configured as a trial subscription. To do so, change the settings of the subscription plan.",
-      "extendableWasChanged": "The «Extendable» option has been adjusted according to the subscription plan."
+      "extendableWasChanged": "The «Extendable» option has been adjusted according to the subscription plan.",
+      "extendModalTitle": "Extend your subscription early?",
+      "extendModalBody": "The subscription will be extended prematurely for the next possible period. An invoice will be issued."
     },
     "subscriptionListFilter": {
       "extendable": "Extendable"

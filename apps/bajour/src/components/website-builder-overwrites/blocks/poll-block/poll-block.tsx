@@ -5,12 +5,17 @@ import {
   PollBlockResultInfo,
   PollBlockResultName,
   PollBlockResultPercentage,
+  PollBlockTitle,
   PollBlockVoteBar,
   PollBlockVoteBarFill,
   RichTextBlockWrapper
 } from '@wepublish/website'
 
 export const PollBlock = styled(BasePollBlock)`
+  ${PollBlockTitle} {
+    display: none;
+  }
+
   ${PollBlockMeta} {
     display: none;
   }

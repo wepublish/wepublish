@@ -14,7 +14,14 @@ const nextConfig = {
   ...wepNextConfig,
   publicRuntimeConfig: {
     env: {
-      API_URL: process.env.API_URL || ''
+      API_URL: process.env.API_URL || '',
+      MAILCHIMP_SIGNUP_URL: process.env.MAILCHIMP_SIGNUP_URL || ''
+    }
+  },
+  serverRuntimeConfig: {
+    env: {
+      MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY || '',
+      MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX || ''
     }
   }
 }
