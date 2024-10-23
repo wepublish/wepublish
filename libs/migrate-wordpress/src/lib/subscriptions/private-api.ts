@@ -3,9 +3,6 @@ import {
   CreateUserMutation,
   CreateUserMutationVariables,
   UserInput,
-  CreateSubscription,
-  CreateSubscriptionMutation,
-  CreateSubscriptionMutationVariables,
   SubscriptionInput,
   UserList,
   UserListQuery,
@@ -24,7 +21,6 @@ import {
   ImportSubscription
 } from '../../api/private'
 import {privateClient} from '../api/clients'
-import {Row} from './row'
 
 export async function createUser({
   password,

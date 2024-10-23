@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/nextjs'
-import Error from 'next/error'
 import {NextPageContext} from 'next'
+import Error from 'next/error'
 
 // Define the type for the component's props
 interface CustomErrorComponentProps {

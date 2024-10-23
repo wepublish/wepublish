@@ -1,6 +1,6 @@
 import {Row} from './row'
 import {PaymentPeriodicity, SubscriptionInput, UserListQuery} from '../../api/private'
-import {differenceInDays, differenceInMonths, differenceInYears} from 'date-fns'
+import {differenceInDays, differenceInMonths} from 'date-fns'
 import {importSubscription, deleteSubscription, getMemberPlans} from './private-api'
 
 export async function migrateSubscription(user: UserListQuery['users']['nodes'][number], row: Row) {
