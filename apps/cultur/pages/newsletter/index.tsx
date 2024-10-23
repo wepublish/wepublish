@@ -2,8 +2,8 @@ import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
-import MailchimpSubscribeForm from '../../src/components/newsletter/mailchimp-form'
 import BriefingPage from '../../src/components/newsletter/briefing-page'
+import MailchimpSubscribeForm from '../../src/components/newsletter/mailchimp-form'
 
 type NewsletterPageProps = {
   mailchimpSignupUrl: string

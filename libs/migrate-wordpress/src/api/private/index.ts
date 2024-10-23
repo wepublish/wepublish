@@ -5028,6 +5028,7 @@ export type FullMemberPlanFragment = {
   __typename?: 'MemberPlan'
   tags?: Array<string> | null
   amountPerMonthMin: number
+  currency: Currency
   extendable: boolean
   maxCount?: number | null
   id: string
@@ -5079,6 +5080,7 @@ export type MemberPlanListQuery = {
       __typename?: 'MemberPlan'
       tags?: Array<string> | null
       amountPerMonthMin: number
+      currency: Currency
       extendable: boolean
       maxCount?: number | null
       id: string
@@ -5135,6 +5137,25 @@ export type CreateSubscriptionMutationVariables = Exact<{
 export type CreateSubscriptionMutation = {
   __typename?: 'Mutation'
   createSubscription?: {
+    __typename?: 'Subscription'
+    autoRenew: boolean
+    id: string
+    paidUntil?: string | null
+    monthlyAmount: number
+    extendable: boolean
+    user?: {__typename?: 'User'; id: string} | null
+    memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+    paymentMethod: {__typename?: 'PaymentMethod'; id: string}
+  } | null
+}
+
+export type ImportSubscriptionMutationVariables = Exact<{
+  input: SubscriptionInput
+}>
+
+export type ImportSubscriptionMutation = {
+  __typename?: 'Mutation'
+  importSubscription?: {
     __typename?: 'Subscription'
     autoRenew: boolean
     id: string
@@ -5651,6 +5672,7 @@ export const FullMemberPlan = gql`
   fragment FullMemberPlan on MemberPlan {
     tags
     amountPerMonthMin
+    currency
     availablePaymentMethods {
       paymentMethods {
         id
@@ -5930,6 +5952,27 @@ export const MemberPlanList = gql`
 export const CreateSubscription = gql`
   mutation CreateSubscription($input: SubscriptionInput!) {
     createSubscription(input: $input) {
+      autoRenew
+      id
+      paidUntil
+      user {
+        id
+      }
+      monthlyAmount
+      memberPlan {
+        id
+        slug
+      }
+      extendable
+      paymentMethod {
+        id
+      }
+    }
+  }
+`
+export const ImportSubscription = gql`
+  mutation ImportSubscription($input: SubscriptionInput!) {
+    importSubscription(input: $input) {
       autoRenew
       id
       paidUntil
