@@ -104,7 +104,13 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 30
-
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
           volumeMounts:
             - name: {{ include "helm.fullname" . }}-config
               mountPath: /wepublish/config

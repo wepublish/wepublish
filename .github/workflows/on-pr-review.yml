@@ -260,7 +260,7 @@ jobs:
             env:
               PEER_BY_DEFAULT: "true"
           storybook:
-            enabled: true
+            enabled: false
             image: ghcr.io/wepublish/storybook:${{ github.sha }}
             url: ${STORYBOOK_URL}
           media:

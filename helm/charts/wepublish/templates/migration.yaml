@@ -37,6 +37,13 @@ spec:
           {{- with .Values.api.properties }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "150m"
+            limits:
+              memory: "512Mi"
+              cpu: "250m"
   backoffLimit: 4
 ---
 apiVersion: v1
