@@ -165,13 +165,13 @@ function UserSubscriptionsList({subscriptions, userId}: UserSubscriptionsProps) 
   function paymentPeriodicity(subscription: UserSubscriptionFragment) {
     switch (subscription.paymentPeriodicity) {
       case PaymentPeriodicity.Monthly:
-        return t('memberPlanList.paymentPeriodicity.MONTHLY')
+        return t('memberPlanList.paymentPeriodicity.monthly')
       case PaymentPeriodicity.Quarterly:
-        return t('memberPlanList.paymentPeriodicity.QUARTERLY')
+        return t('memberPlanList.paymentPeriodicity.quarterly')
       case PaymentPeriodicity.Biannual:
-        return t('memberPlanList.paymentPeriodicity.BIANNUAL')
+        return t('memberPlanList.paymentPeriodicity.biannual')
       case PaymentPeriodicity.Yearly:
-        return t('memberPlanList.paymentPeriodicity.YEARLY')
+        return t('memberPlanList.paymentPeriodicity.yearly')
       default:
         return 'Unknown Error'
     }
@@ -251,7 +251,8 @@ function UserSubscriptionsList({subscriptions, userId}: UserSubscriptionsProps) 
                   <FlexboxGrid.Item colspan={24}>
                     <MdCreditCard css={commonIconMargin} />
                     {t('userSubscriptionList.monthlyAmount', {
-                      monthlyAmount: (subscription.monthlyAmount / 100).toFixed(2)
+                      monthlyAmount: (subscription.monthlyAmount / 100).toFixed(2),
+                      currency: subscription.currency
                     })}
                   </FlexboxGrid.Item>
                   {/* paid until */}
@@ -299,7 +300,8 @@ function UserSubscriptionsList({subscriptions, userId}: UserSubscriptionsProps) 
                           {/* amount */}
                           <FlexboxGrid.Item colspan={24}>
                             {t('userSubscriptionList.periodAmount', {
-                              amount: (period.amount / 100).toFixed(2)
+                              amount: (period.amount / 100).toFixed(2),
+                              currency: subscription.currency
                             })}
                           </FlexboxGrid.Item>
                           {/* related invoice */}

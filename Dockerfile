@@ -6,7 +6,11 @@ ARG PLAIN_BUILD_IMAGE=node:18.19.1-bookworm-slim
 #######
 FROM ${PLAIN_BUILD_IMAGE} AS base-image-build
 WORKDIR /wepublish
-COPY . .
+COPY ./package.json .
+COPY ./package-lock.json .
+COPY ./.npmrc .
+COPY ./build ./build
+COPY ./libs/api/prisma/schema.prisma ./libs/api/prisma/schema.prisma
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
@@ -18,7 +22,6 @@ FROM ${PLAIN_BUILD_IMAGE} AS base-image
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 WORKDIR /wepublish
-COPY . .
 RUN groupadd -r wepublish && \
     useradd -r -g wepublish -d /wepublish wepublish && \
     chown -R wepublish:wepublish /wepublish
@@ -32,8 +35,9 @@ FROM ${BUILD_IMAGE} AS  build-website
 ### FRONT_ARG_REPLACER ###
 
 COPY . .
-RUN npx nx build ${NEXT_PROJECT}
-RUN bash /wepublish/deployment/map-secrets.sh clean
+RUN npx prisma generate && \
+    npx nx build ${NEXT_PROJECT}  && \
+    bash /wepublish/deployment/map-secrets.sh clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website
 LABEL org.opencontainers.image.authors="WePublish Foundation"
@@ -64,7 +68,9 @@ ENTRYPOINT ["/entrypoint.sh"]
 ## API
 #######
 FROM ${BUILD_IMAGE} AS build-api
+COPY . .
 RUN npm install -g pkg && \
+    npx prisma generate && \
     npx nx build api-example && \
     cp docker/api_build_package.json package.json && \
     pkg package.json
@@ -94,7 +100,9 @@ CMD /wepublish/api
 #######
 
 FROM ${BUILD_IMAGE} AS build-editor
+COPY . .
 RUN npm install -g pkg && \
+    npx prisma generate && \
     npx nx build editor && \
     cp docker/editor_build_package.json package.json && \
     pkg package.json
@@ -186,6 +194,7 @@ CMD ["node", "main.js"]
 ######
 
 FROM ${BUILD_IMAGE} AS storybook-builder
+COPY . .
 RUN npx nx run website:build-storybook
 
 

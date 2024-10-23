@@ -22,3 +22,5 @@ lerna-debug.log
 tools/modified_jsonfile.json
 tools/removed_keys.json
 .vercel
+# Sentry Config File
+.env.sentry-build-plugin

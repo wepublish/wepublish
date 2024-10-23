@@ -6,7 +6,6 @@ const BASE_URL: string = process.env['WORDPRESS_URL'] || 'https://mannschaft.com
 const BASE_PATH = './libs/migrate-wordpress/src/lib/redirects'
 const IMPORT_PATH = BASE_PATH + '/import-redirects.json'
 const EXPORT_PATH = BASE_PATH + '/redirects.json'
-const EXPORT_PATH_WARNS = BASE_PATH + '/warns.json'
 
 type NextJsRedirectsMap = {
   [key: string]: NextJsRoute
@@ -17,7 +16,7 @@ interface NextJsRoute {
   permanent?: boolean
 }
 
-const exportWarns: NextJsRedirectsMap = {}
+type destinationPathMode = 'wp-posts' | 'redirect-import'
 
 init()
 
@@ -33,8 +32,6 @@ async function init() {
     const nextJsRoutes = resolveRedirects({...nextJsCompatibleRoutes, ...wpArticleRedirects})
     console.log('write file...')
     saveFile(nextJsRoutes, EXPORT_PATH)
-    console.log('write warning file...')
-    saveFile(exportWarns, EXPORT_PATH_WARNS)
     console.log('congrats, all done!')
   } catch (e) {
     console.log('# while migrating the redirects an error occurred', e)
@@ -54,7 +51,8 @@ function transformData(inputData: any[]): NextJsRedirectsMap {
     nextJsCompatibleRoutes = addRedirectToMap(
       nextJsCompatibleRoutes,
       redirect?.url,
-      redirect?.action_data?.url
+      redirect?.action_data?.url,
+      'redirect-import'
     )
   }
   return nextJsCompatibleRoutes
@@ -95,7 +93,7 @@ async function getRedirectsFromWpArticles(): Promise<NextJsRedirectsMap> {
 function getRedirectsFromPosts(posts: WordpressPost[]): NextJsRedirectsMap {
   let wpArticleRedirects: NextJsRedirectsMap = {}
   for (const post of posts) {
-    wpArticleRedirects = addRedirectToMap(wpArticleRedirects, post.link, post.link)
+    wpArticleRedirects = addRedirectToMap(wpArticleRedirects, post.link, post.link, 'wp-posts')
   }
   return wpArticleRedirects
 }
@@ -104,39 +102,39 @@ function getSourcePath(rawUrl: string): string {
   return standardizeRawUrl(rawUrl)
 }
 
-function getDestinationPath(rawUrl: string): string {
+function getDestinationPath(rawUrl: string, mode: destinationPathMode): string {
   let newDestination = standardizeRawUrl(rawUrl)
 
-  // preserve search params
-  const {pathname, searchParams} = new URL(`${BASE_URL}/${newDestination}`)
+  if (mode === 'wp-posts') {
+    // preserve search params
+    const {pathname, searchParams} = new URL(`${BASE_URL}/${newDestination}`)
 
-  // slugify every part of the path name separately. otherwise slashes / would be deleted by the slugify method
-  newDestination = pathname
-    .split('/')
-    .filter(pathnameBit => !!pathnameBit) // remove empty strings
-    .map(pathnameBit => slugify(pathnameBit)) // slugify each pathname bit
-    .join('/') // re-join the pathname
+    // slugify every part of the path name separately. otherwise slashes / would be deleted by the slugify method
+    newDestination = pathname
+      .split('/')
+      .filter(pathnameBit => !!pathnameBit) // remove empty strings
+      .map(pathnameBit => slugify(pathnameBit)) // slugify each pathname bit
+      .join('/') // re-join the pathname
 
-  // add search params again to the url
-  if (searchParams.size) {
-    newDestination += `?${new URLSearchParams(searchParams).toString()}`
+    // add search params again to the url
+    if (searchParams.size) {
+      newDestination += `?${new URLSearchParams(searchParams).toString()}`
+    }
+
+    // every pathname should start with /
+    // empty path would also get a slash
+    if (!newDestination.startsWith('/')) {
+      newDestination = `/${newDestination}`
+    }
+
+    // add /a/ to the pathname (for the WP imports)
+    newDestination = `/a${newDestination}`
   }
 
   // every pathname should start with /
   // empty path would also get a slash
   if (!newDestination.startsWith('/')) {
     newDestination = `/${newDestination}`
-  }
-
-  // add /a/ to the pathname only if
-  // - one slug is available (article)
-  // - or pathname consists of 2 parts and starts with /tag/
-  const pathNameParts = newDestination.split('/').filter(pathNamePart => !!pathNamePart)
-  if (
-    pathNameParts.length === 1 ||
-    (pathNameParts.length === 2 && newDestination.startsWith('/tag/'))
-  ) {
-    newDestination = `/a${newDestination}`
   }
 
   return newDestination
@@ -149,9 +147,14 @@ function standardizeRawUrl(rawUrl: string): string {
   return rawUrl?.replace(BASE_URL, '')?.replace(/\/$/, '')
 }
 
-function addRedirectToMap(map: NextJsRedirectsMap, rawSource: string, rawDestination: string) {
+function addRedirectToMap(
+  map: NextJsRedirectsMap,
+  rawSource: string,
+  rawDestination: string,
+  mode: destinationPathMode
+) {
   const source = getSourcePath(rawSource)
-  const destination = getDestinationPath(rawDestination)
+  const destination = getDestinationPath(rawDestination, mode)
   checkIntegrity(source, destination)
   map[source] = {
     destination
@@ -164,13 +167,6 @@ function checkIntegrity(source: string, destination: string) {
     throw new Error(
       `Source or destination url not provided. source: ${source} | destination: ${destination}`
     )
-  }
-
-  if (!destination.startsWith('/a/') && destination !== '/') {
-    exportWarns[source] = {
-      destination
-    }
-    console.log(`Redirection with destination maybe not working: ${destination}`)
   }
 }
 

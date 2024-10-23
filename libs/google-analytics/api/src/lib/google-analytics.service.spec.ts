@@ -82,49 +82,25 @@ describe('GoogleAnalyticsService', () => {
     expect(runReportSpy).not.toHaveBeenCalled()
   })
 
-  it('should not allow take to be bigger than 100', async () => {
-    runReportSpy.mockReturnValue(
-      Promise.resolve([
-        {
-          rows: []
-        }
-      ])
-    )
-    prismaMock.article.findMany?.mockReturnValue([])
-
-    const result = await service.getMostViewedArticles({
-      take: 101,
-      skip: 0
-    })
-
-    expect(result).toHaveLength(0)
-    expect(prismaMock.article.findMany).toHaveBeenCalledWith({
-      where: expect.any(Object),
-      include: expect.any(Object),
-      take: 100,
-      skip: 0
-    })
-  })
-
   it('should get articles by popularity', async () => {
     runReportSpy.mockReturnValue(
       Promise.resolve([
         {
           rows: [
             {
-              dimensionValues: [{value: 'foobar'}],
+              dimensionValues: [{value: '/a/foobar'}],
               metricValues: [{value: '123'}]
             },
             {
-              dimensionValues: [{value: 'barfoo'}],
+              dimensionValues: [{value: '/a/barfoo'}],
               metricValues: [{value: '1234'}]
             },
             {
-              dimensionValues: [{value: 'bazfoo'}],
+              dimensionValues: [{value: '/a/bazfoo'}],
               metricValues: [{value: '123456'}]
             },
             {
-              dimensionValues: [{value: 'foobaz'}],
+              dimensionValues: [{value: '/a/foobaz'}],
               metricValues: [{value: '12345'}]
             }
           ]
@@ -141,6 +117,71 @@ describe('GoogleAnalyticsService', () => {
     const result = await service.getMostViewedArticles({})
 
     expect(result).toMatchSnapshot()
+    expect(prismaMock.article.findMany?.mock.calls[0]).toMatchSnapshot()
+  })
+
+  it('should filter pages out', async () => {
+    runReportSpy.mockReturnValue(
+      Promise.resolve([
+        {
+          rows: [
+            {
+              dimensionValues: [{value: '/a/foobar/bar'}],
+              metricValues: [{value: '123'}]
+            },
+            {
+              dimensionValues: [{value: '/a/barfoo'}],
+              metricValues: [{value: '1234'}]
+            },
+            {
+              dimensionValues: [{value: '/a/bazfoo'}],
+              metricValues: [{value: '123456'}]
+            },
+            {
+              dimensionValues: [{value: '/a/foobaz/foo'}],
+              metricValues: [{value: '12345'}]
+            }
+          ]
+        }
+      ])
+    )
+    prismaMock.article.findMany?.mockReturnValue([])
+
+    await service.getMostViewedArticles({})
+    expect(prismaMock.article.findMany?.mock.calls[0]).toMatchSnapshot()
+  })
+
+  it('should have a working pagination', async () => {
+    runReportSpy.mockReturnValue(
+      Promise.resolve([
+        {
+          rows: [
+            {
+              dimensionValues: [{value: '/a/foobar'}],
+              metricValues: [{value: '123'}]
+            },
+            {
+              dimensionValues: [{value: '/a/barfoo'}],
+              metricValues: [{value: '1234'}]
+            },
+            {
+              dimensionValues: [{value: '/a/bazfoo'}],
+              metricValues: [{value: '123456'}]
+            },
+            {
+              dimensionValues: [{value: '/a/foobaz'}],
+              metricValues: [{value: '12345'}]
+            }
+          ]
+        }
+      ])
+    )
+    prismaMock.article.findMany?.mockReturnValue([])
+
+    await service.getMostViewedArticles({
+      skip: 1,
+      take: 2
+    })
     expect(prismaMock.article.findMany?.mock.calls[0]).toMatchSnapshot()
   })
 })

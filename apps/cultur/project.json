@@ -24,7 +24,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "cultur:build",
-        "dev": true
+        "dev": true,
+        "port": 4206
       },
       "configurations": {
         "development": {

@@ -200,7 +200,8 @@ export const updateAdminSubscription = async (
   memberContext: Context['memberContext'],
   subscriptionClient: PrismaClient['subscription'],
   userClient: PrismaClient['user'],
-  paymentProviders: PaymentProvider[]
+  paymentProviders: PaymentProvider[],
+  memberPlanClient: PrismaClient['memberPlan']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateSubscription, roles)
@@ -245,10 +246,25 @@ export const updateAdminSubscription = async (
 
   if (!user) throw new Error('Can not update subscription without user')
 
+  const memberPlan = await memberPlanClient.findUnique({
+    where: {
+      id: input.memberPlanID as string
+    },
+    select: {
+      currency: true
+    }
+  })
+
+  if (!memberPlan)
+    throw new Error(
+      `Can not update subscription. Memberplan with id ${input.memberPlanID} not found.`
+    )
+
   const updatedSubscription = await subscriptionClient.update({
     where: {id},
     data: {
       ...input,
+      currency: memberPlan.currency,
       properties: {
         deleteMany: {
           subscriptionId: id
