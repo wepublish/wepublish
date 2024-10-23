@@ -274,7 +274,7 @@ jobs:
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
-          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
+          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait --timeout 10m
 
   setup-website-matrix:
     runs-on: ubuntu-latest
