@@ -1,5 +1,11 @@
 import {styled} from '@mui/material'
-import {ContextBox, ContextBoxIcon, ContextBoxTitle} from '@wepublish/website'
+import {
+  ContextBox,
+  ContextBoxCollapse,
+  ContextBoxIcon,
+  ContextBoxLine,
+  ContextBoxTitle
+} from '@wepublish/website'
 
 export const TsriContextBox = styled(ContextBox)`
   ${ContextBoxIcon} {
@@ -8,5 +14,15 @@ export const TsriContextBox = styled(ContextBox)`
 
   ${ContextBoxTitle} {
     grid-column: 2/3;
+    font-size: ${({theme}) => theme.typography.h6};
+    font-weight: ${({theme}) => theme.typography.fontWeightBold};
+  }
+
+  ${ContextBoxTitle}, ${ContextBoxCollapse} {
+    font-style: normal;
+  }
+
+  ${ContextBoxLine} {
+    width: ${({theme}) => theme.spacing(0.25)};
   }
 `
