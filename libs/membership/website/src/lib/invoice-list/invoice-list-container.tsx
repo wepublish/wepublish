@@ -23,8 +23,12 @@ export function InvoiceListContainer({
 }: InvoiceListContainerProps) {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>()
   const {InvoiceList} = useWebsiteBuilder()
-  const [checkInvoice] = useCheckInvoiceStatusLazyQuery()
-  const {data, loading, error} = useInvoicesQuery({
+  const [checkInvoice, {loading: loadingCheckInvoice}] = useCheckInvoiceStatusLazyQuery()
+  const {
+    data,
+    loading: loadingInvoices,
+    error
+  } = useInvoicesQuery({
     onCompleted(data) {
       for (const {id, paidAt} of data.invoices) {
         if (paidAt) {
@@ -64,6 +68,11 @@ export function InvoiceListContainer({
         }
       }),
     [data, filter]
+  )
+
+  const loading = useMemo(
+    () => loadingInvoices || loadingCheckInvoice,
+    [loadingInvoices, loadingCheckInvoice]
   )
 
   return (
