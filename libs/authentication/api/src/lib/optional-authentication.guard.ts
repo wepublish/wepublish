@@ -1,16 +1,10 @@
-import {AuthGuard} from '@nestjs/passport'
 import {ExecutionContext, UnauthorizedException} from '@nestjs/common'
-import {GqlExecutionContext} from '@nestjs/graphql'
+import {AuthenticationGuard} from './authentication.guard'
 
 /**
  * This Guard is to attach the user to the request
  */
-export class OptionalAuthenticationGuard extends AuthGuard('session') {
-  public override getRequest(context: ExecutionContext) {
-    const ctx = GqlExecutionContext.create(context)
-    return ctx.getContext().req
-  }
-
+export class OptionalAuthenticationGuard extends AuthenticationGuard {
   public override async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
       await super.canActivate(context)

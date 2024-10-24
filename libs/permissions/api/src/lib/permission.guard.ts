@@ -18,7 +18,7 @@ export class PermissionsGuard implements CanActivate {
     ])
 
     if (!permissions.length) {
-      return true
+      return false
     }
 
     const request = ctx.getContext().req

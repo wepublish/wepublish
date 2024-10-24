@@ -2,6 +2,7 @@ import {Args, Int, Query, Resolver} from '@nestjs/graphql'
 import {Inject} from '@nestjs/common'
 import {Article as ArticleModel} from '../article.model'
 import {Article} from '@prisma/client'
+import {Public} from '@wepublish/permissions/api'
 
 export const HOT_AND_TRENDING_DATA_SOURCE = Symbol('HOT_AND_TRENDING_DATA_SOURCE')
 
@@ -17,6 +18,7 @@ export interface HotAndTrendingDataSource {
 export class HotAndTrendingResolver {
   constructor(@Inject(HOT_AND_TRENDING_DATA_SOURCE) private datasource: HotAndTrendingDataSource) {}
 
+  @Public()
   @Query(returns => [ArticleModel], {
     name: 'hotAndTrending',
     description: `

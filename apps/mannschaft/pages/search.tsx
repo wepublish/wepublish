@@ -1,12 +1,13 @@
+import {Box, css, Skeleton, styled} from '@mui/material'
 import {
-  useWebsiteBuilder,
+  alignmentForTeaserBlock,
   ApiV1,
   articleToTeaser,
-  alignmentForTeaserBlock
+  useWebsiteBuilder
 } from '@wepublish/website'
-import {Box, Skeleton, styled, css} from '@mui/material'
 import {useRouter} from 'next/router'
 import {FormEvent, useEffect, useMemo, useRef, useState} from 'react'
+
 import {MannschaftBaseTeaser} from '../src/mannschaft-base-teaser'
 
 export const SearchForm = styled('form')`
