@@ -82,27 +82,19 @@ spec:
               path: /health/livenessProbe
               port: 4000
             initialDelaySeconds: 30
-            periodSeconds: 60
-            timeoutSeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
             failureThreshold: 5
             successThreshold: 1
           readinessProbe:
             httpGet:
               path: /health/readinessProbe
               port: 4000
-            initialDelaySeconds: 5
-            periodSeconds: 60
-            timeoutSeconds: 15
-            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
             successThreshold: 1
-          startupProbe:
-            httpGet:
-              path: /health/startupProbe
-              port: 4000
-            initialDelaySeconds: 10
-            periodSeconds: 60
-            timeoutSeconds: 15
-            failureThreshold: 30
           resources:
             requests:
               memory: "256Mi"
