@@ -77,24 +77,6 @@ spec:
           {{- with .Values.api.properties }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
-          livenessProbe:
-            httpGet:
-              path: /health/livenessProbe
-              port: 4000
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-            successThreshold: 1
-          readinessProbe:
-            httpGet:
-              path: /health/readinessProbe
-              port: 4000
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-            successThreshold: 1
           resources:
             requests:
               memory: "256Mi"
