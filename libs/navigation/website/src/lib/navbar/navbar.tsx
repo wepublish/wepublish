@@ -259,11 +259,7 @@ export function Navbar({
         <NavbarInnerWrapper>
           <NavbarMain>
             <NavbarIconButtonWrapper>
-              <IconButton
-                size="large"
-                aria-label="Menu"
-                onClick={toggleMenu}
-                css={{color: 'white'}}>
+              <IconButton size="large" aria-label="Menu" onClick={toggleMenu}>
                 {!isMenuOpen && <MdMenu />}
                 {isMenuOpen && <MdClose />}
               </IconButton>
