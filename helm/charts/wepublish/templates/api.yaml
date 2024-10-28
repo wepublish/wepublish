@@ -22,7 +22,6 @@ spec:
     app.kubernetes.io/name: {{ include "helm.name" . }}-api
     app.kubernetes.io/instance: {{ .Release.Name }}
 
-
 ---
 apiVersion: apps/v1
 kind: Deployment
