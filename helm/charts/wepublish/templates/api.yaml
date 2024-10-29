@@ -100,9 +100,9 @@ spec:
               path: /health/startupProbe
               port: 4000
             initialDelaySeconds: 10
-            periodSeconds: 60
+            periodSeconds: 10
             timeoutSeconds: 15
-            failureThreshold: 30
+            failureThreshold: 40
           resources:
             requests:
               memory: "256Mi"
