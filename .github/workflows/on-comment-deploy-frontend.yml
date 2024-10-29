@@ -1,0 +1,24 @@
+name: Setup database for review build
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  deploy-frontend-on-comment:
+    if: ${{ github.event.comment.body.startsWith('DEPLOY_FRONTEND:') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Extract Project Name from Comment
+        id: extract_project_name
+        run: |
+          echo "Comment body: ${{ github.event.comment.body }}"
+          export PROJECT_NAME=$(echo "${{ github.event.comment.body }}" |cut -d' ' -f1 | sed 's/DEPLOY_FRONTEND://')
+          echo $PROJECT_NAME
+          echo "::set-output name=project_name::${PROJECT_NAME}"
+      - name: Deploy with Helm
+        run: |
+          echo "Deploying project:  ${{ steps.extract_project_name.outputs.project_name }}"

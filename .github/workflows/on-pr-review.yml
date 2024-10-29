@@ -303,17 +303,19 @@ jobs:
         ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.sha }}
     secrets: inherit
 
-  helm_deployment_website:
-    name: Helm Deployment Website
-    needs: [publish_docker_website_image, setup-website-matrix]
-    if: ${{ needs.publish_docker_website_image.result == 'success' }}
-    uses: ./.github/workflows/on-demand-deploy-helm-website.yml
-    strategy:
-      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
-    with:
-      website_project: ${{ matrix.target }}
-      api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-    secrets: inherit
+
+
+#  helm_deployment_website:
+#    name: Helm Deployment Website
+#    needs: [publish_docker_website_image, setup-website-matrix]
+#    if: ${{ needs.publish_docker_website_image.result == 'success' }}
+#    uses: ./.github/workflows/on-demand-deploy-helm-website.yml
+#    strategy:
+#      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
+#    with:
+#      website_project: ${{ matrix.target }}
+#      api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+#    secrets: inherit
 
 
   notify:
