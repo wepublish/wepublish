@@ -12,8 +12,10 @@ const StripePaymentModalWrapper = styled('section')`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80lvw;
+  width: 95lvw;
   max-width: 800px;
+  max-height: 95lvh;
+  overflow-y: auto;
   background-color: ${({theme}) => theme.palette.background.paper};
   box-shadow: ${({theme}) => theme.shadows[24]};
   padding: ${({theme}) => theme.spacing(2)};

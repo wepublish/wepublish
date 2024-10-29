@@ -65,6 +65,12 @@ fragment ArticleRef on Article {
         updatedAt
         revision
         url
+        blocks {
+            __typename
+            ... on RichTextBlock {
+                richText
+            }
+        }
     }
 
     latest {
@@ -80,8 +86,8 @@ fragment ArticleRef on Article {
     }
 }
 
-query ArticleList($filter: String, $cursor: ID, $take: Int) {
-    articles(take: $take, cursor: $cursor, filter: {title: $filter}) {
+query ArticleList($filter: String, $cursor: ID, $skip: Int, $take: Int) {
+    articles(take: $take, skip: $skip, cursor: $cursor, filter: {title: $filter}) {
         nodes {
             ...ArticleRef
         }
