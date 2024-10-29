@@ -18,6 +18,10 @@ fragment ImageRef on Image {
     description
     width
     height
+    focalPoint {
+        x
+        y
+    }
     ...ImageURLs
 }
 
