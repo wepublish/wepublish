@@ -2,6 +2,7 @@
   "website": {
     "production": {
       "deployment": true,
+      "custom_domain": "https://mannschaft.com",
       "env": {
         "GTM_ID": "GTM-WPT97GP"
       },
