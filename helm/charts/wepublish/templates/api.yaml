@@ -82,9 +82,9 @@ spec:
               path: /health/livenessProbe
               port: 4000
             initialDelaySeconds: 30
-            periodSeconds: 60
-            timeoutSeconds: 15
-            failureThreshold: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
             successThreshold: 1
           readinessProbe:
             httpGet:
@@ -92,17 +92,9 @@ spec:
               port: 4000
             initialDelaySeconds: 30
             periodSeconds: 10
-            timeoutSeconds: 15
+            timeoutSeconds: 3
             failureThreshold: 40
             successThreshold: 1
-          startupProbe:
-            httpGet:
-              path: /health/startupProbe
-              port: 4000
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 15
-            failureThreshold: 40
           volumeMounts:
             - name: {{ include "helm.fullname" . }}-config
               mountPath: /wepublish/config
