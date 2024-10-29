@@ -6,7 +6,7 @@ networks:
 
 services:
   migration:
-    image: ghcr.io/wepublish/migration:10e534d3d59ec56fb0e8babe0de0718c25ec5759
+    image: wepublishch/migration:master
     platform: linux/amd64
     environment:
       NODE_ENV: production
@@ -17,7 +17,7 @@ services:
     networks:
       - app-tier
   api:
-    image: ghcr.io/wepublish/api:10e534d3d59ec56fb0e8babe0de0718c25ec5759
+    image: wepublishch/api:master
     platform: linux/amd64
     ports:
       - '127.0.0.1:4000:4000'

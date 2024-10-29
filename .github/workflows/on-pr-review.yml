@@ -260,7 +260,7 @@ jobs:
             env:
               PEER_BY_DEFAULT: "true"
           storybook:
-            enabled: false
+            enabled: true
             image: ghcr.io/wepublish/storybook:${{ github.sha }}
             url: ${STORYBOOK_URL}
           media:
@@ -274,7 +274,7 @@ jobs:
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
-          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait --timeout 10m
+          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
 
   setup-website-matrix:
     runs-on: ubuntu-latest
