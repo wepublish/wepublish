@@ -19,7 +19,10 @@ export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps
         title={'Cultur Briefing'}
         subtitle={'Das Wichtigste für den Start in den Tag'}
         lead={
-          'Wissen, was in der Kulturwelt los ist? Cültür kommentiert, kuratiert alles, was die Deutschschweizer Kulturwelt bewegt - oder auch nicht.'
+          <>
+            Wissen, was in der Kulturwelt los ist? Cültür kommentiert, kuratiert alles, was die
+            Deutschschweizer Kulturwelt bewegt - oder auch nicht.
+          </>
         }
         wakeup={
           <>
@@ -34,18 +37,18 @@ export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps
         }
         ready={
           <>
-            <span class="readytext--everyday">Jeden Morgen ab</span>
+            <span className="readytext--everyday">Jeden Morgen ab</span>
             <br />
-            <span class="readytext--time">06:00</span>
+            <span className="readytext--time">06:00</span>
             <br />
-            <span class="readytext--ready">für dich bereit</span>
+            <span className="readytext--ready">für dich bereit</span>
           </>
         }
         delivery={
           <>
             und schicken dir
             <br />
-            um <span class="deliverytext--time">6 Uhr</span> die wichtigsten
+            um <span className="deliverytext--time">6 Uhr</span> die wichtigsten
             <br />
             regionalen Tagesnews
             <br />
