@@ -101,7 +101,7 @@ spec:
               path: /health/startupProbe
               port: 4000
             initialDelaySeconds: 10
-            periodSeconds: 5
+            periodSeconds: 10
             timeoutSeconds: 3
             failureThreshold: 30
 
