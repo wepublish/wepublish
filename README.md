@@ -10,7 +10,6 @@
 *** github_username, repo_name, twitter_handle, email
 -->
 
-
 <!-- PROJECT SHIELDS -->
 <!--
 *** I'm using markdown "reference style" links for readability.
