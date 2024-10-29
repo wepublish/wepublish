@@ -1120,6 +1120,10 @@ export interface AvailablePaymentMethodFactoryInterface<TOptions extends Availab
  * @returns factory {@link AvailablePaymentMethodFactoryInterface}
  */
 export declare function defineAvailablePaymentMethodFactory<TOptions extends AvailablePaymentMethodFactoryDefineOptions>(options?: TOptions): AvailablePaymentMethodFactoryInterface<TOptions>;
+type MemberPlanmigrateToTargetPaymentMethodFactory = {
+    _factoryFor: "PaymentMethod";
+    build: () => PromiseLike<Prisma.PaymentMethodCreateNestedOneWithoutMigrateFromPlansInput["create"]>;
+};
 type MemberPlanimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutMemberPlanInput["create"]>;
@@ -1138,6 +1142,7 @@ type MemberPlanFactoryDefineInput = {
     extendable?: boolean;
     maxCount?: number | null;
     availablePaymentMethods?: Prisma.AvailablePaymentMethodCreateNestedManyWithoutMemberPlanInput;
+    migrateToTargetPaymentMethod?: MemberPlanmigrateToTargetPaymentMethodFactory | Prisma.PaymentMethodCreateNestedOneWithoutMigrateFromPlansInput;
     image?: MemberPlanimageFactory | Prisma.ImageCreateNestedOneWithoutMemberPlanInput;
     Subscription?: Prisma.SubscriptionCreateNestedManyWithoutMemberPlanInput;
     subscriptionFlows?: Prisma.SubscriptionFlowCreateNestedManyWithoutMemberPlanInput;
@@ -1430,6 +1435,7 @@ type PaymentMethodFactoryDefineInput = {
     Subscription?: Prisma.SubscriptionCreateNestedManyWithoutPaymentMethodInput;
     Payment?: Prisma.PaymentCreateNestedManyWithoutPaymentMethodInput;
     subscriptionFlows?: Prisma.SubscriptionFlowCreateNestedManyWithoutPaymentMethodsInput;
+    migrateFromPlans?: Prisma.MemberPlanCreateNestedManyWithoutMigrateToTargetPaymentMethodInput;
 };
 type PaymentMethodFactoryDefineOptions = {
     defaultData?: Resolver<PaymentMethodFactoryDefineInput, BuildDataOptions>;
