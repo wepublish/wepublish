@@ -87,3 +87,36 @@ jobs:
           push: true
           tags: |
             ${{ inputs.website_tags }}
+      - name: Wait for frontend to be deployed
+        id: wait-for-frontend-deployment
+        if: ${{ inputs.environment != 'review' }}
+        run: |
+          MAX_RETRIES=30
+          RETRY_DELAY=10
+          SHA_HASH=${{ github.sha }}
+          ENVIRONMENT=${{ inputs.environment }}
+          PROJECT_NAME=${{ inputs.website_project }}
+          DEFAULT_TOP_LEVEL_DOMAIN="dev"
+          if [[ $ENVIRONMENT == "production" ]]; then
+            DEFAULT_TOP_LEVEL_DOMAIN="media"
+          fi
+          FRONTEND_BASE_URL=$(./deployment/read_deployment_config.sh ".website.${ENVIRONMENT}.custom_domain" true ${PROJECT_NAME} getValue https://${PROJECT_NAME}.wepublish.${DEFAULT_TOP_LEVEL_DOMAIN} | awk -F "::" '{print $3}')
+          echo "Looking for frontent version at ${FRONTEND_BASE_URL}/deployed_version"
+          for ((i=1; i<=MAX_RETRIES; i++)); do
+            HTTP_CODE=$(curl -s -o response_body.txt -w "%{http_code}"  ${FRONTEND_BASE_URL}/deployed_version)
+            CONTENT=$(head -n 1 response_body.txt)
+          
+              if [[ "$HTTP_CODE" != "200" ]]; then
+                echo "Attempt $i: Received HTTP $HTTP_CODE"
+              elif [[ "$CONTENT" == "$SHA_HASH" ]]; then
+                echo "Attempt $i: Expected version $SHA_HASH found! "
+              exit 0
+              else
+                echo "Attempt $i: Received response '${CONTENT:0:70}' but expected ${SHA_HASH} with HTTP status $HTTP_CODE"
+              fi
+          
+            echo "Waiting for $RETRY_DELAY seconds before retrying..."
+            sleep $RETRY_DELAY
+          done
+          echo "Timed out waiting for deployment of correct version!"
+          exit 1

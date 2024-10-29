@@ -2,6 +2,7 @@
   "website": {
     "production": {
       "deployment": true,
+      "custom_domain": "https://tsri.ch",
       "env": {
         "MAILCHIMP_SERVER_PREFIX": "us9",
         "GA_ID": "G-V33XC5HR9Q",
