@@ -15,7 +15,7 @@ jobs:
         run: |
           project_name=""
           labels=$(echo '${{ toJSON(github.event.pull_request.labels) }}' | jq -r '.[].name')
-          for label in labels; do
+          for label in $labels; do
             if [[ "$label" == deploy_* ]]; then
               project_name="${label#deploy_}"  # Remove "deploy_" prefix to get project name
               break
