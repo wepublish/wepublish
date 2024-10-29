@@ -2,7 +2,7 @@ name: Deploy frontend on comment
 
 on:
   issue_comment:
-    types: [created]
+    types: [created, edited, deleted]
 
 jobs:
   deploy-frontend-on-comment:
