@@ -354,6 +354,10 @@ const modelFieldDefinitions = [{
                 type: "AvailablePaymentMethod",
                 relationName: "AvailablePaymentMethodToMemberPlan"
             }, {
+                name: "migrateToTargetPaymentMethod",
+                type: "PaymentMethod",
+                relationName: "PaymentMethodMigration"
+            }, {
                 name: "image",
                 type: "Image",
                 relationName: "ImageToMemberPlan"
@@ -467,6 +471,10 @@ const modelFieldDefinitions = [{
                 name: "subscriptionFlows",
                 type: "SubscriptionFlow",
                 relationName: "PaymentMethodToSubscriptionFlow"
+            }, {
+                name: "migrateFromPlans",
+                type: "MemberPlan",
+                relationName: "PaymentMethodMigration"
             }]
     }, {
         name: "Payment",
@@ -2413,6 +2421,9 @@ function defineAvailablePaymentMethodFactoryInternal({ defaultData: defaultDataR
 export function defineAvailablePaymentMethodFactory(options) {
     return defineAvailablePaymentMethodFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
+function isMemberPlanmigrateToTargetPaymentMethodFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PaymentMethod";
+}
 function isMemberPlanimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
@@ -2443,6 +2454,9 @@ function defineMemberPlanFactoryInternal({ defaultData: defaultDataResolver, tra
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
             const defaultAssociations = {
+                migrateToTargetPaymentMethod: isMemberPlanmigrateToTargetPaymentMethodFactory(defaultData.migrateToTargetPaymentMethod) ? {
+                    create: yield defaultData.migrateToTargetPaymentMethod.build()
+                } : defaultData.migrateToTargetPaymentMethod,
                 image: isMemberPlanimageFactory(defaultData.image) ? {
                     create: yield defaultData.image.build()
                 } : defaultData.image

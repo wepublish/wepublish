@@ -1262,7 +1262,9 @@
       "maxCountHelpText": "Limite le nombre d'abonnements qu'un:e utilisateur:trice peut souscrire pour ce plan d'abonnement. Cela inclut les abonnements désactivés.",
       "trialMemberplanAlert": "Ce plan d'abonnement est configuré pour des abonnements d'essai.",
       "forceAutoRenewNotPossible": "Le renouvellement automatique n'est pas possible, car le plan d'abonnement n'est pas extensible.",
-      "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela."
+      "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela.",
+      "migratePMTitle": "Migrer les abonnements vers le mode de paiement cible",
+      "migratePMHelptext": "Migre les abonnements de ce plan vers un nouveau mode de paiement. Les abonnements qui sont encore débités automatiquement ne sont pas migrés. La migration n'a lieu que lorsqu'un utilisateur agit lui-même et veut par exemple payer une facture ouverte dans son profil ou prolonger un abonnement de manière anticipée."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Paramètres avancés",
