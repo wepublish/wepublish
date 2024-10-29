@@ -1,10 +1,4 @@
-import {
-  PaymentState,
-  SubscriptionDeactivationReason,
-  UserEvent,
-  Subscription,
-  MemberPlan
-} from '@prisma/client'
+import {PaymentState, SubscriptionDeactivationReason, UserEvent, Subscription} from '@prisma/client'
 import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
 import * as crypto from 'crypto'
@@ -18,7 +12,6 @@ import {
   GraphQLString
 } from 'graphql'
 import {Context} from '../context'
-import {SubscriptionWithRelations} from '../db/subscription'
 import {
   AlreadyUnpaidInvoices,
   CommentAuthenticationError,
@@ -584,14 +577,14 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         // authenticate user
         const {user} = authenticateUser()
 
-        const subscription = (await prisma.subscription.findUnique({
+        const subscription = await prisma.subscription.findUnique({
           where: {
             id: subscriptionId
           },
           include: {
             memberPlan: true
           }
-        })) as SubscriptionWithRelations & {memberPlan: MemberPlan}
+        })
         // Allow only valid and subscription belonging to the user to early extend
         if (!subscription || subscription.userID !== user.id) {
           logger('extendSubscription').error(
