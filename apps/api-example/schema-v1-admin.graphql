@@ -270,6 +270,7 @@ type MemberPlan {
   maxCount: Int
   extendable: Boolean!
   availablePaymentMethods: [AvailablePaymentMethod!]!
+  migrateToTargetPaymentMethodID: ID
 }
 
 type AvailablePaymentMethod {
@@ -1926,6 +1927,7 @@ input MemberPlanInput {
   extendable: Boolean!
   maxCount: Int
   availablePaymentMethods: [AvailablePaymentMethodInput!]!
+  migrateToTargetPaymentMethodID: ID
 }
 
 input AvailablePaymentMethodInput {
