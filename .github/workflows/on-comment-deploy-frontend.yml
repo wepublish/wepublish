@@ -26,7 +26,7 @@ jobs:
   helm_deployment_website:
     name: Helm Deployment Website
     needs: [check-deploy-label]
-    if: ${{ needs.deploy-frontend-on-comment.result == 'success' }}
+    if: ${{ needs.check-deploy-label.result == 'success' }}
     uses: ./.github/workflows/on-demand-deploy-helm-website.yml
     with:
       website_project: ${{needs.deploy-frontend-on-comment.outputs.project_name}}
