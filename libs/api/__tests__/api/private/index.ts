@@ -959,6 +959,7 @@ export type MemberPlan = {
   id: Scalars['ID'];
   image?: Maybe<Image>;
   maxCount?: Maybe<Scalars['Int']>;
+  migrateToTargetPaymentMethodID?: Maybe<Scalars['ID']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['String'];
@@ -987,6 +988,7 @@ export type MemberPlanInput = {
   extendable: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['ID']>;
   maxCount?: InputMaybe<Scalars['Int']>;
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['ID']>;
   name: Scalars['String'];
   slug: Scalars['String'];
   tags?: InputMaybe<Array<Scalars['String']>>;

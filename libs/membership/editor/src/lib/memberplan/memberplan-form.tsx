@@ -41,7 +41,7 @@ import {
 import {MdAutoFixHigh, MdCheck} from 'react-icons/md'
 import {Alert} from '@mui/material'
 
-const {ControlLabel, HelpText} = RForm
+const {ControlLabel, HelpText, Control} = RForm
 
 const ColTextAlignEnd = styled(Col)`
   text-align: end;
@@ -403,6 +403,27 @@ export function MemberPlanForm({
                   </Panel>
                 )}
               </ListInput>
+            </Col>
+
+            <Col xs={12}>
+              <ControlLabel>{t('memberplanForm.migratePMTitle')}</ControlLabel>
+              <Control
+                name="migrateToTargetPaymentMethodID"
+                block
+                virtualized
+                disabled={loading}
+                data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+                value={memberPlan?.migrateToTargetPaymentMethodID}
+                accepter={SelectPicker}
+                placement="auto"
+                onChange={migrateToTargetPaymentMethodID =>
+                  setMemberPlan({
+                    ...(memberPlan as FullMemberPlanFragment),
+                    migrateToTargetPaymentMethodID: migrateToTargetPaymentMethodID || null
+                  })
+                }
+              />
+              <HelpText>{t('memberplanForm.migratePMHelptext')}</HelpText>
             </Col>
           </Row>
         </Panel>
