@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Create .version file
-        run: echo "${{ github.sha }}" > .version
+        run: echo "${{ github.sha }}" > version
       - name: Log in to DockerHub
         uses: docker/login-action@v1
         with:
