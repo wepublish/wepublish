@@ -91,8 +91,6 @@ RUN groupadd -r wepublish && \
 COPY --chown=wepublish:wepublish apps/api-example/src/default.yaml /wepublish/config/default.yaml
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/node_modules/bcrypt node_modules/bcrypt
-COPY --chown=wepublish:wepublish --from=build-api /wepublish/node_modules/@sentry/nestjs node_modules/@sentry/nestjs
-COPY --chown=wepublish:wepublish --from=build-api /wepublish/node_modules/@sentry/profiling-node node_modules/@sentry/profiling-node
 EXPOSE 4000
 USER wepublish
 CMD /wepublish/api
