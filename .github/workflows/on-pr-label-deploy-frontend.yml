@@ -29,7 +29,7 @@ jobs:
     outputs:
       has-website: ${{ steps.read-deployment-config.outputs.has-website }}
     needs: [ check-deploy-label ]
-    if: ${{ needs.check-deploy-label.result == 'success' }}
+    if: ${{ needs.check-deploy-label.result == 'success' &&  needs.check-deploy-label.outputs.project_name != '' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -38,6 +38,7 @@ jobs:
 
   check-if-image-is-build:
     runs-on: ubuntu-latest
+    if: ${{ needs.check-if-website-deployment.result == 'success' && needs.check-if-website-deployment.outputs.has-website == 'true' }}
     needs: [check-deploy-label, check-if-website-deployment]
     steps:
       - uses: docker/login-action@v1
@@ -66,7 +67,7 @@ jobs:
   helm_deployment_website:
     name: Helm Deployment ${{needs.check-deploy-label.outputs.project_name}} website
     needs: [check-deploy-label, check-if-website-deployment, check-if-image-is-build]
-    if: ${{ needs.check-if-website-deployment.result == 'success' && needs.check-if-website-deployment.outputs.has-website == 'true' }}
+    if: ${{ needs.check-if-image-is-build.result == 'success' && needs.check-if-website-deployment.outputs.has-website == 'true' }}
     uses: ./.github/workflows/on-demand-deploy-helm-website.yml
     with:
       website_project: ${{needs.check-deploy-label.outputs.project_name}}
