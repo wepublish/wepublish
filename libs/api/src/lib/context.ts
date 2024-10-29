@@ -1024,7 +1024,7 @@ export async function contextFromRequest(
        * Requirements written down here https://wepublish.atlassian.net/browse/TSRI-98
        */
       if (migrateToTargetPaymentMethodID) {
-        const updatedSubscription = await prisma.subscription.update({
+        await prisma.subscription.update({
           data: {
             paymentMethodID: migrateToTargetPaymentMethodID
           },
@@ -1032,10 +1032,6 @@ export async function contextFromRequest(
             id: invoice.subscriptionID
           }
         })
-
-        if (!updatedSubscription) {
-          throw new Error('Could not update payment provider for this subscription!')
-        }
       }
 
       const payment = await prisma.payment.create({

@@ -427,8 +427,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             saveCustomer: true,
             paymentMethodID: paymentMethod.id,
             successURL,
-            failureURL,
-            migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID
+            failureURL
           }),
           user,
           session
@@ -557,8 +556,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           paymentMethodID: paymentMethod.id,
           successURL,
           failureURL,
-          user,
-          migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID
+          user
         })
       }
     },
