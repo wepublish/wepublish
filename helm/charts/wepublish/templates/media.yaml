@@ -94,7 +94,7 @@ spec:
               path: /health
               port: 4100
             initialDelaySeconds: 10
-            periodSeconds: 5
+            periodSeconds: 10
             timeoutSeconds: 3
             failureThreshold: 30
 
