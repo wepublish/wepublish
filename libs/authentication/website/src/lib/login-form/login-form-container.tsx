@@ -2,7 +2,9 @@ import {useLoginWithCredentialsMutation, useLoginWithEmailMutation} from '@wepub
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useUser} from '../session.context'
 
-export type LoginFormContainerProps = BuilderContainerProps
+export type LoginFormContainerProps = BuilderContainerProps & {
+  afterLoginCallback?: () => void
+}
 
 export function LoginFormContainer({className, afterLoginCallback}: LoginFormContainerProps) {
   const {LoginForm} = useWebsiteBuilder()

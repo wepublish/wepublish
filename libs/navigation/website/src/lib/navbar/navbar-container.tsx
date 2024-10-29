@@ -12,6 +12,7 @@ export type NavbarContainerProps = PropsWithChildren<
     | 'categorySlugs'
     | 'slug'
     | 'headerSlug'
+    | 'iconSlug'
     | 'loginUrl'
     | 'profileUrl'
     | 'subscriptionsUrl'
@@ -25,6 +26,7 @@ export function NavbarContainer({
   categorySlugs,
   headerSlug,
   slug,
+  iconSlug,
   loginUrl,
   profileUrl,
   subscriptionsUrl,
@@ -38,6 +40,7 @@ export function NavbarContainer({
 
   return (
     <Navbar
+      iconSlug={iconSlug}
       headerSlug={headerSlug}
       categorySlugs={categorySlugs}
       slug={slug}
