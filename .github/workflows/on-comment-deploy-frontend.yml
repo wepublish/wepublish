@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy-frontend-on-comment:
-    if: ${{ github.event.comment.body.startsWith('DEPLOY_FRONTEND:') }}
+    if: contains(github.event.comment.body, 'DEPLOY_FRONTEND:')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
