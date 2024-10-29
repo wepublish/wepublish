@@ -24,6 +24,7 @@ async function main() {
   - Media: ${MEDIA_SERVER_URL}
 
 <h2>Projects:</h2>
+To deploy create comment /deploy::{{PROJECT NAME}}
 `
 
     const projects = JSON.parse(PROJECTS);
