@@ -7,7 +7,6 @@ on:
 jobs:
   deploy-frontend-on-comment:
     runs-on: ubuntu-latest
-    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/deploy::') }}
     outputs:
       project_name: ${{ steps.set-extract_project_name.outputs.project_name }}
     env:
