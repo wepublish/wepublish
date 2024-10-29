@@ -428,7 +428,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             paymentMethodID: paymentMethod.id,
             successURL,
             failureURL,
-            migrateToTargetPMid: memberPlan.migrateToTargetPMid
+            migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID
           }),
           user,
           session
@@ -558,7 +558,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           successURL,
           failureURL,
           user,
-          migrateToTargetPMid: memberPlan.migrateToTargetPMid
+          migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID
         })
       }
     },
@@ -705,7 +705,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           paymentMethodID: subscription.paymentMethodID,
           successURL,
           failureURL,
-          migrateToTargetPMid: subscription.memberPlan.migrateToTargetPMid
+          migrateToTargetPaymentMethodID: subscription.memberPlan.migrateToTargetPaymentMethodID
         })
       }
     },
@@ -985,7 +985,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           successURL,
           failureURL,
           user,
-          migrateToTargetPMid: subscription.memberPlan.migrateToTargetPMid
+          migrateToTargetPaymentMethodID: subscription.memberPlan.migrateToTargetPaymentMethodID
         })
       }
     },
@@ -1035,7 +1035,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           saveCustomer: true,
           successURL,
           failureURL,
-          migrateToTargetPMid: invoice.subscription.memberPlan.migrateToTargetPMid
+          migrateToTargetPaymentMethodID:
+            invoice.subscription.memberPlan.migrateToTargetPaymentMethodID
         })
       }
     },

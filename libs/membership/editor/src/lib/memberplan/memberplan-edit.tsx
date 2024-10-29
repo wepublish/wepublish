@@ -155,7 +155,7 @@ function MemberPlanEdit() {
       amountPerMonthMin: memberPlan.amountPerMonthMin,
       extendable: memberPlan.extendable,
       maxCount: memberPlan.maxCount,
-      migrateToTargetPMid: memberPlan.migrateToTargetPMid
+      migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID
     }
 
     // update member plan

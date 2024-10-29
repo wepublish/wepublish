@@ -225,7 +225,7 @@ export interface CreatePaymentWithProvider {
   successURL?: string
   failureURL?: string
   user?: User
-  migrateToTargetPMid?: string
+  migrateToTargetPaymentMethodID?: string
 }
 
 export async function contextFromRequest(
@@ -1005,10 +1005,10 @@ export async function contextFromRequest(
       failureURL,
       successURL,
       user,
-      migrateToTargetPMid
+      migrateToTargetPaymentMethodID
     }: CreatePaymentWithProvider): Promise<Payment> {
       const paymentMethod = await loaders.activePaymentMethodsByID.load(
-        migrateToTargetPMid || paymentMethodID
+        migrateToTargetPaymentMethodID || paymentMethodID
       )
       const paymentProvider = paymentProviders.find(
         pp => pp.id === paymentMethod?.paymentProviderID
@@ -1023,10 +1023,10 @@ export async function contextFromRequest(
        * Mainly used in mutation.public.ts
        * Requirements written down here https://wepublish.atlassian.net/browse/TSRI-98
        */
-      if (migrateToTargetPMid) {
+      if (migrateToTargetPaymentMethodID) {
         const updatedSubscription = await prisma.subscription.update({
           data: {
-            paymentMethodID: migrateToTargetPMid
+            paymentMethodID: migrateToTargetPaymentMethodID
           },
           where: {
             id: invoice.subscriptionID

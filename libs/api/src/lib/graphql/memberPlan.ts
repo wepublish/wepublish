@@ -124,7 +124,7 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     availablePaymentMethods: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethod)))
     },
-    migrateToTargetPMid: {type: GraphQLID}
+    migrateToTargetPaymentMethodID: {type: GraphQLID}
   }
 })
 
@@ -221,6 +221,6 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
         new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethodInput))
       )
     },
-    migrateToTargetPMid: {type: GraphQLID}
+    migrateToTargetPaymentMethodID: {type: GraphQLID}
   }
 })

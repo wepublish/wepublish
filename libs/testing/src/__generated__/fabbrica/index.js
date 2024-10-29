@@ -354,7 +354,7 @@ const modelFieldDefinitions = [{
                 type: "AvailablePaymentMethod",
                 relationName: "AvailablePaymentMethodToMemberPlan"
             }, {
-                name: "migrateToTargetPM",
+                name: "migrateToTargetPaymentMethod",
                 type: "PaymentMethod",
                 relationName: "PaymentMethodMigration"
             }, {
@@ -2421,7 +2421,7 @@ function defineAvailablePaymentMethodFactoryInternal({ defaultData: defaultDataR
 export function defineAvailablePaymentMethodFactory(options) {
     return defineAvailablePaymentMethodFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-function isMemberPlanmigrateToTargetPMFactory(x) {
+function isMemberPlanmigrateToTargetPaymentMethodFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PaymentMethod";
 }
 function isMemberPlanimageFactory(x) {
@@ -2454,9 +2454,9 @@ function defineMemberPlanFactoryInternal({ defaultData: defaultDataResolver, tra
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
             const defaultAssociations = {
-                migrateToTargetPM: isMemberPlanmigrateToTargetPMFactory(defaultData.migrateToTargetPM) ? {
-                    create: yield defaultData.migrateToTargetPM.build()
-                } : defaultData.migrateToTargetPM,
+                migrateToTargetPaymentMethod: isMemberPlanmigrateToTargetPaymentMethodFactory(defaultData.migrateToTargetPaymentMethod) ? {
+                    create: yield defaultData.migrateToTargetPaymentMethod.build()
+                } : defaultData.migrateToTargetPaymentMethod,
                 image: isMemberPlanimageFactory(defaultData.image) ? {
                     create: yield defaultData.image.build()
                 } : defaultData.image

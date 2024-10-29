@@ -408,18 +408,18 @@ export function MemberPlanForm({
             <Col xs={12}>
               <ControlLabel>{t('memberplanForm.migratePMTitle')}</ControlLabel>
               <Control
-                name="migrateToTargetPM"
+                name="migrateToTargetPaymentMethodID"
                 block
                 virtualized
                 disabled={loading}
                 data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-                value={memberPlan?.migrateToTargetPMid}
+                value={memberPlan?.migrateToTargetPaymentMethodID}
                 accepter={SelectPicker}
                 placement="auto"
-                onChange={migrateToTargetPMid =>
+                onChange={migrateToTargetPaymentMethodID =>
                   setMemberPlan({
                     ...(memberPlan as FullMemberPlanFragment),
-                    migrateToTargetPMid: migrateToTargetPMid || null
+                    migrateToTargetPaymentMethodID: migrateToTargetPaymentMethodID || null
                   })
                 }
               />
