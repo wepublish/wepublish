@@ -320,8 +320,8 @@ jobs:
 
   notify:
     name: Notify
-    needs: [setup-website-matrix, helm_deployment_website]
-    if: ${{ needs.helm_deployment_website.result == 'success' }}
+    needs: [setup-website-matrix, publish_docker_website_image]
+    if: ${{ needs.publish_docker_website_image.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
 
