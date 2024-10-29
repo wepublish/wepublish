@@ -68,8 +68,6 @@ export function SubscriptionListItem({
   deactivation,
   memberPlan: {image, name, currency},
   url,
-  canPay,
-  pay,
   cancel,
   canExtend,
   extend,
@@ -186,12 +184,6 @@ export function SubscriptionListItem({
               color="secondary">
               Abo Künden
             </Button>
-
-            {canPay && (
-              <Button onClick={callAction(pay)} disabled={loading}>
-                Jetzt Bezahlen
-              </Button>
-            )}
 
             {canExtend && (
               <Button
