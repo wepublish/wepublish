@@ -1407,7 +1407,9 @@
       "maxCountHelpText": "Limit the number of subscriptions that a user can purchase for this subscription plan. This also includes deactivated subscriptions.",
       "trialMemberplanAlert": "This subscription plan is configured for trial subscriptions.",
       "forceAutoRenewNotPossible": "Automatic renewal is not possible because the subscription plan is not extendable.",
-      "trialSubscriptionNotPossible": "The subscription plan must remain renewable because an automatic renewal is forced in a payment setting. You can of course change this."
+      "trialSubscriptionNotPossible": "The subscription plan must remain renewable because an automatic renewal is forced in a payment setting. You can of course change this.",
+      "migratePMTitle": "Migration of subscriptions to target payment method",
+      "migratePMHelptext": "Migrate the subscriptions of this plan to a new Payment Method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Advanced settings",
