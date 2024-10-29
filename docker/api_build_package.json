@@ -7,9 +7,6 @@
       "node_modules/es-get-iterator/node.js",
       "node_modules/i18n-iso-countries/langs"
     ],
-    "scripts": [
-      "node_modules/@sentry/nestjs/**/*.js"
-    ],
     "targets": ["node16-linux"]
   },
   "bin": {
