@@ -56,19 +56,19 @@ jobs:
           SHA_HASH=${{ github.sha }}
           API_BASE_URL=${{ inputs.api_url }}
           for ((i=1; i<=MAX_RETRIES; i++)); do
-          HTTP_CODE=$(curl -s -o response_body.txt -w "%{http_code}"  ${API_BASE_URL}/health/version)
-          CONTENT=$(head -n 1 response.txt)
-          
-          if [[ "$HTTP_CODE" != "200" ]]; then
-            echo "Attempt $i: Received HTTP $HTTP_CODE"
-          elif [[ "$CONTENT" == "$SHA_HASH" ]]; then
-            echo "Attempt $i: Expected version $SHA_HASH found! "
-            exit 0
-          else
-            echo "Attempt $i: Received response '$CONTENT' but expected ${SHA_HASH} with HTTP status $HTTP_CODE"
-          fi
-          echo "Waiting for $RETRY_DELAY seconds before retrying..."
-          sleep $RETRY_DELAY
+            HTTP_CODE=$(curl -s -o response_body.txt -w "%{http_code}"  ${API_BASE_URL}/health/version)
+            CONTENT=$(head -n 1 response_body.txt)
+            
+            if [[ "$HTTP_CODE" != "200" ]]; then
+              echo "Attempt $i: Received HTTP $HTTP_CODE"
+            elif [[ "$CONTENT" == "$SHA_HASH" ]]; then
+              echo "Attempt $i: Expected version $SHA_HASH found! "
+              exit 0
+            else
+              echo "Attempt $i: Received response '$CONTENT' but expected ${SHA_HASH} with HTTP status $HTTP_CODE"
+            fi
+            echo "Waiting for $RETRY_DELAY seconds before retrying..."
+            sleep $RETRY_DELAY
           done
           echo "Timed out waiting for version: ${SHA_HASH}"
           exit 1
