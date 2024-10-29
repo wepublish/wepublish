@@ -22,6 +22,7 @@ spec:
     app.kubernetes.io/name: {{ include "helm.name" . }}-api
     app.kubernetes.io/instance: {{ .Release.Name }}
 
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -92,8 +93,8 @@ spec:
               port: 4000
             initialDelaySeconds: 5
             periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
             successThreshold: 1
           startupProbe:
             httpGet:
