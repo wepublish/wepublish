@@ -135,6 +135,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 categorySlugs={[['categories']]}
                 slug="main"
                 headerSlug="header"
+                iconSlug="icons"
                 loginUrl={''}
               />
 

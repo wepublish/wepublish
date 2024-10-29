@@ -134,6 +134,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   categorySlugs={[['categories', 'about-us']]}
                   slug="main"
                   headerSlug="header"
+                  iconSlug="icons"
                 />
 
                 <main>
