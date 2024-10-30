@@ -232,31 +232,8 @@
   }
 }
 
-@font-face {
-  font-family: Roboto;
-  font-weight: 400;
-  src: url(/fonts/Roboto-Regular.ttf) format("truetype");
-}
 
-@font-face {
-  font-family: Roboto;
-  font-weight: 700;
-  src: url(/fonts/Roboto-Bold.ttf) format("truetype");
-}
-
-@font-face {
-  font-family: RobotoCondensed;
-  font-weight: 400;
-  src: url(/fonts/RobotoCondensed-Regular.ttf) format("truetype");
-}
-
-@font-face {
-  font-family: RobotoCondensed;
-  font-weight: 700;
-  src: url(/fonts/RobotoCondensed-Bold.ttf) format("truetype");
-}
-
-.main * {
+.header *, .main * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -266,7 +243,6 @@
 }
 
 body {
-  font-family: RobotoCondensed;
   font-weight: 700;
 }
 
@@ -302,7 +278,6 @@ body {
 }
 
 .header__title {
-  font-family: Roboto;
   font-size: var(--title-size);
   text-align: center;
   padding-top: 1em;
@@ -310,7 +285,6 @@ body {
 
 .header__subtitle {
   margin-top: 1em;
-  font-family: Roboto;
   font-size: var(--subtitle-size);
   text-align: center;
 }
@@ -488,7 +462,6 @@ form {
   max-width: 600px;
   margin: 0 auto;
   margin-top: 5vw;
-  font-family: Roboto;
 }
 
 input[type=text], input[type=email] {
@@ -502,7 +475,6 @@ input[type=submit] {
   padding: 0.8em 1.2em;
   color: white;
   text-transform: uppercase;
-  font-family: 'Roboto';
   font-size: calc(var(--font-size) * 0.8);
   border-radius: 0.5em;
   background: linear-gradient(to bottom right, var(--gradient-button-green), var(--gradient-button-blue));
