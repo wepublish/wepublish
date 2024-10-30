@@ -48,6 +48,7 @@ import {readConfig} from '../readConfig'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
+import {CrowdfundingModule} from 'crowdfunding'
 
 @Global()
 @Module({
@@ -282,7 +283,8 @@ import {PollModule} from '@wepublish/poll/api'
       ],
       useFactory: (datasource: GoogleAnalyticsService) => datasource,
       inject: [GoogleAnalyticsService]
-    })
+    }),
+    CrowdfundingModule
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [

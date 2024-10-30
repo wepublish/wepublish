@@ -73,6 +73,13 @@ input ConsentFilter {
   slug: String
 }
 
+type Crowdfunding {
+  createdAt: DateTime!
+  id: ID!
+  modifiedAt: DateTime!
+  name: String!
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -315,6 +322,12 @@ type PageInfo {
   startCursor: String
 }
 
+type PaginatedCrowdfundings {
+  nodes: [Crowdfunding!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
+}
+
 type PaginatedEvents {
   nodes: [Event!]!
   pageInfo: PageInfo!
@@ -392,6 +405,9 @@ type Query {
 
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
+
+  """Returns a paginated list of crowdfundings."""
+  crowdfundings: PaginatedCrowdfundings!
 
   """Returns a event by id."""
   event(id: ID!): Event!
