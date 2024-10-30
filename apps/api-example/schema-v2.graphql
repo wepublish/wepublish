@@ -73,11 +73,32 @@ input ConsentFilter {
   slug: String
 }
 
+input CreateCrowdfundingGoalInput {
+  description: String!
+  goal: Float!
+  title: String!
+}
+
+input CreateCrowdfundingInput {
+  goals: [CreateCrowdfundingGoalInput!]
+  name: String!
+}
+
 type Crowdfunding {
   createdAt: DateTime!
+  goals: [CrowdfundingGoal!]!
   id: ID!
   modifiedAt: DateTime!
   name: String!
+}
+
+type CrowdfundingGoal {
+  createdAt: DateTime!
+  description: String!
+  goal: Float!
+  id: ID!
+  modifiedAt: DateTime!
+  title: String!
 }
 
 type DashboardInvoice {
@@ -246,6 +267,9 @@ type Mutation {
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
+  """Create a new Crowdfunding"""
+  createCrowdfunding(input: CreateCrowdfundingInput!): Crowdfunding!
+
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
 
@@ -291,6 +315,9 @@ type Mutation {
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
+
+  """Update a sinle crowdfunding"""
+  updateCrowdunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
@@ -405,6 +432,9 @@ type Query {
 
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
+
+  """Get a single crowdfunding by id"""
+  crowdfunding(id: ID!): Crowdfunding!
 
   """Returns a paginated list of crowdfundings."""
   crowdfundings: PaginatedCrowdfundings!
@@ -580,6 +610,11 @@ type SystemMailModel {
 
 type Tag {
   id: ID!
+}
+
+input UpdateCrowdfundingInput {
+  id: ID!
+  name: String!
 }
 
 type User {
