@@ -253,7 +253,6 @@ body {
   height: var(--header-height);
   margin: 0 auto;
   padding: 1.5rem 2rem;
-  background-image: url(/baselbriefing/images/bb-header-scaled.webp);
   background-size: cover;
   background-position: center;
 
@@ -463,11 +462,6 @@ form {
   margin: 0 auto;
   margin-top: 5vw;
 }
-
-input[type=text], input[type=email] {
-  /*background-color: rgba(255, 255, 255, 0.75);*/
-}
-
 
 input[type=submit] {
   border: none;
