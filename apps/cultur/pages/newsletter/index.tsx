@@ -19,50 +19,29 @@ export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps
       <BriefingPage
         title={'Cultur Briefing'}
         subtitle={'Das Wichtigste für den Start in den Tag'}
-        lead={
-          <>
-            Wissen, was in der Kulturwelt los ist? Cültür kommentiert, kuratiert alles, was die
-            Deutschschweizer Kulturwelt bewegt - oder auch nicht.
-          </>
-        }
+        lead={<>Willst du wissen, was in der Kulturwelt los ist?</>}
         wakeup={
           <>
-            Jeden Freitag
-            <br />
-            um 06:00 Uhr
-            <br />
-            in deinem Postfach.
-            <br />
-            Passend aufs Wochenende.
+            Der Kultur-Newsletter «Cültür» kommentiert und kuratiert alles, was die Schweizer
+            Kulturwelt bewegt - oder auch nicht bewegt.
           </>
         }
         ready={
           <>
-            <span className="readytext--everyday">Jeden Morgen ab</span>
+            <span className="readytext--everyday">Jeden Freitag ab</span>
             <br />
             <span className="readytext--time">06:00</span>
             <br />
             <span className="readytext--ready">für dich bereit</span>
           </>
         }
-        delivery={
+        delivery={<>Dein neuer Kultur-Newsletter, passend aufs Wochenende.</>}
+        subscribe={<>Jetzt anmelden und bestens informiert sein!</>}
+        independent={
           <>
-            und schicken dir
+            <span className="independenttext--independent">Unabhängig und</span>
             <br />
-            um <span className="deliverytext--time">6 Uhr</span> die wichtigsten
-            <br />
-            regionalen Tagesnews
-            <br />
-            plus unseren Senf dazu
-            <br />
-            per Mail.
-          </>
-        }
-        subscribe={
-          <>
-            jetzt anmelden und immer
-            <br />
-            bestens informiert sein!
+            <span className="independenttext--free">kostenlos</span>
           </>
         }
         mainBackground={'#feeae3'}

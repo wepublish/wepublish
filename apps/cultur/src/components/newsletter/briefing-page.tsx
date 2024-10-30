@@ -9,6 +9,7 @@ interface BriefingPageProps {
   ready: JSX.Element
   delivery: JSX.Element
   subscribe: JSX.Element
+  independent: JSX.Element
   mainBackground: string
   leadColor: string
   headerBackgroundImage: string
@@ -63,11 +64,7 @@ export default function BriefingPage(props: BriefingPageProps) {
         <section
           className="independenttext"
           style={{backgroundImage: `url(${props.independentBackgroundImage})`}}>
-          <p>
-            <span className="independenttext--independent">Unabhängig und</span>
-            <br />
-            <span className="independenttext--free">kostenlos</span>
-          </p>
+          <p>{props.independent}</p>
         </section>
         <section className="deliverytext" style={{background: props.deliveryBackground}}>
           <div>{props.delivery}</div>
