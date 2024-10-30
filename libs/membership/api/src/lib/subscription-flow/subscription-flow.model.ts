@@ -29,7 +29,7 @@ export class MailTemplateRef {
 }
 
 @ObjectType()
-class MemberPlan {
+export class MemberPlan {
   @Field(() => ID)
   id!: string
 

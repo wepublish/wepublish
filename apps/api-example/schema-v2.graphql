@@ -81,13 +81,19 @@ input CreateCrowdfundingGoalInput {
 
 input CreateCrowdfundingInput {
   goals: [CreateCrowdfundingGoalInput!]
+  memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String!
+}
+
+input CreateCrowdfundingMemberPlan {
+  id: ID!
 }
 
 type Crowdfunding {
   createdAt: DateTime!
   goals: [CrowdfundingGoal!]!
   id: ID!
+  memberPlans: [CrowdfundingMemberPlan!]!
   modifiedAt: DateTime!
   name: String!
 }
@@ -99,6 +105,11 @@ type CrowdfundingGoal {
   id: ID!
   modifiedAt: DateTime!
   title: String!
+}
+
+type CrowdfundingMemberPlan {
+  id: ID!
+  name: String!
 }
 
 type DashboardInvoice {
@@ -349,12 +360,6 @@ type PageInfo {
   startCursor: String
 }
 
-type PaginatedCrowdfundings {
-  nodes: [Crowdfunding!]!
-  pageInfo: PageInfo!
-  totalCount: Float!
-}
-
 type PaginatedEvents {
   nodes: [Event!]!
   pageInfo: PageInfo!
@@ -437,7 +442,7 @@ type Query {
   crowdfunding(id: ID!): Crowdfunding!
 
   """Returns a paginated list of crowdfundings."""
-  crowdfundings: PaginatedCrowdfundings!
+  crowdfundings: [Crowdfunding!]!
 
   """Returns a event by id."""
   event(id: ID!): Event!

@@ -1,7 +1,25 @@
 import {ArgsType, Directive, Field, ID, InputType, ObjectType, PickType} from '@nestjs/graphql'
-import {PaginatedType} from '@wepublish/api'
 import {CreateCrowdfundingGoalInput, CrowdfundingGoal} from './crowdfunding-goal.model'
-import {Input} from '@mui/material'
+
+/**
+ * This Memberplan is only here to provide the interface and
+ * can be removed when MemberPlans are moved to APIv2
+ */
+@ObjectType()
+class CrowdfundingMemberPlan {
+  @Field(() => ID)
+  id!: string
+
+  @Field()
+  name!: string
+}
+
+@InputType()
+export class CreateCrowdfundingMemberPlan extends PickType(
+  CrowdfundingMemberPlan,
+  ['id'],
+  InputType
+) {}
 
 @ObjectType()
 @Directive('@key(fields: "id")')
@@ -20,6 +38,9 @@ export class Crowdfunding {
 
   @Field(type => [CrowdfundingGoal])
   goals?: CrowdfundingGoal[]
+
+  @Field(type => [CrowdfundingMemberPlan])
+  memberPlans?: CrowdfundingMemberPlan[]
 }
 
 @ArgsType()
@@ -28,13 +49,13 @@ export class CrowdfundingId {
   id!: string
 }
 
-@ObjectType()
-export class PaginatedCrowdfundings extends PaginatedType(Crowdfunding) {}
-
 @InputType()
 export class CreateCrowdfundingInput extends PickType(Crowdfunding, ['name'], InputType) {
   @Field(() => [CreateCrowdfundingGoalInput], {nullable: true})
   goals?: CreateCrowdfundingGoalInput[]
+
+  @Field(() => [CreateCrowdfundingMemberPlan], {nullable: true})
+  memberPlans?: CreateCrowdfundingMemberPlan[]
 }
 
 @InputType()
