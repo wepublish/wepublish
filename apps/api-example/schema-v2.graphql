@@ -132,11 +132,32 @@ input CreateBannerInput {
   title: String!
 }
 
+input CreateCrowdfundingGoalInput {
+  description: String!
+  goal: Float!
+  title: String!
+}
+
+input CreateCrowdfundingInput {
+  goals: [CreateCrowdfundingGoalInput!]
+  name: String!
+}
+
 type Crowdfunding {
   createdAt: DateTime!
+  goals: [CrowdfundingGoal!]!
   id: ID!
   modifiedAt: DateTime!
   name: String!
+}
+
+type CrowdfundingGoal {
+  createdAt: DateTime!
+  description: String!
+  goal: Float!
+  id: ID!
+  modifiedAt: DateTime!
+  title: String!
 }
 
 enum Currency {
@@ -317,6 +338,9 @@ type Mutation {
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
+  """Create a new Crowdfunding"""
+  createCrowdfunding(input: CreateCrowdfundingInput!): Crowdfunding!
+
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
@@ -358,6 +382,9 @@ type Mutation {
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
+
+  """Update a sinle crowdfunding"""
+  updateCrowdunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -478,6 +505,9 @@ type Query {
 
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
+
+  """Get a single crowdfunding by id"""
+  crowdfunding(id: ID!): Crowdfunding!
 
   """Returns a paginated list of crowdfundings."""
   crowdfundings: PaginatedCrowdfundings!
@@ -659,6 +689,11 @@ input UpdateBannerInput {
   showOnPages: [PageModelInput!]
   text: String!
   title: String!
+}
+
+input UpdateCrowdfundingInput {
+  id: ID!
+  name: String!
 }
 
 type User {
