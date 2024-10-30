@@ -501,16 +501,18 @@ model MemberPlan {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name                    String
-  slug                    String                   @unique
-  tags                    String[]
-  description             Json
-  active                  Boolean
-  currency                Currency
-  amountPerMonthMin       Float
-  availablePaymentMethods AvailablePaymentMethod[]
-  extendable              Boolean                  @default(true)
-  maxCount                Int?
+  name                           String
+  slug                           String                   @unique
+  tags                           String[]
+  description                    Json
+  active                         Boolean
+  currency                       Currency
+  amountPerMonthMin              Float
+  availablePaymentMethods        AvailablePaymentMethod[]
+  migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
+  migrateToTargetPaymentMethodID String?
+  extendable                     Boolean                  @default(true)
+  maxCount                       Int?
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
@@ -640,6 +642,7 @@ model PaymentMethod {
   Subscription      Subscription[]
   Payment           Payment[]
   subscriptionFlows SubscriptionFlow[]
+  migrateFromPlans  MemberPlan[]       @relation("PaymentMethodMigration")
 
   @@map("payment.methods")
 }
