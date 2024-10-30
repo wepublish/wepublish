@@ -6,10 +6,11 @@ type MailchimpSubscribeFormProps = {
   defaultEmail?: string
   defaultFirstName?: string
   defaultLastName?: string
+  source?: string
 }
 
 export default function MailchimpSubscribeForm(props: MailchimpSubscribeFormProps) {
-  const {signupUrl, defaultEmail, defaultFirstName, defaultLastName} = props
+  const {signupUrl, defaultEmail, defaultFirstName, defaultLastName, source} = props
   const [email, setEmail] = useState(defaultEmail || '')
   const [firstName, setFirstName] = useState(defaultFirstName || '')
   const [lastName, setLastName] = useState(defaultLastName || '')
@@ -53,6 +54,8 @@ export default function MailchimpSubscribeForm(props: MailchimpSubscribeFormProp
           onChange={e => setEmail(e.target.value)}
           required
         />
+
+        <input type="hidden" name="SOURCE" value={source} />
 
         <Box display={'flex'} flexDirection={'row'} alignItems={'end'} alignSelf={'end'}>
           <Button

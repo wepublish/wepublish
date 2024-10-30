@@ -12,7 +12,7 @@ type NewsletterPageProps = {
 
 export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps) {
   const {query} = useRouter()
-  const {firstname, lastname, email} = query
+  const {firstname, lastname, email, source} = query
 
   return (
     <Box>
@@ -84,6 +84,7 @@ export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps
             defaultEmail={(email as string) || undefined}
             defaultFirstName={(firstname as string) || undefined}
             defaultLastName={(lastname as string) || undefined}
+            source={(source as string) || undefined}
           />
         }
       />
