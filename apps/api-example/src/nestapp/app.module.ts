@@ -52,6 +52,7 @@ import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
 import {ProlitterisTrackingPixelProvider, TrackingPixelModule} from '@wepublish/tracking-pixel/api'
 import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
+import {CrowdfundingModule} from '@wepublish/crowdfunding'
 
 @Global()
 @Module({
@@ -340,7 +341,8 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
       inject: [GoogleAnalyticsService]
     }),
     BannerApiModule,
-    VersionInformationModule
+    VersionInformationModule,
+    CrowdfundingModule
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [
