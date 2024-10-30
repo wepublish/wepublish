@@ -57,6 +57,8 @@ import type { SubscriptionInterval } from "@prisma/client";
 import type { MailTemplate } from "@prisma/client";
 import type { PeriodicJob } from "@prisma/client";
 import type { BlockStyle } from "@prisma/client";
+import type { Crowdfunding } from "@prisma/client";
+import type { CrowdfundingGoal } from "@prisma/client";
 import type { CommentItemType } from "@prisma/client";
 import type { CommentRejectionReason } from "@prisma/client";
 import type { CommentState } from "@prisma/client";
@@ -1146,6 +1148,7 @@ type MemberPlanFactoryDefineInput = {
     image?: MemberPlanimageFactory | Prisma.ImageCreateNestedOneWithoutMemberPlanInput;
     Subscription?: Prisma.SubscriptionCreateNestedManyWithoutMemberPlanInput;
     subscriptionFlows?: Prisma.SubscriptionFlowCreateNestedManyWithoutMemberPlanInput;
+    crowdfundings?: Prisma.CrowdfundingCreateNestedManyWithoutMemberPlansInput;
 };
 type MemberPlanFactoryDefineOptions = {
     defaultData?: Resolver<MemberPlanFactoryDefineInput, BuildDataOptions>;
@@ -2784,3 +2787,82 @@ export interface BlockStyleFactoryInterface<TOptions extends BlockStyleFactoryDe
  * @returns factory {@link BlockStyleFactoryInterface}
  */
 export declare function defineBlockStyleFactory<TOptions extends BlockStyleFactoryDefineOptions>(options?: TOptions): BlockStyleFactoryInterface<TOptions>;
+type CrowdfundingFactoryDefineInput = {
+    id?: string;
+    createdAt?: Date;
+    modifiedAt?: Date;
+    name?: string;
+    memberPlans?: Prisma.MemberPlanCreateNestedManyWithoutCrowdfundingsInput;
+    goals?: Prisma.CrowdfundingGoalCreateNestedManyWithoutCrowdfundingInput;
+};
+type CrowdfundingFactoryDefineOptions = {
+    defaultData?: Resolver<CrowdfundingFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<CrowdfundingFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type CrowdfundingTraitKeys<TOptions extends CrowdfundingFactoryDefineOptions> = keyof TOptions["traits"];
+export interface CrowdfundingFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "Crowdfunding";
+    build(inputData?: Partial<Prisma.CrowdfundingCreateInput>): PromiseLike<Prisma.CrowdfundingCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.CrowdfundingCreateInput>): PromiseLike<Prisma.CrowdfundingCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.CrowdfundingCreateInput>[]): PromiseLike<Prisma.CrowdfundingCreateInput[]>;
+    pickForConnect(inputData: Crowdfunding): Pick<Crowdfunding, "id">;
+    create(inputData?: Partial<Prisma.CrowdfundingCreateInput>): PromiseLike<Crowdfunding>;
+    createList(inputData: number | readonly Partial<Prisma.CrowdfundingCreateInput>[]): PromiseLike<Crowdfunding[]>;
+    createForConnect(inputData?: Partial<Prisma.CrowdfundingCreateInput>): PromiseLike<Pick<Crowdfunding, "id">>;
+}
+export interface CrowdfundingFactoryInterface<TOptions extends CrowdfundingFactoryDefineOptions = CrowdfundingFactoryDefineOptions> extends CrowdfundingFactoryInterfaceWithoutTraits {
+    use(name: CrowdfundingTraitKeys<TOptions>, ...names: readonly CrowdfundingTraitKeys<TOptions>[]): CrowdfundingFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link Crowdfunding} model.
+ *
+ * @param options
+ * @returns factory {@link CrowdfundingFactoryInterface}
+ */
+export declare function defineCrowdfundingFactory<TOptions extends CrowdfundingFactoryDefineOptions>(options?: TOptions): CrowdfundingFactoryInterface<TOptions>;
+type CrowdfundingGoalCrowdfundingFactory = {
+    _factoryFor: "Crowdfunding";
+    build: () => PromiseLike<Prisma.CrowdfundingCreateNestedOneWithoutGoalsInput["create"]>;
+};
+type CrowdfundingGoalFactoryDefineInput = {
+    id?: string;
+    createdAt?: Date;
+    modifiedAt?: Date;
+    title?: string;
+    description?: string | null;
+    goal?: number;
+    Crowdfunding?: CrowdfundingGoalCrowdfundingFactory | Prisma.CrowdfundingCreateNestedOneWithoutGoalsInput;
+};
+type CrowdfundingGoalFactoryDefineOptions = {
+    defaultData?: Resolver<CrowdfundingGoalFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<CrowdfundingGoalFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type CrowdfundingGoalTraitKeys<TOptions extends CrowdfundingGoalFactoryDefineOptions> = keyof TOptions["traits"];
+export interface CrowdfundingGoalFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "CrowdfundingGoal";
+    build(inputData?: Partial<Prisma.CrowdfundingGoalCreateInput>): PromiseLike<Prisma.CrowdfundingGoalCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.CrowdfundingGoalCreateInput>): PromiseLike<Prisma.CrowdfundingGoalCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.CrowdfundingGoalCreateInput>[]): PromiseLike<Prisma.CrowdfundingGoalCreateInput[]>;
+    pickForConnect(inputData: CrowdfundingGoal): Pick<CrowdfundingGoal, "id">;
+    create(inputData?: Partial<Prisma.CrowdfundingGoalCreateInput>): PromiseLike<CrowdfundingGoal>;
+    createList(inputData: number | readonly Partial<Prisma.CrowdfundingGoalCreateInput>[]): PromiseLike<CrowdfundingGoal[]>;
+    createForConnect(inputData?: Partial<Prisma.CrowdfundingGoalCreateInput>): PromiseLike<Pick<CrowdfundingGoal, "id">>;
+}
+export interface CrowdfundingGoalFactoryInterface<TOptions extends CrowdfundingGoalFactoryDefineOptions = CrowdfundingGoalFactoryDefineOptions> extends CrowdfundingGoalFactoryInterfaceWithoutTraits {
+    use(name: CrowdfundingGoalTraitKeys<TOptions>, ...names: readonly CrowdfundingGoalTraitKeys<TOptions>[]): CrowdfundingGoalFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link CrowdfundingGoal} model.
+ *
+ * @param options
+ * @returns factory {@link CrowdfundingGoalFactoryInterface}
+ */
+export declare function defineCrowdfundingGoalFactory<TOptions extends CrowdfundingGoalFactoryDefineOptions>(options?: TOptions): CrowdfundingGoalFactoryInterface<TOptions>;

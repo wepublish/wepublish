@@ -521,6 +521,8 @@ model MemberPlan {
 
   subscriptionFlows SubscriptionFlow[]
 
+  crowdfundings Crowdfunding[]
+
   @@index([name])
   @@map("member.plans")
 }
@@ -1229,4 +1231,24 @@ model BlockStyle {
   blocks BlockType[]
 
   @@map("block-content.styles")
+}
+
+model Crowdfunding {
+  id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt   DateTime           @default(now())
+  modifiedAt  DateTime           @updatedAt
+  name        String
+  memberPlans MemberPlan[]
+  goals       CrowdfundingGoal[]
+}
+
+model CrowdfundingGoal {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt      DateTime      @default(now())
+  modifiedAt     DateTime      @updatedAt
+  title          String
+  description    String?
+  goal           Int
+  Crowdfunding   Crowdfunding? @relation(fields: [crowdfundingId], references: [id])
+  crowdfundingId String?       @db.Uuid
 }
