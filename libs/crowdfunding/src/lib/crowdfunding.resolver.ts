@@ -3,7 +3,6 @@ import {
   CreateCrowdfundingInput,
   Crowdfunding,
   CrowdfundingId,
-  PaginatedCrowdfundings,
   UpdateCrowdfundingInput
 } from './crowdfunding.model'
 import {CrowdfundingService} from './crowdfunding.service'
@@ -17,7 +16,7 @@ export class CrowdfundingResolver {
     return this.crowdfundingService.getCrowdfundingById(id)
   }
 
-  @Query(() => PaginatedCrowdfundings, {
+  @Query(() => [Crowdfunding], {
     description: 'Returns a paginated list of crowdfundings.'
   })
   public crowdfundings() {

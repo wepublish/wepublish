@@ -10,6 +10,10 @@ export class CrowdfundingService {
     const crowdfunding = await this.prisma.crowdfunding.findUnique({
       where: {
         id
+      },
+      include: {
+        goals: true,
+        memberPlans: true
       }
     })
     if (!crowdfunding) throw new NotFoundException()
@@ -19,7 +23,10 @@ export class CrowdfundingService {
 
   async getCrowdfundings() {
     return await this.prisma.crowdfunding.findMany({
-      take: 10
+      include: {
+        goals: true,
+        memberPlans: true
+      }
     })
   }
 
@@ -29,7 +36,14 @@ export class CrowdfundingService {
         ...crowdfunding,
         goals: {
           create: crowdfunding.goals
+        },
+        memberPlans: {
+          connect: crowdfunding.memberPlans
         }
+      },
+      include: {
+        goals: true,
+        memberPlans: true
       }
     })
   }
@@ -41,6 +55,10 @@ export class CrowdfundingService {
       },
       where: {
         id: crowdfunding.id
+      },
+      include: {
+        goals: true,
+        memberPlans: true
       }
     })
   }

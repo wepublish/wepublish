@@ -54,7 +54,7 @@ class AvailablePaymentMethod {
 }
 
 @ObjectType()
-class MemberPlan {
+export class MemberPlan {
   @Field(() => ID)
   id!: string
 

@@ -140,13 +140,19 @@ input CreateCrowdfundingGoalInput {
 
 input CreateCrowdfundingInput {
   goals: [CreateCrowdfundingGoalInput!]
+  memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String!
+}
+
+input CreateCrowdfundingMemberPlan {
+  id: ID!
 }
 
 type Crowdfunding {
   createdAt: DateTime!
   goals: [CrowdfundingGoal!]!
   id: ID!
+  memberPlans: [CrowdfundingMemberPlan!]!
   modifiedAt: DateTime!
   name: String!
 }
@@ -158,6 +164,11 @@ type CrowdfundingGoal {
   id: ID!
   modifiedAt: DateTime!
   title: String!
+}
+
+type CrowdfundingMemberPlan {
+  id: ID!
+  name: String!
 }
 
 enum Currency {
@@ -421,12 +432,6 @@ input PageModelInput {
   id: ID!
 }
 
-type PaginatedCrowdfundings {
-  nodes: [Crowdfunding!]!
-  pageInfo: PageInfo!
-  totalCount: Float!
-}
-
 type PaginatedPollVotes {
   nodes: [PollVote!]!
   pageInfo: PageInfo!
@@ -510,7 +515,7 @@ type Query {
   crowdfunding(id: ID!): Crowdfunding!
 
   """Returns a paginated list of crowdfundings."""
-  crowdfundings: PaginatedCrowdfundings!
+  crowdfundings: [Crowdfunding!]!
 
   "\n      Returns a list of Importable Event Providers\n    "
   eventProviders: [String!]!
