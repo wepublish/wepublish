@@ -16,6 +16,7 @@ import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
+import {Footer} from '../src/components/footer'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
@@ -99,6 +100,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
+          Footer={Footer}
           elements={{Link: NextWepublishLink}}
           blocks={{
             Teaser: CulturTeaser

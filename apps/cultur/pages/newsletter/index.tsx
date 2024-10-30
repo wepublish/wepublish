@@ -4,6 +4,7 @@ import {useRouter} from 'next/router'
 
 import BriefingPage from '../../src/components/newsletter/briefing-page'
 import MailchimpSubscribeForm from '../../src/components/newsletter/mailchimp-form'
+import {Box} from '@mui/material'
 
 type NewsletterPageProps = {
   mailchimpSignupUrl: string
@@ -11,10 +12,10 @@ type NewsletterPageProps = {
 
 export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps) {
   const {query} = useRouter()
-  const {firstname, lastname, email} = query
+  const {firstname, lastname, email, source} = query
 
   return (
-    <>
+    <Box>
       <BriefingPage
         title={'Cultur Briefing'}
         subtitle={'Das Wichtigste für den Start in den Tag'}
@@ -83,10 +84,11 @@ export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps
             defaultEmail={(email as string) || undefined}
             defaultFirstName={(firstname as string) || undefined}
             defaultLastName={(lastname as string) || undefined}
+            source={(source as string) || undefined}
           />
         }
       />
-    </>
+    </Box>
   )
 }
 
