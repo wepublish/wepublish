@@ -256,7 +256,7 @@
   src: url(/fonts/RobotoCondensed-Bold.ttf) format("truetype");
 }
 
-* {
+.main * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -491,24 +491,10 @@ form {
   font-family: Roboto;
 }
 
-form label {
-  color: white;
-  font-weight: 300;
-}
-
 input[type=text], input[type=email] {
-  background-color: rgba(255, 255, 255, 0.75);
-  border-radius: 0.3em;
-  border: none;
-  padding: 0.4em;
-  font-size: calc(var(--font-size) * 0.8);
-  font-weight: 300;
-  width: 100%;
+  /*background-color: rgba(255, 255, 255, 0.75);*/
 }
 
-.mc-field-group > * {
-  margin-bottom: 0.7em;
-}
 
 input[type=submit] {
   border: none;

@@ -60,6 +60,29 @@ const theme = createTheme(WePTheme, {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
     },
     fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+  },
+  components: {
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'rgba(255,255,255, 0.75)'
+        }
+      }
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12
+        }
+      }
+    },
+    MuiButtonBase: {
+      styleOverrides: {
+        root: {
+          borderRadius: 4
+        }
+      }
+    }
   }
 } as PartialDeep<Theme> | ThemeOptions)
 
