@@ -21,8 +21,6 @@ import Head from 'next/head'
 import {useRouter} from 'next/router'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
-import {FaTwitter} from 'react-icons/fa6'
-import {MdFacebook, MdMail, MdSearch} from 'react-icons/md'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
@@ -78,10 +76,6 @@ const Footer = styled(FooterContainer)`
   ${FooterPaperWrapper} {
     color: ${({theme}) => theme.palette.common.white};
   }
-`
-
-const ButtonLink = styled('a')`
-  color: ${({theme}) => theme.palette.primary.contrastText};
 `
 
 const {publicRuntimeConfig} = getConfig()
@@ -148,23 +142,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   <NavBar
                     slug="main"
                     categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
-                    headerSlug="header">
-                    <ButtonLink href="/search">
-                      <MdSearch size="32" />
-                    </ButtonLink>
-
-                    <ButtonLink href="https://www.facebook.com/bajourbasel">
-                      <MdFacebook size="32" />
-                    </ButtonLink>
-
-                    <ButtonLink href="https://twitter.com/bajourbasel">
-                      <FaTwitter size="32" />
-                    </ButtonLink>
-
-                    <ButtonLink href="mailto:info@bajour.ch">
-                      <MdMail size="32" />
-                    </ButtonLink>
-                  </NavBar>
+                    headerSlug="header"
+                    iconSlug="icons"
+                  />
                 </ThemeProvider>
 
                 <Component {...pageProps} />

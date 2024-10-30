@@ -130,7 +130,13 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               </Head>
 
               <Spacer>
-                <NavBar categorySlugs={[['abo']]} slug="main" headerSlug="header" loginUrl={''} />
+                <NavBar
+                  categorySlugs={[['abo']]}
+                  slug="main"
+                  headerSlug="header"
+                  iconSlug="icons"
+                  loginUrl={''}
+                />
 
                 <main>
                   <MainSpacer maxWidth="lg">
