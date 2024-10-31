@@ -4,7 +4,6 @@ import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {navigationLinkToUrl} from '../link-to-url'
 
 export const FooterWrapper = styled('footer')`
-  background: red;
   position: sticky;
   top: 0;
   left: 0;
@@ -74,7 +73,7 @@ export function Footer({className, categorySlugs, slug, data, loading, error}: B
 
 export const FooterPaperWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};
-  background-color: transparent;
+  background-color: ${({theme}) => theme.palette.grey[800]};
   color: ${({theme}) => theme.palette.primary.contrastText};
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
