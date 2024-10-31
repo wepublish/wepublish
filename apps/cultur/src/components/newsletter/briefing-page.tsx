@@ -13,7 +13,8 @@ interface BriefingPageProps {
   mainBackground: string
   leadColor: string
   headerBackgroundImage: string
-  readyBackgroundImage: string
+  readyBackgroundImage?: string
+  readyBackgroundColor: string
   independentBackgroundImage: string
   footerBackgroundImage: string
   blobBackground: string
@@ -58,7 +59,11 @@ export default function BriefingPage(props: BriefingPageProps) {
         />
         <section
           className="readytext"
-          style={{backgroundImage: `url(${props.readyBackgroundImage})`}}>
+          style={{
+            background: props.readyBackgroundImage
+              ? `url(${props.readyBackgroundImage})`
+              : props.readyBackgroundColor
+          }}>
           <div>{props.ready}</div>
         </section>
         <section

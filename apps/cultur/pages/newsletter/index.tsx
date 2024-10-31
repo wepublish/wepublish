@@ -47,14 +47,16 @@ export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps
         mainBackground={'#feeae3'}
         leadColor={'black'}
         headerBackgroundImage={'/images/Selfieshow.jpeg'}
-        readyBackgroundImage={'/images/Puppets.jpeg'}
-        independentBackgroundImage={'/images/Scenic-Panner.png'}
-        footerBackgroundImage={'/images/Kunstevent.jpeg'}
+        independentBackgroundImage={'/images/Hall.jpeg'}
+        footerBackgroundImage={'/images/Tiger.jpeg'}
         blobBackground={
           'linear-gradient(to right top, var(--gradient-pink-dark), var(--gradient-pink-bright))'
         }
         deliveryBackground={'linear-gradient(to top right, #00304b, #2161a6, #ffbaba)'}
         subscribetextBackground={
+          'linear-gradient(to right, var(--gradient-orange-dark), var(--gradient-orange-bright))'
+        }
+        readyBackgroundColor={
           'linear-gradient(to right, var(--gradient-orange-dark), var(--gradient-orange-bright))'
         }
         signupForm={
