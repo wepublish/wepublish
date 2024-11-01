@@ -4,6 +4,7 @@ import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
+  NavbarIconButtonWrapper,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
@@ -17,6 +18,7 @@ import Head from 'next/head'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {Footer} from '../src/components/footer'
+import {Navbar} from '../src/components/navbar'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
@@ -80,6 +82,10 @@ const LogoWrapper = styled(Logo)`
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
+
+  ${NavbarIconButtonWrapper} {
+    color: inherit;
+  }
 `
 
 const dateFormatter = (date: Date, includeTime = true) =>

@@ -142,6 +142,7 @@ export const NavbarIconButtonWrapper = styled('div')`
   align-items: center;
   width: ${({theme}) => theme.spacing(6.5)};
   height: ${({theme}) => theme.spacing(6.5)};
+  color: ${({theme}) => theme.palette.common.white};
 
   ${({theme}) => theme.breakpoints.up('md')} {
     width: ${({theme}) => theme.spacing(7.5)};
