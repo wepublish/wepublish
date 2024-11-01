@@ -1,4 +1,5 @@
-import {NextResponse, NextRequest} from 'next/server'
+import {NextRequest, NextResponse} from 'next/server'
+
 import redirectsJson from './redirects.json'
 
 // Convert redirects JSON to a Map for O(1) lookups

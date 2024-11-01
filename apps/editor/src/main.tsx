@@ -1,6 +1,7 @@
 import {ApolloClient, ApolloLink, ApolloProvider, InMemoryCache} from '@apollo/client'
 import {onError} from '@apollo/client/link/error'
 import {CssBaseline, ThemeProvider} from '@mui/material'
+import * as Sentry from '@sentry/react'
 import {theme} from '@wepublish/ui'
 import {
   AuthProvider,
@@ -17,7 +18,6 @@ import {IconContext} from 'react-icons'
 import {App} from './app/app'
 import {initI18N} from './app/i18n'
 import {ElementID} from './shared/elementID'
-import * as Sentry from '@sentry/react'
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,

@@ -6,11 +6,11 @@ import {
 } from '@wepublish/website'
 import {useWebsiteBuilder} from '@wepublish/website'
 import {ApiV1} from '@wepublish/website'
-import {allPass, anyPass} from 'ramda'
 import {hasBlockStyle} from '@wepublish/website'
 import {isImageBlock} from '@wepublish/website'
 import {isRichTextBlock} from '@wepublish/website'
 import {isEmbedBlock} from '@wepublish/website'
+import {allPass, anyPass} from 'ramda'
 
 export const MannschaftContentBox = (
   props: BuilderImageBlockProps | BuilderRichTextBlockProps | BuilderEmbedBlockProps
