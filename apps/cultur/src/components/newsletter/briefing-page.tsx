@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import {JSX} from 'react'
+import {Box} from '@mui/material'
 
 interface BriefingPageProps {
   title: string
@@ -37,11 +38,10 @@ export default function BriefingPage(props: BriefingPageProps) {
       </Head>
 
       <header className="header" style={{backgroundImage: `url(${props.headerBackgroundImage})`}}>
-        <img className="header__logo" src="/logo_white.svg" />
-        <div className="header__content">
+        <Box display={'flex'} flexDirection={'column'} gap={2} className="header__content">
           <h1 className="header__title">{props.title}</h1>
           <h2 className="header__subtitle">{props.subtitle}</h2>
-        </div>
+        </Box>
       </header>
       <main className="main" style={{backgroundColor: props.mainBackground}}>
         <div className="pinkblob pinkblob--topleft" style={{background: props.blobBackground}} />
