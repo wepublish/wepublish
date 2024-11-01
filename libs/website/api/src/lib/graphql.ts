@@ -2591,14 +2591,6 @@ export type UploadImageMutationVariables = Exact<{
 
 export type UploadImageMutation = { __typename?: 'Mutation', uploadUserProfileImage?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, email: string, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }>, oauth2Accounts: Array<{ __typename?: 'OAuth2Account', type: string, provider: string, scope: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } | null };
 
-export type RevenueQueryVariables = Exact<{
-  start: Scalars['DateTime'];
-  end?: InputMaybe<Scalars['DateTime']>;
-}>;
-
-
-export type RevenueQuery = { __typename?: 'Query', revenue: Array<{ __typename?: 'DashboardInvoice', amount: number, paidAt?: string | null, memberPlan?: string | null }> };
-
 export type FullPaymentMethodFragment = { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type FullAvailablePaymentMethodFragment = { __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> };
@@ -2696,6 +2688,14 @@ export type MemberPlanListQueryVariables = Exact<{
 
 
 export type MemberPlanListQuery = { __typename?: 'Query', memberPlans: { __typename?: 'MemberPlanConnection', totalCount: number, nodes: Array<{ __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: Node[] | null, amountPerMonthMin: number, currency: Currency, extendable: boolean, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type RevenueQueryVariables = Exact<{
+  start: Scalars['DateTime'];
+  end?: InputMaybe<Scalars['DateTime']>;
+}>;
+
+
+export type RevenueQuery = { __typename?: 'Query', revenue: Array<{ __typename?: 'DashboardInvoice', amount: number, paidAt?: string | null, memberPlan?: string | null }> };
 
 export type FullNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename?: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', url: string } | null } | { __typename?: 'ExternalNavigationLink', label: string, url: string } | { __typename?: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', url: string } | null }> };
 
@@ -4292,44 +4292,6 @@ export function useUploadImageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMutation>;
 export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
 export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
-export const RevenueDocument = gql`
-    query Revenue($start: DateTime!, $end: DateTime) {
-  revenue(start: $start, end: $end) {
-    amount
-    paidAt
-    memberPlan
-  }
-}
-    `;
-
-/**
- * __useRevenueQuery__
- *
- * To run a query within a React component, call `useRevenueQuery` and pass it any options that fit your needs.
- * When your component renders, `useRevenueQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useRevenueQuery({
- *   variables: {
- *      start: // value for 'start'
- *      end: // value for 'end'
- *   },
- * });
- */
-export function useRevenueQuery(baseOptions: Apollo.QueryHookOptions<RevenueQuery, RevenueQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RevenueQuery, RevenueQueryVariables>(RevenueDocument, options);
-      }
-export function useRevenueLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RevenueQuery, RevenueQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RevenueQuery, RevenueQueryVariables>(RevenueDocument, options);
-        }
-export type RevenueQueryHookResult = ReturnType<typeof useRevenueQuery>;
-export type RevenueLazyQueryHookResult = ReturnType<typeof useRevenueLazyQuery>;
-export type RevenueQueryResult = Apollo.QueryResult<RevenueQuery, RevenueQueryVariables>;
 export const SubscribeDocument = gql`
     mutation Subscribe($memberPlanId: ID, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: ID, $paymentMethodSlug: Slug, $subscriptionProperties: [PublicPropertiesInput!], $successURL: String, $failureURL: String, $deactivateSubscriptionId: ID) {
   createSubscription(
@@ -4694,6 +4656,44 @@ export function useMemberPlanListLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type MemberPlanListQueryHookResult = ReturnType<typeof useMemberPlanListQuery>;
 export type MemberPlanListLazyQueryHookResult = ReturnType<typeof useMemberPlanListLazyQuery>;
 export type MemberPlanListQueryResult = Apollo.QueryResult<MemberPlanListQuery, MemberPlanListQueryVariables>;
+export const RevenueDocument = gql`
+    query Revenue($start: DateTime!, $end: DateTime) {
+  revenue(start: $start, end: $end) {
+    amount
+    paidAt
+    memberPlan
+  }
+}
+    `;
+
+/**
+ * __useRevenueQuery__
+ *
+ * To run a query within a React component, call `useRevenueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRevenueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRevenueQuery({
+ *   variables: {
+ *      start: // value for 'start'
+ *      end: // value for 'end'
+ *   },
+ * });
+ */
+export function useRevenueQuery(baseOptions: Apollo.QueryHookOptions<RevenueQuery, RevenueQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RevenueQuery, RevenueQueryVariables>(RevenueDocument, options);
+      }
+export function useRevenueLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RevenueQuery, RevenueQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RevenueQuery, RevenueQueryVariables>(RevenueDocument, options);
+        }
+export type RevenueQueryHookResult = ReturnType<typeof useRevenueQuery>;
+export type RevenueLazyQueryHookResult = ReturnType<typeof useRevenueLazyQuery>;
+export type RevenueQueryResult = Apollo.QueryResult<RevenueQuery, RevenueQueryVariables>;
 export const NavigationListDocument = gql`
     query NavigationList {
   navigations {

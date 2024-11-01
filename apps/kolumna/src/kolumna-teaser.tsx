@@ -17,6 +17,7 @@ export const KolumnaTeaser = cond([
         <SubscribeContainer
           successURL={`${locationOrigin}/profile/subscription`}
           failureURL={thisLocation}
+          filter={memberPlans => memberPlans.filter(mb => mb.tags?.includes('crowdfunding'))}
         />
       )
     }
