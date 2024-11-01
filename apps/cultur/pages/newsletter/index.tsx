@@ -1,10 +1,10 @@
+import {Box} from '@mui/material'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
 import BriefingPage from '../../src/components/newsletter/briefing-page'
 import MailchimpSubscribeForm from '../../src/components/newsletter/mailchimp-form'
-import {Box} from '@mui/material'
 
 type NewsletterPageProps = {
   mailchimpSignupUrl: string

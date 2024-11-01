@@ -22,7 +22,6 @@ import {
 } from './block-styles/ad'
 import {HighlightBlockStyle, isHighlightTeasers} from './block-styles/highlight'
 import {HotAndTrendingBlockStyle, isHotAndTrendingTeasers} from './block-styles/hot-and-trending'
-import {MannschaftContentBox, isContentBoxBlock} from './mannschaft-content-box'
 import {MainSpacer} from './main-spacer'
 import {
   isAccentBreakBlock,
@@ -36,6 +35,7 @@ import {
   isVioletBreakBlock,
   isWarningBreakBlock
 } from './mannschaft-break-block'
+import {isContentBoxBlock, MannschaftContentBox} from './mannschaft-content-box'
 
 const seamlessBackground = (theme: Theme) => css`
   &:has(+ * > :is(${BreakBlockWrapper}, ${SliderWrapper}, ${FocusTeaserWrapper})) {

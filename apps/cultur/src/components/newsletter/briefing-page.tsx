@@ -1,6 +1,6 @@
+import {Box} from '@mui/material'
 import Head from 'next/head'
 import {JSX} from 'react'
-import {Box} from '@mui/material'
 
 interface BriefingPageProps {
   title: string
