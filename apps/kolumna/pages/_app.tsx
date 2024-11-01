@@ -22,6 +22,7 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {KolumnaTeaser} from '../src/kolumna-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 
@@ -101,6 +102,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           <WebsiteBuilderProvider
             Head={Head}
             Script={Script}
+            blocks={{Teaser: KolumnaTeaser}}
             elements={{Link: NextWepublishLink}}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>
