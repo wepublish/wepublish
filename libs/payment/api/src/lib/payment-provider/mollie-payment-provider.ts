@@ -81,6 +81,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
   }
 
   generateWebhookUrl(): string {
+    return 'https://webhook.site/2f1fff28-d769-48cd-9f8e-f0d87d8b30ea'
     return `${this.apiBaseUrl}/payment-webhooks/${this.id}?key=${this.webhookEndpointSecret}`
   }
 
@@ -108,7 +109,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     const metadata = payment.metadata as MolliePaymentMetadata
     if (state && metadata.paymentID) {
       let customerID: undefined | string
-      if (payment.customerId) customerID = payment.customerId
+      if (this.offSessionPayments && payment.customerId) customerID = payment.customerId
 
       intentStates.push({
         paymentID: metadata.paymentID,
@@ -145,13 +146,17 @@ export class MolliePaymentProvider extends BasePaymentProvider {
   }: CreatePaymentIntentProps): Promise<Intent> {
     let payment: Payment
     try {
-      const customer = await this.mollieClient.customers.create({
-        email: invoice.mail,
-        name: invoice.mail
-      })
+      let customerId: undefined | string
+      if (this.offSessionPayments) {
+        const customer = await this.mollieClient.customers.create({
+          email: invoice.mail,
+          name: invoice.mail
+        })
+        customerId = customer.id
+      }
 
-      payment = await this.mollieClient.customerPayments.create({
-        customerId: customer.id,
+      payment = await this.mollieClient.payments.create({
+        customerId,
         amount: {
           currency,
           value: calculateAndFormatAmount(invoice)
@@ -159,7 +164,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
         description: invoice.description || 'Subscription',
         redirectUrl: successURL,
         webhookUrl: this.generateWebhookUrl(),
-        sequenceType: SequenceType.first,
+        sequenceType: this.offSessionPayments ? SequenceType.first : SequenceType.oneoff,
         method: this.method,
         metadata: {
           paymentID,
