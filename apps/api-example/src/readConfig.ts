@@ -116,6 +116,7 @@ type Mollie = {
   apiKey: string
   webhookEndpointSecret: string
   apiBaseUrl: string
+  methods?: string[]
 }
 
 type PaymentProvider =

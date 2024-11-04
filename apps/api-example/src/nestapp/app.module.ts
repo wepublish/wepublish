@@ -231,7 +231,8 @@ import {PollModule} from '@wepublish/poll/api'
                   apiKey: paymentProvider.apiKey,
                   webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
                   apiBaseUrl: paymentProvider.apiBaseUrl,
-                  incomingRequestHandler: bodyParser.urlencoded({extended: true})
+                  incomingRequestHandler: bodyParser.urlencoded({extended: true}),
+                  methods: paymentProvider.methods
                 })
               )
             } else if (paymentProvider.type === 'no-charge') {

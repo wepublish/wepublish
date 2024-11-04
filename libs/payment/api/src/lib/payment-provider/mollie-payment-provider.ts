@@ -23,7 +23,7 @@ export interface MolliePaymentProviderProps extends PaymentProviderProps {
   apiKey: string
   webhookEndpointSecret: string
   apiBaseUrl: string
-  method?: MaybeArray<PaymentMethod>
+  methods?: string[]
 }
 
 const erroredPaymentIntent = {
@@ -70,18 +70,26 @@ export class MolliePaymentProvider extends BasePaymentProvider {
   readonly webhookEndpointSecret: string
   readonly mollieClient: MollieClient
   readonly apiBaseUrl: string
-  readonly method: MaybeArray<PaymentMethod> | undefined
+  readonly methods: MaybeArray<PaymentMethod> | undefined
 
   constructor(props: MolliePaymentProviderProps) {
     super(props)
     this.webhookEndpointSecret = props.webhookEndpointSecret
     this.apiBaseUrl = props.apiBaseUrl
     this.mollieClient = createMollieClient({apiKey: props.apiKey})
-    this.method = props.method
+    this.methods = this.getPaymentMethode(props.methods)
+  }
+
+  getPaymentMethode(methods: string[] | undefined): MaybeArray<PaymentMethod> | undefined {
+    if (!methods) return undefined
+    const paymentMethods: MaybeArray<PaymentMethod> = []
+    for (const paymentMethode of methods) {
+      paymentMethods.push(PaymentMethod[paymentMethode as keyof typeof PaymentMethod])
+    }
+    return paymentMethods
   }
 
   generateWebhookUrl(): string {
-    return 'https://webhook.site/2f1fff28-d769-48cd-9f8e-f0d87d8b30ea'
     return `${this.apiBaseUrl}/payment-webhooks/${this.id}?key=${this.webhookEndpointSecret}`
   }
 
@@ -165,7 +173,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
         redirectUrl: successURL,
         webhookUrl: this.generateWebhookUrl(),
         sequenceType: this.offSessionPayments ? SequenceType.first : SequenceType.oneoff,
-        method: this.method,
+        method: this.methods,
         metadata: {
           paymentID,
           mail: invoice.mail
