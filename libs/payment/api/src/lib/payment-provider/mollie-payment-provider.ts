@@ -160,7 +160,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
           currency,
           value: calculateAndFormatAmount(invoice)
         },
-        description: invoice.subscriptionID,
+        description: invoice.description,
         redirectUrl: successURL,
         webhookUrl: this.generateWebhookUrl(),
         sequenceType: SequenceType.first,
@@ -203,7 +203,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
           currency,
           value: calculateAndFormatAmount(invoice)
         },
-        description: invoice.subscriptionID,
+        description: invoice.description,
         redirectUrl: successURL,
         webhookUrl: this.generateWebhookUrl(),
         sequenceType: SequenceType.recurring,
