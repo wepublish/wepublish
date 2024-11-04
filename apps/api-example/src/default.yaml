@@ -57,7 +57,7 @@ paymentProviders:
     id: mollie
     name: Mollie
     offSessionPayments: true
-    apiKey: ${MOLLIE_API_KEY}
+    apiKey: ${MOLLIE_API_SECRET}
     webhookEndpointSecret: secret
     apiBaseUrl: https://api.wepublish.dev
   - type: payrexx-subscription

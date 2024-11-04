@@ -39,7 +39,7 @@ type MolliePaymentMetadata = {
   mail?: string
 }
 
-function mapMollieEventToPaymentStatus(event: string): PaymentState | null {
+function mapMollieEventToPaymentStatus(event: string): PaymentState {
   switch (event) {
     case 'failed':
     case 'expired':
@@ -53,7 +53,7 @@ function mapMollieEventToPaymentStatus(event: string): PaymentState | null {
     case 'canceled':
       return PaymentState.canceled
     default:
-      return null
+      throw new Error(`Unhandled ${event} state received from mollie`)
   }
 }
 
@@ -70,7 +70,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
   readonly webhookEndpointSecret: string
   readonly mollieClient: MollieClient
   readonly apiBaseUrl: string
-  readonly method: MaybeArray<PaymentMethod>
+  readonly method: MaybeArray<PaymentMethod> | undefined
 
   constructor(props: MolliePaymentProviderProps) {
     super(props)
@@ -85,7 +85,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
   }
 
   async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
-    const intentStates = []
+    const intentStates: IntentState[] = []
     const key = props.req.query?.key as string
 
     if (!this.timeConstantCompare(key, this.webhookEndpointSecret)) {
@@ -105,7 +105,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     }
     const payment = await this.mollieClient.payments.get(molliePaymentId)
     const state = mapMollieEventToPaymentStatus(payment.status)
-    const metadata: MolliePaymentMetadata = payment.metadata
+    const metadata = payment.metadata as MolliePaymentMetadata
     if (state && metadata.paymentID) {
       let customerID: undefined | string
       if (payment.customerId) customerID = payment.customerId
@@ -145,22 +145,18 @@ export class MolliePaymentProvider extends BasePaymentProvider {
   }: CreatePaymentIntentProps): Promise<Intent> {
     let payment: Payment
     try {
-      let customerId: undefined | string
-      if (this.offSessionPayments) {
-        const customer = await this.mollieClient.customers.create({
-          email: invoice.mail,
-          name: invoice.mail
-        })
-        customerId = customer.id
-      }
+      const customer = await this.mollieClient.customers.create({
+        email: invoice.mail,
+        name: invoice.mail
+      })
 
       payment = await this.mollieClient.customerPayments.create({
-        customerId,
+        customerId: customer.id,
         amount: {
           currency,
           value: calculateAndFormatAmount(invoice)
         },
-        description: invoice.description,
+        description: invoice.description || 'Subscription',
         redirectUrl: successURL,
         webhookUrl: this.generateWebhookUrl(),
         sequenceType: SequenceType.first,
@@ -196,6 +192,8 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     successURL
   }: CreatePaymentIntentProps): Promise<Intent> {
     let payment: Payment
+    if (!customerID) return erroredPaymentIntent
+
     try {
       payment = await this.mollieClient.customerPayments.create({
         customerId: customerID,
@@ -203,7 +201,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
           currency,
           value: calculateAndFormatAmount(invoice)
         },
-        description: invoice.description,
+        description: invoice.description || 'Subscription',
         redirectUrl: successURL,
         webhookUrl: this.generateWebhookUrl(),
         sequenceType: SequenceType.recurring,
@@ -238,7 +236,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
       throw new Error('unknown intent state')
     }
 
-    const metadata: MolliePaymentMetadata = payment.metadata
+    const metadata = payment.metadata as MolliePaymentMetadata
 
     if (!metadata.paymentID) {
       logger('molliePaymentProvider').error(
