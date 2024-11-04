@@ -108,7 +108,24 @@ type novaMediaServer = {
   type: 'nova'
 }
 
-type PaymentProvider = Payrexx | PayrexxSubscription | Stripe | StripeCheckout | Bexio | noCharge
+type Mollie = {
+  type: 'mollie'
+  id: string
+  name: string
+  offSessionPayments: boolean
+  apiKey: string
+  webhookEndpointSecret: string
+  webhookUrl: string
+}
+
+type PaymentProvider =
+  | Payrexx
+  | PayrexxSubscription
+  | Stripe
+  | StripeCheckout
+  | Bexio
+  | noCharge
+  | Mollie
 
 type Challenge = {
   secret: string

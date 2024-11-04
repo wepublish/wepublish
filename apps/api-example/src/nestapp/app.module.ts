@@ -36,7 +36,8 @@ import {
   HotAndTrendingModule,
   GoogleAnalyticsService,
   GoogleAnalyticsModule,
-  EventModule
+  EventModule,
+  MolliePaymentProvider
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -219,6 +220,18 @@ import {PollModule} from '@wepublish/poll/api'
                     paymentProvider.invoiceMailBodyRenewalMembership,
                   markInvoiceAsOpen: paymentProvider.markInvoiceAsOpen,
                   prisma
+                })
+              )
+            } else if (paymentProvider.type === 'mollie') {
+              paymentProviders.push(
+                new MolliePaymentProvider({
+                  id: paymentProvider.id,
+                  name: paymentProvider.name,
+                  offSessionPayments: paymentProvider.offSessionPayments,
+                  apiKey: paymentProvider.apiKey,
+                  webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
+                  webhookUrl: paymentProvider.webhookUrl,
+                  incomingRequestHandler: bodyParser.urlencoded({extended: true})
                 })
               )
             } else if (paymentProvider.type === 'no-charge') {
