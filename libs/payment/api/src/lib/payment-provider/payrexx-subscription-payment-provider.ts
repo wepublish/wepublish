@@ -8,7 +8,6 @@ import {
 } from '@prisma/client'
 import {logger, mapPaymentPeriodToMonths} from '@wepublish/utils/api'
 import * as crypto from 'crypto'
-import {timingSafeEqual} from 'crypto'
 import add from 'date-fns/add'
 import parseISO from 'date-fns/parseISO'
 import startOfDay from 'date-fns/startOfDay'

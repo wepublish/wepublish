@@ -12,7 +12,6 @@ import {logger} from '@wepublish/utils/api'
 import {PaymentState} from '@prisma/client'
 import {Gateway, GatewayClient, GatewayStatus} from '../payrexx/gateway-client'
 import {Transaction, TransactionClient, TransactionStatus} from '../payrexx/transaction-client'
-import {timingSafeEqual} from 'crypto'
 
 export interface PayrexxPaymentProviderProps extends PaymentProviderProps {
   gatewayClient: GatewayClient
