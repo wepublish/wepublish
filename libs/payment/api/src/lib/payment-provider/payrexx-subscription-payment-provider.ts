@@ -51,14 +51,6 @@ function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
   }
 }
 
-function timeConstantCompare(a: string, b: string): boolean {
-  try {
-    return timingSafeEqual(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'))
-  } catch {
-    return false
-  }
-}
-
 async function findSubscriptionByExternalId(
   subscriptionClient: PrismaClient['subscription'],
   externalId: string
@@ -396,7 +388,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
     // Protect endpoint
     const apiKey = props.req.query.apiKey as string
-    if (!timeConstantCompare(apiKey, this.webhookSecret)) {
+    if (!this.timeConstantCompare(apiKey, this.webhookSecret)) {
       return {
         status: 403,
         message: 'Invalid Api Key'

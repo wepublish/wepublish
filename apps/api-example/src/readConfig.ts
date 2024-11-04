@@ -115,7 +115,7 @@ type Mollie = {
   offSessionPayments: boolean
   apiKey: string
   webhookEndpointSecret: string
-  webhookUrl: string
+  apiBaseUrl: string
 }
 
 type PaymentProvider =

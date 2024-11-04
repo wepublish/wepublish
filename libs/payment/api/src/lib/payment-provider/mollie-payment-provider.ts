@@ -11,12 +11,19 @@ import {
 } from './payment-provider'
 import {logger} from '@wepublish/utils/api'
 import {PaymentState} from '@prisma/client'
-import createMollieClient, {MollieClient, SequenceType, Payment} from '@mollie/api-client'
+import createMollieClient, {
+  MollieClient,
+  SequenceType,
+  Payment,
+  PaymentMethod
+} from '@mollie/api-client'
+import MaybeArray from '@mollie/api-client/dist/types/types/MaybeArray'
 
 export interface MolliePaymentProviderProps extends PaymentProviderProps {
   apiKey: string
   webhookEndpointSecret: string
-  webhookUrl: string
+  apiBaseUrl: string
+  method?: MaybeArray<PaymentMethod>
 }
 
 const erroredPaymentIntent = {
@@ -62,22 +69,32 @@ function calculateAndFormatAmount(invoice: InvoiceWithItems) {
 export class MolliePaymentProvider extends BasePaymentProvider {
   readonly webhookEndpointSecret: string
   readonly mollieClient: MollieClient
-  readonly webhookUrl: string
+  readonly apiBaseUrl: string
+  readonly method: MaybeArray<PaymentMethod>
 
   constructor(props: MolliePaymentProviderProps) {
     super(props)
     this.webhookEndpointSecret = props.webhookEndpointSecret
-    this.webhookUrl = props.webhookUrl
+    this.apiBaseUrl = props.apiBaseUrl
     this.mollieClient = createMollieClient({apiKey: props.apiKey})
+    this.method = props.method
   }
 
   generateWebhookUrl(): string {
-    //return  `${this.webhookUrl}/payment-webhooks/${this.id}?key=${this.webhookEndpointSecret}`
-    return `https://webhook.site/2f1fff28-d769-48cd-9f8e-f0d87d8b30ea`
+    return `${this.apiBaseUrl}/payment-webhooks/${this.id}?key=${this.webhookEndpointSecret}`
   }
 
   async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
     const intentStates = []
+    const key = props.req.query?.key as string
+
+    if (!this.timeConstantCompare(key, this.webhookEndpointSecret)) {
+      return {
+        status: 403,
+        message: 'Invalid Api Key'
+      }
+    }
+
     const molliePaymentId: string | undefined = props.req.body.id
 
     if (!molliePaymentId) {
@@ -100,7 +117,6 @@ export class MolliePaymentProvider extends BasePaymentProvider {
         customerID
       })
     }
-    console.log(intentStates)
     return {
       status: 200,
       paymentStates: intentStates
@@ -148,6 +164,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
         redirectUrl: successURL,
         webhookUrl: this.generateWebhookUrl(),
         sequenceType: SequenceType.first,
+        method: this.method,
         metadata: {
           paymentID,
           mail: invoice.mail
@@ -155,8 +172,6 @@ export class MolliePaymentProvider extends BasePaymentProvider {
       })
     } catch (err) {
       const error: any = err
-
-      console.log(JSON.stringify(error))
 
       logger('molliePaymentProvider').error(
         error,
