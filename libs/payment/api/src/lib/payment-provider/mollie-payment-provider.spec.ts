@@ -297,8 +297,6 @@ describe('MolliePaymentProvider', () => {
 
   describe('createOffsiteTransactionIntent', () => {
     it('should return no payment url for valid offsession customer', async () => {
-      const modifiedCreatePaymentIntentProps = structuredClone(defaultCreatePaymentIntentProps)
-      modifiedCreatePaymentIntentProps.customerID = '22'
       ;(mollieOffSession.mollieClient.customerPayments.create as jest.Mock).mockImplementationOnce(
         () =>
           Promise.resolve({
@@ -308,6 +306,8 @@ describe('MolliePaymentProvider', () => {
             getCheckoutUrl: () => ''
           })
       )
+      const modifiedCreatePaymentIntentProps = structuredClone(defaultCreatePaymentIntentProps)
+      modifiedCreatePaymentIntentProps.customerID = '22'
       expect(
         await mollieOffSession.createOffsiteTransactionIntent(modifiedCreatePaymentIntentProps)
       ).toEqual({
