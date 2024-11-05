@@ -318,7 +318,7 @@ describe('MolliePaymentProvider', () => {
       })
     })
     it('should invalid intent', async () => {
-      // Workaound to make linter happy :-)
+      // Workaround to make linter happy :-)
       const x = 'tt'
       ;(mollieOffSession.mollieClient.customerPayments.create as jest.Mock).mockImplementationOnce(
         () =>
