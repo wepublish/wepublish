@@ -318,19 +318,16 @@ describe('MolliePaymentProvider', () => {
       })
     })
     it('should invalid intent', async () => {
-      ;(() => {
-        ;(
-          mollieOffSession.mollieClient.customerPayments.create as jest.Mock
-        ).mockImplementationOnce(() =>
+      const x = 'tt'
+      ;(mollieOffSession.mollieClient.customerPayments.create as jest.Mock).mockImplementationOnce(
+        () =>
           Promise.resolve({
             customerId: '22',
             id: 'test_payment_id',
             status: 'paid',
             getCheckoutUrl: () => ''
           })
-        )
-      })()
-
+      )
       expect(
         await mollieOffSession.createOffsiteTransactionIntent(defaultCreatePaymentIntentProps)
       ).toEqual({
