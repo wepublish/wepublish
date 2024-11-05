@@ -39,7 +39,7 @@ type MolliePaymentMetadata = {
   mail?: string
 }
 
-function mapMollieEventToPaymentStatus(event: string): PaymentState {
+export function mapMollieEventToPaymentStatus(event: string): PaymentState {
   switch (event) {
     case 'failed':
     case 'expired':
@@ -57,7 +57,7 @@ function mapMollieEventToPaymentStatus(event: string): PaymentState {
   }
 }
 
-function calculateAndFormatAmount(invoice: InvoiceWithItems) {
+export function calculateAndFormatAmount(invoice: {items: {amount: number; quantity: number}[]}) {
   return `${(
     invoice.items.reduce(
       (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
@@ -238,16 +238,6 @@ export class MolliePaymentProvider extends BasePaymentProvider {
   async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
     const payment = await this.mollieClient.payments.get(intentID)
     const state = mapMollieEventToPaymentStatus(payment.status)
-
-    if (!state) {
-      logger('molliePaymentProvider').error(
-        'Stripe intent with ID: %s for paymentProvider %s returned with an unknown state %s',
-        payment.id,
-        this.id,
-        payment.status
-      )
-      throw new Error('unknown intent state')
-    }
 
     const metadata = payment.metadata as MolliePaymentMetadata
 
