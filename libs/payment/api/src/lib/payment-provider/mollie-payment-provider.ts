@@ -57,12 +57,12 @@ export function mapMollieEventToPaymentStatus(event: string): PaymentState {
 }
 
 export function calculateAndFormatAmount(invoice: {items: {amount: number; quantity: number}[]}) {
-  return `${(
+  return (
     invoice.items.reduce(
       (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
       0
     ) / 100
-  ).toFixed(2)}`
+  ).toFixed(2)
 }
 
 export class MolliePaymentProvider extends BasePaymentProvider {
@@ -80,7 +80,9 @@ export class MolliePaymentProvider extends BasePaymentProvider {
   }
 
   getPaymentMethode(methods: string[] | undefined): MaybeArray<PaymentMethod> | undefined {
-    if (!methods) return undefined
+    if (!methods) {
+      return undefined
+    }
     const paymentMethods: MaybeArray<PaymentMethod> = []
     for (const paymentMethode of methods) {
       paymentMethods.push(PaymentMethod[paymentMethode as keyof typeof PaymentMethod])
@@ -116,7 +118,10 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     const metadata = payment.metadata as MolliePaymentMetadata
     if (state && metadata.paymentID) {
       let customerID: undefined | string
-      if (this.offSessionPayments && payment.customerId) customerID = payment.customerId
+
+      if (this.offSessionPayments && payment.customerId) {
+        customerID = payment.customerId
+      }
 
       intentStates.push({
         paymentID: metadata.paymentID,
@@ -204,7 +209,10 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     successURL
   }: CreatePaymentIntentProps): Promise<Intent> {
     let payment: Payment
-    if (!customerID) return erroredPaymentIntent
+
+    if (!customerID) {
+      return erroredPaymentIntent
+    }
 
     try {
       payment = await this.mollieClient.customerPayments.create({

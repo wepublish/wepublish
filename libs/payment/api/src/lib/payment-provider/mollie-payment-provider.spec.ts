@@ -341,10 +341,6 @@ describe('MolliePaymentProvider', () => {
 
   describe('checkIntentStatus', () => {
     it('offsession paid payment', async () => {
-      const intent: CheckIntentProps = {
-        intentID: '1',
-        paymentID: '1'
-      }
       ;(mollieOffSession.mollieClient.payments.get as jest.Mock).mockImplementationOnce(() =>
         Promise.resolve({
           id: 'test_payment_id',
@@ -355,6 +351,10 @@ describe('MolliePaymentProvider', () => {
           }
         })
       )
+      const intent: CheckIntentProps = {
+        intentID: '1',
+        paymentID: '1'
+      }
       expect(await mollieOffSession.checkIntentStatus(intent)).toEqual({
         customerID: 'customer_id',
         paymentData:
@@ -365,10 +365,6 @@ describe('MolliePaymentProvider', () => {
     })
 
     it('offsession failed payment', async () => {
-      const intent: CheckIntentProps = {
-        intentID: '1',
-        paymentID: '1'
-      }
       ;(mollieOffSession.mollieClient.payments.get as jest.Mock).mockImplementationOnce(() =>
         Promise.resolve({
           id: 'test_payment_id',
@@ -379,6 +375,10 @@ describe('MolliePaymentProvider', () => {
           }
         })
       )
+      const intent: CheckIntentProps = {
+        intentID: '1',
+        paymentID: '1'
+      }
       expect(await mollieOffSession.checkIntentStatus(intent)).toEqual({
         customerID: 'customer_id',
         paymentData:
@@ -389,10 +389,6 @@ describe('MolliePaymentProvider', () => {
     })
 
     it('onsession paid payment', async () => {
-      const intent: CheckIntentProps = {
-        intentID: '1',
-        paymentID: '1'
-      }
       ;(mollieOnSession.mollieClient.payments.get as jest.Mock).mockImplementationOnce(() =>
         Promise.resolve({
           id: 'test_payment_id',
@@ -402,6 +398,10 @@ describe('MolliePaymentProvider', () => {
           }
         })
       )
+      const intent: CheckIntentProps = {
+        intentID: '1',
+        paymentID: '1'
+      }
       expect(await mollieOnSession.checkIntentStatus(intent)).toEqual({
         customerID: undefined,
         paymentData: '{"id":"test_payment_id","status":"paid","metadata":{"paymentID":"22"}}',
@@ -411,10 +411,6 @@ describe('MolliePaymentProvider', () => {
     })
 
     it('missing paymentID', async () => {
-      const intent: CheckIntentProps = {
-        intentID: '1',
-        paymentID: '1'
-      }
       ;(mollieOffSession.mollieClient.payments.get as jest.Mock).mockImplementationOnce(() =>
         Promise.resolve({
           id: 'test_payment_id',
@@ -424,6 +420,10 @@ describe('MolliePaymentProvider', () => {
           }
         })
       )
+      const intent: CheckIntentProps = {
+        intentID: '1',
+        paymentID: '1'
+      }
       await expect(mollieOffSession.checkIntentStatus(intent)).rejects.toThrowError(
         new Error('empty paymentID')
       )
