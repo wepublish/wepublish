@@ -1,19 +1,13 @@
-import {
-  CheckIntentProps,
-  CreatePaymentIntentProps,
-  IntentState,
-  InvoiceWithItems
-} from './payment-provider'
+import {CheckIntentProps, CreatePaymentIntentProps, IntentState} from './payment-provider'
 import express from 'express'
 import {
   calculateAndFormatAmount,
   mapMollieEventToPaymentStatus,
   MolliePaymentProvider
-} from '@wepublish/payment/api'
+} from './mollie-payment-provider'
 import bodyParser from 'body-parser'
-import {Currency, PaymentState} from '@prisma/client'
+import {PaymentState} from '@prisma/client'
 import {PaymentMethod} from '@mollie/api-client'
-import mollieClient from '@mollie/api-client'
 
 const mollieApiPaymentGet = {
   status: 'paid',
@@ -37,7 +31,7 @@ const mollieApiCustomerPaymentCreate = {
   status: 'pending'
 }
 
-let defaultCreatePaymentIntentProps: CreatePaymentIntentProps = {
+const defaultCreatePaymentIntentProps: CreatePaymentIntentProps = {
   paymentID: '1',
   invoice: {
     createdAt: new Date(),
@@ -305,7 +299,6 @@ describe('MolliePaymentProvider', () => {
     it('should return no payment url for valid offsession customer', async () => {
       const modifiedCreatePaymentIntentProps = structuredClone(defaultCreatePaymentIntentProps)
       modifiedCreatePaymentIntentProps.customerID = '22'
-
       ;(mollieOffSession.mollieClient.customerPayments.create as jest.Mock).mockImplementationOnce(
         () =>
           Promise.resolve({

@@ -4,7 +4,6 @@ import {
   CreatePaymentIntentProps,
   Intent,
   IntentState,
-  InvoiceWithItems,
   PaymentProviderProps,
   WebhookForPaymentIntentProps,
   WebhookResponse
