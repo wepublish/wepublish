@@ -20,8 +20,10 @@ export default function Mitmachen() {
         firstName: firstName as string | undefined,
         name: lastName as string | undefined
       }}
+      filter={memberPlans => memberPlans.filter(mb => mb.tags?.includes('crowdfunding'))}
       successURL={`${locationOrigin}/profile/subscription`}
       failureURL={thisLocation}
+      fields={['firstName']}
     />
   )
 }

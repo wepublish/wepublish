@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {ApiV1, formatCurrency, useWebsiteBuilder} from '@wepublish/website'
+import {useWebsiteBuilder} from '@wepublish/website'
 import {lighten} from 'polished'
 
 export const CrowdfundingGoalWrapper = styled('div')`
@@ -35,14 +35,11 @@ export type CrowdfundingGoalProps = {
   current: number
   goal: number
   until: Date
-  name: string
+  name?: string
 }
 
 export const CrowdfundingGoal = ({current, goal, until, name}: CrowdfundingGoalProps) => {
-  const {
-    meta: {locale},
-    date
-  } = useWebsiteBuilder()
+  const {date} = useWebsiteBuilder()
 
   return (
     <CrowdfundingGoalWrapper>
@@ -50,8 +47,7 @@ export const CrowdfundingGoal = ({current, goal, until, name}: CrowdfundingGoalP
 
       <CrowdfundingGoalText>
         <CrowdfundingGoalAmount>
-          {formatCurrency(current, ApiV1.Currency.Eur, locale)} von{' '}
-          <strong>{formatCurrency(goal, ApiV1.Currency.Eur, locale)}</strong>
+          {current} von <strong>{goal}</strong> Mitgliedern
         </CrowdfundingGoalAmount>
 
         <CrowdfundingGoalUntil>

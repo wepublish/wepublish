@@ -1,5 +1,7 @@
-import {BuilderTeaserProps, SubscribeContainer, Teaser} from '@wepublish/website'
+import {BuilderTeaserProps, Teaser} from '@wepublish/website'
 import {allPass, cond, T} from 'ramda'
+
+import Mitmachen from '../pages/mitmachen'
 
 export const isSubscribeTeaser = allPass([
   ({teaser}: BuilderTeaserProps) => teaser?.__typename === 'CustomTeaser',
@@ -7,20 +9,6 @@ export const isSubscribeTeaser = allPass([
 ])
 
 export const KolumnaTeaser = cond([
-  [
-    isSubscribeTeaser,
-    props => {
-      const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
-      const thisLocation = typeof window !== 'undefined' ? location.href : ''
-
-      return (
-        <SubscribeContainer
-          successURL={`${locationOrigin}/profile/subscription`}
-          failureURL={thisLocation}
-          filter={memberPlans => memberPlans.filter(mb => mb.tags?.includes('crowdfunding'))}
-        />
-      )
-    }
-  ],
+  [isSubscribeTeaser, props => <Mitmachen />],
   [T, props => <Teaser {...props} />]
 ])

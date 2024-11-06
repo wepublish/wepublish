@@ -246,3 +246,10 @@ query Revenue($start: DateTime!, $end: DateTime) {
     memberPlan
   }
 }
+
+query NewSubscribers($start: DateTime!, $end: DateTime) {
+  newSubscribers(start: $start, end: $end) {
+    monthlyAmount
+    memberPlan
+  }
+}
