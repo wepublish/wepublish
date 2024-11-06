@@ -2697,6 +2697,14 @@ export type RevenueQueryVariables = Exact<{
 
 export type RevenueQuery = { __typename?: 'Query', revenue: Array<{ __typename?: 'DashboardInvoice', amount: number, paidAt?: string | null, memberPlan?: string | null }> };
 
+export type NewSubscribersQueryVariables = Exact<{
+  start: Scalars['DateTime'];
+  end?: InputMaybe<Scalars['DateTime']>;
+}>;
+
+
+export type NewSubscribersQuery = { __typename?: 'Query', newSubscribers: Array<{ __typename?: 'DashboardSubscription', monthlyAmount: number, memberPlan: string }> };
+
 export type FullNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename?: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', url: string } | null } | { __typename?: 'ExternalNavigationLink', label: string, url: string } | { __typename?: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', url: string } | null }> };
 
 export type NavigationListQueryVariables = Exact<{ [key: string]: never; }>;
@@ -4694,6 +4702,43 @@ export function useRevenueLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Re
 export type RevenueQueryHookResult = ReturnType<typeof useRevenueQuery>;
 export type RevenueLazyQueryHookResult = ReturnType<typeof useRevenueLazyQuery>;
 export type RevenueQueryResult = Apollo.QueryResult<RevenueQuery, RevenueQueryVariables>;
+export const NewSubscribersDocument = gql`
+    query NewSubscribers($start: DateTime!, $end: DateTime) {
+  newSubscribers(start: $start, end: $end) {
+    monthlyAmount
+    memberPlan
+  }
+}
+    `;
+
+/**
+ * __useNewSubscribersQuery__
+ *
+ * To run a query within a React component, call `useNewSubscribersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNewSubscribersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewSubscribersQuery({
+ *   variables: {
+ *      start: // value for 'start'
+ *      end: // value for 'end'
+ *   },
+ * });
+ */
+export function useNewSubscribersQuery(baseOptions: Apollo.QueryHookOptions<NewSubscribersQuery, NewSubscribersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NewSubscribersQuery, NewSubscribersQueryVariables>(NewSubscribersDocument, options);
+      }
+export function useNewSubscribersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewSubscribersQuery, NewSubscribersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NewSubscribersQuery, NewSubscribersQueryVariables>(NewSubscribersDocument, options);
+        }
+export type NewSubscribersQueryHookResult = ReturnType<typeof useNewSubscribersQuery>;
+export type NewSubscribersLazyQueryHookResult = ReturnType<typeof useNewSubscribersLazyQuery>;
+export type NewSubscribersQueryResult = Apollo.QueryResult<NewSubscribersQuery, NewSubscribersQueryVariables>;
 export const NavigationListDocument = gql`
     query NavigationList {
   navigations {

@@ -32,6 +32,13 @@ export const getStaticProps: GetStaticProps = async () => {
       }
     }),
     client.query({
+      query: ApiV1.NewSubscribersDocument,
+      variables: {
+        start: '2024-01-11T00:00:00.000Z',
+        end: '2025-01-11T00:00:00.000Z'
+      }
+    }),
+    client.query({
       query: ApiV1.NavigationListDocument
     }),
     client.query({

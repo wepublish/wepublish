@@ -1,16 +1,10 @@
 import {styled} from '@mui/material'
-import {
-  ApiV1,
-  BuilderSubscribeProps,
-  formatCurrency,
-  Subscribe,
-  useWebsiteBuilder
-} from '@wepublish/website'
+import {ApiV1, BuilderSubscribeProps, Subscribe} from '@wepublish/website'
 import {useMemo} from 'react'
 
 import {CrowdfundingGoal} from './crowdfunding/crowdfunding-goal'
 
-const goals = [{goal: 30000, name: 'Initiales Ziel', until: new Date()}]
+const goals = [{goal: 700, until: new Date()}]
 
 export const GoalsWrapper = styled('div')`
   display: grid;
@@ -23,26 +17,20 @@ export const FinancedWrapper = styled('div')`
 `
 
 export const KolumnaSubscribe = (props: BuilderSubscribeProps) => {
-  const {
-    meta: {locale}
-  } = useWebsiteBuilder()
-
-  const {data} = ApiV1.useRevenueQuery({
+  const {data} = ApiV1.useNewSubscribersQuery({
     variables: {
-      start: new Date('01-11-2024').toISOString(),
-      end: new Date('01-11-2025').toISOString()
+      start: '2024-01-11T00:00:00.000Z',
+      end: '2025-01-11T00:00:00.000Z'
     }
   })
 
   const current = useMemo(
     () =>
-      data?.revenue.reduce((total, {memberPlan, amount}) => {
-        if (props.memberPlans.data?.memberPlans.nodes.some(({name}) => name === memberPlan)) {
-          return total + amount
-        }
-
-        return total
-      }, 0) ?? 0,
+      data?.newSubscribers.filter(
+        ({memberPlan}) =>
+          props.memberPlans.data?.memberPlans.nodes.some(({name}) => name === memberPlan),
+        0
+      ).length ?? 0,
     [data, props.memberPlans]
   )
 
@@ -50,7 +38,7 @@ export const KolumnaSubscribe = (props: BuilderSubscribeProps) => {
     <>
       <GoalsWrapper>
         <FinancedWrapper>
-          Bereits <strong>{formatCurrency(current, ApiV1.Currency.Eur, locale)}</strong> finanziert
+          Bereits <strong>{current}</strong> machen mit!
         </FinancedWrapper>
 
         {goals.map((goal, index) => (
