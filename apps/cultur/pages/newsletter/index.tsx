@@ -1,9 +1,9 @@
-import {Box} from '@mui/material'
+import {ApiV1, ContentWrapper, PageContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+
 import MailchimpSubscribeForm from '../../src/components/newsletter/mailchimp-form'
-import {ApiV1, ContentWrapper, PageContainer} from '@wepublish/website'
 
 type NewsletterPageProps = {
   mailchimpSignupUrl: string
