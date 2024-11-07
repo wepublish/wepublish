@@ -61,7 +61,7 @@ export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps
         }
         signupForm={
           <MailchimpSubscribeForm
-            signupUrl={mailchimpSignupUrl}
+            signupUrl="https://ch-interkultur.us12.list-manage.com/subscribe/post?u=930fd0ccfcf8b34b60492e282&id=7755141349"
             defaultEmail={(email as string) || undefined}
             defaultFirstName={(firstname as string) || undefined}
             defaultLastName={(lastname as string) || undefined}
