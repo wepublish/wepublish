@@ -756,7 +756,7 @@ export const WithExtraMoneyOffset: StoryObj<typeof Subscribe> = {
   ...LoggedIn,
   args: {
     ...LoggedIn.args,
-    extraMoneyOffset: 300
+    extraMoneyOffset: () => 300
   }
 }
 

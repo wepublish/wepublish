@@ -1,5 +1,5 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, Slider, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, InputAdornment, Slider, styled} from '@mui/material'
 import {
   RegistrationChallenge,
   RegistrationChallengeWrapper,
@@ -91,6 +91,18 @@ export const SubscribeAmount = styled('div')`
   border-radius: ${({theme}) => theme.shape.borderRadius}px;
 `
 
+export const SubscribeAmountSlider = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${({theme}) => theme.spacing(3)};
+  align-items: center;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-auto-flow: column;
+    grid-auto-columns: 300px;
+  }
+`
+
 export const SubscribeAmountText = styled('p')`
   text-align: center;
 `
@@ -106,18 +118,25 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
 
 export const getPaymentText = (
   autoRenew: boolean,
+  extendable: boolean,
   paymentPeriodicity: PaymentPeriodicity,
   monthlyAmount: number,
   currency: Currency,
   locale: string
 ) =>
-  autoRenew
+  autoRenew && extendable
     ? `${formatRenewalPeriod(paymentPeriodicity)} für ${formatCurrency(
         (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
         currency,
         locale
       )}`
-    : `${formatPaymentPeriod(paymentPeriodicity)} für ${formatCurrency(
+    : extendable
+    ? `${formatPaymentPeriod(paymentPeriodicity)} für ${formatCurrency(
+        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        currency,
+        locale
+      )}`
+    : `Für ${formatCurrency(
         (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
         currency,
         locale
@@ -125,7 +144,7 @@ export const getPaymentText = (
 
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
-  extraMoneyOffset = 0,
+  extraMoneyOffset = () => 0,
   memberPlans,
   challenge,
   userSubscriptions,
@@ -239,6 +258,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const paymentText = getPaymentText(
     autoRenew,
+    selectedMemberPlan?.extendable ?? true,
     selectedPaymentPeriodicity,
     monthlyAmount,
     selectedMemberPlan?.currency ?? Currency.Chf,
@@ -247,6 +267,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const monthlyPaymentText = getPaymentText(
     true,
+    selectedMemberPlan?.extendable ?? true,
     PaymentPeriodicity.Monthly,
     monthlyAmount,
     selectedMemberPlan?.currency ?? Currency.Chf,
@@ -290,7 +311,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     if (selectedMemberPlan) {
       setValue<'monthlyAmount'>(
         'monthlyAmount',
-        selectedMemberPlan.amountPerMonthMin + extraMoneyOffset
+        selectedMemberPlan.amountPerMonthMin + extraMoneyOffset(selectedMemberPlan)
       )
     }
   }, [selectedMemberPlan, extraMoneyOffset, setValue])
@@ -308,7 +329,11 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     if (selectedAvailablePaymentMethod?.forceAutoRenewal) {
       setValue<'autoRenew'>('autoRenew', true)
     }
-  }, [selectedAvailablePaymentMethod?.forceAutoRenewal, setValue])
+
+    if (!selectedMemberPlan?.extendable) {
+      setValue<'autoRenew'>('autoRenew', false)
+    }
+  }, [selectedAvailablePaymentMethod?.forceAutoRenewal, selectedMemberPlan?.extendable, setValue])
 
   useEffect(() => {
     if (
@@ -395,16 +420,39 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                 Ich unterstütze {siteTitle} {replace(/^./, toLower)(monthlyPaymentText)}
               </Paragraph>
 
-              <Slider
-                {...field}
-                min={selectedMemberPlan?.amountPerMonthMin}
-                max={(selectedMemberPlan?.amountPerMonthMin ?? 500) * 5}
-                valueLabelFormat={val =>
-                  formatCurrency(val / 100, selectedMemberPlan?.currency ?? Currency.Chf, locale)
-                }
-                step={100}
-                color="secondary"
-              />
+              <SubscribeAmountSlider>
+                <Slider
+                  {...field}
+                  min={selectedMemberPlan?.amountPerMonthMin}
+                  max={(selectedMemberPlan?.amountPerMonthMin || 5000) * 5}
+                  valueLabelFormat={val =>
+                    formatCurrency(val / 100, selectedMemberPlan?.currency ?? Currency.Chf, locale)
+                  }
+                  step={100}
+                  color="secondary"
+                />
+
+                {!selectedMemberPlan?.amountPerMonthMin && (
+                  <TextField
+                    {...field}
+                    value={field.value / 100}
+                    onChange={event => field.onChange(+event.target.value * 100)}
+                    type={'number'}
+                    fullWidth
+                    inputProps={{
+                      step: 'any',
+                      min: 0
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          {selectedMemberPlan?.currency ?? Currency.Chf}
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                )}
+              </SubscribeAmountSlider>
             </SubscribeAmount>
           )}
         />
@@ -442,7 +490,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             )}
           />
 
-          {!selectedAvailablePaymentMethod?.forceAutoRenewal && (
+          {!selectedAvailablePaymentMethod?.forceAutoRenewal && selectedMemberPlan?.extendable && (
             <Controller
               name={'autoRenew'}
               control={control}

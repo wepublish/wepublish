@@ -22,10 +22,14 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {KolumnaBlockRenderer} from '../src/kolumna-block-renderer'
+import {KolumnaFooter} from '../src/kolumna-footer'
+import {KolumnaGlobalStyles} from '../src/kolumna-global-styles'
+import {KolumnaPage} from '../src/kolumna-page'
 import {KolumnaSubscribe} from '../src/kolumna-subscribe'
 import {KolumnaTeaser} from '../src/kolumna-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
-import theme from '../src/theme'
+import theme, {navbarTheme} from '../src/theme'
 
 setDefaultOptions({
   locale: de
@@ -103,13 +107,16 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           <WebsiteBuilderProvider
             Head={Head}
             Script={Script}
+            Footer={KolumnaFooter}
+            Page={KolumnaPage}
             Subscribe={KolumnaSubscribe}
-            blocks={{Teaser: KolumnaTeaser}}
+            blocks={{Renderer: KolumnaBlockRenderer, Teaser: KolumnaTeaser}}
             elements={{Link: NextWepublishLink}}
             date={{format: dateFormatter}}
             meta={{siteTitle, locale: 'de-DE'}}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
+              <KolumnaGlobalStyles />
 
               <Head>
                 <title key="title">{siteTitle}</title>
@@ -134,12 +141,14 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               </Head>
 
               <Spacer>
-                <NavBar
-                  categorySlugs={[['categories', 'about-us']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
-                />
+                <ThemeProvider theme={navbarTheme}>
+                  <NavBar
+                    categorySlugs={[['categories', 'about-us']]}
+                    slug="main"
+                    headerSlug="header"
+                    iconSlug="icons"
+                  />
+                </ThemeProvider>
 
                 <main>
                   <MainSpacer maxWidth="lg">

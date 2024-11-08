@@ -24,6 +24,25 @@ export default function Mitmachen() {
       successURL={`${locationOrigin}/profile/subscription`}
       failureURL={thisLocation}
       fields={['firstName']}
+      extraMoneyOffset={memberPlan => {
+        if (memberPlan.slug === 'spende') {
+          return 5000
+        }
+
+        if (memberPlan.slug === 'monatsabo') {
+          return 100
+        }
+
+        if (memberPlan.slug === 'jahresabo') {
+          return 250
+        }
+
+        if (memberPlan.slug === 'foerderabo') {
+          return 3500
+        }
+
+        return 0
+      }}
     />
   )
 }

@@ -4,8 +4,8 @@ import {lighten} from 'polished'
 
 export const CrowdfundingGoalWrapper = styled('div')`
   position: relative;
-  background: ${({theme}) => lighten(0.15, theme.palette.primary.main)};
-  color: ${({theme}) => theme.palette.primary.contrastText};
+  background: ${({theme}) => lighten(0.15, theme.palette.secondary.main)};
+  color: ${({theme}) => theme.palette.secondary.contrastText};
   display: grid;
   justify-items: end;
   padding: ${({theme}) => theme.spacing(1)};
@@ -14,7 +14,7 @@ export const CrowdfundingGoalWrapper = styled('div')`
 `
 
 export const CrowdfundingGoalCurrent = styled('div')`
-  background: ${({theme}) => theme.palette.primary.main};
+  background: ${({theme}) => theme.palette.secondary.main};
   position: absolute;
   top: 0;
   bottom: 0;

@@ -16,6 +16,12 @@ export const FinancedWrapper = styled('div')`
   text-align: center;
 `
 
+export const KolumnaSubscribeWrapper = styled(Subscribe)`
+  .MuiSlider-root {
+    color: ${({theme}) => theme.palette.primary.main};
+  }
+`
+
 export const KolumnaSubscribe = (props: BuilderSubscribeProps) => {
   const {data} = ApiV1.useNewSubscribersQuery({
     variables: {
@@ -46,7 +52,7 @@ export const KolumnaSubscribe = (props: BuilderSubscribeProps) => {
         ))}
       </GoalsWrapper>
 
-      <Subscribe {...props} />
+      <KolumnaSubscribeWrapper {...props} />
     </>
   )
 }
