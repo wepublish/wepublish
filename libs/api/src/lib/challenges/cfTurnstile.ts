@@ -5,11 +5,10 @@ import {
   ChallengeValidationProps,
   ChallengeValidationReturn
 } from './challengeProvider'
-import {TestingChallengeAnswer} from './algebraicCaptchaChallenge'
 
 export class CfTurnstile implements ChallengeProvider {
   constructor(private turnstile_secret_key: string) {}
-  private testing: boolean = false
+  private testing = false
 
   async generateChallenge(testing = false): Promise<Challenge> {
     this.testing = testing
