@@ -18,6 +18,7 @@ export const unselectPassword: Record<
   boolean
 > = {
   address: true,
+  birthday: true,
   oauth2Accounts: true,
   properties: true,
   paymentProviderCustomers: true,
@@ -28,7 +29,6 @@ export const unselectPassword: Record<
   emailVerifiedAt: true,
   name: true,
   firstName: true,
-  preferredName: true,
   flair: true,
   userImageID: true,
   password: false,

@@ -18,8 +18,8 @@ fragment FullUser on User {
   id
   name
   firstName
-  preferredName
   flair
+  birthday
   email
 
   address {
@@ -62,10 +62,6 @@ fragment FullSessionWithToken on SessionWithToken {
   token
   expiresAt
   createdAt
-
-  user {
-    ...FullUser
-  }
 }
 
 query Me {
@@ -93,7 +89,7 @@ mutation LoginWithJWT($jwt: String!) {
 mutation Register(
   $name: String!
   $firstName: String
-  $preferredName: String
+  $birthday: DateTime
   $address: UserAddressInput
   $email: String!
   $password: String
@@ -102,7 +98,7 @@ mutation Register(
   registerMember(
     name: $name
     firstName: $firstName
-    preferredName: $preferredName
+    birthday: $birthday
     address: $address
     email: $email
     password: $password

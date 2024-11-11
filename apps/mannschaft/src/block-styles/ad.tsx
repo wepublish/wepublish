@@ -1,9 +1,11 @@
+import {styled} from '@mui/material'
 import {
   ApiV1,
   BuilderTeaserListBlockProps,
   hasBlockStyle,
   isTeaserListBlock,
-  useWebsiteBuilder
+  TeaserListBlock,
+  TeaserListBlockTeasers
 } from '@wepublish/website'
 import {allPass, compose, insert} from 'ramda'
 
@@ -20,11 +22,25 @@ export const isSecondAdTeaser = (block: ApiV1.Block): block is ApiV1.TeaserListB
 export const isThirdAdTeaser = (block: ApiV1.Block): block is ApiV1.TeaserListBlock =>
   allPass([third, isTeaserListBlock])(block)
 
-export const AdTeaserBlockStyle = (props: BuilderTeaserListBlockProps) => {
-  const {
-    blocks: {TeaserList}
-  } = useWebsiteBuilder()
+// This allows the ad slot to not create an empty space when not displayed
+const AdTeaserList = styled(TeaserListBlock)`
+  ${TeaserListBlockTeasers} {
+    ${({theme}) => theme.breakpoints.up('md')} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
 
+  ${TeaserListBlockTeasers} > * {
+    grid-column: initial;
+    grid-row: initial;
+
+    &:empty {
+      display: none;
+    }
+  }
+`
+
+export const AdTeaserBlockStyle = (props: BuilderTeaserListBlockProps) => {
   // prettier-ignore
   const position = first(props)
     ? 0
@@ -37,13 +53,13 @@ export const AdTeaserBlockStyle = (props: BuilderTeaserListBlockProps) => {
       __typename: 'CustomTeaser',
       properties: [],
       contentUrl: null,
-      preTitle: 'ad',
-      title: props.title,
+      preTitle: 'ad-300x250',
+      title: null,
       lead: null,
       image: null,
       style: ApiV1.TeaserStyle.Default
     } as ApiV1.CustomTeaser)
   )(props.teasers as ApiV1.Teaser[])
 
-  return <TeaserList {...props} teasers={teasers} title={null} />
+  return <AdTeaserList {...props} teasers={teasers} />
 }

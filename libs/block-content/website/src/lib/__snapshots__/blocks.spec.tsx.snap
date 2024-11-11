@@ -2,29 +2,7 @@
 
 exports[`Blocks should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 24px;
-  grid-auto-rows: min-content;
-}
-
-.emotion-3 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <h1
@@ -38,88 +16,7 @@ exports[`Blocks should render Default 1`] = `
       Lead
     </p>
   </div>
-  .emotion-2 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-3 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-  margin-bottom: 0.35em;
-}
-
-@media (min-width: 900px) {
-  .emotion-3 {
-    font-size: 32px;
-  }
-}
-
-.emotion-3:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  font-size: 1.5rem;
-  line-height: 1.4;
-  margin-bottom: 0.35em;
-}
-
-.emotion-4:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-5 {
-  border-collapse: collapse;
-}
-
-.emotion-6 {
-  border-collapse: collapse;
-  border: 1px solid #000000;
-  padding: 8px;
-}
-
-.emotion-7 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-7.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-7:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-15 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-}
-
-.emotion-15:hover {
-  text-decoration-color: inherit;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -474,124 +371,7 @@ exports[`Blocks should render Default 1`] = `
       </p>
     </div>
   </div>
-  .emotion-0 {
-  display: grid;
-  gap: 32px;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  padding: 48px 24px;
-}
-
-@media (min-width:900px) {
-  .emotion-0 {
-    padding: 80px 0;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-  }
-}
-
-.emotion-2 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 16px;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  object-fit: cover;
-  width: 100%;
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-@media (min-width:900px) {
-  .emotion-4 {
-    width: 80%;
-  }
-}
-
-.emotion-8 {
-  font-size: 40px;
-  font-weight: 600;
-  text-transform: uppercase;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width:900px) {
-  .emotion-8 {
-    font-style: italic;
-    font-size: 45px;
-  }
-}
-
-@media (min-width: 900px) {
-  .emotion-8 {
-    font-size: 32px;
-  }
-}
-
-.emotion-10 {
-  max-width: 440px;
-}
-
-.emotion-10 p {
-  font-size: 16px;
-}
-
-@media (min-width:900px) {
-  .emotion-10 p {
-    font-size: 22px;
-  }
-}
-
-.emotion-12 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-12.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-12:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-13 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  font-size: 1.5rem;
-  line-height: 1.4;
-  margin-bottom: 0.35em;
-}
-
-.emotion-13:last-child {
-  margin-bottom: 0;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -733,203 +513,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
   </div>
-  .emotion-0 {
-  display: grid;
-  grid-template-columns: 36px 1fr;
-  grid-auto-rows: max-content;
-  gap: 8px;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-  padding: 8px;
-}
-
-.emotion-4 {
-  -webkit-align-self: center;
-  -ms-flex-item-align: center;
-  align-self: center;
-  font-weight: 600;
-}
-
-.emotion-6 {
-  justify-self: center;
-  width: 8px;
-  background-color: currentColor;
-}
-
-.emotion-8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: column;
-  -webkit-flex-flow: column;
-  -ms-flex-flow: column;
-  flex-flow: column;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  gap: 8px;
-}
-
-.emotion-10 {
-  font-weight: 500;
-  font-style: italic;
-}
-
-.emotion-12 {
-  height: 120px;
-  max-height: 120px;
-  overflow: hidden;
-  -webkit-transition: max-height 0.3s ease-in-out;
-  transition: max-height 0.3s ease-in-out;
-  font-style: italic;
-}
-
-.emotion-16 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-16.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-16:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-17 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  font-size: 1.5rem;
-  line-height: 1.4;
-  margin-bottom: 0.35em;
-}
-
-.emotion-17:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-20 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-  font-weight: 700;
-}
-
-.emotion-20::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-20.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-20 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-20:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgb(163, 21, 69);
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
-}
-
-@media (hover: none) {
-  .emotion-20:hover {
-    background-color: #e91e63;
-  }
-}
-
-.emotion-20:active {
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
-}
-
-.emotion-20.Mui-focusVisible {
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-}
-
-.emotion-20.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.emotion-20:hover {
-  box-shadow: none;
-}
-
-.emotion-21 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-<aside
+  <aside
     class="emotion-0 emotion-1"
   >
     <svg
@@ -953,7 +537,7 @@ https://unsplash.it/200/100 200w"
     <div
       class="emotion-4 emotion-5"
     >
-      Darum geht’s:
+      Break block test
     </div>
     <div
       class="emotion-6 emotion-7"
@@ -964,13 +548,8 @@ https://unsplash.it/200/100 200w"
       <div
         class="emotion-10 emotion-11"
       >
-        Break block test
-      </div>
-      <div
-        class="emotion-12 emotion-13"
-      >
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
           <div
             data-gramm="false"
@@ -979,7 +558,7 @@ https://unsplash.it/200/100 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -993,7 +572,7 @@ https://unsplash.it/200/100 200w"
               </span>
             </p>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -1007,7 +586,7 @@ https://unsplash.it/200/100 200w"
               </span>
             </h4>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -1023,7 +602,7 @@ https://unsplash.it/200/100 200w"
               </span>
             </h4>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -1078,37 +657,18 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-20"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-18"
         tabindex="0"
         type="button"
       >
         Alles lesen
         <span
-          class="MuiTouchRipple-root emotion-21"
+          class="MuiTouchRipple-root emotion-19"
         />
       </button>
     </div>
   </aside>
-  .emotion-0 {
-  aspect-ratio: 2.7/1;
-  width: 100%;
-  background-color: #0288d1;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-2 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  width: 100%;
-  object-fit: cover;
-}
-
-<a
+  <a
     class="emotion-0 emotion-1"
     href=""
     target="_blank"
@@ -1132,28 +692,7 @@ https://unsplash.it/200/100 200w"
       title=""
     />
   </a>
-  .emotion-0 {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: auto;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  justify-self: center;
-}
-
-<figure
+  <figure
     class="emotion-0 emotion-1"
   >
     <div
@@ -1177,80 +716,14 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
       />
-      <figcaption>
+      <figcaption
+        class="emotion-6 emotion-7"
+      >
         Caption 
       </figcaption>
     </div>
   </figure>
-  .emotion-0 {
-  margin: 0;
-}
-
-.emotion-3 {
-  display: grid;
-  overflow-y: auto;
-  list-style: none;
-  padding: 0;
-  -webkit-overflow-scrolling: touch;
-  margin: 0;
-  grid-template-columns: repeat(1, 1fr);
-}
-
-@media (min-width:600px) {
-  .emotion-3 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.emotion-4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  position: relative;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-}
-
-.emotion-4 .MuiImageListItem-img {
-  object-fit: cover;
-  width: 100%;
-  height: auto;
-  display: block;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-}
-
-.emotion-5 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-}
-
-.emotion-7 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-7.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-<figure
+  <figure
     class="emotion-0 emotion-1"
   >
     <ul
@@ -1343,80 +816,7 @@ https://unsplash.it/200/100 200w"
       </li>
     </ul>
   </figure>
-  .emotion-0 {
-  display: grid;
-  gap: 24px;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 40px;
-}
-
-.emotion-4 {
-  position: relative;
-}
-
-.emotion-6 {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-}
-
-.emotion-8 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: auto;
-}
-
-.emotion-10 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  justify-self: center;
-}
-
-.emotion-24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.emotion-26 {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  border: none;
-  width: 16px;
-  height: 16px;
-  background-color: #eeeeee;
-  color: #e91e63;
-  border-radius: 50%;
-  cursor: pointer;
-  overflow: hidden;
-  padding: 0;
-}
-
-.emotion-26:focus {
-  outline: none;
-}
-
-.emotion-28 {
-  display: block;
-  background-color: currentColor;
-  height: 100%;
-}
-
-<section
+  <section
     class="emotion-0 emotion-1"
   >
     <div
@@ -1452,7 +852,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
               />
-              <figcaption>
+              <figcaption
+                class="emotion-12 emotion-13"
+              >
                 Caption 
               </figcaption>
             </div>
@@ -1485,7 +887,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
               />
-              <figcaption>
+              <figcaption
+                class="emotion-12 emotion-13"
+              >
                 Caption 
               </figcaption>
             </div>
@@ -1518,7 +922,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
               />
-              <figcaption>
+              <figcaption
+                class="emotion-12 emotion-13"
+              >
                 Caption 
               </figcaption>
             </div>
@@ -1526,96 +932,28 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-24 emotion-25"
+        class="emotion-30 emotion-31"
       >
         <button
           aria-label="Slide 1"
-          class="emotion-26 emotion-27"
+          class="emotion-32 emotion-33"
         >
           <span
-            class="emotion-28 emotion-29"
+            class="emotion-34 emotion-35"
           />
         </button>
         <button
           aria-label="Slide 2"
-          class="emotion-26 emotion-27"
+          class="emotion-32 emotion-33"
         />
         <button
           aria-label="Slide 3"
-          class="emotion-26 emotion-27"
+          class="emotion-32 emotion-33"
         />
       </div>
     </div>
   </section>
-  .emotion-0 {
-  display: grid;
-  gap: 80px;
-  grid-template-columns: minmax(min-content, 700px);
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  justify-items: center;
-}
-
-.emotion-4 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: #e91e63;
-  color: #fff;
-  font-size: 1.5em;
-  line-height: 1;
-  width: 2em;
-  height: 2em;
-}
-
-.emotion-6 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-7 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-}
-
-.emotion-11 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-11.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-11:last-child {
-  margin-bottom: 0;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -1790,69 +1128,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
   </div>
-  .emotion-0 {
-  font-style: italic;
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 32px 0px;
-  border-top: 2px solid #000;
-  border-bottom: 2px solid #000;
-  margin: 0;
-  margin-left: calc(100% / 6);
-}
-
-@media (min-width:900px) {
-  .emotion-0 {
-    padding: 40px 24px;
-  }
-}
-
-.emotion-2 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  justify-items: center;
-  text-align: center;
-  gap: 24px;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-4 {
-    font-size: 32px;
-  }
-}
-
-.emotion-5 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-5.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-<blockquote
+  <blockquote
     class="emotion-0 emotion-1"
   >
     <div
@@ -1870,13 +1146,7 @@ https://unsplash.it/200/100 200w"
       </cite>
     </div>
   </blockquote>
-  .emotion-2 {
-  width: 100%;
-  border: 0;
-  aspect-ratio: 1.78343949044586;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <iframe
@@ -1916,15 +1186,7 @@ https://unsplash.it/200/100 200w"
   <div
     class="emotion-0 emotion-1"
   />
-  .emotion-0 {
-  display: grid;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -1932,15 +1194,7 @@ https://unsplash.it/200/100 200w"
       style="width: auto; height: auto;"
     />
   </div>
-  .emotion-0 {
-  display: grid;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <blockquote
@@ -1958,12 +1212,7 @@ https://unsplash.it/200/100 200w"
   <div
     class="emotion-0 emotion-1"
   />
-  .emotion-2 {
-  width: 100%;
-  aspect-ratio: 16/9;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -1971,23 +1220,7 @@ https://unsplash.it/200/100 200w"
       style="width: auto; height: auto;"
     />
   </div>
-  .emotion-0 {
-  display: grid;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-.emotion-2 {
-  width: 325px;
-  aspect-ratio: calc(
-      1 / 1.77 - 0.15
-    );
-  border: 0;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <iframe
@@ -2006,12 +1239,7 @@ https://unsplash.it/200/100 200w"
       Tweet Mock: {"id":"1600079498845863937"}
     </div>
   </div>
-  .emotion-2 {
-  width: 100%;
-  aspect-ratio: 16/9;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -2019,12 +1247,7 @@ https://unsplash.it/200/100 200w"
       style="width: auto; height: auto;"
     />
   </div>
-  .emotion-2 {
-  width: 100%;
-  aspect-ratio: 16/9;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -2032,305 +1255,7 @@ https://unsplash.it/200/100 200w"
       style="width: auto; height: auto;"
     />
   </div>
-  .emotion-0 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-}
-
-.emotion-2 {
-  display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-2 .emotion-16 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-2 .emotion-18 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    grid-column-start: 1;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-4 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-5 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-7 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-7:empty {
-  min-height: 32px;
-}
-
-.emotion-9 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-9:where(.emotion-3:hover .emotion-9) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-9 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #F5FF64;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-  grid-area: pretitle;
-}
-
-.emotion-11:where(.emotion-3:hover .emotion-11) {
-  background-color: #e91e63;
-}
-
-.emotion-13 {
-  transition-property: color,background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  padding: 4px 16px;
-  background-color: #F5FF64;
-  color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  font-size: 14px;
-  font-weight: 300;
-  -webkit-transform: translateY(-100%);
-  -moz-transform: translateY(-100%);
-  -ms-transform: translateY(-100%);
-  transform: translateY(-100%);
-}
-
-.emotion-13:where(.emotion-3:hover .emotion-13) {
-  background-color: #e91e63;
-  color: #fff;
-}
-
-@media (min-width:900px) {
-  .emotion-13 {
-    font-size: 18px;
-  }
-}
-
-.emotion-15 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-15 {
-    font-size: 32px;
-  }
-}
-
-.emotion-17 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-17.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-19 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-21 {
-  font-weight: 400;
-}
-
-.emotion-23 {
-  display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-23 .emotion-16 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-23 .emotion-18 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-23 {
-    grid-column-start: 1;
-    grid-column-end: 13;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-32 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-32:where(.emotion-3:hover .emotion-32) {
-  background-color: #e91e63;
-}
-
-.emotion-42 {
-  display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-42 .emotion-16 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-42 .emotion-18 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-42 {
-    grid-column-start: 1;
-    grid-column-end: 13;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-61 {
-  display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-61 .emotion-16 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-61 .emotion-18 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-61 {
-    grid-column-start: 1;
-    grid-column-end: 13;
-    grid-row-start: 4;
-    grid-row-end: 5;
-  }
-}
-
-.emotion-76 {
-  display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-76 .emotion-16 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-76 .emotion-18 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-76 {
-    grid-column-start: 1;
-    grid-column-end: 13;
-    grid-row-start: 5;
-    grid-row-end: 6;
-  }
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <article
@@ -2377,7 +1302,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Title
           </h1>
@@ -2437,7 +1362,7 @@ https://unsplash.it/200/100 200w"
             class="emotion-32 emotion-33"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -2503,7 +1428,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Title
           </h1>
@@ -2556,7 +1481,7 @@ https://unsplash.it/200/100 200w"
             class="emotion-32 emotion-33"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Home
           </h1>
@@ -2610,7 +1535,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Title
           </h1>
@@ -2626,252 +1551,7 @@ https://unsplash.it/200/100 200w"
       </a>
     </article>
   </div>
-  .emotion-0 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-}
-
-@media (min-width:600px) {
-  .emotion-0 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-0 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-.emotion-2 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-4 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-5 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-7 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-7:empty {
-  min-height: 32px;
-}
-
-.emotion-9 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-9:where(.emotion-3:hover .emotion-9) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-9 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #F5FF64;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-  grid-area: pretitle;
-}
-
-.emotion-11:where(.emotion-3:hover .emotion-11) {
-  background-color: #e91e63;
-}
-
-.emotion-13 {
-  transition-property: color,background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  padding: 4px 16px;
-  background-color: #F5FF64;
-  color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  font-size: 14px;
-  font-weight: 300;
-  -webkit-transform: translateY(-100%);
-  -moz-transform: translateY(-100%);
-  -ms-transform: translateY(-100%);
-  transform: translateY(-100%);
-}
-
-.emotion-13:where(.emotion-3:hover .emotion-13) {
-  background-color: #e91e63;
-  color: #fff;
-}
-
-@media (min-width:900px) {
-  .emotion-13 {
-    font-size: 18px;
-  }
-}
-
-.emotion-15 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-15 {
-    font-size: 32px;
-  }
-}
-
-.emotion-17 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-17.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-19 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-21 {
-  font-weight: 400;
-}
-
-.emotion-23 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-23 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-32 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-32:where(.emotion-3:hover .emotion-32) {
-  background-color: #e91e63;
-}
-
-.emotion-42 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-42 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-61 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-61 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-76 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-76 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <article
@@ -2918,7 +1598,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Title
           </h1>
@@ -2978,7 +1658,7 @@ https://unsplash.it/200/100 200w"
             class="emotion-32 emotion-33"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -3044,7 +1724,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Title
           </h1>
@@ -3097,7 +1777,7 @@ https://unsplash.it/200/100 200w"
             class="emotion-32 emotion-33"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Home
           </h1>
@@ -3151,7 +1831,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Title
           </h1>
@@ -3167,232 +1847,7 @@ https://unsplash.it/200/100 200w"
       </a>
     </article>
   </div>
-  .emotion-0 {
-  display: grid;
-  gap: 24px;
-}
-
-.emotion-2 {
-  text-align: center;
-}
-
-.emotion-4 {
-  display: grid;
-  gap: 40px;
-}
-
-.emotion-6 {
-  position: relative;
-}
-
-.emotion-8 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-8 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-10 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-11 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-13 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-13:empty {
-  min-height: 32px;
-}
-
-.emotion-15 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-15:where(.emotion-9:hover .emotion-15) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-15 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-17 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #F5FF64;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-  grid-area: pretitle;
-}
-
-.emotion-17:where(.emotion-9:hover .emotion-17) {
-  background-color: #e91e63;
-}
-
-.emotion-19 {
-  transition-property: color,background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  padding: 4px 16px;
-  background-color: #F5FF64;
-  color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  font-size: 14px;
-  font-weight: 300;
-  -webkit-transform: translateY(-100%);
-  -moz-transform: translateY(-100%);
-  -ms-transform: translateY(-100%);
-  transform: translateY(-100%);
-}
-
-.emotion-19:where(.emotion-9:hover .emotion-19) {
-  background-color: #e91e63;
-  color: #fff;
-}
-
-@media (min-width:900px) {
-  .emotion-19 {
-    font-size: 18px;
-  }
-}
-
-.emotion-21 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-21 {
-    font-size: 32px;
-  }
-}
-
-.emotion-23 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-23.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-25 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-27 {
-  font-weight: 400;
-}
-
-.emotion-38 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-38:where(.emotion-9:hover .emotion-38) {
-  background-color: #e91e63;
-}
-
-.emotion-101 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.emotion-103 {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  border: none;
-  width: 16px;
-  height: 16px;
-  background-color: #eeeeee;
-  color: #e91e63;
-  border-radius: 50%;
-  cursor: pointer;
-  overflow: hidden;
-  padding: 0;
-}
-
-.emotion-103:focus {
-  outline: none;
-}
-
-.emotion-105 {
-  display: block;
-  background-color: currentColor;
-  height: 100%;
-}
-
-<section
+  <section
     class="emotion-0 emotion-1"
   >
     <div
@@ -3451,7 +1906,7 @@ https://unsplash.it/200/100 200w"
                   </div>
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                  class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-21 emotion-22"
                 >
                   Title
                 </h1>
@@ -3515,7 +1970,7 @@ https://unsplash.it/200/100 200w"
                   class="emotion-38 emotion-39"
                 />
                 <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                  class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-21 emotion-22"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
@@ -3585,7 +2040,7 @@ https://unsplash.it/200/100 200w"
                   </div>
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                  class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-21 emotion-22"
                 >
                   Title
                 </h1>
@@ -3642,7 +2097,7 @@ https://unsplash.it/200/100 200w"
                   class="emotion-38 emotion-39"
                 />
                 <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                  class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-21 emotion-22"
                 >
                   Home
                 </h1>
@@ -3700,7 +2155,7 @@ https://unsplash.it/200/100 200w"
                   </div>
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                  class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-21 emotion-22"
                 >
                   Title
                 </h1>
@@ -3747,270 +2202,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
   </section>
-  .emotion-0 {
-  display: grid;
-  gap: 24px;
-}
-
-.emotion-2 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-}
-
-@media (min-width:600px) {
-  .emotion-2 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-.emotion-4 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-4 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-6 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-7 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-9 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-9:empty {
-  min-height: 32px;
-}
-
-.emotion-11 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-11:where(.emotion-5:hover .emotion-11) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-11 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-13 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #F5FF64;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-  grid-area: pretitle;
-}
-
-.emotion-13:where(.emotion-5:hover .emotion-13) {
-  background-color: #e91e63;
-}
-
-.emotion-15 {
-  transition-property: color,background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  padding: 4px 16px;
-  background-color: #F5FF64;
-  color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  font-size: 14px;
-  font-weight: 300;
-  -webkit-transform: translateY(-100%);
-  -moz-transform: translateY(-100%);
-  -ms-transform: translateY(-100%);
-  transform: translateY(-100%);
-}
-
-.emotion-15:where(.emotion-5:hover .emotion-15) {
-  background-color: #e91e63;
-  color: #fff;
-}
-
-@media (min-width:900px) {
-  .emotion-15 {
-    font-size: 18px;
-  }
-}
-
-.emotion-17 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-17 {
-    font-size: 32px;
-  }
-}
-
-.emotion-19 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-19.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-21 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-23 {
-  font-weight: 400;
-}
-
-.emotion-25 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-25 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-34 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-34:where(.emotion-5:hover .emotion-34) {
-  background-color: #e91e63;
-}
-
-.emotion-44 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-44 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-65 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-65 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-84 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-84 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-105 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-105 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-<section
+  <section
     class="emotion-0 emotion-1"
   >
     <div
@@ -4060,7 +2252,7 @@ https://unsplash.it/200/100 200w"
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-17 emotion-18"
             >
               Title
             </h1>
@@ -4120,7 +2312,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-34 emotion-35"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-17 emotion-18"
             >
               Chur solidarisiert sich mit der Ukraine
             </h1>
@@ -4186,7 +2378,7 @@ https://unsplash.it/200/100 200w"
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-17 emotion-18"
             >
               Title
             </h1>
@@ -4246,7 +2438,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-34 emotion-35"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-17 emotion-18"
             >
               Chur solidarisiert sich mit der Ukraine
             </h1>
@@ -4312,7 +2504,7 @@ https://unsplash.it/200/100 200w"
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-17 emotion-18"
             >
               Title
             </h1>
@@ -4372,7 +2564,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-34 emotion-35"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-17 emotion-18"
             >
               Chur solidarisiert sich mit der Ukraine
             </h1>
@@ -4396,232 +2588,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </div>
   </section>
-  .emotion-0 {
-  display: grid;
-  gap: 24px;
-}
-
-.emotion-2 {
-  text-align: center;
-}
-
-.emotion-4 {
-  display: grid;
-  gap: 40px;
-}
-
-.emotion-6 {
-  position: relative;
-}
-
-.emotion-8 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-8 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-10 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-11 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-13 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-13:empty {
-  min-height: 32px;
-}
-
-.emotion-15 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-15:where(.emotion-9:hover .emotion-15) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-15 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-17 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #F5FF64;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-  grid-area: pretitle;
-}
-
-.emotion-17:where(.emotion-9:hover .emotion-17) {
-  background-color: #e91e63;
-}
-
-.emotion-19 {
-  transition-property: color,background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  padding: 4px 16px;
-  background-color: #F5FF64;
-  color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  font-size: 14px;
-  font-weight: 300;
-  -webkit-transform: translateY(-100%);
-  -moz-transform: translateY(-100%);
-  -ms-transform: translateY(-100%);
-  transform: translateY(-100%);
-}
-
-.emotion-19:where(.emotion-9:hover .emotion-19) {
-  background-color: #e91e63;
-  color: #fff;
-}
-
-@media (min-width:900px) {
-  .emotion-19 {
-    font-size: 18px;
-  }
-}
-
-.emotion-21 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-21 {
-    font-size: 32px;
-  }
-}
-
-.emotion-23 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-23.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-25 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-27 {
-  font-weight: 400;
-}
-
-.emotion-38 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-38:where(.emotion-9:hover .emotion-38) {
-  background-color: #e91e63;
-}
-
-.emotion-128 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.emotion-130 {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  border: none;
-  width: 16px;
-  height: 16px;
-  background-color: #eeeeee;
-  color: #e91e63;
-  border-radius: 50%;
-  cursor: pointer;
-  overflow: hidden;
-  padding: 0;
-}
-
-.emotion-130:focus {
-  outline: none;
-}
-
-.emotion-132 {
-  display: block;
-  background-color: currentColor;
-  height: 100%;
-}
-
-<section
+  <section
     class="emotion-0 emotion-1"
   >
     <div
@@ -4680,7 +2647,7 @@ https://unsplash.it/200/100 200w"
                   </div>
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                  class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-21 emotion-22"
                 >
                   Title
                 </h1>
@@ -4744,7 +2711,7 @@ https://unsplash.it/200/100 200w"
                   class="emotion-38 emotion-39"
                 />
                 <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                  class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-21 emotion-22"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
@@ -4814,7 +2781,7 @@ https://unsplash.it/200/100 200w"
                   </div>
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                  class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-21 emotion-22"
                 >
                   Title
                 </h1>
@@ -4878,7 +2845,7 @@ https://unsplash.it/200/100 200w"
                   class="emotion-38 emotion-39"
                 />
                 <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                  class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-21 emotion-22"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
@@ -4948,7 +2915,7 @@ https://unsplash.it/200/100 200w"
                   </div>
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                  class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-21 emotion-22"
                 >
                   Title
                 </h1>
@@ -5012,7 +2979,7 @@ https://unsplash.it/200/100 200w"
                   class="emotion-38 emotion-39"
                 />
                 <h1
-                  class="MuiTypography-root MuiTypography-h4 emotion-21 emotion-22"
+                  class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-21 emotion-22"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
@@ -5070,265 +3037,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
   </section>
-  .emotion-0 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-}
-
-@media (min-width:600px) {
-  .emotion-0 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-0 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-.emotion-2 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    grid-column-start: 1;
-    grid-column-end: 4;
-    grid-row-start: 1;
-    grid-row-end: 7;
-  }
-}
-
-.emotion-4 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-5 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-7 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-7:empty {
-  min-height: 32px;
-}
-
-.emotion-9 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-9:where(.emotion-3:hover .emotion-9) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-9 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #F5FF64;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-  grid-area: pretitle;
-}
-
-.emotion-11:where(.emotion-3:hover .emotion-11) {
-  background-color: #e91e63;
-}
-
-.emotion-13 {
-  transition-property: color,background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  padding: 4px 16px;
-  background-color: #F5FF64;
-  color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  font-size: 14px;
-  font-weight: 300;
-  -webkit-transform: translateY(-100%);
-  -moz-transform: translateY(-100%);
-  -ms-transform: translateY(-100%);
-  transform: translateY(-100%);
-}
-
-.emotion-13:where(.emotion-3:hover .emotion-13) {
-  background-color: #e91e63;
-  color: #fff;
-}
-
-@media (min-width:900px) {
-  .emotion-13 {
-    font-size: 18px;
-  }
-}
-
-.emotion-15 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-15 {
-    font-size: 32px;
-  }
-}
-
-.emotion-17 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-17.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-19 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-21 {
-  font-weight: 400;
-}
-
-.emotion-23 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-23 {
-    grid-column-start: 4;
-    grid-column-end: 9;
-    grid-row-start: 1;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-32 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-32:where(.emotion-3:hover .emotion-32) {
-  background-color: #e91e63;
-}
-
-.emotion-42 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-42 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 7;
-  }
-}
-
-.emotion-57 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-57 {
-    grid-column-start: 4;
-    grid-column-end: 9;
-    grid-row-start: 4;
-    grid-row-end: 7;
-  }
-}
-
-.emotion-76 {
-  display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-76 .emotion-16 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-76 .emotion-18 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-76 {
-    grid-column-start: 1;
-    grid-column-end: 13;
-    grid-row-start: 7;
-    grid-row-end: 9;
-  }
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <article
@@ -5375,7 +3084,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Title
           </h1>
@@ -5435,7 +3144,7 @@ https://unsplash.it/200/100 200w"
             class="emotion-32 emotion-33"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -5495,7 +3204,7 @@ https://unsplash.it/200/100 200w"
             class="emotion-32 emotion-33"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Home
           </h1>
@@ -5549,7 +3258,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Title
           </h1>
@@ -5608,7 +3317,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
           >
             Title
           </h1>
@@ -5638,127 +3347,16 @@ https://unsplash.it/200/100 200w"
       </script>
     </div>
   </div>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-2 {
-    font-size: 32px;
-  }
-}
-
-.emotion-5 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-5.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-5:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-6 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-8 {
-  display: grid;
-  gap: 4px;
-}
-
-.emotion-10 {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: 1fr max-content;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  padding: 0 8px;
-}
-
-.emotion-12 {
-  font-weight: 500;
-}
-
-.emotion-14 {
-  font-weight: 500;
-}
-
-.emotion-16 {
-  position: relative;
-  font-size: 0.75em;
-  padding: 4px 8px;
-  position: relative;
-  background-color: #eeeeee;
-}
-
-.emotion-18 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  background-color: #e91e63;
-  width: 52.38095238095239%;
-}
-
-.emotion-20 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-  color: #fff;
-}
-
-.emotion-32 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  width: 47.61904761904761%;
-}
-
-.emotion-34 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.emotion-36 {
-  font-size: 0.875em;
-  color: rgba(0, 0, 0, 0.38);
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h4 emotion-2"
+      class="MuiTypography-root MuiTypography-h4 emotion-2 emotion-3"
     >
       Question
     </h1>
     <div
-      class="emotion-3 emotion-4"
+      class="emotion-4 emotion-5"
     >
       <div
         data-gramm="false"
@@ -5767,7 +3365,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-5"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
           data-slate-node="element"
         >
           <span
@@ -5783,63 +3381,63 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-6 emotion-7"
+      class="emotion-7 emotion-8"
     >
       <div
-        class="emotion-8 emotion-9"
+        class="emotion-9 emotion-10"
       >
         <div
-          class="emotion-10 emotion-11"
+          class="emotion-11 emotion-12"
         >
           <div
-            class="emotion-12 emotion-13"
+            class="emotion-13 emotion-14"
           >
             Ja
           </div>
           <div
-            class="emotion-14 emotion-15"
+            class="emotion-15 emotion-16"
           >
             52%
           </div>
         </div>
         <div
-          class="emotion-16 emotion-17"
+          class="emotion-17 emotion-18"
         >
           <div
-            class="emotion-18 emotion-19"
+            class="emotion-19 emotion-20"
           />
           <div
-            class="emotion-20 emotion-21"
+            class="emotion-21 emotion-22"
           >
             11 Stimmen
           </div>
         </div>
       </div>
       <div
-        class="emotion-8 emotion-9"
+        class="emotion-9 emotion-10"
       >
         <div
-          class="emotion-10 emotion-11"
+          class="emotion-11 emotion-12"
         >
           <div
-            class="emotion-12 emotion-13"
+            class="emotion-13 emotion-14"
           >
             Nein
           </div>
           <div
-            class="emotion-14 emotion-15"
+            class="emotion-15 emotion-16"
           >
             48%
           </div>
         </div>
         <div
-          class="emotion-16 emotion-17"
+          class="emotion-17 emotion-18"
         >
           <div
-            class="emotion-32 emotion-19"
+            class="emotion-33 emotion-20"
           />
           <div
-            class="emotion-34 emotion-21"
+            class="emotion-35 emotion-22"
           >
             10 Stimmen
           </div>
@@ -5847,7 +3445,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-36 emotion-37"
+      class="emotion-37 emotion-38"
     >
       21 Stimmen – Schliesst am 
       <time
@@ -5857,131 +3455,10 @@ https://unsplash.it/200/100 200w"
       </time>
     </div>
   </article>
-  .emotion-0 {
-  display: grid;
-  gap: 32px;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   />
-  .emotion-0 {
-  display: grid;
-  gap: 32px;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  justify-items: center;
-}
-
-.emotion-2 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  width: 100%;
-  color: inherit;
-  -webkit-text-decoration: inherit;
-  text-decoration: inherit;
-  container-type: inline-size;
-}
-
-.emotion-2:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-3 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: 1fr;
-  -webkit-align-content: start;
-  -ms-flex-line-pack: start;
-  align-content: start;
-}
-
-@container (min-width: 400px) {
-  .emotion-3 {
-    grid-template-columns: minmax(30%, 200px) auto;
-  }
-}
-
-.emotion-7 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-}
-
-.emotion-9 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: column;
-  -webkit-flex-flow: column;
-  -ms-flex-flow: column;
-  flex-flow: column;
-  gap: 8px;
-}
-
-.emotion-11 {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  gap: 8px;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.emotion-13 {
-  display: grid;
-  grid-template-columns: auto auto;
-  gap: 8px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.emotion-15 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-15 {
-    font-size: 32px;
-  }
-}
-
-.emotion-18 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-18.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-18:last-child {
-  margin-bottom: 0;
-}
-
-<aside
+  <aside
     class="emotion-0 emotion-1"
   >
     <a
@@ -6162,1371 +3639,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`Blocks should render WithLayout 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 24px;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 24px;
-  grid-auto-rows: min-content;
-}
-
-.emotion-5 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-6 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-9 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-10 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-  margin-bottom: 0.35em;
-}
-
-@media (min-width: 900px) {
-  .emotion-10 {
-    font-size: 32px;
-  }
-}
-
-.emotion-10:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-11 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  font-size: 1.5rem;
-  line-height: 1.4;
-  margin-bottom: 0.35em;
-}
-
-.emotion-11:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-12 {
-  border-collapse: collapse;
-}
-
-.emotion-13 {
-  border-collapse: collapse;
-  border: 1px solid #000000;
-  padding: 8px;
-}
-
-.emotion-14 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-14.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-14:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-22 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-}
-
-.emotion-22:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-23 {
-  display: grid;
-  gap: 32px;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  padding: 48px 24px;
-}
-
-@media (min-width:900px) {
-  .emotion-23 {
-    padding: 80px 0;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-  }
-}
-
-.emotion-25 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 16px;
-}
-
-.emotion-27 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  object-fit: cover;
-  width: 100%;
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-@media (min-width:900px) {
-  .emotion-27 {
-    width: 80%;
-  }
-}
-
-.emotion-31 {
-  font-size: 40px;
-  font-weight: 600;
-  text-transform: uppercase;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width:900px) {
-  .emotion-31 {
-    font-style: italic;
-    font-size: 45px;
-  }
-}
-
-@media (min-width: 900px) {
-  .emotion-31 {
-    font-size: 32px;
-  }
-}
-
-.emotion-33 {
-  max-width: 440px;
-}
-
-.emotion-33 p {
-  font-size: 16px;
-}
-
-@media (min-width:900px) {
-  .emotion-33 p {
-    font-size: 22px;
-  }
-}
-
-.emotion-39 {
-  display: grid;
-  grid-template-columns: 36px 1fr;
-  grid-auto-rows: max-content;
-  gap: 8px;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-  padding: 8px;
-}
-
-.emotion-43 {
-  -webkit-align-self: center;
-  -ms-flex-item-align: center;
-  align-self: center;
-  font-weight: 600;
-}
-
-.emotion-45 {
-  justify-self: center;
-  width: 8px;
-  background-color: currentColor;
-}
-
-.emotion-47 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: column;
-  -webkit-flex-flow: column;
-  -ms-flex-flow: column;
-  flex-flow: column;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  gap: 8px;
-}
-
-.emotion-49 {
-  font-weight: 500;
-  font-style: italic;
-}
-
-.emotion-51 {
-  height: 120px;
-  max-height: 120px;
-  overflow: hidden;
-  -webkit-transition: max-height 0.3s ease-in-out;
-  transition: max-height 0.3s ease-in-out;
-  font-style: italic;
-}
-
-.emotion-59 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-  font-weight: 700;
-}
-
-.emotion-59::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-59.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-59 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-59:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgb(163, 21, 69);
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
-}
-
-@media (hover: none) {
-  .emotion-59:hover {
-    background-color: #e91e63;
-  }
-}
-
-.emotion-59:active {
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
-}
-
-.emotion-59.Mui-focusVisible {
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-}
-
-.emotion-59.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.emotion-59:hover {
-  box-shadow: none;
-}
-
-.emotion-60 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-.emotion-61 {
-  aspect-ratio: 2.7/1;
-  width: 100%;
-  background-color: #0288d1;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-63 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  width: 100%;
-  object-fit: cover;
-}
-
-.emotion-65 {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-}
-
-.emotion-67 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: auto;
-}
-
-.emotion-69 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  justify-self: center;
-}
-
-.emotion-71 {
-  margin: 0;
-}
-
-.emotion-74 {
-  display: grid;
-  overflow-y: auto;
-  list-style: none;
-  padding: 0;
-  -webkit-overflow-scrolling: touch;
-  margin: 0;
-  grid-template-columns: repeat(1, 1fr);
-}
-
-@media (min-width:600px) {
-  .emotion-74 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-74 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.emotion-75 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  position: relative;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-}
-
-.emotion-75 .MuiImageListItem-img {
-  object-fit: cover;
-  width: 100%;
-  height: auto;
-  display: block;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-}
-
-.emotion-76 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-}
-
-.emotion-78 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-78.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-87 {
-  display: grid;
-  gap: 24px;
-}
-
-.emotion-89 {
-  display: grid;
-  gap: 40px;
-}
-
-.emotion-91 {
-  position: relative;
-}
-
-.emotion-111 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.emotion-113 {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  border: none;
-  width: 16px;
-  height: 16px;
-  background-color: #eeeeee;
-  color: #e91e63;
-  border-radius: 50%;
-  cursor: pointer;
-  overflow: hidden;
-  padding: 0;
-}
-
-.emotion-113:focus {
-  outline: none;
-}
-
-.emotion-115 {
-  display: block;
-  background-color: currentColor;
-  height: 100%;
-}
-
-.emotion-121 {
-  display: grid;
-  gap: 80px;
-  grid-template-columns: minmax(min-content, 700px);
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-.emotion-123 {
-  display: grid;
-  gap: 16px;
-  justify-items: center;
-}
-
-.emotion-125 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: #e91e63;
-  color: #fff;
-  font-size: 1.5em;
-  line-height: 1;
-  width: 2em;
-  height: 2em;
-}
-
-.emotion-127 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-153 {
-  font-style: italic;
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 32px 0px;
-  border-top: 2px solid #000;
-  border-bottom: 2px solid #000;
-  margin: 0;
-  margin-left: calc(100% / 6);
-}
-
-@media (min-width:900px) {
-  .emotion-153 {
-    padding: 40px 24px;
-  }
-}
-
-.emotion-155 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  justify-items: center;
-  text-align: center;
-  gap: 24px;
-}
-
-.emotion-157 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-157 {
-    font-size: 32px;
-  }
-}
-
-.emotion-161 {
-  width: 100%;
-  border: 0;
-  aspect-ratio: 1.78343949044586;
-}
-
-.emotion-167 {
-  display: grid;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-.emotion-171 {
-  display: grid;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-.emotion-177 {
-  width: 100%;
-  aspect-ratio: 16/9;
-}
-
-.emotion-179 {
-  display: grid;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-.emotion-181 {
-  width: 325px;
-  aspect-ratio: calc(
-      1 / 1.77 - 0.15
-    );
-  border: 0;
-}
-
-.emotion-187 {
-  width: 100%;
-  aspect-ratio: 16/9;
-}
-
-.emotion-191 {
-  width: 100%;
-  aspect-ratio: 16/9;
-}
-
-.emotion-193 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-}
-
-.emotion-195 {
-  display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-195 .emotion-209 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-195 .emotion-211 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-195 {
-    grid-column-start: 1;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-197 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-198 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-200 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-200:empty {
-  min-height: 32px;
-}
-
-.emotion-202 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-202:where(.emotion-196:hover .emotion-202) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-202 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-204 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #F5FF64;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-  grid-area: pretitle;
-}
-
-.emotion-204:where(.emotion-196:hover .emotion-204) {
-  background-color: #e91e63;
-}
-
-.emotion-206 {
-  transition-property: color,background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  padding: 4px 16px;
-  background-color: #F5FF64;
-  color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  font-size: 14px;
-  font-weight: 300;
-  -webkit-transform: translateY(-100%);
-  -moz-transform: translateY(-100%);
-  -ms-transform: translateY(-100%);
-  transform: translateY(-100%);
-}
-
-.emotion-206:where(.emotion-196:hover .emotion-206) {
-  background-color: #e91e63;
-  color: #fff;
-}
-
-@media (min-width:900px) {
-  .emotion-206 {
-    font-size: 18px;
-  }
-}
-
-.emotion-208 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-208 {
-    font-size: 32px;
-  }
-}
-
-.emotion-210 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-210.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-212 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-214 {
-  font-weight: 400;
-}
-
-.emotion-216 {
-  display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-216 .emotion-209 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-216 .emotion-211 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-216 {
-    grid-column-start: 1;
-    grid-column-end: 13;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-225 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-225:where(.emotion-196:hover .emotion-225) {
-  background-color: #e91e63;
-}
-
-.emotion-235 {
-  display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-235 .emotion-209 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-235 .emotion-211 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-235 {
-    grid-column-start: 1;
-    grid-column-end: 13;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-254 {
-  display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-254 .emotion-209 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-254 .emotion-211 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-254 {
-    grid-column-start: 1;
-    grid-column-end: 13;
-    grid-row-start: 4;
-    grid-row-end: 5;
-  }
-}
-
-.emotion-269 {
-  display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-269 .emotion-209 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-269 .emotion-211 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-269 {
-    grid-column-start: 1;
-    grid-column-end: 13;
-    grid-row-start: 5;
-    grid-row-end: 6;
-  }
-}
-
-.emotion-288 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-}
-
-@media (min-width:600px) {
-  .emotion-288 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-288 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-.emotion-290 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-290 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-311 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-311 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-330 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-330 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-349 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-349 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-364 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-364 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-385 {
-  text-align: center;
-}
-
-.emotion-498 {
-  display: grid;
-  gap: 24px;
-}
-
-.emotion-500 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-}
-
-@media (min-width:600px) {
-  .emotion-500 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-500 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-.emotion-603 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-603 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-766 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-}
-
-@media (min-width:600px) {
-  .emotion-766 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-766 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-.emotion-768 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-768 {
-    grid-column-start: 1;
-    grid-column-end: 4;
-    grid-row-start: 1;
-    grid-row-end: 7;
-  }
-}
-
-.emotion-789 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-789 {
-    grid-column-start: 4;
-    grid-column-end: 9;
-    grid-row-start: 1;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-808 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-808 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 7;
-  }
-}
-
-.emotion-823 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-823 {
-    grid-column-start: 4;
-    grid-column-end: 9;
-    grid-row-start: 4;
-    grid-row-end: 7;
-  }
-}
-
-.emotion-842 {
-  display: grid;
-  grid-column: 1/-1;
-}
-
-@media (min-width:900px) {
-  .emotion-842 .emotion-209 {
-    font-size: 3rem;
-    line-height: 1.15;
-  }
-
-  .emotion-842 .emotion-211 {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-842 {
-    grid-column-start: 1;
-    grid-column-end: 13;
-    grid-row-start: 7;
-    grid-row-end: 9;
-  }
-}
-
-.emotion-863 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-869 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-871 {
-  display: grid;
-  gap: 4px;
-}
-
-.emotion-873 {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: 1fr max-content;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  padding: 0 8px;
-}
-
-.emotion-875 {
-  font-weight: 500;
-}
-
-.emotion-877 {
-  font-weight: 500;
-}
-
-.emotion-879 {
-  position: relative;
-  font-size: 0.75em;
-  padding: 4px 8px;
-  position: relative;
-  background-color: #eeeeee;
-}
-
-.emotion-881 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  background-color: #e91e63;
-  width: 52.38095238095239%;
-}
-
-.emotion-883 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-  color: #fff;
-}
-
-.emotion-895 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  z-index: 0;
-  pointer-events: none;
-  width: 47.61904761904761%;
-}
-
-.emotion-897 {
-  position: relative;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.emotion-899 {
-  font-size: 0.875em;
-  color: rgba(0, 0, 0, 0.38);
-}
-
-.emotion-901 {
-  display: grid;
-  gap: 32px;
-}
-
-.emotion-903 {
-  display: grid;
-  gap: 32px;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  justify-items: center;
-}
-
-.emotion-905 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  width: 100%;
-  color: inherit;
-  -webkit-text-decoration: inherit;
-  text-decoration: inherit;
-  container-type: inline-size;
-}
-
-.emotion-905:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-906 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: 1fr;
-  -webkit-align-content: start;
-  -ms-flex-line-pack: start;
-  align-content: start;
-}
-
-@container (min-width: 400px) {
-  .emotion-906 {
-    grid-template-columns: minmax(30%, 200px) auto;
-  }
-}
-
-.emotion-912 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: column;
-  -webkit-flex-flow: column;
-  -ms-flex-flow: column;
-  flex-flow: column;
-  gap: 8px;
-}
-
-.emotion-914 {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  gap: 8px;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.emotion-916 {
-  display: grid;
-  grid-template-columns: auto auto;
-  gap: 8px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -8064,7 +4177,7 @@ https://unsplash.it/200/100 200w"
       <div
         class="emotion-43 emotion-44"
       >
-        Darum geht’s:
+        Break block test
       </div>
       <div
         class="emotion-45 emotion-46"
@@ -8074,11 +4187,6 @@ https://unsplash.it/200/100 200w"
       >
         <div
           class="emotion-49 emotion-50"
-        >
-          Break block test
-        </div>
-        <div
-          class="emotion-51 emotion-52"
         >
           <div
             class="emotion-7 emotion-8"
@@ -8189,25 +4297,25 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-59"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-57"
           tabindex="0"
           type="button"
         >
           Alles lesen
           <span
-            class="MuiTouchRipple-root emotion-60"
+            class="MuiTouchRipple-root emotion-58"
           />
         </button>
       </div>
     </aside>
     <a
-      class="emotion-61 emotion-62"
+      class="emotion-59 emotion-60"
       href=""
       target="_blank"
     >
       <img
         alt="DSC07717"
-        class="emotion-63 emotion-28"
+        class="emotion-61 emotion-28"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8225,14 +4333,14 @@ https://unsplash.it/200/100 200w"
       />
     </a>
     <figure
-      class="emotion-65 emotion-66"
+      class="emotion-63 emotion-64"
     >
       <div
-        class="emotion-67 emotion-68"
+        class="emotion-65 emotion-66"
       >
         <img
           alt="DSC07717"
-          class="emotion-69 emotion-28"
+          class="emotion-67 emotion-28"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8248,7 +4356,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
         />
-        <figcaption>
+        <figcaption
+          class="emotion-69 emotion-70"
+        >
           Caption 
         </figcaption>
       </div>
@@ -8359,14 +4469,14 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <figure
-              class="emotion-65 emotion-66"
+              class="emotion-63 emotion-64"
             >
               <div
-                class="emotion-67 emotion-68"
+                class="emotion-65 emotion-66"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-69 emotion-28"
+                  class="emotion-67 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8382,7 +4492,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                   title=""
                 />
-                <figcaption>
+                <figcaption
+                  class="emotion-69 emotion-70"
+                >
                   Caption 
                 </figcaption>
               </div>
@@ -8392,14 +4504,14 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <figure
-              class="emotion-65 emotion-66"
+              class="emotion-63 emotion-64"
             >
               <div
-                class="emotion-67 emotion-68"
+                class="emotion-65 emotion-66"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-69 emotion-28"
+                  class="emotion-67 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8415,7 +4527,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                   title=""
                 />
-                <figcaption>
+                <figcaption
+                  class="emotion-69 emotion-70"
+                >
                   Caption 
                 </figcaption>
               </div>
@@ -8425,14 +4539,14 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <figure
-              class="emotion-65 emotion-66"
+              class="emotion-63 emotion-64"
             >
               <div
-                class="emotion-67 emotion-68"
+                class="emotion-65 emotion-66"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-69 emotion-28"
+                  class="emotion-67 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8448,7 +4562,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                   title=""
                 />
-                <figcaption>
+                <figcaption
+                  class="emotion-69 emotion-70"
+                >
                   Caption 
                 </figcaption>
               </div>
@@ -8456,40 +4572,40 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <div
-          class="emotion-111 emotion-112"
+          class="emotion-117 emotion-118"
         >
           <button
             aria-label="Slide 1"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           >
             <span
-              class="emotion-115 emotion-116"
+              class="emotion-121 emotion-122"
             />
           </button>
           <button
             aria-label="Slide 2"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 3"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           />
         </div>
       </div>
     </section>
     <div
-      class="emotion-121 emotion-122"
+      class="emotion-127 emotion-128"
     >
       <div
-        class="emotion-123 emotion-124"
+        class="emotion-129 emotion-130"
       >
         <div
-          class="emotion-125 emotion-126"
+          class="emotion-131 emotion-132"
         >
           1
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h3 emotion-127"
+          class="MuiTypography-root MuiTypography-h3 emotion-133"
         >
           Foobar
         </h3>
@@ -8538,15 +4654,15 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-123 emotion-124"
+        class="emotion-129 emotion-130"
       >
         <div
-          class="emotion-125 emotion-126"
+          class="emotion-131 emotion-132"
         >
           2
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h3 emotion-127"
+          class="MuiTypography-root MuiTypography-h3 emotion-133"
         >
           Foobar
         </h3>
@@ -8595,15 +4711,15 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-123 emotion-124"
+        class="emotion-129 emotion-130"
       >
         <div
-          class="emotion-125 emotion-126"
+          class="emotion-131 emotion-132"
         >
           3
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h3 emotion-127"
+          class="MuiTypography-root MuiTypography-h3 emotion-133"
         >
           Foobar
         </h3>
@@ -8653,13 +4769,13 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <blockquote
-      class="emotion-153 emotion-154"
+      class="emotion-159 emotion-160"
     >
       <div
-        class="emotion-155 emotion-156"
+        class="emotion-161 emotion-162"
       >
         <p
-          class="MuiTypography-root MuiTypography-h4 emotion-157"
+          class="MuiTypography-root MuiTypography-h4 emotion-163"
         >
           Quote
         </p>
@@ -8671,11 +4787,11 @@ https://unsplash.it/200/100 200w"
       </div>
     </blockquote>
     <div
-      class="emotion-159 emotion-160"
+      class="emotion-165 emotion-166"
     >
       <iframe
         allowfullscreen=""
-        class="emotion-161 emotion-162"
+        class="emotion-167 emotion-168"
         id="iFrameResizer1"
         scrolling="no"
         src="https://www.example.com"
@@ -8688,7 +4804,7 @@ https://unsplash.it/200/100 200w"
       src="https://media.online.bildwurf.ch/js/code.min.js"
     />
     <div
-      class="emotion-163 emotion-164"
+      class="emotion-169 emotion-170"
     >
       
             
@@ -8708,13 +4824,13 @@ https://unsplash.it/200/100 200w"
           
     </div>
     <div
-      class="emotion-165 emotion-166"
+      class="emotion-171 emotion-172"
     />
     <div
-      class="emotion-167 emotion-168"
+      class="emotion-173 emotion-174"
     >
       <div
-        class="emotion-169 emotion-170"
+        class="emotion-175 emotion-176"
         style="width: auto; height: auto;"
       >
         <div
@@ -8729,7 +4845,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-171 emotion-172"
+      class="emotion-177 emotion-178"
     >
       <blockquote
         class="instagram-media"
@@ -8744,13 +4860,13 @@ https://unsplash.it/200/100 200w"
       />
     </div>
     <div
-      class="emotion-173 emotion-174"
+      class="emotion-179 emotion-180"
     />
     <div
-      class="emotion-175 emotion-176"
+      class="emotion-181 emotion-182"
     >
       <div
-        class="emotion-177 emotion-178"
+        class="emotion-183 emotion-184"
         style="width: auto; height: auto;"
       >
         <iframe
@@ -8762,18 +4878,18 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-179 emotion-180"
+      class="emotion-185 emotion-186"
     >
       <iframe
         allow="encrypted-media;"
         allowfullscreen=""
-        class="emotion-181 emotion-182"
+        class="emotion-187 emotion-188"
         src="https://www.tiktok.com/embed/v2/6718335390845095173"
         title="Embedded TikTok Video"
       />
     </div>
     <div
-      class="emotion-183 emotion-184"
+      class="emotion-189 emotion-190"
       data-theme="dark"
     >
       <div>
@@ -8781,10 +4897,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-185 emotion-186"
+      class="emotion-191 emotion-192"
     >
       <div
-        class="emotion-187 emotion-188"
+        class="emotion-193 emotion-194"
         style="width: auto; height: auto;"
       >
         <div
@@ -8793,10 +4909,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-189 emotion-190"
+      class="emotion-195 emotion-196"
     >
       <div
-        class="emotion-191 emotion-192"
+        class="emotion-197 emotion-198"
         style="width: auto; height: auto;"
       >
         <div
@@ -8807,26 +4923,26 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-193 emotion-194"
+      class="emotion-199 emotion-200"
     >
       <article
-        class="emotion-195 emotion-196"
+        class="emotion-201 emotion-202"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8844,29 +4960,29 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-204 emotion-205"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-206 emotion-207"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             >
               <time
-                class="emotion-214 emotion-215"
+                class="emotion-220 emotion-221"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -8876,23 +4992,23 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-216 emotion-196"
+        class="emotion-222 emotion-202"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8910,23 +5026,23 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-225 emotion-226"
+              class="emotion-231 emotion-232"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Chur solidarisiert sich mit der Ukraine
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
             </p>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             >
               <time
-                class="emotion-214 emotion-215"
+                class="emotion-220 emotion-221"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -8936,23 +5052,23 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-235 emotion-196"
+        class="emotion-241 emotion-202"
         x="0"
         y="2"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8970,48 +5086,48 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-204 emotion-205"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-206 emotion-207"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
       <article
-        class="emotion-254 emotion-196"
+        class="emotion-260 emotion-202"
         x="0"
         y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9029,37 +5145,37 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-225 emotion-226"
+              class="emotion-231 emotion-232"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Home
             </h1>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
       <article
-        class="emotion-269 emotion-196"
+        class="emotion-275 emotion-202"
         x="0"
         y="4"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://google.com"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9077,52 +5193,52 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-204 emotion-205"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-206 emotion-207"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
     </div>
     <div
-      class="emotion-288 emotion-194"
+      class="emotion-294 emotion-200"
     >
       <article
-        class="emotion-290 emotion-196"
+        class="emotion-296 emotion-202"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9140,29 +5256,29 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-204 emotion-205"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-206 emotion-207"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             >
               <time
-                class="emotion-214 emotion-215"
+                class="emotion-220 emotion-221"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -9172,23 +5288,23 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-311 emotion-196"
+        class="emotion-317 emotion-202"
         x="4"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9206,23 +5322,23 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-225 emotion-226"
+              class="emotion-231 emotion-232"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Chur solidarisiert sich mit der Ukraine
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
             </p>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             >
               <time
-                class="emotion-214 emotion-215"
+                class="emotion-220 emotion-221"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -9232,23 +5348,23 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-330 emotion-196"
+        class="emotion-336 emotion-202"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9266,48 +5382,48 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-204 emotion-205"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-206 emotion-207"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
       <article
-        class="emotion-349 emotion-196"
+        class="emotion-355 emotion-202"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9325,37 +5441,37 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-225 emotion-226"
+              class="emotion-231 emotion-232"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Home
             </h1>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
       <article
-        class="emotion-364 emotion-196"
+        class="emotion-370 emotion-202"
         x="4"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://google.com"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9373,26 +5489,26 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-204 emotion-205"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-206 emotion-207"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
@@ -9402,7 +5518,7 @@ https://unsplash.it/200/100 200w"
       class="emotion-87 emotion-88"
     >
       <div
-        class="emotion-385 emotion-386"
+        class="emotion-391 emotion-392"
       />
       <div
         class="emotion-89 emotion-90"
@@ -9414,23 +5530,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-290 emotion-196"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-198 emotion-199"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-200 emotion-201"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-202 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9448,29 +5564,29 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-204 emotion-205"
+                    class="emotion-210 emotion-211"
                   >
                     <div
-                      class="emotion-206 emotion-207"
+                      class="emotion-212 emotion-213"
                     >
                       Pre Title
                     </div>
                   </div>
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Title
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Lead
                   </p>
                   <div
-                    class="emotion-212 emotion-213"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-214 emotion-215"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -9484,23 +5600,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-290 emotion-196"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-198 emotion-199"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-200 emotion-201"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-202 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9518,23 +5634,23 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-225 emotion-226"
+                    class="emotion-231 emotion-232"
                   />
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Chur solidarisiert sich mit der Ukraine
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
                   </p>
                   <div
-                    class="emotion-212 emotion-213"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-214 emotion-215"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -9548,23 +5664,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-290 emotion-196"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
               >
                 <div
-                  class="emotion-198 emotion-199"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-200 emotion-201"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-202 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9582,26 +5698,26 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-204 emotion-205"
+                    class="emotion-210 emotion-211"
                   >
                     <div
-                      class="emotion-206 emotion-207"
+                      class="emotion-212 emotion-213"
                     >
                       Pre Title
                     </div>
                   </div>
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Title
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Lead
                   </p>
                   <div
-                    class="emotion-212 emotion-213"
+                    class="emotion-218 emotion-219"
                   />
                 </div>
               </a>
@@ -9611,23 +5727,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-290 emotion-196"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
               >
                 <div
-                  class="emotion-198 emotion-199"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-200 emotion-201"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-202 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9645,15 +5761,15 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-225 emotion-226"
+                    class="emotion-231 emotion-232"
                   />
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Home
                   </h1>
                   <div
-                    class="emotion-212 emotion-213"
+                    class="emotion-218 emotion-219"
                   />
                 </div>
               </a>
@@ -9663,23 +5779,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-290 emotion-196"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://google.com"
               >
                 <div
-                  class="emotion-198 emotion-199"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-200 emotion-201"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-202 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9697,26 +5813,26 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-204 emotion-205"
+                    class="emotion-210 emotion-211"
                   >
                     <div
-                      class="emotion-206 emotion-207"
+                      class="emotion-212 emotion-213"
                     >
                       Pre Title
                     </div>
                   </div>
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Title
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Lead
                   </p>
                   <div
-                    class="emotion-212 emotion-213"
+                    class="emotion-218 emotion-219"
                   />
                 </div>
               </a>
@@ -9724,59 +5840,59 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <div
-          class="emotion-111 emotion-112"
+          class="emotion-117 emotion-118"
         >
           <button
             aria-label="Slide 1"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           >
             <span
-              class="emotion-115 emotion-116"
+              class="emotion-121 emotion-122"
             />
           </button>
           <button
             aria-label="Slide 2"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 3"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 4"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 5"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           />
         </div>
       </div>
     </section>
     <section
-      class="emotion-498 emotion-499"
+      class="emotion-504 emotion-505"
     >
       <div
-        class="emotion-500 emotion-501"
+        class="emotion-506 emotion-507"
       >
         <article
-          class="emotion-290 emotion-196"
+          class="emotion-296 emotion-202"
           x="0"
           y="0"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
             href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-204 emotion-205"
             >
               <div
-                class="emotion-200 emotion-201"
+                class="emotion-206 emotion-207"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-202 emotion-28"
+                  class="emotion-208 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9794,29 +5910,29 @@ https://unsplash.it/200/100 200w"
                 />
               </div>
               <div
-                class="emotion-204 emotion-205"
+                class="emotion-210 emotion-211"
               >
                 <div
-                  class="emotion-206 emotion-207"
+                  class="emotion-212 emotion-213"
                 >
                   Pre Title
                 </div>
               </div>
               <h1
-                class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
               >
                 Title
               </h1>
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
               >
                 Lead
               </p>
               <div
-                class="emotion-212 emotion-213"
+                class="emotion-218 emotion-219"
               >
                 <time
-                  class="emotion-214 emotion-215"
+                  class="emotion-220 emotion-221"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
                   01.01.2023 
@@ -9826,23 +5942,23 @@ https://unsplash.it/200/100 200w"
           </a>
         </article>
         <article
-          class="emotion-311 emotion-196"
+          class="emotion-317 emotion-202"
           x="4"
           y="0"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
             href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-204 emotion-205"
             >
               <div
-                class="emotion-200 emotion-201"
+                class="emotion-206 emotion-207"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-202 emotion-28"
+                  class="emotion-208 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9860,23 +5976,23 @@ https://unsplash.it/200/100 200w"
                 />
               </div>
               <div
-                class="emotion-225 emotion-226"
+                class="emotion-231 emotion-232"
               />
               <h1
-                class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
               >
                 Chur solidarisiert sich mit der Ukraine
               </h1>
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
               <div
-                class="emotion-212 emotion-213"
+                class="emotion-218 emotion-219"
               >
                 <time
-                  class="emotion-214 emotion-215"
+                  class="emotion-220 emotion-221"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
                   01.01.2023 
@@ -9886,23 +6002,23 @@ https://unsplash.it/200/100 200w"
           </a>
         </article>
         <article
-          class="emotion-330 emotion-196"
+          class="emotion-336 emotion-202"
           x="8"
           y="0"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
             href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-204 emotion-205"
             >
               <div
-                class="emotion-200 emotion-201"
+                class="emotion-206 emotion-207"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-202 emotion-28"
+                  class="emotion-208 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9920,29 +6036,29 @@ https://unsplash.it/200/100 200w"
                 />
               </div>
               <div
-                class="emotion-204 emotion-205"
+                class="emotion-210 emotion-211"
               >
                 <div
-                  class="emotion-206 emotion-207"
+                  class="emotion-212 emotion-213"
                 >
                   Pre Title
                 </div>
               </div>
               <h1
-                class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
               >
                 Title
               </h1>
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
               >
                 Lead
               </p>
               <div
-                class="emotion-212 emotion-213"
+                class="emotion-218 emotion-219"
               >
                 <time
-                  class="emotion-214 emotion-215"
+                  class="emotion-220 emotion-221"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
                   01.01.2023 
@@ -9952,23 +6068,23 @@ https://unsplash.it/200/100 200w"
           </a>
         </article>
         <article
-          class="emotion-349 emotion-196"
+          class="emotion-355 emotion-202"
           x="0"
           y="1"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
             href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-204 emotion-205"
             >
               <div
-                class="emotion-200 emotion-201"
+                class="emotion-206 emotion-207"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-202 emotion-28"
+                  class="emotion-208 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9986,23 +6102,23 @@ https://unsplash.it/200/100 200w"
                 />
               </div>
               <div
-                class="emotion-225 emotion-226"
+                class="emotion-231 emotion-232"
               />
               <h1
-                class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
               >
                 Chur solidarisiert sich mit der Ukraine
               </h1>
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
               <div
-                class="emotion-212 emotion-213"
+                class="emotion-218 emotion-219"
               >
                 <time
-                  class="emotion-214 emotion-215"
+                  class="emotion-220 emotion-221"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
                   01.01.2023 
@@ -10012,23 +6128,23 @@ https://unsplash.it/200/100 200w"
           </a>
         </article>
         <article
-          class="emotion-364 emotion-196"
+          class="emotion-370 emotion-202"
           x="4"
           y="1"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
             href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-204 emotion-205"
             >
               <div
-                class="emotion-200 emotion-201"
+                class="emotion-206 emotion-207"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-202 emotion-28"
+                  class="emotion-208 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10046,29 +6162,29 @@ https://unsplash.it/200/100 200w"
                 />
               </div>
               <div
-                class="emotion-204 emotion-205"
+                class="emotion-210 emotion-211"
               >
                 <div
-                  class="emotion-206 emotion-207"
+                  class="emotion-212 emotion-213"
                 >
                   Pre Title
                 </div>
               </div>
               <h1
-                class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
               >
                 Title
               </h1>
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
               >
                 Lead
               </p>
               <div
-                class="emotion-212 emotion-213"
+                class="emotion-218 emotion-219"
               >
                 <time
-                  class="emotion-214 emotion-215"
+                  class="emotion-220 emotion-221"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
                   01.01.2023 
@@ -10078,23 +6194,23 @@ https://unsplash.it/200/100 200w"
           </a>
         </article>
         <article
-          class="emotion-603 emotion-196"
+          class="emotion-609 emotion-202"
           x="8"
           y="1"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
             href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-204 emotion-205"
             >
               <div
-                class="emotion-200 emotion-201"
+                class="emotion-206 emotion-207"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-202 emotion-28"
+                  class="emotion-208 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10112,23 +6228,23 @@ https://unsplash.it/200/100 200w"
                 />
               </div>
               <div
-                class="emotion-225 emotion-226"
+                class="emotion-231 emotion-232"
               />
               <h1
-                class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
               >
                 Chur solidarisiert sich mit der Ukraine
               </h1>
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
               <div
-                class="emotion-212 emotion-213"
+                class="emotion-218 emotion-219"
               >
                 <time
-                  class="emotion-214 emotion-215"
+                  class="emotion-220 emotion-221"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
                   01.01.2023 
@@ -10143,7 +6259,7 @@ https://unsplash.it/200/100 200w"
       class="emotion-87 emotion-88"
     >
       <div
-        class="emotion-385 emotion-386"
+        class="emotion-391 emotion-392"
       />
       <div
         class="emotion-89 emotion-90"
@@ -10155,23 +6271,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-290 emotion-196"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-198 emotion-199"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-200 emotion-201"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-202 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10189,29 +6305,29 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-204 emotion-205"
+                    class="emotion-210 emotion-211"
                   >
                     <div
-                      class="emotion-206 emotion-207"
+                      class="emotion-212 emotion-213"
                     >
                       Pre Title
                     </div>
                   </div>
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Title
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Lead
                   </p>
                   <div
-                    class="emotion-212 emotion-213"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-214 emotion-215"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -10225,23 +6341,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-290 emotion-196"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-198 emotion-199"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-200 emotion-201"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-202 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10259,23 +6375,23 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-225 emotion-226"
+                    class="emotion-231 emotion-232"
                   />
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Chur solidarisiert sich mit der Ukraine
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
                   </p>
                   <div
-                    class="emotion-212 emotion-213"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-214 emotion-215"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -10289,23 +6405,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-290 emotion-196"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-198 emotion-199"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-200 emotion-201"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-202 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10323,29 +6439,29 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-204 emotion-205"
+                    class="emotion-210 emotion-211"
                   >
                     <div
-                      class="emotion-206 emotion-207"
+                      class="emotion-212 emotion-213"
                     >
                       Pre Title
                     </div>
                   </div>
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Title
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Lead
                   </p>
                   <div
-                    class="emotion-212 emotion-213"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-214 emotion-215"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -10359,23 +6475,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-290 emotion-196"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-198 emotion-199"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-200 emotion-201"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-202 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10393,23 +6509,23 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-225 emotion-226"
+                    class="emotion-231 emotion-232"
                   />
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Chur solidarisiert sich mit der Ukraine
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
                   </p>
                   <div
-                    class="emotion-212 emotion-213"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-214 emotion-215"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -10423,23 +6539,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-290 emotion-196"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-198 emotion-199"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-200 emotion-201"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-202 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10457,29 +6573,29 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-204 emotion-205"
+                    class="emotion-210 emotion-211"
                   >
                     <div
-                      class="emotion-206 emotion-207"
+                      class="emotion-212 emotion-213"
                     >
                       Pre Title
                     </div>
                   </div>
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Title
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Lead
                   </p>
                   <div
-                    class="emotion-212 emotion-213"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-214 emotion-215"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -10493,23 +6609,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-290 emotion-196"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-198 emotion-199"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-200 emotion-201"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-202 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10527,23 +6643,23 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-225 emotion-226"
+                    class="emotion-231 emotion-232"
                   />
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Chur solidarisiert sich mit der Ukraine
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
                   </p>
                   <div
-                    class="emotion-212 emotion-213"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-214 emotion-215"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -10555,60 +6671,60 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <div
-          class="emotion-111 emotion-112"
+          class="emotion-117 emotion-118"
         >
           <button
             aria-label="Slide 1"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           >
             <span
-              class="emotion-115 emotion-116"
+              class="emotion-121 emotion-122"
             />
           </button>
           <button
             aria-label="Slide 2"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 3"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 4"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 5"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 6"
-            class="emotion-113 emotion-114"
+            class="emotion-119 emotion-120"
           />
         </div>
       </div>
     </section>
     <div
-      class="emotion-766 emotion-767"
+      class="emotion-772 emotion-773"
     >
       <article
-        class="emotion-768 emotion-196"
+        class="emotion-774 emotion-202"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10626,29 +6742,29 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-204 emotion-205"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-206 emotion-207"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             >
               <time
-                class="emotion-214 emotion-215"
+                class="emotion-220 emotion-221"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -10658,23 +6774,23 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-789 emotion-196"
+        class="emotion-795 emotion-202"
         x="3"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10692,23 +6808,23 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-225 emotion-226"
+              class="emotion-231 emotion-232"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Chur solidarisiert sich mit der Ukraine
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
             </p>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             >
               <time
-                class="emotion-214 emotion-215"
+                class="emotion-220 emotion-221"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -10718,23 +6834,23 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-808 emotion-196"
+        class="emotion-814 emotion-202"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10752,37 +6868,37 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-225 emotion-226"
+              class="emotion-231 emotion-232"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Home
             </h1>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
       <article
-        class="emotion-823 emotion-196"
+        class="emotion-829 emotion-202"
         x="3"
         y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10800,48 +6916,48 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-204 emotion-205"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-206 emotion-207"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
       <article
-        class="emotion-842 emotion-196"
+        class="emotion-848 emotion-202"
         x="0"
         y="6"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-197"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://google.com"
         >
           <div
-            class="emotion-198 emotion-199"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-200 emotion-201"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-202 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10859,33 +6975,33 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-204 emotion-205"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-206 emotion-207"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-210 emotion-211"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-212 emotion-213"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
     </div>
     <div
-      class="emotion-861 emotion-862"
+      class="emotion-867 emotion-868"
     >
       <div>
         <div>
@@ -10899,10 +7015,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <article
-      class="emotion-863 emotion-864"
+      class="emotion-869 emotion-870"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h4 emotion-157"
+        class="MuiTypography-root MuiTypography-h4 emotion-871 emotion-872"
       >
         Question
       </h1>
@@ -10932,63 +7048,63 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-869 emotion-870"
+        class="emotion-876 emotion-877"
       >
         <div
-          class="emotion-871 emotion-872"
+          class="emotion-878 emotion-879"
         >
           <div
-            class="emotion-873 emotion-874"
+            class="emotion-880 emotion-881"
           >
             <div
-              class="emotion-875 emotion-876"
+              class="emotion-882 emotion-883"
             >
               Ja
             </div>
             <div
-              class="emotion-877 emotion-878"
+              class="emotion-884 emotion-885"
             >
               52%
             </div>
           </div>
           <div
-            class="emotion-879 emotion-880"
+            class="emotion-886 emotion-887"
           >
             <div
-              class="emotion-881 emotion-882"
+              class="emotion-888 emotion-889"
             />
             <div
-              class="emotion-883 emotion-884"
+              class="emotion-890 emotion-891"
             >
               11 Stimmen
             </div>
           </div>
         </div>
         <div
-          class="emotion-871 emotion-872"
+          class="emotion-878 emotion-879"
         >
           <div
-            class="emotion-873 emotion-874"
+            class="emotion-880 emotion-881"
           >
             <div
-              class="emotion-875 emotion-876"
+              class="emotion-882 emotion-883"
             >
               Nein
             </div>
             <div
-              class="emotion-877 emotion-878"
+              class="emotion-884 emotion-885"
             >
               48%
             </div>
           </div>
           <div
-            class="emotion-879 emotion-880"
+            class="emotion-886 emotion-887"
           >
             <div
-              class="emotion-895 emotion-882"
+              class="emotion-902 emotion-889"
             />
             <div
-              class="emotion-897 emotion-884"
+              class="emotion-904 emotion-891"
             >
               10 Stimmen
             </div>
@@ -10996,7 +7112,7 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-899 emotion-900"
+        class="emotion-906 emotion-907"
       >
         21 Stimmen – Schliesst am 
         <time
@@ -11007,20 +7123,20 @@ https://unsplash.it/200/100 200w"
       </div>
     </article>
     <article
-      class="emotion-901 emotion-902"
+      class="emotion-908 emotion-909"
     />
     <aside
-      class="emotion-903 emotion-904"
+      class="emotion-910 emotion-911"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-905"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-912"
         href="https://example.com"
       >
         <article
-          class="emotion-906 emotion-907"
+          class="emotion-913 emotion-914"
         >
           <div
-            class="emotion-908 emotion-909"
+            class="emotion-915 emotion-916"
           >
             <img
               alt="DSC07717"
@@ -11042,13 +7158,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-912 emotion-913"
+            class="emotion-919 emotion-920"
           >
             <div
-              class="emotion-914 emotion-915"
+              class="emotion-921 emotion-922"
             >
               <div
-                class="emotion-916 emotion-917"
+                class="emotion-923 emotion-924"
               >
                 <svg
                   fill="currentColor"
@@ -11081,7 +7197,7 @@ https://unsplash.it/200/100 200w"
               </time>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-157"
+              class="MuiTypography-root MuiTypography-h4 emotion-163"
             >
               Cool concert
             </h1>

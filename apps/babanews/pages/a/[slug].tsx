@@ -50,7 +50,7 @@ export default function ArticleBySlugIdOrToken() {
               key={index}
               label={capitalize(tag.tag ?? '')}
               variant="outlined"
-              onClick={() => push(`/a/tag/${tag}`)}
+              onClick={() => push(tag.url)}
             />
           ))}
         </ArticleTagList>
@@ -66,10 +66,12 @@ export default function ArticleBySlugIdOrToken() {
             />
           </ArticleWrapper>
 
-          <ArticleWrapper>
-            <H3 component={'h2'}>Kommentare</H3>
-            <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
-          </ArticleWrapper>
+          {!data.article.disableComments && (
+            <ArticleWrapper>
+              <H3 component={'h2'}>Kommentare</H3>
+              <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
+            </ArticleWrapper>
+          )}
         </>
       )}
     </>

@@ -3,6 +3,7 @@ import {
   AlgebraicCaptchaChallenge,
   ChallengeProvider,
   CfTurnstile,
+  HotAndTrendingDataSource,
   MailProvider,
   MediaAdapter,
   Oauth2Provider,
@@ -18,20 +19,25 @@ import {Application} from 'express'
 import {DefaultURLAdapter} from '../urlAdapters'
 import {readConfig} from '../readConfig'
 import {MannschaftURLAdapter} from '../urlAdapters/URLAdapter-mannschaft'
+
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 type RunServerProps = {
-  expressApp: Application
+  privateExpressApp?: Application
+  publicExpressApp?: Application
   mediaAdapter: MediaAdapter
   paymentProviders: PaymentProvider[]
   mailProvider: MailProvider
+  hotAndTrendingDataSource: HotAndTrendingDataSource
 }
 
 export async function runServer({
-  expressApp,
+  privateExpressApp,
+  publicExpressApp,
   mediaAdapter,
   mailProvider,
-  paymentProviders
+  paymentProviders,
+  hotAndTrendingDataSource
 }: RunServerProps) {
   /*
    * Load User specific configuration
@@ -162,9 +168,11 @@ export async function runServer({
         ? config.general.apolloIntrospection
         : false,
       logger,
-      challenge
+      challenge,
+      hotAndTrendingDataSource
     },
-    expressApp
+    privateExpressApp,
+    publicExpressApp
   )
 
   await server.listen(port, address)

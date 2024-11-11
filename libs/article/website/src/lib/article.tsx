@@ -1,7 +1,6 @@
 import {Chip, styled} from '@mui/material'
 import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Article as ArticleType, Block} from '@wepublish/website/api'
-import {Blocks} from '@wepublish/block-content/website'
 import {ArticleListWrapper} from './article-list/article-list'
 import {CommentListWrapper} from '@wepublish/comments/website'
 import {ContentWrapper} from '@wepublish/content/website'
@@ -31,16 +30,13 @@ export const ArticleAuthors = styled('div')`
   gap: ${({theme}) => theme.spacing(3)};
 `
 
-export const ArticleDate = styled('time')`
-  margin-top: -${({theme}) => theme.spacing(2)};
-`
-
 export function Article({className, data, children, loading, error}: BuilderArticleProps) {
   const {
     AuthorChip,
     ArticleSEO,
+    ArticleDate,
     elements: {Link},
-    date
+    blocks: {Blocks}
   } = useWebsiteBuilder()
 
   const article = data?.article
@@ -48,9 +44,9 @@ export function Article({className, data, children, loading, error}: BuilderArti
 
   return (
     <ArticleWrapper className={className}>
-      {data?.article && <ArticleSEO article={data.article as ArticleType} />}
+      {article && <ArticleSEO article={data.article as ArticleType} />}
 
-      <Blocks blocks={(data?.article?.blocks as Block[]) ?? []} type="Article" />
+      <Blocks blocks={(article?.blocks as Block[]) ?? []} type="Article" />
 
       <ArticleInfoWrapper>
         {!!authors.length && (
@@ -59,17 +55,13 @@ export function Article({className, data, children, loading, error}: BuilderArti
               <AuthorChip key={author.id} author={author} />
             ))}
 
-            {article?.publishedAt && (
-              <ArticleDate suppressHydrationWarning dateTime={article.publishedAt}>
-                {date.format(new Date(article.publishedAt), false)}
-              </ArticleDate>
-            )}
+            <ArticleDate article={article as ArticleType} />
           </ArticleAuthors>
         )}
 
-        {!!data?.article?.tags.length && (
+        {!!article?.tags.length && (
           <ArticleTags>
-            {data.article.tags.map(tag => (
+            {article.tags.map(tag => (
               <Chip
                 key={tag.id}
                 label={tag.tag}

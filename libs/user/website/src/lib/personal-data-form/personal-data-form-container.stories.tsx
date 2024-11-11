@@ -9,7 +9,6 @@ import {
   UpdateUserDocument,
   User
 } from '@wepublish/website/api'
-import {PersonalDataFormFields} from '@wepublish/website/builder'
 import {PersonalDataFormContainer} from './personal-data-form-container'
 import * as personalDataFormStories from './personal-data-form.stories'
 
@@ -18,11 +17,11 @@ export default {
   component: PersonalDataFormContainer
 }
 
-const mockUser: PersonalDataFormFields = {
+const mockUser: User = {
+  id: '1234',
   firstName: 'Kamil',
   name: 'Wasyl',
   email: 'some-example@mail.com',
-  password: 'password123',
   flair: 'Financial Advisor & CEO',
   address: {
     streetAddress: 'Cool Street',
@@ -65,7 +64,10 @@ const mockUser: PersonalDataFormFields = {
     sSquare: 'https://unsplash.it/500/500',
     xsSquare: 'https://unsplash.it/300/300',
     xxsSquare: 'https://unsplash.it/200/200'
-  } as FullImageFragment
+  } as FullImageFragment,
+  oauth2Accounts: [],
+  paymentProviderCustomers: [],
+  properties: []
 }
 
 const onUpdateVariables = {
@@ -78,9 +80,8 @@ const onUpdateVariables = {
       streetAddress: 'Cool StreetMusterstrasse 1',
       zipCode: '123458047',
       city: 'Surfers ParadiseZürich',
-      country: 'AustraliaSchweiz'
-    },
-    preferredName: ''
+      country: 'Schweiz'
+    }
   }
 }
 
@@ -105,7 +106,6 @@ export const Default: StoryObj = {
                 name: 'Gojny',
                 firstName: 'Emil',
                 email: 'emilgojny69@gmail.com',
-                preferredName: null,
                 address: {
                   company: null,
                   streetAddress: 'street',
@@ -157,7 +157,6 @@ export const Default: StoryObj = {
                 name: 'Gojny',
                 firstName: 'Emil',
                 email: 'emilgojny69@gmail.com',
-                preferredName: null,
                 address: {
                   company: null,
                   streetAddress: 'street',
@@ -200,7 +199,7 @@ export const Default: StoryObj = {
       ]
     }
   },
-  decorators: [WithUserDecorator(mockUser as User)]
+  decorators: [WithUserDecorator(mockUser)]
 }
 
 export const Filled: StoryObj = {

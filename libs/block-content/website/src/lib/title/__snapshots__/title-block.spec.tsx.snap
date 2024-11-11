@@ -2,29 +2,7 @@
 
 exports[`Title Block should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 24px;
-  grid-auto-rows: min-content;
-}
-
-.emotion-3 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <h1
@@ -43,29 +21,7 @@ exports[`Title Block should render Default 1`] = `
 
 exports[`Title Block should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 24px;
-  grid-auto-rows: min-content;
-}
-
-.emotion-3 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-<div
+  <div
     class="extra-classname emotion-0 emotion-1"
   >
     <h1
@@ -84,29 +40,7 @@ exports[`Title Block should render WithClassName 1`] = `
 
 exports[`Title Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 24px;
-  grid-auto-rows: min-content;
-}
-
-.emotion-3 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <h1
@@ -125,21 +59,7 @@ exports[`Title Block should render WithEmotion 1`] = `
 
 exports[`Title Block should render WithoutLead 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 24px;
-  grid-auto-rows: min-content;
-}
-
-.emotion-3 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <h1

@@ -22,12 +22,14 @@ import {
   useAuthorisation,
   UserSubscriptionsList
 } from '@wepublish/ui/editor'
+import {userCountryNames} from '@wepublish/user'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   CheckPicker,
   Col,
+  DatePicker,
   Drawer,
   Form,
   Grid as RGrid,
@@ -36,6 +38,7 @@ import {
   Panel as RPanel,
   Row,
   Schema,
+  SelectPicker,
   toaster,
   Toggle as RToggle
 } from 'rsuite'
@@ -106,7 +109,7 @@ function UserEditView() {
   // user props
   const [name, setName] = useState('')
   const [firstName, setFirstName] = useState<string | undefined | null>()
-  const [preferredName, setPreferredName] = useState<string | undefined>()
+  const [birthday, setBirthday] = useState<Date>()
   const [flair, setFlair] = useState<string | undefined>()
   const [email, setEmail] = useState('')
   const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null)
@@ -149,8 +152,8 @@ function UserEditView() {
     setUser(tmpUser)
     setFirstName(tmpUser.firstName)
     setName(tmpUser.name)
-    setPreferredName(tmpUser.preferredName ?? undefined)
     setFlair(tmpUser.flair || undefined)
+    setBirthday(tmpUser.birthday ? new Date(tmpUser.birthday) : undefined)
     setEmail(tmpUser.email)
     setMetadataProperties(
       tmpUser?.properties
@@ -227,7 +230,8 @@ function UserEditView() {
     email: StringType()
       .isRequired(t('errorMessages.noEmailErrorMessage'))
       .isEmail(t('errorMessages.invalidEmailErrorMessage')),
-    password: validatePassword
+    password: validatePassword,
+    country: StringType().isOneOf(userCountryNames, t('errorMessages.invalidCountry'))
   })
 
   /**
@@ -242,12 +246,12 @@ function UserEditView() {
             input: {
               name,
               firstName: firstName || undefined,
-              preferredName,
               flair,
+              birthday: birthday?.toISOString() ?? null,
               email,
-              emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
+              emailVerifiedAt: emailVerifiedAt?.toISOString() ?? null,
               active,
-              userImageID: userImage?.id || null,
+              userImageID: userImage?.id ?? null,
               roleIDs: roles.map(role => role.id),
               properties: metaDataProperties.map(
                 ({value: {key, public: isPublic, value: newValue}}) => ({
@@ -290,8 +294,8 @@ function UserEditView() {
             input: {
               name,
               firstName,
-              preferredName,
               flair,
+              birthday: birthday?.toISOString(),
               email,
               emailVerifiedAt: null,
               active,
@@ -354,7 +358,7 @@ function UserEditView() {
         onSubmit={validationPassed => validationPassed && createOrUpdateUser()}
         fluid
         model={validationModel}
-        formValue={{name, email, password}}>
+        formValue={{name, email, password, country: address?.country}}>
         <SingleViewTitle
           loading={false}
           title={titleView()}
@@ -427,20 +431,6 @@ function UserEditView() {
                         />
                       </Form.Group>
                     </Col>
-                    {/* preferred name */}
-                    <Col xs={12}>
-                      <Form.Group controlId="preferredName">
-                        <Form.ControlLabel>
-                          {t('userCreateOrEditView.preferredName')}
-                        </Form.ControlLabel>
-                        <Form.Control
-                          name="preferredName"
-                          value={preferredName || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) => setPreferredName(value)}
-                        />
-                      </Form.Group>
-                    </Col>
                     {/* email */}
                     <Col xs={12}>
                       <Form.Group controlId="email">
@@ -455,6 +445,27 @@ function UserEditView() {
                           onChange={(value: string) => {
                             setEmail(value)
                           }}
+                        />
+                      </Form.Group>
+                    </Col>
+                    {/* birthday */}
+                    <Col xs={12}>
+                      <Form.Group controlId="birthday">
+                        <Form.ControlLabel>{t('userCreateOrEditView.birthday')}</Form.ControlLabel>
+                        <Form.Control
+                          name="birthday"
+                          autoComplete="birthday"
+                          block
+                          oneTap
+                          isoWeek
+                          format="dd.MM.yyyy"
+                          limitEndYear={0}
+                          value={birthday}
+                          disabled={isDisabled}
+                          onChange={value => {
+                            setBirthday(value as Date)
+                          }}
+                          accepter={DatePicker}
                         />
                       </Form.Group>
                     </Col>
@@ -502,7 +513,7 @@ function UserEditView() {
                       </Form.Group>
                     </Col>
                     {/* street 2 */}
-                    <Col xs={12}>
+                    <Col xs={24}>
                       <Form.Group controlId="streetAddress2">
                         <Form.ControlLabel>
                           {t('userCreateOrEditView.streetAddress2')}
@@ -549,11 +560,18 @@ function UserEditView() {
                     <Col xs={24}>
                       <Form.Group controlId="country">
                         <Form.ControlLabel>{t('userCreateOrEditView.country')}</Form.ControlLabel>
+
                         <Form.Control
                           name="country"
-                          value={address?.country || ''}
+                          accepter={SelectPicker}
+                          block
+                          cleanable
+                          searchable
+                          data={userCountryNames.map(item => ({label: item, value: item}))}
+                          placeholder={address?.country ?? undefined}
+                          value={address?.country ?? ''}
                           disabled={isDisabled}
-                          onChange={(value: string) =>
+                          onChange={value =>
                             updateAddressObject(address, setAddress, 'country', value)
                           }
                         />

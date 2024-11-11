@@ -21,6 +21,7 @@ import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subs
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {SubscriptionService} from '../subscription/subscription.service'
 import {PeriodicJobRunObject} from './periodic-job.type'
+import {getMaxTake} from '@wepublish/utils/api'
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 
@@ -45,7 +46,7 @@ export class PeriodicJobService {
   getJobLog(take: number, skip?: number) {
     return this.prismaService.periodicJob.findMany({
       skip,
-      take: Math.min(take, 100),
+      take: getMaxTake(take),
       orderBy: {
         date: 'desc'
       }

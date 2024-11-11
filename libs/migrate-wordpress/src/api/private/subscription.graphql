@@ -1,0 +1,51 @@
+mutation CreateSubscription($input: SubscriptionInput!) {
+    createSubscription(input: $input) {
+        autoRenew
+        id
+        paidUntil
+        user {
+            id
+        }
+        monthlyAmount
+        memberPlan {
+            id
+            slug
+        }
+        extendable
+        paymentMethod {
+            id
+        }
+    }
+}
+
+mutation ImportSubscription($input: SubscriptionInput!) {
+    importSubscription(input: $input) {
+        autoRenew
+        id
+        paidUntil
+        user {
+            id
+        }
+        monthlyAmount
+        memberPlan {
+            id
+            slug
+        }
+        extendable
+        paymentMethod {
+            id
+        }
+    }
+}
+
+mutation RenewSubscription($id: ID!) {
+    renewSubscription(id: $id) {
+        id
+    }
+}
+
+mutation DeleteSubscription($id: ID!) {
+    deleteSubscription(id: $id) {
+        id
+    }
+}

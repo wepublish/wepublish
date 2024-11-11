@@ -3,7 +3,7 @@ import {INestApplication, Module} from '@nestjs/common'
 import request from 'supertest'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {Invoice, PrismaClient} from '@prisma/client'
+import {Currency, Invoice, PrismaClient} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {DashboardInvoiceResolver} from './dashboard-invoice.resolver'
 import {DashboardInvoiceService} from './dashboard-invoice.service'
@@ -82,6 +82,7 @@ describe('DashboardInvoiceResolver', () => {
   test('revenue', async () => {
     const mockData = [
       {
+        currency: Currency.CHF,
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-01-01 12:00:00'),
         scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
@@ -104,6 +105,7 @@ describe('DashboardInvoiceResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-01-02 12:00:00'),
         scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
@@ -121,6 +123,7 @@ describe('DashboardInvoiceResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-02-01 12:00:00'),
         scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
@@ -138,6 +141,7 @@ describe('DashboardInvoiceResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-01-01 12:00:00'),
         scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
@@ -156,6 +160,7 @@ describe('DashboardInvoiceResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         dueAt: new Date('2023-01-01 12:00:00'),
         scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
@@ -195,6 +200,7 @@ describe('DashboardInvoiceResolver', () => {
   test('expectedRevenue', async () => {
     const mockData = [
       {
+        currency: Currency.CHF,
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-01-01 12:00:00'),
         scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
@@ -217,6 +223,7 @@ describe('DashboardInvoiceResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         dueAt: new Date('2023-01-02 12:00:00'),
         scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
@@ -233,6 +240,7 @@ describe('DashboardInvoiceResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         dueAt: new Date('2023-02-01 12:00:00'),
         scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
@@ -249,6 +257,7 @@ describe('DashboardInvoiceResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         dueAt: new Date('2023-01-01 12:00:00'),
         scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
@@ -266,6 +275,7 @@ describe('DashboardInvoiceResolver', () => {
         }
       },
       {
+        currency: Currency.CHF,
         dueAt: new Date('2023-01-01 12:00:00'),
         mail: 'foo@wepublish.ch',
         canceledAt: new Date('2023-01-01 11:00:00'),

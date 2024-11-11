@@ -2,75 +2,7 @@
 
 exports[`Listicle Block should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 80px;
-  grid-template-columns: minmax(min-content, 700px);
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  justify-items: center;
-}
-
-.emotion-4 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: #e91e63;
-  color: #fff;
-  font-size: 1.5em;
-  line-height: 1;
-  width: 2em;
-  height: 2em;
-}
-
-.emotion-6 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-7 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-}
-
-.emotion-11 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-11.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-11:last-child {
-  margin-bottom: 0;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -307,75 +239,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`Listicle Block should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 80px;
-  grid-template-columns: minmax(min-content, 700px);
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  justify-items: center;
-}
-
-.emotion-4 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: #e91e63;
-  color: #fff;
-  font-size: 1.5em;
-  line-height: 1;
-  width: 2em;
-  height: 2em;
-}
-
-.emotion-6 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-7 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-}
-
-.emotion-11 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-11.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-11:last-child {
-  margin-bottom: 0;
-}
-
-<div
+  <div
     class="extra-classname emotion-0 emotion-1"
   >
     <div
@@ -612,75 +476,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`Listicle Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 80px;
-  grid-template-columns: minmax(min-content, 700px);
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  justify-items: center;
-}
-
-.emotion-4 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: #e91e63;
-  color: #fff;
-  font-size: 1.5em;
-  line-height: 1;
-  width: 2em;
-  height: 2em;
-}
-
-.emotion-6 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-7 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-}
-
-.emotion-11 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-11.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-11:last-child {
-  margin-bottom: 0;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -917,75 +713,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`Listicle Block should render WithoutImage 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 80px;
-  grid-template-columns: minmax(min-content, 700px);
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  justify-items: center;
-}
-
-.emotion-4 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: #e91e63;
-  color: #fff;
-  font-size: 1.5em;
-  line-height: 1;
-  width: 2em;
-  height: 2em;
-}
-
-.emotion-6 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-7 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-}
-
-.emotion-11 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-11.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-11:last-child {
-  margin-bottom: 0;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div

@@ -354,6 +354,10 @@ const modelFieldDefinitions = [{
                 type: "AvailablePaymentMethod",
                 relationName: "AvailablePaymentMethodToMemberPlan"
             }, {
+                name: "migrateToTargetPaymentMethod",
+                type: "PaymentMethod",
+                relationName: "PaymentMethodMigration"
+            }, {
                 name: "image",
                 type: "Image",
                 relationName: "ImageToMemberPlan"
@@ -467,6 +471,10 @@ const modelFieldDefinitions = [{
                 name: "subscriptionFlows",
                 type: "SubscriptionFlow",
                 relationName: "PaymentMethodToSubscriptionFlow"
+            }, {
+                name: "migrateFromPlans",
+                type: "MemberPlan",
+                relationName: "PaymentMethodMigration"
             }]
     }, {
         name: "Payment",
@@ -2204,7 +2212,8 @@ function autoGenerateInvoiceScalarsOrEnums({ seq }) {
     return {
         mail: getScalarFieldValueGenerator().String({ modelName: "Invoice", fieldName: "mail", isId: false, isUnique: false, seq }),
         dueAt: getScalarFieldValueGenerator().DateTime({ modelName: "Invoice", fieldName: "dueAt", isId: false, isUnique: false, seq }),
-        scheduledDeactivationAt: getScalarFieldValueGenerator().DateTime({ modelName: "Invoice", fieldName: "scheduledDeactivationAt", isId: false, isUnique: false, seq })
+        scheduledDeactivationAt: getScalarFieldValueGenerator().DateTime({ modelName: "Invoice", fieldName: "scheduledDeactivationAt", isId: false, isUnique: false, seq }),
+        currency: "CHF"
     };
 }
 function defineInvoiceFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
@@ -2412,6 +2421,9 @@ function defineAvailablePaymentMethodFactoryInternal({ defaultData: defaultDataR
 export function defineAvailablePaymentMethodFactory(options) {
     return defineAvailablePaymentMethodFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
+function isMemberPlanmigrateToTargetPaymentMethodFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PaymentMethod";
+}
 function isMemberPlanimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
@@ -2421,6 +2433,7 @@ function autoGenerateMemberPlanScalarsOrEnums({ seq }) {
         slug: getScalarFieldValueGenerator().String({ modelName: "MemberPlan", fieldName: "slug", isId: false, isUnique: true, seq }),
         description: getScalarFieldValueGenerator().Json({ modelName: "MemberPlan", fieldName: "description", isId: false, isUnique: false, seq }),
         active: getScalarFieldValueGenerator().Boolean({ modelName: "MemberPlan", fieldName: "active", isId: false, isUnique: false, seq }),
+        currency: "CHF",
         amountPerMonthMin: getScalarFieldValueGenerator().Float({ modelName: "MemberPlan", fieldName: "amountPerMonthMin", isId: false, isUnique: false, seq })
     };
 }
@@ -2441,6 +2454,9 @@ function defineMemberPlanFactoryInternal({ defaultData: defaultDataResolver, tra
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
             const defaultAssociations = {
+                migrateToTargetPaymentMethod: isMemberPlanmigrateToTargetPaymentMethodFactory(defaultData.migrateToTargetPaymentMethod) ? {
+                    create: yield defaultData.migrateToTargetPaymentMethod.build()
+                } : defaultData.migrateToTargetPaymentMethod,
                 image: isMemberPlanimageFactory(defaultData.image) ? {
                     create: yield defaultData.image.build()
                 } : defaultData.image
@@ -3424,7 +3440,8 @@ function autoGenerateSubscriptionScalarsOrEnums({ seq }) {
         paymentPeriodicity: "monthly",
         monthlyAmount: getScalarFieldValueGenerator().Float({ modelName: "Subscription", fieldName: "monthlyAmount", isId: false, isUnique: false, seq }),
         autoRenew: getScalarFieldValueGenerator().Boolean({ modelName: "Subscription", fieldName: "autoRenew", isId: false, isUnique: false, seq }),
-        startsAt: getScalarFieldValueGenerator().DateTime({ modelName: "Subscription", fieldName: "startsAt", isId: false, isUnique: false, seq })
+        startsAt: getScalarFieldValueGenerator().DateTime({ modelName: "Subscription", fieldName: "startsAt", isId: false, isUnique: false, seq }),
+        currency: "CHF"
     };
 }
 function defineSubscriptionFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {

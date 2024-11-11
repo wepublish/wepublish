@@ -59,6 +59,8 @@ function mapColumFieldToGraphQLField(columnField: string): PageSort | null {
       return PageSort.ModifiedAt
     case 'publishAt':
       return PageSort.PublishAt
+    case 'publishedAt':
+      return PageSort.PublishedAt
     default:
       return null
   }
@@ -190,7 +192,7 @@ function PageList() {
 
           <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
-            <Cell dataKey="published">
+            <Cell dataKey="publishedAt">
               {(pageRef: RowDataType<PageRefFragment>) =>
                 pageRef.published?.publishedAt
                   ? t('pageEditor.overview.publishedAt', {

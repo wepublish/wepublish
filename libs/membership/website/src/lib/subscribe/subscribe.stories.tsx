@@ -7,6 +7,7 @@ import {WithUserDecorator} from '@wepublish/storybook'
 import {wait} from '@wepublish/testing'
 import {
   Challenge,
+  Currency,
   Exact,
   FullImageFragment,
   FullInvoiceFragment,
@@ -144,7 +145,8 @@ const memberPlan = {
   slug: '',
   description: text,
   tags: [],
-  extendable: true
+  extendable: true,
+  currency: Currency.Chf
 } as Exact<FullMemberPlanFragment>
 
 const memberPlan2 = {
@@ -152,7 +154,8 @@ const memberPlan2 = {
   id: '2',
   name: 'Barfoo Memberplan',
   amountPerMonthMin: 500,
-  availablePaymentMethods: [memberPlan.availablePaymentMethods[1]]
+  availablePaymentMethods: [memberPlan.availablePaymentMethods[1]],
+  currency: Currency.Eur
 } as Exact<FullMemberPlanFragment>
 
 const memberPlan3 = {
@@ -209,19 +212,6 @@ const fillFirstName: StoryObj['play'] = async ({canvasElement, step}) => {
   await step('Enter firstname', async () => {
     await userEvent.click(input)
     await userEvent.type(input, 'Foo')
-  })
-}
-
-const fillPreferredName: StoryObj['play'] = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement)
-
-  const input = canvas.getByLabelText('Bevorzugter Name', {
-    selector: 'input'
-  })
-
-  await step('Enter preferred name', async () => {
-    await userEvent.click(input)
-    await userEvent.type(input, 'Baz')
   })
 }
 
@@ -312,7 +302,7 @@ const fillCountry: StoryObj['play'] = async ({canvasElement, step}) => {
 
   await step('Enter country', async () => {
     await userEvent.click(input)
-    await userEvent.type(input, 'Schweiz')
+    await userEvent.type(input, 'Schweiz{enter}')
   })
 }
 
@@ -347,6 +337,19 @@ const fillRequired: StoryObj['play'] = async ctx => {
     await fillName(ctx)
     await fillEmail(ctx)
     await fillCaptcha(ctx)
+  })
+}
+
+const fillBirthday: StoryObj['play'] = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement)
+
+  const input = canvas.getByLabelText('Geburtstag', {
+    selector: 'input'
+  })
+
+  await step('Enter birthday', async () => {
+    await userEvent.click(input)
+    await userEvent.type(input, '09081994')
   })
 }
 
@@ -498,28 +501,28 @@ export const OnlyFirstNameInvalid: StoryObj<typeof Subscribe> = {
   })
 }
 
-export const OnlyPreferredName: StoryObj<typeof Subscribe> = {
+export const OnlyBirthday: StoryObj<typeof Subscribe> = {
   ...LoggedOut,
   args: {
     ...LoggedOut.args,
-    fields: ['preferredName']
+    fields: ['birthday']
   }
 }
 
-export const OnlyPreferredNameFilled: StoryObj<typeof Subscribe> = {
-  ...OnlyPreferredName,
-  play: waitForInitialDataIsSet(async ctx => {
+export const OnlyBirthdayFilled: StoryObj<typeof Subscribe> = {
+  ...OnlyBirthday,
+  play: async ctx => {
     await fillRequired(ctx)
-    await fillPreferredName(ctx)
+    await fillBirthday(ctx)
     await clickSubscribe(ctx)
-  })
+  }
 }
 
-export const OnlyPreferredNameInvalid: StoryObj<typeof Subscribe> = {
-  ...OnlyPreferredName,
-  play: waitForInitialDataIsSet(async ctx => {
+export const OnlyBirthdayInvalid: StoryObj<typeof Subscribe> = {
+  ...OnlyBirthday,
+  play: async ctx => {
     await clickSubscribe(ctx)
-  })
+  }
 }
 
 export const OnlyAddress: StoryObj<typeof Subscribe> = {
@@ -739,6 +742,21 @@ export const NoWarningPaindInvoice: StoryObj<typeof Subscribe> = {
       },
       loading: false
     }
+  }
+}
+
+export const WithCurrency: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  play: waitForInitialDataIsSet(async ctx => {
+    await changeMemberPlan(memberPlan2)(ctx)
+  })
+}
+
+export const WithExtraMoneyOffset: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    extraMoneyOffset: () => 300
   }
 }
 

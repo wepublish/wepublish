@@ -13,14 +13,12 @@ import {
   Subscription,
   SubscriptionsQuery
 } from '@wepublish/website/api'
-import {OptionalKeysOf} from 'type-fest'
 import {BuilderRegistrationFormProps} from './authentication.interface'
+import {BuilderUserFormFields} from './user.interface'
 
 export type BuilderSubscriptionListItemProps = Subscription & {
   className?: string
-  canPay: boolean
   canExtend: boolean
-  pay?: () => Promise<void>
   cancel?: () => Promise<void>
   extend?: () => Promise<void>
 }
@@ -31,7 +29,6 @@ export type BuilderSubscriptionListProps = Pick<
 > & {
   className?: string
   invoices: Pick<QueryResult<InvoicesQuery>, 'data' | 'loading' | 'error'>
-  onPay?: (subscriptionId: string) => Promise<void>
   onCancel?: (subscriptionId: string) => Promise<void>
   onExtend?: (subscriptionId: string) => Promise<void>
 }
@@ -58,7 +55,7 @@ export type BuilderMemberPlanPickerProps = {
   value?: string
 }
 
-export type BuilderMemberPlanItemProps = Pick<MemberPlan, 'amountPerMonthMin'> &
+export type BuilderMemberPlanItemProps = Pick<MemberPlan, 'amountPerMonthMin' | 'currency'> &
   RadioProps & {className?: string}
 
 export type BuilderPeriodicityPickerProps = {
@@ -78,7 +75,7 @@ export type BuilderPaymentMethodPickerProps = {
 }
 
 export type BuilderSubscribeProps<
-  T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
+  T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<BuilderUserFormFields, 'flair'>
 > = {
   challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>
   userSubscriptions: Pick<QueryResult<SubscriptionsQuery>, 'data' | 'loading' | 'error'>
@@ -99,5 +96,5 @@ export type BuilderSubscribeProps<
     firstName: string
   }>
   deactivateSubscriptionId?: string
-  extraMoneyOffset?: number
+  extraMoneyOffset?: (memberPlan: MemberPlan) => number
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>

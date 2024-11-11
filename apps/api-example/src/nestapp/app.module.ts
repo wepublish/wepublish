@@ -1,4 +1,4 @@
-import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
+import {ApolloDriverConfig, ApolloFederationDriver} from '@nestjs/apollo'
 import {Global, Module} from '@nestjs/common'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {GraphQLModule} from '@nestjs/graphql'
@@ -8,30 +8,35 @@ import {
   AuthenticationModule,
   BexioPaymentProvider,
   ConsentModule,
-  StatsModule,
   DashboardModule,
+  EventModule,
   EventsImportModule,
+  GoogleAnalyticsModule,
+  GoogleAnalyticsService,
   GraphQLRichText,
+  HealthModule,
+  HotAndTrendingModule,
+  KarmaMediaAdapter,
   KulturZueriService,
   MailchimpMailProvider,
   MailgunMailProvider,
   MailsModule,
   MediaAdapterService,
   MembershipModule,
+  MolliePaymentProvider,
+  NeverChargePaymentProvider,
   NovaMediaAdapter,
   PaymentProvider,
   PaymentsModule,
+  PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   PermissionModule,
+  ScriptsModule,
   SettingModule,
+  StatsModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  PayrexxFactory,
-  HealthModule,
-  NeverChargePaymentProvider,
-  KarmaMediaAdapter,
-  ScriptsModule,
   SystemInfoModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
@@ -41,23 +46,32 @@ import Mailgun from 'mailgun.js'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 import {readConfig} from '../readConfig'
-import {EventModule} from '@wepublish/event/api'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
+import {PollModule} from '@wepublish/poll/api'
 
 @Global()
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      resolvers: {RichText: GraphQLRichText},
-      autoSchemaFile: './apps/api-example/schema-v2.graphql',
-      sortSchema: true,
-      path: 'v2',
-      cache: 'bounded',
-      playground: process.env.NODE_ENV === 'development',
-      allowBatchedHttpRequests: true
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloFederationDriver,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+        return {
+          resolvers: {RichText: GraphQLRichText},
+          autoSchemaFile: './apps/api-example/schema-v2.graphql',
+          sortSchema: true,
+          path: 'v2',
+          cache: 'bounded',
+          introspection: configFile.general.apolloIntrospection,
+          playground: configFile.general.apolloPlayground,
+          allowBatchedHttpRequests: true
+        }
+      }
     }),
+
     PrismaModule,
     MailsModule.registerAsync({
       imports: [ConfigModule],
@@ -208,6 +222,19 @@ import {PrismaClient} from '@prisma/client'
                   prisma
                 })
               )
+            } else if (paymentProvider.type === 'mollie') {
+              paymentProviders.push(
+                new MolliePaymentProvider({
+                  id: paymentProvider.id,
+                  name: paymentProvider.name,
+                  offSessionPayments: paymentProvider.offSessionPayments,
+                  apiKey: paymentProvider.apiKey,
+                  webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
+                  apiBaseUrl: paymentProvider.apiBaseUrl,
+                  incomingRequestHandler: bodyParser.urlencoded({extended: true}),
+                  methods: paymentProvider.methods
+                })
+              )
             } else if (paymentProvider.type === 'no-charge') {
               paymentProviders.push(
                 new NeverChargePaymentProvider({
@@ -249,7 +276,27 @@ import {PrismaClient} from '@prisma/client'
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
     HealthModule,
-    SystemInfoModule
+    SystemInfoModule,
+    PollModule,
+    HotAndTrendingModule.registerAsync({
+      imports: [
+        GoogleAnalyticsModule.registerAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: async (config: ConfigService) => {
+            const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+
+            return {
+              credentials: configFile.ga?.credentials,
+              property: configFile.ga?.property,
+              articlePrefix: configFile.ga?.articlePrefix
+            }
+          }
+        })
+      ],
+      useFactory: (datasource: GoogleAnalyticsService) => datasource,
+      inject: [GoogleAnalyticsService]
+    })
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [

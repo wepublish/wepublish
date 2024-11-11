@@ -35,6 +35,7 @@ import {
   isVioletBreakBlock,
   isWarningBreakBlock
 } from './mannschaft-break-block'
+import {isContentBoxBlock, MannschaftContentBox} from './mannschaft-content-box'
 
 const seamlessBackground = (theme: Theme) => css`
   &:has(+ * > :is(${BreakBlockWrapper}, ${SliderWrapper}, ${FocusTeaserWrapper})) {
@@ -57,7 +58,8 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
           anyPass([isFirstAdTeaser, isSecondAdTeaser, isThirdAdTeaser]),
           (block: ApiV1.TeaserListBlock) => <AdTeaserBlockStyle {...block} />
         ],
-        [isHighlightTeasers, block => <HighlightBlockStyle {...block} />]
+        [isHighlightTeasers, block => <HighlightBlockStyle {...block} />],
+        [isContentBoxBlock, block => <MannschaftContentBox {...block} />]
       ]),
     []
   )

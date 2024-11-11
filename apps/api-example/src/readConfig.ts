@@ -1,6 +1,7 @@
 import fs from 'fs'
 import YAML from 'yaml'
 import {MappedReplacer} from 'mapped-replacer'
+import {GoogleAnalyticsConfig} from '@wepublish/api'
 
 type General = {
   apolloPlayground: boolean
@@ -107,7 +108,25 @@ type novaMediaServer = {
   type: 'nova'
 }
 
-type PaymentProvider = Payrexx | PayrexxSubscription | Stripe | StripeCheckout | Bexio | noCharge
+type Mollie = {
+  type: 'mollie'
+  id: string
+  name: string
+  offSessionPayments: boolean
+  apiKey: string
+  webhookEndpointSecret: string
+  apiBaseUrl: string
+  methods?: string[]
+}
+
+type PaymentProvider =
+  | Payrexx
+  | PayrexxSubscription
+  | Stripe
+  | StripeCheckout
+  | Bexio
+  | noCharge
+  | Mollie
 
 type AlgebraicCaptcha = {
   type: 'algebraic'
@@ -137,6 +156,7 @@ type Config = {
   paymentProviders: PaymentProvider[]
   mediaServer: karmaMediaServer | novaMediaServer
   challenge: AlgebraicCaptcha | Turnstile
+  ga?: GoogleAnalyticsConfig
 }
 
 function extractReplacer(input: string): string[] {

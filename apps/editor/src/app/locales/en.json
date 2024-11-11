@@ -122,6 +122,7 @@
         "yes": "Yes",
         "hidden": "Hide",
         "setAsHidden": "Hidden articles are excluded by default but can still be queried on demand.",
+        "disableComments": "Disable comments for this article",
         "light": "Light",
         "style": "Style",
         "text": "Text",
@@ -223,6 +224,8 @@
         "teasers": "{{count}} Teasers loaded",
         "teaserType": "Loading {{teaserType}} teasers",
         "teaserTypeLabel": "Teaser Type",
+        "sort": "Sorted by {{sort}}",
+        "sortLabel": "Sort by",
         "skip": "Skipping the first {{skip}} teasers",
         "skipLabel": "How many teasers should be skipped",
         "take": "Showing up to {{take}} teasers",
@@ -324,7 +327,8 @@
         "link": "Link",
         "remove": "Remove",
         "startWriting": "Start writing ...",
-        "text": "Text"
+        "text": "Text",
+        "id": "ID"
       },
       "richTextTable": {
         "addBorders": "Add Borders",
@@ -513,8 +517,8 @@
       "invalidEmailErrorMessage": "Please enter a valid email address",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
       "invalidUrlErrorMessage": "Please enter a valid url",
-      "minimalAmountPerMonth": "The minimal amount / month is defined as {{amount}} chf.",
-      "noAmountErrorMessage": "Default amount will be set to 5.00 CHF if empty",
+      "minimalAmountPerMonth": "The minimal amount / month is defined as {{amount}} {{currency}}.",
+      "noAmountErrorMessage": "Default amount will be set to 5.00 if empty",
       "noCallToActionImageErrorMessage": "Please enter a call to action image",
       "noEmailErrorMessage": "Please enter an email address",
       "noImageErrorMessage": "Please enter an image",
@@ -528,7 +532,8 @@
       "noUrlErrorMessage": "Please enter a url",
       "noUserErrorMessage": "Please select a user",
       "passwordTooShortErrorMessage": "Password must be at least 8 characters long",
-      "required": "This field is required"
+      "required": "This field is required",
+      "invalidCountry": "Please select a valid country"
     },
     "event": {
       "create": {
@@ -684,6 +689,8 @@
     "memberPlanEdit": {
       "active": "Active",
       "activeDescription": "Makes the plan available",
+      "currency": "Currency",
+      "currencyRequired": "Currency required",
       "amountPerMonthMin": "Minimal amount / month",
       "amountPerMonthMinRequired": "Minimal amount required",
       "amountPerMonthMinZero": "Minimal amount cannot be less than 0",
@@ -714,10 +721,10 @@
       "paymentMethods": "Possible Payment Methods",
       "paymentPeriodicities": "Payment Periodicities",
       "paymentPeriodicity": {
-        "BIANNUAL": "Biannual",
-        "MONTHLY": "Monthly",
-        "QUARTERLY": "Quarterly",
-        "YEARLY": "Yearly"
+        "biannual": "Biannual",
+        "monthly": "Monthly",
+        "quarterly": "Quarterly",
+        "yearly": "Yearly"
       },
       "title": "Member Plans"
     },
@@ -1026,6 +1033,7 @@
       "closedAtNone": "Not closed",
       "createNew": "Create Poll",
       "delete": "Delete",
+      "showVotes": "Show votes",
       "hasBeenClosedAt": "Closed at {{closedAt, ccc PP p}}",
       "noQuestion": "No question captured",
       "openedAt": "Opened at {{openedAt, ccc PP p}}",
@@ -1035,6 +1043,13 @@
       "question": "Question",
       "state": "State",
       "title": "Polls"
+    },
+    "pollVoteList": {
+      "createdAt": "Created at",
+      "answerId": "Answer",
+      "userId": "User ID",
+      "fingerprint": "Fingerprint",
+      "deleteItems": "Delete items"
     },
     "pollStateIndication": {
       "closed": "Poll closed",
@@ -1248,7 +1263,6 @@
       "password": "Password",
       "passwordChangeSuccess": "Password successfuly changed!",
       "passwordHeader": "Passwords & Access",
-      "preferredName": "Preferred Name",
       "properties": "Properties",
       "resetPassword": "Reset Password",
       "resetPasswordFor": "Reset the password for {{userName}}",
@@ -1263,7 +1277,8 @@
       "Unknown": "Unknown",
       "userDataTitle": "User Data",
       "userRoles": "User Roles",
-      "zipCode": "ZIP"
+      "zipCode": "ZIP",
+      "birthday": "Birthday"
     },
     "userList": {
       "overview": {
@@ -1334,7 +1349,7 @@
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
       },
       "editTitle": "Edit Subscription",
-      "memberPlanMonthlyAmount": "Minimal Monthly Amount (CHF)",
+      "memberPlanMonthlyAmount": "Minimal Monthly Amount ({{currency}})",
       "monthlyAmount": "Monthly amount",
       "paidUntil": "Paid Until",
       "paymentMethod": "Payment Method",
@@ -1357,12 +1372,12 @@
       "invoiceNr": "Invoice No. {{invoiceId}}",
       "invoicePaid": "paid",
       "invoiceUnpaid": "unpaid",
-      "monthlyAmount": "Monthly amount: {{monthlyAmount}} CHF",
+      "monthlyAmount": "Monthly amount: {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "Subscription expires, no automatic renewal",
       "noDeactivation": "No deactivation.",
       "paidUntil": "Paid until {{date}}",
       "paymentPeriodicity": "Payment periodicity: {{paymentPeriodicity}}",
-      "periodAmount": "Amount: {{amount}} CHF",
+      "periodAmount": "Amount: {{amount}} {{currency}}",
       "periodCreatedAt": "Created at {{date}}",
       "periodEndsAt": "until {{date}}",
       "periods": "Periods",
@@ -1392,7 +1407,9 @@
       "maxCountHelpText": "Limit the number of subscriptions that a user can purchase for this subscription plan. This also includes deactivated subscriptions.",
       "trialMemberplanAlert": "This subscription plan is configured for trial subscriptions.",
       "forceAutoRenewNotPossible": "Automatic renewal is not possible because the subscription plan is not extendable.",
-      "trialSubscriptionNotPossible": "The subscription plan must remain renewable because an automatic renewal is forced in a payment setting. You can of course change this."
+      "trialSubscriptionNotPossible": "The subscription plan must remain renewable because an automatic renewal is forced in a payment setting. You can of course change this.",
+      "migratePMTitle": "Migration of subscriptions to target payment method",
+      "migratePMHelptext": "Migrate the subscriptions of this plan to a new Payment Method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Advanced settings",
@@ -1400,7 +1417,9 @@
       "nonExtendableNotCompatibleWithAutoRenew": "An automatically renewing subscription must be renewable. Change one of these parameters.",
       "configureAsTrialSubscription": "Configure as a trial subscription",
       "subscriptionTrialNotPossible": "The subscription cannot be configured as a trial subscription. To do so, change the settings of the subscription plan.",
-      "extendableWasChanged": "The «Extendable» option has been adjusted according to the subscription plan."
+      "extendableWasChanged": "The «Extendable» option has been adjusted according to the subscription plan.",
+      "extendModalTitle": "Extend your subscription early?",
+      "extendModalBody": "The subscription will be extended prematurely for the next possible period. An invoice will be issued."
     },
     "subscriptionListFilter": {
       "extendable": "Extendable"
@@ -1412,6 +1431,10 @@
         "page": "Page",
         "event": "Event",
         "custom": "Custom"
+      },
+      "teaserSort": {
+        "hotAndTrending": "Hot & Trending",
+        "publishedAt": "Publication date"
       }
     },
     "authorEditPanel": {
@@ -1419,6 +1442,9 @@
       "hideOnTeam": "Hide on team page",
       "hideOnArticle": "Hide on articles",
       "hideOnTeaser": "Hide on teasers"
+    },
+    "selectableItemsActions": {
+      "selectedItems": "Selected {{numberOfItems}} items"
     }
   }
 }

@@ -1,7 +1,6 @@
 import {styled} from '@mui/material'
 import {
   ImageWrapper,
-  Teaser,
   TeaserLead,
   TeaserMetadata,
   TeaserPreTitle,
@@ -9,7 +8,9 @@ import {
   TeaserPreTitleWrapper
 } from '@wepublish/website'
 
-export const HighlightTeaser = styled(Teaser)`
+import {MannschaftBaseTeaser} from '../mannschaft-base-teaser'
+
+export const HighlightTeaser = styled(MannschaftBaseTeaser)`
   background-color: #000;
   color: #fff;
   grid-template-areas:
@@ -17,10 +18,10 @@ export const HighlightTeaser = styled(Teaser)`
     '. pretitle .'
     '. title .'
     '. lead .'
+    '. tags .'
     '. . .';
   grid-auto-rows: auto;
   grid-template-columns: 0 1fr 0;
-
   gap: ${({theme}) => theme.spacing(2)};
 
   ${({theme}) => theme.breakpoints.up('md')} {
@@ -29,6 +30,7 @@ export const HighlightTeaser = styled(Teaser)`
       'image pretitle .'
       'image title .'
       'image lead .'
+      'image tags .'
       'image . .';
     grid-template-columns: 2fr 1fr 0;
     column-gap: ${({theme}) => theme.spacing(4)};
@@ -61,6 +63,8 @@ export const HighlightTeaser = styled(Teaser)`
   }
 
   ${ImageWrapper} {
+    height: 100%;
+
     ${({theme}) => theme.breakpoints.up('md')} {
       aspect-ratio: 5/3;
       max-height: unset;

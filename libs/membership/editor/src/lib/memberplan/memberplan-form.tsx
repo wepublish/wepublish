@@ -4,7 +4,8 @@ import {
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   ImageRefFragment,
-  PaymentMethod
+  PaymentMethod,
+  Currency
 } from '@wepublish/editor/api'
 import {
   Button,
@@ -20,7 +21,8 @@ import {
   Row,
   TagPicker,
   toaster,
-  Toggle
+  Toggle,
+  SelectPicker
 } from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import styled from '@emotion/styled'
@@ -39,7 +41,7 @@ import {
 import {MdAutoFixHigh, MdCheck} from 'react-icons/md'
 import {Alert} from '@mui/material'
 
-const {ControlLabel, HelpText} = RForm
+const {ControlLabel, HelpText, Control} = RForm
 
 const ColTextAlignEnd = styled(Col)`
   text-align: end;
@@ -96,6 +98,7 @@ export function MemberPlanForm({
     const forcedAutoRenewPaymentMethods = !!availablePaymentMethods?.find(
       apm => apm.value.forceAutoRenewal
     )
+
     if (forcedAutoRenewPaymentMethods) {
       toaster.push(
         <Message type="error" showIcon closable>
@@ -103,11 +106,14 @@ export function MemberPlanForm({
         </Message>,
         {duration: 6000}
       )
+
       return
     }
+
     if (!updatedMemberPlan) {
       return
     }
+
     // update extendable prop of the member plan
     setMemberPlan({
       ...updatedMemberPlan,
@@ -131,6 +137,7 @@ export function MemberPlanForm({
       // cancel action
       return
     }
+
     onChange({...availablePaymentMethod, forceAutoRenewal})
   }
 
@@ -242,11 +249,12 @@ export function MemberPlanForm({
           </Row>
         </PanelWidth100>
       </Col>
+
       <Col xs={12}>
         <Panel bordered>
           <Row>
             {/* tags */}
-            <Col xs={12}>
+            <Col xs={24}>
               <Form.ControlLabel>{t('memberPlanEdit.tags')}</Form.ControlLabel>
               <TagPicker
                 disabled={loading}
@@ -266,12 +274,35 @@ export function MemberPlanForm({
               />
             </Col>
 
+            {/* Currency */}
+            <Col xs={12}>
+              <Form.ControlLabel>{t('memberPlanEdit.currency')}</Form.ControlLabel>
+              <SelectPicker
+                name="currency"
+                cleanable={false}
+                block
+                value={memberPlan?.currency ?? null}
+                data={[
+                  {value: Currency.Chf, label: Currency.Chf},
+                  {value: Currency.Eur, label: Currency.Eur}
+                ]}
+                disabled={loading}
+                onChange={(currency: Currency | null) => {
+                  if (!memberPlan || !currency) {
+                    return
+                  }
+
+                  setMemberPlan({...memberPlan, currency})
+                }}
+              />
+            </Col>
+
             {/* minimal monthly amount */}
             <Col xs={12}>
               <Form.ControlLabel>{t('memberPlanEdit.amountPerMonthMin')}</Form.ControlLabel>
               <CurrencyInput
-                name="currency"
-                currency="CHF"
+                name="amountPerMonthMin"
+                currency={memberPlan?.currency ?? 'CHF'}
                 centAmount={memberPlan?.amountPerMonthMin || 0}
                 disabled={loading}
                 onChange={centAmount => {
@@ -372,6 +403,27 @@ export function MemberPlanForm({
                   </Panel>
                 )}
               </ListInput>
+            </Col>
+
+            <Col xs={12}>
+              <ControlLabel>{t('memberplanForm.migratePMTitle')}</ControlLabel>
+              <Control
+                name="migrateToTargetPaymentMethodID"
+                block
+                virtualized
+                disabled={loading}
+                data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+                value={memberPlan?.migrateToTargetPaymentMethodID}
+                accepter={SelectPicker}
+                placement="auto"
+                onChange={migrateToTargetPaymentMethodID =>
+                  setMemberPlan({
+                    ...(memberPlan as FullMemberPlanFragment),
+                    migrateToTargetPaymentMethodID: migrateToTargetPaymentMethodID || null
+                  })
+                }
+              />
+              <HelpText>{t('memberplanForm.migratePMHelptext')}</HelpText>
             </Col>
           </Row>
         </Panel>

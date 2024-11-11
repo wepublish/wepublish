@@ -1,4 +1,4 @@
-import {css, styled, useTheme} from '@mui/material'
+import {Chip, css, styled, useTheme} from '@mui/material'
 import {firstParagraphToPlaintext} from '@wepublish/richtext'
 import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -152,15 +152,15 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
 export const selectTeaserTags = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      return teaser.page?.tags ?? []
+      return teaser.page?.tags?.filter(({tag, main}) => !!tag && main) ?? []
     }
 
     case 'ArticleTeaser': {
-      return teaser.article?.tags ?? []
+      return teaser.article?.tags?.filter(({tag, main}) => !!tag && main) ?? []
     }
 
     case 'EventTeaser':
-      return teaser.event?.tags ?? []
+      return teaser.event?.tags?.filter(({tag, main}) => !!tag && main) ?? []
 
     case 'PeerArticleTeaser':
     case 'CustomTeaser':
@@ -258,7 +258,6 @@ export const TeaserContentWrapper = styled('div')`
 
 export const TeaserTitle = styled('h1')`
   grid-area: title;
-  margin-bottom: ${({theme}) => theme.spacing(1)};
 `
 
 export const TeaserLead = styled('p')`
@@ -266,7 +265,7 @@ export const TeaserLead = styled('p')`
   grid-area: lead;
 `
 
-export const Authors = styled('span')`
+export const TeaserAuthors = styled('span')`
   font-weight: 500;
 `
 
@@ -327,6 +326,13 @@ export const TeaserTime = styled('time')`
   font-weight: 400;
 `
 
+export const TeaserTags = styled('div')`
+  display: none;
+  flex-flow: row wrap;
+  gap: ${({theme}) => theme.spacing(1)};
+  grid-area: tags;
+`
+
 const TeaserContent = ({
   href,
   className,
@@ -355,6 +361,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const image = teaser && selectTeaserImage(teaser)
   const publishDate = teaser && selectTeaserDate(teaser)
   const authors = teaser && selectTeaserAuthors(teaser)
+  const tags = teaser && selectTeaserTags(teaser).filter(tag => tag.tag !== preTitle)
 
   const {
     date,
@@ -377,11 +384,15 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
         )}
         {!preTitle && <TeaserPreTitleNoContent />}
 
-        <H4 component={TeaserTitle}>{title}</H4>
+        <H4 component={TeaserTitle} gutterBottom>
+          {title}
+        </H4>
         {lead && <Paragraph component={TeaserLead}>{lead}</Paragraph>}
 
         <TeaserMetadata>
-          {authors && authors?.length ? <Authors>Von {authors?.join(', ')} </Authors> : null}
+          {authors && authors?.length ? (
+            <TeaserAuthors>Von {authors?.join(', ')} </TeaserAuthors>
+          ) : null}
 
           {publishDate && (
             <TeaserTime suppressHydrationWarning dateTime={publishDate}>
@@ -390,6 +401,14 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
             </TeaserTime>
           )}
         </TeaserMetadata>
+
+        {!!tags?.length && (
+          <TeaserTags>
+            {tags?.slice(0, 5).map(tag => (
+              <Chip key={tag.id} label={tag.tag} color="primary" variant="outlined" />
+            ))}
+          </TeaserTags>
+        )}
       </TeaserContent>
     </TeaserWrapper>
   )

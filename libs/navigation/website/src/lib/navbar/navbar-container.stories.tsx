@@ -50,6 +50,25 @@ const navigations = [
     id: '123456-123456',
     key: 'header',
     name: 'Header'
+  },
+  {
+    id: '123456-123456',
+    key: 'icons',
+    name: 'Icons',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Search',
+        page: {
+          url: '/search'
+        }
+      },
+      {
+        __typename: 'ExternalNavigationLink',
+        label: 'X',
+        url: 'https://twitter.com/foobar'
+      }
+    ]
   }
 ] as Navigation[]
 
@@ -62,7 +81,8 @@ export const Default = {
   args: {
     slug: 'main',
     categorySlugs: [['categories'], ['about']],
-    headerSlug: 'header'
+    headerSlug: 'header',
+    iconSlug: 'icons'
   },
 
   parameters: {

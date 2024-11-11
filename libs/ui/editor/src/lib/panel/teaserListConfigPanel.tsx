@@ -1,4 +1,4 @@
-import {TagType, TeaserType} from '@wepublish/editor/api'
+import {TagType, TeaserListBlockSort, TeaserType} from '@wepublish/editor/api'
 import {useEffect, useMemo, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Schema, SelectPicker} from 'rsuite'
@@ -33,6 +33,7 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
   const [tagFilter, setTagFilter] = useState(value.filter.tags ?? [])
   const [take, setTake] = useState(value.take)
   const [skip, setSkip] = useState(value.skip)
+  const [sort, setSort] = useState(value.sort)
   const [teaserType, setTeaserType] = useState(value.teaserType)
   const {t} = useTranslation()
   const teaserTypeText = useTeaserTypeText()
@@ -62,6 +63,7 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
   useEffect(() => {
     if (previousType.current && previousType.current !== teaserType) {
       setTagFilter([])
+      setSort(TeaserListBlockSort.PublishedAt)
     }
 
     previousType.current = teaserType
@@ -69,7 +71,7 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
 
   return (
     <Form
-      formValue={{tagFilter, skip, take, teaserType}}
+      formValue={{tagFilter, skip, take, sort, teaserType}}
       model={validationModel}
       onSubmit={validationPassed =>
         validationPassed &&
@@ -77,6 +79,7 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
           ...value,
           filter: {...value.filter, tags: tagFilter},
           skip,
+          sort,
           take,
           teaserType
         })
@@ -113,6 +116,33 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
           />
         </Form.Group>
 
+        <Form.Group controlId="sort">
+          <Form.ControlLabel>{t('blocks.teaserList.sortLabel')}</Form.ControlLabel>
+
+          <SelectPicker
+            name="sort"
+            cleanable={false}
+            value={sort}
+            defaultValue={TeaserListBlockSort.PublishedAt}
+            onChange={value => setSort(value!)}
+            data={[
+              {
+                label: t(`resources.teaserSort.${TeaserListBlockSort.PublishedAt}`),
+                value: TeaserListBlockSort.PublishedAt
+              },
+              ...(teaserType === TeaserType.Article
+                ? [
+                    {
+                      label: t(`resources.teaserSort.${TeaserListBlockSort.HotAndTrending}`),
+                      value: TeaserListBlockSort.HotAndTrending
+                    }
+                  ]
+                : [])
+            ]}
+            css={inputStyles}
+          />
+        </Form.Group>
+
         <Form.Group controlId="skip">
           <Form.ControlLabel>{t('blocks.teaserList.skipLabel')}</Form.ControlLabel>
 
@@ -137,18 +167,20 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
           />
         </Form.Group>
 
-        <Form.Group controlId="tags">
-          <Form.ControlLabel>{t('blocks.teaserList.tagsLabel')}</Form.ControlLabel>
+        {sort !== TeaserListBlockSort.HotAndTrending && (
+          <Form.Group controlId="tags">
+            <Form.ControlLabel>{t('blocks.teaserList.tagsLabel')}</Form.ControlLabel>
 
-          <SelectTags
-            defaultTags={value.filter.tagObjects}
-            name="tags"
-            tagType={tagType}
-            setSelectedTags={setTagFilter}
-            selectedTags={tagFilter}
-            css={inputStyles}
-          />
-        </Form.Group>
+            <SelectTags
+              defaultTags={value.filter.tagObjects}
+              name="tags"
+              tagType={tagType}
+              setSelectedTags={setTagFilter}
+              selectedTags={tagFilter}
+              css={inputStyles}
+            />
+          </Form.Group>
+        )}
       </DrawerBody>
     </Form>
   )

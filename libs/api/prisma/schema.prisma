@@ -117,8 +117,9 @@ model Article {
   draftId String?          @unique
   draft   ArticleRevision? @relation("draftArticleRevision", fields: [draftId], references: [id], onDelete: SetNull)
 
-  shared Boolean
-  hidden Boolean @default(false)
+  shared          Boolean
+  hidden          Boolean @default(false)
+  disableComments Boolean @default(false)
 
   navigations NavigationLink[]
   tags        TaggedArticles[]
@@ -428,6 +429,7 @@ model Invoice {
   scheduledDeactivationAt   DateTime
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
+  currency                  Currency
 
   subscriptionID String?
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
@@ -489,20 +491,28 @@ model AvailablePaymentMethod {
   @@map("member.plans.payment-methods")
 }
 
+enum Currency {
+  CHF @map("CHF")
+  EUR @map("EUR")
+}
+
 model MemberPlan {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name                    String
-  slug                    String                   @unique
-  tags                    String[]
-  description             Json
-  active                  Boolean
-  amountPerMonthMin       Float
-  availablePaymentMethods AvailablePaymentMethod[]
-  extendable              Boolean                  @default(true)
-  maxCount                Int?
+  name                           String
+  slug                           String                   @unique
+  tags                           String[]
+  description                    Json
+  active                         Boolean
+  currency                       Currency
+  amountPerMonthMin              Float
+  availablePaymentMethods        AvailablePaymentMethod[]
+  migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
+  migrateToTargetPaymentMethodID String?
+  extendable                     Boolean                  @default(true)
+  maxCount                       Int?
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
@@ -632,6 +642,7 @@ model PaymentMethod {
   Subscription      Subscription[]
   Payment           Payment[]
   subscriptionFlows SubscriptionFlow[]
+  migrateFromPlans  MemberPlan[]       @relation("PaymentMethodMigration")
 
   @@map("payment.methods")
 }
@@ -775,6 +786,7 @@ model Subscription {
   properties         MetadataProperty[]
   deactivation       SubscriptionDeactivation?
   extendable         Boolean                   @default(true)
+  currency           Currency
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
@@ -849,11 +861,11 @@ model User {
   id              String    @id @default(cuid())
   createdAt       DateTime  @default(now())
   modifiedAt      DateTime  @updatedAt
+  birthday        DateTime? @db.Date
   email           String    @unique
   emailVerifiedAt DateTime?
   name            String
   firstName       String?
-  preferredName   String?
   flair           String?
   password        String
   active          Boolean

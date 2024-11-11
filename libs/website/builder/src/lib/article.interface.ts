@@ -25,3 +25,8 @@ export type BuilderArticleListProps = Pick<
   variables?: Partial<ArticleListQueryVariables>
   onVariablesChange?: (variables: Partial<ArticleListQueryVariables>) => void
 }
+
+export type BuilderArticleDateProps = {
+  article: Article
+  className?: string
+}

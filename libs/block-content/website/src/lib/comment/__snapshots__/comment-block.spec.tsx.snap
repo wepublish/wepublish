@@ -2,100 +2,7 @@
 
 exports[`Comment List should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 32px;
-}
-
-.emotion-2 {
-  display: grid;
-  grid-template-rows: max-content auto;
-  gap: 12px;
-}
-
-.emotion-2:target {
-  border: 2px solid #e91e63;
-  border-radius: 20px;
-  scroll-margin-top: 80px;
-  padding: 16px;
-}
-
-.emotion-4 {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 16px;
-}
-
-.emotion-6 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-}
-
-.emotion-10 {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  gap: 8px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-weight: 700;
-}
-
-.emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.emotion-14 {
-  font-size: 0.75em;
-  font-weight: 300;
-}
-
-.emotion-18 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-18.emotion-18 {
-  font-weight: 600;
-}
-
-.emotion-18.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-22.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22:last-child {
-  margin-bottom: 0;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <article
@@ -132,7 +39,7 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-12 emotion-13"
             >
-              Signed Up User
+              Fallback User
             </div>
           </div>
           <div
@@ -211,7 +118,7 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-12 emotion-13"
             >
-              Signed Up User
+              Fallback User
             </div>
           </div>
           <div
@@ -262,100 +169,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment List should render WithAnonymousComments 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 32px;
-}
-
-.emotion-2 {
-  display: grid;
-  grid-template-rows: max-content auto;
-  gap: 12px;
-}
-
-.emotion-2:target {
-  border: 2px solid #e91e63;
-  border-radius: 20px;
-  scroll-margin-top: 80px;
-  padding: 16px;
-}
-
-.emotion-4 {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 16px;
-}
-
-.emotion-6 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-}
-
-.emotion-10 {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  gap: 8px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-weight: 700;
-}
-
-.emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.emotion-14 {
-  font-size: 0.75em;
-  font-weight: 300;
-}
-
-.emotion-18 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-18.emotion-18 {
-  font-weight: 600;
-}
-
-.emotion-18.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-22.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22:last-child {
-  margin-bottom: 0;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <article
@@ -522,100 +336,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment List should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 32px;
-}
-
-.emotion-2 {
-  display: grid;
-  grid-template-rows: max-content auto;
-  gap: 12px;
-}
-
-.emotion-2:target {
-  border: 2px solid #e91e63;
-  border-radius: 20px;
-  scroll-margin-top: 80px;
-  padding: 16px;
-}
-
-.emotion-4 {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 16px;
-}
-
-.emotion-6 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-}
-
-.emotion-10 {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  gap: 8px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-weight: 700;
-}
-
-.emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.emotion-14 {
-  font-size: 0.75em;
-  font-weight: 300;
-}
-
-.emotion-18 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-18.emotion-18 {
-  font-weight: 600;
-}
-
-.emotion-18.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-22.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22:last-child {
-  margin-bottom: 0;
-}
-
-<article
+  <article
     class="extra-classname emotion-0 emotion-1"
   >
     <article
@@ -652,7 +373,7 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-12 emotion-13"
             >
-              Signed Up User
+              Fallback User
             </div>
           </div>
           <div
@@ -731,7 +452,7 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-12 emotion-13"
             >
-              Signed Up User
+              Fallback User
             </div>
           </div>
           <div
@@ -782,100 +503,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment List should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 32px;
-}
-
-.emotion-2 {
-  display: grid;
-  grid-template-rows: max-content auto;
-  gap: 12px;
-}
-
-.emotion-2:target {
-  border: 2px solid #e91e63;
-  border-radius: 20px;
-  scroll-margin-top: 80px;
-  padding: 16px;
-}
-
-.emotion-4 {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 16px;
-}
-
-.emotion-6 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-}
-
-.emotion-10 {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  gap: 8px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-weight: 700;
-}
-
-.emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.emotion-14 {
-  font-size: 0.75em;
-  font-weight: 300;
-}
-
-.emotion-18 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-18.emotion-18 {
-  font-weight: 600;
-}
-
-.emotion-18.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-22.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22:last-child {
-  margin-bottom: 0;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <article
@@ -912,7 +540,7 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-12 emotion-13"
             >
-              Signed Up User
+              Fallback User
             </div>
           </div>
           <div
@@ -991,7 +619,7 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-12 emotion-13"
             >
-              Signed Up User
+              Fallback User
             </div>
           </div>
           <div
@@ -1042,100 +670,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment List should render WithError 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 32px;
-}
-
-.emotion-2 {
-  display: grid;
-  grid-template-rows: max-content auto;
-  gap: 12px;
-}
-
-.emotion-2:target {
-  border: 2px solid #e91e63;
-  border-radius: 20px;
-  scroll-margin-top: 80px;
-  padding: 16px;
-}
-
-.emotion-4 {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 16px;
-}
-
-.emotion-6 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-}
-
-.emotion-10 {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  gap: 8px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-weight: 700;
-}
-
-.emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.emotion-14 {
-  font-size: 0.75em;
-  font-weight: 300;
-}
-
-.emotion-18 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-18.emotion-18 {
-  font-weight: 600;
-}
-
-.emotion-18.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-22.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22:last-child {
-  margin-bottom: 0;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <article
@@ -1172,7 +707,7 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-12 emotion-13"
             >
-              Signed Up User
+              Fallback User
             </div>
           </div>
           <div
@@ -1251,7 +786,7 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-12 emotion-13"
             >
-              Signed Up User
+              Fallback User
             </div>
           </div>
           <div
@@ -1302,100 +837,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment List should render WithLoading 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 32px;
-}
-
-.emotion-2 {
-  display: grid;
-  grid-template-rows: max-content auto;
-  gap: 12px;
-}
-
-.emotion-2:target {
-  border: 2px solid #e91e63;
-  border-radius: 20px;
-  scroll-margin-top: 80px;
-  padding: 16px;
-}
-
-.emotion-4 {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 16px;
-}
-
-.emotion-6 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-}
-
-.emotion-10 {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  gap: 8px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-weight: 700;
-}
-
-.emotion-12 {
-  font-size:line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.emotion-14 {
-  font-size: 0.75em;
-  font-weight: 300;
-}
-
-.emotion-18 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-18.emotion-18 {
-  font-weight: 600;
-}
-
-.emotion-18.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-22.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22:last-child {
-  margin-bottom: 0;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <article
@@ -1432,7 +874,7 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-12 emotion-13"
             >
-              Signed Up User
+              Fallback User
             </div>
           </div>
           <div
@@ -1511,7 +953,7 @@ https://unsplash.it/200/200 200w"
             <div
               class="emotion-12 emotion-13"
             >
-              Signed Up User
+              Fallback User
             </div>
           </div>
           <div

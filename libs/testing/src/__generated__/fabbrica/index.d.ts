@@ -62,6 +62,7 @@ import type { CommentRejectionReason } from "@prisma/client";
 import type { CommentState } from "@prisma/client";
 import type { CommentAuthorType } from "@prisma/client";
 import type { RatingSystemType } from "@prisma/client";
+import type { Currency } from "@prisma/client";
 import type { MailLogState } from "@prisma/client";
 import type { PaymentPeriodicity } from "@prisma/client";
 import type { PaymentState } from "@prisma/client";
@@ -300,6 +301,7 @@ type ArticleFactoryDefineInput = {
     modifiedAt?: Date;
     shared?: boolean;
     hidden?: boolean;
+    disableComments?: boolean;
     published?: ArticlepublishedFactory | Prisma.ArticleRevisionCreateNestedOneWithoutPublishedArticleInput;
     pending?: ArticlependingFactory | Prisma.ArticleRevisionCreateNestedOneWithoutPendingArticleInput;
     draft?: ArticledraftFactory | Prisma.ArticleRevisionCreateNestedOneWithoutDraftArticleInput;
@@ -992,6 +994,7 @@ type InvoiceFactoryDefineInput = {
     canceledAt?: Date | null;
     scheduledDeactivationAt?: Date;
     manuallySetAsPaidByUserId?: string | null;
+    currency?: Currency;
     items?: Prisma.InvoiceItemCreateNestedManyWithoutInvoicesInput;
     subscription?: InvoicesubscriptionFactory | Prisma.SubscriptionCreateNestedOneWithoutInvoicesInput;
     subscriptionPeriods?: Prisma.SubscriptionPeriodCreateNestedManyWithoutInvoiceInput;
@@ -1117,6 +1120,10 @@ export interface AvailablePaymentMethodFactoryInterface<TOptions extends Availab
  * @returns factory {@link AvailablePaymentMethodFactoryInterface}
  */
 export declare function defineAvailablePaymentMethodFactory<TOptions extends AvailablePaymentMethodFactoryDefineOptions>(options?: TOptions): AvailablePaymentMethodFactoryInterface<TOptions>;
+type MemberPlanmigrateToTargetPaymentMethodFactory = {
+    _factoryFor: "PaymentMethod";
+    build: () => PromiseLike<Prisma.PaymentMethodCreateNestedOneWithoutMigrateFromPlansInput["create"]>;
+};
 type MemberPlanimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutMemberPlanInput["create"]>;
@@ -1130,10 +1137,12 @@ type MemberPlanFactoryDefineInput = {
     tags?: Prisma.MemberPlanCreatetagsInput | Prisma.Enumerable<string>;
     description?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
     active?: boolean;
+    currency?: Currency;
     amountPerMonthMin?: number;
     extendable?: boolean;
     maxCount?: number | null;
     availablePaymentMethods?: Prisma.AvailablePaymentMethodCreateNestedManyWithoutMemberPlanInput;
+    migrateToTargetPaymentMethod?: MemberPlanmigrateToTargetPaymentMethodFactory | Prisma.PaymentMethodCreateNestedOneWithoutMigrateFromPlansInput;
     image?: MemberPlanimageFactory | Prisma.ImageCreateNestedOneWithoutMemberPlanInput;
     Subscription?: Prisma.SubscriptionCreateNestedManyWithoutMemberPlanInput;
     subscriptionFlows?: Prisma.SubscriptionFlowCreateNestedManyWithoutMemberPlanInput;
@@ -1426,6 +1435,7 @@ type PaymentMethodFactoryDefineInput = {
     Subscription?: Prisma.SubscriptionCreateNestedManyWithoutPaymentMethodInput;
     Payment?: Prisma.PaymentCreateNestedManyWithoutPaymentMethodInput;
     subscriptionFlows?: Prisma.SubscriptionFlowCreateNestedManyWithoutPaymentMethodsInput;
+    migrateFromPlans?: Prisma.MemberPlanCreateNestedManyWithoutMigrateToTargetPaymentMethodInput;
 };
 type PaymentMethodFactoryDefineOptions = {
     defaultData?: Resolver<PaymentMethodFactoryDefineInput, BuildDataOptions>;
@@ -1777,6 +1787,7 @@ type SubscriptionFactoryDefineInput = {
     startsAt?: Date;
     paidUntil?: Date | null;
     extendable?: boolean;
+    currency?: Currency;
     periods?: Prisma.SubscriptionPeriodCreateNestedManyWithoutSubscriptionInput;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutSubscriptionInput;
     deactivation?: SubscriptiondeactivationFactory | Prisma.SubscriptionDeactivationCreateNestedOneWithoutSubscriptionInput;
@@ -1962,11 +1973,11 @@ type UserFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
+    birthday?: Date | null;
     email?: string;
     emailVerifiedAt?: Date | null;
     name?: string;
     firstName?: string | null;
-    preferredName?: string | null;
     flair?: string | null;
     password?: string;
     active?: boolean;

@@ -20,12 +20,18 @@ export type Scalars = {
   /** Setting Value */
   GraphQLSettingValueType: any;
   RichText: Node[];
+  link__Import: any;
 };
 
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
   boolChoice?: Maybe<Scalars['Boolean']>;
   stringChoice?: Maybe<Array<Scalars['String']>>;
+};
+
+export type Article = {
+  __typename?: 'Article';
+  id: Scalars['ID'];
 };
 
 export type BlockStyle = {
@@ -99,15 +105,17 @@ export type Event = {
   endsAt?: Maybe<Scalars['DateTime']>;
   externalSourceId?: Maybe<Scalars['String']>;
   externalSourceName?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  id: Scalars['ID'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  page?: Maybe<Page>;
   startsAt: Scalars['DateTime'];
   status: EventStatus;
+  tags?: Maybe<Array<Tag>>;
 };
 
 export type EventFilter = {
@@ -126,12 +134,13 @@ export type EventFromSource = {
   endsAt?: Maybe<Scalars['DateTime']>;
   externalSourceId?: Maybe<Scalars['String']>;
   externalSourceName?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  id: Scalars['ID'];
   imageUrl?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  page?: Maybe<Page>;
   startsAt: Scalars['DateTime'];
   status: EventStatus;
 };
@@ -158,6 +167,11 @@ export type FocalPoint = {
 
 export type Image = {
   __typename?: 'Image';
+  id: Scalars['ID'];
+};
+
+export type ImageV2 = {
+  __typename?: 'ImageV2';
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['RichText']>;
   extension: Scalars['String'];
@@ -166,7 +180,7 @@ export type Image = {
   focalPoint?: Maybe<FocalPoint>;
   format: Scalars['String'];
   height: Scalars['Int'];
-  id: Scalars['String'];
+  id: Scalars['ID'];
   license?: Maybe<Scalars['String']>;
   link?: Maybe<Scalars['String']>;
   mimeType: Scalars['String'];
@@ -221,9 +235,9 @@ export type MailTemplateWithUrlAndStatusModel = {
   url: Scalars['String'];
 };
 
-export type MemberPlanRef = {
-  __typename?: 'MemberPlanRef';
-  id: Scalars['String'];
+export type MemberPlan = {
+  __typename?: 'MemberPlan';
+  id: Scalars['ID'];
   name: Scalars['String'];
 };
 
@@ -260,6 +274,8 @@ export type Mutation = {
   deleteConsent: Consent;
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Delete poll vote */
+  deletePollVote: PollVote;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -372,6 +388,11 @@ export type MutationDeleteEventArgs = {
 };
 
 
+export type MutationDeletePollVoteArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationDeleteSubscriptionFlowArgs = {
   id: Scalars['String'];
 };
@@ -458,6 +479,11 @@ export type MutationUpdateUserConsentArgs = {
   value: Scalars['Boolean'];
 };
 
+export type Page = {
+  __typename?: 'Page';
+  id: Scalars['ID'];
+};
+
 export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor?: Maybe<Scalars['String']>;
@@ -473,9 +499,16 @@ export type PaginatedEvents = {
   totalCount: Scalars['Float'];
 };
 
-export type PaymentMethodRef = {
-  __typename?: 'PaymentMethodRef';
-  id: Scalars['String'];
+export type PaginatedPollVotes = {
+  __typename?: 'PaginatedPollVotes';
+  nodes: Array<PollVote>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float'];
+};
+
+export type PaymentMethod = {
+  __typename?: 'PaymentMethod';
+  id: Scalars['ID'];
   name: Scalars['String'];
 };
 
@@ -498,6 +531,37 @@ export type PeriodicJob = {
   successfullyFinished?: Maybe<Scalars['DateTime']>;
   tries: Scalars['Float'];
 };
+
+export type PollAnswerInVote = {
+  __typename?: 'PollAnswerInVote';
+  answer: Scalars['String'];
+  id: Scalars['ID'];
+};
+
+export type PollVote = {
+  __typename?: 'PollVote';
+  answer: PollAnswerInVote;
+  answerId: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  disabled: Scalars['Boolean'];
+  fingerprint?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  pollId: Scalars['ID'];
+  userId?: Maybe<Scalars['ID']>;
+};
+
+export type PollVoteFilter = {
+  answerIds?: InputMaybe<Array<Scalars['String']>>;
+  fingerprint?: InputMaybe<Scalars['String']>;
+  from?: InputMaybe<Scalars['DateTime']>;
+  pollId?: InputMaybe<Scalars['String']>;
+  to?: InputMaybe<Scalars['DateTime']>;
+  userId?: InputMaybe<Scalars['String']>;
+};
+
+export enum PollVoteSort {
+  CreatedAt = 'CreatedAt'
+}
 
 export type Query = {
   __typename?: 'Query';
@@ -540,7 +604,13 @@ export type Query = {
    */
   expectedRevenue: Array<DashboardInvoice>;
   /** Returns an image by id. */
-  image: Image;
+  getImage: ImageV2;
+  /**
+   *
+   *       Returns the most viewed articles in descending order.
+   *
+   */
+  hotAndTrending: Array<Article>;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
@@ -576,8 +646,10 @@ export type Query = {
    */
   newSubscribers: Array<DashboardSubscription>;
   /** Returns all payment methods */
-  paymentMethods: Array<PaymentMethodRef>;
+  paymentMethods: Array<PaymentMethod>;
   periodicJobLog: Array<PeriodicJob>;
+  /** Returns a paginated list of poll votes */
+  pollVotes: PaginatedPollVotes;
   provider: MailProviderModel;
   /**
    *
@@ -594,16 +666,22 @@ export type Query = {
   revenue: Array<DashboardInvoice>;
   /**
    *
-   *       Returns a single setting by id.
+   *       Returns a single setting by name.
    *
    */
   setting: Setting;
   /**
    *
+   *       Returns a single setting by id.
+   *
+   */
+  settingById: Setting;
+  /**
+   *
    *       Returns all settings.
    *
    */
-  settingsList: Array<Setting>;
+  settings: Array<Setting>;
   stats?: Maybe<Stats>;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
@@ -636,12 +714,12 @@ export type QueryConsentsArgs = {
 
 
 export type QueryEventArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type QueryEventsArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['ID']>;
   filter?: InputMaybe<EventFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -656,8 +734,14 @@ export type QueryExpectedRevenueArgs = {
 };
 
 
-export type QueryImageArgs = {
+export type QueryGetImageArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryHotAndTrendingArgs = {
+  start?: InputMaybe<Scalars['DateTime']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -693,6 +777,16 @@ export type QueryPeriodicJobLogArgs = {
 };
 
 
+export type QueryPollVotesArgs = {
+  cursorId?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<PollVoteFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<PollVoteSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryRenewingSubscribersArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
@@ -706,11 +800,16 @@ export type QueryRevenueArgs = {
 
 
 export type QuerySettingArgs = {
+  name: Scalars['String'];
+};
+
+
+export type QuerySettingByIdArgs = {
   id: Scalars['String'];
 };
 
 
-export type QuerySettingsListArgs = {
+export type QuerySettingsArgs = {
   filter?: InputMaybe<SettingFilter>;
 };
 
@@ -811,9 +910,9 @@ export type SubscriptionFlowModel = {
   default: Scalars['Boolean'];
   id: Scalars['String'];
   intervals: Array<SubscriptionInterval>;
-  memberPlan?: Maybe<MemberPlanRef>;
+  memberPlan?: Maybe<MemberPlan>;
   numberOfSubscriptions: Scalars['Int'];
-  paymentMethods: Array<PaymentMethodRef>;
+  paymentMethods: Array<PaymentMethod>;
   periodicities: Array<PaymentPeriodicity>;
 };
 
@@ -831,20 +930,20 @@ export type SystemMailModel = {
   mailTemplate?: Maybe<MailTemplateRef>;
 };
 
+export type Tag = {
+  __typename?: 'Tag';
+  id: Scalars['ID'];
+};
+
 export type User = {
   __typename?: 'User';
-  active: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   lastLogin?: Maybe<Scalars['DateTime']>;
-  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  password: Scalars['String'];
-  preferredName?: Maybe<Scalars['String']>;
-  roleIDs: Array<Scalars['String']>;
+  roleIDs?: Maybe<Array<Scalars['String']>>;
   userImageID?: Maybe<Scalars['String']>;
 };
 
@@ -1041,10 +1140,33 @@ export type PeriodicJobLogsQueryVariables = Exact<{
 
 export type PeriodicJobLogsQuery = { __typename?: 'Query', periodicJobLog: Array<{ __typename?: 'PeriodicJob', id: string, date: string, error?: string | null, executionTime?: string | null, finishedWithError?: string | null, modifiedAt: string, successfullyFinished?: string | null, tries: number, createdAt: string }> };
 
+export type FullPollVoteFragment = { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null };
+
+export type FullPollVoteWithAnswerFragment = { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } };
+
+export type PollVoteListQueryVariables = Exact<{
+  filter?: InputMaybe<PollVoteFilter>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<PollVoteSort>;
+}>;
+
+
+export type PollVoteListQuery = { __typename?: 'Query', pollVotes: { __typename?: 'PaginatedPollVotes', totalCount: number, nodes: Array<{ __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type DeletePollVoteMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeletePollVoteMutation = { __typename?: 'Mutation', deletePollVote: { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } } };
+
 export type SettingsListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SettingsListQuery = { __typename?: 'Query', settingsList: Array<{ __typename?: 'Setting', id: string, name: SettingName, value?: any | null, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null, allowedValues?: { __typename?: 'AllowedSettingVals', stringChoice?: Array<string> | null, boolChoice?: boolean | null } | null } | null }> };
+export type SettingsListQuery = { __typename?: 'Query', settings: Array<{ __typename?: 'Setting', id: string, name: SettingName, value?: any | null, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null, allowedValues?: { __typename?: 'AllowedSettingVals', stringChoice?: Array<string> | null, boolChoice?: boolean | null } | null } | null }> };
 
 export type UpdateSettingMutationVariables = Exact<{
   name: SettingName;
@@ -1060,7 +1182,7 @@ export type SubscriptionFlowsQueryVariables = Exact<{
 }>;
 
 
-export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type CreateSubscriptionFlowMutationVariables = Exact<{
   memberPlanId: Scalars['String'];
@@ -1070,7 +1192,7 @@ export type CreateSubscriptionFlowMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type UpdateSubscriptionFlowMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1080,14 +1202,14 @@ export type UpdateSubscriptionFlowMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type DeleteSubscriptionFlowMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type CreateSubscriptionIntervalMutationVariables = Exact<{
   subscriptionFlowId: Scalars['String'];
@@ -1097,7 +1219,7 @@ export type CreateSubscriptionIntervalMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type UpdateSubscriptionIntervalMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1106,29 +1228,29 @@ export type UpdateSubscriptionIntervalMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type DeleteSubscriptionIntervalMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type ListPaymentMethodsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ListPaymentMethodsQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }> };
+export type ListPaymentMethodsQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }> };
 
-export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
+export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
 
 export type SubscriptionIntervalFragment = { __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null };
 
 export type MailTemplateRefFragment = { __typename?: 'MailTemplateRef', id: string, name: string };
 
-export type MemberPlanRefFragment = { __typename?: 'MemberPlanRef', id: string, name: string };
+export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string };
 
-export type PaymentMethodRefFragment = { __typename?: 'PaymentMethodRef', id: string, name: string };
+export type PaymentMethodRefFragment = { __typename?: 'PaymentMethod', id: string, name: string };
 
 export type SystemMailsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1236,14 +1358,33 @@ export const FullPeriodicJobFragmentDoc = gql`
   createdAt
 }
     `;
+export const FullPollVoteFragmentDoc = gql`
+    fragment FullPollVote on PollVote {
+  id
+  createdAt
+  pollId
+  answerId
+  userId
+  fingerprint
+}
+    `;
+export const FullPollVoteWithAnswerFragmentDoc = gql`
+    fragment FullPollVoteWithAnswer on PollVote {
+  ...FullPollVote
+  answer {
+    id
+    answer
+  }
+}
+    ${FullPollVoteFragmentDoc}`;
 export const MemberPlanRefFragmentDoc = gql`
-    fragment MemberPlanRef on MemberPlanRef {
+    fragment MemberPlanRef on MemberPlan {
   id
   name
 }
     `;
 export const PaymentMethodRefFragmentDoc = gql`
-    fragment PaymentMethodRef on PaymentMethodRef {
+    fragment PaymentMethodRef on PaymentMethod {
   id
   name
 }
@@ -2061,9 +2202,98 @@ export function usePeriodicJobLogsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type PeriodicJobLogsQueryHookResult = ReturnType<typeof usePeriodicJobLogsQuery>;
 export type PeriodicJobLogsLazyQueryHookResult = ReturnType<typeof usePeriodicJobLogsLazyQuery>;
 export type PeriodicJobLogsQueryResult = Apollo.QueryResult<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>;
+export const PollVoteListDocument = gql`
+    query PollVoteList($filter: PollVoteFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PollVoteSort) {
+  pollVotes(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullPollVoteWithAnswer
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${FullPollVoteWithAnswerFragmentDoc}`;
+
+/**
+ * __usePollVoteListQuery__
+ *
+ * To run a query within a React component, call `usePollVoteListQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePollVoteListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePollVoteListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function usePollVoteListQuery(baseOptions?: Apollo.QueryHookOptions<PollVoteListQuery, PollVoteListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PollVoteListQuery, PollVoteListQueryVariables>(PollVoteListDocument, options);
+      }
+export function usePollVoteListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PollVoteListQuery, PollVoteListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PollVoteListQuery, PollVoteListQueryVariables>(PollVoteListDocument, options);
+        }
+export type PollVoteListQueryHookResult = ReturnType<typeof usePollVoteListQuery>;
+export type PollVoteListLazyQueryHookResult = ReturnType<typeof usePollVoteListLazyQuery>;
+export type PollVoteListQueryResult = Apollo.QueryResult<PollVoteListQuery, PollVoteListQueryVariables>;
+export const DeletePollVoteDocument = gql`
+    mutation DeletePollVote($id: ID!) {
+  deletePollVote(id: $id) {
+    ...FullPollVoteWithAnswer
+  }
+}
+    ${FullPollVoteWithAnswerFragmentDoc}`;
+export type DeletePollVoteMutationFn = Apollo.MutationFunction<DeletePollVoteMutation, DeletePollVoteMutationVariables>;
+
+/**
+ * __useDeletePollVoteMutation__
+ *
+ * To run a mutation, you first call `useDeletePollVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePollVoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePollVoteMutation, { data, loading, error }] = useDeletePollVoteMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePollVoteMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollVoteMutation, DeletePollVoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePollVoteMutation, DeletePollVoteMutationVariables>(DeletePollVoteDocument, options);
+      }
+export type DeletePollVoteMutationHookResult = ReturnType<typeof useDeletePollVoteMutation>;
+export type DeletePollVoteMutationResult = Apollo.MutationResult<DeletePollVoteMutation>;
+export type DeletePollVoteMutationOptions = Apollo.BaseMutationOptions<DeletePollVoteMutation, DeletePollVoteMutationVariables>;
 export const SettingsListDocument = gql`
     query SettingsList {
-  settingsList {
+  settings {
     id
     name
     value

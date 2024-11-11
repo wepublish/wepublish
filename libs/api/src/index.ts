@@ -62,3 +62,13 @@ export * from '@wepublish/event/api'
 export * from '@wepublish/health'
 export * from '@wepublish/scripts/api'
 export * from '@wepublish/system-info'
+export * from '@wepublish/google-analytics/api'
+export {
+  Article as ArticleV2,
+  HOT_AND_TRENDING_DATA_SOURCE,
+  HotAndTrendingClientAsyncOptions,
+  HotAndTrendingDataSource,
+  HotAndTrendingModule,
+  HotAndTrendingOptionsFactory,
+  HotAndTrendingResolver
+} from '@wepublish/article/api'

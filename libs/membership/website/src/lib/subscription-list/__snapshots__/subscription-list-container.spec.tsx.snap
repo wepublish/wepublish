@@ -7,294 +7,152 @@ Compared values have no visual difference."
 
 exports[`SubscriptionList Container should render CancelWithInvoiceList 1`] = `
 "Snapshot Diff:
-Compared values have no visual difference."
+- First value
++ Second value
+
+@@ -183,10 +183,136 @@
+      </div>
+    </article>
+    <article
+      class="css-1cqlm8-InvoiceListWrapper eae5n870"
+    >
++     <div
++       class="css-7e096c-InvoiceListItemWrapper e7di52m4"
++     >
++       <div
++         class="css-kkg48e-InvoiceListItemContent e7di52m3"
++       >
++         <h6
++           class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
++         >
++           Offene Rechnung für Foobar Memberplan
++         </h6>
++         <ul
++           class="css-579onz-InvoiceListItemMeta e7di52m2"
++         >
++           <li
++             class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
++           >
++             <svg
++               fill="currentColor"
++               height="1em"
++               stroke="currentColor"
++               stroke-width="0"
++               viewBox="0 0 24 24"
++               width="1em"
++               xmlns="http://www.w3.org/2000/svg"
++             >
++               <path
++                 d="M0 0h24v24H0V0z"
++                 fill="none"
++               />
++               <path
++                 d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
++               />
++             </svg>
++              Rechnungs-Nr: 1234-1234
++           </li>
++           <li
++             class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
++           >
++             <svg
++               fill="currentColor"
++               height="1em"
++               stroke="currentColor"
++               stroke-width="0"
++               viewBox="0 0 24 24"
++               width="1em"
++               xmlns="http://www.w3.org/2000/svg"
++             >
++               <path
++                 d="M0 0h24v24H0z"
++                 fill="none"
++               />
++               <path
++                 d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"
++               />
++             </svg>
++             <span>
++               Abgeschlossen am 
++               <time
++                 datetime="2023-01-01"
++               >
++                 01.01.2023 00:00
++               </time>
++             </span>
++           </li>
++           <li
++             class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
++           >
++             <svg
++               fill="currentColor"
++               height="1em"
++               stroke="currentColor"
++               stroke-width="0"
++               viewBox="0 0 24 24"
++               width="1em"
++               xmlns="http://www.w3.org/2000/svg"
++             >
++               <path
++                 d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
++               />
++             </svg>
++             <span>
++               Fällig am 
++               <time
++                 datetime="2023-01-01"
++               >
++                 01.01.2023 00:00
++               </time>
++             </span>
++           </li>
++           <li
++             class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
++           >
++             <svg
++               fill="currentColor"
++               height="1em"
++               stroke="currentColor"
++               stroke-width="0"
++               viewBox="0 0 24 24"
++               width="1em"
++               xmlns="http://www.w3.org/2000/svg"
++             >
++               <path
++                 d="M0 0h24v24H0z"
++                 fill="none"
++               />
++               <path
++                 d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"
++               />
++             </svg>
++              Betrag von CHF 500.-
++           </li>
++         </ul>
++         <div
++           class="css-lst8rm-InvoiceListItemActions e7di52m0"
++         >
++           <button
++             class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-1jff9ki-MuiButtonBase-root-MuiButton-root"
++             tabindex="0"
++             type="button"
++           >
++             Jetzt Bezahlen
+              <span
+-       class="MuiSkeleton-root MuiSkeleton-rectangular MuiSkeleton-pulse css-153n0d3-MuiSkeleton-root"
++               class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              />
++           </button>
++         </div>
++       </div>
++     </div>
+    </article>
+  </DocumentFragment>"
 `;
 
 exports[`SubscriptionList Container should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  container-type: inline-size;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-}
-
-.emotion-6 {
-  display: grid;
-  gap: 16px;
-  padding: 16px;
-}
-
-.emotion-8 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-9 {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.emotion-11 {
-  display: grid;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: start;
-  justify-content: start;
-  gap: 8px;
-}
-
-.emotion-21 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-}
-
-.emotion-21:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-22 {
-  display: grid;
-  gap: 16px;
-}
-
-@container (min-width: 45ch) {
-  .emotion-22 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-    justify-content: space-between;
-  }
-}
-
-.emotion-24 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 8px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #000;
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-}
-
-.emotion-24::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-24.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-24 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-24:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-
-@media (hover: none) {
-  .emotion-24:hover {
-    background-color: transparent;
-  }
-}
-
-.emotion-24.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-}
-
-.emotion-24:hover {
-  box-shadow: none;
-}
-
-.emotion-25 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-.emotion-26 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-  font-weight: 700;
-}
-
-.emotion-26::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-26.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-26 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-26:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgb(163, 21, 69);
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
-}
-
-@media (hover: none) {
-  .emotion-26:hover {
-    background-color: #e91e63;
-  }
-}
-
-.emotion-26:active {
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
-}
-
-.emotion-26.Mui-focusVisible {
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-}
-
-.emotion-26.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.emotion-26:hover {
-  box-shadow: none;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <div
@@ -429,7 +287,7 @@ https://unsplash.it/200/100 200w"
                 d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"
               />
             </svg>
-             Kostet CHF 2'500.- pro Monat
+             Kostet CHF 2’500.- pro Monat
           </li>
           <li
             class="emotion-11 emotion-12"
@@ -464,21 +322,11 @@ https://unsplash.it/200/100 200w"
           class="emotion-22 emotion-23"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-24"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorSecondary MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorSecondary emotion-24"
             tabindex="0"
             type="button"
           >
             Abo Künden
-            <span
-              class="MuiTouchRipple-root emotion-25"
-            />
-          </button>
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-26"
-            tabindex="0"
-            type="button"
-          >
-            Jetzt Bezahlen
             <span
               class="MuiTouchRipple-root emotion-25"
             />
@@ -495,478 +343,9 @@ exports[`SubscriptionList Container should render Extend 1`] = `
 Compared values have no visual difference."
 `;
 
-exports[`SubscriptionList Container should render Pay 1`] = `
-"Snapshot Diff:
-- First value
-+ Second value
-
-@@ -1,10 +1,179 @@
-  <DocumentFragment>
-    <article
-      class="css-1lcio32-SubscriptionListWrapper e12e7g630"
-    >
-      <div
-+       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
-+       role="alert"
-+     >
-+       <div
-+         class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
-+       >
-+         <svg
-+           aria-hidden="true"
-+           class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
-+           data-testid="ErrorOutlineIcon"
-+           focusable="false"
-+           viewBox="0 0 24 24"
-+         >
-+           <path
-+             d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-+           />
-+         </svg>
-+       </div>
-+       <div
-+         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
-+       >
-+         No more mocked responses for the query: query Subscriptions {
-+   subscriptions {
-+     ...FullSubscription
-+     __typename
-+   }
-+ }
-+
-+ fragment FullSubscription on Subscription {
-+   id
-+   url
-+   paymentPeriodicity
-+   monthlyAmount
-+   autoRenew
-+   startsAt
-+   extendable
-+   paidUntil
-+   paymentMethod {
-+     ...FullPaymentMethod
-+     __typename
-+   }
-+   deactivation {
-+     ...FullSubscriptionDeactivation
-+     __typename
-+   }
-+   memberPlan {
-+     ...FullMemberPlan
-+     __typename
-+   }
-+   properties {
-+     ...FullProperty
-+     __typename
-+   }
-+   __typename
-+ }
-+
-+ fragment FullPaymentMethod on PaymentMethod {
-+   id
-+   paymentProviderID
-+   name
-+   slug
-+   description
-+   image {
-+     ...FullImage
-+     __typename
-+   }
-+   __typename
-+ }
-+
-+ fragment FullImage on Image {
-+   id
-+   createdAt
-+   modifiedAt
-+   filename
-+   format
-+   mimeType
-+   extension
-+   width
-+   height
-+   fileSize
-+   title
-+   description
-+   tags
-+   source
-+   link
-+   license
-+   focalPoint {
-+     x
-+     y
-+     __typename
-+   }
-+   ...ImageURLs
-+   __typename
-+ }
-+
-+ fragment ImageURLs on Image {
-+   url
-+   xl: transformURL(input: {width: 1200, output: PNG, quality: 0.8})
-+   l: transformURL(input: {width: 1000, output: PNG, quality: 0.8})
-+   m: transformURL(input: {width: 800, output: PNG, quality: 0.8})
-+   s: transformURL(input: {width: 500, output: PNG, quality: 0.8})
-+   xs: transformURL(input: {width: 300, output: PNG, quality: 0.8})
-+   xxs: transformURL(input: {width: 200, output: PNG, quality: 0.8})
-+   xlSquare: transformURL(
-+     input: {width: 1200, height: 1200, output: PNG, quality: 0.8}
-+   )
-+   lSquare: transformURL(
-+     input: {width: 1000, height: 1000, output: PNG, quality: 0.8}
-+   )
-+   mSquare: transformURL(
-+     input: {width: 800, height: 800, output: PNG, quality: 0.8}
-+   )
-+   sSquare: transformURL(
-+     input: {width: 500, height: 500, output: PNG, quality: 0.8}
-+   )
-+   xsSquare: transformURL(
-+     input: {width: 300, height: 300, output: PNG, quality: 0.8}
-+   )
-+   xxsSquare: transformURL(
-+     input: {width: 200, height: 200, output: PNG, quality: 0.8}
-+   )
-+   __typename
-+ }
-+
-+ fragment FullSubscriptionDeactivation on SubscriptionDeactivation {
-+   date
-+   reason
-+   __typename
-+ }
-+
-+ fragment FullMemberPlan on MemberPlan {
-+   id
-+   slug
-+   name
-+   tags
-+   description
-+   image {
-+     ...FullImage
-+     __typename
-+   }
-+   amountPerMonthMin
-+   availablePaymentMethods {
-+     ...FullAvailablePaymentMethod
-+     __typename
-+   }
-+   extendable
-+   __typename
-+ }
-+
-+ fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
-+   paymentMethods {
-+     ...FullPaymentMethod
-+     __typename
-+   }
-+   paymentPeriodicities
-+   forceAutoRenewal
-+   __typename
-+ }
-+
-+ fragment FullProperty on PublicProperties {
-+   key
-+   value
-+   __typename
-+ }
-+ Expected variables: {}
-+
-+       </div>
-+     </div>
-+     <div
-        class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
-      >
-        <img
-          alt="DSC07717"
-          class="css-cibo30-ImageWrapper e1shv2yg0""
-`;
-
 exports[`SubscriptionList Container should render Unpaid 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  container-type: inline-size;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-}
-
-.emotion-6 {
-  display: grid;
-  gap: 16px;
-  padding: 16px;
-}
-
-.emotion-8 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-9 {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.emotion-11 {
-  display: grid;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: start;
-  justify-content: start;
-  gap: 8px;
-}
-
-.emotion-21 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-}
-
-.emotion-21:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-22 {
-  display: grid;
-  gap: 16px;
-}
-
-@container (min-width: 45ch) {
-  .emotion-22 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-    justify-content: space-between;
-  }
-}
-
-.emotion-24 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 8px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #000;
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-}
-
-.emotion-24::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-24.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-24 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-24:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-
-@media (hover: none) {
-  .emotion-24:hover {
-    background-color: transparent;
-  }
-}
-
-.emotion-24.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-}
-
-.emotion-24:hover {
-  box-shadow: none;
-}
-
-.emotion-25 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-.emotion-26 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-  font-weight: 700;
-}
-
-.emotion-26::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-26.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-26 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-26:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgb(163, 21, 69);
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
-}
-
-@media (hover: none) {
-  .emotion-26:hover {
-    background-color: #e91e63;
-  }
-}
-
-.emotion-26:active {
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
-}
-
-.emotion-26.Mui-focusVisible {
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-}
-
-.emotion-26.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.emotion-26:hover {
-  box-shadow: none;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <div
@@ -1094,7 +473,7 @@ https://unsplash.it/200/100 200w"
                 d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"
               />
             </svg>
-             Kostet CHF 2'500.- pro Monat
+             Kostet CHF 2’500.- pro Monat
           </li>
           <li
             class="emotion-11 emotion-12"
@@ -1129,21 +508,11 @@ https://unsplash.it/200/100 200w"
           class="emotion-22 emotion-23"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-24"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorSecondary MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorSecondary emotion-24"
             tabindex="0"
             type="button"
           >
             Abo Künden
-            <span
-              class="MuiTouchRipple-root emotion-25"
-            />
-          </button>
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-26"
-            tabindex="0"
-            type="button"
-          >
-            Jetzt Bezahlen
             <span
               class="MuiTouchRipple-root emotion-25"
             />
@@ -1157,289 +526,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`SubscriptionList Container should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  container-type: inline-size;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-}
-
-.emotion-6 {
-  display: grid;
-  gap: 16px;
-  padding: 16px;
-}
-
-.emotion-8 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-9 {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.emotion-11 {
-  display: grid;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: start;
-  justify-content: start;
-  gap: 8px;
-}
-
-.emotion-21 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-}
-
-.emotion-21:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-22 {
-  display: grid;
-  gap: 16px;
-}
-
-@container (min-width: 45ch) {
-  .emotion-22 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-    justify-content: space-between;
-  }
-}
-
-.emotion-24 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 8px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #000;
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-}
-
-.emotion-24::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-24.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-24 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-24:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-
-@media (hover: none) {
-  .emotion-24:hover {
-    background-color: transparent;
-  }
-}
-
-.emotion-24.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-}
-
-.emotion-24:hover {
-  box-shadow: none;
-}
-
-.emotion-25 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-.emotion-26 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-  font-weight: 700;
-}
-
-.emotion-26::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-26.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-26 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-26:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgb(163, 21, 69);
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
-}
-
-@media (hover: none) {
-  .emotion-26:hover {
-    background-color: #e91e63;
-  }
-}
-
-.emotion-26:active {
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
-}
-
-.emotion-26.Mui-focusVisible {
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-}
-
-.emotion-26.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.emotion-26:hover {
-  box-shadow: none;
-}
-
-<article
+  <article
     class="extra-classname emotion-0 emotion-1"
   >
     <div
@@ -1574,7 +661,7 @@ https://unsplash.it/200/100 200w"
                 d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"
               />
             </svg>
-             Kostet CHF 2'500.- pro Monat
+             Kostet CHF 2’500.- pro Monat
           </li>
           <li
             class="emotion-11 emotion-12"
@@ -1609,21 +696,11 @@ https://unsplash.it/200/100 200w"
           class="emotion-22 emotion-23"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-24"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorSecondary MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorSecondary emotion-24"
             tabindex="0"
             type="button"
           >
             Abo Künden
-            <span
-              class="MuiTouchRipple-root emotion-25"
-            />
-          </button>
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-26"
-            tabindex="0"
-            type="button"
-          >
-            Jetzt Bezahlen
             <span
               class="MuiTouchRipple-root emotion-25"
             />
@@ -1637,289 +714,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`SubscriptionList Container should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  container-type: inline-size;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-}
-
-.emotion-6 {
-  display: grid;
-  gap: 16px;
-  padding: 16px;
-}
-
-.emotion-8 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-9 {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.emotion-11 {
-  display: grid;
-  grid-auto-flow: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: start;
-  justify-content: start;
-  gap: 8px;
-}
-
-.emotion-21 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-}
-
-.emotion-21:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-22 {
-  display: grid;
-  gap: 16px;
-}
-
-@container (min-width: 45ch) {
-  .emotion-22 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-    justify-content: space-between;
-  }
-}
-
-.emotion-24 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 8px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #000;
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-}
-
-.emotion-24::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-24.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-24 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-24:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-
-@media (hover: none) {
-  .emotion-24:hover {
-    background-color: transparent;
-  }
-}
-
-.emotion-24.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-}
-
-.emotion-24:hover {
-  box-shadow: none;
-}
-
-.emotion-25 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-.emotion-26 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-  font-weight: 700;
-}
-
-.emotion-26::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-26.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-26 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-26:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgb(163, 21, 69);
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
-}
-
-@media (hover: none) {
-  .emotion-26:hover {
-    background-color: #e91e63;
-  }
-}
-
-.emotion-26:active {
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
-}
-
-.emotion-26.Mui-focusVisible {
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-}
-
-.emotion-26.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.emotion-26:hover {
-  box-shadow: none;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <div
@@ -2054,7 +849,7 @@ https://unsplash.it/200/100 200w"
                 d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"
               />
             </svg>
-             Kostet CHF 2'500.- pro Monat
+             Kostet CHF 2’500.- pro Monat
           </li>
           <li
             class="emotion-11 emotion-12"
@@ -2089,21 +884,11 @@ https://unsplash.it/200/100 200w"
           class="emotion-22 emotion-23"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-24"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorSecondary MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorSecondary emotion-24"
             tabindex="0"
             type="button"
           >
             Abo Künden
-            <span
-              class="MuiTouchRipple-root emotion-25"
-            />
-          </button>
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-26"
-            tabindex="0"
-            type="button"
-          >
-            Jetzt Bezahlen
             <span
               class="MuiTouchRipple-root emotion-25"
             />
@@ -2117,27 +902,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`SubscriptionList Container should render WithFilter 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  gap: 16px;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  container-type: inline-size;
-}
-
-.emotion-4 {
-  display: grid;
-  gap: 16px;
-  padding: 16px;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <div

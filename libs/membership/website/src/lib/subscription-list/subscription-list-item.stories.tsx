@@ -1,4 +1,5 @@
 import {
+  Currency,
   Exact,
   FullImageFragment,
   FullSubscriptionFragment,
@@ -116,7 +117,8 @@ const subscription = {
   memberPlan: {
     image,
     name: 'Foobar Memberplan',
-    extendable: true
+    extendable: true,
+    currency: Currency.Chf
   },
   extendable: true
 } as Exact<FullSubscriptionFragment>
@@ -267,34 +269,6 @@ export const WithCancelError: StoryObj = {
   play: clickCancel
 }
 
-export const WithPayLoading: StoryObj = {
-  args: {
-    ...Unpaid.args,
-    pay: (...args: unknown[]) => {
-      action('pay')(args)
-
-      return new Promise(() => {
-        // never resolve
-      })
-    }
-  },
-  play: clickPay
-}
-
-export const WithPayError: StoryObj = {
-  args: {
-    ...Unpaid.args,
-    pay: (...args: unknown[]) => {
-      action('pay')(args)
-
-      throw new ApolloError({
-        errorMessage: 'Foobar'
-      })
-    }
-  },
-  play: clickPay
-}
-
 export const WithExtendLoading: StoryObj = {
   ...Default,
   args: {
@@ -323,6 +297,20 @@ export const WithExtendError: StoryObj = {
     }
   },
   play: clickExtend
+}
+
+export const WithCurrency: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    subscription: {
+      ...subscription,
+      memberPlan: {
+        ...subscription.memberPlan,
+        currency: Currency.Eur
+      }
+    }
+  }
 }
 
 export const WithClassName: StoryObj = {

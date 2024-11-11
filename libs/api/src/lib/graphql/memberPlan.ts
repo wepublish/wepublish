@@ -18,15 +18,23 @@ import {
 import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLPageInfo} from './common'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
-import {AvailablePaymentMethod, PaymentPeriodicity} from '@prisma/client'
+import {AvailablePaymentMethod, Currency, PaymentPeriodicity} from '@prisma/client'
+
+export const GraphQLSupportedCurrency = new GraphQLEnumType({
+  name: 'Currency',
+  values: {
+    CHF: {value: Currency.CHF},
+    EUR: {value: Currency.EUR}
+  }
+})
 
 export const GraphQLPaymentPeriodicity = new GraphQLEnumType({
   name: 'PaymentPeriodicity',
   values: {
-    MONTHLY: {value: PaymentPeriodicity.monthly},
-    QUARTERLY: {value: PaymentPeriodicity.quarterly},
-    BIANNUAL: {value: PaymentPeriodicity.biannual},
-    YEARLY: {value: PaymentPeriodicity.yearly}
+    [PaymentPeriodicity.monthly]: {value: PaymentPeriodicity.monthly},
+    [PaymentPeriodicity.quarterly]: {value: PaymentPeriodicity.quarterly},
+    [PaymentPeriodicity.biannual]: {value: PaymentPeriodicity.biannual},
+    [PaymentPeriodicity.yearly]: {value: PaymentPeriodicity.yearly}
   }
 })
 
@@ -110,11 +118,13 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
     amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
     maxCount: {type: GraphQLInt},
     extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
     availablePaymentMethods: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethod)))
-    }
+    },
+    migrateToTargetPaymentMethodID: {type: GraphQLID}
   }
 })
 
@@ -133,6 +143,7 @@ export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context
     },
     description: {type: GraphQLRichText},
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
     amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
     maxCount: {type: GraphQLInt},
     extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
@@ -156,8 +167,8 @@ export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
 export const GraphQLMemberPlanSort = new GraphQLEnumType({
   name: 'MemberPlanSort',
   values: {
-    CREATED_AT: {value: MemberPlanSort.CreatedAt},
-    MODIFIED_AT: {value: MemberPlanSort.ModifiedAt}
+    [MemberPlanSort.CreatedAt]: {value: MemberPlanSort.CreatedAt},
+    [MemberPlanSort.ModifiedAt]: {value: MemberPlanSort.ModifiedAt}
   }
 })
 
@@ -202,12 +213,14 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
     amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
     extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
     maxCount: {type: GraphQLInt},
     availablePaymentMethods: {
       type: new GraphQLNonNull(
         new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethodInput))
       )
-    }
+    },
+    migrateToTargetPaymentMethodID: {type: GraphQLID}
   }
 })

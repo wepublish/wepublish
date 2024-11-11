@@ -27,8 +27,8 @@ export const GraphQLInputPoint = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLPoint = new GraphQLObjectType<any, Context>({
-  name: 'Point',
+export const GraphQLFocalPoint = new GraphQLObjectType<any, Context>({
+  name: 'FocalPoint',
   fields: {
     x: {type: new GraphQLNonNull(GraphQLFloat)},
     y: {type: new GraphQLNonNull(GraphQLFloat)}
@@ -38,20 +38,20 @@ export const GraphQLPoint = new GraphQLObjectType<any, Context>({
 export const GraphQLImageRotation = new GraphQLEnumType({
   name: 'ImageRotation',
   values: {
-    AUTO: {value: ImageRotation.Auto},
-    ROTATE_0: {value: ImageRotation.Rotate0},
-    ROTATE_90: {value: ImageRotation.Rotate90},
-    ROTATE_180: {value: ImageRotation.Rotate180},
-    ROTATE_270: {value: ImageRotation.Rotate270}
+    Auto: {value: ImageRotation.Auto},
+    Rotate0: {value: ImageRotation.Rotate0},
+    Rotate90: {value: ImageRotation.Rotate90},
+    Rotate180: {value: ImageRotation.Rotate180},
+    Rotate270: {value: ImageRotation.Rotate270}
   }
 })
 
 export const GraphQLImageOutput = new GraphQLEnumType({
   name: 'ImageOutput',
   values: {
-    PNG: {value: ImageOutput.PNG},
-    JPEG: {value: ImageOutput.JPEG},
-    WEBP: {value: ImageOutput.WEBP}
+    [ImageOutput.PNG]: {value: ImageOutput.PNG},
+    [ImageOutput.JPEG]: {value: ImageOutput.JPEG},
+    [ImageOutput.WEBP]: {value: ImageOutput.WEBP}
   }
 })
 
@@ -113,8 +113,8 @@ export const GraphQLImageFilter = new GraphQLInputObjectType({
 export const GraphQLImageSort = new GraphQLEnumType({
   name: 'ImageSort',
   values: {
-    CREATED_AT: {value: ImageSort.CreatedAt},
-    MODIFIED_AT: {value: ImageSort.ModifiedAt}
+    [ImageSort.CreatedAt]: {value: ImageSort.CreatedAt},
+    [ImageSort.ModifiedAt]: {value: ImageSort.ModifiedAt}
   }
 })
 
@@ -141,7 +141,7 @@ export const GraphQLImage = new GraphQLObjectType<ImageWithTransformURL, Context
     format: {type: new GraphQLNonNull(GraphQLString)},
     width: {type: new GraphQLNonNull(GraphQLInt)},
     height: {type: new GraphQLNonNull(GraphQLInt)},
-    focalPoint: {type: GraphQLPoint},
+    focalPoint: {type: GraphQLFocalPoint},
 
     url: {
       type: GraphQLString,
@@ -168,3 +168,12 @@ export const GraphQLImageConnection = new GraphQLObjectType<any, Context>({
     pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)}
   }
 })
+
+export const GraphQLImageResolver = {
+  __resolveReference: async (reference, {loaders}: Context) => {
+    const {id} = reference
+    const image = await loaders.images.load(id)
+    if (!image) throw new Error('Image not found')
+    return image
+  }
+}

@@ -1,4 +1,5 @@
 import {
+  Currency,
   Invoice,
   InvoiceItem,
   MetadataProperty,
@@ -11,6 +12,7 @@ import bodyParser from 'body-parser'
 import {NextHandleFunction} from 'connect'
 import express from 'express'
 import DataLoader from 'dataloader'
+import {timingSafeEqual} from 'crypto'
 
 export type InvoiceWithItems = Invoice & {
   items: InvoiceItem[]
@@ -34,6 +36,7 @@ export interface IntentState {
 export interface CreatePaymentIntentProps {
   paymentID: string
   invoice: InvoiceWithItems
+  currency: Currency
   saveCustomer: boolean
   customerID?: string
   successURL?: string
@@ -287,5 +290,13 @@ export abstract class BasePaymentProvider implements PaymentProvider {
         }
       }
     })
+  }
+
+  protected timeConstantCompare(a: string, b: string): boolean {
+    try {
+      return timingSafeEqual(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'))
+    } catch {
+      return false
+    }
   }
 }

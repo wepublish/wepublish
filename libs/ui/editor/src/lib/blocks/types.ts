@@ -9,6 +9,7 @@ import {
   PageRefFragment,
   PeerRefFragment,
   Tag,
+  TeaserListBlockSort,
   TeaserStyle,
   TeaserType
 } from '@wepublish/editor/api'
@@ -260,6 +261,7 @@ export interface TeaserListBlockValue extends BaseBlockValue {
   teaserType: TeaserType
   skip: number
   take: number
+  sort?: TeaserListBlockSort | null
   teasers: Array<[string, Teaser]>
 }
 
@@ -562,12 +564,13 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
         teaserList: {
           title: block.value.title,
           filter: {
-            tags: block.value.filter.tags
+            tags: block.value.filter.tags || []
           },
           take: block.value.take,
           skip: block.value.skip,
           blockStyle: block.value.blockStyle,
-          teaserType: block.value.teaserType
+          teaserType: block.value.teaserType,
+          sort: block.value.sort
         }
       }
 
@@ -1014,6 +1017,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           filter: block.filter,
           skip: block.skip ?? 0,
           take: block.take ?? 6,
+          sort: block.sort,
           teaserType: block.teaserType ?? TeaserType.Article,
           teasers: block.teasers.map((teaser, index) => [
             `${index}`,

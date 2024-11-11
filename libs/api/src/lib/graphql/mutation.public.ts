@@ -1,4 +1,10 @@
-import {PaymentState, SubscriptionDeactivationReason, UserEvent, Subscription} from '@prisma/client'
+import {
+  PaymentState,
+  SubscriptionDeactivationReason,
+  UserEvent,
+  Subscription,
+  MemberPlan
+} from '@prisma/client'
 import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
 import * as crypto from 'crypto'
@@ -76,6 +82,7 @@ import {
 
 import {mailLogType} from '@wepublish/mail/api'
 import {sub} from 'date-fns'
+import {GraphQLDateTime} from 'graphql-scalars'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -185,10 +192,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         name: {type: new GraphQLNonNull(GraphQLString)},
         firstName: {type: GraphQLString},
-        preferredName: {type: GraphQLString},
         email: {type: new GraphQLNonNull(GraphQLString)},
         address: {type: GraphQLUserAddressInput},
         password: {type: GraphQLString},
+        birthday: {
+          type: GraphQLDateTime
+        },
         challengeAnswer: {
           type: new GraphQLNonNull(GraphQLChallengeInput)
         }
@@ -196,11 +205,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description: 'This mutation allows to register a new member,',
       async resolve(
         root,
-        {name, firstName, preferredName, email, address, password, challengeAnswer},
+        {name, firstName, email, address, birthday, password, challengeAnswer},
         {sessionTTL, hashCostFactor, prisma, challenge, mailContext}
       ) {
         email = email.toLowerCase()
-        await Validator.createUser().parse({name, email, firstName, preferredName})
+        await Validator.createUser.parse({name, email, firstName})
 
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
@@ -230,8 +239,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           {
             name,
             firstName,
-            preferredName,
             email,
+            birthday,
             address,
             emailVerifiedAt: null,
             active: true,
@@ -261,8 +270,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: new GraphQLNonNull(GraphQLMemberRegistrationAndPayment),
       args: {
         name: {type: new GraphQLNonNull(GraphQLString)},
+        birthday: {
+          type: GraphQLDateTime
+        },
         firstName: {type: GraphQLString},
-        preferredName: {type: GraphQLString},
         email: {type: new GraphQLNonNull(GraphQLString)},
         address: {type: GraphQLUserAddressInput},
         password: {type: GraphQLString},
@@ -289,10 +300,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {
           name,
           firstName,
-          preferredName,
           email,
           address,
           password,
+          birthday,
           memberPlanID,
           memberPlanSlug,
           autoRenew,
@@ -317,7 +328,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         }
       ) {
         email = email.toLowerCase()
-        await Validator.createUser().parse({name, email, firstName, preferredName})
+        await Validator.createUser.parse({name, email, firstName})
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
@@ -369,9 +380,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           {
             name,
             firstName,
-            preferredName,
             email,
             address,
+            birthday,
             emailVerifiedAt: null,
             active: true,
             roleIDs: [],
@@ -576,8 +587,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const subscription = (await prisma.subscription.findUnique({
           where: {
             id: subscriptionId
+          },
+          include: {
+            memberPlan: true
           }
-        })) as SubscriptionWithRelations
+        })) as SubscriptionWithRelations & {memberPlan: MemberPlan}
         // Allow only valid and subscription belonging to the user to early extend
         if (!subscription || subscription.userID !== user.id) {
           logger('extendSubscription').error(
@@ -688,7 +702,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           saveCustomer: true,
           paymentMethodID: subscription.paymentMethodID,
           successURL,
-          failureURL
+          failureURL,
+          migrateToTargetPaymentMethodID: subscription.memberPlan.migrateToTargetPaymentMethodID
         })
       }
     },
@@ -702,7 +717,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         'This mutation sends a login link to the email if the user exists. Method will always return email address',
       async resolve(root, {email}, {prisma, generateJWT, mailContext, urlAdapter}) {
         email = email.toLowerCase()
-        await Validator.login().parse({email})
+        await Validator.login.parse({email})
 
         const user = await prisma.user.findUnique({
           where: {email},
@@ -939,7 +954,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           include: {
             deactivation: true,
             periods: true,
-            properties: true
+            properties: true,
+            memberPlan: true
           }
         })
 
@@ -963,10 +979,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         return await createPaymentWithProvider({
           paymentMethodID: paymentMethod.id,
           invoice,
-          saveCustomer: false,
+          saveCustomer: true,
           successURL,
           failureURL,
-          user
+          user,
+          migrateToTargetPaymentMethodID: subscription.memberPlan.migrateToTargetPaymentMethodID
         })
       }
     },
@@ -994,7 +1011,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           },
           include: {
             items: true,
-            subscription: true
+            subscription: {
+              include: {
+                memberPlan: true
+              }
+            }
           }
         })
 
@@ -1009,9 +1030,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         return await createPaymentWithProvider({
           paymentMethodID: invoice.subscription.paymentMethodID,
           invoice,
-          saveCustomer: false,
+          saveCustomer: true,
           successURL,
-          failureURL
+          failureURL,
+          migrateToTargetPaymentMethodID:
+            invoice.subscription.memberPlan.migrateToTargetPaymentMethodID
         })
       }
     },

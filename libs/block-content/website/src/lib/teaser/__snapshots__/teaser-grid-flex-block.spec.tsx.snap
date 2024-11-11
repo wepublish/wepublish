@@ -2,265 +2,7 @@
 
 exports[`Teaser Grid Flex Block should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-}
-
-@media (min-width:600px) {
-  .emotion-0 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-0 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-.emotion-2 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    grid-column-start: 1;
-    grid-column-end: 4;
-    grid-row-start: 1;
-    grid-row-end: 5;
-  }
-}
-
-.emotion-4 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-5 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-7 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-7:empty {
-  min-height: 32px;
-}
-
-.emotion-9 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-9:where(.emotion-3:hover .emotion-9) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-9 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-11:where(.emotion-3:hover .emotion-11) {
-  background-color: #e91e63;
-}
-
-.emotion-13 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-13 {
-    font-size: 32px;
-  }
-}
-
-.emotion-15 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-15.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-17 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-19 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-19 {
-    grid-column-start: 4;
-    grid-column-end: 8;
-    grid-row-start: 1;
-    grid-row-end: 7;
-  }
-}
-
-.emotion-28 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #F5FF64;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-  grid-area: pretitle;
-}
-
-.emotion-28:where(.emotion-3:hover .emotion-28) {
-  background-color: #e91e63;
-}
-
-.emotion-30 {
-  transition-property: color,background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  padding: 4px 16px;
-  background-color: #F5FF64;
-  color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  font-size: 14px;
-  font-weight: 300;
-  -webkit-transform: translateY(-100%);
-  -moz-transform: translateY(-100%);
-  -ms-transform: translateY(-100%);
-  transform: translateY(-100%);
-}
-
-.emotion-30:where(.emotion-3:hover .emotion-30) {
-  background-color: #e91e63;
-  color: #fff;
-}
-
-@media (min-width:900px) {
-  .emotion-30 {
-    font-size: 18px;
-  }
-}
-
-.emotion-38 {
-  font-weight: 400;
-}
-
-.emotion-40 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-40 {
-    grid-column-start: 8;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 9;
-  }
-}
-
-.emotion-59 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-59 {
-    grid-column-start: 1;
-    grid-column-end: 4;
-    grid-row-start: 5;
-    grid-row-end: 9;
-  }
-}
-
-.emotion-80 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-80 {
-    grid-column-start: 4;
-    grid-column-end: 8;
-    grid-row-start: 7;
-    grid-row-end: 13;
-  }
-}
-
-.emotion-99 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-99 {
-    grid-column-start: 8;
-    grid-column-end: 13;
-    grid-row-start: 9;
-    grid-row-end: 17;
-  }
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <article
@@ -301,7 +43,7 @@ https://unsplash.it/200/100 200w"
             class="emotion-11 emotion-12"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Teambesprechung vom 23.05.
           </h1>
@@ -360,7 +102,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Title
           </h1>
@@ -426,7 +168,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Title
           </h1>
@@ -485,7 +227,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Title
           </h1>
@@ -551,7 +293,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Title
           </h1>
@@ -604,7 +346,7 @@ https://unsplash.it/200/100 200w"
             class="emotion-11 emotion-12"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Teambesprechung vom 23.05.
           </h1>
@@ -625,265 +367,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-}
-
-@media (min-width:600px) {
-  .emotion-0 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-0 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-.emotion-2 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    grid-column-start: 1;
-    grid-column-end: 4;
-    grid-row-start: 1;
-    grid-row-end: 5;
-  }
-}
-
-.emotion-4 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-5 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-7 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-7:empty {
-  min-height: 32px;
-}
-
-.emotion-9 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-9:where(.emotion-3:hover .emotion-9) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-9 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-11:where(.emotion-3:hover .emotion-11) {
-  background-color: #e91e63;
-}
-
-.emotion-13 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-13 {
-    font-size: 32px;
-  }
-}
-
-.emotion-15 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-15.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-17 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-19 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-19 {
-    grid-column-start: 4;
-    grid-column-end: 8;
-    grid-row-start: 1;
-    grid-row-end: 7;
-  }
-}
-
-.emotion-28 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #F5FF64;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-  grid-area: pretitle;
-}
-
-.emotion-28:where(.emotion-3:hover .emotion-28) {
-  background-color: #e91e63;
-}
-
-.emotion-30 {
-  transition-property: color,background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  padding: 4px 16px;
-  background-color: #F5FF64;
-  color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  font-size: 14px;
-  font-weight: 300;
-  -webkit-transform: translateY(-100%);
-  -moz-transform: translateY(-100%);
-  -ms-transform: translateY(-100%);
-  transform: translateY(-100%);
-}
-
-.emotion-30:where(.emotion-3:hover .emotion-30) {
-  background-color: #e91e63;
-  color: #fff;
-}
-
-@media (min-width:900px) {
-  .emotion-30 {
-    font-size: 18px;
-  }
-}
-
-.emotion-38 {
-  font-weight: 400;
-}
-
-.emotion-40 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-40 {
-    grid-column-start: 8;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 9;
-  }
-}
-
-.emotion-59 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-59 {
-    grid-column-start: 1;
-    grid-column-end: 4;
-    grid-row-start: 5;
-    grid-row-end: 9;
-  }
-}
-
-.emotion-80 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-80 {
-    grid-column-start: 4;
-    grid-column-end: 8;
-    grid-row-start: 7;
-    grid-row-end: 13;
-  }
-}
-
-.emotion-99 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-99 {
-    grid-column-start: 8;
-    grid-column-end: 13;
-    grid-row-start: 9;
-    grid-row-end: 17;
-  }
-}
-
-<div
+  <div
     class="extra-classname emotion-0 emotion-1"
   >
     <article
@@ -924,7 +408,7 @@ https://unsplash.it/200/100 200w"
             class="emotion-11 emotion-12"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Teambesprechung vom 23.05.
           </h1>
@@ -983,7 +467,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Title
           </h1>
@@ -1049,7 +533,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Title
           </h1>
@@ -1108,7 +592,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Title
           </h1>
@@ -1174,7 +658,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Title
           </h1>
@@ -1227,7 +711,7 @@ https://unsplash.it/200/100 200w"
             class="emotion-11 emotion-12"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Teambesprechung vom 23.05.
           </h1>
@@ -1248,265 +732,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-}
-
-@media (min-width:600px) {
-  .emotion-0 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-0 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-.emotion-2 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    grid-column-start: 1;
-    grid-column-end: 4;
-    grid-row-start: 1;
-    grid-row-end: 5;
-  }
-}
-
-.emotion-4 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-5 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-7 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-7:empty {
-  min-height: 32px;
-}
-
-.emotion-9 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-9:where(.emotion-3:hover .emotion-9) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-9 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-11 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-11:where(.emotion-3:hover .emotion-11) {
-  background-color: #e91e63;
-}
-
-.emotion-13 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-13 {
-    font-size: 32px;
-  }
-}
-
-.emotion-15 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-15.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-17 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-19 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-19 {
-    grid-column-start: 4;
-    grid-column-end: 8;
-    grid-row-start: 1;
-    grid-row-end: 7;
-  }
-}
-
-.emotion-28 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #F5FF64;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-  grid-area: pretitle;
-}
-
-.emotion-28:where(.emotion-3:hover .emotion-28) {
-  background-color: #e91e63;
-}
-
-.emotion-30 {
-  transition-property: color,background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  padding: 4px 16px;
-  background-color: #F5FF64;
-  color: rgba(0, 0, 0, 0.87);
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  font-size: 14px;
-  font-weight: 300;
-  -webkit-transform: translateY(-100%);
-  -moz-transform: translateY(-100%);
-  -ms-transform: translateY(-100%);
-  transform: translateY(-100%);
-}
-
-.emotion-30:where(.emotion-3:hover .emotion-30) {
-  background-color: #e91e63;
-  color: #fff;
-}
-
-@media (min-width:900px) {
-  .emotion-30 {
-    font-size: 18px;
-  }
-}
-
-.emotion-38 {
-  font-weight: 400;
-}
-
-.emotion-40 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-40 {
-    grid-column-start: 8;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 9;
-  }
-}
-
-.emotion-59 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-59 {
-    grid-column-start: 1;
-    grid-column-end: 4;
-    grid-row-start: 5;
-    grid-row-end: 9;
-  }
-}
-
-.emotion-80 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-80 {
-    grid-column-start: 4;
-    grid-column-end: 8;
-    grid-row-start: 7;
-    grid-row-end: 13;
-  }
-}
-
-.emotion-99 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-99 {
-    grid-column-start: 8;
-    grid-column-end: 13;
-    grid-row-start: 9;
-    grid-row-end: 17;
-  }
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <article
@@ -1547,7 +773,7 @@ https://unsplash.it/200/100 200w"
             class="emotion-11 emotion-12"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Teambesprechung vom 23.05.
           </h1>
@@ -1606,7 +832,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Title
           </h1>
@@ -1672,7 +898,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Title
           </h1>
@@ -1731,7 +957,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Title
           </h1>
@@ -1797,7 +1023,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Title
           </h1>
@@ -1850,7 +1076,7 @@ https://unsplash.it/200/100 200w"
             class="emotion-11 emotion-12"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13 emotion-14"
+            class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13 emotion-14"
           >
             Teambesprechung vom 23.05.
           </h1>

@@ -11,6 +11,7 @@ import {
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {
+  BuilderArticleDateProps,
   BuilderArticleListProps,
   BuilderArticleProps,
   BuilderArticleSEOProps
@@ -26,6 +27,7 @@ import {
 import {
   BuilderBildwurfAdBlockProps,
   BuilderBlockRendererProps,
+  BuilderBlocksProps,
   BuilderBreakBlockProps,
   BuilderCommentBlockProps,
   BuilderEmbedBlockProps,
@@ -111,6 +113,7 @@ export type WebsiteBuilderProps = {
   PageSEO: ComponentType<BuilderPageSEOProps>
   Article: ComponentType<BuilderArticleProps>
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
+  ArticleDate: ComponentType<BuilderArticleDateProps>
   PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
   AuthorLinks: ComponentType<BuilderAuthorLinksProps>
@@ -170,6 +173,7 @@ export type WebsiteBuilderProps = {
   }
 
   blocks: {
+    Blocks: ComponentType<BuilderBlocksProps>
     Renderer: ComponentType<BuilderBlockRendererProps>
     Title: ComponentType<BuilderTitleBlockProps>
     Image: ComponentType<BuilderImageBlockProps>
@@ -235,6 +239,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   PageSEO: NoComponent,
   Article: NoComponent,
   ArticleSEO: NoComponent,
+  ArticleDate: NoComponent,
   PeerInformation: NoComponent,
   Author: NoComponent,
   AuthorLinks: NoComponent,
@@ -285,6 +290,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   },
 
   blocks: {
+    Blocks: NoComponent,
     Renderer: NoComponent,
     Title: NoComponent,
     Comment: NoComponent,
@@ -328,7 +334,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
 
   meta: {
     siteTitle: 'Newsroom Name',
-    locale: 'ch-DE'
+    locale: 'de-CH'
   },
 
   thirdParty: {}
