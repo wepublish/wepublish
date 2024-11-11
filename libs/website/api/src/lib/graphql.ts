@@ -207,15 +207,21 @@ export type CalculatedRating = {
   total: Scalars['Int'];
 };
 
+export enum CaptchaType {
+  Algebraic = 'Algebraic',
+  CfTurnstile = 'CfTurnstile'
+}
+
 export type Challenge = {
   __typename?: 'Challenge';
   challenge?: Maybe<Scalars['String']>;
   challengeID?: Maybe<Scalars['String']>;
+  type?: Maybe<CaptchaType>;
   validUntil?: Maybe<Scalars['Date']>;
 };
 
 export type ChallengeInput = {
-  challengeID: Scalars['String'];
+  challengeID?: InputMaybe<Scalars['String']>;
   challengeSolution: Scalars['String'];
 };
 
@@ -2509,7 +2515,7 @@ export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_C
 export type ChallengeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ChallengeQuery = { __typename?: 'Query', challenge: { __typename?: 'Challenge', challengeID?: string | null, challenge?: string | null, validUntil?: string | null } };
+export type ChallengeQuery = { __typename?: 'Query', challenge: { __typename?: 'Challenge', type?: CaptchaType | null, challengeID?: string | null, challenge?: string | null, validUntil?: string | null } };
 
 export type FullCommentRatingSystemAnswerFragment = { __typename?: 'CommentRatingSystemAnswer', id: string, ratingSystemId: string, answer?: string | null, type: RatingSystemType };
 
@@ -4001,6 +4007,7 @@ export type AuthorListQueryResult = Apollo.QueryResult<AuthorListQuery, AuthorLi
 export const ChallengeDocument = gql`
     query Challenge {
   challenge {
+    type
     challengeID
     challenge
     validUntil

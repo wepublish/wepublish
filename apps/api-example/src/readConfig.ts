@@ -147,6 +147,7 @@ type AlgebraicCaptcha = {
 type Turnstile = {
   type: 'turnstile'
   secret: string
+  siteKey: string
 }
 
 type Config = {
