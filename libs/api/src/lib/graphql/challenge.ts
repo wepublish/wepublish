@@ -7,8 +7,8 @@ import {CaptchaType} from './../../lib/challenges/challengeProvider'
 export const GraphQLCaptchaType = new GraphQLEnumType({
   name: 'CaptchaType',
   values: {
-    ALGEBRAIC: {value: CaptchaType.Algebraic},
-    CF_TURNSTILE: {value: CaptchaType.CfTurnstile}
+    [CaptchaType.Algebraic]: {value: CaptchaType.Algebraic},
+    [CaptchaType.CfTurnstile]: {value: CaptchaType.CfTurnstile}
   }
 })
 

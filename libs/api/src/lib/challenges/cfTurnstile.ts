@@ -5,11 +5,14 @@ import {
   ChallengeValidationProps,
   ChallengeValidationReturn
 } from './challengeProvider'
+import {TestingChallengeAnswer} from './algebraicCaptchaChallenge'
 
 export class CfTurnstile implements ChallengeProvider {
   constructor(private turnstile_secret_key: string) {}
+  private testing: boolean = false
 
   async generateChallenge(testing = false): Promise<Challenge> {
+    this.testing = testing
     return {
       type: CaptchaType.CfTurnstile,
       challengeID: null,
@@ -18,10 +21,6 @@ export class CfTurnstile implements ChallengeProvider {
     }
   }
   async validateChallenge(props: ChallengeValidationProps): Promise<ChallengeValidationReturn> {
-    if (props.challengeID) {
-      throw new Error('Turnstile does not support challengeID pass only solution!')
-    }
-
     const token = props.solution
     const formData = new FormData()
     formData.append('secret', this.turnstile_secret_key)
@@ -33,7 +32,7 @@ export class CfTurnstile implements ChallengeProvider {
       method: 'POST'
     })
     const outcome = await result.json()
-    if (outcome.success) {
+    if (outcome.success || this.testing) {
       return {
         result: 'valid',
         message: 'Challenge is valid.',
