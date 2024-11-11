@@ -38,6 +38,7 @@ export const getStaticProps: GetStaticProps = async () => {
       sortField: 'send_time',
       status: 'sent',
       sortDir: 'DESC',
+      folderId: '496b1eb537',
       fields: ['campaigns.id', 'campaigns.long_archive_url', 'campaigns.settings.subject_line']
     }),
     client.query({
