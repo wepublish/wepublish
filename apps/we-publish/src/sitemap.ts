@@ -1,9 +1,10 @@
 import {ApiV1, generateSitemap} from '@wepublish/website/server'
 import {NextApiRequest} from 'next'
 import getConfig from 'next/config'
+import process from 'node:process'
 
 export const getSitemap = async (req: NextApiRequest): Promise<string> => {
-  const siteUrl = `https://${req.headers['host']}`
+  const siteUrl = `https://${process.env.WEBSITE_URL}`
 
   const generate = generateSitemap({
     siteUrl,
