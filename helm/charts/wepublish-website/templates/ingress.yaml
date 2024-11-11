@@ -1,5 +1,4 @@
 {{- $fullName := include "helm.fullname" . -}}
-{{- $websiteUrl := urlParse .Values.deployment.env.WEBSITE_URL }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -16,6 +15,7 @@ metadata:
     nginx.ingress.kubernetes.io/upstream-vhost: {{ $websiteUrl.host }}
 spec:
   rules:
+    {{- $websiteUrl := urlParse .Values.deployment.env.WEBSITE_URL }}
     - host: {{ $websiteUrl.host }}
       http:
         paths:
