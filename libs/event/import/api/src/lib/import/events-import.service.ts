@@ -34,9 +34,7 @@ export interface CreateEventParams {
 export interface EventsProvider {
   name: string
   importedEvents(): Promise<EventFromSource[]>
-
   importedEvent({id}: ImportedEventResolverParams): Promise<EventFromSource>
-
   createEvent({id}: CreateEventParams): Promise<string>
 }
 

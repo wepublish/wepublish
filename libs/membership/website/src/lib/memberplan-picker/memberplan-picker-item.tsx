@@ -1,7 +1,7 @@
 import {Radio, css, lighten, styled, useRadioGroup} from '@mui/material'
-import {BuilderMemberPlanItemProps} from '@wepublish/website/builder'
+import {BuilderMemberPlanItemProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {forwardRef} from 'react'
-import {formatChf} from '../formatters/format-currency'
+import {formatCurrency} from '../formatters/format-currency'
 
 export const MemberPlanItemWrapper = styled('div')<{isChecked: boolean}>`
   display: grid;
@@ -34,7 +34,10 @@ export const MemberPlanItemPrice = styled('small')`
 `
 
 export const MemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberPlanItemProps>(
-  ({className, id, name, amountPerMonthMin, ...props}, ref) => {
+  ({className, id, name, amountPerMonthMin, currency, ...props}, ref) => {
+    const {
+      meta: {locale}
+    } = useWebsiteBuilder()
     const radioGroup = useRadioGroup()
     const isChecked = props.checked ?? radioGroup?.value === id
 
@@ -43,9 +46,11 @@ export const MemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberPlanIte
         <MemberPlanItemContent>
           <MemberPlanItemName>{name}</MemberPlanItemName>
 
-          <MemberPlanItemPrice>
-            Ab {formatChf(amountPerMonthMin / 100)} pro Monat
-          </MemberPlanItemPrice>
+          {!!amountPerMonthMin && (
+            <MemberPlanItemPrice>
+              Ab {formatCurrency(amountPerMonthMin / 100, currency, locale)} pro Monat
+            </MemberPlanItemPrice>
+          )}
         </MemberPlanItemContent>
 
         <Radio ref={ref} name={name} disableRipple={true} {...props} />

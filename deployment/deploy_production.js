@@ -1,7 +1,8 @@
-const { exec } = require('child_process');
+const {exec} = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
+const chalk = require("chalk");
 
 if (!process.argv[2]) {
   console.error('Error: Project name is required.');
@@ -24,8 +25,12 @@ const rl = readline.createInterface({
 });
 
 function askConfirmation() {
-  return new Promise((resolve) => {
-    rl.question(`Are you sure you want to deploy this commit to ${projectName} production? To confirm, write the project name: `, (answer) => {
+  return new Promise(async (resolve) => {
+    const changelogCommand = `git log --color=always --graph --decorate --pretty=format:'%C(yellow)%h%C(reset) %s %C(cyan)%an%C(reset)' --abbrev-commit $(git describe --abbrev=0 --tags --match 'deploy_${projectName}_*' )..HEAD`
+    let changelog = await execCommand(changelogCommand)
+    changelog = changelog.replace(/#([0-9]+)/g, (text, number) => `\x1b]8;;https://github.com/wepublish/wepublish/pull/${number}\x1b\\${text}\x1b]8;;\x1b\\`)
+    rl.write(`${chalk.underline("Changes you are about to deploy")}:\n\n${changelog}\n\n`)
+    rl.question(`Are you sure you want to deploy this commit to ${chalk.bold(projectName)} production? To confirm, write the project name: `, (answer) => {
       rl.close();
       resolve(answer);
     });

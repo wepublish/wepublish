@@ -21,9 +21,10 @@ import gql from 'graphql-tag'
 import {GraphQLPublicPageResolver} from './graphql/page'
 import {GraphQLTagResolver} from './graphql/tag/tag'
 import {GraphQLImageResolver} from './graphql/image'
-import {GraphQLObjectType, GraphQLUnionType} from 'graphql'
+import {GraphQLObjectType, GraphQLUnionType, printSchema} from 'graphql'
 import {GraphQLEventResolver} from './graphql/event/event'
-import {GraphQLArticleResolver} from './graphql/article'
+import * as fs from 'fs'
+import {GraphQLPublicArticleResolver} from './graphql/article'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -58,9 +59,17 @@ export class WepublishServer {
           ? ApolloServerPluginLandingPageGraphQLPlayground()
           : ApolloServerPluginLandingPageDisabled()
       ],
-      introspection: this.opts.introspection ?? false,
+      introspection: true,
       context: ({req}) => contextFromRequest(req, this.opts)
     })
+
+    if (process.env['NODE_ENV'] !== 'production') {
+      await fs.promises.writeFile(
+        './apps/api-example/schema-v1-admin.graphql',
+        printSchema(GraphQLWepublishSchema)
+      )
+    }
+
     await adminServer.start()
 
     const federatedTypeDefs = gql`
@@ -84,15 +93,15 @@ export class WepublishServer {
         name: String!
       ) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
+      extend type Article @key(fields: "id")
       extend type Page @key(fields: "id")
       extend type Tag @key(fields: "id")
       extend type Image @key(fields: "id")
       extend type Event @key(fields: "id")
       extend type PaymentMethod @key(fields: "id")
       extend type MemberPlan @key(fields: "id")
-      extend type Author @key(fields: "id")
-      extend type Article @key(fields: "id")
-      extend type Payment @key(fields: "id")
+      extend type User @key(fields: "id")
+      extend type PollVote @key(fields: "id")
     `
     const typeDefs = [graphQLJSSchemaToAST(GraphQLWepublishPublicSchema), federatedTypeDefs]
     const resolvers = {
@@ -129,25 +138,35 @@ export class WepublishServer {
           .filter(([name, resolvers]) => Object.keys(resolvers).length > 0)
       )
     }
+
     const federatedResolvers = {
+      Article: GraphQLPublicArticleResolver,
       Page: GraphQLPublicPageResolver,
       Tag: GraphQLTagResolver,
       Image: GraphQLImageResolver,
-      Event: GraphQLEventResolver,
-      Article: GraphQLArticleResolver
+      Event: GraphQLEventResolver
     }
+
     for (const type in federatedResolvers) {
       resolvers[type] = {...resolvers[type], ...federatedResolvers[type]}
     }
 
-    const publicServer = new ApolloServer({
-      schema: buildSubgraphSchema({
-        typeDefs,
-        resolvers
-      }),
-      introspection: this.opts.introspection ?? false,
-      context: ({req}) => contextFromRequest(req, this.opts)
+    const publicSchema = buildSubgraphSchema({
+      typeDefs,
+      resolvers
     })
+
+    const publicServer = new ApolloServer({
+      schema: publicSchema,
+      introspection: this.opts.introspection ?? false,
+      context: ({req}) => contextFromRequest(req, this.opts),
+      allowBatchedHttpRequests: true
+    })
+
+    if (process.env['NODE_ENV'] !== 'production') {
+      await fs.promises.writeFile('./apps/api-example/schema-v1.graphql', printSchema(publicSchema))
+    }
+
     await publicServer.start()
 
     const corsOptions = {

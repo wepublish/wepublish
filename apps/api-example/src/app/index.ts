@@ -1,6 +1,9 @@
 import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
+  ChallengeProvider,
+  CfTurnstile,
+  HotAndTrendingDataSource,
   MailProvider,
   MediaAdapter,
   Oauth2Provider,
@@ -25,6 +28,7 @@ type RunServerProps = {
   mediaAdapter: MediaAdapter
   paymentProviders: PaymentProvider[]
   mailProvider: MailProvider
+  hotAndTrendingDataSource: HotAndTrendingDataSource
 }
 
 export async function runServer({
@@ -32,7 +36,8 @@ export async function runServer({
   publicExpressApp,
   mediaAdapter,
   mailProvider,
-  paymentProviders
+  paymentProviders,
+  hotAndTrendingDataSource
 }: RunServerProps) {
   /*
    * Load User specific configuration
@@ -119,10 +124,11 @@ export async function runServer({
   /**
    * Challenge
    */
-  const challenge = new AlgebraicCaptchaChallenge(
-    config.challenge.secret,
-    config.challenge.validTime,
-    {
+  let challenge: ChallengeProvider
+  if (config.challenge.type === 'turnstile') {
+    challenge = new CfTurnstile(config.challenge.secret)
+  } else {
+    challenge = new AlgebraicCaptchaChallenge(config.challenge.secret, config.challenge.validTime, {
       width: config.challenge.width,
       height: config.challenge.height,
       background: config.challenge.background,
@@ -133,8 +139,8 @@ export async function runServer({
       operandTypes: config.challenge.operandTypes,
       mode: config.challenge.mode,
       targetSymbol: config.challenge.targetSymbol
-    }
-  )
+    })
+  }
 
   /**
    * Load session time to live (TTL)
@@ -162,7 +168,8 @@ export async function runServer({
         ? config.general.apolloIntrospection
         : false,
       logger,
-      challenge
+      challenge,
+      hotAndTrendingDataSource
     },
     privateExpressApp,
     publicExpressApp

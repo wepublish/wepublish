@@ -54,8 +54,17 @@ const createTagIdsFilter = (filter?: Partial<AuthorFilter>): Prisma.AuthorWhereI
   return {}
 }
 
+const createHideOnTeamFilter = (filter?: Partial<AuthorFilter>): Prisma.AuthorWhereInput => {
+  if (filter != null) {
+    return {
+      hideOnTeam: filter?.hideOnTeam
+    }
+  }
+  return {}
+}
+
 export const createAuthorFilter = (filter: Partial<AuthorFilter>): Prisma.AuthorWhereInput => ({
-  AND: [createNameFilter(filter), createTagIdsFilter(filter)]
+  AND: [createNameFilter(filter), createTagIdsFilter(filter), createHideOnTeamFilter(filter)]
 })
 
 export const getAuthors = async (

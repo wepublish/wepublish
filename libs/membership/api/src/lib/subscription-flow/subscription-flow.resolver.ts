@@ -9,6 +9,7 @@ import {
 } from '@wepublish/permissions/api'
 import {SubscriptionFlowService} from './subscription-flow.service'
 import {
+  PaymentMethod,
   SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,

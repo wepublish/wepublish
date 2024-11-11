@@ -209,12 +209,6 @@ const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput =>
     return {
       OR: [
         {
-          preferredName: {
-            contains: filter.text,
-            mode: 'insensitive'
-          }
-        },
-        {
           email: {
             contains: filter.text,
             mode: 'insensitive'
@@ -310,7 +304,7 @@ export const getUserForCredentials = async (
   userClient: PrismaClient['user']
 ) => {
   email = email.toLowerCase()
-  await Validator.login().parse({email})
+  await Validator.login.parse({email})
 
   const user = await userClient.findUnique({
     where: {

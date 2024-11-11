@@ -5,6 +5,7 @@ import {
   BuilderCommentProps,
   BuilderTeaserListBlockProps,
   Comment,
+  Image,
   isPollBlock
 } from '@wepublish/website'
 import Link from 'next/link'
@@ -13,7 +14,6 @@ import {MdForum} from 'react-icons/md'
 
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
 import {AuthorBox} from './author-box'
-import {ReactComponent as FrageDesTagesLogo} from './frage-des-tages.svg'
 import {InfoBox} from './info-box'
 
 interface CommentWithChildren extends ApiV1.Comment {
@@ -45,7 +45,7 @@ export const FrageDesTagesContainer = styled('div')`
 
 export const FrageDesTagesWrapper = styled('div')`
   display: grid;
-  column-gap: ${({theme}) => theme.spacing(2)};
+  column-gap: 0;
   row-gap: ${({theme}) => theme.spacing(3)};
   grid-template-columns: 1fr;
   align-items: stretch;
@@ -58,6 +58,7 @@ export const FrageDesTagesWrapper = styled('div')`
       ${theme.breakpoints.up('sm')} {
         padding: ${theme.spacing(4)} ${theme.spacing(5)};
         grid-template-columns: repeat(12, 1fr);
+        column-gap: ${theme.spacing(2)};
       }
     `}
 `
@@ -133,9 +134,11 @@ export const StyledComment = styled(Comment)`
   }
 `
 
-export const FDTLogo = styled(FrageDesTagesLogo)`
-  grid-column: -1 / 1;
-  justify-self: end;
+export const FdtArticleImage = styled(Image)`
+  grid-column-start: 5;
+  grid-column-end: 9;
+  margin-bottom: ${({theme}) => theme.spacing(4)};
+  border-radius: ${({theme}) => theme.spacing(2.5)};
 `
 
 export const ReadMoreLink = styled(Link)`
@@ -168,9 +171,8 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
   return (
     <FrageDesTagesContainer>
       <FrageDesTagesWrapper className={className}>
-        <FDTLogo width={110} aria-label="Frage des Tages Logo" />
-
         <PollWrapper>
+          {article?.image && <FdtArticleImage image={article.image} />}
           <PollBlock poll={pollToPass} />
         </PollWrapper>
 
@@ -186,13 +188,14 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
           <Comments>
             {commentsData?.comments
               .slice(0, 2)
-              .map(({text, title, user, createdAt, id, authorType}) => {
+              .map(({text, title, user, createdAt, id, authorType, guestUsername}) => {
                 const dataToPass = {
                   text,
                   title,
                   user,
                   createdAt,
-                  authorType
+                  authorType,
+                  guestUsername
                 } as BuilderCommentProps
 
                 return <StyledComment {...dataToPass} key={id} />

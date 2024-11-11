@@ -15,6 +15,7 @@ import {Image} from '@wepublish/image/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {PaginatedType, SortOrder} from '@wepublish/utils/api'
 import {Node} from 'slate'
+import {Page} from './page.model'
 
 export enum EventSort {
   CreatedAt = 'CreatedAt',
@@ -79,6 +80,9 @@ export class Event {
 
   @Field({nullable: true})
   externalSourceName?: string
+
+  @Field({nullable: true})
+  page?: Page
 }
 
 @ObjectType()

@@ -1,5 +1,8 @@
-import {BuilderBlockRendererProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Block as BlockType} from '@wepublish/website/api'
+import {
+  BuilderBlockRendererProps,
+  BuilderBlocksProps,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
 import {isHtmlBlock} from './html/html-block'
 import {isImageBlock} from './image/image-block'
 import {isQuoteBlock} from './quote/quote-block'
@@ -97,12 +100,7 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   )
 })
 
-export type BlocksProp = {
-  blocks: BlockType[]
-  type: BuilderBlockRendererProps['type']
-}
-
-export const Blocks = ({blocks, type}: BlocksProp) => {
+export const Blocks = ({blocks, type}: BuilderBlocksProps) => {
   const {
     blocks: {Renderer}
   } = useWebsiteBuilder()

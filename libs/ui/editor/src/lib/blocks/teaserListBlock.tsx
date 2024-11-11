@@ -52,7 +52,7 @@ const InfoList = styled.ul`
 
 export const TeaserListBlock = ({value, onChange, autofocus}: BlockProps<TeaserListBlockValue>) => {
   const focusRef = useRef<HTMLTextAreaElement>(null)
-  const {filter, teasers, skip, take, teaserType} = value
+  const {filter, teasers, skip, sort, take, teaserType} = value
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const {t} = useTranslation()
   const teaserTypeText = useTeaserTypeText()
@@ -87,6 +87,7 @@ export const TeaserListBlock = ({value, onChange, autofocus}: BlockProps<TeaserL
             <li>{t('blocks.teaserList.teaserType', {teaserType: teaserTypeText(teaserType)})}</li>
             <li>{t('blocks.teaserList.take', {take})}</li>
             <li>{t('blocks.teaserList.skip', {skip})}</li>
+            {!!sort && <li>{t('blocks.teaserList.sort', {sort})}</li>}
             {!!filter.tags?.length && (
               <li>{t('blocks.teaserList.tags', {tags: filter.tags.join(', ')})}</li>
             )}

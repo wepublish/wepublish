@@ -40,6 +40,7 @@ export * from './lib/server'
 
 export * from './lib/challenges/challengeProvider'
 export * from './lib/challenges/algebraicCaptchaChallenge'
+export * from './lib/challenges/cfTurnstile'
 
 export {getUserForCredentials} from './lib/graphql/user/user.queries'
 
@@ -64,3 +65,13 @@ export * from '@wepublish/payment-method/api'
 export * from '@wepublish/member-plan/api'
 export * from '@wepublish/scripts/api'
 export * from '@wepublish/system-info'
+export * from '@wepublish/google-analytics/api'
+export {
+  Article as ArticleV2,
+  HOT_AND_TRENDING_DATA_SOURCE,
+  HotAndTrendingClientAsyncOptions,
+  HotAndTrendingDataSource,
+  HotAndTrendingModule,
+  HotAndTrendingOptionsFactory,
+  HotAndTrendingResolver
+} from '@wepublish/article/api'

@@ -1,7 +1,13 @@
-import {Invoice, MetadataProperty, PaymentState, PrismaClient, Subscription} from '@prisma/client'
+import {
+  Currency,
+  Invoice,
+  MetadataProperty,
+  PaymentState,
+  PrismaClient,
+  Subscription
+} from '@prisma/client'
 import {logger, mapPaymentPeriodToMonths} from '@wepublish/utils/api'
 import * as crypto from 'crypto'
-import {timingSafeEqual} from 'crypto'
 import add from 'date-fns/add'
 import parseISO from 'date-fns/parseISO'
 import startOfDay from 'date-fns/startOfDay'
@@ -41,14 +47,6 @@ function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
       return PaymentState.declined
     default:
       return null
-  }
-}
-
-function timeConstantCompare(a: string, b: string): boolean {
-  try {
-    return timingSafeEqual(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'))
-  } catch {
-    return false
   }
 }
 
@@ -132,17 +130,29 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     // Find external id property and fail if subscription has been deactivated
     const properties: MetadataProperty[] = props.subscription.properties
     const isPayrexxExt = properties.find(sub => sub.key === 'payrexx_external_id')
+
     if (!isPayrexxExt) {
       throw new Error(`Payrexx Subscription Id not found on subscription ${props.subscription.id}`)
     }
+
+    const currency = props.subscription.currency
+
+    if (!currency) {
+      throw new Error(
+        `Payrexx Memberplan could not be found for subscription ${props.subscription.id}`
+      )
+    }
+
     const amount = props.newAmount * mapPaymentPeriodToMonths(props.subscription.paymentPeriodicity)
-    await this.updateAmountUpstream(parseInt(isPayrexxExt.value, 10), amount.toString())
+
+    await this.updateAmountUpstream(+isPayrexxExt.value, currency, amount.toString())
   }
 
   async cancelRemoteSubscription(props: CancelRemoteSubscriptionProps): Promise<void> {
     // Find external id property and fail if subscription has been deactivated
     const properties: MetadataProperty[] = props.subscription.properties
     const isPayrexxExt = properties.find(sub => sub.key === 'payrexx_external_id')
+
     if (!isPayrexxExt) {
       throw new Error(`Payrexx Subscription Id not found on subscription ${props.subscription.id}`)
     }
@@ -243,7 +253,8 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           description: `Abo ${memberPlan.name}`,
           paidAt: new Date(),
           canceledAt: null,
-          scheduledDeactivationAt: add(new Date(), {days: 10})
+          scheduledDeactivationAt: add(new Date(), {days: 10}),
+          currency: subscription.currency
         }
       })
 
@@ -300,11 +311,12 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     }
   }
 
-  async updateAmountUpstream(subscriptionId: number, amount: string) {
+  async updateAmountUpstream(subscriptionId: number, currency: Currency, amount: string) {
     const data = {
       amount,
-      currency: 'CHF'
+      currency
     }
+
     const signature = crypto
       .createHmac('sha256', this.instanceAPISecret)
       .update(qs.stringify(data))
@@ -319,7 +331,9 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
         body: qs.stringify({...data, ApiSignature: signature})
       }
     )
+
     const resJSON = await res.json()
+
     if (res.status === 200 && resJSON.status === 'success') {
       logger('payrexxSubscriptionPaymentProvider').info(
         'Payrexx response for subscription %s updated',
@@ -373,7 +387,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
     // Protect endpoint
     const apiKey = props.req.query.apiKey as string
-    if (!timeConstantCompare(apiKey, this.webhookSecret)) {
+    if (!this.timeConstantCompare(apiKey, this.webhookSecret)) {
       return {
         status: 403,
         message: 'Invalid Api Key'

@@ -127,7 +127,12 @@
         "value": "Valeur",
         "yes": "Oui",
         "hidden": "Cacher",
-        "setAsHidden": "Les articles cachés sont exclus par défaut mais peuvent toujours être interrogés sur demande."
+        "setAsHidden": "Les articles cachés sont exclus par défaut mais peuvent toujours être interrogés sur demande.",
+        "disableComments": "Disable comments for this article",
+        "light": "Light",
+        "style": "Style",
+        "text": "Texte",
+        "default": "Default"
       }
     },
     "articleList": {
@@ -231,7 +236,9 @@
         "takeLabel": "How many teasers should be loaded",
         "tags": "Only showing with tags: {{tags}}",
         "tagsLabel": "Which tags should be loaded",
-        "edit": "Edit teaser list block"
+        "edit": "Edit teaser list block",
+        "sort": "Sorted by {{sort}}",
+        "sortLabel": "Sort by"
       },
       "embeds": {
         "label": "Intégration",
@@ -326,7 +333,8 @@
         "link": "Lien",
         "remove": "Supprimer",
         "startWriting": "Commencez à écrire...",
-        "text": "Texte"
+        "text": "Texte",
+        "id": "ID"
       },
       "richTextTable": {
         "addBorders": "Ajouter des bordures",
@@ -514,8 +522,8 @@
       "invalidEmailErrorMessage": "Veuillez entrer une adresse email valide",
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
       "invalidUrlErrorMessage": "Veuillez entrer une adresse url valide",
-      "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} chf.",
-      "noAmountErrorMessage": "Le montant par défaut sera fixé à 5.00 CHF si le champ est laissé vide",
+      "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} {{currency}}.",
+      "noAmountErrorMessage": "Le montant par défaut sera fixé à 5.00 si le champ est laissé vide",
       "noCallToActionImageErrorMessage": "Veuillez entrer une image pour le Call to Action",
       "noEmailErrorMessage": "Veuillez entrer une adresse email",
       "noImageErrorMessage": "Veuillez ajouter une image",
@@ -529,7 +537,8 @@
       "noUrlErrorMessage": "Veuillez entrer une url",
       "noUserErrorMessage": "Veuillez sélectionner un·e utilisateur·trice",
       "passwordTooShortErrorMessage": "Le mot de passe doit comporter au moins 8 caractères.",
-      "required": "Ce champ est requis"
+      "required": "Ce champ est requis",
+      "invalidCountry": "Please select a valid country"
     },
     "event": {
       "create": {
@@ -678,10 +687,10 @@
       "paymentMethods": "Méthodes de paiement possibles",
       "paymentPeriodicities": "Périodicités de paiement",
       "paymentPeriodicity": {
-        "BIANNUAL": "Bi-annuelles",
-        "MONTHLY": "Mensuelles",
-        "QUARTERLY": "Trimestrielles",
-        "YEARLY": "Annuelles"
+        "biannual": "Bi-annuelles",
+        "monthly": "Mensuelles",
+        "quarterly": "Trimestrielles",
+        "yearly": "Annuelles"
       },
       "title": "Plans membres"
     },
@@ -964,6 +973,7 @@
       "closedAtNone": "Non fermé",
       "createNew": "Créer Sondage",
       "delete": "Supprimer",
+      "showVotes": "Afficher les votes",
       "hasBeenClosedAt": "Fermé le {{closedAt, ccc PP p}}",
       "noQuestion": "Aucune question saisie",
       "openedAt": "Débuté le {{openedAt, ccc PP p}}",
@@ -973,6 +983,13 @@
       "question": "Question",
       "state": "État",
       "title": "Sondages"
+    },
+    "pollVoteList": {
+      "createdAt": "Créé le",
+      "answerId": "Réponse",
+      "userId": "ID utilisateur",
+      "fingerprint": "Empreinte digitale",
+      "deleteItems": "Supprimer les éléments"
     },
     "pollStateIndication": {
       "closed": "Sondage fermé",
@@ -1111,7 +1128,6 @@
       "password": "Mot de passe",
       "passwordChangeSuccess": "Le mot de passe a été changé avec succès !",
       "passwordHeader": "Mots de passe & accès",
-      "preferredName": "Nom préféré",
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
       "selectUserImage": "Choisir une photo de profil",
@@ -1125,7 +1141,8 @@
       "Unknown": "Inconnu",
       "userDataTitle": "Données des utilisateurs·trices",
       "userRoles": "Rôles de l'utilisateur·trice",
-      "zipCode": "Code Postal"
+      "zipCode": "Code Postal",
+      "birthday": "Birthday"
     },
     "userList": {
       "overview": {
@@ -1196,7 +1213,7 @@
         "willBeDeactivated": "L'abonnement sera désactivé le {{date, ccc PP p}}"
       },
       "editTitle": "Modifier l'abonnement",
-      "memberPlanMonthlyAmount": "Montant mensuel minimum (CHF)",
+      "memberPlanMonthlyAmount": "Montant mensuel minimum ({{currency}})",
       "monthlyAmount": "Montant mensuel",
       "paidUntil": "Payé jusqu'à",
       "paymentMethod": "Mode de paiement",
@@ -1219,12 +1236,12 @@
       "invoiceNr": "N° de facture {{invoiceId}}",
       "invoicePaid": "payée",
       "invoiceUnpaid": "non payée",
-      "monthlyAmount": "Montant mensuel : {{monthlyAmount}} CHF",
+      "monthlyAmount": "Montant mensuel : {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "L'abonnement expire, pas de renouvellement automatique",
       "noDeactivation": "Pas de désactivation.",
       "paidUntil": "Payé jusqu'au {{date}}",
       "paymentPeriodicity": "Périodicité des paiements : {{paymentPeriodicity}}",
-      "periodAmount": "Montant : {{amount}} CHF",
+      "periodAmount": "Montant : {{amount}} {{currency}}",
       "periodCreatedAt": "Créé le {{date}}",
       "periodEndsAt": "jusqu'à {{date}}",
       "periods": "Périodes",
@@ -1245,7 +1262,9 @@
       "maxCountHelpText": "Limite le nombre d'abonnements qu'un:e utilisateur:trice peut souscrire pour ce plan d'abonnement. Cela inclut les abonnements désactivés.",
       "trialMemberplanAlert": "Ce plan d'abonnement est configuré pour des abonnements d'essai.",
       "forceAutoRenewNotPossible": "Le renouvellement automatique n'est pas possible, car le plan d'abonnement n'est pas extensible.",
-      "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela."
+      "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela.",
+      "migratePMTitle": "Migrer les abonnements vers le mode de paiement cible",
+      "migratePMHelptext": "Migre les abonnements de ce plan vers un nouveau mode de paiement. Les abonnements qui sont encore débités automatiquement ne sont pas migrés. La migration n'a lieu que lorsqu'un utilisateur agit lui-même et veut par exemple payer une facture ouverte dans son profil ou prolonger un abonnement de manière anticipée."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Paramètres avancés",
@@ -1253,7 +1272,9 @@
       "nonExtendableNotCompatibleWithAutoRenew": "Un abonnement à renouvellement automatique doit pouvoir être prolongé. Modifie l'un de ces paramètres.",
       "configureAsTrialSubscription": "Configurer comme abonnement d'essai",
       "subscriptionTrialNotPossible": "L'abonnement ne peut pas être configuré comme abonnement d'essai. Pour ce faire, modifie les paramètres du plan d'abonnement.",
-      "extendableWasChanged": "L'option «Extensible» a été adaptée en fonction du plan d'abonnement."
+      "extendableWasChanged": "L'option «Extensible» a été adaptée en fonction du plan d'abonnement.",
+      "extendModalTitle": "Renouveler l'abonnement plus tôt?",
+      "extendModalBody": "L'abonnement est prolongé en temps utile pour la prochaine période possible. Une facture est établie."
     },
     "subscriptionListFilter": {
       "extendable": "Extensible"
@@ -1265,7 +1286,20 @@
         "page": "Page",
         "event": "Event",
         "custom": "Custom"
+      },
+      "teaserSort": {
+        "hotAndTrending": "Hot & Trending",
+        "publishedAt": "Publication date"
       }
+    },
+    "authorEditPanel": {
+      "hideAuthor": "Masquer les auteurs",
+      "hideOnTeam": "Masquer sur la page de l'équipe",
+      "hideOnArticle": "Masquer sur les articles",
+      "hideOnTeaser": "Masquer sur les teasers"
+    },
+    "selectableItemsActions": {
+      "selectedItems": "{{numberOfItems}} éléments sélectionnés"
     }
   }
 }

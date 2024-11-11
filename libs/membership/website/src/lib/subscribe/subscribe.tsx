@@ -1,14 +1,16 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, Slider, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, InputAdornment, Slider, styled} from '@mui/material'
 import {
   RegistrationChallenge,
   RegistrationChallengeWrapper,
   UserForm,
   defaultRegisterSchema,
   requiredRegisterSchema,
-  useUser
+  useUser,
+  zodAlwaysRefine
 } from '@wepublish/authentication/website'
 import {
+  Currency,
   MemberPlan,
   PaymentPeriodicity,
   RegisterMutationVariables,
@@ -24,7 +26,7 @@ import {
 import {useEffect, useMemo, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'
-import {formatChf} from '../formatters/format-currency'
+import {formatCurrency} from '../formatters/format-currency'
 import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
@@ -34,8 +36,8 @@ import {ApolloError} from '@apollo/client'
 import {ApiAlert} from '@wepublish/errors/website'
 
 const subscribeSchema = z.object({
-  memberPlanId: z.string().nonempty(),
-  paymentMethodId: z.string().nonempty(),
+  memberPlanId: z.string().min(1),
+  paymentMethodId: z.string().min(1),
   monthlyAmount: z.coerce.number().gte(0),
   autoRenew: z.boolean(),
   paymentPeriodicity: z.enum([
@@ -89,6 +91,18 @@ export const SubscribeAmount = styled('div')`
   border-radius: ${({theme}) => theme.shape.borderRadius}px;
 `
 
+export const SubscribeAmountSlider = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${({theme}) => theme.spacing(3)};
+  align-items: center;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-auto-flow: column;
+    grid-auto-columns: 300px;
+  }
+`
+
 export const SubscribeAmountText = styled('p')`
   text-align: center;
 `
@@ -104,28 +118,38 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
 
 export const getPaymentText = (
   autoRenew: boolean,
+  extendable: boolean,
   paymentPeriodicity: PaymentPeriodicity,
   monthlyAmount: number,
+  currency: Currency,
   locale: string
 ) =>
-  autoRenew
-    ? `${formatRenewalPeriod(paymentPeriodicity)} für ${formatChf(
+  autoRenew && extendable
+    ? `${formatRenewalPeriod(paymentPeriodicity)} für ${formatCurrency(
         (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        currency,
         locale
       )}`
-    : `${formatPaymentPeriod(paymentPeriodicity)} für ${formatChf(
+    : extendable
+    ? `${formatPaymentPeriod(paymentPeriodicity)} für ${formatCurrency(
         (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        currency,
+        locale
+      )}`
+    : `Für ${formatCurrency(
+        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        currency,
         locale
       )}`
 
-export const Subscribe = <T extends BuilderUserFormFields>({
+export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
-  extraMoneyOffset = 0,
+  extraMoneyOffset = () => 0,
   memberPlans,
   challenge,
   userSubscriptions,
   userInvoices,
-  fields = ['firstName', 'password', 'address'] as T[],
+  fields = ['firstName', 'password', 'passwordRepeated', 'address'] as T[],
   schema = defaultRegisterSchema,
   className,
   onSubscribe,
@@ -149,22 +173,34 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     () =>
       fields.reduce(
         (obj, field) => ({...obj, [field]: true}),
-        {} as Record<BuilderUserFormFields, true>
+        {} as Record<Exclude<BuilderUserFormFields, 'flair'>, true>
       ),
     [fields]
   )
 
-  const loggedOutSchema = useMemo(
-    () => requiredRegisterSchema.merge(schema.pick(fieldsToDisplay).merge(subscribeSchema)),
-    [fieldsToDisplay, schema]
-  )
+  /**
+   * Done like this to avoid type errors due to z.ZodObject vs z.ZodEffect<z.ZodObject>.
+   * [Fixed with Zod 4](https://github.com/colinhacks/zod/issues/2474)
+   */
+  const loggedOutSchema = useMemo(() => {
+    const result = requiredRegisterSchema.merge(schema.pick(fieldsToDisplay).merge(subscribeSchema))
+
+    if (fieldsToDisplay.passwordRepeated) {
+      return zodAlwaysRefine(result).refine(data => data.password === data.passwordRepeated, {
+        message: 'Passwörter stimmen nicht überein.',
+        path: ['passwordRepeated']
+      })
+    }
+
+    return result
+  }, [fieldsToDisplay, schema])
 
   const loggedInSchema = subscribeSchema
 
   const {control, handleSubmit, watch, setValue, resetField} = useForm<
     z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
   >({
-    resolver: zodResolver(hasUser ? subscribeSchema : loggedOutSchema),
+    resolver: zodResolver(hasUser ? loggedInSchema : loggedOutSchema),
     defaultValues: {
       ...defaults,
       monthlyAmount: 0,
@@ -220,8 +256,23 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     [selectedMemberPlan?.availablePaymentMethods]
   )
 
-  const paymentText = getPaymentText(autoRenew, selectedPaymentPeriodicity, monthlyAmount, locale)
-  const monthlyPaymentText = getPaymentText(true, PaymentPeriodicity.Monthly, monthlyAmount, locale)
+  const paymentText = getPaymentText(
+    autoRenew,
+    selectedMemberPlan?.extendable ?? true,
+    selectedPaymentPeriodicity,
+    monthlyAmount,
+    selectedMemberPlan?.currency ?? Currency.Chf,
+    locale
+  )
+
+  const monthlyPaymentText = getPaymentText(
+    true,
+    selectedMemberPlan?.extendable ?? true,
+    PaymentPeriodicity.Monthly,
+    monthlyAmount,
+    selectedMemberPlan?.currency ?? Currency.Chf,
+    locale
+  )
 
   const onSubmit = handleSubmit(data => {
     const subscribeData: SubscribeMutationVariables = {
@@ -236,15 +287,16 @@ export const Subscribe = <T extends BuilderUserFormFields>({
       return callAction(onSubscribe)(subscribeData)
     }
 
-    const {address, challengeAnswer, email, password, name, firstName, preferredName} =
-      data as z.infer<typeof loggedOutSchema>
+    const {address, challengeAnswer, email, birthday, password, name, firstName} = data as z.infer<
+      typeof loggedOutSchema
+    >
 
     const registerData = {
+      birthday,
       email,
       password,
       name,
       firstName,
-      preferredName,
       address: address as UserAddressInput,
       challengeAnswer
     } as RegisterMutationVariables
@@ -259,7 +311,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     if (selectedMemberPlan) {
       setValue<'monthlyAmount'>(
         'monthlyAmount',
-        selectedMemberPlan.amountPerMonthMin + extraMoneyOffset
+        selectedMemberPlan.amountPerMonthMin + extraMoneyOffset(selectedMemberPlan)
       )
     }
   }, [selectedMemberPlan, extraMoneyOffset, setValue])
@@ -277,7 +329,11 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     if (selectedAvailablePaymentMethod?.forceAutoRenewal) {
       setValue<'autoRenew'>('autoRenew', true)
     }
-  }, [selectedAvailablePaymentMethod?.forceAutoRenewal, setValue])
+
+    if (!selectedMemberPlan?.extendable) {
+      setValue<'autoRenew'>('autoRenew', false)
+    }
+  }, [selectedAvailablePaymentMethod?.forceAutoRenewal, selectedMemberPlan?.extendable, setValue])
 
   useEffect(() => {
     if (
@@ -300,21 +356,23 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     if (deactivateSubscriptionId) {
       return
     }
+
     return (
       userSubscriptions.data?.subscriptions.some(
         ({memberPlan, deactivation}) => memberPlan.id === selectedMemberPlanId && !deactivation
       ) ?? false
     )
-  }, [userSubscriptions.data?.subscriptions, selectedMemberPlanId])
+  }, [deactivateSubscriptionId, userSubscriptions.data?.subscriptions, selectedMemberPlanId])
 
   const hasOpenInvoices = useMemo(() => {
     if (deactivateSubscriptionId) {
       return
     }
+
     return (
       userInvoices.data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt) ?? false
     )
-  }, [userInvoices.data?.invoices])
+  }, [deactivateSubscriptionId, userInvoices.data?.invoices])
 
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
@@ -362,14 +420,39 @@ export const Subscribe = <T extends BuilderUserFormFields>({
                 Ich unterstütze {siteTitle} {replace(/^./, toLower)(monthlyPaymentText)}
               </Paragraph>
 
-              <Slider
-                {...field}
-                min={selectedMemberPlan?.amountPerMonthMin}
-                max={(selectedMemberPlan?.amountPerMonthMin ?? 500) * 5}
-                valueLabelFormat={val => formatChf(val / 100, locale)}
-                step={100}
-                color="secondary"
-              />
+              <SubscribeAmountSlider>
+                <Slider
+                  {...field}
+                  min={selectedMemberPlan?.amountPerMonthMin}
+                  max={(selectedMemberPlan?.amountPerMonthMin || 5000) * 5}
+                  valueLabelFormat={val =>
+                    formatCurrency(val / 100, selectedMemberPlan?.currency ?? Currency.Chf, locale)
+                  }
+                  step={100}
+                  color="secondary"
+                />
+
+                {!selectedMemberPlan?.amountPerMonthMin && (
+                  <TextField
+                    {...field}
+                    value={field.value / 100}
+                    onChange={event => field.onChange(+event.target.value * 100)}
+                    type={'number'}
+                    fullWidth
+                    inputProps={{
+                      step: 'any',
+                      min: 0
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          {selectedMemberPlan?.currency ?? Currency.Chf}
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                )}
+              </SubscribeAmountSlider>
             </SubscribeAmount>
           )}
         />
@@ -407,7 +490,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
             )}
           />
 
-          {!selectedAvailablePaymentMethod?.forceAutoRenewal && (
+          {!selectedAvailablePaymentMethod?.forceAutoRenewal && selectedMemberPlan?.extendable && (
             <Controller
               name={'autoRenew'}
               control={control}

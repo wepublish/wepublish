@@ -19,8 +19,14 @@ env:
 
 
 jobs:
+  publish_docker_base_image:
+    name: Docker base image
+    uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
+    secrets: inherit
+
   publish_docker_image:
-    name: Docker
+    needs: [publish_docker_base_image]
+    name: Docker backend images
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
       editor_tags: |
@@ -232,6 +238,14 @@ jobs:
                   invoiceMailSubjectRenewalMembership: "Invoice for :memberPlan.name:"
                   invoiceMailBodyRenewalMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
                   markInvoiceAsOpen: False
+          
+                - type: mollie
+                  id: mollie
+                  name: Mollie
+                  offSessionPayments: true
+                  apiKey: ${{ secrets.MOLLIE_API_KEY }}
+                  webhookEndpointSecret: secret
+                  apiBaseUrl: ${{ env.API_URL }}
 
               challenge:
                 secret: 'secret'
@@ -284,7 +298,7 @@ jobs:
 
   publish_docker_website_image:
     name: Build Docker Website
-    needs: [setup-website-matrix, helm_deployment]
+    needs: [setup-website-matrix, helm_deployment, publish_docker_base_image]
     if: ${{ needs.helm_deployment.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
@@ -297,23 +311,25 @@ jobs:
         ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.sha }}
     secrets: inherit
 
-  helm_deployment_website:
-    name: Helm Deployment Website
-    needs: [publish_docker_website_image, setup-website-matrix]
-    if: ${{ needs.publish_docker_website_image.result == 'success' }}
-    uses: ./.github/workflows/on-demand-deploy-helm-website.yml
-    strategy:
-      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
-    with:
-      website_project: ${{ matrix.target }}
-      api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-    secrets: inherit
+
+
+#  helm_deployment_website:
+#    name: Helm Deployment Website
+#    needs: [publish_docker_website_image, setup-website-matrix]
+#    if: ${{ needs.publish_docker_website_image.result == 'success' }}
+#    uses: ./.github/workflows/on-demand-deploy-helm-website.yml
+#    strategy:
+#      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
+#    with:
+#      website_project: ${{ matrix.target }}
+#      api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+#    secrets: inherit
 
 
   notify:
     name: Notify
-    needs: [setup-website-matrix, helm_deployment_website]
-    if: ${{ needs.helm_deployment_website.result == 'success' }}
+    needs: [setup-website-matrix, publish_docker_website_image]
+    if: ${{ needs.publish_docker_website_image.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -351,6 +367,7 @@ jobs:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          PROJECTS: ${{needs.setup-website-matrix.outputs.matrix}}
         run: |
           cd ./config
           npm ci

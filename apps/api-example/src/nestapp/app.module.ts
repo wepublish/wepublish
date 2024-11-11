@@ -6,13 +6,16 @@ import {ScheduleModule} from '@nestjs/schedule'
 import {
   AgendaBaselService,
   AuthenticationModule,
-  AuthorModule,
   BexioPaymentProvider,
   ConsentModule,
   DashboardModule,
+  EventModule,
   EventsImportModule,
+  GoogleAnalyticsModule,
+  GoogleAnalyticsService,
   GraphQLRichText,
   HealthModule,
+  HotAndTrendingModule,
   KarmaMediaAdapter,
   KulturZueriService,
   MailchimpMailProvider,
@@ -20,22 +23,20 @@ import {
   MailsModule,
   MediaAdapterService,
   MembershipModule,
-  NavigationModule,
+  MolliePaymentProvider,
   NeverChargePaymentProvider,
   NovaMediaAdapter,
   PaymentProvider,
   PaymentsModule,
-  PaymentMethodModule,
   PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   PermissionModule,
+  ScriptsModule,
   SettingModule,
   StatsModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  MemberPlanModule,
-  ScriptsModule,
   SystemInfoModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
@@ -45,25 +46,32 @@ import Mailgun from 'mailgun.js'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 import {readConfig} from '../readConfig'
-import {EventModule} from '@wepublish/event/api'
-import {BlockModule, BlockStylesModule} from '@wepublish/block-content/api'
+import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
-import {UserRoleModule} from '@wepublish/user-role/api'
-import {ActionModule} from '@wepublish/action/api'
+import {PollModule} from '@wepublish/poll/api'
 
 @Global()
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloFederationDriver,
-      resolvers: {RichText: GraphQLRichText},
-      autoSchemaFile: './apps/api-example/schema-v2.graphql',
-      sortSchema: true,
-      path: 'v2',
-      cache: 'bounded',
-      playground: process.env.NODE_ENV === 'development',
-      allowBatchedHttpRequests: true
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+        return {
+          resolvers: {RichText: GraphQLRichText},
+          autoSchemaFile: './apps/api-example/schema-v2.graphql',
+          sortSchema: true,
+          path: 'v2',
+          cache: 'bounded',
+          introspection: configFile.general.apolloIntrospection,
+          playground: configFile.general.apolloPlayground,
+          allowBatchedHttpRequests: true
+        }
+      }
     }),
+
     PrismaModule,
     MailsModule.registerAsync({
       imports: [ConfigModule],
@@ -214,6 +222,19 @@ import {ActionModule} from '@wepublish/action/api'
                   prisma
                 })
               )
+            } else if (paymentProvider.type === 'mollie') {
+              paymentProviders.push(
+                new MolliePaymentProvider({
+                  id: paymentProvider.id,
+                  name: paymentProvider.name,
+                  offSessionPayments: paymentProvider.offSessionPayments,
+                  apiKey: paymentProvider.apiKey,
+                  webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
+                  apiBaseUrl: paymentProvider.apiBaseUrl,
+                  incomingRequestHandler: bodyParser.urlencoded({extended: true}),
+                  methods: paymentProvider.methods
+                })
+              )
             } else if (paymentProvider.type === 'no-charge') {
               paymentProviders.push(
                 new NeverChargePaymentProvider({
@@ -244,14 +265,7 @@ import {ActionModule} from '@wepublish/action/api'
     SettingModule,
     ScriptsModule,
     EventModule,
-    NavigationModule,
-    AuthorModule,
-    PaymentMethodModule,
-    ActionModule,
-    UserRoleModule,
-    MemberPlanModule,
     BlockStylesModule,
-    BlockModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
         agendaBasel,
@@ -262,7 +276,27 @@ import {ActionModule} from '@wepublish/action/api'
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
     HealthModule,
-    SystemInfoModule
+    SystemInfoModule,
+    PollModule,
+    HotAndTrendingModule.registerAsync({
+      imports: [
+        GoogleAnalyticsModule.registerAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: async (config: ConfigService) => {
+            const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+
+            return {
+              credentials: configFile.ga?.credentials,
+              property: configFile.ga?.property,
+              articlePrefix: configFile.ga?.articlePrefix
+            }
+          }
+        })
+      ],
+      useFactory: (datasource: GoogleAnalyticsService) => datasource,
+      inject: [GoogleAnalyticsService]
+    })
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [

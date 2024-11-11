@@ -13,6 +13,7 @@ fragment MemberPlanRef on MemberPlan {
 fragment FullMemberPlan on MemberPlan {
   tags
   amountPerMonthMin
+  currency
   availablePaymentMethods {
     paymentMethods {
       ...FullPaymentMethod
@@ -23,6 +24,7 @@ fragment FullMemberPlan on MemberPlan {
   ...MemberPlanRef
   extendable
   maxCount
+  migrateToTargetPaymentMethodID
 }
 
 query MemberPlanList($filter: String, $cursor: ID, $take: Int, $skip: Int) {

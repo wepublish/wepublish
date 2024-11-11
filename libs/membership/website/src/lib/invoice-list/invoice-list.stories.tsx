@@ -4,6 +4,7 @@ import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {InvoiceList} from './invoice-list'
 import {
+  Currency,
   Exact,
   FullImageFragment,
   FullInvoiceFragment,
@@ -64,7 +65,8 @@ const subscription = {
   paymentMethod: {},
   memberPlan: {
     image,
-    name: 'Foobar Memberplan'
+    name: 'Foobar Memberplan',
+    currency: Currency.Chf
   }
 } as Exact<FullSubscriptionFragment>
 

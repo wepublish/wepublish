@@ -36,7 +36,6 @@ export const createAdminUser = async (
   authorise(CanCreateUser, roles)
 
   input.email = input.email ? (input.email as string).toLowerCase() : input.email
-  await Validator.createUser().parse(input)
 
   const userExists = await prisma.user.findUnique({
     where: {email: input.email}
@@ -62,7 +61,8 @@ export const updateAdminUser = async (
   authorise(CanCreateUser, roles)
 
   input.email = input.email ? (input.email as string).toLowerCase() : input.email
-  await Validator.createUser().parse(input)
+  await Validator.createUser.parse(input)
+  await Validator.createAddress.parse(address)
 
   return user.update({
     where: {id},

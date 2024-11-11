@@ -203,12 +203,12 @@ export const CommentEditor = ({
   const anonymousSchema = useMemo(
     () =>
       z.object({
-        comment: z.string().nonempty().max(maxCommentLength),
+        comment: z.string().min(1).max(maxCommentLength),
         title: z.string(),
-        guestUsername: z.string().nonempty(),
+        guestUsername: z.string().min(1),
         challenge: z.object({
-          challengeSolution: z.string().nonempty(),
-          challengeID: z.string().nonempty()
+          challengeSolution: z.string().min(1),
+          challengeID: z.string().min(1)
         })
       }),
     [maxCommentLength]
@@ -217,7 +217,7 @@ export const CommentEditor = ({
   const loggedInSchema = useMemo(
     () =>
       z.object({
-        comment: z.string().nonempty().max(maxCommentLength),
+        comment: z.string().min(1).max(maxCommentLength),
         title: z.string()
       }),
     [maxCommentLength]

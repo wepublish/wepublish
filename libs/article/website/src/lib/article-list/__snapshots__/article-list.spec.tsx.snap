@@ -2,291 +2,7 @@
 
 exports[`ArticleList should render Default 1`] = `
 <DocumentFragment>
-  .emotion-2 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-}
-
-@media (min-width:600px) {
-  .emotion-2 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-.emotion-4 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-4 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-6 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-7 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-9 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-9:empty {
-  min-height: 32px;
-}
-
-.emotion-11 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-11:where(.emotion-5:hover .emotion-11) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-11 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-13 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-13:where(.emotion-5:hover .emotion-13) {
-  background-color: #e91e63;
-}
-
-.emotion-15 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-15 {
-    font-size: 32px;
-  }
-}
-
-.emotion-17 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-17.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-19 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-21 {
-  font-weight: 500;
-}
-
-.emotion-23 {
-  font-weight: 400;
-}
-
-.emotion-25 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-25 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-46 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-46 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-67 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-67 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-88 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-88 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-109 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-109 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-130 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-130 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-151 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-151 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-172 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-172 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-193 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-193 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 4;
-    grid-row-end: 5;
-  }
-}
-
-.emotion-214 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-214 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 4;
-    grid-row-end: 5;
-  }
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <div
@@ -330,7 +46,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -395,7 +111,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               Some longer article title: How will it look like?
             </h1>
@@ -460,7 +176,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -525,7 +241,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -590,7 +306,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -655,7 +371,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -720,7 +436,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -785,7 +501,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -850,7 +566,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -915,7 +631,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -980,7 +696,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -1014,291 +730,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`ArticleList should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-2 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-}
-
-@media (min-width:600px) {
-  .emotion-2 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-.emotion-4 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-4 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-6 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-7 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-9 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-9:empty {
-  min-height: 32px;
-}
-
-.emotion-11 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-11:where(.emotion-5:hover .emotion-11) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-11 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-13 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-13:where(.emotion-5:hover .emotion-13) {
-  background-color: #e91e63;
-}
-
-.emotion-15 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-15 {
-    font-size: 32px;
-  }
-}
-
-.emotion-17 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-17.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-19 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-21 {
-  font-weight: 500;
-}
-
-.emotion-23 {
-  font-weight: 400;
-}
-
-.emotion-25 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-25 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-46 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-46 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-67 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-67 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-88 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-88 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-109 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-109 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-130 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-130 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-151 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-151 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-172 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-172 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-193 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-193 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 4;
-    grid-row-end: 5;
-  }
-}
-
-.emotion-214 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-214 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 4;
-    grid-row-end: 5;
-  }
-}
-
-<article
+  <article
     class="extra-classname emotion-0 emotion-1"
   >
     <div
@@ -1342,7 +774,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -1407,7 +839,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               Some longer article title: How will it look like?
             </h1>
@@ -1472,7 +904,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -1537,7 +969,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -1602,7 +1034,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -1667,7 +1099,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -1732,7 +1164,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -1797,7 +1229,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -1862,7 +1294,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -1927,7 +1359,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -1992,7 +1424,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -2026,291 +1458,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`ArticleList should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-2 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-}
-
-@media (min-width:600px) {
-  .emotion-2 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-.emotion-4 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-4 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-6 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-7 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-9 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-9:empty {
-  min-height: 32px;
-}
-
-.emotion-11 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-11:where(.emotion-5:hover .emotion-11) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-11 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-13 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-13:where(.emotion-5:hover .emotion-13) {
-  background-color: #e91e63;
-}
-
-.emotion-15 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-15 {
-    font-size: 32px;
-  }
-}
-
-.emotion-17 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-17.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-19 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-21 {
-  font-weight: 500;
-}
-
-.emotion-23 {
-  font-weight: 400;
-}
-
-.emotion-25 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-25 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-46 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-46 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-67 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-67 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-88 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-88 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-109 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-109 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-130 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-130 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-151 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-151 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-172 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-172 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-193 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-193 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 4;
-    grid-row-end: 5;
-  }
-}
-
-.emotion-214 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-214 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 4;
-    grid-row-end: 5;
-  }
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <div
@@ -2354,7 +1502,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -2419,7 +1567,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               Some longer article title: How will it look like?
             </h1>
@@ -2484,7 +1632,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -2549,7 +1697,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -2614,7 +1762,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -2679,7 +1827,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -2744,7 +1892,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -2809,7 +1957,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -2874,7 +2022,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -2939,7 +2087,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -3004,7 +2152,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -3038,31 +2186,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`ArticleList should render WithError 1`] = `
 <DocumentFragment>
-  .emotion-2 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-}
-
-@media (min-width:600px) {
-  .emotion-2 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <div
@@ -3074,31 +2198,7 @@ exports[`ArticleList should render WithError 1`] = `
 
 exports[`ArticleList should render WithLoading 1`] = `
 <DocumentFragment>
-  .emotion-2 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-}
-
-@media (min-width:600px) {
-  .emotion-2 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <div
@@ -3110,291 +2210,7 @@ exports[`ArticleList should render WithLoading 1`] = `
 
 exports[`ArticleList should render WithoutImage 1`] = `
 <DocumentFragment>
-  .emotion-2 {
-  display: grid;
-  -webkit-column-gap: 16px;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-}
-
-@media (min-width:600px) {
-  .emotion-2 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-.emotion-4 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-4 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-6 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-7 {
-  display: grid;
-  grid-auto-rows: max-content;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
-}
-
-.emotion-9 {
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-}
-
-.emotion-9:empty {
-  min-height: 32px;
-}
-
-.emotion-11 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-}
-
-.emotion-11:where(.emotion-5:hover .emotion-11) {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-@media (min-width:900px) {
-  .emotion-11 {
-    aspect-ratio: 1;
-  }
-}
-
-.emotion-13 {
-  -webkit-transition: background-color 0.3s ease-in-out;
-  transition: background-color 0.3s ease-in-out;
-  background-color: #000;
-  height: 3px;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.emotion-13:where(.emotion-5:hover .emotion-13) {
-  background-color: #e91e63;
-}
-
-.emotion-15 {
-  grid-area: title;
-  margin-bottom: 8px;
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-15 {
-    font-size: 32px;
-  }
-}
-
-.emotion-17 {
-  font-weight: 300;
-  grid-area: lead;
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-17.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-19 {
-  margin: 0;
-  font-size: 12px;
-  grid-area: authors;
-}
-
-.emotion-21 {
-  font-weight: 500;
-}
-
-.emotion-23 {
-  font-weight: 400;
-}
-
-.emotion-25 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-25 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-46 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-46 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.emotion-67 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-67 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-88 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-88 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-109 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-109 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-}
-
-.emotion-130 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-130 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-151 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-151 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-172 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-172 {
-    grid-column-start: 9;
-    grid-column-end: 13;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-}
-
-.emotion-193 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-193 {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 4;
-    grid-row-end: 5;
-  }
-}
-
-.emotion-214 {
-  display: grid;
-}
-
-@media (min-width:900px) {
-  .emotion-214 {
-    grid-column-start: 5;
-    grid-column-end: 9;
-    grid-row-start: 4;
-    grid-row-end: 5;
-  }
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <div
@@ -3438,7 +2254,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -3503,7 +2319,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -3568,7 +2384,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -3633,7 +2449,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -3698,7 +2514,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -3763,7 +2579,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -3828,7 +2644,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -3893,7 +2709,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -3958,7 +2774,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -4023,7 +2839,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>
@@ -4088,7 +2904,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-13 emotion-14"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-15 emotion-16"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15 emotion-16"
             >
               title
             </h1>

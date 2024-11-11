@@ -1,54 +1,52 @@
 import {ApolloError} from '@apollo/client'
 import {Meta} from '@storybook/react'
-import {FullNavigationFragment, Navigation} from '@wepublish/website/api'
+import {Navigation} from '@wepublish/website/api'
 import {Navbar} from './navbar'
 import {css} from '@emotion/react'
 import {Md60FpsSelect, MdInvertColors, MdSecurity} from 'react-icons/md'
 import {WithUserDecorator} from '@wepublish/storybook'
 
-const navigation = {
-  id: 'cldx7kcpi1168oapxftiqsh0p',
-  key: 'main',
-  name: 'main',
-  links: [
-    {
-      __typename: 'PageNavigationLink',
-      label: 'Gesellschaft',
-      page: {
-        url: '/'
-      }
-    },
-    {
-      __typename: 'ArticleNavigationLink',
-      label: 'Politik',
-      article: {
-        url: '/a/abcd'
-      }
-    },
-    {
-      __typename: 'ArticleNavigationLink',
-      label: 'Kultur',
-      article: {
-        url: '/a/abcd'
-      }
-    },
-    {
-      __typename: 'ArticleNavigationLink',
-      label: 'Tsüri-News',
-      article: {
-        url: '/a/abcd'
-      }
-    },
-    {
-      __typename: 'ExternalNavigationLink',
-      label: 'Was lauft?',
-      url: 'https://google.com'
-    }
-  ]
-} as FullNavigationFragment
-
 const navigations = [
-  navigation,
+  {
+    id: 'cldx7kcpi1168oapxftiqsh0p',
+    key: 'main',
+    name: 'main',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Gesellschaft',
+        page: {
+          url: '/'
+        }
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Politik',
+        article: {
+          url: '/a/abcd'
+        }
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Kultur',
+        article: {
+          url: '/a/abcd'
+        }
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Tsüri-News',
+        article: {
+          url: '/a/abcd'
+        }
+      },
+      {
+        __typename: 'ExternalNavigationLink',
+        label: 'Was lauft?',
+        url: 'https://google.com'
+      }
+    ]
+  },
   {
     id: '1234-1234',
     key: 'guides',
@@ -165,6 +163,25 @@ const navigations = [
         }
       }
     ]
+  },
+  {
+    id: '123456-123456',
+    key: 'icons',
+    name: 'Icons',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Search',
+        page: {
+          url: '/search'
+        }
+      },
+      {
+        __typename: 'ExternalNavigationLink',
+        label: 'X',
+        url: 'https://twitter.com/foobar'
+      }
+    ]
   }
 ] as Navigation[]
 
@@ -220,6 +237,7 @@ export const Default = {
     slug: 'main',
     categorySlugs: [['guides', 'fokusthema'], ['about']],
     headerSlug: 'header',
+    iconSlug: 'icons',
     logo
   }
 }

@@ -3,15 +3,13 @@ import {Logger} from '@nestjs/common'
 import {NestFactory} from '@nestjs/core'
 import {AppModule} from './nestapp/app.module'
 import {MediaAdapterService} from '@wepublish/image/api'
-import {PaymentProviderService} from '@wepublish/payment/api'
+import {PaymentsService} from '@wepublish/payment/api'
 import {MailContext} from '@wepublish/mail/api'
 import helmet from 'helmet'
 import {GatewayModule} from './nestapp/gateway.module'
+import {HOT_AND_TRENDING_DATA_SOURCE, HotAndTrendingDataSource} from '@wepublish/api'
 
 async function bootstrap() {
-  const port = process.env.PORT ?? 4000
-  const privatePort = +port + 1
-
   const nestApp = await NestFactory.create(AppModule)
   nestApp.enableCors({
     origin: true,
@@ -19,9 +17,12 @@ async function bootstrap() {
   })
   nestApp.use(helmet())
   const mediaAdapter = nestApp.get(MediaAdapterService)
-  const paymentProviders = nestApp.get(PaymentProviderService).paymentProviders
+  const paymentProviders = nestApp.get(PaymentsService).paymentProviders
   const mailProvider = nestApp.get(MailContext).mailProvider
   const privateExpressApp = nestApp.getHttpAdapter().getInstance()
+  const hotAndTrendingDataSource = nestApp.get<HotAndTrendingDataSource>(
+    HOT_AND_TRENDING_DATA_SOURCE
+  )
 
   const gatewayApp = await NestFactory.create(GatewayModule)
   gatewayApp.enableCors({
@@ -31,11 +32,11 @@ async function bootstrap() {
   const publicExpressApp = gatewayApp.getHttpAdapter().getInstance()
 
   await runServer({
-    privateExpressApp,
-    publicExpressApp,
+    expressApp,
     mediaAdapter,
     paymentProviders,
-    mailProvider
+    mailProvider,
+    hotAndTrendingDataSource
   }).catch(err => {
     console.error(err)
     process.exit(1)

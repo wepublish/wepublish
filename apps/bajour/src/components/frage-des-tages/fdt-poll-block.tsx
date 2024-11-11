@@ -1,13 +1,12 @@
 import {css, styled} from '@mui/material'
-import {ApiV1, PollBlockProvider, useAsyncAction} from '@wepublish/website'
+import {ApiV1, PollBlockProvider, usePollBlock} from '@wepublish/website'
 import {useRouter} from 'next/router'
 import {useCallback, useEffect, useState} from 'react'
 
 import {CommentListContainer} from '../website-builder-overwrites/blocks/comment-list-container/comment-list-container-fdt'
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
 import {AuthorBox} from './author-box'
-import {TopComments} from './frage-des-tages'
-import {ReactComponent as FrageDesTagesLogo} from './frage-des-tages.svg'
+import {FdtArticleImage, TopComments} from './frage-des-tages'
 import {InfoBox} from './info-box'
 
 export const FrageDesTagesContainer = styled('div')`
@@ -79,17 +78,6 @@ export const AuthorAndContext = styled('div')`
     `}
 `
 
-export const FDTLogo = styled(FrageDesTagesLogo)`
-  grid-column: 10 / 13;
-
-  ${({theme}) =>
-    css`
-      ${theme.breakpoints.up('sm')} {
-        grid-column: 1 / 2;
-      }
-    `}
-`
-
 const StyledAuthorBox = styled(AuthorBox)`
   background-color: ${({theme}) => theme.palette.secondary.light};
 `
@@ -119,7 +107,6 @@ const PollBlockStyled = styled(PollBlock)`
 `
 
 export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
-  const [vote] = ApiV1.usePollVoteMutation()
   const router = useRouter()
   const {
     query: {slug}
@@ -127,7 +114,7 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
-  const callAction = useAsyncAction(setLoading, setError)
+  const {vote} = usePollBlock()
 
   const {data: articleData} = ApiV1.useArticleQuery({
     fetchPolicy: 'cache-only',
@@ -140,16 +127,20 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
 
   const autoVote = useCallback(async () => {
     const answerId = router.query.answerId as string
-    if (answerId) {
-      callAction(async () => {
-        await vote({
-          variables: {
-            answerId
-          }
-        })
-      })()
+
+    if (!answerId || !poll?.id) {
+      return
     }
-  }, [callAction, router.query.answerId, vote])
+
+    await vote(
+      {
+        variables: {
+          answerId
+        }
+      },
+      poll.id
+    )
+  }, [poll?.id, router.query.answerId, vote])
 
   useEffect(() => {
     autoVote()
@@ -159,9 +150,8 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
     <PollBlockProvider>
       <FrageDesTagesContainer>
         <FrageDesTagesWrapper>
-          <FDTLogo width={110} aria-label="Frage des Tages Logo" />
-
           <PollWrapper>
+            {articleData?.article?.image && <FdtArticleImage image={articleData.article.image} />}
             <PollBlockStyled poll={poll} />
           </PollWrapper>
 
@@ -175,15 +165,17 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
 
             <TopComments>Top antworten</TopComments>
 
-            <CommentListContainer
-              id={articleData?.article?.id || ''}
-              variables={{
-                sort: ApiV1.CommentSort.Rating,
-                order: ApiV1.SortOrder.Descending
-              }}
-              type={ApiV1.CommentItemType.Article}
-              maxCommentDepth={1}
-            />
+            {!articleData?.article?.disableComments && (
+              <CommentListContainer
+                id={articleData?.article?.id || ''}
+                variables={{
+                  sort: ApiV1.CommentSort.Rating,
+                  order: ApiV1.SortOrder.Descending
+                }}
+                type={ApiV1.CommentItemType.Article}
+                maxCommentDepth={1}
+              />
+            )}
           </CommentsWrapper>
         </FrageDesTagesWrapper>
       </FrageDesTagesContainer>

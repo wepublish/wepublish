@@ -10,6 +10,7 @@ import {BuilderPollBlockProps, useWebsiteBuilder} from '@wepublish/website/build
 import {useEffect, useMemo, useState} from 'react'
 import {PollBlockResult} from './poll-block-result'
 import {usePollBlock} from './poll-block.context'
+import {H4} from '@wepublish/ui'
 
 export const isPollBlock = (block: Block): block is PollBlockType =>
   block.__typename === 'PollBlock'
@@ -18,6 +19,8 @@ export const PollBlockWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
 `
+
+export const PollBlockTitle = styled(H4)``
 
 export const PollBlockVoting = styled('div')`
   display: grid;
@@ -115,7 +118,7 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
 
   return (
     <PollBlockWrapper className={className}>
-      {poll.question && <H4 component={'h1'}>{poll.question}</H4>}
+      {poll.question && <PollBlockTitle component={'h1'}>{poll.question}</PollBlockTitle>}
       {poll.infoText && <RichText richText={poll.infoText} />}
 
       {loggedInVote.error && <Alert severity="error">{loggedInVote.error.message}</Alert>}
@@ -134,11 +137,14 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
                   loading: true
                 })
 
-                const result = await vote({
-                  variables: {
-                    answerId: answer.id
-                  }
-                })
+                const result = await vote(
+                  {
+                    variables: {
+                      answerId: answer.id
+                    }
+                  },
+                  poll?.id
+                )
 
                 setVoteResult({
                   ...result,

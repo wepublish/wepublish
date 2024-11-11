@@ -53,6 +53,13 @@ paymentProviders:
     offSessionPayments: false
     secretKey: ${STRIPE_SECRET_KEY}
     webhookEndpointSecret: ${STRIPE_CHECKOUT_WEBHOOK_SECRET}
+  - type: mollie
+    id: mollie
+    name: Mollie
+    offSessionPayments: true
+    apiKey: ${MOLLIE_API_SECRET}
+    webhookEndpointSecret: secret
+    apiBaseUrl: https://api.wepublish.dev
   - type: payrexx-subscription
     id: payrexx-subscription
     name: Payrexx Subscription
@@ -82,19 +89,11 @@ paymentProviders:
     name: No Charge
     offSessionPayments: true
 challenge:
-  secret: 'secret'
-  validTime: 600
-  width: 200
-  height: 200
-  background: '#ffffff'
-  noise: 5
-  minValue: 1
-  maxValue: 10
-  operandAmount: 1
-  operandTypes:
-    - '+'
-    - '-'
-  mode: 'formula'
-  targetSymbol: '?'
+  type: 'turnstile'
+  secret: ${TURNSTILE_SECRET}
 mediaServer:
   type: 'nova'
+ga:
+  credentials:
+  property:
+  articlePrefix: /a/

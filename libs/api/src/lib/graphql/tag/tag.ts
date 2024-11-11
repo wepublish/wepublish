@@ -18,11 +18,11 @@ import {createProxyingResolver} from '../../utility'
 export const GraphQLTagType = new GraphQLEnumType({
   name: 'TagType',
   values: {
-    Comment: {value: TagType.Comment},
-    Event: {value: TagType.Event},
-    Author: {value: TagType.Author},
-    Article: {value: TagType.Article},
-    Page: {value: TagType.Page}
+    [TagType.Comment]: {value: TagType.Comment},
+    [TagType.Event]: {value: TagType.Event},
+    [TagType.Author]: {value: TagType.Author},
+    [TagType.Article]: {value: TagType.Article},
+    [TagType.Page]: {value: TagType.Page}
   }
 })
 
@@ -62,9 +62,9 @@ export const GraphQLTagFilter = new GraphQLInputObjectType({
 export const GraphQLTagSort = new GraphQLEnumType({
   name: 'TagSort',
   values: {
-    CREATED_AT: {value: TagSort.CreatedAt},
-    MODIFIED_AT: {value: TagSort.ModifiedAt},
-    TAG: {value: TagSort.Tag}
+    [TagSort.CreatedAt]: {value: TagSort.CreatedAt},
+    [TagSort.ModifiedAt]: {value: TagSort.ModifiedAt},
+    [TagSort.Tag]: {value: TagSort.Tag}
   }
 })
 

@@ -2,203 +2,7 @@
 
 exports[`Context Box should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  grid-template-columns: 36px 1fr;
-  grid-auto-rows: max-content;
-  gap: 8px;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-  padding: 8px;
-}
-
-.emotion-4 {
-  -webkit-align-self: center;
-  -ms-flex-item-align: center;
-  align-self: center;
-  font-weight: 600;
-}
-
-.emotion-6 {
-  justify-self: center;
-  width: 8px;
-  background-color: currentColor;
-}
-
-.emotion-8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: column;
-  -webkit-flex-flow: column;
-  -ms-flex-flow: column;
-  flex-flow: column;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  gap: 8px;
-}
-
-.emotion-10 {
-  font-weight: 500;
-  font-style: italic;
-}
-
-.emotion-12 {
-  height: 120px;
-  max-height: 120px;
-  overflow: hidden;
-  -webkit-transition: max-height 0.3s ease-in-out;
-  transition: max-height 0.3s ease-in-out;
-  font-style: italic;
-}
-
-.emotion-16 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-16.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-16:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-17 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  font-size: 1.5rem;
-  line-height: 1.4;
-  margin-bottom: 0.35em;
-}
-
-.emotion-17:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-20 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-  font-weight: 700;
-}
-
-.emotion-20::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-20.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-20 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-20:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgb(163, 21, 69);
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
-}
-
-@media (hover: none) {
-  .emotion-20:hover {
-    background-color: #e91e63;
-  }
-}
-
-.emotion-20:active {
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
-}
-
-.emotion-20.Mui-focusVisible {
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-}
-
-.emotion-20.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.emotion-20:hover {
-  box-shadow: none;
-}
-
-.emotion-21 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-<aside
+  <aside
     class="emotion-0 emotion-1"
   >
     <svg
@@ -222,7 +26,7 @@ exports[`Context Box should render Default 1`] = `
     <div
       class="emotion-4 emotion-5"
     >
-      Darum geht’s:
+      Break block test
     </div>
     <div
       class="emotion-6 emotion-7"
@@ -233,13 +37,8 @@ exports[`Context Box should render Default 1`] = `
       <div
         class="emotion-10 emotion-11"
       >
-        Break block test
-      </div>
-      <div
-        class="emotion-12 emotion-13"
-      >
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
           <div
             data-gramm="false"
@@ -248,7 +47,7 @@ exports[`Context Box should render Default 1`] = `
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -262,7 +61,7 @@ exports[`Context Box should render Default 1`] = `
               </span>
             </p>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -276,7 +75,7 @@ exports[`Context Box should render Default 1`] = `
               </span>
             </h4>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -292,7 +91,7 @@ exports[`Context Box should render Default 1`] = `
               </span>
             </h4>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -347,13 +146,13 @@ exports[`Context Box should render Default 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-20"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-18"
         tabindex="0"
         type="button"
       >
         Alles lesen
         <span
-          class="MuiTouchRipple-root emotion-21"
+          class="MuiTouchRipple-root emotion-19"
         />
       </button>
     </div>
@@ -363,203 +162,7 @@ exports[`Context Box should render Default 1`] = `
 
 exports[`Context Box should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  grid-template-columns: 36px 1fr;
-  grid-auto-rows: max-content;
-  gap: 8px;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-  padding: 8px;
-}
-
-.emotion-4 {
-  -webkit-align-self: center;
-  -ms-flex-item-align: center;
-  align-self: center;
-  font-weight: 600;
-}
-
-.emotion-6 {
-  justify-self: center;
-  width: 8px;
-  background-color: currentColor;
-}
-
-.emotion-8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: column;
-  -webkit-flex-flow: column;
-  -ms-flex-flow: column;
-  flex-flow: column;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  gap: 8px;
-}
-
-.emotion-10 {
-  font-weight: 500;
-  font-style: italic;
-}
-
-.emotion-12 {
-  height: 120px;
-  max-height: 120px;
-  overflow: hidden;
-  -webkit-transition: max-height 0.3s ease-in-out;
-  transition: max-height 0.3s ease-in-out;
-  font-style: italic;
-}
-
-.emotion-16 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-16.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-16:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-17 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  font-size: 1.5rem;
-  line-height: 1.4;
-  margin-bottom: 0.35em;
-}
-
-.emotion-17:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-20 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-  font-weight: 700;
-}
-
-.emotion-20::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-20.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-20 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-20:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgb(163, 21, 69);
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
-}
-
-@media (hover: none) {
-  .emotion-20:hover {
-    background-color: #e91e63;
-  }
-}
-
-.emotion-20:active {
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
-}
-
-.emotion-20.Mui-focusVisible {
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-}
-
-.emotion-20.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.emotion-20:hover {
-  box-shadow: none;
-}
-
-.emotion-21 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-<aside
+  <aside
     class="extra-classname emotion-0 emotion-1"
   >
     <svg
@@ -583,7 +186,7 @@ exports[`Context Box should render WithClassName 1`] = `
     <div
       class="emotion-4 emotion-5"
     >
-      Darum geht’s:
+      Break block test
     </div>
     <div
       class="emotion-6 emotion-7"
@@ -594,13 +197,8 @@ exports[`Context Box should render WithClassName 1`] = `
       <div
         class="emotion-10 emotion-11"
       >
-        Break block test
-      </div>
-      <div
-        class="emotion-12 emotion-13"
-      >
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
           <div
             data-gramm="false"
@@ -609,7 +207,7 @@ exports[`Context Box should render WithClassName 1`] = `
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -623,7 +221,7 @@ exports[`Context Box should render WithClassName 1`] = `
               </span>
             </p>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -637,7 +235,7 @@ exports[`Context Box should render WithClassName 1`] = `
               </span>
             </h4>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -653,7 +251,7 @@ exports[`Context Box should render WithClassName 1`] = `
               </span>
             </h4>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -708,13 +306,13 @@ exports[`Context Box should render WithClassName 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-20"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-18"
         tabindex="0"
         type="button"
       >
         Alles lesen
         <span
-          class="MuiTouchRipple-root emotion-21"
+          class="MuiTouchRipple-root emotion-19"
         />
       </button>
     </div>
@@ -724,203 +322,7 @@ exports[`Context Box should render WithClassName 1`] = `
 
 exports[`Context Box should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  grid-template-columns: 36px 1fr;
-  grid-auto-rows: max-content;
-  gap: 8px;
-  -webkit-align-items: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-  padding: 8px;
-}
-
-.emotion-4 {
-  -webkit-align-self: center;
-  -ms-flex-item-align: center;
-  align-self: center;
-  font-weight: 600;
-}
-
-.emotion-6 {
-  justify-self: center;
-  width: 8px;
-  background-color: currentColor;
-}
-
-.emotion-8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: column;
-  -webkit-flex-flow: column;
-  -ms-flex-flow: column;
-  flex-flow: column;
-  -webkit-align-items: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: start;
-  gap: 8px;
-}
-
-.emotion-10 {
-  font-weight: 500;
-  font-style: italic;
-}
-
-.emotion-12 {
-  height: 120px;
-  max-height: 120px;
-  overflow: hidden;
-  -webkit-transition: max-height 0.3s ease-in-out;
-  transition: max-height 0.3s ease-in-out;
-  font-style: italic;
-}
-
-.emotion-16 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-16.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-16:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-17 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  font-size: 1.5rem;
-  line-height: 1.4;
-  margin-bottom: 0.35em;
-}
-
-.emotion-17:last-child {
-  margin-bottom: 0;
-}
-
-.emotion-20 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #e91e63;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 30px;
-  text-transform: initial;
-  box-shadow: none;
-  font-weight: 700;
-}
-
-.emotion-20::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-20.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-20 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-20:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgb(163, 21, 69);
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
-}
-
-@media (hover: none) {
-  .emotion-20:hover {
-    background-color: #e91e63;
-  }
-}
-
-.emotion-20:active {
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
-}
-
-.emotion-20.Mui-focusVisible {
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-}
-
-.emotion-20.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.emotion-20:hover {
-  box-shadow: none;
-}
-
-.emotion-21 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-<aside
+  <aside
     class="emotion-0 emotion-1"
   >
     <svg
@@ -944,7 +346,7 @@ exports[`Context Box should render WithEmotion 1`] = `
     <div
       class="emotion-4 emotion-5"
     >
-      Darum geht’s:
+      Break block test
     </div>
     <div
       class="emotion-6 emotion-7"
@@ -955,13 +357,8 @@ exports[`Context Box should render WithEmotion 1`] = `
       <div
         class="emotion-10 emotion-11"
       >
-        Break block test
-      </div>
-      <div
-        class="emotion-12 emotion-13"
-      >
         <div
-          class="emotion-14 emotion-15"
+          class="emotion-12 emotion-13"
         >
           <div
             data-gramm="false"
@@ -970,7 +367,7 @@ exports[`Context Box should render WithEmotion 1`] = `
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -984,7 +381,7 @@ exports[`Context Box should render WithEmotion 1`] = `
               </span>
             </p>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -998,7 +395,7 @@ exports[`Context Box should render WithEmotion 1`] = `
               </span>
             </h4>
             <h4
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
               data-slate-node="element"
             >
               <span
@@ -1014,7 +411,7 @@ exports[`Context Box should render WithEmotion 1`] = `
               </span>
             </h4>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-14"
               data-slate-node="element"
             >
               <span
@@ -1069,13 +466,13 @@ exports[`Context Box should render WithEmotion 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-20"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-18"
         tabindex="0"
         type="button"
       >
         Alles lesen
         <span
-          class="MuiTouchRipple-root emotion-21"
+          class="MuiTouchRipple-root emotion-19"
         />
       </button>
     </div>

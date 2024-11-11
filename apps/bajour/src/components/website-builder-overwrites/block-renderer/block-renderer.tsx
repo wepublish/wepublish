@@ -20,6 +20,12 @@ import {FrageDesTages} from '../../frage-des-tages/frage-des-tages'
 import {isFrageDesTages} from '../../frage-des-tages/is-frage-des-tages'
 import {isSmallTeaser, SmallTeaser} from '../blocks/small-teaser'
 import {isWideTeaser, WideTeaser} from '../blocks/wide-teaser'
+import {
+  BajourLightBreakBlock,
+  BajourSponsoredBreakBlock,
+  isLightBreak,
+  isSponsoredBreak
+} from '../break/bajour-break'
 
 export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
   const {
@@ -63,7 +69,9 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
               {isTeaserListBlock(block) && <TeaserList {...block} />}
             </WebsiteBuilderProvider>
           )
-        ]
+        ],
+        [isLightBreak, block => <BajourLightBreakBlock {...block} />],
+        [isSponsoredBreak, block => <BajourSponsoredBreakBlock {...block} />]
       ]),
     [TeaserGrid, TeaserList, isOldRelatedArticles]
   )

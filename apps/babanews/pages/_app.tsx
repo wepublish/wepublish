@@ -1,4 +1,6 @@
+import {EmotionCache} from '@emotion/cache'
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -22,9 +24,9 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {BabanewsBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
+import {BabanewsBanner} from '../src/components/website-builder-overwrites/blocks/banner'
 import {BabanewsTeaserGrid} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme from '../src/styles/theme'
-import {BabanewsBanner} from '../src/components/website-builder-overwrites/blocks/banner'
 
 setDefaultOptions({
   locale: de
@@ -67,77 +69,80 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
-}>
+}> & {emotionCache?: EmotionCache}
 
-function CustomApp({Component, pageProps}: CustomAppProps) {
+function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'baba news'
 
   return (
-    <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
-      <WebsiteProvider>
-        <WebsiteBuilderProvider
-          Head={Head}
-          Script={Script}
-          elements={{Link: NextWepublishLink}}
-          date={{format: dateFormatter}}
-          blocks={{
-            Renderer: BabanewsBlockRenderer,
-            TeaserGrid: BabanewsTeaserGrid
-          }}
-          blockStyles={{
-            Banner: BabanewsBanner
-          }}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Head>
-              <title key="title">{siteTitle}</title>
+    <AppCacheProvider emotionCache={emotionCache}>
+      <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
+        <WebsiteProvider>
+          <WebsiteBuilderProvider
+            Head={Head}
+            Script={Script}
+            elements={{Link: NextWepublishLink}}
+            date={{format: dateFormatter}}
+            blocks={{
+              Renderer: BabanewsBlockRenderer,
+              TeaserGrid: BabanewsTeaserGrid
+            }}
+            blockStyles={{
+              Banner: BabanewsBanner
+            }}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <Head>
+                <title key="title">{siteTitle}</title>
 
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-              {/* Feeds */}
-              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+                {/* Feeds */}
+                <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+                <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+                <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
 
-              {/* Sitemap */}
-              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+                {/* Sitemap */}
+                <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
-              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-              <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-              <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-              <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-              <link rel="manifest" href="/site.webmanifest" />
-              <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-              <meta name="msapplication-TileColor" content="#ffffff" />
-              <meta name="theme-color" content="#ffffff" />
-            </Head>
+                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                <link rel="manifest" href="/site.webmanifest" />
+                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
+                <meta name="msapplication-TileColor" content="#ffffff" />
+                <meta name="theme-color" content="#ffffff" />
+              </Head>
 
-            <NavBar
-              categorySlugs={[['categories', 'about-us']]}
-              slug="main"
-              headerSlug="header"
-              subscriptionsUrl={null}
-            />
+              <NavBar
+                categorySlugs={[['categories', 'about-us']]}
+                slug="main"
+                headerSlug="header"
+                iconSlug="icons"
+                subscriptionsUrl={null}
+              />
 
-            <ContentSpacer>
-              <Component {...pageProps} />
-            </ContentSpacer>
+              <ContentSpacer>
+                <Component {...pageProps} />
+              </ContentSpacer>
 
-            <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
+              <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
 
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-              strategy="afterInteractive"
-            />
+              <Script
+                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
+                strategy="afterInteractive"
+              />
 
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-              strategy="lazyOnload"
-            />
-          </ThemeProvider>
-        </WebsiteBuilderProvider>
-      </WebsiteProvider>
-    </SessionProvider>
+              <Script
+                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
+                strategy="lazyOnload"
+              />
+            </ThemeProvider>
+          </WebsiteBuilderProvider>
+        </WebsiteProvider>
+      </SessionProvider>
+    </AppCacheProvider>
   )
 }
 

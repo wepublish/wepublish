@@ -20,7 +20,7 @@ import {
   GraphQLMetadataPropertyInput,
   GraphQLPageInfo
 } from './common'
-import {GraphQLMemberPlan, GraphQLPaymentPeriodicity} from './memberPlan'
+import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLSupportedCurrency} from './memberPlan'
 import {GraphQLPaymentMethod} from './paymentMethod'
 import {
   GraphQLSubscriptionDeactivation,
@@ -66,7 +66,8 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
     properties: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataProperty)))
     },
-    deactivation: {type: GraphQLSubscriptionDeactivation}
+    deactivation: {type: GraphQLSubscriptionDeactivation},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)}
   }
 })
 
@@ -97,8 +98,8 @@ export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
 export const GraphQLSubscriptionSort = new GraphQLEnumType({
   name: 'SubscriptionSort',
   values: {
-    CREATED_AT: {value: SubscriptionSort.CreatedAt},
-    MODIFIED_AT: {value: SubscriptionSort.ModifiedAt}
+    [SubscriptionSort.CreatedAt]: {value: SubscriptionSort.CreatedAt},
+    [SubscriptionSort.ModifiedAt]: {value: SubscriptionSort.ModifiedAt}
   }
 })
 

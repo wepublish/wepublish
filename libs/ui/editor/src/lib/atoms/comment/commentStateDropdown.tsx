@@ -80,15 +80,11 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
     return (
       <RPopover ref={ref} className={className} full>
         <Dropdown.Menu onSelect={handleSelect}>
-          {Object.keys(CommentState)
+          {Object.values(CommentState)
             .filter(tmpState => tmpState !== CommentState.PendingApproval)
             .map((tmpState, index) => (
-              <Dropdown.Item
-                key={index}
-                eventKey={tmpState}
-                /* onClick={() => setNewCommentState(tmpState as CommentState)} */
-              >
-                {t(mapCommentActionToBtnTitle(tmpState as CommentState))}
+              <Dropdown.Item key={index} eventKey={tmpState}>
+                {t(mapCommentActionToBtnTitle(tmpState))}
               </Dropdown.Item>
             ))}
         </Dropdown.Menu>

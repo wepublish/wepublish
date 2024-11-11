@@ -30,30 +30,9 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
-export type ArticleNavigationLink = BaseNavigationLink & {
-  __typename?: 'ArticleNavigationLink';
-  articleID: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  label: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  type: Scalars['String'];
-};
-
-export type BaseNavigationLink = {
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  label: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  type: Scalars['String'];
-};
-
-export type BaseNavigationLinkInput = {
-  articleID?: InputMaybe<Scalars['String']>;
-  label: Scalars['String'];
-  pageID?: InputMaybe<Scalars['String']>;
-  type: Scalars['String'];
-  url?: InputMaybe<Scalars['String']>;
+export type Article = {
+  __typename?: 'Article';
+  id: Scalars['ID'];
 };
 
 export type BlockStyle = {
@@ -208,6 +187,27 @@ export type Image = {
   id: Scalars['ID'];
 };
 
+export type ImageV2 = {
+  __typename?: 'ImageV2';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  extension: Scalars['String'];
+  fileSize: Scalars['Int'];
+  filename?: Maybe<Scalars['String']>;
+  focalPoint?: Maybe<FocalPoint>;
+  format: Scalars['String'];
+  height: Scalars['Int'];
+  id: Scalars['ID'];
+  license?: Maybe<Scalars['String']>;
+  link?: Maybe<Scalars['String']>;
+  mimeType: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  source?: Maybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  width: Scalars['Int'];
+};
+
 export type ImportedEventFilter = {
   from?: InputMaybe<Scalars['String']>;
   location?: InputMaybe<Scalars['String']>;
@@ -293,8 +293,8 @@ export type Mutation = {
   deleteConsent: Consent;
   /** Deletes an existing event. */
   deleteEvent: Event;
-  /** Deletes an existing navigation. */
-  deleteNavigation: Navigation;
+  /** Delete poll vote */
+  deletePollVote: PollVote;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -414,7 +414,7 @@ export type MutationDeleteEventArgs = {
 };
 
 
-export type MutationDeleteNavigationArgs = {
+export type MutationDeletePollVoteArgs = {
   id: Scalars['ID'];
 };
 
@@ -510,16 +510,6 @@ export type MutationUpdateUserConsentArgs = {
   value: Scalars['Boolean'];
 };
 
-export type Navigation = {
-  __typename?: 'Navigation';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  key: Scalars['String'];
-  links: Array<BaseNavigationLink>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-};
-
 export type Page = {
   __typename?: 'Page';
   id: Scalars['ID'];
@@ -550,6 +540,13 @@ export type PaginatedEvents = {
   totalCount: Scalars['Float'];
 };
 
+export type PaginatedPollVotes = {
+  __typename?: 'PaginatedPollVotes';
+  nodes: Array<PollVote>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float'];
+};
+
 export type PaymentMethod = {
   __typename?: 'PaymentMethod';
   id: Scalars['ID'];
@@ -575,6 +572,37 @@ export type PeriodicJob = {
   successfullyFinished?: Maybe<Scalars['DateTime']>;
   tries: Scalars['Float'];
 };
+
+export type PollAnswerInVote = {
+  __typename?: 'PollAnswerInVote';
+  answer: Scalars['String'];
+  id: Scalars['ID'];
+};
+
+export type PollVote = {
+  __typename?: 'PollVote';
+  answer: PollAnswerInVote;
+  answerId: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  disabled: Scalars['Boolean'];
+  fingerprint?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  pollId: Scalars['ID'];
+  userId?: Maybe<Scalars['ID']>;
+};
+
+export type PollVoteFilter = {
+  answerIds?: InputMaybe<Array<Scalars['String']>>;
+  fingerprint?: InputMaybe<Scalars['String']>;
+  from?: InputMaybe<Scalars['DateTime']>;
+  pollId?: InputMaybe<Scalars['String']>;
+  to?: InputMaybe<Scalars['DateTime']>;
+  userId?: InputMaybe<Scalars['String']>;
+};
+
+export enum PollVoteSort {
+  CreatedAt = 'CreatedAt'
+}
 
 export type Query = {
   __typename?: 'Query';
@@ -623,7 +651,13 @@ export type Query = {
   /** Returns a list of navigations. */
   getNavigations: Array<Navigation>;
   /** Returns an image by id. */
-  image: Image;
+  getImage: ImageV2;
+  /**
+   *
+   *       Returns the most viewed articles in descending order.
+   *
+   */
+  hotAndTrending: Array<Article>;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
@@ -661,6 +695,8 @@ export type Query = {
   /** Returns all payment methods */
   paymentMethods: Array<PaymentMethod>;
   periodicJobLog: Array<PeriodicJob>;
+  /** Returns a paginated list of poll votes */
+  pollVotes: PaginatedPollVotes;
   provider: MailProviderModel;
   /**
    *
@@ -677,6 +713,12 @@ export type Query = {
   revenue: Array<DashboardInvoice>;
   /**
    *
+   *       Returns a single setting by name.
+   *
+   */
+  settingById: Setting;
+  /**
+   *
    *       Returns a single setting by id.
    *
    */
@@ -686,7 +728,7 @@ export type Query = {
    *       Returns all settings.
    *
    */
-  settingsList: Array<Setting>;
+  settings: Array<Setting>;
   stats?: Maybe<Stats>;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
@@ -749,8 +791,14 @@ export type QueryGetNavigationByKeyArgs = {
 };
 
 
-export type QueryImageArgs = {
+export type QueryGetImageArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryHotAndTrendingArgs = {
+  start?: InputMaybe<Scalars['DateTime']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -786,6 +834,16 @@ export type QueryPeriodicJobLogArgs = {
 };
 
 
+export type QueryPollVotesArgs = {
+  cursorId?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<PollVoteFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<PollVoteSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryRenewingSubscribersArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
@@ -799,11 +857,16 @@ export type QueryRevenueArgs = {
 
 
 export type QuerySettingByIdArgs = {
+  name: Scalars['String'];
+};
+
+
+export type QuerySettingByIdArgs = {
   id: Scalars['String'];
 };
 
 
-export type QuerySettingsListArgs = {
+export type QuerySettingsArgs = {
   filter?: InputMaybe<SettingFilter>;
 };
 
@@ -924,52 +987,20 @@ export type SystemMailModel = {
   mailTemplate?: Maybe<MailTemplateRef>;
 };
 
-export type UpdateNavigationInput = {
-  id: Scalars['String'];
-  key: Scalars['String'];
-  links: Array<BaseNavigationLinkInput>;
-  name: Scalars['String'];
-};
-
-export type User = {
-  __typename?: 'User';
-};
 export type Tag = {
   __typename?: 'Tag';
   id: Scalars['ID'];
 };
 
-export type UserConsent = {
-  __typename?: 'UserConsent';
-  consent: Consent;
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  user: UserV2;
-  value: Scalars['Boolean'];
-};
-
-export enum UserEvent {
-  AccountCreation = 'ACCOUNT_CREATION',
-  LoginLink = 'LOGIN_LINK',
-  PasswordReset = 'PASSWORD_RESET',
-  TestMail = 'TEST_MAIL'
-}
-
-export type UserV2 = {
-  __typename?: 'UserV2';
-  active: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
+export type User = {
+  __typename?: 'User';
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   lastLogin?: Maybe<Scalars['DateTime']>;
-  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  password: Scalars['String'];
-  preferredName?: Maybe<Scalars['String']>;
-  roleIDs: Array<Scalars['String']>;
+  roleIDs?: Maybe<Array<Scalars['String']>>;
   userImageID?: Maybe<Scalars['String']>;
 };
 
@@ -1184,10 +1215,33 @@ export type PeriodicJobLogsQueryVariables = Exact<{
 
 export type PeriodicJobLogsQuery = { __typename?: 'Query', periodicJobLog: Array<{ __typename?: 'PeriodicJob', id: string, date: string, error?: string | null, executionTime?: string | null, finishedWithError?: string | null, modifiedAt: string, successfullyFinished?: string | null, tries: number, createdAt: string }> };
 
+export type FullPollVoteFragment = { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null };
+
+export type FullPollVoteWithAnswerFragment = { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } };
+
+export type PollVoteListQueryVariables = Exact<{
+  filter?: InputMaybe<PollVoteFilter>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<PollVoteSort>;
+}>;
+
+
+export type PollVoteListQuery = { __typename?: 'Query', pollVotes: { __typename?: 'PaginatedPollVotes', totalCount: number, nodes: Array<{ __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type DeletePollVoteMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeletePollVoteMutation = { __typename?: 'Mutation', deletePollVote: { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } } };
+
 export type SettingsListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SettingsListQuery = { __typename?: 'Query', settingsList: Array<{ __typename?: 'Setting', id: string, name: SettingName, value?: any | null, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null, allowedValues?: { __typename?: 'AllowedSettingVals', stringChoice?: Array<string> | null, boolChoice?: boolean | null } | null } | null }> };
+export type SettingsListQuery = { __typename?: 'Query', settings: Array<{ __typename?: 'Setting', id: string, name: SettingName, value?: any | null, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null, allowedValues?: { __typename?: 'AllowedSettingVals', stringChoice?: Array<string> | null, boolChoice?: boolean | null } | null } | null }> };
 
 export type UpdateSettingMutationVariables = Exact<{
   name: SettingName;
@@ -1401,6 +1455,25 @@ export const FullPeriodicJobFragmentDoc = gql`
         createdAt
     }
 `;
+export const FullPollVoteFragmentDoc = gql`
+    fragment FullPollVote on PollVote {
+  id
+  createdAt
+  pollId
+  answerId
+  userId
+  fingerprint
+}
+    `;
+export const FullPollVoteWithAnswerFragmentDoc = gql`
+    fragment FullPollVoteWithAnswer on PollVote {
+  ...FullPollVote
+  answer {
+    id
+    answer
+  }
+}
+    ${FullPollVoteFragmentDoc}`;
 export const MemberPlanRefFragmentDoc = gql`
     fragment MemberPlanRef on MemberPlan {
         id
@@ -2434,9 +2507,98 @@ export function usePeriodicJobLogsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type PeriodicJobLogsQueryHookResult = ReturnType<typeof usePeriodicJobLogsQuery>;
 export type PeriodicJobLogsLazyQueryHookResult = ReturnType<typeof usePeriodicJobLogsLazyQuery>;
 export type PeriodicJobLogsQueryResult = Apollo.QueryResult<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>;
+export const PollVoteListDocument = gql`
+    query PollVoteList($filter: PollVoteFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PollVoteSort) {
+  pollVotes(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullPollVoteWithAnswer
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${FullPollVoteWithAnswerFragmentDoc}`;
+
+/**
+ * __usePollVoteListQuery__
+ *
+ * To run a query within a React component, call `usePollVoteListQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePollVoteListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePollVoteListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function usePollVoteListQuery(baseOptions?: Apollo.QueryHookOptions<PollVoteListQuery, PollVoteListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PollVoteListQuery, PollVoteListQueryVariables>(PollVoteListDocument, options);
+      }
+export function usePollVoteListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PollVoteListQuery, PollVoteListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PollVoteListQuery, PollVoteListQueryVariables>(PollVoteListDocument, options);
+        }
+export type PollVoteListQueryHookResult = ReturnType<typeof usePollVoteListQuery>;
+export type PollVoteListLazyQueryHookResult = ReturnType<typeof usePollVoteListLazyQuery>;
+export type PollVoteListQueryResult = Apollo.QueryResult<PollVoteListQuery, PollVoteListQueryVariables>;
+export const DeletePollVoteDocument = gql`
+    mutation DeletePollVote($id: ID!) {
+  deletePollVote(id: $id) {
+    ...FullPollVoteWithAnswer
+  }
+}
+    ${FullPollVoteWithAnswerFragmentDoc}`;
+export type DeletePollVoteMutationFn = Apollo.MutationFunction<DeletePollVoteMutation, DeletePollVoteMutationVariables>;
+
+/**
+ * __useDeletePollVoteMutation__
+ *
+ * To run a mutation, you first call `useDeletePollVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePollVoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePollVoteMutation, { data, loading, error }] = useDeletePollVoteMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePollVoteMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollVoteMutation, DeletePollVoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePollVoteMutation, DeletePollVoteMutationVariables>(DeletePollVoteDocument, options);
+      }
+export type DeletePollVoteMutationHookResult = ReturnType<typeof useDeletePollVoteMutation>;
+export type DeletePollVoteMutationResult = Apollo.MutationResult<DeletePollVoteMutation>;
+export type DeletePollVoteMutationOptions = Apollo.BaseMutationOptions<DeletePollVoteMutation, DeletePollVoteMutationVariables>;
 export const SettingsListDocument = gql`
     query SettingsList {
-        settingsList {
+        settings {
             id
             name
             value

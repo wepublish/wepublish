@@ -32,7 +32,8 @@ export enum ElementNodeFields {
 
 export enum LinkNodeFields {
   URL = 'url',
-  Title = 'title'
+  Title = 'title',
+  Id = 'id'
 }
 
 export enum TableCellNodeFields {
@@ -229,7 +230,10 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
             url: value.url,
             children: parseRichTextNodes(value.children, [...path, 'children'])
           },
-          value.title != undefined ? {title: value.title as string} : {}
+          {
+            ...(value.title != undefined && {title: value.title as string}),
+            ...(value.id != undefined && {id: value.id as string})
+          }
         )
       }
 

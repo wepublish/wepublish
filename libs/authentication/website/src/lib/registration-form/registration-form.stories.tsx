@@ -55,19 +55,6 @@ const fillFirstName: StoryObj['play'] = async ({canvasElement, step}) => {
   })
 }
 
-const fillPreferredName: StoryObj['play'] = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement)
-
-  const input = canvas.getByLabelText('Bevorzugter Name', {
-    selector: 'input'
-  })
-
-  await step('Enter preferred name', async () => {
-    await userEvent.click(input)
-    await userEvent.type(input, 'Baz')
-  })
-}
-
 const fillName: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
@@ -94,6 +81,19 @@ const fillEmail: StoryObj['play'] = async ({canvasElement, step}) => {
   })
 }
 
+const fillBirthday: StoryObj['play'] = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement)
+
+  const input = canvas.getByLabelText('Geburtstag', {
+    selector: 'input'
+  })
+
+  await step('Enter birthday', async () => {
+    await userEvent.click(input)
+    await userEvent.type(input, '09081994')
+  })
+}
+
 const fillPassword: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
@@ -107,10 +107,23 @@ const fillPassword: StoryObj['play'] = async ({canvasElement, step}) => {
   })
 }
 
+const fillRepeatPassword: StoryObj['play'] = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement)
+
+  const input = canvas.getByLabelText('Passwort wiederholen', {
+    selector: 'input'
+  })
+
+  await step('Enter password', async () => {
+    await userEvent.click(input)
+    await userEvent.type(input, '12345678')
+  })
+}
+
 const fillStreetName: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const input = canvas.getByLabelText('Adresse', {
+  const input = canvas.getByLabelText('Strasse und Hausnummer', {
     selector: 'input'
   })
 
@@ -155,7 +168,7 @@ const fillCountry: StoryObj['play'] = async ({canvasElement, step}) => {
 
   await step('Enter country', async () => {
     await userEvent.click(input)
-    await userEvent.type(input, 'Schweiz')
+    await userEvent.type(input, 'Schweiz{enter}')
   })
 }
 
@@ -218,6 +231,7 @@ export const Filled: StoryObj = {
     await fillRequired(ctx)
     await fillFirstName(ctx)
     await fillPassword(ctx)
+    await fillRepeatPassword(ctx)
     await fillAddress(ctx)
     await clickRegister(ctx)
   }
@@ -254,25 +268,25 @@ export const OnlyFirstNameInvalid: StoryObj = {
   }
 }
 
-export const OnlyPreferredName: StoryObj = {
+export const OnlyBirthday: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    fields: ['preferredName']
+    fields: ['birthday']
   }
 }
 
-export const OnlyPreferredNameFilled: StoryObj = {
-  ...OnlyPreferredName,
+export const OnlyBirthdayFilled: StoryObj = {
+  ...OnlyBirthday,
   play: async ctx => {
     await fillRequired(ctx)
-    await fillPreferredName(ctx)
+    await fillBirthday(ctx)
     await clickRegister(ctx)
   }
 }
 
-export const OnlyPreferredNameInvalid: StoryObj = {
-  ...OnlyPreferredName,
+export const OnlyBirthdayInvalid: StoryObj = {
+  ...OnlyBirthday,
   play: async ctx => {
     await clickRegister(ctx)
   }
@@ -321,6 +335,31 @@ export const OnlyPasswordFilled: StoryObj = {
 
 export const OnlyPasswordInvalid: StoryObj = {
   ...OnlyPassword,
+  play: async ctx => {
+    await clickRegister(ctx)
+  }
+}
+
+export const OnlyPasswordWithRepeat: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    fields: ['password', 'passwordRepeated']
+  }
+}
+
+export const OnlyPasswordWithRepeatFilled: StoryObj = {
+  ...OnlyPasswordWithRepeat,
+  play: async ctx => {
+    await fillRequired(ctx)
+    await fillPassword(ctx)
+    await fillRepeatPassword(ctx)
+    await clickRegister(ctx)
+  }
+}
+
+export const OnlyPasswordWithRepeatInvalid: StoryObj = {
+  ...OnlyPasswordWithRepeat,
   play: async ctx => {
     await clickRegister(ctx)
   }

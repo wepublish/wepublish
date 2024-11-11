@@ -5,6 +5,7 @@ import {
   EventBlockWrapper,
   ImageBlockWrapper,
   ImageGalleryBlockWrapper,
+  SliderWrapper,
   TeaserGridBlockWrapper,
   TeaserGridFlexBlockWrapper,
   TeaserListBlockWrapper
@@ -41,7 +42,10 @@ export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
           grid-column: 4/10;
         }
 
-        & > :is(${ImageBlockWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper}) {
+        &
+          > :is(
+            ${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper}
+          ) {
           grid-column: 2/12;
         }
 

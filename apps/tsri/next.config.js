@@ -3,7 +3,7 @@
 const {composePlugins, withNx} = require('@nx/next')
 const wepNextConfig = require('../../libs/utils/website/src/lib/next.config')
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.NODE_ENV === 'production',
+  enabled: !!process.env.ANALYZE_BUNDLE,
   openAnalyzer: false
 })
 
@@ -71,6 +71,11 @@ const nextConfig = {
       {
         source: '/fluchtmigration-mitmachmarkt',
         destination: '/a/mitmachmarkt-wo-kann-ich-mich-engagieren',
+        permanent: false
+      },
+      {
+        source: '/tipp',
+        destination: '/a/crowdfunding-tsueritipp',
         permanent: false
       }
     ]

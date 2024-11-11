@@ -121,7 +121,12 @@
         "value": "Wert",
         "yes": "Ja",
         "hidden": "Ausblenden",
-        "setAsHidden": "Ausgeblendete Artikel werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden."
+        "setAsHidden": "Ausgeblendete Artikel werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden.",
+        "disableComments": "Kommentare für diesen Artikel deaktivieren",
+        "light": "Light",
+        "style": "Style",
+        "text": "Text",
+        "default": "Default"
       }
     },
     "articleList": {
@@ -225,7 +230,9 @@
         "takeLabel": "Wieviele Teaser sollten geladen werden",
         "tags": "Nur mit diesen Tags anzeigen: {{tags}}",
         "tagsLabel": "Welche Tags sollten geladen werden",
-        "edit": "Teaser Liste bearbeiten"
+        "edit": "Teaser Liste bearbeiten",
+        "sort": "Sortiert nach {{sort}}",
+        "sortLabel": "Sortieren nach"
       },
       "embeds": {
         "label": "Embed",
@@ -320,7 +327,8 @@
         "link": "Link",
         "remove": "Entfernen",
         "startWriting": "Beginne zu schreiben ...",
-        "text": "Text"
+        "text": "Text",
+        "id": "ID"
       },
       "richTextTable": {
         "addBorders": "Rahmen hinzufügen",
@@ -508,8 +516,8 @@
       "invalidEmailErrorMessage": "Bitte eine gültige E-Mail eingeben",
       "invalidRange": "Ungültiger Wert. Bitte Zahl zwischen {{min}} und {{max}} eingeben.",
       "invalidUrlErrorMessage": "Bitte eine gültige URL eingeben",
-      "minimalAmountPerMonth": "Der Minimalbetrag / Monat ist {{amount}} chf.",
-      "noAmountErrorMessage": "Der Betrag ist 5 CHF, wenn Du nichts eingibst",
+      "minimalAmountPerMonth": "Der Minimalbetrag / Monat ist {{amount}} {{currency}}.",
+      "noAmountErrorMessage": "Der Betrag ist 5, wenn Du nichts eingibst",
       "noCallToActionImageErrorMessage": "Bitte erfasse einen Call-To-Action-Bild",
       "noEmailErrorMessage": "Bitte E-Mail eingeben",
       "noImageErrorMessage": "Bild fehlt",
@@ -523,7 +531,8 @@
       "noUrlErrorMessage": "Bitte URL eingeben",
       "noUserErrorMessage": "Bitte wähle den/die Benutzer:in",
       "passwordTooShortErrorMessage": "Das Passwort muss mindestens 8 Zeichen lang sein",
-      "required": "Dieses Feld ist erforderlich"
+      "required": "Dieses Feld ist erforderlich",
+      "invalidCountry": "Bitte ein gültiges Land auswählen"
     },
     "event": {
       "create": {
@@ -629,7 +638,7 @@
       },
       "payManually": "Manuell bezahlen",
       "total": "Rechnungsbetrag",
-      "unpaid": "unbezahlt",
+      "unpaid": "(unbezahlt)",
       "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden."
     },
     "linkPageBreakEditPanel": {
@@ -669,6 +678,8 @@
     "memberPlanEdit": {
       "active": "Aktiv",
       "activeDescription": "Plan verfügbar machen",
+      "currency": "Währung",
+      "currencyRequired": "Währung erforderlich",
       "amountPerMonthMin": "Minimaler Betrag / Monat",
       "amountPerMonthMinRequired": "Minimaler Betrag erforderlich",
       "amountPerMonthMinZero": "Minimaler Betrag muss mindestens 0 betragen",
@@ -699,10 +710,10 @@
       "paymentMethods": "Mögliche Zahlungsmethoden",
       "paymentPeriodicities": "Zahlungsperiodizitäten",
       "paymentPeriodicity": {
-        "BIANNUAL": "Halbjährlich",
-        "MONTHLY": "Monatlich",
-        "QUARTERLY": "Vierteljährlich",
-        "YEARLY": "Jährlich"
+        "biannual": "Halbjährlich",
+        "monthly": "Monatlich",
+        "quarterly": "Vierteljährlich",
+        "yearly": "Jährlich"
       },
       "title": "Abo Pläne"
     },
@@ -1010,6 +1021,7 @@
       "closedAtNone": "Nicht geschlossen",
       "createNew": "Umfrage erstellen",
       "delete": "Löschen",
+      "showVotes": "Stimmen anzeigen",
       "hasBeenClosedAt": "Geschlossen am {{closedAt, ccc PP p}}",
       "noQuestion": "Keine Frage erfasst",
       "openedAt": "Begonnen am {{openedAt, ccc PP p}}",
@@ -1019,6 +1031,13 @@
       "question": "Frage",
       "state": "Status",
       "title": "Umfragen"
+    },
+    "pollVoteList": {
+      "createdAt": "Erstellt am",
+      "answerId": "Antwort",
+      "userId": "Benutzer-ID",
+      "fingerprint": "Fingerabdruck",
+      "deleteItems": "Elemente löschen"
     },
     "pollStateIndication": {
       "closed": "Umfrage geschlossen",
@@ -1157,7 +1176,6 @@
       "password": "Passwort",
       "passwordChangeSuccess": "Passwort erfolgreich geändert!",
       "passwordHeader": "Passwörter & Zugänge",
-      "preferredName": "Bevorzugter Name",
       "properties": "Eigenschaften",
       "resetPassword": "Passwort zurücksetzen",
       "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",
@@ -1172,7 +1190,8 @@
       "Unknown": "Unbekannt",
       "userDataTitle": "Userdaten",
       "userRoles": "Userrollen",
-      "zipCode": "PLZ"
+      "zipCode": "PLZ",
+      "birthday": "Geburtstag"
     },
     "userList": {
       "overview": {
@@ -1243,7 +1262,7 @@
         "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
       },
       "editTitle": "Abonnement bearbeiten",
-      "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag (CHF)",
+      "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag ({{currency}})",
       "monthlyAmount": "Monatlicher Betrag",
       "paidUntil": "Bezahlt bis",
       "paymentMethod": "Zahlungsmethode",
@@ -1266,12 +1285,12 @@
       "invoiceNr": "Rechnung Nr. {{invoiceId}}",
       "invoicePaid": "bezahlt",
       "invoiceUnpaid": "unbezahlt",
-      "monthlyAmount": "Monatlicher Betrag: {{monthlyAmount}} CHF",
+      "monthlyAmount": "Monatlicher Betrag: {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "Subscription läuft aus, keine automatische Erneuerung",
       "noDeactivation": "Keine Deaktivierung.",
       "paidUntil": "Bezahlt bis am {{date}}",
       "paymentPeriodicity": "Zahlungsperiodizität: {{paymentPeriodicity}}",
-      "periodAmount": "Betrag: {{amount}} CHF",
+      "periodAmount": "Betrag: {{amount}} {{currency}}",
       "periodCreatedAt": "Erstellt am {{date}}",
       "periodEndsAt": "bis {{date}}",
       "periods": "Perioden",
@@ -1292,7 +1311,9 @@
       "maxCountHelpText": "Limitiere die Anzahl Abos, welche ein:e Benutzer:in für diesen Abo-Plan lösen kann. Dazu zählen auch deaktivierte Abos.",
       "trialMemberplanAlert": "Dieser Abo-Plan ist für Probeabos konfiguriert.",
       "forceAutoRenewNotPossible": "Automatische Erneuerung ist nicht möglich, weil der Abo-Plan nicht verlängerbar ist.",
-      "trialSubscriptionNotPossible": "Der Abo-Plan muss verlängerbar bleiben, weil in einer Zahlungseinstellung eine automatische Verlängerung eingestellt ist. Du kannst das natürlich ändern."
+      "trialSubscriptionNotPossible": "Der Abo-Plan muss verlängerbar bleiben, weil in einer Zahlungseinstellung eine automatische Verlängerung eingestellt ist. Du kannst das natürlich ändern.",
+      "migratePMTitle": "Migraton der Abos zu Ziel-Zahlungsmethode",
+      "migratePMHelptext": "Migriere die Abos dieses Planes zu einer neuen Zahlungsmethode. Abos, die noch automatisch abgebucht werden, werden nicht migriert. Die Migration findet erst dann statt, wenn ein User selbst tätig wird und in seinem Profil etwa eine offene Rechnung bezahlen will oder ein Abo frühzeitig verlängert."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Erweiterte Einstellungen",
@@ -1300,7 +1321,9 @@
       "nonExtendableNotCompatibleWithAutoRenew": "Ein automatisch erneuerndes Abo muss verlängerbar sein. Ändere einen dieser Parameter.",
       "configureAsTrialSubscription": "Als Probeabo konfigurieren",
       "subscriptionTrialNotPossible": "Das Abo kann nicht als Probeabo konfiguriert werden. Ändere hierzu die Einstellungen des Abo-Plans.",
-      "extendableWasChanged": "Die Option «Verlängerbar» wurde entsprechend dem Abo-Plan angepasst."
+      "extendableWasChanged": "Die Option «Verlängerbar» wurde entsprechend dem Abo-Plan angepasst.",
+      "extendModalTitle": "Abo frühzeitig verlängern?",
+      "extendModalBody": "Das Abo wird frühzeitig um die nächst mögliche Periode verlängert. Es wird eine Rechnung erstellt."
     },
     "subscriptionListFilter": {
       "extendable": "Verlängerbar"
@@ -1312,7 +1335,20 @@
         "page": "Seite",
         "event": "Event",
         "custom": "Benutzerdefinierte"
+      },
+      "teaserSort": {
+        "hotAndTrending": "Beliebtheit",
+        "publishedAt": "Publikationsdatum"
       }
+    },
+    "authorEditPanel": {
+      "hideAuthor": "Autor:innen ausblenden",
+      "hideOnTeam": "Auf der Team-Seite ausblenden",
+      "hideOnArticle": "Auf den Artikeln ausblenden",
+      "hideOnTeaser": "Auf den Teasern ausblenden"
+    },
+    "selectableItemsActions": {
+      "selectedItems": "{{numberOfItems}} Elemente ausgewählt"
     }
   }
 }

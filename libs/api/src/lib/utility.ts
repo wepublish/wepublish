@@ -7,6 +7,7 @@ import {Context} from './context'
 import {TeaserStyle} from './db/block'
 import {SubscriptionWithRelations} from './db/subscription'
 import {UserWithRelations} from './db/user'
+import {format} from 'date-fns'
 
 export const MAX_PAYLOAD_SIZE = '1MB'
 
@@ -29,7 +30,7 @@ export function mapSubscriptionsAsCsv(
       'id',
       'firstName',
       'name',
-      'preferredName',
+      'birthday',
       'email',
       'active',
       'createdAt',
@@ -66,7 +67,7 @@ export function mapSubscriptionsAsCsv(
         user?.id,
         `${sanitizeCsvContent(user?.firstName)}`,
         `${sanitizeCsvContent(user?.name)}`,
-        `${sanitizeCsvContent(user?.preferredName)}`,
+        `${user?.birthday ? format(user?.birthday, 'yyyy-MM-dd') : ''}`,
         `${user?.email ?? ''}`,
         user?.active,
         user?.createdAt ? formatISO(user.createdAt, {representation: 'date'}) : '',
@@ -162,6 +163,7 @@ export function createProxyingIsTypeOf<TSource, TContext>(
 }
 
 export function mapEnumsBack(result: any) {
+  console.log('mapEnumsBack')
   if (!result) return null
 
   for (const key in result) {
@@ -254,4 +256,10 @@ export function isString(unknown: unknown): unknown is string {
 
 export function isBoolean(unknown: unknown): unknown is boolean {
   return typeof unknown === 'boolean'
+}
+
+export function mapEnumToGraphQLEnumValues(enumObject: unknown) {
+  return Object.fromEntries(
+    Object.keys(enumObject).map(key => [enumObject[key], {values: enumObject[key]}])
+  )
 }

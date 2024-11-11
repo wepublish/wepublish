@@ -9,13 +9,18 @@ import {ChangeEvent} from 'react'
 import {OptionalKeysOf} from 'type-fest'
 import z from 'zod'
 import {Control} from 'react-hook-form'
+import {AddressShape} from './authentication.interface'
 
-export type BuilderUserFormFields = OptionalKeysOf<RegisterMutationVariables>
+export type BuilderUserFormFields =
+  | OptionalKeysOf<RegisterMutationVariables>
+  | 'passwordRepeated'
+  | 'flair'
 
 export type BuilderUserFormProps<T extends BuilderUserFormFields> = {
   fields: T[]
   className?: string
   control: Control<any>
+  hideEmail?: boolean
 }
 
 export type BuilderImageUploadProps = {
@@ -24,19 +29,12 @@ export type BuilderImageUploadProps = {
   className?: string
 }
 
-type AddressShape = z.ZodObject<{
-  streetAddress: z.ZodString | z.ZodOptional<z.ZodString>
-  zipCode: z.ZodString | z.ZodOptional<z.ZodString>
-  city: z.ZodString | z.ZodOptional<z.ZodString>
-  country: z.ZodString | z.ZodOptional<z.ZodString>
-}>
-
 export type PersonalDataFormFields = UpdateUserMutationVariables['input'] &
-  Partial<UpdatePasswordMutationVariables> & {image?: Image}
+  Partial<UpdatePasswordMutationVariables>
 
-export type BuilderPersonalDataFormFields = OptionalKeysOf<
-  Omit<PersonalDataFormFields, 'uploadImageInput' | 'passwordRepeated'>
->
+export type BuilderPersonalDataFormFields =
+  | Exclude<BuilderUserFormFields, 'passwordRepeated'>
+  | 'image'
 
 export type BuilderPersonalDataFormProps<
   T extends BuilderPersonalDataFormFields = BuilderPersonalDataFormFields
@@ -46,14 +44,14 @@ export type BuilderPersonalDataFormProps<
     Partial<{
       password: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
       passwordRepeated: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
-      preferredName: z.ZodString | z.ZodOptional<z.ZodString>
-      firstName: z.ZodString | z.ZodOptional<z.ZodString>
-      lastName: z.ZodString | z.ZodOptional<z.ZodString>
-      flair: z.ZodString | z.ZodOptional<z.ZodString>
+      firstName: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
+      name: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
+      flair: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
       address: AddressShape | z.ZodOptional<AddressShape>
+      birthday: z.ZodDate | z.ZodOptional<z.ZodDate>
     }>
   >
-  initialUser: User
+  user: User
   className?: string
   onUpdate?: (
     data: UpdateUserMutationVariables['input'] & Partial<UpdatePasswordMutationVariables>

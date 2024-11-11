@@ -1,0 +1,64 @@
+fragment ArticleWithoutBlocks on Article {
+  id
+  publishedAt
+  updatedAt
+  preTitle
+  title
+  lead
+  slug
+  breaking
+  lead
+  publishedAt
+  title
+  url
+  peeredArticleURL
+  disableComments
+
+  tags {
+    ...FullTag
+  }
+
+  authors {
+    ...FullAuthor
+  }
+
+  image {
+    ...FullImage
+  }
+
+  socialMediaDescription
+  socialMediaTitle
+  socialMediaImage {
+    ...FullImage
+  }
+
+  properties {
+    ...FullProperty
+  }
+}
+
+fragment FullArticle on Article {
+  ...ArticleWithoutBlocks
+
+  blocks {
+    ...FullBlock
+  }
+}
+
+query Article($slug: Slug, $id: ID, $token: String) {
+  article(slug: $slug, id: $id, token: $token) {
+    ...FullArticle
+  }
+}
+
+query PeerArticle($peerSlug: Slug, $peerId: ID, $articleId: ID!) {
+  peerArticle(peerSlug: $peerSlug, peerID: $peerId, id: $articleId) {
+    ...FullArticle
+  }
+}
+
+query HotAndTrending($take: Int, $start: DateTime) {
+  hotAndTrending(take: $take, start: $start) {
+    ...ArticleWithoutBlocks
+  }
+}

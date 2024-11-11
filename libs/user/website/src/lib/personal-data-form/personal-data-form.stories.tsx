@@ -69,7 +69,7 @@ const Render = () => {
   return (
     <PersonalDataForm
       {...props}
-      initialUser={mockUser}
+      user={mockUser}
       onUpdate={async data => {
         args.onUpdate(data)
         updateArgs({
@@ -98,19 +98,6 @@ const fillFirstName: StoryObj['play'] = async ({canvasElement, step}) => {
   await step('Enter firstname', async () => {
     await userEvent.click(input)
     await userEvent.type(input, 'Foo')
-  })
-}
-
-const fillPreferredName: StoryObj['play'] = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement)
-
-  const input = canvas.getByLabelText('Bevorzugter Name', {
-    selector: 'input'
-  })
-
-  await step('Enter preferred name', async () => {
-    await userEvent.click(input)
-    await userEvent.type(input, 'Baz')
   })
 }
 
@@ -183,7 +170,7 @@ const fillRepeatPassword: StoryObj['play'] = async ({canvasElement, step}) => {
 const fillStreetName: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const input = canvas.getByLabelText('Adresse', {
+  const input = canvas.getByLabelText('Strasse und Hausnummer', {
     selector: 'input'
   })
 
@@ -228,7 +215,7 @@ const fillCountry: StoryObj['play'] = async ({canvasElement, step}) => {
 
   await step('Enter country', async () => {
     await userEvent.click(input)
-    await userEvent.type(input, 'Schweiz')
+    await userEvent.type(input, 'Schweiz{enter}')
   })
 }
 
@@ -258,6 +245,19 @@ const fillAddress: StoryObj['play'] = async ctx => {
     await fillZip(ctx)
     await fillCity(ctx)
     await fillCountry(ctx)
+  })
+}
+
+const fillBirthday: StoryObj['play'] = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement)
+
+  const input = canvas.getByLabelText('Geburtstag', {
+    selector: 'input'
+  })
+
+  await step('Enter birthday', async () => {
+    await userEvent.click(input)
+    await userEvent.type(input, '09081994')
   })
 }
 
@@ -321,37 +321,6 @@ export const OnlyFirstNameFilled: StoryObj = {
   }
 }
 
-export const OnlyFirstNameInvalid: StoryObj = {
-  ...OnlyFirstName,
-  play: async ctx => {
-    await clickUpdate(ctx)
-  }
-}
-
-export const OnlyPreferredName: StoryObj = {
-  args: {
-    onUpdate: action('onUpdate'),
-    update: {},
-    fields: ['preferredName']
-  }
-}
-
-export const OnlyPreferredNameFilled: StoryObj = {
-  ...OnlyPreferredName,
-  play: async ctx => {
-    await fillRequired(ctx)
-    await fillPreferredName(ctx)
-    await clickUpdate(ctx)
-  }
-}
-
-export const OnlyPreferredNameInvalid: StoryObj = {
-  ...OnlyPreferredName,
-  play: async ctx => {
-    await clickUpdate(ctx)
-  }
-}
-
 export const OnlyFlair: StoryObj = {
   args: {
     onUpdate: action('onUpdate'),
@@ -369,9 +338,19 @@ export const OnlyFlairFilled: StoryObj = {
   }
 }
 
-export const OnlyFlairInvalid: StoryObj = {
-  ...OnlyFlair,
+export const OnlyBirthday: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    fields: ['birthday']
+  }
+}
+
+export const OnlyBirthdayFilled: StoryObj = {
+  ...OnlyBirthday,
   play: async ctx => {
+    await fillRequired(ctx)
+    await fillBirthday(ctx)
     await clickUpdate(ctx)
   }
 }
@@ -389,13 +368,6 @@ export const OnlyAddressFilled: StoryObj = {
   play: async ctx => {
     await fillRequired(ctx)
     await fillAddress(ctx)
-    await clickUpdate(ctx)
-  }
-}
-
-export const OnlyAddressInvalid: StoryObj = {
-  ...OnlyAddress,
-  play: async ctx => {
     await clickUpdate(ctx)
   }
 }
@@ -437,13 +409,6 @@ export const OnlyRequiredFilled: StoryObj = {
   ...OnlyRequired,
   play: async ctx => {
     await fillRequired(ctx)
-    await clickUpdate(ctx)
-  }
-}
-
-export const OnlyRequiredInvalid: StoryObj = {
-  ...OnlyRequired,
-  play: async ctx => {
     await clickUpdate(ctx)
   }
 }

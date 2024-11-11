@@ -12,6 +12,7 @@ fragment ArticleWithoutBlocks on Article {
   title
   url
   peeredArticleURL
+  disableComments
 
   tags {
     ...FullTag

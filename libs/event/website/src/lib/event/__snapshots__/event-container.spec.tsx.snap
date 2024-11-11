@@ -2,137 +2,7 @@
 
 exports[`Event Container should render Default 1`] = `
 <DocumentFragment>
-  .emotion-1 {
-  display: grid;
-  gap: 56px;
-  gap: 32px;
-}
-
-@media (min-width:900px) {
-  .emotion-1 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-
-  .emotion-1>* {
-    grid-column: 4/10;
-  }
-
-  .emotion-1>:is(.emotion-4, .ea1goei0, .e11xbw3q3) {
-    grid-column: 2/12;
-  }
-
-  .emotion-1>:is(
-              .e1je8zv30,
-                .e1xnbuxv0,
-                .ebuvkaa1,
-                .e5naayd1
-            ) {
-    grid-column: -1/1;
-  }
-}
-
-.emotion-3 {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-}
-
-.emotion-3 .emotion-8 {
-  aspect-ratio: 16/9;
-  object-fit: cover;
-}
-
-.emotion-5 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: auto;
-}
-
-.emotion-7 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  justify-self: center;
-}
-
-.emotion-9 {
-  display: grid;
-  grid-template-columns: auto auto;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 16px;
-  margin-top: -32px;
-}
-
-@media (min-width:900px) {
-  .emotion-9 {
-    grid-column: 2/12;
-  }
-}
-
-.emotion-11 {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  gap: 16px;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.emotion-13 {
-  display: grid;
-  grid-template-columns: auto auto;
-  gap: 8px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.emotion-17 {
-  display: grid;
-  gap: 24px;
-  grid-auto-rows: min-content;
-}
-
-.emotion-19 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-22 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-22.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22:last-child {
-  margin-bottom: 0;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1 emotion-2"
   >
     <div
@@ -226,7 +96,7 @@ exports[`Event Container should render Default 1`] = `
       data-testid="fake-script"
       type="application/ld+json"
     >
-      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/500","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200","format":"jpg","mimeType":"image/jpg"},"name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"Scheduled","location":"Basel","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/500","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200","format":"jpg","mimeType":"image/jpg"},"name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <figure
       class="emotion-3 emotion-4"
@@ -314,13 +184,13 @@ https://unsplash.it/200/100 200w"
       class="emotion-17 emotion-18"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 emotion-19"
+        class="MuiTypography-root MuiTypography-h3 emotion-19 emotion-20"
       >
         Cool concert
       </h1>
     </div>
     <div
-      class="emotion-20 emotion-21"
+      class="emotion-21 emotion-22"
     >
       <div
         data-gramm="false"
@@ -329,7 +199,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -413,7 +283,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -497,7 +367,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -581,7 +451,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -672,137 +542,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`Event Container should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-1 {
-  display: grid;
-  gap: 56px;
-  gap: 32px;
-}
-
-@media (min-width:900px) {
-  .emotion-1 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-
-  .emotion-1>* {
-    grid-column: 4/10;
-  }
-
-  .emotion-1>:is(.emotion-4, .ea1goei0, .e11xbw3q3) {
-    grid-column: 2/12;
-  }
-
-  .emotion-1>:is(
-              .e1je8zv30,
-                .e1xnbuxv0,
-                .ebuvkaa1,
-                .e5naayd1
-            ) {
-    grid-column: -1/1;
-  }
-}
-
-.emotion-3 {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-}
-
-.emotion-3 .emotion-8 {
-  aspect-ratio: 16/9;
-  object-fit: cover;
-}
-
-.emotion-5 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: auto;
-}
-
-.emotion-7 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  justify-self: center;
-}
-
-.emotion-9 {
-  display: grid;
-  grid-template-columns: auto auto;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 16px;
-  margin-top: -32px;
-}
-
-@media (min-width:900px) {
-  .emotion-9 {
-    grid-column: 2/12;
-  }
-}
-
-.emotion-11 {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  gap: 16px;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.emotion-13 {
-  display: grid;
-  grid-template-columns: auto auto;
-  gap: 8px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.emotion-17 {
-  display: grid;
-  gap: 24px;
-  grid-auto-rows: min-content;
-}
-
-.emotion-19 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-22 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-22.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22:last-child {
-  margin-bottom: 0;
-}
-
-<article
+  <article
     class="extra-classname emotion-0 emotion-1 emotion-2"
   >
     <div
@@ -896,7 +636,7 @@ exports[`Event Container should render WithClassName 1`] = `
       data-testid="fake-script"
       type="application/ld+json"
     >
-      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/500","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200","format":"jpg","mimeType":"image/jpg"},"name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"Scheduled","location":"Basel","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/500","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200","format":"jpg","mimeType":"image/jpg"},"name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <figure
       class="emotion-3 emotion-4"
@@ -984,13 +724,13 @@ https://unsplash.it/200/100 200w"
       class="emotion-17 emotion-18"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 emotion-19"
+        class="MuiTypography-root MuiTypography-h3 emotion-19 emotion-20"
       >
         Cool concert
       </h1>
     </div>
     <div
-      class="emotion-20 emotion-21"
+      class="emotion-21 emotion-22"
     >
       <div
         data-gramm="false"
@@ -999,7 +739,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1083,7 +823,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1167,7 +907,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1251,7 +991,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1342,137 +1082,7 @@ https://unsplash.it/200/100 200w"
 
 exports[`Event Container should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-1 {
-  display: grid;
-  gap: 56px;
-  gap: 32px;
-}
-
-@media (min-width:900px) {
-  .emotion-1 {
-    grid-template-columns: repeat(12, 1fr);
-  }
-
-  .emotion-1>* {
-    grid-column: 4/10;
-  }
-
-  .emotion-1>:is(.emotion-4, .ea1goei0, .e11xbw3q3) {
-    grid-column: 2/12;
-  }
-
-  .emotion-1>:is(
-              .e1je8zv30,
-                .e1xnbuxv0,
-                .ebuvkaa1,
-                .e5naayd1
-            ) {
-    grid-column: -1/1;
-  }
-}
-
-.emotion-3 {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-}
-
-.emotion-3 .emotion-8 {
-  aspect-ratio: 16/9;
-  object-fit: cover;
-}
-
-.emotion-5 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: auto;
-}
-
-.emotion-7 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  justify-self: center;
-}
-
-.emotion-9 {
-  display: grid;
-  grid-template-columns: auto auto;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 16px;
-  margin-top: -32px;
-}
-
-@media (min-width:900px) {
-  .emotion-9 {
-    grid-column: 2/12;
-  }
-}
-
-.emotion-11 {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  gap: 16px;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.emotion-13 {
-  display: grid;
-  grid-template-columns: auto auto;
-  gap: 8px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.emotion-17 {
-  display: grid;
-  gap: 24px;
-  grid-auto-rows: min-content;
-}
-
-.emotion-19 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 3rem;
-}
-
-.emotion-22 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  margin-bottom: 0.35em;
-}
-
-.emotion-22.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-.emotion-22:last-child {
-  margin-bottom: 0;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1 emotion-2"
   >
     <div
@@ -1566,7 +1176,7 @@ exports[`Event Container should render WithEmotion 1`] = `
       data-testid="fake-script"
       type="application/ld+json"
     >
-      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/500","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200","format":"jpg","mimeType":"image/jpg"},"name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"Scheduled","location":"Basel","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/500","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200","format":"jpg","mimeType":"image/jpg"},"name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <figure
       class="emotion-3 emotion-4"
@@ -1654,13 +1264,13 @@ https://unsplash.it/200/100 200w"
       class="emotion-17 emotion-18"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 emotion-19"
+        class="MuiTypography-root MuiTypography-h3 emotion-19 emotion-20"
       >
         Cool concert
       </h1>
     </div>
     <div
-      class="emotion-20 emotion-21"
+      class="emotion-21 emotion-22"
     >
       <div
         data-gramm="false"
@@ -1669,7 +1279,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1753,7 +1363,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1837,7 +1447,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span
@@ -1921,7 +1531,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
           data-slate-node="element"
         >
           <span

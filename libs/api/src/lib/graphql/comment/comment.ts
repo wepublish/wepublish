@@ -47,52 +47,52 @@ import {userCommentRating} from '../comment-rating/comment-rating.public-queries
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
   values: {
-    Approved: {value: CommentState.approved},
-    PendingApproval: {value: CommentState.pendingApproval},
-    PendingUserChanges: {value: CommentState.pendingUserChanges},
-    Rejected: {value: CommentState.rejected}
+    [CommentState.approved]: {value: CommentState.approved},
+    [CommentState.pendingApproval]: {value: CommentState.pendingApproval},
+    [CommentState.pendingUserChanges]: {value: CommentState.pendingUserChanges},
+    [CommentState.rejected]: {value: CommentState.rejected}
   }
 })
 
 export const GraphQLCommentRejectionReason = new GraphQLEnumType({
   name: 'CommentRejectionReason',
   values: {
-    Misconduct: {value: CommentRejectionReason.misconduct},
-    Spam: {value: CommentRejectionReason.spam}
+    [CommentRejectionReason.misconduct]: {value: CommentRejectionReason.misconduct},
+    [CommentRejectionReason.spam]: {value: CommentRejectionReason.spam}
   }
 })
 
 export const GraphQLCommentAuthorType = new GraphQLEnumType({
   name: 'CommentAuthorType',
   values: {
-    Author: {value: CommentAuthorType.author},
-    Team: {value: CommentAuthorType.team},
-    VerifiedUser: {value: CommentAuthorType.verifiedUser},
-    GuestUser: {value: CommentAuthorType.guestUser}
+    [CommentAuthorType.author]: {value: CommentAuthorType.author},
+    [CommentAuthorType.team]: {value: CommentAuthorType.team},
+    [CommentAuthorType.verifiedUser]: {value: CommentAuthorType.verifiedUser},
+    [CommentAuthorType.guestUser]: {value: CommentAuthorType.guestUser}
   }
 })
 
 export const GraphQLCommentItemType = new GraphQLEnumType({
   name: 'CommentItemType',
   values: {
-    Article: {value: CommentItemType.article},
-    PeerArticle: {value: CommentItemType.peerArticle},
-    Page: {value: CommentItemType.page}
+    [CommentItemType.article]: {value: CommentItemType.article},
+    [CommentItemType.peerArticle]: {value: CommentItemType.peerArticle},
+    [CommentItemType.page]: {value: CommentItemType.page}
   }
 })
 
 export const GraphQLCommentSort = new GraphQLEnumType({
   name: 'CommentSort',
   values: {
-    ModifiedAt: {value: CommentSort.ModifiedAt},
-    CreatedAt: {value: CommentSort.CreatedAt}
+    [CommentSort.ModifiedAt]: {value: CommentSort.ModifiedAt},
+    [CommentSort.CreatedAt]: {value: CommentSort.CreatedAt}
   }
 })
 
 export const GraphQLPublicCommentSort = new GraphQLEnumType({
   name: 'CommentSort',
   values: {
-    RATING: {value: PublicCommentSort.Rating}
+    [PublicCommentSort.Rating]: {value: PublicCommentSort.Rating}
   }
 })
 
@@ -148,7 +148,7 @@ export const GraphQLChallengeInput = new GraphQLInputObjectType({
   name: 'ChallengeInput',
   fields: {
     challengeID: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: GraphQLString
     },
     challengeSolution: {
       type: new GraphQLNonNull(GraphQLString)

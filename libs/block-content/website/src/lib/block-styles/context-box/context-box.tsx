@@ -67,17 +67,15 @@ export const ContextBox = ({className, richText, text}: BuilderBlockStyleProps['
     <ContextBoxWrapper className={className}>
       <ContextBoxIcon size="36" />
 
-      <ContextBoxAllAbout>Darum geht’s:</ContextBoxAllAbout>
+      <ContextBoxTitle>{text || `Darum geht's`}</ContextBoxTitle>
 
       <ContextBoxLine />
       <ContextBoxContent>
-        <ContextBoxTitle>{text}</ContextBoxTitle>
-
         <ContextBoxCollapse expanded={expanded}>
           <RichTextBlock richText={richText} />
         </ContextBoxCollapse>
 
-        <Button onClick={toggleExpanded}>Alles lesen</Button>
+        <Button onClick={toggleExpanded}>{expanded ? 'Weniger lesen' : 'Alles lesen'}</Button>
       </ContextBoxContent>
     </ContextBoxWrapper>
   )

@@ -13,6 +13,8 @@ fragment FullEvent on Event {
     }
     startsAt
     endsAt
+    createdAt
+    modifiedAt
     url
 }
 

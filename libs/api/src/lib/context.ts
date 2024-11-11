@@ -58,6 +58,7 @@ import {Hooks} from './hooks'
 import {MemberContext} from './memberContext'
 import {URLAdapter} from './urlAdapter'
 import {BlockStylesDataloaderService} from '@wepublish/block-content/api'
+import {HotAndTrendingDataSource} from '@wepublish/article/api'
 
 /**
  * Peered article cache configuration and setup
@@ -134,6 +135,7 @@ export interface Context {
 
   readonly session: AuthSession | null
   readonly loaders: DataLoaderContext
+  readonly hotAndTrendingDataSource: HotAndTrendingDataSource
 
   readonly mailContext: MailContext
   readonly memberContext: MemberContext
@@ -204,6 +206,7 @@ export interface ContextOptions {
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
   readonly challenge: ChallengeProvider
+  readonly hotAndTrendingDataSource: HotAndTrendingDataSource
 }
 
 export interface SendMailFromProviderProps {
@@ -222,6 +225,7 @@ export interface CreatePaymentWithProvider {
   successURL?: string
   failureURL?: string
   user?: User
+  migrateToTargetPaymentMethodID?: string
 }
 
 export async function contextFromRequest(
@@ -239,7 +243,8 @@ export async function contextFromRequest(
     paymentProviders,
     challenge,
     sessionTTL,
-    hashCostFactor
+    hashCostFactor,
+    hotAndTrendingDataSource
   }: ContextOptions
 ): Promise<Context> {
   const authService = new AuthenticationService(prisma)
@@ -925,6 +930,7 @@ export async function contextFromRequest(
     urlAdapter,
     oauth2Providers,
     paymentProviders,
+    hotAndTrendingDataSource,
     hooks,
     requestIP,
     fingerprint,
@@ -998,15 +1004,34 @@ export async function contextFromRequest(
       saveCustomer,
       failureURL,
       successURL,
-      user
+      user,
+      migrateToTargetPaymentMethodID
     }: CreatePaymentWithProvider): Promise<Payment> {
-      const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
+      const paymentMethod = await loaders.activePaymentMethodsByID.load(
+        migrateToTargetPaymentMethodID || paymentMethodID
+      )
       const paymentProvider = paymentProviders.find(
         pp => pp.id === paymentMethod?.paymentProviderID
       )
 
       if (!paymentProvider) {
         throw new Error('paymentProvider not found')
+      }
+
+      /**
+       * Gradually migrate subscription's payment method.
+       * Mainly used in mutation.public.ts
+       * Requirements written down here https://wepublish.atlassian.net/browse/TSRI-98
+       */
+      if (migrateToTargetPaymentMethodID) {
+        await prisma.subscription.update({
+          data: {
+            paymentMethodID: migrateToTargetPaymentMethodID
+          },
+          where: {
+            id: invoice.subscriptionID
+          }
+        })
       }
 
       const payment = await prisma.payment.create({
@@ -1029,6 +1054,7 @@ export async function contextFromRequest(
       const intent = await paymentProvider.createIntent({
         paymentID: payment.id,
         invoice,
+        currency: invoice.currency,
         saveCustomer,
         successURL,
         failureURL,

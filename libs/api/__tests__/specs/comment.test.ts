@@ -203,7 +203,7 @@ describe('Comments', () => {
           }
         }
       })
-      expect(res.data.createComment.state).toBe('Approved')
+      expect(res.data.createComment.state).toBe('approved')
     })
 
     describe('authorize permissions', () => {
@@ -236,7 +236,7 @@ describe('Comments', () => {
             }
           }
         })
-        expect(res.data.createComment.state).toBe('Approved')
+        expect(res.data.createComment.state).toBe('approved')
       })
 
       test('comment from a user without approval permission is pending approval', async () => {
@@ -268,7 +268,7 @@ describe('Comments', () => {
             }
           }
         })
-        expect(res.data.createComment.state).toBe('PendingApproval')
+        expect(res.data.createComment.state).toBe('pendingApproval')
       })
 
       test('Public: comment from a user with approval permission is approved', async () => {
@@ -303,7 +303,7 @@ describe('Comments', () => {
             }
           }
         })
-        expect(res.data.addComment.state).toBe('Approved')
+        expect(res.data.addComment.state).toBe('approved')
       })
       test('Public: comment from a user without approval permission is pending approval', async () => {
         const res = await clientPublicAsUser.executeOperation({
@@ -337,7 +337,7 @@ describe('Comments', () => {
             }
           }
         })
-        expect(res.data.addComment.state).toBe('PendingApproval')
+        expect(res.data.addComment.state).toBe('pendingApproval')
       })
     })
   })
@@ -396,7 +396,6 @@ describe('Comments', () => {
     const input: UserInput = {
       name: 'Wayne',
       firstName: 'Bruce',
-      preferredName: 'Batman',
       flair: 'Superhero',
       email: newUserEmail,
       emailVerifiedAt: new Date().toISOString(),
