@@ -4,7 +4,7 @@ import getConfig from 'next/config'
 import * as process from 'node:process'
 
 export const getSitemap = async (req: NextApiRequest): Promise<string> => {
-  const siteUrl = `https://${process.env.WEBSITE_URL}`
+  const siteUrl = process.env.WEBSITE_URL || ''
 
   const generate = generateSitemap({
     siteUrl,

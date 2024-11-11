@@ -5,7 +5,7 @@ import getConfig from 'next/config'
 import process from 'node:process'
 
 export const getFeed = async (req: NextApiRequest): Promise<Feed> => {
-  const siteUrl = `https://${process.env.WEBSITE_URL}`
+  const siteUrl = process.env.WEBSITE_URL || ''
 
   const generate = await generateFeed({
     id: `${siteUrl + req.url}`,
