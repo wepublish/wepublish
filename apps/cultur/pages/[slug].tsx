@@ -19,7 +19,7 @@ export default function PageBySlugIdOrToken() {
   return <PageContainer {...containerProps} />
 }
 
-export const getStaticPaths = () => getPagePathsBasedOnPage('', 20, ['newsletter'])
+export const getStaticPaths = getPagePathsBasedOnPage('', 20, ['newsletter'])
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
   const {slug} = params || {}
