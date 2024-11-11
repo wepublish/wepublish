@@ -89,20 +89,8 @@ paymentProviders:
     name: No Charge
     offSessionPayments: true
 challenge:
-  secret: 'secret'
-  validTime: 600
-  width: 200
-  height: 200
-  background: '#ffffff'
-  noise: 5
-  minValue: 1
-  maxValue: 10
-  operandAmount: 1
-  operandTypes:
-    - '+'
-    - '-'
-  mode: 'formula'
-  targetSymbol: '?'
+  type: 'turnstile'
+  secret: ${TURNSTILE_SECRET}
 mediaServer:
   type: 'nova'
 ga:
