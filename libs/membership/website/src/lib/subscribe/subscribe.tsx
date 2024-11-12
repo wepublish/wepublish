@@ -107,7 +107,7 @@ export const SubscribeAmountText = styled('p')`
   text-align: center;
 `
 
-export const SubscribeCancelable = styled('p')`
+export const SubscribeCancelable = styled('div')`
   text-align: center;
   color: ${({theme}) => theme.palette.grey[500]};
 `
@@ -142,9 +142,11 @@ export const getPaymentText = (
         locale
       )}`
 
+const extraMoneyOffsetDefault = () => 0
+
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
-  extraMoneyOffset = () => 0,
+  extraMoneyOffset = extraMoneyOffsetDefault,
   memberPlans,
   challenge,
   userSubscriptions,
@@ -154,7 +156,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   className,
   onSubscribe,
   onSubscribeWithRegister,
-  deactivateSubscriptionId
+  deactivateSubscriptionId,
+  termsOfServiceUrl,
+  donate
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale, siteTitle},
@@ -374,6 +378,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     )
   }, [deactivateSubscriptionId, userInvoices.data?.invoices])
 
+  const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500
+
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
       <SubscribeSection>
@@ -423,8 +429,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               <SubscribeAmountSlider>
                 <Slider
                   {...field}
-                  min={selectedMemberPlan?.amountPerMonthMin}
-                  max={(selectedMemberPlan?.amountPerMonthMin || 5000) * 5}
+                  min={amountPerMonthMin}
+                  max={amountPerMonthMin * 5}
                   valueLabelFormat={val =>
                     formatCurrency(val / 100, selectedMemberPlan?.currency ?? Currency.Chf, locale)
                   }
@@ -432,7 +438,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   color="secondary"
                 />
 
-                {!selectedMemberPlan?.amountPerMonthMin && (
+                {donate?.(selectedMemberPlan) && (
                   <TextField
                     {...field}
                     value={field.value / 100}
@@ -441,7 +447,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                     fullWidth
                     inputProps={{
                       step: 'any',
-                      min: 0
+                      min: amountPerMonthMin / 100
                     }}
                     InputProps={{
                       startAdornment: (
@@ -546,7 +552,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
         </SubscribeSection>
       )}
-
       {error && <ApiAlert error={error as ApolloError} severity="error" />}
 
       <SubscribeNarrowSection>
@@ -563,13 +568,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               setOpenConfirm(true)
             }
           }}>
-          {paymentText} Abonnieren
+          {paymentText} {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
         </Button>
 
-        {autoRenew && (
-          <Paragraph component={SubscribeCancelable} gutterBottom={false}>
-            Jederzeit kündbar
-          </Paragraph>
+        {autoRenew && termsOfServiceUrl ? (
+          <Link underline={'hover'} href={termsOfServiceUrl}>
+            <SubscribeCancelable>Jederzeit kündbar</SubscribeCancelable>
+          </Link>
+        ) : (
+          autoRenew && <SubscribeCancelable>Jederzeit kündbar</SubscribeCancelable>
         )}
       </SubscribeNarrowSection>
 

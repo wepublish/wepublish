@@ -7,7 +7,7 @@ import snapshotDiff from 'snapshot-diff'
 
 const storiesCmp = composeStories(stories)
 
-xdescribe('Subscribe Container', () => {
+describe('Subscribe Container', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, async () => {
       const {container, asFragment} = render(
