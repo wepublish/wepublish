@@ -75,6 +75,10 @@ export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
         return await urlAdapter.getEventURL(event)
       })
     }
+  },
+
+  resolveObject: () => {
+    return 1
   }
 })
 

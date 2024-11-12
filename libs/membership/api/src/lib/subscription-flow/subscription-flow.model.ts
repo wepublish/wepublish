@@ -10,6 +10,8 @@ import {
   ID
 } from '@nestjs/graphql'
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
+import {PaymentMethod} from '@wepublish/payment-method/api'
+import {MemberPlan} from '@wepublish/member-plan/api'
 
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'

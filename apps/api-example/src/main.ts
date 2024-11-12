@@ -10,9 +10,6 @@ import {GatewayModule} from './nestapp/gateway.module'
 import {HOT_AND_TRENDING_DATA_SOURCE, HotAndTrendingDataSource} from '@wepublish/api'
 
 async function bootstrap() {
-  const port = process.env.PORT ?? 4000
-  const privatePort = +port + 1
-
   const nestApp = await NestFactory.create(AppModule)
   nestApp.enableCors({
     origin: true,
@@ -35,8 +32,7 @@ async function bootstrap() {
   const publicExpressApp = gatewayApp.getHttpAdapter().getInstance()
 
   await runServer({
-    privateExpressApp,
-    publicExpressApp,
+    expressApp,
     mediaAdapter,
     paymentProviders,
     mailProvider,

@@ -18,7 +18,7 @@ export class SettingsResolver {
   }
 
   @Query(returns => Setting, {
-    name: 'setting',
+    name: 'settingById',
     description: `
       Returns a single setting by name.
     `
