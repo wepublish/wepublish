@@ -18,8 +18,11 @@ const ArticleChatsList = styled('ul')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
   counter-reset: article 0;
-  padding-left: calc((100% / 12) * 2);
-  padding-right: calc((100% / 12) * 2);
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    padding-left: calc((100% / 12) * 2);
+    padding-right: calc((100% / 12) * 2);
+  }
 `
 
 const ArticleChartsItem = styled('div')`
