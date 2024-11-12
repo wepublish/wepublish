@@ -166,6 +166,14 @@ const memberPlan3 = {
   availablePaymentMethods: [memberPlan.availablePaymentMethods[2]]
 } as Exact<FullMemberPlanFragment>
 
+const memberPlan4 = {
+  ...memberPlan,
+  id: '4',
+  name: 'Donate Memberplan',
+  amountPerMonthMin: 0,
+  availablePaymentMethods: [memberPlan.availablePaymentMethods[2]]
+} as Exact<FullMemberPlanFragment>
+
 const challenge = {
   challengeID:
     'MTY4NjY2MzEyMDU0MjtGOHpxUEhscldLL0I5a0t4aVdtaTQrMDRob21iRG5sMm5yWEJob0YybUFjPTs0NzI1',
@@ -405,7 +413,7 @@ export const LoggedOut: StoryObj<typeof Subscribe> = {
     memberPlans: {
       data: {
         memberPlans: {
-          nodes: [memberPlan, memberPlan2, memberPlan3],
+          nodes: [memberPlan, memberPlan2, memberPlan3, memberPlan4],
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
@@ -757,6 +765,14 @@ export const WithExtraMoneyOffset: StoryObj<typeof Subscribe> = {
   args: {
     ...LoggedIn.args,
     extraMoneyOffset: () => 300
+  }
+}
+
+export const WithDonate: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    donate: () => true
   }
 }
 
