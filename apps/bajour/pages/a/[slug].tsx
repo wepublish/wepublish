@@ -19,6 +19,7 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
+import {ArticleCharts} from '../../src/components/article-charts/article-charts'
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
 import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
 import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
@@ -81,6 +82,16 @@ export default function ArticleBySlugIdOrToken() {
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
         <ArticleContainer {...containerProps} />
+
+        {!isFDT && (
+          <ArticleWrapper>
+            <H5 component={'h2'} css={uppercase}>
+              Artikel Charts
+            </H5>
+
+            <ArticleCharts />
+          </ArticleWrapper>
+        )}
 
         <BriefingNewsletter />
 
@@ -150,6 +161,12 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     }),
     client.query({
       query: ApiV1.SettingListDocument
+    }),
+    client.query({
+      query: ApiV1.HotAndTrendingDocument,
+      variables: {
+        take: 4
+      }
     })
   ])
 

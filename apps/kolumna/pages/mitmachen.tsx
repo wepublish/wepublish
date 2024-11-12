@@ -1,11 +1,31 @@
+import {styled} from '@mui/material'
 import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
 import {ApiV1, AuthTokenStorageKey, SubscribeContainer} from '@wepublish/website'
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {useMemo} from 'react'
 
-export default function Mitmachen() {
+import {CrowdfundingGoal} from '../src/crowdfunding/crowdfunding-goal'
+
+const goals = [{goal: 700, until: new Date()}]
+
+export const GoalsWrapper = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(1)};
+`
+
+export const FinancedWrapper = styled('div')`
+  font-size: ${({theme}) => theme.typography.h4.fontSize};
+  text-align: center;
+`
+
+type MitmachenProps = {
+  donate?: boolean
+}
+
+export default function Mitmachen({donate}: MitmachenProps) {
   const {
     query: {firstName, mail, lastName}
   } = useRouter()
@@ -13,37 +33,63 @@ export default function Mitmachen() {
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
   const thisLocation = typeof window !== 'undefined' ? location.href : ''
 
+  const {data: newSubscribers} = ApiV1.useNewSubscribersQuery({
+    variables: {
+      start: '2024-01-11T00:00:00.000Z',
+      end: '2025-01-11T00:00:00.000Z'
+    }
+  })
+
+  const {data: memberplans} = ApiV1.useMemberPlanListQuery({
+    variables: {
+      take: 50
+    }
+  })
+
+  const current = useMemo(
+    () =>
+      newSubscribers?.newSubscribers?.filter(
+        ({memberPlan}) =>
+          memberplans?.memberPlans.nodes.some(
+            ({name, tags}) => name === memberPlan && tags?.includes('crowdfunding')
+          ),
+        0
+      ).length ?? 0,
+    [memberplans?.memberPlans.nodes, newSubscribers?.newSubscribers]
+  )
+
   return (
-    <SubscribeContainer
-      defaults={{
-        email: mail as string | undefined,
-        firstName: firstName as string | undefined,
-        name: lastName as string | undefined
-      }}
-      filter={memberPlans => memberPlans.filter(mb => mb.tags?.includes('crowdfunding'))}
-      successURL={`${locationOrigin}/profile/subscription`}
-      failureURL={thisLocation}
-      fields={['firstName']}
-      extraMoneyOffset={memberPlan => {
-        if (memberPlan.slug === 'spende') {
-          return 5000
-        }
+    <>
+      {!donate && (
+        <GoalsWrapper>
+          <FinancedWrapper>
+            Bereits <strong>{current}</strong> machen mit!
+          </FinancedWrapper>
 
-        if (memberPlan.slug === 'monatsabo') {
-          return 100
-        }
+          {goals.map((goal, index) => (
+            <CrowdfundingGoal key={index} {...goal} current={current} />
+          ))}
+        </GoalsWrapper>
+      )}
 
-        if (memberPlan.slug === 'jahresabo') {
-          return 250
+      <SubscribeContainer
+        defaults={{
+          email: mail as string | undefined,
+          firstName: firstName as string | undefined,
+          name: lastName as string | undefined
+        }}
+        filter={memberPlans =>
+          memberPlans.filter(mb =>
+            donate ? mb.tags?.includes('spende') : mb.tags?.includes('crowdfunding')
+          )
         }
-
-        if (memberPlan.slug === 'foerderabo') {
-          return 3500
-        }
-
-        return 0
-      }}
-    />
+        successURL={`${locationOrigin}/profile/subscription`}
+        failureURL={thisLocation}
+        fields={['firstName']}
+        termsOfServiceUrl="/agb"
+        donate={() => !!donate}
+      />
+    </>
   )
 }
 
