@@ -126,7 +126,7 @@ export async function runServer({
    */
   let challenge: ChallengeProvider
   if (config.challenge.type === 'turnstile') {
-    challenge = new CfTurnstile(config.challenge.secret)
+    challenge = new CfTurnstile(config.challenge.secret, config.challenge.siteKey)
   } else {
     challenge = new AlgebraicCaptchaChallenge(config.challenge.secret, config.challenge.validTime, {
       width: config.challenge.width,

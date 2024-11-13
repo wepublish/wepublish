@@ -91,6 +91,7 @@ paymentProviders:
 challenge:
   type: 'turnstile'
   secret: ${TURNSTILE_SECRET}
+  siteKey: ${TURNSTILE_SITE_KEY}
 mediaServer:
   type: 'nova'
 ga:

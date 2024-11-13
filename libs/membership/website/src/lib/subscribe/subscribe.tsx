@@ -1,8 +1,7 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import {Checkbox, FormControlLabel, InputAdornment, Slider, styled} from '@mui/material'
 import {
-  RegistrationChallenge,
-  RegistrationChallengeWrapper,
+  Challenge,
   UserForm,
   defaultRegisterSchema,
   requiredRegisterSchema,
@@ -521,32 +520,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         <SubscribeSection>
           <H5 component="h2">Spam-Schutz</H5>
 
-          {challenge.data && (
-            <RegistrationChallengeWrapper>
-              <RegistrationChallenge
-                dangerouslySetInnerHTML={{
-                  __html:
-                    challenge.data.challenge.challenge
-                      ?.replace('#ffffff', 'transparent')
-                      .replace('width="200"', '')
-                      .replace('height="200"', '') ?? ''
-                }}
-              />
-
-              <Controller
-                name={'challengeAnswer.challengeSolution'}
-                control={control}
-                render={({field, fieldState: {error}}) => (
-                  <TextField
-                    {...field}
-                    value={field.value ?? ''}
-                    label={'Captcha'}
-                    error={!!error}
-                    helperText={error?.message}
-                  />
-                )}
-              />
-            </RegistrationChallengeWrapper>
+          {challenge.data?.challenge && (
+            <Controller
+              name={'challengeAnswer.challengeSolution'}
+              control={control}
+              render={({field, fieldState: {error}}) => (
+                <Challenge
+                  {...field}
+                  onChange={field.onChange}
+                  challenge={challenge.data!.challenge}
+                  label={'Captcha'}
+                  error={!!error}
+                  helperText={error?.message}
+                />
+              )}
+            />
           )}
 
           {challenge.error && <ApiAlert error={challenge.error} severity="error" />}

@@ -230,15 +230,21 @@ export type CalculatedRating = {
   total: Scalars['Int']
 }
 
+export enum CaptchaType {
+  Algebraic = 'Algebraic',
+  CfTurnstile = 'CfTurnstile'
+}
+
 export type Challenge = {
   __typename?: 'Challenge'
   challenge?: Maybe<Scalars['String']>
   challengeID?: Maybe<Scalars['String']>
+  type?: Maybe<CaptchaType>
   validUntil?: Maybe<Scalars['Date']>
 }
 
 export type ChallengeInput = {
-  challengeID: Scalars['String']
+  challengeID?: InputMaybe<Scalars['String']>
   challengeSolution: Scalars['String']
 }
 
