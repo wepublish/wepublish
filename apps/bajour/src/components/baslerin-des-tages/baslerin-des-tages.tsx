@@ -19,6 +19,7 @@ import {
   HeadingsInner,
   ImageWrapperMobile,
   MobileGrid,
+  MobileImage,
   Title,
   WeekdayDisplay
 } from './styles'
@@ -49,10 +50,6 @@ function ContentBlock(props: {
 }
 
 export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
-  const {
-    elements: {Image}
-  } = useWebsiteBuilder()
-
   const [currentArticle, setCurrentArticle] = useState(article.article)
 
   const {data: tagData, loading: tagLoading} = ApiV1.useTagQuery({
@@ -125,7 +122,7 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
   return (
     <BaslerinDesTagesWrapper>
       <DesktopGrid>
-        <DesktopImage style={{backgroundImage: 'url(' + currentArticle.image.url + ')'}} />
+        <DesktopImage style={{backgroundImage: `url(${currentArticle.image.url})`}} />
 
         <Headings>
           <HeadingsInner>
@@ -170,7 +167,7 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
         </Headings>
 
         <ImageWrapperMobile>
-          <Image image={currentArticle.image} square css={{borderRadius: '15%', gridRow: '1/3'}} />
+          <MobileImage style={{backgroundImage: `url(${currentArticle.image.url})`}} />
           <ArticleListMobile data={articleData} loading={articleLoading} error={articleError} />
 
           <DateWeekdayContainer>

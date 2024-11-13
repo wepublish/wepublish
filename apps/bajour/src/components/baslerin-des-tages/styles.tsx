@@ -85,7 +85,14 @@ export const DesktopGrid = styled('div')`
 export const DesktopImage = styled('div')`
   grid-row: 1/4;
   aspect-ratio: 1/1.2;
-  border-radius: 5%;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+`
+
+export const MobileImage = styled('div')`
+  border-radius: 20px;
+  grid-row: 1/3;
   background-size: cover;
   background-position: center;
 `
@@ -157,7 +164,7 @@ export const ArticleListDesktop = styled(ArticleList)`
 
     ${TeaserImgStyled} {
       height: 10vw;
-      border-radius: 15px;
+      border-radius: 20px;
     }
     ${TeaserContentStyled} {
       background: transparent;
@@ -194,7 +201,7 @@ export const ArticleListMobile = styled(ArticleListDesktop)`
 
       ${TeaserImgStyled} {
         height: 25vw;
-        border-radius: 15px;
+        border-radius: 20px;
       }
 
       ${TeaserContentStyled} {
