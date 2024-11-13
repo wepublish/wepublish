@@ -42,6 +42,30 @@ const CanDeleteNavigation = {
   deprecated: false
 }
 
+export const CanGetBanner: Permission = {
+  id: 'CAN_GET_BANNER',
+  description: 'Allows to get banner',
+  deprecated: false
+}
+
+export const CanGetBanners: Permission = {
+  id: 'CAN_GET_BANNERS',
+  description: 'Allows to get all banners',
+  deprecated: false
+}
+
+export const CanCreateBanner: Permission = {
+  id: 'CAN_CREATE_BANNER',
+  description: 'Allows to create banner',
+  deprecated: false
+}
+
+export const CanDeleteBanner: Permission = {
+  id: 'CAN_DELETE_BANNER',
+  description: 'Allows to delete banners',
+  deprecated: false
+}
+
 const CanCreateAuthor = {
   id: 'CAN_CREATE_AUTHOR',
   description: 'Allows to create authors',
@@ -498,6 +522,10 @@ export const AllPermissions = [
   CanGetNavigation,
   CanGetNavigations,
   CanDeleteNavigation,
+  CanGetBanner,
+  CanGetBanners,
+  CanCreateBanner,
+  CanDeleteBanner,
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,

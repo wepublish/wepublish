@@ -191,6 +191,15 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       }),
       client.query({
         query: ApiV1.PeerProfileDocument
+      }),
+      client.query({
+        query: ApiV1.PrimaryBannerDocument,
+        variables: {
+          document: {
+            type: ApiV1.BannerDocumentType.Article,
+            id: article.data.article.id
+          }
+        }
       })
     ])
   }

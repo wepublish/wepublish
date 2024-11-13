@@ -1,6 +1,7 @@
 import {PollBlockProvider} from '@wepublish/block-content/website'
-import {usePageQuery} from '@wepublish/website/api'
+import {BannerDocumentType, usePageQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BannerContainer} from '@wepublish/banner/website'
 import {PropsWithChildren} from 'react'
 
 type IdSlugOrToken =
@@ -22,6 +23,7 @@ export function PageContainer({id, slug, token, className, children}: PageContai
 
   return (
     <PollBlockProvider>
+      <BannerContainer documentId={data?.page?.id} documentType={BannerDocumentType.Page} />
       <Page data={data} loading={loading} error={error} className={className}>
         {children}
       </Page>

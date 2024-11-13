@@ -208,6 +208,46 @@
         "tags": "Tags"
       }
     },
+    "banner": {
+      "edit": {
+        "title": "Edit banner"
+      },
+      "create": {
+        "title": "Create banner"
+      },
+      "delete": {
+        "title": "Delete banner",
+        "body": "Do you really want to delete the banner?",
+        "delete": "Delete banner"
+      },
+      "form": {
+        "title": "Title",
+        "text": "Text",
+        "cta": "Call to action",
+        "active": "Active",
+        "showOnArticles": "Display on articles",
+        "showOnPages": "Display on those pages",
+        "actions": "Actions",
+        "image": "Image",
+        "action": {
+          "add": "Add new action",
+          "label": "Label",
+          "url": "URL",
+          "style": "Style"
+        }
+      },
+      "list": {
+        "title": "Banners",
+        "text": "Text",
+        "createNew": "Create new",
+        "active": "Active",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "actions": {
+        "add": "Add action"
+      }
+    },
     "blocks": {
       "comment": {
         "cherryPick": "Select specific comments",
@@ -731,6 +771,7 @@
     "navbar": {
       "articles": "Articles",
       "authors": "Authors",
+      "banners": "Banners",
       "blocks": {
         "polls": "Polls",
         "blockStyles": "Block Styling",
