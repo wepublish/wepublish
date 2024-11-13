@@ -60,7 +60,6 @@ export * from '@wepublish/utils/api'
 export * from '@wepublish/richtext/api'
 export * from '@wepublish/event/api'
 export * from '@wepublish/health'
-export * from '@wepublish/scripts/api'
 export * from '@wepublish/system-info'
 export * from '@wepublish/google-analytics/api'
 export {

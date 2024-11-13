@@ -1196,8 +1196,6 @@ enum SettingName {
   makeRevenueApiPublic
   commentCharLimit
   allowCommentEditing
-  headScript
-  bodyScript
 }
 
 scalar GraphQLSettingValueType

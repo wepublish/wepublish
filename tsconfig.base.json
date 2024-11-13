@@ -61,7 +61,6 @@
       "@wepublish/richtext": ["libs/richtext/src/index.ts"],
       "@wepublish/richtext/api": ["libs/richtext/api/src/index.ts"],
       "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
-      "@wepublish/scripts/api": ["libs/scripts/api/src/index.ts"],
       "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
       "@wepublish/settings/editor": ["libs/settings/editor/src/index.ts"],
       "@wepublish/stats/api": ["libs/stats/api/src/index.ts"],
