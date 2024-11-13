@@ -75,17 +75,25 @@ export const DesktopGrid = styled('div')`
   display: none;
   ${({theme}) => theme.breakpoints.up('lg')} {
     display: grid;
-    grid-template-columns: 33% 67%;
+    grid-template-columns: 25% 75%;
     grid-auto-rows: max-content;
     gap: 1em;
     padding-left: 3em;
   }
 `
 
+export const DesktopImage = styled('div')`
+  grid-row: 1/4;
+  aspect-ratio: 1/1.2;
+  border-radius: 5%;
+  background-size: cover;
+  background-position: center;
+`
+
 export const DateWeekdayContainer = styled('div')`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   font-size: 0.8em;
   font-weight: 500;
   & svg {
@@ -93,6 +101,7 @@ export const DateWeekdayContainer = styled('div')`
   }
   ${({theme}) => theme.breakpoints.up('lg')} {
     font-size: 1.3em;
+    align-items: flex-end;
   }
 `
 
@@ -175,22 +184,26 @@ export const ArticleListMobile = styled(ArticleListDesktop)`
   grid-template-columns: 1/7;
   margin: 0;
   ${BajourTeaserGrid} {
-    grid-template-columns: repeat(6, 20vw);
+    grid-template-columns: repeat(6, 25vw);
     gap: 3vw;
-    height: 15vw;
+    height: 25vw;
 
     ${ColTeaser} {
       margin: 0;
-      height: 20vw;
+      height: 25vw;
 
       ${TeaserImgStyled} {
-        height: 20vw;
+        height: 25vw;
         border-radius: 15px;
       }
 
       ${TeaserContentStyled} {
         background: transparent;
         grid-column: 2/23;
+
+        ${TeaserTitlesStyled} {
+          font-size: 0.7rem;
+        }
       }
     }
   }

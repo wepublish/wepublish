@@ -12,6 +12,7 @@ import {
   DateDisplay,
   DateWeekdayContainer,
   DesktopGrid,
+  DesktopImage,
   Heading,
   HeadingLarge,
   Headings,
@@ -124,12 +125,7 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
   return (
     <BaslerinDesTagesWrapper>
       <DesktopGrid>
-        <Image
-          style={{gridRow: '1/4'}}
-          image={currentArticle.image}
-          square
-          css={{borderRadius: '15%'}}
-        />
+        <DesktopImage style={{backgroundImage: 'url(' + currentArticle.image.url + ')'}} />
 
         <Headings>
           <HeadingsInner>
