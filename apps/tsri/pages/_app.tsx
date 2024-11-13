@@ -183,16 +183,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 </FooterContainer>
               </Spacer>
 
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-                strategy="afterInteractive"
-              />
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-                strategy="lazyOnload"
-              />
-
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
               )}

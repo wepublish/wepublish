@@ -1055,13 +1055,11 @@
     "saveAndClose": "Speichern & Schliessen",
     "settingList": {
       "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
-      "bodyScript": "Scripts zur Ausführung nachdem der Inhalt geladen ist",
       "comments": "Kommentare",
       "days": "Tage",
       "errorTitle": "Fehler",
       "guestCommenting": "Gastkommentare erlauben",
       "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen",
-      "headScript": "Scripts zur Ausführung bevor der Inhalt geladen ist",
       "login": "Login",
       "loginMinutes": "Gültigkeitsdauer Email-Login-Token",
       "minutes": "Minuten",
@@ -1071,7 +1069,6 @@
       "peering": "Peering",
       "peerToken": "Peering timeout",
       "polls": "Umfragen",
-      "scripts": "Eigener JavaScript-Code",
       "settings": "Einstellungen",
       "successMessage": "Einstellungen erfolgreich aktualisiert!",
       "successTitle": "Gespeichert",
@@ -1083,8 +1080,7 @@
         "invoiceReminders": "Wie oft wird der Benutzer daran erinnert, das Abonnement zu bezahlen (einmal pro Tag).",
         "loginMinutes": "Wie lange (in Minuten) ist der per E-Mail gesendete Link zum Erstellen eines Kontos gültig. Die Standardeinstellung ist eine Woche (10080 / 60 / 24).",
         "passwordToken": "Wie lange (in Minuten) der per E-Mail gesendete Link zum Zurücksetzen des Passworts gültig ist. Die Standardeinstellung ist ein Tag (1440 / 60 / 24).",
-        "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden.",
-        "scripts": "Scripts aus unseriösen Quellen können schwerwiegende Sicherheitsprobleme verursachen und das Layout sowie das Design der Website erheblich beeinträchtigen."
+        "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden."
       }
     },
     "subscriptionList": {
