@@ -238,6 +238,8 @@ model Image {
   events         Event[]
   paymentMethods PaymentMethod[]
 
+  banners        Banner[]
+
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([title])
@@ -608,6 +610,8 @@ model Page {
 
   navigations NavigationLink[]
   tags        TaggedPages[]
+
+  banners     Banner[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -1229,4 +1233,44 @@ model BlockStyle {
   blocks BlockType[]
 
   @@map("block-content.styles")
+}
+
+model Banner {
+  id                  String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt           DateTime         @default(now())
+  modifiedAt          DateTime         @updatedAt
+
+  title               String
+  text                String
+  cta                 String?
+
+  imageId             String?
+  image               Image?          @relation(fields: [imageId], references: [id])
+
+  active              Boolean         @default(true)
+
+  tags                String[]
+
+  showOnArticles      Boolean         @default(true)
+  showOnPages         Page[]  
+
+  actions             BannerAction[]
+
+  @@map("banners")
+}
+
+model BannerAction {
+  id                  String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt           DateTime        @default(now())
+  modifiedAt          DateTime        @updatedAt
+
+  banner              Banner          @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+  bannerId            String          @db.Uuid
+
+  label               String
+  url                 String
+
+  style               String          @default("")
+
+  @@map("banner_actions")
 }

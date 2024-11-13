@@ -19,6 +19,7 @@ import {
   SubscriptionFlowList,
   SystemMailList
 } from '@wepublish/membership/editor'
+import {BannerList, CreateBannerForm, EditBannerForm} from '@wepublish/banner/editor'
 import {SettingList} from '@wepublish/settings/editor'
 import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from '@wepublish/ui/editor'
 import {useContext, useEffect, useState} from 'react'
@@ -450,6 +451,30 @@ export function App() {
               element={
                 <Base>
                   <NavigationList />
+                </Base>
+              }
+            />
+            <Route
+              path="banners"
+              element={
+                <Base>
+                  <BannerList />
+                </Base>
+              }
+            />
+            <Route
+              path="banners/create"
+              element={
+                <Base>
+                  <CreateBannerForm />
+                </Base>
+              }
+            />
+            <Route
+              path="banners/edit/:id"
+              element={
+                <Base>
+                  <EditBannerForm />
                 </Base>
               }
             />

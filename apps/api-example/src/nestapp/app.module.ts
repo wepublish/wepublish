@@ -7,6 +7,7 @@ import {
   AgendaBaselService,
   AuthenticationModule,
   BexioPaymentProvider,
+  BannerApiModule,
   ConsentModule,
   DashboardModule,
   EventModule,
@@ -294,7 +295,8 @@ import {PollModule} from '@wepublish/poll/api'
       ],
       useFactory: (datasource: GoogleAnalyticsService) => datasource,
       inject: [GoogleAnalyticsService]
-    })
+    }),
+    BannerApiModule
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [
