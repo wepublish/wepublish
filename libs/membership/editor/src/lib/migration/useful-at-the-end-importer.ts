@@ -50,6 +50,13 @@ export class UsefulAtTheEndImporter extends BaseImporter {
       return
     }
     console.log(`Running importer for ${this.useful.title}`)
+
+    const tagId = await this.getTagId('useful-at-the-end')
+    if (!tagId) {
+      console.error(`    Tag not found`)
+      return
+    }
+
     if (this.useful.image) {
       this.imageID = await this.transferImage(
         this.useful.title,
@@ -87,9 +94,7 @@ export class UsefulAtTheEndImporter extends BaseImporter {
           title: this.useful.title,
           lead: '',
           authorIDs: [],
-          tags: [
-            /*'Das Nützliche zum Schluss'*/
-          ],
+          tags: [tagId],
           properties: [],
           hideAuthor: false,
           shared: false,

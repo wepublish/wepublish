@@ -9,7 +9,8 @@ import {
   useUploadImageMutation,
   useImageListLazyQuery,
   useArticleListLazyQuery,
-  useArticleLazyQuery
+  useArticleLazyQuery,
+  useTagListLazyQuery
 } from '@wepublish/editor/api'
 import {BajourUsefulAtTheEndList} from './bajour-useful-at-the-end-list'
 
@@ -36,6 +37,7 @@ function MigrationList() {
   const [getExistingImages] = useImageListLazyQuery()
   const [getExistingArticles] = useArticleListLazyQuery()
   const [getExistingArticle] = useArticleLazyQuery()
+  const [getTags] = useTagListLazyQuery()
 
   const requestCollection = {
     createArticle,
@@ -43,7 +45,8 @@ function MigrationList() {
     uploadImage,
     getExistingImages,
     getExistingArticles,
-    getExistingArticle
+    getExistingArticle,
+    getTags
   }
 
   return (

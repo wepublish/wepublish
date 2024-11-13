@@ -48,6 +48,13 @@ export class PersonOfTheDayImporter extends BaseImporter {
 
   async run() {
     console.log(`Running importer for ${this.person.name}`)
+
+    const tagId = await this.getTagId('baslerin-des-tages')
+    if (!tagId) {
+      console.error(`    Tag not found`)
+      return
+    }
+
     if (this.person.image) {
       this.imageID = await this.transferImage(
         this.person.name,
@@ -89,9 +96,7 @@ export class PersonOfTheDayImporter extends BaseImporter {
           title: this.person.name,
           lead: this.person.title || '',
           authorIDs: [],
-          tags: [
-            /*this.person.categories*/
-          ],
+          tags: [tagId],
           properties: [],
           hideAuthor: false,
           shared: false,

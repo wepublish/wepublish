@@ -5,6 +5,8 @@ import {
   useCreateArticleMutation,
   useImageListLazyQuery,
   usePublishArticleMutation,
+  useTagListLazyQuery,
+  useTagListQuery,
   useUploadImageMutation
 } from '@wepublish/editor/api'
 import {DirectusDownloader, DirectusSyncStatus, ImageInfo} from './directus-downloader'
@@ -16,6 +18,7 @@ export interface RequestCollection {
   getExistingArticles: ReturnType<typeof useArticleListLazyQuery>[0]
   getExistingImages: ReturnType<typeof useImageListLazyQuery>[0]
   getExistingArticle: ReturnType<typeof useArticleLazyQuery>[0]
+  getTags: ReturnType<typeof useTagListLazyQuery>[0]
 }
 
 export class BaseImporter {
@@ -27,6 +30,18 @@ export class BaseImporter {
     protected password: string,
     protected requests: RequestCollection
   ) {}
+
+  protected async getTagId(tag: string): Promise<string | undefined> {
+    const {data} = await this.requests.getTags({
+      variables: {
+        filter: {
+          tag
+        }
+      }
+    })
+
+    return data?.tags?.nodes.find(t => t.tag === tag)?.id
+  }
 
   protected async checkImageExists(title: string, filename: string): Promise<string | null> {
     const {data} = await this.requests.getExistingImages({

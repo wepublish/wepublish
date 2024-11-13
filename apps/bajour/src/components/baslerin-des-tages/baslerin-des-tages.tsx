@@ -4,7 +4,6 @@ import {format} from 'date-fns'
 import {useState} from 'react'
 import {LikeButton} from './like-button'
 import {useLikeStatus} from './use-like-status'
-import {SearchBar} from './search-bar'
 import {
   ArticleListDesktop,
   ArticleListMobile,
@@ -54,7 +53,6 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
   } = useWebsiteBuilder()
 
   const [currentArticle, setCurrentArticle] = useState(article.article)
-  const [searchQuery, setSearchQuery] = useState<string | undefined>()
 
   const {data: tagData, loading: tagLoading} = ApiV1.useTagQuery({
     variables: {
@@ -66,8 +64,7 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
   const {
     data: articleData,
     loading: articleLoading,
-    error: articleError,
-    refetch: refetchArticles
+    error: articleError
   } = ApiV1.useArticleListQuery({
     skip: !tagData?.tags?.nodes.length,
     variables: {
@@ -82,26 +79,6 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
       }
     }
   })
-
-  /*const {data: phraseData, loading: phraseLoading, refetch: refetchPhrase} = ApiV1.usePhraseQuery({
-    skip: !searchQuery,
-    variables: {
-      query: searchQuery
-    }
-  })*/
-
-  /*const handleSearch = async (query: string) => {
-    setSearchQuery(query)
-    const { data } = await refetchPhrase({ query })
-    if (data?.phrase?.articles?.nodes && Array.isArray(data.phrase.articles.nodes) && data.phrase.articles.nodes.length > 0) {
-      setCurrentArticle(data.phrase.articles.nodes[0]);
-    }
-    await refetchArticles()
-  }*/
-
-  const handleSearch = async (query: string) => {
-    console.log(query)
-  }
 
   const [addLikeMutation] = ApiV1.useAddLikeMutation({
     variables: {
@@ -161,7 +138,6 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
               <Heading>des Tages</Heading>
             </div>
             <DateWeekdayContainer>
-              <SearchBar onSearch={handleSearch} />
               <DateDisplay>{publicationDate}</DateDisplay>
               <WeekdayDisplay>{publicationDay}</WeekdayDisplay>
             </DateWeekdayContainer>
