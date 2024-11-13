@@ -32,7 +32,6 @@ import {
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   PermissionModule,
-  ScriptsModule,
   SettingModule,
   StatsModule,
   StripeCheckoutPaymentProvider,
@@ -263,7 +262,6 @@ import {PollModule} from '@wepublish/poll/api'
     ConsentModule,
     StatsModule,
     SettingModule,
-    ScriptsModule,
     EventModule,
     BlockStylesModule,
     EventsImportModule.registerAsync({

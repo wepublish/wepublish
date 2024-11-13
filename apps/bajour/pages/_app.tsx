@@ -156,16 +156,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
               )}
 
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-                strategy="afterInteractive"
-              />
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-                strategy="lazyOnload"
-              />
-
               {popup && (
                 <Script
                   src={publicRuntimeConfig.env.MAILCHIMP_POPUP_SCRIPT_URL!}

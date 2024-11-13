@@ -23,10 +23,7 @@ export enum SettingName {
   MAKE_REVENUE_API_PUBLIC = 'makeRevenueApiPublic',
   COMMENT_CHAR_LIMIT = 'commentCharLimit',
 
-  ALLOW_COMMENT_EDITING = 'allowCommentEditing',
-
-  HEAD_SCRIPT = 'headScript',
-  BODY_SCRIPT = 'bodyScript'
+  ALLOW_COMMENT_EDITING = 'allowCommentEditing'
 }
 
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>

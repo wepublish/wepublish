@@ -1069,7 +1069,6 @@
       "activeSubscriptionsApiPublic": "Make the active subscriptions API accessible by the public",
       "allowCommentEditing": "Allow comment editing",
       "allowGuestCommentRating": "Allow guest ratings on comments",
-      "bodyScript": "Scripts for execution after the content is loaded",
       "commentCharLimit": "Comment character limit",
       "comments": "Comments",
       "days": "days",
@@ -1079,7 +1078,6 @@
       "expectedRevenueApiPublic": "Make the expected revenue API accessible by the public",
       "guestCommenting": "Allow guest commenting",
       "guestPollVote": "Allow guest votes on polls",
-      "headScript": "Scripts for execution before the content is loaded",
       "login": "Login",
       "loginMinutes": "Email-Login token validity period",
       "memberships": "Memberships",
@@ -1092,7 +1090,6 @@
       "peering": "Peering",
       "peerToken": "Peering timeout",
       "polls": "Polls",
-      "scripts": "Custom JavaScript code",
       "renewingSubscriptionsApiPublic": "Make the renewing subscriptions API accessible by the public",
       "revenueApiPublic": "Make the revenue API accessible by the public",
       "settings": "Settings",
@@ -1115,8 +1112,7 @@
         "passwordToken": "How long (in minutes) the link sent via email to reset password will be valid. Defaults to one day (1440 / 60 / 24).",
         "peerToken": "Timeout in milliseconds after which we will no longer try to pull peer articles. Defaults to 3 seconds.",
         "renewingSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
-        "revenueApiPublic": "Exposes invoices anonymized to the public.",
-        "scripts": "Scripts from dubious sources can cause serious security problems and significantly impair the layout and design of the website."
+        "revenueApiPublic": "Exposes invoices anonymized to the public."
       }
     },
     "subscriptionFlow": {
