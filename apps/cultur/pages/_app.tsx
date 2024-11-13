@@ -21,6 +21,7 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {CulturBreakBlock} from '../src/components/cultur-break'
 import {CulturTeaser} from '../src/components/cultur-teaser'
 import {Footer} from '../src/components/footer'
 import {ReactComponent as Logo} from '../src/logo.svg'
@@ -108,7 +109,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Footer={Footer}
           elements={{Link: NextWepublishLink}}
           blocks={{
-            Teaser: CulturTeaser
+            Teaser: CulturTeaser,
+            Break: CulturBreakBlock
           }}
           date={{format: dateFormatter}}
           meta={{siteTitle}}>
