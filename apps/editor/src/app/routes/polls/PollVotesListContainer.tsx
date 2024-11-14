@@ -40,7 +40,9 @@ function PollVoteListContainer() {
   })
 
   const deletePollVotes = async (selectedItems: string[]) => {
-    await Promise.all(selectedItems.map(id => deletePollVote({variables: {id}})))
+    await Promise.all(
+      selectedItems.map(id => deletePollVote({variables: {id}}).catch(() => undefined))
+    )
     await listQuery.refetch()
   }
 
