@@ -121,23 +121,20 @@ exports[`Page should render Default 1`] = `
         data-slate-node="value"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
-        <div>
-          <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
-            data-slate-node="element"
+        <h2
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
           >
             <span
-              data-slate-node="text"
+              data-slate-string="true"
             >
-              <span
-                data-slate-string="true"
-              >
-                Title
-              </span>
+              Title
             </span>
-          </h2>
-          <hr />
-        </div>
+          </span>
+        </h2>
         <h3
           class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11"
           data-slate-node="element"
@@ -2459,23 +2456,20 @@ exports[`Page should render WithChildren 1`] = `
         data-slate-node="value"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
-        <div>
-          <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
-            data-slate-node="element"
+        <h2
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
           >
             <span
-              data-slate-node="text"
+              data-slate-string="true"
             >
-              <span
-                data-slate-string="true"
-              >
-                Title
-              </span>
+              Title
             </span>
-          </h2>
-          <hr />
-        </div>
+          </span>
+        </h2>
         <h3
           class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11"
           data-slate-node="element"
@@ -4827,23 +4821,20 @@ exports[`Page should render WithClassName 1`] = `
         data-slate-node="value"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
-        <div>
-          <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
-            data-slate-node="element"
+        <h2
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
           >
             <span
-              data-slate-node="text"
+              data-slate-string="true"
             >
-              <span
-                data-slate-string="true"
-              >
-                Title
-              </span>
+              Title
             </span>
-          </h2>
-          <hr />
-        </div>
+          </span>
+        </h2>
         <h3
           class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11"
           data-slate-node="element"
@@ -7192,23 +7183,20 @@ exports[`Page should render WithEmotion 1`] = `
         data-slate-node="value"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
-        <div>
-          <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
-            data-slate-node="element"
+        <h2
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
           >
             <span
-              data-slate-node="text"
+              data-slate-string="true"
             >
-              <span
-                data-slate-string="true"
-              >
-                Title
-              </span>
+              Title
             </span>
-          </h2>
-          <hr />
-        </div>
+          </span>
+        </h2>
         <h3
           class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11"
           data-slate-node="element"
@@ -9573,23 +9561,20 @@ exports[`Page should render WithoutDescription 1`] = `
         data-slate-node="value"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
-        <div>
-          <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
-            data-slate-node="element"
+        <h2
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
           >
             <span
-              data-slate-node="text"
+              data-slate-string="true"
             >
-              <span
-                data-slate-string="true"
-              >
-                Title
-              </span>
+              Title
             </span>
-          </h2>
-          <hr />
-        </div>
+          </span>
+        </h2>
         <h3
           class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11"
           data-slate-node="element"
@@ -11938,23 +11923,20 @@ exports[`Page should render WithoutImageMetadata 1`] = `
         data-slate-node="value"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
-        <div>
-          <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
-            data-slate-node="element"
+        <h2
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
           >
             <span
-              data-slate-node="text"
+              data-slate-string="true"
             >
-              <span
-                data-slate-string="true"
-              >
-                Title
-              </span>
+              Title
             </span>
-          </h2>
-          <hr />
-        </div>
+          </span>
+        </h2>
         <h3
           class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11"
           data-slate-node="element"
@@ -14295,23 +14277,20 @@ exports[`Page should render WithoutSocialMedia 1`] = `
         data-slate-node="value"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
-        <div>
-          <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
-            data-slate-node="element"
+        <h2
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
           >
             <span
-              data-slate-node="text"
+              data-slate-string="true"
             >
-              <span
-                data-slate-string="true"
-              >
-                Title
-              </span>
+              Title
             </span>
-          </h2>
-          <hr />
-        </div>
+          </span>
+        </h2>
         <h3
           class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11"
           data-slate-node="element"
