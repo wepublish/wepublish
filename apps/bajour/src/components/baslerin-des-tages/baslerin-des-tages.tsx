@@ -24,8 +24,20 @@ import {
   WeekdayDisplay
 } from './styles'
 
+interface BaslerinDesTagesArticle {
+  id: string
+  publishedAt: string
+  preTitle?: string | null
+  title: string
+  lead?: string | null
+  slug: string
+  url: string
+  blocks: ApiV1.Block[]
+}
+
 interface BaslerinDesTagesProps {
-  article: ApiV1.ArticleQuery
+  article: BaslerinDesTagesArticle
+  className?: string
 }
 
 function ContentBlock(props: {
@@ -49,8 +61,8 @@ function ContentBlock(props: {
   )
 }
 
-export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
-  const [currentArticle, setCurrentArticle] = useState(article.article)
+export function BaslerinDesTages({article, className}: BaslerinDesTagesProps) {
+  const [currentArticle, setCurrentArticle] = useState(article)
 
   const {data: tagData, loading: tagLoading} = ApiV1.useTagQuery({
     variables: {
@@ -120,7 +132,7 @@ export function BaslerinDesTages({article}: BaslerinDesTagesProps) {
   }
 
   return (
-    <BaslerinDesTagesWrapper>
+    <BaslerinDesTagesWrapper className={className}>
       <DesktopGrid>
         <DesktopImage style={{backgroundImage: `url(${currentArticle.image.url})`}} />
 

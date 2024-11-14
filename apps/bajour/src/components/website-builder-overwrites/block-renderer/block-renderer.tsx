@@ -20,6 +20,9 @@ import {FrageDesTages} from '../../frage-des-tages/frage-des-tages'
 import {isFrageDesTages} from '../../frage-des-tages/is-frage-des-tages'
 import {isSmallTeaser, SmallTeaser} from '../blocks/small-teaser'
 import {isWideTeaser, WideTeaser} from '../blocks/wide-teaser'
+import {BaslerinDesTages} from '../../baslerin-des-tages/baslerin-des-tages'
+import {isBaslerinDesTages} from '../../baslerin-des-tages/is-baslerin-des-tages'
+import {BaslerinDesTagesBlock} from '../../baslerin-des-tages/baslerin-des-tages-block'
 
 export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
   const {
@@ -43,6 +46,7 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
       cond([
         [isOldRelatedArticles, block => <Fragment />],
         [isFrageDesTages, block => <FrageDesTages {...block} />],
+        [isBaslerinDesTages, block => <BaslerinDesTagesBlock {...block} />],
         [isBestOfWePublish, block => <BestOfWePublish {...block} />],
         [isAnyBriefing, block => <BaselBriefing {...(block as BaselBriefingProps)} />],
         [isArchive, block => <Archive {...block} />],
