@@ -177,9 +177,16 @@ export type BannerAction = {
   __typename?: 'BannerAction';
   id: Scalars['ID'];
   label: Scalars['String'];
+  role: BannerActionRole;
   style: Scalars['String'];
   url: Scalars['String'];
 };
+
+export enum BannerActionRole {
+  Cancel = 'CANCEL',
+  Other = 'OTHER',
+  Primary = 'PRIMARY'
+}
 
 export enum BannerDocumentType {
   Article = 'ARTICLE',
@@ -234,15 +241,21 @@ export type CalculatedRating = {
   total: Scalars['Int'];
 };
 
+export enum CaptchaType {
+  Algebraic = 'Algebraic',
+  CfTurnstile = 'CfTurnstile'
+}
+
 export type Challenge = {
   __typename?: 'Challenge';
   challenge?: Maybe<Scalars['String']>;
   challengeID?: Maybe<Scalars['String']>;
+  type?: Maybe<CaptchaType>;
   validUntil?: Maybe<Scalars['Date']>;
 };
 
 export type ChallengeInput = {
-  challengeID: Scalars['String'];
+  challengeID?: InputMaybe<Scalars['String']>;
   challengeSolution: Scalars['String'];
 };
 
@@ -360,6 +373,7 @@ export type ConsentFilter = {
 
 export type CreateBannerActionInput = {
   label: Scalars['String'];
+  role: BannerActionRole;
   style: Scalars['String'];
   url: Scalars['String'];
 };
@@ -2433,28 +2447,28 @@ export type BannersQueryVariables = Exact<{
 }>;
 
 
-export type BannersQuery = { __typename?: 'Query', banners: Array<{ __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null }> };
+export type BannersQuery = { __typename?: 'Query', banners: Array<{ __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null }> };
 
 export type BannerQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type BannerQuery = { __typename?: 'Query', banner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
+export type BannerQuery = { __typename?: 'Query', banner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null } };
 
 export type CreateBannerMutationVariables = Exact<{
   input: CreateBannerInput;
 }>;
 
 
-export type CreateBannerMutation = { __typename?: 'Mutation', createBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
+export type CreateBannerMutation = { __typename?: 'Mutation', createBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null } };
 
 export type UpdateBannerMutationVariables = Exact<{
   input: UpdateBannerInput;
 }>;
 
 
-export type UpdateBannerMutation = { __typename?: 'Mutation', updateBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
+export type UpdateBannerMutation = { __typename?: 'Mutation', updateBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null } };
 
 export type DeleteBannerMutationVariables = Exact<{
   id: Scalars['String'];
@@ -2465,9 +2479,9 @@ export type DeleteBannerMutation = { __typename?: 'Mutation', deleteBanner?: boo
 
 export type PageRefFragment = { __typename?: 'PageModel', id: string };
 
-export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null };
+export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null };
 
-export type FullBannerActionFragment = { __typename?: 'BannerAction', id: string, label: string, url: string, style: string };
+export type FullBannerActionFragment = { __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole };
 
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
@@ -2820,6 +2834,7 @@ export const FullBannerActionFragmentDoc = gql`
   label
   url
   style
+  role
 }
     `;
 export const FullBannerFragmentDoc = gql`

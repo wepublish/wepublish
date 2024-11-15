@@ -26,6 +26,7 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {MainGrid} from '../src/components/layout/main-grid'
+import {BajourBanner} from '../src/components/website-builder-overwrites/banner/bajour-banner'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
 import {BajourTeaserSlider} from '../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
@@ -133,7 +134,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             thirdParty={{
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
             }}
-            PaymentMethodPicker={BajourPaymentMethodPicker}>
+            PaymentMethodPicker={BajourPaymentMethodPicker}
+            Banner={BajourBanner}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
 

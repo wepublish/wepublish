@@ -85,7 +85,7 @@ export class BannerService {
   }
 
   async update(args: UpdateBannerInput): Promise<Banner> {
-    const {id, actions, showOnPages, ...args_without_id} = args
+    const {id, actions, showOnPages, imageId, ...args_without_id} = args
 
     return this.prisma.banner.update({
       where: {
@@ -93,6 +93,7 @@ export class BannerService {
       },
       data: {
         ...args_without_id,
+        imageId: imageId ?? null,
         actions: {
           deleteMany: {},
           create: actions

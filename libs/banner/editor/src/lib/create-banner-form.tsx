@@ -18,7 +18,10 @@ export const CreateBannerForm = () => {
 
   const closePath = '/banners'
 
-  const [banner, setBanner] = useState({} as CreateBannerInput & {image?: ImageRefFragment | null})
+  const [banner, setBanner] = useState({
+    active: false,
+    showOnArticles: false
+  } as CreateBannerInput & {image?: ImageRefFragment | null})
 
   const {StringType, BooleanType} = Schema.Types
   const validationModel = Schema.Model({

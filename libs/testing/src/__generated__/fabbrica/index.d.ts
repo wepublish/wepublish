@@ -74,6 +74,7 @@ import type { EventStatus } from "@prisma/client";
 import type { UserEvent } from "@prisma/client";
 import type { SubscriptionEvent } from "@prisma/client";
 import type { BlockType } from "@prisma/client";
+import type { BannerActionRole } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { Resolver } from "@quramy/prisma-fabbrica/lib/internal";
 export { initialize, resetSequence, registerScalarFieldValueGenerator, resetScalarFieldValueGenerator } from "@quramy/prisma-fabbrica/lib/internal";
@@ -2800,7 +2801,6 @@ type BannerFactoryDefineInput = {
     text?: string;
     cta?: string | null;
     active?: boolean;
-    tags?: Prisma.BannerCreatetagsInput | Prisma.Enumerable<string>;
     showOnArticles?: boolean;
     image?: BannerimageFactory | Prisma.ImageCreateNestedOneWithoutBannersInput;
     showOnPages?: Prisma.PageCreateNestedManyWithoutBannersInput;
@@ -2846,6 +2846,7 @@ type BannerActionFactoryDefineInput = {
     label?: string;
     url?: string;
     style?: string;
+    role?: BannerActionRole;
     banner: BannerActionbannerFactory | Prisma.BannerCreateNestedOneWithoutActionsInput;
 };
 type BannerActionFactoryDefineOptions = {
