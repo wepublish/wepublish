@@ -1,4 +1,4 @@
-import {styled, Theme} from '@mui/material'
+import {Link, styled, Theme} from '@mui/material'
 import {Button} from '@wepublish/ui'
 import {BannerAction, BannerActionRole} from '@wepublish/website/api'
 import {BuilderBannerProps} from '@wepublish/website/builder'
@@ -13,7 +13,7 @@ export const BannerImage = styled('div')(
   ({theme}) => `
   background-size: cover;
   background-position: center;
-  height: 150px;
+  height: ${theme.spacing(18)};
   order: 1;
   ${theme.breakpoints.up('md')} {
     order: 0;
@@ -96,11 +96,9 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
 
   const handleActionClick = (e: React.MouseEvent, action: BannerAction) => {
     if (action.role === BannerActionRole.Cancel) {
+      e.preventDefault()
       handleClose()
-    } else {
-      window.location.href = action.url
     }
-    e.preventDefault()
   }
 
   if (!data?.primaryBanner || loading || error) {
@@ -124,22 +122,15 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
         <BannerActions>
           {data?.primaryBanner.actions &&
             data?.primaryBanner.actions.map(a => {
-              if (a.role === BannerActionRole.Primary) {
-                return (
-                  <Button data-role={a.role} onClick={e => handleActionClick(e, a)}>
-                    {a.label}
-                  </Button>
-                )
-              } else {
-                return (
+              return (
+                <Link href={a.url} key={a.url} onClick={e => handleActionClick(e, a)}>
                   <Button
                     data-role={a.role}
-                    onClick={e => handleActionClick(e, a)}
-                    color="secondary">
+                    color={a.role === BannerActionRole.Primary ? 'primary' : 'secondary'}>
                     {a.label}
                   </Button>
-                )
-              }
+                </Link>
+              )
             })}
         </BannerActions>
       </BannerContent>
