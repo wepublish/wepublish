@@ -1,5 +1,5 @@
 import {Test, TestingModule} from '@nestjs/testing'
-import {PrismaClient} from '@prisma/client'
+import {BannerActionRole, PrismaClient} from '@prisma/client'
 import {BannerActionService} from './banner-action.service'
 
 describe('BannerActionService', () => {
@@ -13,6 +13,7 @@ describe('BannerActionService', () => {
     label: 'Test Action',
     url: 'https://test.com',
     style: 'outline',
+    role: BannerActionRole.OTHER,
     bannerId: '1'
   }
 
@@ -81,7 +82,8 @@ describe('BannerActionService', () => {
       const createBannerActionInput = {
         label: 'Test Action',
         url: 'https://test.com',
-        style: 'outline'
+        style: 'outline',
+        role: BannerActionRole.OTHER
       }
       jest.spyOn(prisma.bannerAction, 'create').mockResolvedValue(bannerAction)
       expect(await service.create(banner, createBannerActionInput)).toEqual(bannerAction)
@@ -90,12 +92,13 @@ describe('BannerActionService', () => {
 
   describe('update', () => {
     it('should update a banner action', async () => {
-      const updatedBannerAction = {...bannerAction, title: 'Updated Action'}
+      const updatedBannerAction = {...bannerAction, label: 'Updated Action'}
       const updateBannerActionInput = {
         id: '1',
         label: 'Updated Action',
         url: 'https://test.com',
-        style: 'outline'
+        style: 'outline',
+        role: BannerActionRole.OTHER
       }
       jest.spyOn(prisma.bannerAction, 'update').mockResolvedValue(updatedBannerAction)
       expect(await service.update(updateBannerActionInput)).toEqual(updatedBannerAction)

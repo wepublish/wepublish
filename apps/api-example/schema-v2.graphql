@@ -47,8 +47,15 @@ type Banner {
 type BannerAction {
   id: ID!
   label: String!
+  role: BannerActionRole!
   style: String!
   url: String!
+}
+
+enum BannerActionRole {
+  CANCEL
+  OTHER
+  PRIMARY
 }
 
 enum BannerDocumentType {
@@ -100,6 +107,7 @@ input ConsentFilter {
 
 input CreateBannerActionInput {
   label: String!
+  role: BannerActionRole!
   style: String!
   url: String!
 }

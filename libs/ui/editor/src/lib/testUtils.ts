@@ -60,6 +60,12 @@ export const CanCreateBanner: Permission = {
   deprecated: false
 }
 
+export const CanUpdateBanner: Permission = {
+  id: 'CAN_UPDATE_BANNER',
+  description: 'Allows to update banner',
+  deprecated: false
+}
+
 export const CanDeleteBanner: Permission = {
   id: 'CAN_DELETE_BANNER',
   description: 'Allows to delete banners',
