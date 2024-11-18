@@ -175,9 +175,16 @@ export type BannerAction = {
   __typename?: 'BannerAction';
   id: Scalars['ID'];
   label: Scalars['String'];
+  role: BannerActionRole;
   style: Scalars['String'];
   url: Scalars['String'];
 };
+
+export enum BannerActionRole {
+  Cancel = 'CANCEL',
+  Other = 'OTHER',
+  Primary = 'PRIMARY'
+}
 
 export enum BannerDocumentType {
   Article = 'ARTICLE',
@@ -364,6 +371,7 @@ export type ConsentFilter = {
 
 export type CreateBannerActionInput = {
   label: Scalars['String'];
+  role: BannerActionRole;
   style: Scalars['String'];
   url: Scalars['String'];
 };

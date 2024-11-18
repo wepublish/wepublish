@@ -1249,8 +1249,6 @@ model Banner {
 
   active              Boolean         @default(true)
 
-  tags                String[]
-
   showOnArticles      Boolean         @default(true)
   showOnPages         Page[]  
 
@@ -1271,6 +1269,13 @@ model BannerAction {
   url                 String
 
   style               String          @default("")
+  role                BannerActionRole @default(OTHER)
 
   @@map("banner_actions")
+}
+
+enum BannerActionRole {
+  PRIMARY             @map("primary")
+  CANCEL              @map("cancel")
+  OTHER               @map("other")
 }

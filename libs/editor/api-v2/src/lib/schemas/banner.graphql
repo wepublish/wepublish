@@ -30,7 +30,6 @@ input CreateBannerInput {
   title: ID!
   text: String!
   active: Boolean!
-  #tags: [String!]
   showOnArticles: Boolean!
   actions: [CreateBannerActionInput]!
   imageId: ID!
@@ -47,7 +46,6 @@ input UpdateBannerInput {
   title: String!
   text: String!
   active: Boolean!
-  #tags: [String!]
   showOnArticles: Boolean!
   actions: [CreateBannerActionInput!]
   imageId: ID!
@@ -65,7 +63,6 @@ fragment FullBanner on Banner {
 
   active
 
-  #tags
   showOnArticles
   showOnPages {
     ...PageRef
@@ -85,6 +82,7 @@ fragment FullBannerAction on BannerAction {
   label
   url
   style
+  role
 }
 
 fragment ImageURLs on Image {

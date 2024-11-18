@@ -1,4 +1,13 @@
-import {ArgsType, Field, ID, InputType, ObjectType} from '@nestjs/graphql'
+import {
+  ArgsType,
+  Field,
+  ID,
+  InputType,
+  ObjectType,
+  PickType,
+  registerEnumType
+} from '@nestjs/graphql'
+import {BannerActionRole} from '@prisma/client'
 
 @ArgsType()
 export class BannerActionArgs {
@@ -6,9 +15,15 @@ export class BannerActionArgs {
   bannerId!: string
 }
 
+registerEnumType(BannerActionRole, {
+  name: 'BannerActionRole'
+})
+
 @ObjectType()
-@InputType()
-export class BannerActionFields {
+export class BannerAction {
+  @Field(() => ID)
+  id!: string
+
   @Field()
   label!: string
 
@@ -17,19 +32,21 @@ export class BannerActionFields {
 
   @Field()
   style!: string
-}
 
-@ObjectType()
-export class BannerAction extends BannerActionFields {
-  @Field(() => ID)
-  id!: string
+  @Field(() => BannerActionRole)
+  role!: BannerActionRole
 }
 
 @InputType()
-export class CreateBannerActionInput extends BannerActionFields {}
+export class CreateBannerActionInput extends PickType(
+  BannerAction,
+  ['label', 'url', 'style', 'role'],
+  InputType
+) {}
 
 @InputType()
-export class UpdateBannerActionInput extends BannerActionFields {
-  @Field(() => ID)
-  id!: string
-}
+export class UpdateBannerActionInput extends PickType(
+  BannerAction,
+  ['id', 'label', 'url', 'style', 'role'],
+  InputType
+) {}
