@@ -15,6 +15,7 @@ export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps
   return (
     <>
       <PageContainer slug={'newsletter'} />
+
       <ContentWrapper>
         <MailchimpSubscribeForm
           signupUrl="https://ch-interkultur.us12.list-manage.com/subscribe/post?u=930fd0ccfcf8b34b60492e282&id=7755141349"
@@ -29,7 +30,6 @@ export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps
 }
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
@@ -37,7 +37,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     client.query({
       query: ApiV1.PageDocument,
       variables: {
-        slug
+        slug: 'newsletter'
       }
     }),
     client.query({
