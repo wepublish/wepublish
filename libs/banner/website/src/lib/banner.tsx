@@ -123,10 +123,12 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
           {data?.primaryBanner.actions &&
             data?.primaryBanner.actions.map(a => {
               return (
-                <Link href={a.url} key={a.url} onClick={e => handleActionClick(e, a)}>
-                  <Button
-                    data-role={a.role}
-                    color={a.role === BannerActionRole.Primary ? 'primary' : 'secondary'}>
+                <Link
+                  href={a.url}
+                  key={a.url}
+                  onClick={e => handleActionClick(e, a)}
+                  data-role={a.role}>
+                  <Button color={a.role === BannerActionRole.Primary ? 'primary' : 'secondary'}>
                     {a.label}
                   </Button>
                 </Link>
