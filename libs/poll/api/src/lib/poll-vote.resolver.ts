@@ -1,4 +1,4 @@
-import {Args, Int, Mutation, Query, Resolver} from '@nestjs/graphql'
+import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {
   DeletePollVotesResult,
   PaginatedPollVotes,
