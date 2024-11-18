@@ -4,7 +4,7 @@ import {
   PollVoteListQueryResult,
   PollVoteSort,
   SortOrder as SortOrderV2,
-  useDeletePollVoteMutation,
+  useDeletePollVotesMutation,
   usePollVoteListQuery
 } from '@wepublish/editor/api-v2'
 import {
@@ -35,12 +35,12 @@ function PollVoteListContainer() {
     variables,
     fetchPolicy: 'network-only'
   })
-  const [deletePollVote, {loading}] = useDeletePollVoteMutation({
+  const [deletePollVotes] = useDeletePollVotesMutation({
     client
   })
 
-  const deletePollVotes = async (selectedItems: string[]) => {
-    await Promise.all(selectedItems.map(id => deletePollVote({variables: {id}})))
+  const handleDeletePollVotes = async (selectedItems: string[]) => {
+    await deletePollVotes({variables: {ids: selectedItems}})
     await listQuery.refetch()
   }
 
@@ -54,7 +54,7 @@ function PollVoteListContainer() {
       listQueryState={state}
       listQuery={listQuery}
       pollQuery={pollQuery}
-      deleteItems={deletePollVotes}
+      deleteItems={handleDeletePollVotes}
     />
   )
 }
