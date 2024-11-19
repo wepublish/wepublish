@@ -57,7 +57,7 @@ describe('PayrexxPaymentProvider', () => {
           body: {}
         } as unknown as express.Request
       })
-      expect(response.status).toEqual(500)
+      expect(response.status).toEqual(415)
       expect(response.message).toEqual(
         'Request does not contain valid json. Is Payrexx wrongly configured to send a PHP-Post?'
       )
@@ -74,7 +74,7 @@ describe('PayrexxPaymentProvider', () => {
         } as unknown as express.Request
       })
 
-      expect(response.status).toEqual(500)
+      expect(response.status).toEqual(415)
       expect(response.message).toEqual(
         'Request does not contain valid json. Is Payrexx wrongly configured to send a PHP-Post?'
       )

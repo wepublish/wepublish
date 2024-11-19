@@ -53,7 +53,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     const contentType = props.req.headers['content-type']
     if (contentType !== 'application/json' || typeof props.req.body === 'string') {
       return {
-        status: 500,
+        status: 415,
         message:
           'Request does not contain valid json. Is Payrexx wrongly configured to send a PHP-Post?'
       }
