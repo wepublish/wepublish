@@ -34,6 +34,13 @@ fragment FullMemberPlan on MemberPlan {
     ...FullAvailablePaymentMethod
   }
   extendable
+
+  successPage {
+    url
+  }
+  failPage {
+    url
+  }
 }
 
 fragment FullPayment on Payment {

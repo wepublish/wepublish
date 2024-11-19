@@ -234,15 +234,21 @@ export type CalculatedRating = {
   total: Scalars['Int'];
 };
 
+export enum CaptchaType {
+  Algebraic = 'Algebraic',
+  CfTurnstile = 'CfTurnstile'
+}
+
 export type Challenge = {
   __typename?: 'Challenge';
   challenge?: Maybe<Scalars['String']>;
   challengeID?: Maybe<Scalars['String']>;
+  type?: Maybe<CaptchaType>;
   validUntil?: Maybe<Scalars['Date']>;
 };
 
 export type ChallengeInput = {
-  challengeID: Scalars['String'];
+  challengeID?: InputMaybe<Scalars['String']>;
   challengeSolution: Scalars['String'];
 };
 
@@ -784,11 +790,15 @@ export type MemberPlan = {
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
+  failPage?: Maybe<Page>;
+  failPageId?: Maybe<Scalars['ID']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   maxCount?: Maybe<Scalars['Int']>;
   name: Scalars['String'];
   slug: Scalars['String'];
+  successPage?: Maybe<Page>;
+  successPageId?: Maybe<Scalars['ID']>;
   tags?: Maybe<Array<Scalars['String']>>;
 };
 

@@ -10,8 +10,6 @@ export default function Mitmachen() {
     query: {firstName, mail, lastName}
   } = useRouter()
 
-  const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
-  const thisLocation = typeof window !== 'undefined' ? location.href : ''
   const userCountry = useUserCountry() ?? 'CH'
 
   return (
@@ -30,8 +28,6 @@ export default function Mitmachen() {
           return memberPlan.currency === ApiV1.Currency.Eur
         })
       }
-      successURL={`${locationOrigin}/profile/subscription`}
-      failureURL={thisLocation}
       fields={['firstName', 'address', 'birthday', 'password', 'passwordRepeated']}
     />
   )

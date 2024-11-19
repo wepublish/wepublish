@@ -27,7 +27,7 @@ export const createPaymentFromInvoice = async (
   const invoice = await invoicesByID.load(invoiceID)
   const memberPlan = await memberPlanClient.findFirst({
     where: {
-      Subscription: {
+      subscription: {
         some: {
           id: invoice.subscriptionID
         }

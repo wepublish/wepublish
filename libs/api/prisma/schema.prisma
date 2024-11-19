@@ -238,7 +238,7 @@ model Image {
   events         Event[]
   paymentMethods PaymentMethod[]
 
-  banners        Banner[]
+  banners Banner[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -519,8 +519,13 @@ model MemberPlan {
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
 
-  Subscription Subscription[]
+  successPageId String?
+  successPage   Page?   @relation("successPage", fields: [successPageId], references: [id])
 
+  failPageId String?
+  failPage   Page?   @relation("failPage", fields: [failPageId], references: [id])
+
+  subscription      Subscription[]
   subscriptionFlows SubscriptionFlow[]
 
   @@index([name])
@@ -611,7 +616,9 @@ model Page {
   navigations NavigationLink[]
   tags        TaggedPages[]
 
-  banners     Banner[]
+  banners            Banner[]
+  memberPlansSuccess MemberPlan[] @relation("successPage")
+  memberPlansFail    MemberPlan[] @relation("failPage")
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -1236,41 +1243,41 @@ model BlockStyle {
 }
 
 model Banner {
-  id                  String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt           DateTime         @default(now())
-  modifiedAt          DateTime         @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
 
-  title               String
-  text                String
-  cta                 String?
+  title String
+  text  String
+  cta   String?
 
-  imageId             String?
-  image               Image?          @relation(fields: [imageId], references: [id])
+  imageId String?
+  image   Image?  @relation(fields: [imageId], references: [id])
 
-  active              Boolean         @default(true)
+  active Boolean @default(true)
 
-  tags                String[]
+  tags String[]
 
-  showOnArticles      Boolean         @default(true)
-  showOnPages         Page[]  
+  showOnArticles Boolean @default(true)
+  showOnPages    Page[]
 
-  actions             BannerAction[]
+  actions BannerAction[]
 
   @@map("banners")
 }
 
 model BannerAction {
-  id                  String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt           DateTime        @default(now())
-  modifiedAt          DateTime        @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
 
-  banner              Banner          @relation(fields: [bannerId], references: [id], onDelete: Cascade)
-  bannerId            String          @db.Uuid
+  banner   Banner @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+  bannerId String @db.Uuid
 
-  label               String
-  url                 String
+  label String
+  url   String
 
-  style               String          @default("")
+  style String @default("")
 
   @@map("banner_actions")
 }

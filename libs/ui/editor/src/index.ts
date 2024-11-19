@@ -6,6 +6,7 @@ export * from './lib/listView/use-selectable-list'
 export * from './lib/listView/selected-items-actions'
 
 export * from './lib/atoms'
+export * from './lib/atoms/page/selectPages'
 export * from './lib/blocks'
 export * from './lib/panel'
 export * from './lib/hooks'

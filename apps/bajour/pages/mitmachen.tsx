@@ -8,7 +8,6 @@ import {useRouter} from 'next/router'
 import {Container} from '../src/components/layout/container'
 
 export default function Mitmachen() {
-  const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
   const {
     query: {
       memberPlanBySlug,
@@ -29,8 +28,6 @@ export default function Mitmachen() {
           name: lastName as string | undefined,
           memberPlanSlug: memberPlanBySlug as string | undefined
         }}
-        successURL={`${locationOrigin}/profile/subscription`}
-        failureURL={`${locationOrigin}/fail`}
         fields={['firstName']}
         filter={memberPlans => {
           const preselectedMemberPlan = memberPlans.find(({slug}) => slug === memberPlanBySlug)

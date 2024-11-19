@@ -852,6 +852,10 @@ type MemberPlan {
   maxCount: Int
   extendable: Boolean!
   availablePaymentMethods: [AvailablePaymentMethod!]!
+  successPageId: ID
+  successPage: Page
+  failPageId: ID
+  failPage: Page
 }
 
 enum Currency {

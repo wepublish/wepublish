@@ -128,10 +128,7 @@ const intent = {
 }
 
 export const Default: StoryObj = {
-  args: {
-    successURL: '/payment/success',
-    failureURL: '/payment/fail'
-  },
+  args: {},
   parameters: {
     apolloClient: {
       mocks: [
@@ -176,9 +173,7 @@ export const Default: StoryObj = {
           request: {
             query: ExtendSubscriptionDocument,
             variables: {
-              subscriptionId: subscription.id,
-              successURL: '/payment/success',
-              failureURL: '/payment/fail'
+              subscriptionId: subscription.id
             }
           },
           result: {
@@ -191,9 +186,7 @@ export const Default: StoryObj = {
           request: {
             query: PaySubscriptionDocument,
             variables: {
-              subscriptionId: subscription.id,
-              successURL: '/payment/success',
-              failureURL: '/payment/fail'
+              subscriptionId: subscription.id
             }
           },
           result: {

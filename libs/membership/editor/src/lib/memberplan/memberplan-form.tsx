@@ -36,7 +36,8 @@ import {
   ListInput,
   ListValue,
   RichTextBlock,
-  RichTextBlockValue
+  RichTextBlockValue,
+  SelectPage
 } from '@wepublish/ui/editor'
 import {MdAutoFixHigh, MdCheck} from 'react-icons/md'
 import {Alert} from '@mui/material'
@@ -403,6 +404,38 @@ export function MemberPlanForm({
                   </Panel>
                 )}
               </ListInput>
+            </Col>
+
+            <Col xs={24}>
+              <Row>
+                <Form.ControlLabel>{t('memberPlanEdit.successPage')}</Form.ControlLabel>
+                <SelectPage
+                  setSelectedPage={successPageId => {
+                    if (!memberPlan) {
+                      return
+                    }
+
+                    setMemberPlan({...memberPlan, successPageId})
+                  }}
+                  selectedPage={memberPlan?.successPageId}
+                  name="successPageId"
+                />
+              </Row>
+
+              <Row>
+                <Form.ControlLabel>{t('memberPlanEdit.failPage')}</Form.ControlLabel>
+                <SelectPage
+                  setSelectedPage={failPageId => {
+                    if (!memberPlan) {
+                      return
+                    }
+
+                    setMemberPlan({...memberPlan, failPageId})
+                  }}
+                  selectedPage={memberPlan?.failPageId}
+                  name="failPageId"
+                />
+              </Row>
             </Col>
 
             <Col xs={12}>
