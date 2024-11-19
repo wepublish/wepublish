@@ -51,7 +51,11 @@ export default function Login({sessionToken}: LoginProps) {
         ein Abo lösen willst, <Link href={'/abo'}>klicke hier.</Link>)
       </Typography>
 
-      <LoginFormContainer />
+      <LoginFormContainer
+        defaults={{
+          email: router.query?.mail as string | undefined
+        }}
+      />
     </LoginWrapper>
   )
 }
