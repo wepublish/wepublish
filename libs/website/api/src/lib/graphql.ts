@@ -177,9 +177,16 @@ export type BannerAction = {
   __typename?: 'BannerAction';
   id: Scalars['ID'];
   label: Scalars['String'];
+  role: BannerActionRole;
   style: Scalars['String'];
   url: Scalars['String'];
 };
+
+export enum BannerActionRole {
+  Cancel = 'CANCEL',
+  Other = 'OTHER',
+  Primary = 'PRIMARY'
+}
 
 export enum BannerDocumentType {
   Article = 'ARTICLE',
@@ -366,6 +373,7 @@ export type ConsentFilter = {
 
 export type CreateBannerActionInput = {
   label: Scalars['String'];
+  role: BannerActionRole;
   style: Scalars['String'];
   url: Scalars['String'];
 };
@@ -2501,9 +2509,9 @@ export type AuthorListQueryVariables = Exact<{
 
 export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', id: string, name: string, jobTitle?: string | null, slug: string, bio?: Node[] | null, url: string, createdAt: string, modifiedAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null, main: boolean, url: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
-export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null };
+export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null };
 
-export type FullBannerActionFragment = { __typename?: 'BannerAction', id: string, label: string, url: string, style: string };
+export type FullBannerActionFragment = { __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole };
 
 export type PageRefFragment = { __typename?: 'PageModel', id: string };
 
@@ -2513,7 +2521,7 @@ export type PrimaryBannerQueryVariables = Exact<{
 }>;
 
 
-export type PrimaryBannerQuery = { __typename?: 'Query', primaryBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string }> | null } };
+export type PrimaryBannerQuery = { __typename?: 'Query', primaryBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null } };
 
 type BlockWithoutTeaser_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock', blockStyle?: string | null, zoneID: string };
 
@@ -3536,6 +3544,7 @@ export const FullBannerActionFragmentDoc = gql`
   label
   url
   style
+  role
 }
     `;
 export const FullBannerFragmentDoc = gql`

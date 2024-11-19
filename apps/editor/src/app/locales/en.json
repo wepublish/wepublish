@@ -245,7 +245,12 @@
         "delete": "Delete"
       },
       "actions": {
-        "add": "Add action"
+        "add": "Add action",
+        "role": {
+          "PRIMARY": "Primary",
+          "CANCEL": "Cancel",
+          "OTHER": "Other"
+        }
       }
     },
     "blocks": {

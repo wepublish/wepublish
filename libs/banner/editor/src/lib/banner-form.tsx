@@ -7,10 +7,11 @@ import {
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate} from 'react-router-dom'
-import {CheckPicker, Drawer, Form, Panel, Toggle} from 'rsuite'
+import {CheckPicker, Drawer, Form, Input, Panel, Toggle} from 'rsuite'
 import {BannerActionList} from './banner-action-list'
 import {ChooseEditImage, ImageEditPanel, ImageSelectPanel} from '@wepublish/ui/editor'
 import {PageRefFragment, usePageListQuery} from '@wepublish/editor/api'
+import React from 'react'
 
 type BannerFormData = (CreateBannerInput | UpdateBannerInput) & {
   image?: ImageRefFragment | null
@@ -54,15 +55,22 @@ export const BannerForm = (props: BannerFormProps) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
   return (
-    <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
+    <div style={{display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '12px'}}>
       <Panel bordered style={{overflow: 'initial'}}>
         <Form.Group controlId="title">
+          <h3>Banner</h3>
           <Form.ControlLabel>{t('banner.form.title')}</Form.ControlLabel>
           <Form.Control name="title" value={props.banner.title} onChange={handleChange} />
         </Form.Group>
         <Form.Group controlId="text">
           <Form.ControlLabel>{t('banner.form.text')}</Form.ControlLabel>
-          <Form.Control name="text" value={props.banner.text} onChange={handleChange} />
+          <Input
+            name="text"
+            as="textarea"
+            rows={5}
+            value={props.banner.text}
+            onChange={handleChange}
+          />
         </Form.Group>
         <Form.Group controlId="cta">
           <Form.ControlLabel>{t('banner.form.cta')}</Form.ControlLabel>
