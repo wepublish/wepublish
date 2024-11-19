@@ -11,6 +11,9 @@ ${PageBanner.BannerCloseButton} {
   top: ${theme.spacing(2)};
   right: ${theme.spacing(2)};
 }
+${PageBanner.BannerCta} {
+  display: none;
+}
 &[data-collapsed='true'] {
   display: block;
   border-radius: 4px;
@@ -24,6 +27,7 @@ ${PageBanner.BannerCloseButton} {
     width: 20%;
   }
   ${PageBanner.BannerCta} {
+    display: block;
     margin-top: 0;
   }
   ${PageBanner.BannerImage}, ${PageBanner.BannerTitle}, ${PageBanner.BannerText}, ${
