@@ -565,8 +565,8 @@ exports[`CommentEditor should render AnonymousCanCommentTrue 1`] = `
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":ra:"
-        id=":ra:-label"
+        for=":r8:"
+        id=":r8:-label"
       >
         Name
       </label>
@@ -576,7 +576,7 @@ exports[`CommentEditor should render AnonymousCanCommentTrue 1`] = `
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input emotion-5"
-          id=":ra:"
+          id=":r8:"
           name="guestUsername"
           placeholder="Dein Name"
           type="text"
@@ -602,8 +602,8 @@ exports[`CommentEditor should render AnonymousCanCommentTrue 1`] = `
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":rb:"
-        id=":rb:-label"
+        for=":r9:"
+        id=":r9:-label"
       >
         Titel
       </label>
@@ -613,7 +613,7 @@ exports[`CommentEditor should render AnonymousCanCommentTrue 1`] = `
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input emotion-5"
-          id=":rb:"
+          id=":r9:"
           name="title"
           placeholder="Gib Deinem Beitrag einen Titel."
           type="text"
@@ -639,8 +639,8 @@ exports[`CommentEditor should render AnonymousCanCommentTrue 1`] = `
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":rc:"
-        id=":rc:-label"
+        for=":ra:"
+        id=":ra:-label"
       >
         Kommentar
       </label>
@@ -648,10 +648,10 @@ exports[`CommentEditor should render AnonymousCanCommentTrue 1`] = `
         class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline emotion-16"
       >
         <textarea
-          aria-describedby=":rc:-helper-text"
+          aria-describedby=":ra:-helper-text"
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-17"
-          id=":rc:"
+          id=":ra:"
           name="comment"
           placeholder="Beitrag verfassen"
           style="height: 0px; overflow: hidden;"
@@ -678,7 +678,7 @@ exports[`CommentEditor should render AnonymousCanCommentTrue 1`] = `
       </div>
       <p
         class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-21"
-        id=":rc:-helper-text"
+        id=":ra:-helper-text"
       >
         0 / 1000 Zeichen
       </p>
@@ -751,8 +751,8 @@ exports[`CommentEditor should render AnonymousCanCommentTrue 1`] = `
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
           data-shrink="false"
-          for=":rd:"
-          id=":rd:-label"
+          for=":rb:"
+          id=":rb:-label"
         >
           Captcha
         </label>
@@ -762,7 +762,7 @@ exports[`CommentEditor should render AnonymousCanCommentTrue 1`] = `
           <input
             aria-invalid="false"
             class="MuiInputBase-input MuiOutlinedInput-input emotion-5"
-            id=":rd:"
+            id=":rb:"
             name="challenge.challengeSolution"
             type="text"
             value=""
@@ -1673,8 +1673,8 @@ exports[`CommentEditor should render LoggedIn 1`] = `
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":rt:"
-        id=":rt:-label"
+        for=":ro:"
+        id=":ro:-label"
       >
         Titel
       </label>
@@ -1684,7 +1684,7 @@ exports[`CommentEditor should render LoggedIn 1`] = `
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input emotion-5"
-          id=":rt:"
+          id=":ro:"
           name="title"
           placeholder="Gib Deinem Beitrag einen Titel."
           type="text"
@@ -1710,8 +1710,8 @@ exports[`CommentEditor should render LoggedIn 1`] = `
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":ru:"
-        id=":ru:-label"
+        for=":rp:"
+        id=":rp:-label"
       >
         Kommentar
       </label>
@@ -1719,10 +1719,10 @@ exports[`CommentEditor should render LoggedIn 1`] = `
         class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline emotion-10"
       >
         <textarea
-          aria-describedby=":ru:-helper-text"
+          aria-describedby=":rp:-helper-text"
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-11"
-          id=":ru:"
+          id=":rp:"
           name="comment"
           placeholder="Beitrag verfassen"
           style="height: 0px; overflow: hidden;"
@@ -1749,7 +1749,7 @@ exports[`CommentEditor should render LoggedIn 1`] = `
       </div>
       <p
         class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-15"
-        id=":ru:-helper-text"
+        id=":rp:-helper-text"
       >
         0 / 1000 Zeichen
       </p>
@@ -1814,8 +1814,8 @@ exports[`CommentEditor should render LoggedInFilled 1`] = `
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":rv:"
-        id=":rv:-label"
+        for=":rq:"
+        id=":rq:-label"
       >
         Titel
       </label>
@@ -1825,7 +1825,7 @@ exports[`CommentEditor should render LoggedInFilled 1`] = `
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input emotion-5"
-          id=":rv:"
+          id=":rq:"
           name="title"
           placeholder="Gib Deinem Beitrag einen Titel."
           type="text"
@@ -1851,8 +1851,8 @@ exports[`CommentEditor should render LoggedInFilled 1`] = `
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":r10:"
-        id=":r10:-label"
+        for=":rr:"
+        id=":rr:-label"
       >
         Kommentar
       </label>
@@ -1860,10 +1860,10 @@ exports[`CommentEditor should render LoggedInFilled 1`] = `
         class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline emotion-10"
       >
         <textarea
-          aria-describedby=":r10:-helper-text"
+          aria-describedby=":rr:-helper-text"
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-11"
-          id=":r10:"
+          id=":rr:"
           name="comment"
           placeholder="Beitrag verfassen"
           style="height: 0px; overflow: hidden;"
@@ -1890,7 +1890,7 @@ exports[`CommentEditor should render LoggedInFilled 1`] = `
       </div>
       <p
         class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-15"
-        id=":r10:-helper-text"
+        id=":rr:-helper-text"
       >
         0 / 1000 Zeichen
       </p>
@@ -1955,8 +1955,8 @@ exports[`CommentEditor should render LoggedInInvalid 1`] = `
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":r11:"
-        id=":r11:-label"
+        for=":rs:"
+        id=":rs:-label"
       >
         Titel
       </label>
@@ -1966,7 +1966,7 @@ exports[`CommentEditor should render LoggedInInvalid 1`] = `
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input emotion-5"
-          id=":r11:"
+          id=":rs:"
           name="title"
           placeholder="Gib Deinem Beitrag einen Titel."
           type="text"
@@ -1992,8 +1992,8 @@ exports[`CommentEditor should render LoggedInInvalid 1`] = `
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":r12:"
-        id=":r12:-label"
+        for=":rt:"
+        id=":rt:-label"
       >
         Kommentar
       </label>
@@ -2001,10 +2001,10 @@ exports[`CommentEditor should render LoggedInInvalid 1`] = `
         class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline emotion-10"
       >
         <textarea
-          aria-describedby=":r12:-helper-text"
+          aria-describedby=":rt:-helper-text"
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-11"
-          id=":r12:"
+          id=":rt:"
           name="comment"
           placeholder="Beitrag verfassen"
           style="height: 0px; overflow: hidden;"
@@ -2031,7 +2031,7 @@ exports[`CommentEditor should render LoggedInInvalid 1`] = `
       </div>
       <p
         class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-15"
-        id=":r12:-helper-text"
+        id=":rt:-helper-text"
       >
         0 / 1000 Zeichen
       </p>

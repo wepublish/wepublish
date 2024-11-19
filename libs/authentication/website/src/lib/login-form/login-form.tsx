@@ -1,6 +1,8 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import {Checkbox, FormControlLabel, css, styled} from '@mui/material'
 import {BuilderLoginFormProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useRouter} from 'next/router'
+import {useMemo} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'
 
@@ -45,12 +47,17 @@ export function LoginForm({
   const {
     elements: {Alert, Button, TextField}
   } = useWebsiteBuilder()
+  const {query} = useRouter()
+
+  const defaulEmail = useMemo(() => {
+    return (query?.mail as string | undefined) || ''
+  }, [query])
 
   type FormInput = z.infer<typeof loginFormSchema>
   const {handleSubmit, control, watch, setValue} = useForm<FormInput>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: '',
+      email: defaulEmail,
       password: '',
       requirePassword: false
     },
