@@ -55,7 +55,11 @@ export default function Login({sessionToken}: LoginProps) {
           </Typography>
         </div>
 
-        <LoginFormContainer />
+        <LoginFormContainer
+          defaults={{
+            email: router.query?.mail as string | undefined
+          }}
+        />
       </LoginWrapper>
     </Container>
   )
