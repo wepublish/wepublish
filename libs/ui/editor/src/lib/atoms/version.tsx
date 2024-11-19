@@ -21,7 +21,7 @@ export function Version() {
 
   return (
     <StyledVersion>
-      <div>{`v${version}`}</div>
+      <div>{`${version}`}</div>
     </StyledVersion>
   )
 }
