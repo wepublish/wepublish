@@ -51,10 +51,9 @@ export function LoginForm({
   const {handleSubmit, control, watch, setValue} = useForm<FormInput>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: '',
+      email: defaults?.email || '',
       password: '',
-      requirePassword: false,
-      ...defaults
+      requirePassword: false
     },
     mode: 'onTouched',
     reValidateMode: 'onChange'
