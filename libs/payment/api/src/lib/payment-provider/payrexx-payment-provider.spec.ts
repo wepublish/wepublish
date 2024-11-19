@@ -47,10 +47,46 @@ describe('PayrexxPaymentProvider', () => {
       expect(response.status).toEqual(403)
     })
 
+    it('should reject unauthorized when content-type is not application/json', async () => {
+      const response = await payrexx.webhookForPaymentIntent({
+        req: {
+          query: {apiKey: 'secret'},
+          headers: {
+            'content-type': 'text/plain'
+          },
+          body: {}
+        } as unknown as express.Request
+      })
+      expect(response.status).toEqual(500)
+      expect(response.message).toEqual(
+        'Request does not contain valid json. Is Payrexx wrongly configured to send a PHP-Post?'
+      )
+    })
+
+    it('should reject unauthorized when req.body is a string', async () => {
+      const response = await payrexx.webhookForPaymentIntent({
+        req: {
+          query: {apiKey: 'secret'},
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: 'invalid-string-body'
+        } as unknown as express.Request
+      })
+
+      expect(response.status).toEqual(500)
+      expect(response.message).toEqual(
+        'Request does not contain valid json. Is Payrexx wrongly configured to send a PHP-Post?'
+      )
+    })
+
     it('should ignore non-transaction payloads', async () => {
       const response = await payrexx.webhookForPaymentIntent({
         req: {
           query: {apiKey: 'secret'},
+          headers: {
+            'content-type': 'application/json'
+          },
           body: {}
         } as unknown as express.Request
       })
@@ -70,6 +106,9 @@ describe('PayrexxPaymentProvider', () => {
 
       const response = await payrexx.webhookForPaymentIntent({
         req: {
+          headers: {
+            'content-type': 'application/json'
+          },
           query: {apiKey: 'secret'},
           body: {transaction}
         } as unknown as express.Request
@@ -90,6 +129,9 @@ describe('PayrexxPaymentProvider', () => {
 
       const response = await payrexx.webhookForPaymentIntent({
         req: {
+          headers: {
+            'content-type': 'application/json'
+          },
           query: {apiKey: 'secret'},
           body: {transaction}
         } as unknown as express.Request
@@ -115,6 +157,9 @@ describe('PayrexxPaymentProvider', () => {
 
       const response = await payrexx.webhookForPaymentIntent({
         req: {
+          headers: {
+            'content-type': 'application/json'
+          },
           query: {apiKey: 'secret'},
           body: {transaction}
         } as unknown as express.Request
