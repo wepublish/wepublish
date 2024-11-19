@@ -399,7 +399,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       return {
         status: 500,
         message:
-          'Request does not contain no valid json. Is Payrexx wrongly configured to send a PHP-Post?'
+          'Request does not contain valid json. Is Payrexx wrongly configured to send a PHP-Post?'
       }
     }
 
