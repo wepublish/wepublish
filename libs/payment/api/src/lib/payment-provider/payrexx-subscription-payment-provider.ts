@@ -394,6 +394,15 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       }
     }
 
+    const contentType = props.req.headers['content-type']
+    if (contentType !== 'application/json' || typeof props.req.body === 'string') {
+      return {
+        status: 500,
+        message:
+          'Request does not contain no valid json. Is Payrexx wrongly configured to send a PHP-Post?'
+      }
+    }
+
     if (!props.req.body.transaction) {
       return {
         status: 200,
