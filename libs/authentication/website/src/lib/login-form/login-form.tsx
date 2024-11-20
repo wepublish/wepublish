@@ -53,7 +53,7 @@ export function LoginForm({
     defaultValues: {
       email: defaults?.email || '',
       password: '',
-      requirePassword: false
+      requirePassword: defaults?.requirePassword || false
     },
     mode: 'onTouched',
     reValidateMode: 'onChange'

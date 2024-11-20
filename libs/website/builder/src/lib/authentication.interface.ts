@@ -14,6 +14,7 @@ export type BuilderLoginFormProps = {
 
   defaults?: Partial<{
     email: string
+    requirePassword: boolean
   }>
 
   loginWithEmail: Pick<MutationResult<LoginWithEmailMutation>, 'data' | 'loading' | 'error'>
