@@ -32,6 +32,8 @@ import {KolumnaTeaser} from '../src/kolumna-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme, {navbarTheme} from '../src/theme'
 
+const {publicRuntimeConfig} = getConfig()
+
 setDefaultOptions({
   locale: de
 })
@@ -129,7 +131,10 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             blocks={{Renderer: KolumnaBlockRenderer, Teaser: KolumnaTeaser}}
             elements={{Link: NextWepublishLink}}
             date={{format: dateFormatter}}
-            meta={{siteTitle, locale: 'de-DE'}}>
+            meta={{siteTitle, locale: 'de-DE'}}
+            thirdParty={{
+              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
+            }}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
               <KolumnaGlobalStyles />
@@ -186,7 +191,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   )
 }
 
-const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
   CustomApp
 )
