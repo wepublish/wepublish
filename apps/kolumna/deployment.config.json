@@ -2,6 +2,7 @@
   "website": {
     "production": {
       "deployment": true,
+      "custom_domain": "https://kolumna.org",
       "env": {
         "STRIPE_PUBLIC_KEY": "pk_live_51QMUsIK61nnLnKc4Wj2xGf74YbbW862LqaRtmbxU83nLzZgdTUyhLFjQrxEA45e9BfQ41284jjTkg0VgFySBFqZq00wVqvV9Q0"
       },
