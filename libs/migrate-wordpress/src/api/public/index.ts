@@ -175,8 +175,15 @@ export type BannerAction = {
   __typename?: 'BannerAction'
   id: Scalars['ID']
   label: Scalars['String']
+  role: BannerActionRole
   style: Scalars['String']
   url: Scalars['String']
+}
+
+export enum BannerActionRole {
+  Cancel = 'CANCEL',
+  Other = 'OTHER',
+  Primary = 'PRIMARY'
 }
 
 export enum BannerDocumentType {
@@ -389,6 +396,7 @@ export type ConsentFilter = {
 
 export type CreateBannerActionInput = {
   label: Scalars['String']
+  role: BannerActionRole
   style: Scalars['String']
   url: Scalars['String']
 }
@@ -439,6 +447,11 @@ export type DashboardSubscription = {
   reasonForDeactivation?: Maybe<SubscriptionDeactivationReason>
   renewsAt?: Maybe<Scalars['DateTime']>
   startsAt: Scalars['DateTime']
+}
+
+export type DeletePollVotesResult = {
+  __typename?: 'DeletePollVotesResult'
+  count: Scalars['Int']
 }
 
 export type EmbedBlock = {
@@ -886,8 +899,8 @@ export type Mutation = {
   deleteConsent: Consent
   /** Deletes an existing event. */
   deleteEvent: Event
-  /** Delete poll vote */
-  deletePollVote: PollVote
+  /** Delete poll votes */
+  deletePollVotes: DeletePollVotesResult
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>
   /** Delete an existing subscription interval */
@@ -1072,8 +1085,8 @@ export type MutationDeleteEventArgs = {
   id: Scalars['String']
 }
 
-export type MutationDeletePollVoteArgs = {
-  id: Scalars['ID']
+export type MutationDeletePollVotesArgs = {
+  ids: Array<Scalars['ID']>
 }
 
 export type MutationDeleteSubscriptionFlowArgs = {

@@ -4,7 +4,6 @@ fragment FullBanner on Banner {
     text
     cta
 
-    #tags
     showOnArticles
     showOnPages {
         ...PageRef
@@ -24,6 +23,7 @@ fragment FullBannerAction on BannerAction {
   label
   url
   style
+  role
 }
 
 fragment PageRef on PageModel {
