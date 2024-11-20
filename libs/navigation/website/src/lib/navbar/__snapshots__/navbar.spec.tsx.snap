@@ -19,7 +19,7 @@ exports[`Navbar should render Default 1`] = `
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -151,7 +151,7 @@ exports[`Navbar should render WithChildren 1`] = `
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -283,7 +283,7 @@ exports[`Navbar should render WithClassName 1`] = `
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -415,7 +415,7 @@ exports[`Navbar should render WithEmotion 1`] = `
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -547,7 +547,7 @@ exports[`Navbar should render WithError 1`] = `
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -663,7 +663,7 @@ exports[`Navbar should render WithLoading 1`] = `
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -779,7 +779,7 @@ exports[`Navbar should render WithLoggedIn 1`] = `
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -943,7 +943,7 @@ exports[`Navbar should render WithoutItems 1`] = `
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -1059,7 +1059,7 @@ exports[`Navbar should render WithoutLogo 1`] = `
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >

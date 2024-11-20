@@ -27,6 +27,7 @@ generates:
       withComponent: false
   ./libs/editor/api-v2/src/lib/graphql.ts:
     schema:
+      - ./apps/api-example/schema-v1.graphql
       - ./apps/api-example/schema-v2.graphql
     documents: ./libs/editor/api-v2/src/lib/schemas/*.graphql
     plugins:

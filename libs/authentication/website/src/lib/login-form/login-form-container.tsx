@@ -1,10 +1,21 @@
 import {useLoginWithCredentialsMutation, useLoginWithEmailMutation} from '@wepublish/website/api'
-import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {
+  BuilderContainerProps,
+  BuilderLoginFormProps,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
 import {useUser} from '../session.context'
 
-export type LoginFormContainerProps = BuilderContainerProps
+export type LoginFormContainerProps = BuilderContainerProps & {
+  afterLoginCallback?: () => void
+  defaults?: BuilderLoginFormProps['defaults']
+}
 
-export function LoginFormContainer({className, afterLoginCallback}: LoginFormContainerProps) {
+export function LoginFormContainer({
+  className,
+  afterLoginCallback,
+  defaults
+}: LoginFormContainerProps) {
   const {LoginForm} = useWebsiteBuilder()
   const {setToken} = useUser()
   const [loginWithEmail, withEmail] = useLoginWithEmailMutation()
@@ -41,6 +52,7 @@ export function LoginFormContainer({className, afterLoginCallback}: LoginFormCon
         }
       }}
       loginWithEmail={withEmail}
+      defaults={defaults}
     />
   )
 }

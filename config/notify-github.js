@@ -24,7 +24,9 @@ async function main() {
   - Media: ${MEDIA_SERVER_URL}
 
 <h2>Projects:</h2>
-To deploy create comment /deploy::{{PROJECT NAME}}
+
+To deploy frontend create a label with the prefix "deploy_" followed by the project name eg. deploy_bajour
+ 
 `
 
     const projects = JSON.parse(PROJECTS);

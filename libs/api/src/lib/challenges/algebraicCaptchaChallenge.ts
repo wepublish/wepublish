@@ -1,4 +1,5 @@
 import {
+  CaptchaType,
   Challenge,
   ChallengeProvider,
   ChallengeValidationProps,
@@ -44,7 +45,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
     this.captchaLib = new AlgebraicCaptcha(algebraicCaptchaOptions)
   }
 
-  composeHashSecret(answer: number, time: number, counter: number) {
+  composeHashSecret(answer: number | string, time: number, counter: number) {
     return `${this.challengeSecret};${time};${answer};${counter}`
   }
 
@@ -76,6 +77,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
       }
     }
     return {
+      type: CaptchaType.Algebraic,
       challengeID,
       challenge: image,
       validUntil: new Date(time + this.challengeValidTime)

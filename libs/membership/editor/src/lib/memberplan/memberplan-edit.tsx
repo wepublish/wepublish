@@ -154,7 +154,8 @@ function MemberPlanEdit() {
       currency: memberPlan.currency,
       amountPerMonthMin: memberPlan.amountPerMonthMin,
       extendable: memberPlan.extendable,
-      maxCount: memberPlan.maxCount
+      maxCount: memberPlan.maxCount,
+      migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID
     }
 
     // update member plan

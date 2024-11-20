@@ -24,6 +24,7 @@ import {
   BuilderAuthorListProps,
   BuilderAuthorProps
 } from './author.interface'
+import {BuilderBannerProps} from './banner.interface'
 import {
   BuilderBildwurfAdBlockProps,
   BuilderBlockRendererProps,
@@ -121,6 +122,7 @@ export type WebsiteBuilderProps = {
   AuthorListItem: ComponentType<BuilderAuthorListItemProps>
   AuthorList: ComponentType<BuilderAuthorListProps>
   ArticleList: ComponentType<BuilderArticleListProps>
+  Banner: ComponentType<BuilderBannerProps>
   Event: ComponentType<BuilderEventProps>
   EventSEO: ComponentType<BuilderEventSEOProps>
   EventList: ComponentType<BuilderEventListProps>
@@ -246,6 +248,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   AuthorChip: NoComponent,
   AuthorList: NoComponent,
   AuthorListItem: NoComponent,
+  Banner: NoComponent,
   Event: NoComponent,
   EventSEO: NoComponent,
   EventList: NoComponent,
