@@ -159,6 +159,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 categorySlugs={[['account', 'issues', 'about-us']]}
                 slug="main"
                 headerSlug="header"
+                iconSlug="icons"
               />
 
               <main>
@@ -221,15 +222,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             {publicRuntimeConfig.env.GA_ID && (
               <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
             )}
-
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-              strategy="afterInteractive"
-            />
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-              strategy="lazyOnload"
-            />
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>

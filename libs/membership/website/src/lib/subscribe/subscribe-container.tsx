@@ -27,7 +27,10 @@ import {useEffect, useMemo, useState} from 'react'
 export type SubscribeContainerProps<
   T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<BuilderUserFormFields, 'flair'>
 > = BuilderContainerProps &
-  Pick<BuilderSubscribeProps<T>, 'fields' | 'schema' | 'defaults' | 'extraMoneyOffset'> & {
+  Pick<
+    BuilderSubscribeProps<T>,
+    'fields' | 'schema' | 'defaults' | 'extraMoneyOffset' | 'termsOfServiceUrl' | 'donate'
+  > & {
     successURL: string
     failureURL: string
     filter?: (memberPlans: MemberPlan[]) => MemberPlan[]
@@ -43,7 +46,9 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
   fields,
   schema,
   filter,
-  deactivateSubscriptionId
+  deactivateSubscriptionId,
+  termsOfServiceUrl,
+  donate
 }: SubscribeContainerProps<T>) => {
   const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
@@ -126,6 +131,8 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
         userSubscriptions={userSubscriptions}
         userInvoices={userInvoices}
         memberPlans={filteredMemberPlans}
+        termsOfServiceUrl={termsOfServiceUrl}
+        donate={donate}
         onSubscribe={async formData => {
           await subscribe({
             variables: {

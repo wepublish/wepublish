@@ -24,7 +24,7 @@ import {PaymentProvider} from '@wepublish/payment/api'
 import {logger} from '@wepublish/utils/api'
 import {ONE_DAY_IN_MILLISECONDS, ONE_MONTH_IN_MILLISECONDS} from './utility'
 import {SubscriptionEventDictionary, Action, LookupActionInput} from '@wepublish/membership/api'
-import {add} from 'date-fns'
+import {add, format} from 'date-fns'
 
 export interface HandleSubscriptionChangeProps {
   subscription: SubscriptionWithRelations
@@ -273,10 +273,14 @@ export class MemberContext implements MemberContextInterface {
         days: subscriptionFlowActionDeactivationUnpaid.daysAwayFromEnding
       })
 
+      const memberplan = await this.prisma.memberPlan.findUnique({
+        where: {id: subscription.memberPlanID}
+      })
+
       const newInvoice = await this.prisma.invoice.create({
         data: {
           subscriptionID: subscription.id,
-          description: `Membership from ${startDate.toISOString()} for ${user.name || user.email}`,
+          description: `${memberplan.name}: ${format(startDate, 'dd-MM-yyyy')}`,
           mail: user.email,
           dueAt: startDate,
           scheduledDeactivationAt: deactivationDate,

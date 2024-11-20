@@ -159,6 +159,40 @@ export type AvailablePaymentMethod = {
   paymentPeriodicities: Array<PaymentPeriodicity>;
 };
 
+export type Banner = {
+  __typename?: 'Banner';
+  actions?: Maybe<Array<BannerAction>>;
+  active: Scalars['Boolean'];
+  cta?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']>;
+  showOnArticles: Scalars['Boolean'];
+  showOnPages?: Maybe<Array<PageModel>>;
+  text: Scalars['String'];
+  title: Scalars['String'];
+};
+
+export type BannerAction = {
+  __typename?: 'BannerAction';
+  id: Scalars['ID'];
+  label: Scalars['String'];
+  role: BannerActionRole;
+  style: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export enum BannerActionRole {
+  Cancel = 'CANCEL',
+  Other = 'OTHER',
+  Primary = 'PRIMARY'
+}
+
+export enum BannerDocumentType {
+  Article = 'ARTICLE',
+  Page = 'PAGE'
+}
+
 export type BaseNavigationLink = {
   label: Scalars['String'];
 };
@@ -207,15 +241,21 @@ export type CalculatedRating = {
   total: Scalars['Int'];
 };
 
+export enum CaptchaType {
+  Algebraic = 'Algebraic',
+  CfTurnstile = 'CfTurnstile'
+}
+
 export type Challenge = {
   __typename?: 'Challenge';
   challenge?: Maybe<Scalars['String']>;
   challengeID?: Maybe<Scalars['String']>;
+  type?: Maybe<CaptchaType>;
   validUntil?: Maybe<Scalars['Date']>;
 };
 
 export type ChallengeInput = {
-  challengeID: Scalars['String'];
+  challengeID?: InputMaybe<Scalars['String']>;
   challengeSolution: Scalars['String'];
 };
 
@@ -331,6 +371,24 @@ export type ConsentFilter = {
   slug?: InputMaybe<Scalars['String']>;
 };
 
+export type CreateBannerActionInput = {
+  label: Scalars['String'];
+  role: BannerActionRole;
+  style: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type CreateBannerInput = {
+  actions?: InputMaybe<Array<CreateBannerActionInput>>;
+  active: Scalars['Boolean'];
+  cta?: InputMaybe<Scalars['String']>;
+  imageId?: InputMaybe<Scalars['String']>;
+  showOnArticles: Scalars['Boolean'];
+  showOnPages?: InputMaybe<Array<PageModelInput>>;
+  text: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export enum Currency {
   Chf = 'CHF',
   Eur = 'EUR'
@@ -366,6 +424,11 @@ export type DashboardSubscription = {
   reasonForDeactivation?: Maybe<SubscriptionDeactivationReason>;
   renewsAt?: Maybe<Scalars['DateTime']>;
   startsAt: Scalars['DateTime'];
+};
+
+export type DeletePollVotesResult = {
+  __typename?: 'DeletePollVotesResult';
+  count: Scalars['Int'];
 };
 
 export type EmbedBlock = {
@@ -772,6 +835,7 @@ export type Mutation = {
   addComment: Comment;
   /** This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now */
   cancelUserSubscription?: Maybe<Subscription>;
+  createBanner: Banner;
   /** Creates a new block style. */
   createBlockStyle: BlockStyle;
   /**
@@ -802,6 +866,7 @@ export type Mutation = {
    *
    */
   createUserConsent: UserConsent;
+  deleteBanner?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
   /**
@@ -812,8 +877,8 @@ export type Mutation = {
   deleteConsent: Consent;
   /** Deletes an existing event. */
   deleteEvent: Event;
-  /** Delete poll vote */
-  deletePollVote: PollVote;
+  /** Delete poll votes */
+  deletePollVotes: DeletePollVotesResult;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -847,6 +912,7 @@ export type Mutation = {
   syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
+  updateBanner: Banner;
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle;
   /** This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text. */
@@ -896,6 +962,11 @@ export type MutationAddCommentArgs = {
 
 export type MutationCancelUserSubscriptionArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationCreateBannerArgs = {
+  input: CreateBannerInput;
 };
 
 
@@ -992,6 +1063,11 @@ export type MutationCreateUserConsentArgs = {
 };
 
 
+export type MutationDeleteBannerArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteBlockStyleArgs = {
   id: Scalars['String'];
 };
@@ -1007,8 +1083,8 @@ export type MutationDeleteEventArgs = {
 };
 
 
-export type MutationDeletePollVoteArgs = {
-  id: Scalars['ID'];
+export type MutationDeletePollVotesArgs = {
+  ids: Array<Scalars['ID']>;
 };
 
 
@@ -1086,6 +1162,11 @@ export type MutationSendWebsiteLoginArgs = {
 
 export type MutationTestSystemMailArgs = {
   event: UserEvent;
+};
+
+
+export type MutationUpdateBannerArgs = {
+  input: UpdateBannerInput;
 };
 
 
@@ -1234,6 +1315,15 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
   startCursor?: Maybe<Scalars['String']>;
+};
+
+export type PageModel = {
+  __typename?: 'PageModel';
+  id: Scalars['ID'];
+};
+
+export type PageModelInput = {
+  id: Scalars['ID'];
 };
 
 export type PageNavigationLink = BaseNavigationLink & {
@@ -1500,6 +1590,8 @@ export type Query = {
   author?: Maybe<Author>;
   /** This query is to get the authors. */
   authors: AuthorConnection;
+  banner: Banner;
+  banners: Array<Banner>;
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>;
   /** This query generates a challenge which can be used to access protected endpoints. */
@@ -1610,6 +1702,7 @@ export type Query = {
   poll: FullPoll;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
+  primaryBanner: Banner;
   provider: MailProviderModel;
   ratingSystem: FullCommentRatingSystem;
   /**
@@ -1710,6 +1803,17 @@ export type QueryAuthorsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<AuthorSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryBannerArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryBannersArgs = {
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
 };
 
 
@@ -1876,6 +1980,12 @@ export type QueryPollVotesArgs = {
 };
 
 
+export type QueryPrimaryBannerArgs = {
+  documentId: Scalars['ID'];
+  documentType: BannerDocumentType;
+};
+
+
 export type QueryRenewingSubscribersArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
@@ -1991,9 +2101,7 @@ export enum SettingName {
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
-  BodyScript = 'BODY_SCRIPT',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
-  HeadScript = 'HEAD_SCRIPT',
   MailProviderName = 'MAIL_PROVIDER_NAME',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
@@ -2212,6 +2320,18 @@ export type TwitterTweetBlock = {
   userID: Scalars['String'];
 };
 
+export type UpdateBannerInput = {
+  actions?: InputMaybe<Array<CreateBannerActionInput>>;
+  active: Scalars['Boolean'];
+  cta?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  imageId?: InputMaybe<Scalars['String']>;
+  showOnArticles: Scalars['Boolean'];
+  showOnPages?: InputMaybe<Array<PageModelInput>>;
+  text: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type UploadImageInput = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
@@ -2390,6 +2510,20 @@ export type AuthorListQueryVariables = Exact<{
 
 export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', id: string, name: string, jobTitle?: string | null, slug: string, bio?: Node[] | null, url: string, createdAt: string, modifiedAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null, main: boolean, url: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
+export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null };
+
+export type FullBannerActionFragment = { __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole };
+
+export type PageRefFragment = { __typename?: 'PageModel', id: string };
+
+export type PrimaryBannerQueryVariables = Exact<{
+  documentType: BannerDocumentType;
+  documentId: Scalars['ID'];
+}>;
+
+
+export type PrimaryBannerQuery = { __typename?: 'Query', primaryBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null } };
+
 type BlockWithoutTeaser_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock', blockStyle?: string | null, zoneID: string };
 
 type BlockWithoutTeaser_CommentBlock_Fragment = { __typename: 'CommentBlock' };
@@ -2509,7 +2643,7 @@ export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_C
 export type ChallengeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ChallengeQuery = { __typename?: 'Query', challenge: { __typename?: 'Challenge', challengeID?: string | null, challenge?: string | null, validUntil?: string | null } };
+export type ChallengeQuery = { __typename?: 'Query', challenge: { __typename?: 'Challenge', type?: CaptchaType | null, challengeID?: string | null, challenge?: string | null, validUntil?: string | null } };
 
 export type FullCommentRatingSystemAnswerFragment = { __typename?: 'CommentRatingSystemAnswer', id: string, ratingSystemId: string, answer?: string | null, type: RatingSystemType };
 
@@ -2590,14 +2724,6 @@ export type UploadImageMutationVariables = Exact<{
 
 
 export type UploadImageMutation = { __typename?: 'Mutation', uploadUserProfileImage?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, email: string, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }>, oauth2Accounts: Array<{ __typename?: 'OAuth2Account', type: string, provider: string, scope: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } | null };
-
-export type RevenueQueryVariables = Exact<{
-  start: Scalars['DateTime'];
-  end?: InputMaybe<Scalars['DateTime']>;
-}>;
-
-
-export type RevenueQuery = { __typename?: 'Query', revenue: Array<{ __typename?: 'DashboardInvoice', amount: number, paidAt?: string | null, memberPlan?: string | null }> };
 
 export type FullPaymentMethodFragment = { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
@@ -2696,6 +2822,22 @@ export type MemberPlanListQueryVariables = Exact<{
 
 
 export type MemberPlanListQuery = { __typename?: 'Query', memberPlans: { __typename?: 'MemberPlanConnection', totalCount: number, nodes: Array<{ __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: Node[] | null, amountPerMonthMin: number, currency: Currency, extendable: boolean, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type RevenueQueryVariables = Exact<{
+  start: Scalars['DateTime'];
+  end?: InputMaybe<Scalars['DateTime']>;
+}>;
+
+
+export type RevenueQuery = { __typename?: 'Query', revenue: Array<{ __typename?: 'DashboardInvoice', amount: number, paidAt?: string | null, memberPlan?: string | null }> };
+
+export type NewSubscribersQueryVariables = Exact<{
+  start: Scalars['DateTime'];
+  end?: InputMaybe<Scalars['DateTime']>;
+}>;
+
+
+export type NewSubscribersQuery = { __typename?: 'Query', newSubscribers: Array<{ __typename?: 'DashboardSubscription', monthlyAmount: number, memberPlan: string }> };
 
 export type FullNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename?: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', url: string } | null } | { __typename?: 'ExternalNavigationLink', label: string, url: string } | { __typename?: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', url: string } | null }> };
 
@@ -3392,6 +3534,40 @@ export const FullArticleFragmentDoc = gql`
 }
     ${ArticleWithoutBlocksFragmentDoc}
 ${FullBlockFragmentDoc}`;
+export const PageRefFragmentDoc = gql`
+    fragment PageRef on PageModel {
+  id
+}
+    `;
+export const FullBannerActionFragmentDoc = gql`
+    fragment FullBannerAction on BannerAction {
+  id
+  label
+  url
+  style
+  role
+}
+    `;
+export const FullBannerFragmentDoc = gql`
+    fragment FullBanner on Banner {
+  id
+  title
+  text
+  cta
+  showOnArticles
+  showOnPages {
+    ...PageRef
+  }
+  image {
+    ...FullImage
+  }
+  actions {
+    ...FullBannerAction
+  }
+}
+    ${PageRefFragmentDoc}
+${FullImageFragmentDoc}
+${FullBannerActionFragmentDoc}`;
 export const FullAddressFragmentDoc = gql`
     fragment FullAddress on UserAddress {
   company
@@ -3990,9 +4166,46 @@ export function useAuthorListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type AuthorListQueryHookResult = ReturnType<typeof useAuthorListQuery>;
 export type AuthorListLazyQueryHookResult = ReturnType<typeof useAuthorListLazyQuery>;
 export type AuthorListQueryResult = Apollo.QueryResult<AuthorListQuery, AuthorListQueryVariables>;
+export const PrimaryBannerDocument = gql`
+    query PrimaryBanner($documentType: BannerDocumentType!, $documentId: ID!) {
+  primaryBanner(documentType: $documentType, documentId: $documentId) {
+    ...FullBanner
+  }
+}
+    ${FullBannerFragmentDoc}`;
+
+/**
+ * __usePrimaryBannerQuery__
+ *
+ * To run a query within a React component, call `usePrimaryBannerQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePrimaryBannerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePrimaryBannerQuery({
+ *   variables: {
+ *      documentType: // value for 'documentType'
+ *      documentId: // value for 'documentId'
+ *   },
+ * });
+ */
+export function usePrimaryBannerQuery(baseOptions: Apollo.QueryHookOptions<PrimaryBannerQuery, PrimaryBannerQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PrimaryBannerQuery, PrimaryBannerQueryVariables>(PrimaryBannerDocument, options);
+      }
+export function usePrimaryBannerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PrimaryBannerQuery, PrimaryBannerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PrimaryBannerQuery, PrimaryBannerQueryVariables>(PrimaryBannerDocument, options);
+        }
+export type PrimaryBannerQueryHookResult = ReturnType<typeof usePrimaryBannerQuery>;
+export type PrimaryBannerLazyQueryHookResult = ReturnType<typeof usePrimaryBannerLazyQuery>;
+export type PrimaryBannerQueryResult = Apollo.QueryResult<PrimaryBannerQuery, PrimaryBannerQueryVariables>;
 export const ChallengeDocument = gql`
     query Challenge {
   challenge {
+    type
     challengeID
     challenge
     validUntil
@@ -4292,44 +4505,6 @@ export function useUploadImageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMutation>;
 export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
 export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
-export const RevenueDocument = gql`
-    query Revenue($start: DateTime!, $end: DateTime) {
-  revenue(start: $start, end: $end) {
-    amount
-    paidAt
-    memberPlan
-  }
-}
-    `;
-
-/**
- * __useRevenueQuery__
- *
- * To run a query within a React component, call `useRevenueQuery` and pass it any options that fit your needs.
- * When your component renders, `useRevenueQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useRevenueQuery({
- *   variables: {
- *      start: // value for 'start'
- *      end: // value for 'end'
- *   },
- * });
- */
-export function useRevenueQuery(baseOptions: Apollo.QueryHookOptions<RevenueQuery, RevenueQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RevenueQuery, RevenueQueryVariables>(RevenueDocument, options);
-      }
-export function useRevenueLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RevenueQuery, RevenueQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RevenueQuery, RevenueQueryVariables>(RevenueDocument, options);
-        }
-export type RevenueQueryHookResult = ReturnType<typeof useRevenueQuery>;
-export type RevenueLazyQueryHookResult = ReturnType<typeof useRevenueLazyQuery>;
-export type RevenueQueryResult = Apollo.QueryResult<RevenueQuery, RevenueQueryVariables>;
 export const SubscribeDocument = gql`
     mutation Subscribe($memberPlanId: ID, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: ID, $paymentMethodSlug: Slug, $subscriptionProperties: [PublicPropertiesInput!], $successURL: String, $failureURL: String, $deactivateSubscriptionId: ID) {
   createSubscription(
@@ -4694,6 +4869,81 @@ export function useMemberPlanListLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type MemberPlanListQueryHookResult = ReturnType<typeof useMemberPlanListQuery>;
 export type MemberPlanListLazyQueryHookResult = ReturnType<typeof useMemberPlanListLazyQuery>;
 export type MemberPlanListQueryResult = Apollo.QueryResult<MemberPlanListQuery, MemberPlanListQueryVariables>;
+export const RevenueDocument = gql`
+    query Revenue($start: DateTime!, $end: DateTime) {
+  revenue(start: $start, end: $end) {
+    amount
+    paidAt
+    memberPlan
+  }
+}
+    `;
+
+/**
+ * __useRevenueQuery__
+ *
+ * To run a query within a React component, call `useRevenueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRevenueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRevenueQuery({
+ *   variables: {
+ *      start: // value for 'start'
+ *      end: // value for 'end'
+ *   },
+ * });
+ */
+export function useRevenueQuery(baseOptions: Apollo.QueryHookOptions<RevenueQuery, RevenueQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RevenueQuery, RevenueQueryVariables>(RevenueDocument, options);
+      }
+export function useRevenueLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RevenueQuery, RevenueQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RevenueQuery, RevenueQueryVariables>(RevenueDocument, options);
+        }
+export type RevenueQueryHookResult = ReturnType<typeof useRevenueQuery>;
+export type RevenueLazyQueryHookResult = ReturnType<typeof useRevenueLazyQuery>;
+export type RevenueQueryResult = Apollo.QueryResult<RevenueQuery, RevenueQueryVariables>;
+export const NewSubscribersDocument = gql`
+    query NewSubscribers($start: DateTime!, $end: DateTime) {
+  newSubscribers(start: $start, end: $end) {
+    monthlyAmount
+    memberPlan
+  }
+}
+    `;
+
+/**
+ * __useNewSubscribersQuery__
+ *
+ * To run a query within a React component, call `useNewSubscribersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNewSubscribersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewSubscribersQuery({
+ *   variables: {
+ *      start: // value for 'start'
+ *      end: // value for 'end'
+ *   },
+ * });
+ */
+export function useNewSubscribersQuery(baseOptions: Apollo.QueryHookOptions<NewSubscribersQuery, NewSubscribersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NewSubscribersQuery, NewSubscribersQueryVariables>(NewSubscribersDocument, options);
+      }
+export function useNewSubscribersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewSubscribersQuery, NewSubscribersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NewSubscribersQuery, NewSubscribersQueryVariables>(NewSubscribersDocument, options);
+        }
+export type NewSubscribersQueryHookResult = ReturnType<typeof useNewSubscribersQuery>;
+export type NewSubscribersLazyQueryHookResult = ReturnType<typeof useNewSubscribersLazyQuery>;
+export type NewSubscribersQueryResult = Apollo.QueryResult<NewSubscribersQuery, NewSubscribersQueryVariables>;
 export const NavigationListDocument = gql`
     query NavigationList {
   navigations {
