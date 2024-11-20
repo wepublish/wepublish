@@ -1,17 +1,23 @@
 export type Challenge = {
+  type: CaptchaType
   challengeID: string
   challenge: string
   validUntil: Date
 }
 export type ChallengeValidationProps = {
-  challengeID: string
-  solution: number
+  challengeID?: string
+  solution: number | string
 }
 
 export type ChallengeValidationReturn = {
   result: string
   message: string
   valid: boolean
+}
+
+export enum CaptchaType {
+  Algebraic = 'Algebraic',
+  CfTurnstile = 'CfTurnstile'
 }
 
 export interface ChallengeProvider {

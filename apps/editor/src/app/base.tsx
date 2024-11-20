@@ -33,6 +33,7 @@ import {
   MdSell,
   MdSettings,
   MdSettingsInputAntenna,
+  MdSignpost,
   MdStar,
   MdStyle,
   MdTranslate,
@@ -459,6 +460,22 @@ export function Base({children}: BaseProps) {
                     icon={<MdLocationPin />}
                     active={path === 'navigations'}>
                     {t('navbar.navigations')}
+                  </Nav.Item>
+                </PermissionControl>
+
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_BANNERS',
+                    'CAN_GET_BANNER',
+                    'CAN_CREATE_BANNER',
+                    'CAN_DELETE_BANNER'
+                  ]}>
+                  <Nav.Item
+                    as={NavLink}
+                    href="/banners"
+                    icon={<MdSignpost />}
+                    active={path === 'banners'}>
+                    {t('navbar.banners')}
                   </Nav.Item>
                 </PermissionControl>
 

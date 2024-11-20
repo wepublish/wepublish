@@ -9,7 +9,8 @@ import {
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   StripeCheckoutPaymentProvider,
-  StripePaymentProvider
+  StripePaymentProvider,
+  MolliePaymentProvider
 } from '@wepublish/payment/api'
 import bodyParser from 'body-parser'
 import {ConfigModule, ConfigService} from '@nestjs/config'
@@ -97,6 +98,19 @@ export function registerPaymentsModule(): DynamicModule {
             incomingRequestHandler: bodyParser.json(),
             webhookSecret: config.getOrThrow('PAYREXX_WEBHOOK_SECRET'),
             prisma
+          })
+        )
+      }
+      if (config.get('MOLLIE_API_SECRET')) {
+        paymentProviders.push(
+          new MolliePaymentProvider({
+            id: 'mollie',
+            name: 'Mollie',
+            offSessionPayments: true,
+            incomingRequestHandler: bodyParser.urlencoded({extended: true}),
+            apiKey: config.getOrThrow('MOLLIE_API_SECRET'),
+            webhookEndpointSecret: 'secret',
+            apiBaseUrl: 'https://wepublish.ch'
           })
         )
       }

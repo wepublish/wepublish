@@ -31,6 +31,38 @@ type Article {
   id: ID!
 }
 
+type Banner {
+  actions: [BannerAction!]
+  active: Boolean!
+  cta: String
+  id: ID!
+  image: Image
+  imageId: String
+  showOnArticles: Boolean!
+  showOnPages: [PageModel!]
+  text: String!
+  title: String!
+}
+
+type BannerAction {
+  id: ID!
+  label: String!
+  role: BannerActionRole!
+  style: String!
+  url: String!
+}
+
+enum BannerActionRole {
+  CANCEL
+  OTHER
+  PRIMARY
+}
+
+enum BannerDocumentType {
+  ARTICLE
+  PAGE
+}
+
 type BlockStyle {
   blocks: [BlockType!]!
   createdAt: DateTime!
@@ -73,6 +105,24 @@ input ConsentFilter {
   slug: String
 }
 
+input CreateBannerActionInput {
+  label: String!
+  role: BannerActionRole!
+  style: String!
+  url: String!
+}
+
+input CreateBannerInput {
+  actions: [CreateBannerActionInput!]
+  active: Boolean!
+  cta: String
+  imageId: String
+  showOnArticles: Boolean!
+  showOnPages: [PageModelInput!]
+  text: String!
+  title: String!
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -95,6 +145,10 @@ type DashboardSubscription {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type DeletePollVotesResult {
+  count: Int!
+}
 
 type Event {
   createdAt: DateTime!
@@ -233,6 +287,8 @@ type MemberPlan {
 }
 
 type Mutation {
+  createBanner(input: CreateBannerInput!): Banner!
+
   """Creates a new block style."""
   createBlockStyle(blocks: [BlockType!]!, name: String!): BlockStyle!
 
@@ -250,6 +306,7 @@ type Mutation {
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
+  deleteBanner(id: String!): Boolean
 
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
@@ -260,8 +317,8 @@ type Mutation {
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
 
-  """Delete poll vote"""
-  deletePollVote(id: ID!): PollVote!
+  """Delete poll votes"""
+  deletePollVotes(ids: [ID!]!): DeletePollVotesResult!
 
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
@@ -278,6 +335,7 @@ type Mutation {
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
+  updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
   updateBlockStyle(blocks: [BlockType!], id: String!, name: String): BlockStyle!
@@ -313,6 +371,14 @@ type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
+}
+
+type PageModel {
+  id: ID!
+}
+
+input PageModelInput {
+  id: ID!
 }
 
 type PaginatedEvents {
@@ -383,6 +449,8 @@ enum PollVoteSort {
 type Query {
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
+  banner(id: String!): Banner!
+  banners(skip: Int!, take: Int!): [Banner!]!
 
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
@@ -435,6 +503,7 @@ type Query {
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: ID, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
+  primaryBanner(documentId: ID!, documentType: BannerDocumentType!): Banner!
   provider: MailProviderModel!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
@@ -485,9 +554,7 @@ enum SettingName {
   ALLOW_GUEST_COMMENTING
   ALLOW_GUEST_COMMENT_RATING
   ALLOW_GUEST_POLL_VOTING
-  BODY_SCRIPT
   COMMENT_CHAR_LIMIT
-  HEAD_SCRIPT
   MAIL_PROVIDER_NAME
   MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC
   MAKE_EXPECTED_REVENUE_API_PUBLIC
@@ -564,6 +631,18 @@ type SystemMailModel {
 
 type Tag {
   id: ID!
+}
+
+input UpdateBannerInput {
+  actions: [CreateBannerActionInput!]
+  active: Boolean!
+  cta: String
+  id: ID!
+  imageId: String
+  showOnArticles: Boolean!
+  showOnPages: [PageModelInput!]
+  text: String!
+  title: String!
 }
 
 type User {

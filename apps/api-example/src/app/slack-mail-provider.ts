@@ -25,7 +25,9 @@ export class SlackMailProvider extends BaseMailProvider {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: `*From*: ${props.replyToAddress}\n*To*: ${props.recipient}\n*Subject*: ${props.subject}\n\`\`\`${props.message}\`\`\``
+            text: `*From*: ${props.replyToAddress}\n*To*: ${props.recipient}\n*Template*: ${
+              props.template
+            }\n\`\`\`${JSON.stringify(props.templateData)}\`\`\``
           }
         }
       ]

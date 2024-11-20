@@ -86,27 +86,12 @@ TBD
 
 ## Demo (Stable)
 
-- [Editor](https://editor.demo.wepublish.media)
+- [Editor](https://editor-demo.wepublish.media)
   - username: `dev@wepublish.ch`
   - password: `123`
 - [Website](https://demo.wepublish.media)
-- [API](https://api.demo.wepublish.media)
-
-## Preview (Next)
-
-- [Editor](https://editor.next.wepublish.media)
-  - username: `admin@wepublish.ch`
-  - password: `123`
-- [Website](https://next.wepublish.media)
-- [API](https://api.next.wepublish.media)
-
-## Development (Master)
-
-- [Editor](https://editor.dev.wepublish.media)
-  - username: `admin@wepublish.ch`
-  - password: `123`
-- [Website](https://dev.wepublish.media)
-- [API](https://api.dev.wepublish.media)
+- [API V1](https://api-demo.wepublish.media/v1)
+- [API Admin](https://api-demo.wepublish.media/v1/admin)
 
 ## Packages
 

@@ -1,3 +1,4 @@
+import {Box} from '@mui/material'
 import Head from 'next/head'
 import {JSX} from 'react'
 
@@ -9,10 +10,12 @@ interface BriefingPageProps {
   ready: JSX.Element
   delivery: JSX.Element
   subscribe: JSX.Element
+  independent: JSX.Element
   mainBackground: string
   leadColor: string
   headerBackgroundImage: string
-  readyBackgroundImage: string
+  readyBackgroundImage?: string
+  readyBackgroundColor: string
   independentBackgroundImage: string
   footerBackgroundImage: string
   blobBackground: string
@@ -35,11 +38,10 @@ export default function BriefingPage(props: BriefingPageProps) {
       </Head>
 
       <header className="header" style={{backgroundImage: `url(${props.headerBackgroundImage})`}}>
-        <img className="header__logo" src="/logo_white.svg" />
-        <div className="header__content">
+        <Box display={'flex'} flexDirection={'column'} gap={2} className="header__content">
           <h1 className="header__title">{props.title}</h1>
           <h2 className="header__subtitle">{props.subtitle}</h2>
-        </div>
+        </Box>
       </header>
       <main className="main" style={{backgroundColor: props.mainBackground}}>
         <div className="pinkblob pinkblob--topleft" style={{background: props.blobBackground}} />
@@ -57,17 +59,17 @@ export default function BriefingPage(props: BriefingPageProps) {
         />
         <section
           className="readytext"
-          style={{backgroundImage: `url(${props.readyBackgroundImage})`}}>
+          style={{
+            background: props.readyBackgroundImage
+              ? `url(${props.readyBackgroundImage})`
+              : props.readyBackgroundColor
+          }}>
           <div>{props.ready}</div>
         </section>
         <section
           className="independenttext"
           style={{backgroundImage: `url(${props.independentBackgroundImage})`}}>
-          <p>
-            <span className="independenttext--independent">Unabhängig und</span>
-            <br />
-            <span className="independenttext--free">kostenlos</span>
-          </p>
+          <p>{props.independent}</p>
         </section>
         <section className="deliverytext" style={{background: props.deliveryBackground}}>
           <div>{props.delivery}</div>

@@ -7,36 +7,37 @@ import {
   AgendaBaselService,
   AuthenticationModule,
   BexioPaymentProvider,
+  BannerApiModule,
   ConsentModule,
-  StatsModule,
   DashboardModule,
+  EventModule,
   EventsImportModule,
+  GoogleAnalyticsModule,
+  GoogleAnalyticsService,
   GraphQLRichText,
+  HealthModule,
+  HotAndTrendingModule,
+  KarmaMediaAdapter,
   KulturZueriService,
   MailchimpMailProvider,
   MailgunMailProvider,
   MailsModule,
   MediaAdapterService,
   MembershipModule,
+  MolliePaymentProvider,
+  NeverChargePaymentProvider,
   NovaMediaAdapter,
   PaymentProvider,
   PaymentsModule,
+  PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   PermissionModule,
   SettingModule,
+  StatsModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  PayrexxFactory,
-  HealthModule,
-  NeverChargePaymentProvider,
-  KarmaMediaAdapter,
-  ScriptsModule,
-  SystemInfoModule,
-  HotAndTrendingModule,
-  GoogleAnalyticsService,
-  GoogleAnalyticsModule,
-  EventModule
+  SystemInfoModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -221,6 +222,19 @@ import {PollModule} from '@wepublish/poll/api'
                   prisma
                 })
               )
+            } else if (paymentProvider.type === 'mollie') {
+              paymentProviders.push(
+                new MolliePaymentProvider({
+                  id: paymentProvider.id,
+                  name: paymentProvider.name,
+                  offSessionPayments: paymentProvider.offSessionPayments,
+                  apiKey: paymentProvider.apiKey,
+                  webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
+                  apiBaseUrl: paymentProvider.apiBaseUrl,
+                  incomingRequestHandler: bodyParser.urlencoded({extended: true}),
+                  methods: paymentProvider.methods
+                })
+              )
             } else if (paymentProvider.type === 'no-charge') {
               paymentProviders.push(
                 new NeverChargePaymentProvider({
@@ -249,7 +263,6 @@ import {PollModule} from '@wepublish/poll/api'
     ConsentModule,
     StatsModule,
     SettingModule,
-    ScriptsModule,
     EventModule,
     BlockStylesModule,
     EventsImportModule.registerAsync({
@@ -282,7 +295,8 @@ import {PollModule} from '@wepublish/poll/api'
       ],
       useFactory: (datasource: GoogleAnalyticsService) => datasource,
       inject: [GoogleAnalyticsService]
-    })
+    }),
+    BannerApiModule
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [

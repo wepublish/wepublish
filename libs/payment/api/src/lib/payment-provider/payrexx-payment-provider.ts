@@ -12,7 +12,6 @@ import {logger} from '@wepublish/utils/api'
 import {PaymentState} from '@prisma/client'
 import {Gateway, GatewayClient, GatewayStatus} from '../payrexx/gateway-client'
 import {Transaction, TransactionClient, TransactionStatus} from '../payrexx/transaction-client'
-import {timingSafeEqual} from 'crypto'
 
 export interface PayrexxPaymentProviderProps extends PaymentProviderProps {
   gatewayClient: GatewayClient
@@ -21,14 +20,6 @@ export interface PayrexxPaymentProviderProps extends PaymentProviderProps {
   psp: number[]
   pm: string[]
   vatRate: number
-}
-
-function timeConstantCompare(a: string, b: string): boolean {
-  try {
-    return timingSafeEqual(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'))
-  } catch {
-    return false
-  }
 }
 
 export class PayrexxPaymentProvider extends BasePaymentProvider {
@@ -52,10 +43,19 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
     const apiKey = props.req.query?.apiKey as string
 
-    if (!timeConstantCompare(apiKey, this.webhookApiKey)) {
+    if (!this.timeConstantCompare(apiKey, this.webhookApiKey)) {
       return {
         status: 403,
         message: 'Invalid Api Key'
+      }
+    }
+
+    const contentType = props.req.headers['content-type']
+    if (contentType !== 'application/json' || typeof props.req.body === 'string') {
+      return {
+        status: 415,
+        message:
+          'Request does not contain valid json. Is Payrexx wrongly configured to send a PHP-Post?'
       }
     }
 

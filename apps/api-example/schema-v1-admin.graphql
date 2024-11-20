@@ -270,6 +270,7 @@ type MemberPlan {
   maxCount: Int
   extendable: Boolean!
   availablePaymentMethods: [AvailablePaymentMethod!]!
+  migrateToTargetPaymentMethodID: ID
 }
 
 type AvailablePaymentMethod {
@@ -1195,8 +1196,6 @@ enum SettingName {
   makeRevenueApiPublic
   commentCharLimit
   allowCommentEditing
-  headScript
-  bodyScript
 }
 
 scalar GraphQLSettingValueType
@@ -1926,6 +1925,7 @@ input MemberPlanInput {
   extendable: Boolean!
   maxCount: Int
   availablePaymentMethods: [AvailablePaymentMethodInput!]!
+  migrateToTargetPaymentMethodID: ID
 }
 
 input AvailablePaymentMethodInput {

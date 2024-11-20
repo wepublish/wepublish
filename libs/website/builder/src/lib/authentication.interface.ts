@@ -12,6 +12,10 @@ import {BuilderUserFormFields} from './user.interface'
 export type BuilderLoginFormProps = {
   className?: string
 
+  defaults?: Partial<{
+    email: string
+  }>
+
   loginWithEmail: Pick<MutationResult<LoginWithEmailMutation>, 'data' | 'loading' | 'error'>
   onSubmitLoginWithEmail: (email: string) => void
 
