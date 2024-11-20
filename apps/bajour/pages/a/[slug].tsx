@@ -83,7 +83,8 @@ export default function ArticleBySlugIdOrToken() {
       <Container>
         <ArticleContainer {...containerProps} />
 
-        {!isFDT && (
+        {/* Waiting for Samuel H. from Bajour to confirm - 2024-11-20
+         !isFDT && (
           <ArticleWrapper>
             <H5 component={'h2'} css={uppercase}>
               Artikel Charts
@@ -91,7 +92,7 @@ export default function ArticleBySlugIdOrToken() {
 
             <ArticleCharts />
           </ArticleWrapper>
-        )}
+        ) */}
 
         <BriefingNewsletter />
 
