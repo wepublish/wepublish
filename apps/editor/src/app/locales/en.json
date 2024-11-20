@@ -221,9 +221,9 @@
         "delete": "Delete banner"
       },
       "form": {
-        "title": "Title",
-        "text": "Text",
-        "cta": "Call to action",
+        "title": "Title (maximized only)",
+        "text": "Text (maximized only)",
+        "cta": "Call to action (minimized only)",
         "active": "Active",
         "showOnArticles": "Display on articles",
         "showOnPages": "Display on those pages",

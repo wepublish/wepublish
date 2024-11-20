@@ -68,7 +68,7 @@ type CustomAppProps = AppProps<{
 
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
-  z-index: 11;
+  z-index: 12;
 `
 
 const Footer = styled(FooterContainer)`
