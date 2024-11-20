@@ -19,7 +19,6 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
-import {ArticleCharts} from '../../src/components/article-charts/article-charts'
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
 import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
 import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
