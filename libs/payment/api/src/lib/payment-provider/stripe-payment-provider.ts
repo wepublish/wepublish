@@ -160,7 +160,9 @@ export class StripePaymentProvider extends BasePaymentProvider {
               payment_method: paymentMethodID,
               payment_method_types: this.methods
             }
-          : {}),
+          : {
+              payment_method_types: this.methods
+            }),
         currency: currency.toLowerCase(),
         // description: props.invoice.description, TODO: convert to text
         ...(saveCustomer ? {setup_future_usage: 'off_session'} : {}),
