@@ -15,6 +15,7 @@ import {PaymentState} from '@prisma/client'
 export interface StripePaymentProviderProps extends PaymentProviderProps {
   secretKey: string
   webhookEndpointSecret: string
+  methods: Stripe.Checkout.SessionCreateParams.PaymentMethodType[]
 }
 
 interface CreateStripeCustomerProps {
@@ -41,9 +42,11 @@ function mapStripeEventToPaymentStatus(event: string): PaymentState | null {
 export class StripePaymentProvider extends BasePaymentProvider {
   readonly stripe: Stripe
   readonly webhookEndpointSecret: string
+  readonly methods: Stripe.Checkout.SessionCreateParams.PaymentMethodType[]
 
   constructor(props: StripePaymentProviderProps) {
     super(props)
+    this.methods = props.methods
     this.stripe = new Stripe(props.secretKey, {
       apiVersion: '2020-08-27'
     })
@@ -155,7 +158,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
               customer: customerID,
               off_session: true,
               payment_method: paymentMethodID,
-              payment_method_types: ['card']
+              payment_method_types: this.methods
             }
           : {}),
         currency: currency.toLowerCase(),
