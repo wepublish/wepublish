@@ -148,7 +148,8 @@ import {PollModule} from '@wepublish/poll/api'
                   offSessionPayments: paymentProvider.offSessionPayments,
                   secretKey: paymentProvider.secretKey,
                   webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
-                  incomingRequestHandler: bodyParser.raw({type: 'application/json'})
+                  incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
+                  methods: paymentProvider.methods
                 })
               )
             } else if (paymentProvider.type === 'stripe') {
@@ -159,7 +160,8 @@ import {PollModule} from '@wepublish/poll/api'
                   offSessionPayments: paymentProvider.offSessionPayments,
                   secretKey: paymentProvider.secretKey,
                   webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
-                  incomingRequestHandler: bodyParser.raw({type: 'application/json'})
+                  incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
+                  methods: paymentProvider.methods
                 })
               )
             } else if (paymentProvider.type === 'payrexx') {
