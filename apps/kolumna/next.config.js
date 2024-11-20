@@ -14,7 +14,8 @@ const nextConfig = {
   ...wepNextConfig,
   publicRuntimeConfig: {
     env: {
-      API_URL: process.env.API_URL || ''
+      API_URL: process.env.API_URL || '',
+      STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || ''
     }
   }
 }

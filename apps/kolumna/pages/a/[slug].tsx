@@ -1,3 +1,4 @@
+import {ThemeProvider} from '@mui/material'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -11,6 +12,8 @@ import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
+
+import {articleTheme} from '../../src/theme'
 
 export default function ArticleBySlugIdOrToken() {
   const {
@@ -35,7 +38,9 @@ export default function ArticleBySlugIdOrToken() {
 
   return (
     <>
-      <ArticleContainer {...containerProps} />
+      <ThemeProvider theme={articleTheme}>
+        <ArticleContainer {...containerProps} />
+      </ThemeProvider>
 
       {data?.article && (
         <ArticleWrapper>

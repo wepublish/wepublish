@@ -5,6 +5,7 @@ import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/web
 import {
   ApiV1,
   FooterContainer,
+  ImageWrapper,
   NavbarContainer,
   WebsiteBuilderProvider,
   WebsiteProvider
@@ -86,6 +87,21 @@ const LogoWrapper = styled(Logo)`
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
+
+  ${ImageWrapper} {
+    padding-top: ${({theme}) => theme.spacing(0.5)};
+    padding-bottom: ${({theme}) => theme.spacing(0.5)};
+
+    ${({theme}) => theme.breakpoints.up('md')} {
+      padding-top: ${({theme}) => theme.spacing(1)};
+      padding-bottom: ${({theme}) => theme.spacing(1)};
+    }
+
+    ${({theme}) => theme.breakpoints.up('lg')} {
+      padding-top: ${({theme}) => theme.spacing(1.5)};
+      padding-bottom: ${({theme}) => theme.spacing(1.5)};
+    }
+  }
 `
 
 const dateFormatter = (date: Date, includeTime = true) =>
@@ -146,6 +162,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                     slug="main"
                     headerSlug="header"
                     iconSlug="icons"
+                    loginUrl={''}
                   />
                 </ThemeProvider>
 

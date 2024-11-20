@@ -238,7 +238,7 @@ model Image {
   events         Event[]
   paymentMethods PaymentMethod[]
 
-  banners        Banner[]
+  banners Banner[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -611,7 +611,7 @@ model Page {
   navigations NavigationLink[]
   tags        TaggedPages[]
 
-  banners     Banner[]
+  banners Banner[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -1236,46 +1236,46 @@ model BlockStyle {
 }
 
 model Banner {
-  id                  String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt           DateTime         @default(now())
-  modifiedAt          DateTime         @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
 
-  title               String
-  text                String
-  cta                 String?
+  title String
+  text  String
+  cta   String?
 
-  imageId             String?
-  image               Image?          @relation(fields: [imageId], references: [id])
+  imageId String?
+  image   Image?  @relation(fields: [imageId], references: [id])
 
-  active              Boolean         @default(true)
+  active Boolean @default(true)
 
-  showOnArticles      Boolean         @default(true)
-  showOnPages         Page[]  
+  showOnArticles Boolean @default(true)
+  showOnPages    Page[]
 
-  actions             BannerAction[]
+  actions BannerAction[]
 
   @@map("banners")
 }
 
 model BannerAction {
-  id                  String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt           DateTime        @default(now())
-  modifiedAt          DateTime        @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
 
-  banner              Banner          @relation(fields: [bannerId], references: [id], onDelete: Cascade)
-  bannerId            String          @db.Uuid
+  banner   Banner @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+  bannerId String @db.Uuid
 
-  label               String
-  url                 String
+  label String
+  url   String
 
-  style               String          @default("")
-  role                BannerActionRole @default(OTHER)
+  style String           @default("")
+  role  BannerActionRole @default(OTHER)
 
   @@map("banner_actions")
 }
 
 enum BannerActionRole {
-  PRIMARY             @map("primary")
-  CANCEL              @map("cancel")
-  OTHER               @map("other")
+  PRIMARY @map("primary")
+  CANCEL  @map("cancel")
+  OTHER   @map("other")
 }
