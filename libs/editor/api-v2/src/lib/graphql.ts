@@ -426,6 +426,11 @@ export type DashboardSubscription = {
   startsAt: Scalars['DateTime'];
 };
 
+export type DeletePollVotesResult = {
+  __typename?: 'DeletePollVotesResult';
+  count: Scalars['Int'];
+};
+
 export type EmbedBlock = {
   __typename?: 'EmbedBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -876,8 +881,8 @@ export type Mutation = {
   deleteConsent: Consent;
   /** Deletes an existing event. */
   deleteEvent: Event;
-  /** Delete poll vote */
-  deletePollVote: PollVote;
+  /** Delete poll votes */
+  deletePollVotes: DeletePollVotesResult;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -1082,8 +1087,8 @@ export type MutationDeleteEventArgs = {
 };
 
 
-export type MutationDeletePollVoteArgs = {
-  id: Scalars['ID'];
+export type MutationDeletePollVotesArgs = {
+  ids: Array<Scalars['ID']>;
 };
 
 
@@ -2678,12 +2683,12 @@ export type PollVoteListQueryVariables = Exact<{
 
 export type PollVoteListQuery = { __typename?: 'Query', pollVotes: { __typename?: 'PaginatedPollVotes', totalCount: number, nodes: Array<{ __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
-export type DeletePollVoteMutationVariables = Exact<{
-  id: Scalars['ID'];
+export type DeletePollVotesMutationVariables = Exact<{
+  ids: Array<Scalars['ID']> | Scalars['ID'];
 }>;
 
 
-export type DeletePollVoteMutation = { __typename?: 'Mutation', deletePollVote: { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } } };
+export type DeletePollVotesMutation = { __typename?: 'Mutation', deletePollVotes: { __typename?: 'DeletePollVotesResult', count: number } };
 
 export type SettingsListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4028,39 +4033,39 @@ export function usePollVoteListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type PollVoteListQueryHookResult = ReturnType<typeof usePollVoteListQuery>;
 export type PollVoteListLazyQueryHookResult = ReturnType<typeof usePollVoteListLazyQuery>;
 export type PollVoteListQueryResult = Apollo.QueryResult<PollVoteListQuery, PollVoteListQueryVariables>;
-export const DeletePollVoteDocument = gql`
-    mutation DeletePollVote($id: ID!) {
-  deletePollVote(id: $id) {
-    ...FullPollVoteWithAnswer
+export const DeletePollVotesDocument = gql`
+    mutation DeletePollVotes($ids: [ID!]!) {
+  deletePollVotes(ids: $ids) {
+    count
   }
 }
-    ${FullPollVoteWithAnswerFragmentDoc}`;
-export type DeletePollVoteMutationFn = Apollo.MutationFunction<DeletePollVoteMutation, DeletePollVoteMutationVariables>;
+    `;
+export type DeletePollVotesMutationFn = Apollo.MutationFunction<DeletePollVotesMutation, DeletePollVotesMutationVariables>;
 
 /**
- * __useDeletePollVoteMutation__
+ * __useDeletePollVotesMutation__
  *
- * To run a mutation, you first call `useDeletePollVoteMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeletePollVoteMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useDeletePollVotesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePollVotesMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [deletePollVoteMutation, { data, loading, error }] = useDeletePollVoteMutation({
+ * const [deletePollVotesMutation, { data, loading, error }] = useDeletePollVotesMutation({
  *   variables: {
- *      id: // value for 'id'
+ *      ids: // value for 'ids'
  *   },
  * });
  */
-export function useDeletePollVoteMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollVoteMutation, DeletePollVoteMutationVariables>) {
+export function useDeletePollVotesMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollVotesMutation, DeletePollVotesMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePollVoteMutation, DeletePollVoteMutationVariables>(DeletePollVoteDocument, options);
+        return Apollo.useMutation<DeletePollVotesMutation, DeletePollVotesMutationVariables>(DeletePollVotesDocument, options);
       }
-export type DeletePollVoteMutationHookResult = ReturnType<typeof useDeletePollVoteMutation>;
-export type DeletePollVoteMutationResult = Apollo.MutationResult<DeletePollVoteMutation>;
-export type DeletePollVoteMutationOptions = Apollo.BaseMutationOptions<DeletePollVoteMutation, DeletePollVoteMutationVariables>;
+export type DeletePollVotesMutationHookResult = ReturnType<typeof useDeletePollVotesMutation>;
+export type DeletePollVotesMutationResult = Apollo.MutationResult<DeletePollVotesMutation>;
+export type DeletePollVotesMutationOptions = Apollo.BaseMutationOptions<DeletePollVotesMutation, DeletePollVotesMutationVariables>;
 export const SettingsListDocument = gql`
     query SettingsList {
   settings {

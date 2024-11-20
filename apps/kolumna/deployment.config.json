@@ -2,17 +2,24 @@
   "website": {
     "production": {
       "deployment": true,
-      "env": {},
+      "custom_domain": "https://kolumna.org",
+      "env": {
+        "STRIPE_PUBLIC_KEY": "pk_live_51QMUsIK61nnLnKc4Wj2xGf74YbbW862LqaRtmbxU83nLzZgdTUyhLFjQrxEA45e9BfQ41284jjTkg0VgFySBFqZq00wVqvV9Q0"
+      },
       "secret_env": []
     },
     "staging": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "STRIPE_PUBLIC_KEY": "pk_test_51QMUsIK61nnLnKc4kCGh00hsCzKmVUy84Y5thBMTnXxcw7TczefsCbf1jeERhIlfOLUXKr8kg83LVEU0EvH4ejhC00UgzbCfx6"
+      },
       "secret_env": []
     },
     "review": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "STRIPE_PUBLIC_KEY": "pk_test_51QMUsIK61nnLnKc4kCGh00hsCzKmVUy84Y5thBMTnXxcw7TczefsCbf1jeERhIlfOLUXKr8kg83LVEU0EvH4ejhC00UgzbCfx6"
+      },
       "secret_env": []
     }
   }

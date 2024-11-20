@@ -426,6 +426,11 @@ export type DashboardSubscription = {
   startsAt: Scalars['DateTime'];
 };
 
+export type DeletePollVotesResult = {
+  __typename?: 'DeletePollVotesResult';
+  count: Scalars['Int'];
+};
+
 export type EmbedBlock = {
   __typename?: 'EmbedBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -876,8 +881,8 @@ export type Mutation = {
   deleteConsent: Consent;
   /** Deletes an existing event. */
   deleteEvent: Event;
-  /** Delete poll vote */
-  deletePollVote: PollVote;
+  /** Delete poll votes */
+  deletePollVotes: DeletePollVotesResult;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -1082,8 +1087,8 @@ export type MutationDeleteEventArgs = {
 };
 
 
-export type MutationDeletePollVoteArgs = {
-  id: Scalars['ID'];
+export type MutationDeletePollVotesArgs = {
+  ids: Array<Scalars['ID']>;
 };
 
 

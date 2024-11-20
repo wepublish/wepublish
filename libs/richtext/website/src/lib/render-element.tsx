@@ -34,13 +34,9 @@ export function RenderElement({
   switch (element.type) {
     case BlockFormat.H1:
       return (
-        <div>
-          <H3 component="h2" {...attributes} gutterBottom>
-            {children}
-          </H3>
-
-          <hr />
-        </div>
+        <H3 component="h2" {...attributes} gutterBottom css={lastChildNoGutter}>
+          {children}
+        </H3>
       )
 
     case BlockFormat.H2:

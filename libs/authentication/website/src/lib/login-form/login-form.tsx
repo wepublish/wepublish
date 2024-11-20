@@ -40,6 +40,7 @@ export function LoginForm({
   onSubmitLoginWithCredentials,
   loginWithEmail,
   onSubmitLoginWithEmail,
+  defaults,
   className
 }: BuilderLoginFormProps) {
   const {
@@ -50,7 +51,7 @@ export function LoginForm({
   const {handleSubmit, control, watch, setValue} = useForm<FormInput>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: '',
+      email: defaults?.email || '',
       password: '',
       requirePassword: false
     },

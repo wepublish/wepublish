@@ -5,6 +5,7 @@ import {
   ChallengeValidationProps,
   ChallengeValidationReturn
 } from './challengeProvider'
+import FormData from 'form-data'
 
 export class CfTurnstile implements ChallengeProvider {
   constructor(private turnstileSecretKey: string, private turnstileSiteKey: string) {}
@@ -29,7 +30,7 @@ export class CfTurnstile implements ChallengeProvider {
 
     const url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
     const result = await fetch(url, {
-      body: formData,
+      body: formData as any,
       method: 'POST'
     })
 
