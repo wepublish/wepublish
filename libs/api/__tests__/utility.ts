@@ -90,7 +90,7 @@ class ExampleURLAdapter implements URLAdapter {
   }
 
   async getTagURL(tag: Tag) {
-    return `https://demo.wepublish.ch/a/tag/${tag.tag}`
+    return `https://demo.wepublish.ch/a/tag/${encodeURIComponent(tag.tag)}`
   }
 }
 
@@ -154,6 +154,7 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
   function mockInstance<Type = unknown>(implementation?: PartialDeep<Type>) {
     return new (jest.fn().mockImplementation(() => implementation) as Mock<Type>)() as Type
   }
+
   const mockGatewayClient = mockInstance<GatewayClient>({
     createGateway: async (requestData: CreateGatewayRequestData): Promise<Gateway> => {
       return {
