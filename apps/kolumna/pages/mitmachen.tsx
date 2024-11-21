@@ -33,12 +33,7 @@ export default function Mitmachen({donate}: MitmachenProps) {
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
   const thisLocation = typeof window !== 'undefined' ? location.href : ''
 
-  const {data: newSubscribers} = ApiV1.useNewSubscribersQuery({
-    variables: {
-      start: '2024-01-11T00:00:00.000Z',
-      end: '2025-01-11T00:00:00.000Z'
-    }
-  })
+  const {data: subscribers} = ApiV1.useActiveSubscribersQuery()
 
   const {data: memberplans} = ApiV1.useMemberPlanListQuery({
     variables: {
@@ -48,14 +43,14 @@ export default function Mitmachen({donate}: MitmachenProps) {
 
   const current = useMemo(
     () =>
-      newSubscribers?.newSubscribers?.filter(
+      subscribers?.activeSubscribers?.filter(
         ({memberPlan}) =>
           memberplans?.memberPlans.nodes.some(
             ({name, tags}) => name === memberPlan && tags?.includes('crowdfunding')
           ),
         0
       ).length ?? 0,
-    [memberplans?.memberPlans.nodes, newSubscribers?.newSubscribers]
+    [memberplans?.memberPlans.nodes, subscribers?.activeSubscribers]
   )
 
   return (
@@ -133,6 +128,9 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
     }),
     client.query({
       query: ApiV1.PeerProfileDocument
+    }),
+    client.query({
+      query: ApiV1.ActiveSubscribersDocument
     })
   ]
 
