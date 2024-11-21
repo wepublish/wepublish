@@ -148,7 +148,6 @@ export function SubscriptionListItem({
           {!paidUntil && (
             <SubscriptionListItemMetaItem>
               <MdOutlinePayments /> Abo ist unbezahlt
-              {}
             </SubscriptionListItemMetaItem>
           )}
 
