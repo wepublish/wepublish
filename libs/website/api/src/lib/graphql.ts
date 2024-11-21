@@ -2839,11 +2839,6 @@ export type NewSubscribersQueryVariables = Exact<{
 
 export type NewSubscribersQuery = { __typename?: 'Query', newSubscribers: Array<{ __typename?: 'DashboardSubscription', monthlyAmount: number, memberPlan: string }> };
 
-export type ActiveSubscribersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ActiveSubscribersQuery = { __typename?: 'Query', activeSubscribers: Array<{ __typename?: 'DashboardSubscription', monthlyAmount: number, memberPlan: string }> };
-
 export type FullNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename?: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', url: string } | null } | { __typename?: 'ExternalNavigationLink', label: string, url: string } | { __typename?: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', url: string } | null }> };
 
 export type NavigationListQueryVariables = Exact<{ [key: string]: never; }>;
@@ -4949,41 +4944,6 @@ export function useNewSubscribersLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type NewSubscribersQueryHookResult = ReturnType<typeof useNewSubscribersQuery>;
 export type NewSubscribersLazyQueryHookResult = ReturnType<typeof useNewSubscribersLazyQuery>;
 export type NewSubscribersQueryResult = Apollo.QueryResult<NewSubscribersQuery, NewSubscribersQueryVariables>;
-export const ActiveSubscribersDocument = gql`
-    query ActiveSubscribers {
-  activeSubscribers {
-    monthlyAmount
-    memberPlan
-  }
-}
-    `;
-
-/**
- * __useActiveSubscribersQuery__
- *
- * To run a query within a React component, call `useActiveSubscribersQuery` and pass it any options that fit your needs.
- * When your component renders, `useActiveSubscribersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useActiveSubscribersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useActiveSubscribersQuery(baseOptions?: Apollo.QueryHookOptions<ActiveSubscribersQuery, ActiveSubscribersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ActiveSubscribersQuery, ActiveSubscribersQueryVariables>(ActiveSubscribersDocument, options);
-      }
-export function useActiveSubscribersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ActiveSubscribersQuery, ActiveSubscribersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ActiveSubscribersQuery, ActiveSubscribersQueryVariables>(ActiveSubscribersDocument, options);
-        }
-export type ActiveSubscribersQueryHookResult = ReturnType<typeof useActiveSubscribersQuery>;
-export type ActiveSubscribersLazyQueryHookResult = ReturnType<typeof useActiveSubscribersLazyQuery>;
-export type ActiveSubscribersQueryResult = Apollo.QueryResult<ActiveSubscribersQuery, ActiveSubscribersQueryVariables>;
 export const NavigationListDocument = gql`
     query NavigationList {
   navigations {

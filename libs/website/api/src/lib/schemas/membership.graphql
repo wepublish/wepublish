@@ -253,10 +253,3 @@ query NewSubscribers($start: DateTime!, $end: DateTime) {
     memberPlan
   }
 }
-
-query ActiveSubscribers {
-  activeSubscribers {
-    monthlyAmount
-    memberPlan
-  }
-}
