@@ -3,7 +3,7 @@ import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
-import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/md'
+import {MdAccountCircle, MdClose, MdMenu} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
 import {TextToIcon} from '@wepublish/ui'
 
@@ -220,7 +220,6 @@ export function Navbar({
   logo,
   loginUrl = '/login',
   profileUrl = '/profile',
-  subscriptionsUrl = '/profile/subscription',
   actions
 }: BuilderNavbarProps) {
   const {hasUser} = useUser()
@@ -290,14 +289,6 @@ export function Navbar({
           <NavbarActions isMenuOpen={isMenuOpen}>
             {actions}
 
-            {hasUser && subscriptionsUrl && (
-              <Link href={subscriptionsUrl}>
-                <IconButton css={{fontSize: '2em', color: 'black'}}>
-                  <MdOutlinePayments aria-label={'Subscriptions'} />
-                </IconButton>
-              </Link>
-            )}
-
             {(hasUser ? profileUrl : loginUrl) && (
               <Link href={hasUser ? profileUrl : loginUrl}>
                 <IconButton className="login-button" css={{fontSize: '2em', color: 'black'}}>
@@ -312,7 +303,6 @@ export function Navbar({
       {isMenuOpen && Boolean(mainItems || categories?.length) && (
         <NavPaper
           profileUrl={profileUrl}
-          subscriptionsUrl={subscriptionsUrl}
           loginUrl={loginUrl}
           main={mainItems}
           categories={categories}
@@ -446,13 +436,11 @@ const NavPaper = ({
   categories,
   loginUrl,
   profileUrl,
-  subscriptionsUrl,
   closeMenu,
   children
 }: PropsWithChildren<{
   loginUrl?: string | null
   profileUrl?: string | null
-  subscriptionsUrl?: string | null
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
   closeMenu: () => void
@@ -502,17 +490,6 @@ const NavPaper = ({
                   color="secondary"
                   onClick={closeMenu}>
                   Mein Konto
-                </Button>
-              )}
-
-              {subscriptionsUrl && (
-                <Button
-                  LinkComponent={Link}
-                  href={subscriptionsUrl}
-                  variant="contained"
-                  color="accent"
-                  onClick={closeMenu}>
-                  Meine Abos
                 </Button>
               )}
 

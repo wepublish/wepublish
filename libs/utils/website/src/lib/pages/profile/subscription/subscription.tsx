@@ -1,8 +1,8 @@
 import {css, styled} from '@mui/material'
-import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
 import {
   ApiV1,
   AuthTokenStorageKey,
+  ContentWrapper,
   InvoiceListContainer,
   SubscriptionListContainer,
   useWebsiteBuilder
@@ -10,8 +10,12 @@ import {
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
+import {useRouter} from 'next/router'
+import {withAuthGuard} from '../../../auth-guard'
+import {ssrAuthLink} from '../../../auth-link'
+import {getSessionTokenProps} from '../../../get-session-token-props'
 
-const SubscriptionsWrapper = styled('div')`
+const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
 
@@ -29,65 +33,42 @@ const SubscriptionListWrapper = styled('div')`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-const DeactivatedSubscriptions = styled('div')`
-  display: grid;
-  justify-content: center;
-`
-
-function Subscriptions() {
+function SubscriptionPage() {
   const {
-    elements: {Link, H4}
+    query: {id}
+  } = useRouter()
+  const {
+    elements: {H4}
   } = useWebsiteBuilder()
-
-  const {data} = ApiV1.useSubscriptionsQuery({
-    fetchPolicy: 'cache-only'
-  })
-
-  const hasDeactivatedSubscriptions = data?.subscriptions.some(
-    subscription => subscription.deactivation
-  )
-
-  const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
 
   return (
     <SubscriptionsWrapper>
       <SubscriptionListWrapper>
-        <H4 component={'h1'}>Aktive Abos</H4>
+        <H4 component={'h1'}>Abo</H4>
 
         <SubscriptionListContainer
-          successURL={`${locationOrigin}/payment/success`}
-          failureURL={`${locationOrigin}/payment/fail`}
-          filter={subscriptions => subscriptions.filter(subscription => !subscription.deactivation)}
+          filter={subscriptions => subscriptions.filter(subscription => subscription.id === id)}
+          failureURL=""
+          successURL=""
         />
-
-        {hasDeactivatedSubscriptions && (
-          <DeactivatedSubscriptions>
-            <Link href="/profile/subscription/deactivated">Gekündete Abos anzeigen</Link>
-          </DeactivatedSubscriptions>
-        )}
       </SubscriptionListWrapper>
 
       <SubscriptionListWrapper>
-        <H4 component={'h1'}>Offene Rechnungen</H4>
+        <H4 component={'h1'}>Rechnungen</H4>
 
         <InvoiceListContainer
-          successURL={`${locationOrigin}/payment/success`}
-          failureURL={`${locationOrigin}/payment/fail`}
-          filter={invoices =>
-            invoices.filter(
-              invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt
-            )
-          }
+          filter={invoices => invoices.filter(invoice => invoice.subscriptionID === id)}
+          failureURL=""
+          successURL=""
         />
       </SubscriptionListWrapper>
     </SubscriptionsWrapper>
   )
 }
 
-const GuardedSubscriptions = withAuthGuard(Subscriptions)
+const GuardedSubscription = withAuthGuard(SubscriptionPage)
 
-export {GuardedSubscriptions as default}
-;(GuardedSubscriptions as any).getInitialProps = async (ctx: NextPageContext) => {
+;(GuardedSubscription as any).getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}
   }
@@ -129,9 +110,6 @@ export {GuardedSubscriptions as default}
       }),
       client.query({
         query: ApiV1.InvoicesDocument
-      }),
-      client.query({
-        query: ApiV1.NavigationListDocument
       })
     ])
   }
@@ -140,3 +118,5 @@ export {GuardedSubscriptions as default}
 
   return props
 }
+
+export {GuardedSubscription as SubscriptionPage}
