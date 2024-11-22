@@ -103,6 +103,15 @@ export class SubscriptionService {
         // skip invoices where the subscription has been deleted
         subscriptionID: {
           not: null
+        },
+        subscription: {
+          paymentMethod: {
+            description: {
+              not: {
+                contains: 'sepa'
+              }
+            }
+          }
         }
       },
       include: {
