@@ -33,6 +33,7 @@ import {replace, sortBy, toLower} from 'ramda'
 import {MembershipModal} from '../membership-modal/membership-modal'
 import {ApolloError} from '@apollo/client'
 import {ApiAlert} from '@wepublish/errors/website'
+import {isSepaInvoice} from '../is-sepa'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
@@ -373,7 +374,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     }
 
     return (
-      userInvoices.data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt) ?? false
+      userInvoices.data?.invoices.some(
+        invoice => !invoice.canceledAt && !invoice.paidAt && !isSepaInvoice(invoice)
+      ) ?? false
     )
   }, [deactivateSubscriptionId, userInvoices.data?.invoices])
 

@@ -8,6 +8,7 @@ import {useMemo, useState} from 'react'
 import {MdAttachMoney, MdCalendarMonth, MdOutlineInfo, MdOutlineWarning} from 'react-icons/md'
 import {formatCurrency} from '../formatters/format-currency'
 import {Currency} from '@wepublish/website/api'
+import {isSepaSubscription} from '../is-sepa'
 
 export const InvoiceListItemWrapper = styled('div')`
   display: grid;
@@ -56,7 +57,6 @@ export function InvoiceListItem({
   canceledAt,
   dueAt,
   subscription,
-  isSepa,
   canPay,
   pay,
   className
@@ -79,6 +79,8 @@ export function InvoiceListItem({
       !paidAt,
     [canceledAt, dueAt, paidAt, subscription?.paymentMethod.slug]
   )
+
+  const isSepa = subscription && isSepaSubscription(subscription)
 
   return (
     <InvoiceListItemWrapper className={className}>

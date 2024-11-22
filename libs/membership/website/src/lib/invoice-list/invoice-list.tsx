@@ -2,6 +2,7 @@ import {Skeleton, styled} from '@mui/material'
 import {BuilderInvoiceListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {InvoiceListItemContent, InvoiceListItemWrapper} from './invoice-list-item'
 import {Invoice} from '@wepublish/website/api'
+import {isSepaInvoice} from '../is-sepa'
 
 export const InvoiceListWrapper = styled('article')`
   display: grid;
@@ -13,10 +14,7 @@ export const canPayInvoice = (invoice: Invoice) =>
   invoice.subscription?.paymentMethod.slug !== 'payrexx-subscription' &&
   !invoice.canceledAt &&
   !invoice.paidAt &&
-  !isSepa(invoice)
-
-export const isSepa = (invoice: Invoice) =>
-  invoice.subscription?.paymentMethod.description === 'sepa'
+  !isSepaInvoice(invoice)
 
 export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInvoiceListProps) => {
   const {
@@ -43,7 +41,6 @@ export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInv
           <InvoiceListItem
             key={invoice.id}
             {...invoice}
-            isSepa={isSepa(invoice)}
             canPay={canPayInvoice(invoice)}
             pay={async () => {
               if (invoice?.subscription) {
