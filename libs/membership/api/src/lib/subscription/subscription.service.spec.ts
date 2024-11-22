@@ -867,18 +867,18 @@ describe('SubscriptionController', () => {
     })
       .post(
         '/v1/payment_intents',
-        /amount=240&currency=chf&metadata\[paymentID\]=.*&metadata\[mail\]=test%40wepublish.com/g
+        /amount=240&payment_method_types\[0\]=card&currency=chf&metadata\[paymentID\]=.*&metadata\[mail\]=test%40wepublish.com/g
       )
       .replyWithFile(200, __dirname + '/__fixtures__/stripePostPaymentIntentSuccess.json', {
         'Content-Type': 'application/json'
       })
     const answerDeletedCustomer = await subscriptionService.chargeInvoice(testableInvoice!, actions)
+    expect(stripeGetCustomersDeletedCustomer.isDone()).toBeTruthy()
+    expect(stripePaymentIntentDeletedCustomer.isDone()).toBeTruthy()
     expect(answerDeletedCustomer.action?.daysAwayFromEnding).toEqual(999)
     expect(answerDeletedCustomer.action?.type).toEqual('RENEWAL_SUCCESS')
     expect(answerDeletedCustomer.action?.externalMailTemplate).toEqual('success-template')
     expect(answerDeletedCustomer.errorCode).toEqual('')
-    expect(stripeGetCustomersDeletedCustomer.isDone()).toBeTruthy()
-    expect(stripePaymentIntentDeletedCustomer.isDone()).toBeTruthy()
     const stripeGetCustomersNoDefault = await nock('https://api.stripe.com')
       .get('/v1/customers/stripeCustomerId')
       .replyWithFile(200, __dirname + '/__fixtures__/stripeGetCustomersNoDefault.json', {
@@ -889,7 +889,7 @@ describe('SubscriptionController', () => {
     })
       .post(
         '/v1/payment_intents',
-        /amount=240&currency=chf&metadata\[paymentID\]=.*&metadata\[mail\]=test%40wepublish.com/g
+        /amount=240&payment_method_types\[0\]=card&currency=chf&metadata\[paymentID\]=.*&metadata\[mail\]=test%40wepublish.com/g
       )
       .replyWithFile(200, __dirname + '/__fixtures__/stripePostPaymentIntentSuccess.json', {
         'Content-Type': 'application/json'
