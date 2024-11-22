@@ -6,6 +6,7 @@ import {
   ChallengeValidationReturn
 } from './challengeProvider'
 import FormData from 'form-data'
+import fetch from 'node-fetch'
 
 export class CfTurnstile implements ChallengeProvider {
   constructor(private turnstileSecretKey: string, private turnstileSiteKey: string) {}

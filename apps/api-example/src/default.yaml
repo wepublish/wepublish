@@ -46,12 +46,16 @@ paymentProviders:
     name: Stripe
     offSessionPayments: true
     secretKey: ${STRIPE_SECRET_KEY}
+    methods:
+      - 'card'
     webhookEndpointSecret: ${STRIPE_WEBHOOK_SECRET}
   - type: stripe-checkout
     id: stripe-checkout
     name: Stripe Checkout
     offSessionPayments: false
     secretKey: ${STRIPE_SECRET_KEY}
+    methods:
+      - 'card'
     webhookEndpointSecret: ${STRIPE_CHECKOUT_WEBHOOK_SECRET}
   - type: mollie
     id: mollie

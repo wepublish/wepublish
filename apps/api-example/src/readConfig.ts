@@ -2,6 +2,7 @@ import fs from 'fs'
 import YAML from 'yaml'
 import {MappedReplacer} from 'mapped-replacer'
 import {GoogleAnalyticsConfig} from '@wepublish/api'
+import StipeType from 'stripe'
 
 type General = {
   apolloPlayground: boolean
@@ -61,6 +62,7 @@ type Stripe = {
   offSessionPayments: boolean
   secretKey: string
   webhookEndpointSecret: string
+  methods: StipeType.Checkout.SessionCreateParams.PaymentMethodType[]
 }
 
 type StripeCheckout = {
@@ -70,6 +72,7 @@ type StripeCheckout = {
   offSessionPayments: boolean
   secretKey: string
   webhookEndpointSecret: string
+  methods: StipeType.Checkout.SessionCreateParams.PaymentMethodType[]
 }
 
 type Bexio = {

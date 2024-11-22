@@ -35,6 +35,7 @@ export type BuilderSubscriptionListProps = Pick<
 
 export type BuilderInvoiceListItemProps = Invoice & {
   className?: string
+  isSepa?: boolean
   canPay: boolean
   pay?: () => Promise<void>
 }
