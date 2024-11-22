@@ -2,6 +2,7 @@ import 'rsuite/styles/index.less'
 
 import {gql, useMutation} from '@apollo/client'
 import {css, Global} from '@emotion/react'
+import {BannerList, CreateBannerForm, EditBannerForm} from '@wepublish/banner/editor'
 import {
   ConsentCreateView,
   ConsentEditView,
@@ -19,7 +20,6 @@ import {
   SubscriptionFlowList,
   SystemMailList
 } from '@wepublish/membership/editor'
-import {BannerList, CreateBannerForm, EditBannerForm} from '@wepublish/banner/editor'
 import {SettingList} from '@wepublish/settings/editor'
 import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from '@wepublish/ui/editor'
 import {useContext, useEffect, useState} from 'react'
