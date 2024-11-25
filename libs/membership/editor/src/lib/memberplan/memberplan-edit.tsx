@@ -86,6 +86,7 @@ function MemberPlanEdit() {
       description: [],
       currency: Currency.Chf,
       amountPerMonthMin: 0,
+      amountPerMonthTarget: null,
       image: undefined,
       active: true,
       tags: [],
@@ -153,6 +154,7 @@ function MemberPlanEdit() {
       })),
       currency: memberPlan.currency,
       amountPerMonthMin: memberPlan.amountPerMonthMin,
+      amountPerMonthTarget: memberPlan.amountPerMonthTarget,
       extendable: memberPlan.extendable,
       maxCount: memberPlan.maxCount,
       migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID

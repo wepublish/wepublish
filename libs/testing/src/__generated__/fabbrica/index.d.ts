@@ -1143,6 +1143,7 @@ type MemberPlanFactoryDefineInput = {
     active?: boolean;
     currency?: Currency;
     amountPerMonthMin?: number;
+    amountPerMonthTarget?: number | null;
     extendable?: boolean;
     maxCount?: number | null;
     availablePaymentMethods?: Prisma.AvailablePaymentMethodCreateNestedManyWithoutMemberPlanInput;
