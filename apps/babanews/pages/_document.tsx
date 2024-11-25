@@ -6,10 +6,6 @@ import {
 import {DocumentContext, Head, Html, Main, NextScript} from 'next/document'
 
 export default function MuiDocument(props: DocumentHeadTagsProps) {
-  // console.log(props)
-
-  console.log(Object.keys(props))
-
   return (
     <Html lang="de">
       <Head>

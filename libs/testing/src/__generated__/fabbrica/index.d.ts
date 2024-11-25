@@ -1359,9 +1359,9 @@ type PageFactoryDefineInput = {
     draft?: PagedraftFactory | Prisma.PageRevisionCreateNestedOneWithoutDraftPageInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutPageInput;
     tags?: Prisma.TaggedPagesCreateNestedManyWithoutPageInput;
-    banners?: Prisma.BannerCreateNestedManyWithoutShowOnPagesInput;
     memberPlansSuccess?: Prisma.MemberPlanCreateNestedManyWithoutSuccessPageInput;
     memberPlansFail?: Prisma.MemberPlanCreateNestedManyWithoutFailPageInput;
+    banners?: Prisma.BannerCreateNestedManyWithoutShowOnPagesInput;
 };
 type PageFactoryDefineOptions = {
     defaultData?: Resolver<PageFactoryDefineInput, BuildDataOptions>;

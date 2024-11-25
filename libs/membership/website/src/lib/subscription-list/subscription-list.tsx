@@ -1,14 +1,17 @@
 import {styled} from '@mui/material'
 import {BuilderSubscriptionListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {SubscriptionListItemContent, SubscriptionListItemWrapper} from './subscription-list-item'
-import {Invoice, Subscription} from '@wepublish/website/api'
+import {FullInvoiceFragment, FullSubscriptionFragment} from '@wepublish/website/api'
 
 export const SubscriptionListWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-export const canExtendSubscription = (subscription: Subscription, invoices: Invoice[]) =>
+export const canExtendSubscription = (
+  subscription: FullSubscriptionFragment,
+  invoices: FullInvoiceFragment[]
+) =>
   subscription.memberPlan.extendable &&
   // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
   subscription.paymentMethod.slug !== 'payrexx-subscription' &&

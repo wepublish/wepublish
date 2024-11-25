@@ -2,21 +2,21 @@ import {QueryResult} from '@apollo/client'
 import {RadioProps} from '@mui/material'
 import {
   ChallengeQuery,
-  Invoice,
+  FullSubscriptionFragment,
+  FullInvoiceFragment,
   InvoicesQuery,
-  MemberPlan,
   MemberPlanListQuery,
   PaymentMethod,
   PaymentPeriodicity,
   RegisterMutationVariables,
   SubscribeMutationVariables,
-  Subscription,
-  SubscriptionsQuery
+  SubscriptionsQuery,
+  FullMemberPlanFragment
 } from '@wepublish/website/api'
 import {BuilderRegistrationFormProps} from './authentication.interface'
 import {BuilderUserFormFields} from './user.interface'
 
-export type BuilderSubscriptionListItemProps = Subscription & {
+export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
   className?: string
   canExtend: boolean
   cancel?: () => Promise<void>
@@ -33,8 +33,9 @@ export type BuilderSubscriptionListProps = Pick<
   onExtend?: (subscriptionId: string) => Promise<void>
 }
 
-export type BuilderInvoiceListItemProps = Invoice & {
+export type BuilderInvoiceListItemProps = FullInvoiceFragment & {
   className?: string
+  isSepa?: boolean
   canPay: boolean
   pay?: () => Promise<void>
 }
@@ -48,14 +49,17 @@ export type BuilderInvoiceListProps = Pick<
 }
 
 export type BuilderMemberPlanPickerProps = {
-  memberPlans: MemberPlan[]
+  memberPlans: FullMemberPlanFragment[]
   className?: string
   onChange: (memberPlanId: string) => void
   name?: string
   value?: string
 }
 
-export type BuilderMemberPlanItemProps = Pick<MemberPlan, 'amountPerMonthMin' | 'currency'> &
+export type BuilderMemberPlanItemProps = Pick<
+  FullMemberPlanFragment,
+  'amountPerMonthMin' | 'currency'
+> &
   RadioProps & {className?: string}
 
 export type BuilderPeriodicityPickerProps = {
@@ -96,7 +100,7 @@ export type BuilderSubscribeProps<
     firstName: string
   }>
   deactivateSubscriptionId?: string
-  extraMoneyOffset?: (memberPlan?: MemberPlan) => number
-  donate?: (memberPlan?: MemberPlan) => boolean
+  extraMoneyOffset?: (memberPlan?: FullMemberPlanFragment) => number
+  donate?: (memberPlan?: FullMemberPlanFragment) => boolean
   termsOfServiceUrl?: string
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>

@@ -613,8 +613,10 @@ model Page {
   draftId String?       @unique
   draft   PageRevision? @relation("draftPageRevision", fields: [draftId], references: [id], onDelete: SetNull)
 
-  navigations NavigationLink[]
-  tags        TaggedPages[]
+  navigations        NavigationLink[]
+  tags               TaggedPages[]
+  memberPlansSuccess MemberPlan[]     @relation("successPage")
+  memberPlansFail    MemberPlan[]     @relation("failPage")
 
   banners Banner[]
 

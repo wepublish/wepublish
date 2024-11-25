@@ -454,10 +454,6 @@ const modelFieldDefinitions = [{
                 type: "TaggedPages",
                 relationName: "PageToTaggedPages"
             }, {
-                name: "banners",
-                type: "Banner",
-                relationName: "BannerToPage"
-            }, {
                 name: "memberPlansSuccess",
                 type: "MemberPlan",
                 relationName: "successPage"
@@ -465,6 +461,10 @@ const modelFieldDefinitions = [{
                 name: "memberPlansFail",
                 type: "MemberPlan",
                 relationName: "failPage"
+            }, {
+                name: "banners",
+                type: "Banner",
+                relationName: "BannerToPage"
             }]
     }, {
         name: "TaggedPages",
