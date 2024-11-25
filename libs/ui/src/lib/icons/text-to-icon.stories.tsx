@@ -24,6 +24,30 @@ export default {
         <TextToIcon title="linkedin" size={22} /> linkedin{' '}
       </span>
       <span>
+        <TextToIcon title="bluesky" size={22} /> x{' '}
+      </span>
+      <span>
+        <TextToIcon title="github" size={22} /> x{' '}
+      </span>
+      <span>
+        <TextToIcon title="reddit" size={22} /> x{' '}
+      </span>
+      <span>
+        <TextToIcon title="spotify" size={22} /> x{' '}
+      </span>
+      <span>
+        <TextToIcon title="amazon" size={22} /> x{' '}
+      </span>
+      <span>
+        <TextToIcon title="vimeo" size={22} /> x{' '}
+      </span>
+      <span>
+        <TextToIcon title="discord" size={22} /> x{' '}
+      </span>
+      <span>
+        <TextToIcon title="strava" size={22} /> x{' '}
+      </span>
+      <span>
         <TextToIcon title="mail" size={22} /> mail{' '}
       </span>
       <span>

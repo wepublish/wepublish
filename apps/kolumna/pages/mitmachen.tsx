@@ -26,7 +26,12 @@ type MitmachenProps = {
 }
 
 export default function Mitmachen({donate}: MitmachenProps) {
-  const {data: subscribers} = ApiV1.useActiveSubscribersQuery()
+  const {data: newSubscribers} = ApiV1.useNewSubscribersQuery({
+    variables: {
+      start: '2024-01-11T00:00:00.000Z',
+      end: '2025-01-11T00:00:00.000Z'
+    }
+  })
 
   const {data: memberplans} = ApiV1.useMemberPlanListQuery({
     variables: {
@@ -36,14 +41,14 @@ export default function Mitmachen({donate}: MitmachenProps) {
 
   const current = useMemo(
     () =>
-      subscribers?.activeSubscribers?.filter(
+      newSubscribers?.newSubscribers?.filter(
         ({memberPlan}) =>
           memberplans?.memberPlans.nodes.some(
             ({name, tags}) => name === memberPlan && tags?.includes('crowdfunding')
           ),
         0
       ).length ?? 0,
-    [memberplans?.memberPlans.nodes, subscribers?.activeSubscribers]
+    [memberplans?.memberPlans.nodes, newSubscribers?.newSubscribers]
   )
 
   return (
@@ -114,9 +119,6 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
     }),
     client.query({
       query: ApiV1.PeerProfileDocument
-    }),
-    client.query({
-      query: ApiV1.ActiveSubscribersDocument
     })
   ]
 
