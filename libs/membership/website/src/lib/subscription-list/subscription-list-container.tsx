@@ -9,7 +9,11 @@ import {
   useSubscriptionsQuery,
   ExtendSubscriptionMutation
 } from '@wepublish/website/api'
-import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {
+  BuilderContainerProps,
+  BuilderSubscriptionListProps,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
 import {produce} from 'immer'
 import {useMemo, useState} from 'react'
 
@@ -17,13 +21,15 @@ export type SubscriptionListContainerProps = {
   successURL: string
   failureURL: string
   filter?: (subscriptions: Subscription[]) => Subscription[]
-} & BuilderContainerProps
+} & BuilderContainerProps &
+  Partial<Pick<BuilderSubscriptionListProps, 'subscribeUrl'>>
 
 export function SubscriptionListContainer({
   filter,
   successURL,
   failureURL,
-  className
+  className,
+  subscribeUrl = '/mitmachen'
 }: SubscriptionListContainerProps) {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>()
   const {SubscriptionList} = useWebsiteBuilder()
@@ -75,6 +81,7 @@ export function SubscriptionListContainer({
         loading={loading}
         error={error}
         invoices={invoices}
+        subscribeUrl={subscribeUrl}
         className={className}
         onCancel={async subscriptionId => {
           await cancel({

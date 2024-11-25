@@ -830,7 +830,13 @@ exports[`SubscriptionList should render Empty 1`] = `
         class="emotion-4 emotion-5"
       >
         <strong>
-          Kein aktives Abo
+          Kein has noch kein aktives Abo. 
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-6"
+            href="/mitmachen"
+          >
+            Jetzt ein Abo lösen.
+          </a>
         </strong>
       </div>
     </div>

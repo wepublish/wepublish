@@ -23,11 +23,12 @@ export const SubscriptionList = ({
   invoices,
   onCancel,
   onExtend,
-  className
+  className,
+  subscribeUrl
 }: BuilderSubscriptionListProps) => {
   const {
     SubscriptionListItem,
-    elements: {Alert}
+    elements: {Alert, Link}
   } = useWebsiteBuilder()
 
   return (
@@ -35,7 +36,9 @@ export const SubscriptionList = ({
       {!loading && !error && !data?.subscriptions?.length && (
         <SubscriptionListItemWrapper>
           <SubscriptionListItemContent>
-            <strong>Kein aktives Abo</strong>
+            <strong>
+              Kein has noch kein aktives Abo. <Link href={subscribeUrl}>Jetzt ein Abo lösen.</Link>
+            </strong>
           </SubscriptionListItemContent>
         </SubscriptionListItemWrapper>
       )}
