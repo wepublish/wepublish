@@ -21,20 +21,19 @@ import Head from 'next/head'
 import {useRouter} from 'next/router'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
-import {FaTwitter} from 'react-icons/fa6'
-import {MdFacebook, MdMail, MdSearch} from 'react-icons/md'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {MainGrid} from '../src/components/layout/main-grid'
+import {BajourBanner} from '../src/components/website-builder-overwrites/banner/bajour-banner'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
 import {BajourTeaserSlider} from '../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
+import {BajourBreakBlock} from '../src/components/website-builder-overwrites/break/bajour-break'
 import {BajourContextBox} from '../src/components/website-builder-overwrites/context-box/context-box'
 import {BajourPaymentMethodPicker} from '../src/components/website-builder-overwrites/payment-method-picker/payment-method-picker'
 import {BajourQuoteBlock} from '../src/components/website-builder-overwrites/quote/bajour-quote'
-import {BajourBreakBlock} from '../src/components/website-builder-styled/blocks/break-block-styled'
 import {
   BajourTeaserGrid,
   BajourTeaserList
@@ -69,7 +68,7 @@ type CustomAppProps = AppProps<{
 
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
-  z-index: 11;
+  z-index: 12;
 `
 
 const Footer = styled(FooterContainer)`
@@ -78,10 +77,6 @@ const Footer = styled(FooterContainer)`
   ${FooterPaperWrapper} {
     color: ${({theme}) => theme.palette.common.white};
   }
-`
-
-const ButtonLink = styled('a')`
-  color: ${({theme}) => theme.palette.primary.contrastText};
 `
 
 const {publicRuntimeConfig} = getConfig()
@@ -139,7 +134,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             thirdParty={{
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
             }}
-            PaymentMethodPicker={BajourPaymentMethodPicker}>
+            PaymentMethodPicker={BajourPaymentMethodPicker}
+            Banner={BajourBanner}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
 
@@ -148,23 +144,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   <NavBar
                     slug="main"
                     categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
-                    headerSlug="header">
-                    <ButtonLink href="/search">
-                      <MdSearch size="32" />
-                    </ButtonLink>
-
-                    <ButtonLink href="https://www.facebook.com/bajourbasel">
-                      <MdFacebook size="32" />
-                    </ButtonLink>
-
-                    <ButtonLink href="https://twitter.com/bajourbasel">
-                      <FaTwitter size="32" />
-                    </ButtonLink>
-
-                    <ButtonLink href="mailto:info@bajour.ch">
-                      <MdMail size="32" />
-                    </ButtonLink>
-                  </NavBar>
+                    headerSlug="header"
+                    iconSlug="icons"
+                  />
                 </ThemeProvider>
 
                 <Component {...pageProps} />
@@ -175,16 +157,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
               )}
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-                strategy="afterInteractive"
-              />
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-                strategy="lazyOnload"
-              />
 
               {popup && (
                 <Script

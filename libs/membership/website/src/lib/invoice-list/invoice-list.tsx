@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import {Skeleton, styled} from '@mui/material'
 import {BuilderInvoiceListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {InvoiceListItemContent, InvoiceListItemWrapper} from './invoice-list-item'
 import {Invoice} from '@wepublish/website/api'
@@ -12,7 +12,11 @@ export const canPayInvoice = (invoice: Invoice) =>
   // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
   invoice.subscription?.paymentMethod.slug !== 'payrexx-subscription' &&
   !invoice.canceledAt &&
-  !invoice.paidAt
+  !invoice.paidAt &&
+  !isSepa(invoice)
+
+export const isSepa = (invoice: Invoice) =>
+  invoice.subscription?.paymentMethod.description === 'sepa'
 
 export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInvoiceListProps) => {
   const {
@@ -22,6 +26,8 @@ export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInv
 
   return (
     <InvoiceListWrapper className={className}>
+      {loading && <Skeleton variant={'rectangular'} />}
+
       {!loading && !error && !data?.invoices?.length && (
         <InvoiceListItemWrapper>
           <InvoiceListItemContent>
@@ -32,18 +38,20 @@ export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInv
 
       {error && <Alert severity="error">{error.message}</Alert>}
 
-      {data?.invoices?.map(invoice => (
-        <InvoiceListItem
-          key={invoice.id}
-          {...invoice}
-          canPay={canPayInvoice(invoice)}
-          pay={async () => {
-            if (invoice?.subscription) {
-              return await onPay?.(invoice.id, invoice.subscription.paymentMethod.id)
-            }
-          }}
-        />
-      ))}
+      {!loading &&
+        data?.invoices?.map(invoice => (
+          <InvoiceListItem
+            key={invoice.id}
+            {...invoice}
+            isSepa={isSepa(invoice)}
+            canPay={canPayInvoice(invoice)}
+            pay={async () => {
+              if (invoice?.subscription) {
+                return await onPay?.(invoice.id, invoice.subscription.paymentMethod.id)
+              }
+            }}
+          />
+        ))}
     </InvoiceListWrapper>
   )
 }

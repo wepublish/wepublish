@@ -4,16 +4,24 @@ import {SystemMailModel, SystemMailUpdateInput} from './system-mail.model'
 import {MailContext, mailLogType} from '@wepublish/mail/api'
 import {NotFoundException} from '@nestjs/common'
 import {CurrentUser, UserSession} from '@wepublish/authentication/api'
+import {
+  CanGetSystemMails,
+  CanTestSystemMails,
+  CanUpdateSystemMails,
+  Permissions
+} from '@wepublish/permissions/api'
 
 @Resolver(() => SystemMailModel)
 export class SystemMailResolver {
   constructor(private prismaService: PrismaClient, private readonly mailContext: MailContext) {}
 
+  @Permissions(CanGetSystemMails)
   @Query(() => [SystemMailModel], {description: `Returns all mail flows`})
   async systemMails() {
     return this.getAllMails()
   }
 
+  @Permissions(CanUpdateSystemMails)
   @Mutation(() => [SystemMailModel], {description: `Updates an existing mail flow`})
   async updateSystemMail(@Args() systemMail: SystemMailUpdateInput) {
     const userMail = await this.prismaService.userFlowMail.findUnique({
@@ -38,6 +46,7 @@ export class SystemMailResolver {
     return this.getAllMails()
   }
 
+  @Permissions(CanTestSystemMails)
   @Mutation(() => Boolean, {
     description: `Sends a test email for the given event`
   })

@@ -40,6 +40,8 @@ export function LoginForm({
   onSubmitLoginWithCredentials,
   loginWithEmail,
   onSubmitLoginWithEmail,
+  defaults,
+  disablePasswordLogin,
   className
 }: BuilderLoginFormProps) {
   const {
@@ -50,9 +52,9 @@ export function LoginForm({
   const {handleSubmit, control, watch, setValue} = useForm<FormInput>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: '',
+      email: defaults?.email || '',
       password: '',
-      requirePassword: false
+      requirePassword: defaults?.requirePassword || false
     },
     mode: 'onTouched',
     reValidateMode: 'onChange'
@@ -78,15 +80,17 @@ export function LoginForm({
 
   return (
     <LoginFormWrapper className={className}>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={loginWithPassword}
-            onChange={event => setValue('requirePassword', event.target.checked)}
-          />
-        }
-        label="Login mit Passwort"
-      />
+      {!disablePasswordLogin && (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={loginWithPassword}
+              onChange={event => setValue('requirePassword', event.target.checked)}
+            />
+          }
+          label="Login mit Passwort"
+        />
+      )}
 
       <LoginFormForm onSubmit={onSubmit}>
         <Controller

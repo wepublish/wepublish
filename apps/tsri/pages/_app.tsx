@@ -27,13 +27,13 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {Paywall} from '../src/components/paywall'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
+import {TsriContextBox} from '../src/components/tsri-context-box'
 import {MitmachenButton, TsriNavbar} from '../src/components/tsri-navbar'
 import {TsriQuoteBlock} from '../src/components/tsri-quote-block'
 import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
-import {TsriContextBox} from '../src/components/tsri-context-box'
 
 setDefaultOptions({
   locale: de
@@ -162,6 +162,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   categorySlugs={[['categories', 'about-us']]}
                   slug="main"
                   headerSlug="header"
+                  iconSlug="icons"
                   actions={<MitmachenButton />}
                 />
 
@@ -181,16 +182,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </LogoLink>
                 </FooterContainer>
               </Spacer>
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-                strategy="afterInteractive"
-              />
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-                strategy="lazyOnload"
-              />
 
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />

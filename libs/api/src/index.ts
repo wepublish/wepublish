@@ -41,9 +41,11 @@ export * from './lib/server'
 
 export * from './lib/challenges/challengeProvider'
 export * from './lib/challenges/algebraicCaptchaChallenge'
+export * from './lib/challenges/cfTurnstile'
 
 export {getUserForCredentials} from './lib/graphql/user/user.queries'
 
+export * from '@wepublish/banner/api'
 export * from '@wepublish/settings/api'
 export * from '@wepublish/membership/api'
 export * from '@wepublish/authentication/api'
@@ -58,7 +60,6 @@ export * from '@wepublish/utils/api'
 export * from '@wepublish/richtext/api'
 export * from '@wepublish/event/api'
 export * from '@wepublish/health'
-export * from '@wepublish/scripts/api'
 export * from '@wepublish/system-info'
 export * from '@wepublish/google-analytics/api'
 export {

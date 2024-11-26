@@ -15,7 +15,7 @@ const DailyBriefingTeaserWrapper = styled('div')`
   display: grid;
   grid-auto-rows: min-content;
   gap: ${({theme}) => theme.spacing(4)};
-  background-color: ${({theme}) => theme.palette.primary.light};
+  background-color: ${({theme}) => theme.palette.primary.main};
   padding: ${({theme}) => theme.spacing(2)};
 `
 

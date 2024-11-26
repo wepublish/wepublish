@@ -18,9 +18,7 @@ import {BuilderUserFormFields} from './user.interface'
 
 export type BuilderSubscriptionListItemProps = Subscription & {
   className?: string
-  canPay: boolean
   canExtend: boolean
-  pay?: () => Promise<void>
   cancel?: () => Promise<void>
   extend?: () => Promise<void>
 }
@@ -31,13 +29,13 @@ export type BuilderSubscriptionListProps = Pick<
 > & {
   className?: string
   invoices: Pick<QueryResult<InvoicesQuery>, 'data' | 'loading' | 'error'>
-  onPay?: (subscriptionId: string) => Promise<void>
   onCancel?: (subscriptionId: string) => Promise<void>
   onExtend?: (subscriptionId: string) => Promise<void>
 }
 
 export type BuilderInvoiceListItemProps = Invoice & {
   className?: string
+  isSepa?: boolean
   canPay: boolean
   pay?: () => Promise<void>
 }
@@ -99,5 +97,7 @@ export type BuilderSubscribeProps<
     firstName: string
   }>
   deactivateSubscriptionId?: string
-  extraMoneyOffset?: number
+  extraMoneyOffset?: (memberPlan?: MemberPlan) => number
+  donate?: (memberPlan?: MemberPlan) => boolean
+  termsOfServiceUrl?: string
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>

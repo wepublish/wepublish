@@ -13,13 +13,18 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
+  /** A hexidecimal color value. */
   Color: string
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: string
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string
   GraphQLSettingValueType: any
   RichText: Node[]
   Slug: string
+  /** The `Upload` scalar type represents a file upload. */
   Upload: File
+  /** A valid vote value */
   VoteValue: number
 }
 
@@ -986,6 +991,7 @@ export type MemberPlan = {
   id: Scalars['ID']
   image?: Maybe<Image>
   maxCount?: Maybe<Scalars['Int']>
+  migrateToTargetPaymentMethodID?: Maybe<Scalars['ID']>
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
   slug: Scalars['String']
@@ -1014,6 +1020,7 @@ export type MemberPlanInput = {
   extendable: Scalars['Boolean']
   imageID?: InputMaybe<Scalars['ID']>
   maxCount?: InputMaybe<Scalars['Int']>
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['ID']>
   name: Scalars['String']
   slug: Scalars['String']
   tags?: InputMaybe<Array<Scalars['String']>>
@@ -2293,9 +2300,7 @@ export enum SettingName {
   AllowGuestCommentRating = 'allowGuestCommentRating',
   AllowGuestCommenting = 'allowGuestCommenting',
   AllowGuestPollVoting = 'allowGuestPollVoting',
-  BodyScript = 'bodyScript',
   CommentCharLimit = 'commentCharLimit',
-  HeadScript = 'headScript',
   MakeActiveSubscribersApiPublic = 'makeActiveSubscribersApiPublic',
   MakeExpectedRevenueApiPublic = 'makeExpectedRevenueApiPublic',
   MakeNewDeactivationsApiPublic = 'makeNewDeactivationsApiPublic',
@@ -2877,6 +2882,33 @@ export type ArticleRefFragment = {
     updatedAt?: string | null
     revision: number
     url: string
+    blocks: Array<
+      | {__typename: 'BildwurfAdBlock'}
+      | {__typename: 'CommentBlock'}
+      | {__typename: 'EmbedBlock'}
+      | {__typename: 'EventBlock'}
+      | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
+      | {__typename: 'HTMLBlock'}
+      | {__typename: 'ImageBlock'}
+      | {__typename: 'ImageGalleryBlock'}
+      | {__typename: 'InstagramPostBlock'}
+      | {__typename: 'LinkPageBreakBlock'}
+      | {__typename: 'ListicleBlock'}
+      | {__typename: 'PolisConversationBlock'}
+      | {__typename: 'PollBlock'}
+      | {__typename: 'QuoteBlock'}
+      | {__typename: 'RichTextBlock'; richText: Node[]}
+      | {__typename: 'SoundCloudTrackBlock'}
+      | {__typename: 'TeaserGridBlock'}
+      | {__typename: 'TeaserGridFlexBlock'}
+      | {__typename: 'TeaserListBlock'}
+      | {__typename: 'TikTokVideoBlock'}
+      | {__typename: 'TitleBlock'}
+      | {__typename: 'TwitterTweetBlock'}
+      | {__typename: 'VimeoVideoBlock'}
+      | {__typename: 'YouTubeVideoBlock'}
+    >
   } | null
   latest: {
     __typename?: 'ArticleRevision'
@@ -2904,6 +2936,7 @@ export type ArticleRefFragment = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   }
 }
@@ -2911,6 +2944,7 @@ export type ArticleRefFragment = {
 export type ArticleListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>
   cursor?: InputMaybe<Scalars['ID']>
+  skip?: InputMaybe<Scalars['Int']>
   take?: InputMaybe<Scalars['Int']>
 }>
 
@@ -2933,6 +2967,33 @@ export type ArticleListQuery = {
         updatedAt?: string | null
         revision: number
         url: string
+        blocks: Array<
+          | {__typename: 'BildwurfAdBlock'}
+          | {__typename: 'CommentBlock'}
+          | {__typename: 'EmbedBlock'}
+          | {__typename: 'EventBlock'}
+          | {__typename: 'FacebookPostBlock'}
+          | {__typename: 'FacebookVideoBlock'}
+          | {__typename: 'HTMLBlock'}
+          | {__typename: 'ImageBlock'}
+          | {__typename: 'ImageGalleryBlock'}
+          | {__typename: 'InstagramPostBlock'}
+          | {__typename: 'LinkPageBreakBlock'}
+          | {__typename: 'ListicleBlock'}
+          | {__typename: 'PolisConversationBlock'}
+          | {__typename: 'PollBlock'}
+          | {__typename: 'QuoteBlock'}
+          | {__typename: 'RichTextBlock'; richText: Node[]}
+          | {__typename: 'SoundCloudTrackBlock'}
+          | {__typename: 'TeaserGridBlock'}
+          | {__typename: 'TeaserGridFlexBlock'}
+          | {__typename: 'TeaserListBlock'}
+          | {__typename: 'TikTokVideoBlock'}
+          | {__typename: 'TitleBlock'}
+          | {__typename: 'TwitterTweetBlock'}
+          | {__typename: 'VimeoVideoBlock'}
+          | {__typename: 'YouTubeVideoBlock'}
+        >
       } | null
       latest: {
         __typename?: 'ArticleRevision'
@@ -2960,6 +3021,7 @@ export type ArticleListQuery = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
       }
     }>
@@ -3226,6 +3288,7 @@ export type ArticleQuery = {
         previewURL?: string | null
         column1URL?: string | null
         column6URL?: string | null
+        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
       } | null
       properties: Array<{__typename?: 'Properties'; key: string; value: string; public: boolean}>
       authors: Array<{
@@ -3250,6 +3313,7 @@ export type ArticleQuery = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
       }>
       socialMediaAuthors: Array<{
@@ -3274,6 +3338,7 @@ export type ArticleQuery = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
       }>
       socialMediaImage?: {
@@ -3294,6 +3359,7 @@ export type ArticleQuery = {
         previewURL?: string | null
         column1URL?: string | null
         column6URL?: string | null
+        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
       } | null
       blocks: Array<
         | {__typename: 'BildwurfAdBlock'}
@@ -3332,6 +3398,7 @@ export type ArticleQuery = {
               previewURL?: string | null
               column1URL?: string | null
               column6URL?: string | null
+              focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
             } | null
           }
         | {
@@ -3357,6 +3424,7 @@ export type ArticleQuery = {
                 previewURL?: string | null
                 column1URL?: string | null
                 column6URL?: string | null
+                focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
               } | null
             }>
           }
@@ -3391,6 +3459,7 @@ export type ArticleQuery = {
                 previewURL?: string | null
                 column1URL?: string | null
                 column6URL?: string | null
+                focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
               } | null
             }>
           }
@@ -3418,6 +3487,7 @@ export type ArticleQuery = {
               previewURL?: string | null
               column1URL?: string | null
               column6URL?: string | null
+              focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
             } | null
           }
         | {__typename: 'RichTextBlock'; richText: Node[]}
@@ -3450,6 +3520,7 @@ export type ArticleQuery = {
                     previewURL?: string | null
                     column1URL?: string | null
                     column6URL?: string | null
+                    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
                   } | null
                   article?: {
                     __typename?: 'Article'
@@ -3465,6 +3536,33 @@ export type ArticleQuery = {
                       updatedAt?: string | null
                       revision: number
                       url: string
+                      blocks: Array<
+                        | {__typename: 'BildwurfAdBlock'}
+                        | {__typename: 'CommentBlock'}
+                        | {__typename: 'EmbedBlock'}
+                        | {__typename: 'EventBlock'}
+                        | {__typename: 'FacebookPostBlock'}
+                        | {__typename: 'FacebookVideoBlock'}
+                        | {__typename: 'HTMLBlock'}
+                        | {__typename: 'ImageBlock'}
+                        | {__typename: 'ImageGalleryBlock'}
+                        | {__typename: 'InstagramPostBlock'}
+                        | {__typename: 'LinkPageBreakBlock'}
+                        | {__typename: 'ListicleBlock'}
+                        | {__typename: 'PolisConversationBlock'}
+                        | {__typename: 'PollBlock'}
+                        | {__typename: 'QuoteBlock'}
+                        | {__typename: 'RichTextBlock'; richText: Node[]}
+                        | {__typename: 'SoundCloudTrackBlock'}
+                        | {__typename: 'TeaserGridBlock'}
+                        | {__typename: 'TeaserGridFlexBlock'}
+                        | {__typename: 'TeaserListBlock'}
+                        | {__typename: 'TikTokVideoBlock'}
+                        | {__typename: 'TitleBlock'}
+                        | {__typename: 'TwitterTweetBlock'}
+                        | {__typename: 'VimeoVideoBlock'}
+                        | {__typename: 'YouTubeVideoBlock'}
+                      >
                     } | null
                     latest: {
                       __typename?: 'ArticleRevision'
@@ -3492,6 +3590,7 @@ export type ArticleQuery = {
                         previewURL?: string | null
                         column1URL?: string | null
                         column6URL?: string | null
+                        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
                       } | null
                     }
                   } | null
@@ -3521,6 +3620,7 @@ export type ArticleQuery = {
                     previewURL?: string | null
                     column1URL?: string | null
                     column6URL?: string | null
+                    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
                   } | null
                   event?: {__typename?: 'Event'; id: string} | null
                 }
@@ -3548,6 +3648,7 @@ export type ArticleQuery = {
                     previewURL?: string | null
                     column1URL?: string | null
                     column6URL?: string | null
+                    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
                   } | null
                   page?: {__typename?: 'Page'; id: string} | null
                 }
@@ -3576,6 +3677,7 @@ export type ArticleQuery = {
                     previewURL?: string | null
                     column1URL?: string | null
                     column6URL?: string | null
+                    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
                   } | null
                   article?: {
                     __typename?: 'Article'
@@ -3591,6 +3693,33 @@ export type ArticleQuery = {
                       updatedAt?: string | null
                       revision: number
                       url: string
+                      blocks: Array<
+                        | {__typename: 'BildwurfAdBlock'}
+                        | {__typename: 'CommentBlock'}
+                        | {__typename: 'EmbedBlock'}
+                        | {__typename: 'EventBlock'}
+                        | {__typename: 'FacebookPostBlock'}
+                        | {__typename: 'FacebookVideoBlock'}
+                        | {__typename: 'HTMLBlock'}
+                        | {__typename: 'ImageBlock'}
+                        | {__typename: 'ImageGalleryBlock'}
+                        | {__typename: 'InstagramPostBlock'}
+                        | {__typename: 'LinkPageBreakBlock'}
+                        | {__typename: 'ListicleBlock'}
+                        | {__typename: 'PolisConversationBlock'}
+                        | {__typename: 'PollBlock'}
+                        | {__typename: 'QuoteBlock'}
+                        | {__typename: 'RichTextBlock'; richText: Node[]}
+                        | {__typename: 'SoundCloudTrackBlock'}
+                        | {__typename: 'TeaserGridBlock'}
+                        | {__typename: 'TeaserGridFlexBlock'}
+                        | {__typename: 'TeaserListBlock'}
+                        | {__typename: 'TikTokVideoBlock'}
+                        | {__typename: 'TitleBlock'}
+                        | {__typename: 'TwitterTweetBlock'}
+                        | {__typename: 'VimeoVideoBlock'}
+                        | {__typename: 'YouTubeVideoBlock'}
+                      >
                     } | null
                     latest: {
                       __typename?: 'ArticleRevision'
@@ -3618,6 +3747,7 @@ export type ArticleQuery = {
                         previewURL?: string | null
                         column1URL?: string | null
                         column6URL?: string | null
+                        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
                       } | null
                     }
                   } | null
@@ -3659,6 +3789,7 @@ export type AuthorRefFragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -3687,6 +3818,7 @@ export type FullAuthorFragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -3727,6 +3859,7 @@ export type AuthorListQuery = {
         previewURL?: string | null
         column1URL?: string | null
         column6URL?: string | null
+        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
       } | null
     }>
     pageInfo: {
@@ -3770,6 +3903,7 @@ export type AuthorQuery = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   } | null
 }
@@ -3805,6 +3939,7 @@ export type CreateAuthorMutation = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   } | null
 }
@@ -3841,6 +3976,7 @@ export type UpdateAuthorMutation = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   } | null
 }
@@ -3876,6 +4012,7 @@ export type DeleteAuthorMutation = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   } | null
 }
@@ -3913,6 +4050,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
   article?: {
     __typename?: 'Article'
@@ -3928,6 +4066,33 @@ type FullTeaser_ArticleTeaser_Fragment = {
       updatedAt?: string | null
       revision: number
       url: string
+      blocks: Array<
+        | {__typename: 'BildwurfAdBlock'}
+        | {__typename: 'CommentBlock'}
+        | {__typename: 'EmbedBlock'}
+        | {__typename: 'EventBlock'}
+        | {__typename: 'FacebookPostBlock'}
+        | {__typename: 'FacebookVideoBlock'}
+        | {__typename: 'HTMLBlock'}
+        | {__typename: 'ImageBlock'}
+        | {__typename: 'ImageGalleryBlock'}
+        | {__typename: 'InstagramPostBlock'}
+        | {__typename: 'LinkPageBreakBlock'}
+        | {__typename: 'ListicleBlock'}
+        | {__typename: 'PolisConversationBlock'}
+        | {__typename: 'PollBlock'}
+        | {__typename: 'QuoteBlock'}
+        | {__typename: 'RichTextBlock'; richText: Node[]}
+        | {__typename: 'SoundCloudTrackBlock'}
+        | {__typename: 'TeaserGridBlock'}
+        | {__typename: 'TeaserGridFlexBlock'}
+        | {__typename: 'TeaserListBlock'}
+        | {__typename: 'TikTokVideoBlock'}
+        | {__typename: 'TitleBlock'}
+        | {__typename: 'TwitterTweetBlock'}
+        | {__typename: 'VimeoVideoBlock'}
+        | {__typename: 'YouTubeVideoBlock'}
+      >
     } | null
     latest: {
       __typename?: 'ArticleRevision'
@@ -3955,6 +4120,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
         previewURL?: string | null
         column1URL?: string | null
         column6URL?: string | null
+        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
       } | null
     }
   } | null
@@ -3986,6 +4152,7 @@ type FullTeaser_EventTeaser_Fragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
   event?: {__typename?: 'Event'; id: string} | null
 }
@@ -4014,6 +4181,7 @@ type FullTeaser_PageTeaser_Fragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
   page?: {__typename?: 'Page'; id: string} | null
 }
@@ -4043,6 +4211,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
   article?: {
     __typename?: 'Article'
@@ -4058,6 +4227,33 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
       updatedAt?: string | null
       revision: number
       url: string
+      blocks: Array<
+        | {__typename: 'BildwurfAdBlock'}
+        | {__typename: 'CommentBlock'}
+        | {__typename: 'EmbedBlock'}
+        | {__typename: 'EventBlock'}
+        | {__typename: 'FacebookPostBlock'}
+        | {__typename: 'FacebookVideoBlock'}
+        | {__typename: 'HTMLBlock'}
+        | {__typename: 'ImageBlock'}
+        | {__typename: 'ImageGalleryBlock'}
+        | {__typename: 'InstagramPostBlock'}
+        | {__typename: 'LinkPageBreakBlock'}
+        | {__typename: 'ListicleBlock'}
+        | {__typename: 'PolisConversationBlock'}
+        | {__typename: 'PollBlock'}
+        | {__typename: 'QuoteBlock'}
+        | {__typename: 'RichTextBlock'; richText: Node[]}
+        | {__typename: 'SoundCloudTrackBlock'}
+        | {__typename: 'TeaserGridBlock'}
+        | {__typename: 'TeaserGridFlexBlock'}
+        | {__typename: 'TeaserListBlock'}
+        | {__typename: 'TikTokVideoBlock'}
+        | {__typename: 'TitleBlock'}
+        | {__typename: 'TwitterTweetBlock'}
+        | {__typename: 'VimeoVideoBlock'}
+        | {__typename: 'YouTubeVideoBlock'}
+      >
     } | null
     latest: {
       __typename?: 'ArticleRevision'
@@ -4085,6 +4281,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
         previewURL?: string | null
         column1URL?: string | null
         column6URL?: string | null
+        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
       } | null
     }
   } | null
@@ -4148,6 +4345,7 @@ type FullBlock_ImageBlock_Fragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -4174,6 +4372,7 @@ type FullBlock_ImageGalleryBlock_Fragment = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   }>
 }
@@ -4211,6 +4410,7 @@ type FullBlock_ListicleBlock_Fragment = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   }>
 }
@@ -4241,6 +4441,7 @@ type FullBlock_QuoteBlock_Fragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -4276,6 +4477,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
         article?: {
           __typename?: 'Article'
@@ -4291,6 +4493,33 @@ type FullBlock_TeaserGridBlock_Fragment = {
             updatedAt?: string | null
             revision: number
             url: string
+            blocks: Array<
+              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'CommentBlock'}
+              | {__typename: 'EmbedBlock'}
+              | {__typename: 'EventBlock'}
+              | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
+              | {__typename: 'HTMLBlock'}
+              | {__typename: 'ImageBlock'}
+              | {__typename: 'ImageGalleryBlock'}
+              | {__typename: 'InstagramPostBlock'}
+              | {__typename: 'LinkPageBreakBlock'}
+              | {__typename: 'ListicleBlock'}
+              | {__typename: 'PolisConversationBlock'}
+              | {__typename: 'PollBlock'}
+              | {__typename: 'QuoteBlock'}
+              | {__typename: 'RichTextBlock'; richText: Node[]}
+              | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'TeaserGridBlock'}
+              | {__typename: 'TeaserGridFlexBlock'}
+              | {__typename: 'TeaserListBlock'}
+              | {__typename: 'TikTokVideoBlock'}
+              | {__typename: 'TitleBlock'}
+              | {__typename: 'TwitterTweetBlock'}
+              | {__typename: 'VimeoVideoBlock'}
+              | {__typename: 'YouTubeVideoBlock'}
+            >
           } | null
           latest: {
             __typename?: 'ArticleRevision'
@@ -4318,6 +4547,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
               previewURL?: string | null
               column1URL?: string | null
               column6URL?: string | null
+              focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
             } | null
           }
         } | null
@@ -4347,6 +4577,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
         event?: {__typename?: 'Event'; id: string} | null
       }
@@ -4374,6 +4605,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
         page?: {__typename?: 'Page'; id: string} | null
       }
@@ -4402,6 +4634,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
           previewURL?: string | null
           column1URL?: string | null
           column6URL?: string | null
+          focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
         } | null
         article?: {
           __typename?: 'Article'
@@ -4417,6 +4650,33 @@ type FullBlock_TeaserGridBlock_Fragment = {
             updatedAt?: string | null
             revision: number
             url: string
+            blocks: Array<
+              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'CommentBlock'}
+              | {__typename: 'EmbedBlock'}
+              | {__typename: 'EventBlock'}
+              | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
+              | {__typename: 'HTMLBlock'}
+              | {__typename: 'ImageBlock'}
+              | {__typename: 'ImageGalleryBlock'}
+              | {__typename: 'InstagramPostBlock'}
+              | {__typename: 'LinkPageBreakBlock'}
+              | {__typename: 'ListicleBlock'}
+              | {__typename: 'PolisConversationBlock'}
+              | {__typename: 'PollBlock'}
+              | {__typename: 'QuoteBlock'}
+              | {__typename: 'RichTextBlock'; richText: Node[]}
+              | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'TeaserGridBlock'}
+              | {__typename: 'TeaserGridFlexBlock'}
+              | {__typename: 'TeaserListBlock'}
+              | {__typename: 'TikTokVideoBlock'}
+              | {__typename: 'TitleBlock'}
+              | {__typename: 'TwitterTweetBlock'}
+              | {__typename: 'VimeoVideoBlock'}
+              | {__typename: 'YouTubeVideoBlock'}
+            >
           } | null
           latest: {
             __typename?: 'ArticleRevision'
@@ -4444,6 +4704,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
               previewURL?: string | null
               column1URL?: string | null
               column6URL?: string | null
+              focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
             } | null
           }
         } | null
@@ -4531,6 +4792,7 @@ export type ImageRefFragment = {
   previewURL?: string | null
   column1URL?: string | null
   column6URL?: string | null
+  focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
 }
 
 export type FullImageFragment = {
@@ -4589,6 +4851,7 @@ export type ImageListQuery = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     }>
     pageInfo: {
       __typename?: 'PageInfo'
@@ -4658,6 +4921,7 @@ export type UploadImageMutation = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -4756,6 +5020,7 @@ export type MemberPlanRefFragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -4763,6 +5028,7 @@ export type FullMemberPlanFragment = {
   __typename?: 'MemberPlan'
   tags?: Array<string> | null
   amountPerMonthMin: number
+  currency: Currency
   extendable: boolean
   maxCount?: number | null
   id: string
@@ -4794,6 +5060,7 @@ export type FullMemberPlanFragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -4813,6 +5080,7 @@ export type MemberPlanListQuery = {
       __typename?: 'MemberPlan'
       tags?: Array<string> | null
       amountPerMonthMin: number
+      currency: Currency
       extendable: boolean
       maxCount?: number | null
       id: string
@@ -4849,6 +5117,7 @@ export type MemberPlanListQuery = {
         previewURL?: string | null
         column1URL?: string | null
         column6URL?: string | null
+        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
       } | null
     }>
     pageInfo: {
@@ -4868,6 +5137,25 @@ export type CreateSubscriptionMutationVariables = Exact<{
 export type CreateSubscriptionMutation = {
   __typename?: 'Mutation'
   createSubscription?: {
+    __typename?: 'Subscription'
+    autoRenew: boolean
+    id: string
+    paidUntil?: string | null
+    monthlyAmount: number
+    extendable: boolean
+    user?: {__typename?: 'User'; id: string} | null
+    memberPlan: {__typename?: 'MemberPlan'; id: string; slug: string}
+    paymentMethod: {__typename?: 'PaymentMethod'; id: string}
+  } | null
+}
+
+export type ImportSubscriptionMutationVariables = Exact<{
+  input: SubscriptionInput
+}>
+
+export type ImportSubscriptionMutation = {
+  __typename?: 'Mutation'
+  importSubscription?: {
     __typename?: 'Subscription'
     autoRenew: boolean
     id: string
@@ -5130,6 +5418,10 @@ export const ImageRef = gql`
     description
     width
     height
+    focalPoint {
+      x
+      y
+    }
     ...ImageURLs
   }
   ${ImageUrLs}
@@ -5176,6 +5468,12 @@ export const ArticleRef = gql`
       updatedAt
       revision
       url
+      blocks {
+        __typename
+        ... on RichTextBlock {
+          richText
+        }
+      }
     }
     latest {
       publishedAt
@@ -5374,6 +5672,7 @@ export const FullMemberPlan = gql`
   fragment FullMemberPlan on MemberPlan {
     tags
     amountPerMonthMin
+    currency
     availablePaymentMethods {
       paymentMethods {
         id
@@ -5406,8 +5705,8 @@ export const FullUser = gql`
   }
 `
 export const ArticleList = gql`
-  query ArticleList($filter: String, $cursor: ID, $take: Int) {
-    articles(take: $take, cursor: $cursor, filter: {title: $filter}) {
+  query ArticleList($filter: String, $cursor: ID, $skip: Int, $take: Int) {
+    articles(take: $take, skip: $skip, cursor: $cursor, filter: {title: $filter}) {
       nodes {
         ...ArticleRef
       }
@@ -5653,6 +5952,27 @@ export const MemberPlanList = gql`
 export const CreateSubscription = gql`
   mutation CreateSubscription($input: SubscriptionInput!) {
     createSubscription(input: $input) {
+      autoRenew
+      id
+      paidUntil
+      user {
+        id
+      }
+      monthlyAmount
+      memberPlan {
+        id
+        slug
+      }
+      extendable
+      paymentMethod {
+        id
+      }
+    }
+  }
+`
+export const ImportSubscription = gql`
+  mutation ImportSubscription($input: SubscriptionInput!) {
+    importSubscription(input: $input) {
       autoRenew
       id
       paidUntil

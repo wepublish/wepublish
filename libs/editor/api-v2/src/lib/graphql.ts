@@ -15,11 +15,22 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A hexidecimal color value. */
+  Color: string;
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
+  Date: string;
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: string;
   /** Setting Value */
   GraphQLSettingValueType: any;
   RichText: Node[];
+  Slug: string;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: File;
+  /** A valid vote value */
+  VoteValue: number;
+  _Any: any;
+  _FieldSet: any;
   link__Import: any;
 };
 
@@ -31,8 +42,168 @@ export type AllowedSettingVals = {
 
 export type Article = {
   __typename?: 'Article';
+  authors: Array<Author>;
+  blocks: Array<Block>;
+  breaking: Scalars['Boolean'];
+  canonicalUrl?: Maybe<Scalars['String']>;
+  comments: Array<Comment>;
+  disableComments?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
+  image?: Maybe<Image>;
+  lead?: Maybe<Scalars['String']>;
+  peeredArticleURL?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
+  properties: Array<PublicProperties>;
+  publishedAt: Scalars['DateTime'];
+  seoTitle?: Maybe<Scalars['String']>;
+  slug: Scalars['Slug'];
+  socialMediaAuthors: Array<Author>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaImage?: Maybe<Image>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  tags: Array<Tag>;
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  url: Scalars['String'];
 };
+
+export type ArticleConnection = {
+  __typename?: 'ArticleConnection';
+  nodes: Array<Article>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type ArticleFilter = {
+  authors?: InputMaybe<Array<Scalars['ID']>>;
+  includeHidden?: InputMaybe<Scalars['Boolean']>;
+  shared?: InputMaybe<Scalars['Boolean']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+};
+
+export type ArticleNavigationLink = BaseNavigationLink & {
+  __typename?: 'ArticleNavigationLink';
+  article?: Maybe<Article>;
+  label: Scalars['String'];
+};
+
+export enum ArticleSort {
+  PublishedAt = 'publishedAt',
+  UpdatedAt = 'updatedAt'
+}
+
+export type ArticleTeaser = {
+  __typename?: 'ArticleTeaser';
+  article?: Maybe<Article>;
+  image?: Maybe<Image>;
+  lead?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type AuthProvider = {
+  __typename?: 'AuthProvider';
+  name: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type Author = {
+  __typename?: 'Author';
+  bio?: Maybe<Scalars['RichText']>;
+  createdAt: Scalars['DateTime'];
+  hideOnArticle?: Maybe<Scalars['Boolean']>;
+  hideOnTeam?: Maybe<Scalars['Boolean']>;
+  hideOnTeaser?: Maybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  image?: Maybe<Image>;
+  jobTitle?: Maybe<Scalars['String']>;
+  links?: Maybe<Array<AuthorLink>>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  slug: Scalars['Slug'];
+  tags: Array<Tag>;
+  url: Scalars['String'];
+};
+
+export type AuthorConnection = {
+  __typename?: 'AuthorConnection';
+  nodes: Array<Author>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type AuthorFilter = {
+  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  tagIds?: InputMaybe<Array<Scalars['ID']>>;
+};
+
+export type AuthorLink = {
+  __typename?: 'AuthorLink';
+  title: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export enum AuthorSort {
+  Name = 'NAME',
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
+}
+
+export type AvailablePaymentMethod = {
+  __typename?: 'AvailablePaymentMethod';
+  forceAutoRenewal: Scalars['Boolean'];
+  paymentMethods: Array<PaymentMethod>;
+  paymentPeriodicities: Array<PaymentPeriodicity>;
+};
+
+export type Banner = {
+  __typename?: 'Banner';
+  actions?: Maybe<Array<BannerAction>>;
+  active: Scalars['Boolean'];
+  cta?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']>;
+  showOnArticles: Scalars['Boolean'];
+  showOnPages?: Maybe<Array<PageModel>>;
+  text: Scalars['String'];
+  title: Scalars['String'];
+};
+
+export type BannerAction = {
+  __typename?: 'BannerAction';
+  id: Scalars['ID'];
+  label: Scalars['String'];
+  role: BannerActionRole;
+  style: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export enum BannerActionRole {
+  Cancel = 'CANCEL',
+  Other = 'OTHER',
+  Primary = 'PRIMARY'
+}
+
+export enum BannerDocumentType {
+  Article = 'ARTICLE',
+  Page = 'PAGE'
+}
+
+export type BaseNavigationLink = {
+  label: Scalars['String'];
+};
+
+export type BildwurfAdBlock = {
+  __typename?: 'BildwurfAdBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  zoneID: Scalars['String'];
+};
+
+export type Block = BildwurfAdBlock | CommentBlock | EmbedBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | LinkPageBreakBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockStyle = {
   __typename?: 'BlockStyle';
@@ -62,6 +233,128 @@ export enum BlockType {
   Title = 'Title'
 }
 
+export type CalculatedRating = {
+  __typename?: 'CalculatedRating';
+  answer: CommentRatingSystemAnswer;
+  count: Scalars['Int'];
+  mean: Scalars['Float'];
+  total: Scalars['Int'];
+};
+
+export enum CaptchaType {
+  Algebraic = 'Algebraic',
+  CfTurnstile = 'CfTurnstile'
+}
+
+export type Challenge = {
+  __typename?: 'Challenge';
+  challenge?: Maybe<Scalars['String']>;
+  challengeID?: Maybe<Scalars['String']>;
+  type?: Maybe<CaptchaType>;
+  validUntil?: Maybe<Scalars['Date']>;
+};
+
+export type ChallengeInput = {
+  challengeID?: InputMaybe<Scalars['String']>;
+  challengeSolution: Scalars['String'];
+};
+
+export type Comment = {
+  __typename?: 'Comment';
+  authorType: CommentAuthorType;
+  calculatedRatings: Array<CalculatedRating>;
+  children: Array<Comment>;
+  createdAt: Scalars['DateTime'];
+  featured?: Maybe<Scalars['Boolean']>;
+  guestUserImage?: Maybe<Image>;
+  guestUsername?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  itemID: Scalars['ID'];
+  itemType: CommentItemType;
+  lead?: Maybe<Scalars['String']>;
+  modifiedAt?: Maybe<Scalars['DateTime']>;
+  overriddenRatings: Array<OverriddenRating>;
+  parentID?: Maybe<Scalars['ID']>;
+  peerId?: Maybe<Scalars['ID']>;
+  rejectionReason?: Maybe<Scalars['String']>;
+  source?: Maybe<Scalars['String']>;
+  state: CommentState;
+  tags: Array<Tag>;
+  text?: Maybe<Scalars['RichText']>;
+  title?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
+  user?: Maybe<User>;
+  userRatings: Array<CommentRating>;
+};
+
+export enum CommentAuthorType {
+  Author = 'author',
+  GuestUser = 'guestUser',
+  Team = 'team',
+  VerifiedUser = 'verifiedUser'
+}
+
+export type CommentBlock = {
+  __typename?: 'CommentBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  comments: Array<Comment>;
+};
+
+export type CommentInput = {
+  challenge?: InputMaybe<ChallengeInput>;
+  guestUsername?: InputMaybe<Scalars['String']>;
+  itemID: Scalars['ID'];
+  itemType: CommentItemType;
+  parentID?: InputMaybe<Scalars['ID']>;
+  peerId?: InputMaybe<Scalars['ID']>;
+  text: Scalars['RichText'];
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export enum CommentItemType {
+  Article = 'article',
+  Page = 'page',
+  PeerArticle = 'peerArticle'
+}
+
+export type CommentRating = {
+  __typename?: 'CommentRating';
+  answer: CommentRatingSystemAnswer;
+  commentId: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  disabled?: Maybe<Scalars['Boolean']>;
+  fingerprint?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  userId?: Maybe<Scalars['ID']>;
+  value: Scalars['Int'];
+};
+
+export type CommentRatingSystemAnswer = {
+  __typename?: 'CommentRatingSystemAnswer';
+  answer?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  ratingSystemId: Scalars['ID'];
+  type: RatingSystemType;
+};
+
+export enum CommentSort {
+  Rating = 'rating'
+}
+
+export enum CommentState {
+  Approved = 'approved',
+  PendingApproval = 'pendingApproval',
+  PendingUserChanges = 'pendingUserChanges',
+  Rejected = 'rejected'
+}
+
+export type CommentUpdateInput = {
+  id: Scalars['ID'];
+  lead?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['RichText']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
 export type Consent = {
   __typename?: 'Consent';
   createdAt: Scalars['DateTime'];
@@ -76,6 +369,41 @@ export type ConsentFilter = {
   defaultValue?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
+};
+
+export type CreateBannerActionInput = {
+  label: Scalars['String'];
+  role: BannerActionRole;
+  style: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type CreateBannerInput = {
+  actions?: InputMaybe<Array<CreateBannerActionInput>>;
+  active: Scalars['Boolean'];
+  cta?: InputMaybe<Scalars['String']>;
+  imageId?: InputMaybe<Scalars['String']>;
+  showOnArticles: Scalars['Boolean'];
+  showOnPages?: InputMaybe<Array<PageModelInput>>;
+  text: Scalars['String'];
+  title: Scalars['String'];
+};
+
+export enum Currency {
+  Chf = 'CHF',
+  Eur = 'EUR'
+}
+
+export type CustomTeaser = {
+  __typename?: 'CustomTeaser';
+  contentUrl?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
+  lead?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
+  properties: Array<PublicProperties>;
+  /** @deprecated Use block styles instead of this */
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
 };
 
 export type DashboardInvoice = {
@@ -98,6 +426,22 @@ export type DashboardSubscription = {
   startsAt: Scalars['DateTime'];
 };
 
+export type DeletePollVotesResult = {
+  __typename?: 'DeletePollVotesResult';
+  count: Scalars['Int'];
+};
+
+export type EmbedBlock = {
+  __typename?: 'EmbedBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['Int']>;
+  sandbox?: Maybe<Scalars['String']>;
+  styleCustom?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+  width?: Maybe<Scalars['Int']>;
+};
+
 export type Event = {
   __typename?: 'Event';
   createdAt: Scalars['DateTime'];
@@ -115,7 +459,21 @@ export type Event = {
   page?: Maybe<Page>;
   startsAt: Scalars['DateTime'];
   status: EventStatus;
-  tags?: Maybe<Array<Tag>>;
+  tags: Array<Tag>;
+  url: Scalars['String'];
+};
+
+export type EventBlock = {
+  __typename?: 'EventBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  events: Array<Event>;
+  filter: EventBlockFilter;
+};
+
+export type EventBlockFilter = {
+  __typename?: 'EventBlockFilter';
+  events?: Maybe<Array<Scalars['ID']>>;
+  tags?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type EventFilter = {
@@ -159,15 +517,149 @@ export enum EventStatus {
   Scheduled = 'Scheduled'
 }
 
+export type EventTeaser = {
+  __typename?: 'EventTeaser';
+  event?: Maybe<Event>;
+  image?: Maybe<Image>;
+  lead?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type ExternalNavigationLink = BaseNavigationLink & {
+  __typename?: 'ExternalNavigationLink';
+  label: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type FacebookPostBlock = {
+  __typename?: 'FacebookPostBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  postID: Scalars['String'];
+  userID: Scalars['String'];
+};
+
+export type FacebookVideoBlock = {
+  __typename?: 'FacebookVideoBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  userID: Scalars['String'];
+  videoID: Scalars['String'];
+};
+
+export type FlexAlignment = {
+  __typename?: 'FlexAlignment';
+  h: Scalars['Int'];
+  w: Scalars['Int'];
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+};
+
+export type FlexTeaser = {
+  __typename?: 'FlexTeaser';
+  alignment: FlexAlignment;
+  teaser?: Maybe<Teaser>;
+};
+
 export type FocalPoint = {
   __typename?: 'FocalPoint';
   x: Scalars['Float'];
   y: Scalars['Float'];
 };
 
+export type FullCommentRatingSystem = {
+  __typename?: 'FullCommentRatingSystem';
+  answers: Array<CommentRatingSystemAnswer>;
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+};
+
+export type FullPoll = {
+  __typename?: 'FullPoll';
+  answers: Array<PollAnswerWithVoteCount>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  externalVoteSources: Array<PollExternalVoteSource>;
+  id: Scalars['ID'];
+  infoText?: Maybe<Scalars['RichText']>;
+  opensAt: Scalars['DateTime'];
+  question?: Maybe<Scalars['String']>;
+};
+
+export type GalleryImageEdge = {
+  __typename?: 'GalleryImageEdge';
+  caption?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
+};
+
+export type HtmlBlock = {
+  __typename?: 'HTMLBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  html?: Maybe<Scalars['String']>;
+};
+
 export type Image = {
   __typename?: 'Image';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  extension: Scalars['String'];
+  fileSize: Scalars['Int'];
+  filename?: Maybe<Scalars['String']>;
+  focalPoint?: Maybe<FocalPoint>;
+  format: Scalars['String'];
+  height: Scalars['Int'];
   id: Scalars['ID'];
+  license?: Maybe<Scalars['String']>;
+  link?: Maybe<Scalars['String']>;
+  mimeType: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  source?: Maybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  transformURL?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+  width: Scalars['Int'];
+};
+
+
+export type ImageTransformUrlArgs = {
+  input?: InputMaybe<ImageTransformation>;
+};
+
+export type ImageBlock = {
+  __typename?: 'ImageBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  caption?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
+  linkUrl?: Maybe<Scalars['String']>;
+};
+
+export type ImageGalleryBlock = {
+  __typename?: 'ImageGalleryBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  images: Array<GalleryImageEdge>;
+};
+
+export enum ImageOutput {
+  Jpeg = 'jpeg',
+  Png = 'png',
+  Webp = 'webp'
+}
+
+export enum ImageRotation {
+  Auto = 'Auto',
+  Rotate0 = 'Rotate0',
+  Rotate90 = 'Rotate90',
+  Rotate180 = 'Rotate180',
+  Rotate270 = 'Rotate270'
+}
+
+export type ImageTransformation = {
+  height?: InputMaybe<Scalars['Int']>;
+  output?: InputMaybe<ImageOutput>;
+  quality?: InputMaybe<Scalars['Float']>;
+  rotation?: InputMaybe<ImageRotation>;
+  width?: InputMaybe<Scalars['Int']>;
 };
 
 export type ImageV2 = {
@@ -213,6 +705,75 @@ export type ImportedEventsDocument = {
   totalCount: Scalars['Float'];
 };
 
+export type InputPoint = {
+  x: Scalars['Float'];
+  y: Scalars['Float'];
+};
+
+export type InstagramPostBlock = {
+  __typename?: 'InstagramPostBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  postID: Scalars['String'];
+};
+
+export type Invoice = {
+  __typename?: 'Invoice';
+  canceledAt?: Maybe<Scalars['DateTime']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  dueAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  items: Array<InvoiceItem>;
+  mail: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  paidAt?: Maybe<Scalars['DateTime']>;
+  subscription?: Maybe<Subscription>;
+  subscriptionID: Scalars['ID'];
+  total: Scalars['Int'];
+};
+
+export type InvoiceItem = {
+  __typename?: 'InvoiceItem';
+  amount: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  quantity: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type LinkPageBreakBlock = {
+  __typename?: 'LinkPageBreakBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  hideButton: Scalars['Boolean'];
+  image?: Maybe<Image>;
+  /** @deprecated Use block styles instead of this */
+  layoutOption?: Maybe<Scalars['String']>;
+  linkTarget?: Maybe<Scalars['String']>;
+  linkText?: Maybe<Scalars['String']>;
+  linkURL?: Maybe<Scalars['String']>;
+  richText: Scalars['RichText'];
+  /** @deprecated Use block styles instead of this */
+  styleOption?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
+  templateOption?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
+};
+
+export type ListicleBlock = {
+  __typename?: 'ListicleBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  items: Array<ListicleItem>;
+};
+
+export type ListicleItem = {
+  __typename?: 'ListicleItem';
+  image?: Maybe<Image>;
+  richText: Scalars['RichText'];
+  title: Scalars['String'];
+};
+
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
   name: Scalars['String'];
@@ -237,12 +798,44 @@ export type MailTemplateWithUrlAndStatusModel = {
 
 export type MemberPlan = {
   __typename?: 'MemberPlan';
+  amountPerMonthMin: Scalars['Int'];
+  availablePaymentMethods: Array<AvailablePaymentMethod>;
+  currency: Currency;
+  description?: Maybe<Scalars['RichText']>;
+  extendable: Scalars['Boolean'];
   id: Scalars['ID'];
+  image?: Maybe<Image>;
+  maxCount?: Maybe<Scalars['Int']>;
   name: Scalars['String'];
+  slug: Scalars['String'];
+  tags?: Maybe<Array<Scalars['String']>>;
 };
+
+export type MemberPlanConnection = {
+  __typename?: 'MemberPlanConnection';
+  nodes: Array<MemberPlan>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type MemberPlanFilter = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+};
+
+export enum MemberPlanSort {
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** This mutation allows to add a comment. The input is of type CommentInput. */
+  addComment: Comment;
+  /** This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now */
+  cancelUserSubscription?: Maybe<Subscription>;
+  createBanner: Banner;
   /** Creates a new block style. */
   createBlockStyle: BlockStyle;
   /**
@@ -253,6 +846,15 @@ export type Mutation = {
   createConsent: Consent;
   /** Creates a new event. */
   createEvent: Event;
+  /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
+  createPaymentFromInvoice?: Maybe<Payment>;
+  /** This mutation allows to create payment by referencing a subscription. */
+  createPaymentFromSubscription?: Maybe<Payment>;
+  createSession: SessionWithToken;
+  createSessionWithJWT: SessionWithToken;
+  createSessionWithOAuth2Code: SessionWithToken;
+  /** Allows authenticated users to create additional subscriptions */
+  createSubscription: Payment;
   /** Create a new subscription flow */
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Create a subscription interval */
@@ -264,6 +866,7 @@ export type Mutation = {
    *
    */
   createUserConsent: UserConsent;
+  deleteBanner?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
   /**
@@ -274,8 +877,8 @@ export type Mutation = {
   deleteConsent: Consent;
   /** Deletes an existing event. */
   deleteEvent: Event;
-  /** Delete poll vote */
-  deletePollVote: PollVote;
+  /** Delete poll votes */
+  deletePollVotes: DeletePollVotesResult;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -287,6 +890,8 @@ export type Mutation = {
    *
    */
   deleteUserConsent: UserConsent;
+  /** This mutation extends an subscription early */
+  extendSubscription: Payment;
   /**
    *
    *       Creates and event based on data from importable events list and an id and provider.
@@ -294,11 +899,24 @@ export type Mutation = {
    *
    */
   importEvent: Scalars['String'];
+  /** This mutation allows to rate a comment. Supports logged in and anonymous */
+  rateComment: Comment;
+  /** This mutation allows to register a new member, */
+  registerMember: Registration;
+  /** This mutation allows to register a new member, select a member plan, payment method and create an invoice.  */
+  registerMemberAndReceivePayment: RegistrationAndPayment;
+  /** This mutation revokes and deletes the active session. */
+  revokeActiveSession: Scalars['Boolean'];
+  /** This mutation sends a login link to the email if the user exists. Method will always return email address */
+  sendWebsiteLogin: Scalars['String'];
   syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
+  updateBanner: Banner;
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle;
+  /** This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text. */
+  updateComment: Comment;
   /**
    *
    *       Updates an existing consent.
@@ -307,6 +925,10 @@ export type Mutation = {
   updateConsent: Consent;
   /** Updates an existing event. */
   updateEvent: Event;
+  /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
+  updatePassword?: Maybe<User>;
+  /** This mutation allows to update the Payment Provider Customers */
+  updatePaymentProviderCustomers: Array<PaymentProviderCustomer>;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Update an existing subscription flow */
@@ -315,6 +937,8 @@ export type Mutation = {
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
   /** Updates an existing mail flow */
   updateSystemMail: Array<SystemMailModel>;
+  /** This mutation allows to update the user's data by taking an input of type UserInput. */
+  updateUser?: Maybe<User>;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -322,6 +946,27 @@ export type Mutation = {
    *
    */
   updateUserConsent: UserConsent;
+  /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
+  updateUserSubscription?: Maybe<Subscription>;
+  /** This mutation allows to upload and update the user's profile image. */
+  uploadUserProfileImage?: Maybe<User>;
+  /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
+  voteOnPoll?: Maybe<PollVote>;
+};
+
+
+export type MutationAddCommentArgs = {
+  input: CommentInput;
+};
+
+
+export type MutationCancelUserSubscriptionArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationCreateBannerArgs = {
+  input: CreateBannerInput;
 };
 
 
@@ -350,6 +995,51 @@ export type MutationCreateEventArgs = {
 };
 
 
+export type MutationCreatePaymentFromInvoiceArgs = {
+  input: PaymentFromInvoiceInput;
+};
+
+
+export type MutationCreatePaymentFromSubscriptionArgs = {
+  failureURL?: InputMaybe<Scalars['String']>;
+  subscriptionId?: InputMaybe<Scalars['ID']>;
+  successURL?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateSessionArgs = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
+
+export type MutationCreateSessionWithJwtArgs = {
+  jwt: Scalars['String'];
+};
+
+
+export type MutationCreateSessionWithOAuth2CodeArgs = {
+  code: Scalars['String'];
+  name: Scalars['String'];
+  redirectUri: Scalars['String'];
+};
+
+
+export type MutationCreateSubscriptionArgs = {
+  autoRenew: Scalars['Boolean'];
+  deactivateSubscriptionId?: InputMaybe<Scalars['ID']>;
+  failureURL?: InputMaybe<Scalars['String']>;
+  memberPlanID?: InputMaybe<Scalars['ID']>;
+  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
+  monthlyAmount: Scalars['Int'];
+  paymentMethodID?: InputMaybe<Scalars['ID']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  paymentPeriodicity: PaymentPeriodicity;
+  subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>;
+  successURL?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreateSubscriptionFlowArgs = {
   autoRenewal: Array<Scalars['Boolean']>;
   memberPlanId: Scalars['String'];
@@ -373,6 +1063,11 @@ export type MutationCreateUserConsentArgs = {
 };
 
 
+export type MutationDeleteBannerArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteBlockStyleArgs = {
   id: Scalars['String'];
 };
@@ -388,8 +1083,8 @@ export type MutationDeleteEventArgs = {
 };
 
 
-export type MutationDeletePollVoteArgs = {
-  id: Scalars['ID'];
+export type MutationDeletePollVotesArgs = {
+  ids: Array<Scalars['ID']>;
 };
 
 
@@ -408,9 +1103,60 @@ export type MutationDeleteUserConsentArgs = {
 };
 
 
+export type MutationExtendSubscriptionArgs = {
+  failureURL?: InputMaybe<Scalars['String']>;
+  subscriptionId: Scalars['ID'];
+  successURL?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationImportEventArgs = {
   id: Scalars['String'];
   source: Scalars['String'];
+};
+
+
+export type MutationRateCommentArgs = {
+  answerId: Scalars['ID'];
+  commentId: Scalars['ID'];
+  value: Scalars['Int'];
+};
+
+
+export type MutationRegisterMemberArgs = {
+  address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
+  challengeAnswer: ChallengeInput;
+  email: Scalars['String'];
+  firstName?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationRegisterMemberAndReceivePaymentArgs = {
+  address?: InputMaybe<UserAddressInput>;
+  autoRenew: Scalars['Boolean'];
+  birthday?: InputMaybe<Scalars['DateTime']>;
+  challengeAnswer: ChallengeInput;
+  email: Scalars['String'];
+  failureURL?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  memberPlanID?: InputMaybe<Scalars['ID']>;
+  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
+  monthlyAmount: Scalars['Int'];
+  name: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
+  paymentMethodID?: InputMaybe<Scalars['ID']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  paymentPeriodicity: PaymentPeriodicity;
+  subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>;
+  successURL?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationSendWebsiteLoginArgs = {
+  email: Scalars['String'];
 };
 
 
@@ -419,10 +1165,20 @@ export type MutationTestSystemMailArgs = {
 };
 
 
+export type MutationUpdateBannerArgs = {
+  input: UpdateBannerInput;
+};
+
+
 export type MutationUpdateBlockStyleArgs = {
   blocks?: InputMaybe<Array<BlockType>>;
   id: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateCommentArgs = {
+  input: CommentUpdateInput;
 };
 
 
@@ -444,6 +1200,17 @@ export type MutationUpdateEventArgs = {
   name?: InputMaybe<Scalars['String']>;
   startsAt?: InputMaybe<Scalars['DateTime']>;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationUpdatePasswordArgs = {
+  password: Scalars['String'];
+  passwordRepeated: Scalars['String'];
+};
+
+
+export type MutationUpdatePaymentProviderCustomersArgs = {
+  input: Array<PaymentProviderCustomerInput>;
 };
 
 
@@ -474,14 +1241,72 @@ export type MutationUpdateSystemMailArgs = {
 };
 
 
+export type MutationUpdateUserArgs = {
+  input: UserInput;
+};
+
+
 export type MutationUpdateUserConsentArgs = {
   id: Scalars['String'];
   value: Scalars['Boolean'];
 };
 
+
+export type MutationUpdateUserSubscriptionArgs = {
+  id: Scalars['ID'];
+  input: SubscriptionInput;
+};
+
+
+export type MutationUploadUserProfileImageArgs = {
+  uploadImageInput?: InputMaybe<UploadImageInput>;
+};
+
+
+export type MutationVoteOnPollArgs = {
+  answerId: Scalars['ID'];
+};
+
+export type Navigation = {
+  __typename?: 'Navigation';
+  id: Scalars['ID'];
+  key: Scalars['String'];
+  links: Array<NavigationLink>;
+  name: Scalars['String'];
+};
+
+export type NavigationLink = ArticleNavigationLink | ExternalNavigationLink | PageNavigationLink;
+
+export type OAuth2Account = {
+  __typename?: 'OAuth2Account';
+  provider: Scalars['String'];
+  scope: Scalars['String'];
+  type: Scalars['String'];
+};
+
 export type Page = {
   __typename?: 'Page';
+  blocks: Array<Block>;
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  image?: Maybe<Image>;
+  properties: Array<PublicProperties>;
+  publishedAt: Scalars['DateTime'];
+  slug: Scalars['Slug'];
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaImage?: Maybe<Image>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  tags: Array<Tag>;
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  url: Scalars['String'];
+};
+
+export type PageConnection = {
+  __typename?: 'PageConnection';
+  nodes: Array<Page>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type PageInfo = {
@@ -490,6 +1315,32 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
   startCursor?: Maybe<Scalars['String']>;
+};
+
+export type PageModel = {
+  __typename?: 'PageModel';
+  id: Scalars['ID'];
+};
+
+export type PageModelInput = {
+  id: Scalars['ID'];
+};
+
+export type PageNavigationLink = BaseNavigationLink & {
+  __typename?: 'PageNavigationLink';
+  label: Scalars['String'];
+  page?: Maybe<Page>;
+};
+
+export type PageTeaser = {
+  __typename?: 'PageTeaser';
+  image?: Maybe<Image>;
+  lead?: Maybe<Scalars['String']>;
+  page?: Maybe<Page>;
+  preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
 };
 
 export type PaginatedEvents = {
@@ -506,10 +1357,31 @@ export type PaginatedPollVotes = {
   totalCount: Scalars['Float'];
 };
 
+export type Payment = {
+  __typename?: 'Payment';
+  id: Scalars['ID'];
+  intentSecret?: Maybe<Scalars['String']>;
+  paymentMethod: PaymentMethod;
+  state: PaymentState;
+};
+
+export type PaymentFromInvoiceInput = {
+  failureURL?: InputMaybe<Scalars['String']>;
+  invoiceID: Scalars['ID'];
+  paymentMethodID?: InputMaybe<Scalars['ID']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  successURL?: InputMaybe<Scalars['String']>;
+};
+
 export type PaymentMethod = {
   __typename?: 'PaymentMethod';
+  description: Scalars['String'];
   id: Scalars['ID'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  paymentProviderID: Scalars['String'];
+  slug: Scalars['Slug'];
 };
 
 export enum PaymentPeriodicity {
@@ -518,6 +1390,66 @@ export enum PaymentPeriodicity {
   Quarterly = 'quarterly',
   Yearly = 'yearly'
 }
+
+export type PaymentProviderCustomer = {
+  __typename?: 'PaymentProviderCustomer';
+  customerID: Scalars['String'];
+  paymentProviderID: Scalars['String'];
+};
+
+export type PaymentProviderCustomerInput = {
+  customerID: Scalars['String'];
+  paymentProviderID: Scalars['String'];
+};
+
+export enum PaymentState {
+  Canceled = 'canceled',
+  Created = 'created',
+  Declined = 'declined',
+  Paid = 'paid',
+  Processing = 'processing',
+  RequiresUserAction = 'requiresUserAction',
+  Submitted = 'submitted'
+}
+
+export type Peer = {
+  __typename?: 'Peer';
+  createdAt: Scalars['DateTime'];
+  hostURL: Scalars['String'];
+  id: Scalars['ID'];
+  isDisabled?: Maybe<Scalars['Boolean']>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  profile?: Maybe<PeerProfile>;
+  slug: Scalars['String'];
+};
+
+export type PeerArticleTeaser = {
+  __typename?: 'PeerArticleTeaser';
+  article?: Maybe<Article>;
+  articleID: Scalars['ID'];
+  image?: Maybe<Image>;
+  lead?: Maybe<Scalars['String']>;
+  peer?: Maybe<Peer>;
+  preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type PeerProfile = {
+  __typename?: 'PeerProfile';
+  callToActionImage?: Maybe<Image>;
+  callToActionImageURL?: Maybe<Scalars['String']>;
+  callToActionText: Scalars['RichText'];
+  callToActionURL: Scalars['String'];
+  hostURL: Scalars['String'];
+  logo?: Maybe<Image>;
+  name: Scalars['String'];
+  themeColor: Scalars['Color'];
+  themeFontColor: Scalars['Color'];
+  websiteURL: Scalars['String'];
+};
 
 export type PeriodicJob = {
   __typename?: 'PeriodicJob';
@@ -532,10 +1464,64 @@ export type PeriodicJob = {
   tries: Scalars['Float'];
 };
 
+export type Phrase = {
+  __typename?: 'Phrase';
+  articles?: Maybe<PhraseResultArticleContent>;
+  pages?: Maybe<PhraseResultPageContent>;
+};
+
+export type PhraseResultArticleContent = {
+  __typename?: 'PhraseResultArticleContent';
+  nodes: Array<Article>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PhraseResultPageContent = {
+  __typename?: 'PhraseResultPageContent';
+  nodes: Array<Page>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PolisConversationBlock = {
+  __typename?: 'PolisConversationBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  conversationID: Scalars['String'];
+};
+
 export type PollAnswerInVote = {
   __typename?: 'PollAnswerInVote';
   answer: Scalars['String'];
   id: Scalars['ID'];
+};
+
+export type PollAnswerWithVoteCount = {
+  __typename?: 'PollAnswerWithVoteCount';
+  answer?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  pollId: Scalars['ID'];
+  votes: Scalars['Int'];
+};
+
+export type PollBlock = {
+  __typename?: 'PollBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  poll?: Maybe<FullPoll>;
+};
+
+export type PollExternalVote = {
+  __typename?: 'PollExternalVote';
+  amount: Scalars['VoteValue'];
+  answerId: Scalars['ID'];
+  id: Scalars['ID'];
+};
+
+export type PollExternalVoteSource = {
+  __typename?: 'PollExternalVoteSource';
+  id: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+  voteAmounts: Array<PollExternalVote>;
 };
 
 export type PollVote = {
@@ -563,8 +1549,30 @@ export enum PollVoteSort {
   CreatedAt = 'CreatedAt'
 }
 
+export type PublicProperties = {
+  __typename?: 'PublicProperties';
+  key: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type PublicPropertiesInput = {
+  key: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type PublishedPageFilter = {
+  tags?: InputMaybe<Array<Scalars['String']>>;
+};
+
+export enum PublishedPageSort {
+  PublishedAt = 'publishedAt',
+  UpdatedAt = 'updatedAt'
+}
+
 export type Query = {
   __typename?: 'Query';
+  _entities: Array<Maybe<_Entity>>;
+  _service: _Service;
   /**
    *
    *       Returns all active subscribers.
@@ -572,8 +1580,26 @@ export type Query = {
    *
    */
   activeSubscribers: Array<DashboardSubscription>;
+  /** This query takes either the ID, slug or token and returns the article. */
+  article?: Maybe<Article>;
+  /** This query returns the articles. */
+  articles: ArticleConnection;
+  /** This query returns the redirect Uri. */
+  authProviders: Array<AuthProvider>;
+  /** This query takes either the ID or the slug and returns the author. */
+  author?: Maybe<Author>;
+  /** This query is to get the authors. */
+  authors: AuthorConnection;
+  banner: Banner;
+  banners: Array<Banner>;
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>;
+  /** This query generates a challenge which can be used to access protected endpoints. */
+  challenge: Challenge;
+  /** This mutation will check the invoice status and update with information from the paymentProvider */
+  checkInvoiceStatus?: Maybe<Invoice>;
+  /** This query returns the comments of an item. */
+  comments: Array<Comment>;
   /**
    *
    *       Returns a consent by id.
@@ -629,8 +1655,20 @@ export type Query = {
    *
    */
   importedEventsIds: Array<Scalars['String']>;
+  /** This query returns the invoices  of the authenticated user. */
+  invoices: Array<Invoice>;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
+  /** This query returns the user. */
+  me?: Maybe<User>;
+  /** This query returns a member plan. */
+  memberPlan?: Maybe<MemberPlan>;
+  /** This query returns the member plans. */
+  memberPlans: MemberPlanConnection;
+  /** This query takes either the ID or the key and returns the navigation. */
+  navigation?: Maybe<Navigation>;
+  /** This query returns all navigations. */
+  navigations?: Maybe<Array<Navigation>>;
   /**
    *
    *       Returns all new deactivations in a given timeframe.
@@ -645,12 +1683,28 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  /** This query takes either the ID, slug or token and returns the page. */
+  page?: Maybe<Page>;
+  /** This query returns the pages. */
+  pages: PageConnection;
   /** Returns all payment methods */
   paymentMethods: Array<PaymentMethod>;
+  /** This query takes either the ID or the slug and returns the peer profile. */
+  peer?: Maybe<Peer>;
+  /** This query takes either the peer ID or the peer slug and returns the article. */
+  peerArticle?: Maybe<Article>;
+  /** This query returns the peer profile. */
+  peerProfile: PeerProfile;
   periodicJobLog: Array<PeriodicJob>;
+  /** This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones. */
+  phrase?: Maybe<Phrase>;
+  /** This query returns a poll with all the needed data */
+  poll: FullPoll;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
+  primaryBanner: Banner;
   provider: MailProviderModel;
+  ratingSystem: FullCommentRatingSystem;
   /**
    *
    *       Returns all renewing subscribers in a given timeframe.
@@ -685,8 +1739,12 @@ export type Query = {
   stats?: Maybe<Stats>;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
+  /** This query returns the subscriptions of the authenticated user. */
+  subscriptions: Array<Subscription>;
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
+  /** This query returns a list of tags */
+  tags?: Maybe<TagConnection>;
   /**
    *
    *       Returns a single userConsent by id.
@@ -699,7 +1757,75 @@ export type Query = {
    *
    */
   userConsents: Array<UserConsent>;
+  /** This query returns the answerId of a poll if the user has already voted on it. */
+  userPollVote?: Maybe<Scalars['ID']>;
   versionInformation: VersionInformation;
+};
+
+
+export type Query_EntitiesArgs = {
+  representations: Array<Scalars['_Any']>;
+};
+
+
+export type QueryArticleArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  slug?: InputMaybe<Scalars['Slug']>;
+  token?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryArticlesArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<ArticleFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<ArticleSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryAuthProvidersArgs = {
+  redirectUri?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryAuthorArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  slug?: InputMaybe<Scalars['Slug']>;
+};
+
+
+export type QueryAuthorsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<AuthorFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<AuthorSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryBannerArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryBannersArgs = {
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
+};
+
+
+export type QueryCheckInvoiceStatusArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryCommentsArgs = {
+  itemId: Scalars['ID'];
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<CommentSort>;
 };
 
 
@@ -759,6 +1885,28 @@ export type QueryImportedEventsArgs = {
 };
 
 
+export type QueryMemberPlanArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  slug?: InputMaybe<Scalars['Slug']>;
+};
+
+
+export type QueryMemberPlansArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<MemberPlanFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<MemberPlanSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryNavigationArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  key?: InputMaybe<Scalars['ID']>;
+};
+
+
 export type QueryNewDeactivationsArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
@@ -771,9 +1919,54 @@ export type QueryNewSubscribersArgs = {
 };
 
 
+export type QueryPageArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  slug?: InputMaybe<Scalars['Slug']>;
+  token?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryPagesArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<PublishedPageFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<PublishedPageSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPeerArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  slug?: InputMaybe<Scalars['Slug']>;
+};
+
+
+export type QueryPeerArticleArgs = {
+  id: Scalars['ID'];
+  peerID?: InputMaybe<Scalars['ID']>;
+  peerSlug?: InputMaybe<Scalars['Slug']>;
+};
+
+
 export type QueryPeriodicJobLogArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPhraseArgs = {
+  articleSort?: InputMaybe<ArticleSort>;
+  order?: InputMaybe<SortOrder>;
+  pageSort?: InputMaybe<PublishedPageSort>;
+  query: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPollArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -784,6 +1977,12 @@ export type QueryPollVotesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<PollVoteSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPrimaryBannerArgs = {
+  documentId: Scalars['ID'];
+  documentType: BannerDocumentType;
 };
 
 
@@ -820,6 +2019,16 @@ export type QuerySubscriptionFlowsArgs = {
 };
 
 
+export type QueryTagsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<TagFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<TagSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryUserConsentArgs = {
   id: Scalars['String'];
 };
@@ -829,6 +2038,50 @@ export type QueryUserConsentsArgs = {
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
   value?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type QueryUserPollVoteArgs = {
+  pollId: Scalars['ID'];
+};
+
+export type QuoteBlock = {
+  __typename?: 'QuoteBlock';
+  author?: Maybe<Scalars['String']>;
+  blockStyle?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
+  quote?: Maybe<Scalars['String']>;
+};
+
+export enum RatingSystemType {
+  Star = 'star'
+}
+
+export type Registration = {
+  __typename?: 'Registration';
+  session: UserSession;
+  user: User;
+};
+
+export type RegistrationAndPayment = {
+  __typename?: 'RegistrationAndPayment';
+  payment: Payment;
+  session: UserSession;
+  user: User;
+};
+
+export type RichTextBlock = {
+  __typename?: 'RichTextBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  richText: Scalars['RichText'];
+};
+
+export type SessionWithToken = {
+  __typename?: 'SessionWithToken';
+  createdAt: Scalars['DateTime'];
+  expiresAt: Scalars['DateTime'];
+  token: Scalars['String'];
+  user: User;
 };
 
 export type Setting = {
@@ -848,9 +2101,7 @@ export enum SettingName {
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
-  BodyScript = 'BODY_SCRIPT',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
-  HeadScript = 'HEAD_SCRIPT',
   MailProviderName = 'MAIL_PROVIDER_NAME',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
@@ -881,11 +2132,39 @@ export enum SortOrder {
   Descending = 'Descending'
 }
 
+export type SoundCloudTrackBlock = {
+  __typename?: 'SoundCloudTrackBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  trackID: Scalars['String'];
+};
+
 export type Stats = {
   __typename?: 'Stats';
   articlesCount: Scalars['Int'];
   authorsCount: Scalars['Int'];
   firstArticleDate?: Maybe<Scalars['DateTime']>;
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  autoRenew: Scalars['Boolean'];
+  deactivation?: Maybe<SubscriptionDeactivation>;
+  extendable: Scalars['Boolean'];
+  id: Scalars['ID'];
+  memberPlan: MemberPlan;
+  monthlyAmount: Scalars['Int'];
+  paidUntil?: Maybe<Scalars['DateTime']>;
+  paymentMethod: PaymentMethod;
+  paymentPeriodicity: PaymentPeriodicity;
+  properties: Array<PublicProperties>;
+  startsAt: Scalars['DateTime'];
+  url: Scalars['String'];
+};
+
+export type SubscriptionDeactivation = {
+  __typename?: 'SubscriptionDeactivation';
+  date: Scalars['DateTime'];
+  reason: SubscriptionDeactivationReason;
 };
 
 export enum SubscriptionDeactivationReason {
@@ -916,6 +2195,15 @@ export type SubscriptionFlowModel = {
   periodicities: Array<PaymentPeriodicity>;
 };
 
+export type SubscriptionInput = {
+  autoRenew: Scalars['Boolean'];
+  id: Scalars['ID'];
+  memberPlanID: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  paymentMethodID: Scalars['String'];
+  paymentPeriodicity: PaymentPeriodicity;
+};
+
 export type SubscriptionInterval = {
   __typename?: 'SubscriptionInterval';
   daysAwayFromEnding?: Maybe<Scalars['Int']>;
@@ -933,18 +2221,165 @@ export type SystemMailModel = {
 export type Tag = {
   __typename?: 'Tag';
   id: Scalars['ID'];
+  main: Scalars['Boolean'];
+  tag?: Maybe<Scalars['String']>;
+  type?: Maybe<TagType>;
+  url: Scalars['String'];
+};
+
+export type TagConnection = {
+  __typename?: 'TagConnection';
+  nodes: Array<Tag>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type TagFilter = {
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
+};
+
+export enum TagSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Tag = 'Tag'
+}
+
+export enum TagType {
+  Article = 'Article',
+  Author = 'Author',
+  Comment = 'Comment',
+  Event = 'Event',
+  Page = 'Page'
+}
+
+export type Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | PeerArticleTeaser;
+
+export type TeaserGridBlock = {
+  __typename?: 'TeaserGridBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  numColumns: Scalars['Int'];
+  teasers: Array<Maybe<Teaser>>;
+};
+
+export type TeaserGridFlexBlock = {
+  __typename?: 'TeaserGridFlexBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  flexTeasers: Array<FlexTeaser>;
+};
+
+export type TeaserListBlock = {
+  __typename?: 'TeaserListBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  filter: TeaserListBlockFilter;
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+  teaserType?: Maybe<TeaserType>;
+  teasers: Array<Maybe<Teaser>>;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type TeaserListBlockFilter = {
+  __typename?: 'TeaserListBlockFilter';
+  tagObjects: Array<Tag>;
+  tags?: Maybe<Array<Scalars['ID']>>;
+};
+
+export enum TeaserStyle {
+  Default = 'default',
+  Light = 'light',
+  Text = 'text'
+}
+
+export enum TeaserType {
+  Article = 'article',
+  Custom = 'custom',
+  Event = 'event',
+  Page = 'page',
+  PeerArticle = 'peerArticle'
+}
+
+export type TikTokVideoBlock = {
+  __typename?: 'TikTokVideoBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  userID: Scalars['String'];
+  videoID: Scalars['String'];
+};
+
+export type TitleBlock = {
+  __typename?: 'TitleBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type TwitterTweetBlock = {
+  __typename?: 'TwitterTweetBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  tweetID: Scalars['String'];
+  userID: Scalars['String'];
+};
+
+export type UpdateBannerInput = {
+  actions?: InputMaybe<Array<CreateBannerActionInput>>;
+  active: Scalars['Boolean'];
+  cta?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  imageId?: InputMaybe<Scalars['String']>;
+  showOnArticles: Scalars['Boolean'];
+  showOnPages?: InputMaybe<Array<PageModelInput>>;
+  text: Scalars['String'];
+  title: Scalars['String'];
+};
+
+export type UploadImageInput = {
+  description?: InputMaybe<Scalars['String']>;
+  file: Scalars['Upload'];
+  filename?: InputMaybe<Scalars['String']>;
+  focalPoint?: InputMaybe<InputPoint>;
+  license?: InputMaybe<Scalars['String']>;
+  link?: InputMaybe<Scalars['String']>;
+  source?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type User = {
   __typename?: 'User';
+  address?: Maybe<UserAddress>;
+  birthday?: Maybe<Scalars['DateTime']>;
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
+  image?: Maybe<Image>;
   lastLogin?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
+  oauth2Accounts: Array<OAuth2Account>;
+  paymentProviderCustomers: Array<PaymentProviderCustomer>;
+  properties: Array<PublicProperties>;
   roleIDs?: Maybe<Array<Scalars['String']>>;
   userImageID?: Maybe<Scalars['String']>;
+};
+
+export type UserAddress = {
+  __typename?: 'UserAddress';
+  city?: Maybe<Scalars['String']>;
+  company?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  streetAddress?: Maybe<Scalars['String']>;
+  streetAddress2?: Maybe<Scalars['String']>;
+  zipCode?: Maybe<Scalars['String']>;
+};
+
+export type UserAddressInput = {
+  city?: InputMaybe<Scalars['String']>;
+  company?: InputMaybe<Scalars['String']>;
+  country?: InputMaybe<Scalars['String']>;
+  streetAddress?: InputMaybe<Scalars['String']>;
+  streetAddress2?: InputMaybe<Scalars['String']>;
+  zipCode?: InputMaybe<Scalars['String']>;
 };
 
 export type UserConsent = {
@@ -964,10 +2399,98 @@ export enum UserEvent {
   TestMail = 'TEST_MAIL'
 }
 
+export type UserInput = {
+  address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  uploadImageInput?: InputMaybe<UploadImageInput>;
+};
+
+export type UserSession = {
+  __typename?: 'UserSession';
+  createdAt: Scalars['DateTime'];
+  expiresAt: Scalars['DateTime'];
+  token: Scalars['String'];
+};
+
 export type VersionInformation = {
   __typename?: 'VersionInformation';
   version: Scalars['String'];
 };
+
+export type VimeoVideoBlock = {
+  __typename?: 'VimeoVideoBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  videoID: Scalars['String'];
+};
+
+export type YouTubeVideoBlock = {
+  __typename?: 'YouTubeVideoBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  videoID: Scalars['String'];
+};
+
+export type _Entity = Article | Event | Image | MemberPlan | Page | PaymentMethod | PollVote | Tag | User;
+
+export type _Service = {
+  __typename?: '_Service';
+  sdl?: Maybe<Scalars['String']>;
+};
+
+export type OverriddenRating = {
+  __typename?: 'overriddenRating';
+  answerId: Scalars['ID'];
+  value?: Maybe<Scalars['Int']>;
+};
+
+export type BannersQueryVariables = Exact<{
+  take: Scalars['Int'];
+  skip: Scalars['Int'];
+}>;
+
+
+export type BannersQuery = { __typename?: 'Query', banners: Array<{ __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null }> };
+
+export type BannerQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type BannerQuery = { __typename?: 'Query', banner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null } };
+
+export type CreateBannerMutationVariables = Exact<{
+  input: CreateBannerInput;
+}>;
+
+
+export type CreateBannerMutation = { __typename?: 'Mutation', createBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null } };
+
+export type UpdateBannerMutationVariables = Exact<{
+  input: UpdateBannerInput;
+}>;
+
+
+export type UpdateBannerMutation = { __typename?: 'Mutation', updateBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null } };
+
+export type DeleteBannerMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteBannerMutation = { __typename?: 'Mutation', deleteBanner?: boolean | null };
+
+export type PageRefFragment = { __typename?: 'PageModel', id: string };
+
+export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null };
+
+export type FullBannerActionFragment = { __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole };
+
+export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
+
+export type ImageRefFragment = { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
 export type FullBlockStyleFragment = { __typename?: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<BlockType> };
 
@@ -1156,12 +2679,12 @@ export type PollVoteListQueryVariables = Exact<{
 
 export type PollVoteListQuery = { __typename?: 'Query', pollVotes: { __typename?: 'PaginatedPollVotes', totalCount: number, nodes: Array<{ __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
-export type DeletePollVoteMutationVariables = Exact<{
-  id: Scalars['ID'];
+export type DeletePollVotesMutationVariables = Exact<{
+  ids: Array<Scalars['ID']> | Scalars['ID'];
 }>;
 
 
-export type DeletePollVoteMutation = { __typename?: 'Mutation', deletePollVote: { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } } };
+export type DeletePollVotesMutation = { __typename?: 'Mutation', deletePollVotes: { __typename?: 'DeletePollVotesResult', count: number } };
 
 export type SettingsListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1182,7 +2705,7 @@ export type SubscriptionFlowsQueryVariables = Exact<{
 }>;
 
 
-export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type CreateSubscriptionFlowMutationVariables = Exact<{
   memberPlanId: Scalars['String'];
@@ -1192,7 +2715,7 @@ export type CreateSubscriptionFlowMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type UpdateSubscriptionFlowMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1202,14 +2725,14 @@ export type UpdateSubscriptionFlowMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type DeleteSubscriptionFlowMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type CreateSubscriptionIntervalMutationVariables = Exact<{
   subscriptionFlowId: Scalars['String'];
@@ -1219,7 +2742,7 @@ export type CreateSubscriptionIntervalMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type UpdateSubscriptionIntervalMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1228,29 +2751,31 @@ export type UpdateSubscriptionIntervalMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type DeleteSubscriptionIntervalMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type ListPaymentMethodsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ListPaymentMethodsQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }> };
+export type ListPaymentMethodsQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }> };
 
-export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
+export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
 
 export type SubscriptionIntervalFragment = { __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null };
 
 export type MailTemplateRefFragment = { __typename?: 'MailTemplateRef', id: string, name: string };
 
-export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string };
+export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }> }> };
 
-export type PaymentMethodRefFragment = { __typename?: 'PaymentMethod', id: string, name: string };
+export type FullAvailablePaymentMethodFragment = { __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string }> };
+
+export type FullPaymentMethodFragment = { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string };
 
 export type SystemMailsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1279,6 +2804,65 @@ export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type VersionInformationQuery = { __typename?: 'Query', versionInformation: { __typename?: 'VersionInformation', version: string } };
 
+export const PageRefFragmentDoc = gql`
+    fragment PageRef on PageModel {
+  id
+}
+    `;
+export const ImageUrLsFragmentDoc = gql`
+    fragment ImageURLs on Image {
+  url
+  largeURL: transformURL(input: {width: 500})
+  mediumURL: transformURL(input: {width: 300})
+  thumbURL: transformURL(input: {width: 280, height: 200})
+  squareURL: transformURL(input: {width: 100, height: 100})
+  previewURL: transformURL(input: {width: 400, height: 200})
+  column1URL: transformURL(input: {width: 800, height: 300})
+  column6URL: transformURL(input: {width: 260, height: 300})
+}
+    `;
+export const ImageRefFragmentDoc = gql`
+    fragment ImageRef on Image {
+  id
+  filename
+  extension
+  title
+  description
+  width
+  height
+  ...ImageURLs
+}
+    ${ImageUrLsFragmentDoc}`;
+export const FullBannerActionFragmentDoc = gql`
+    fragment FullBannerAction on BannerAction {
+  id
+  label
+  url
+  style
+  role
+}
+    `;
+export const FullBannerFragmentDoc = gql`
+    fragment FullBanner on Banner {
+  id
+  title
+  text
+  cta
+  active
+  showOnArticles
+  showOnPages {
+    ...PageRef
+  }
+  image {
+    ...ImageRef
+  }
+  actions {
+    ...FullBannerAction
+  }
+}
+    ${PageRefFragmentDoc}
+${ImageRefFragmentDoc}
+${FullBannerActionFragmentDoc}`;
 export const FullBlockStyleFragmentDoc = gql`
     fragment FullBlockStyle on BlockStyle {
   id
@@ -1377,18 +2961,37 @@ export const FullPollVoteWithAnswerFragmentDoc = gql`
   }
 }
     ${FullPollVoteFragmentDoc}`;
+export const FullPaymentMethodFragmentDoc = gql`
+    fragment FullPaymentMethod on PaymentMethod {
+  id
+  paymentProviderID
+  name
+  slug
+  description
+}
+    `;
+export const FullAvailablePaymentMethodFragmentDoc = gql`
+    fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
+  paymentMethods {
+    ...FullPaymentMethod
+  }
+  paymentPeriodicities
+  forceAutoRenewal
+}
+    ${FullPaymentMethodFragmentDoc}`;
 export const MemberPlanRefFragmentDoc = gql`
     fragment MemberPlanRef on MemberPlan {
   id
   name
+  amountPerMonthMin
+  availablePaymentMethods {
+    ...FullAvailablePaymentMethod
+  }
+  currency
+  extendable
+  slug
 }
-    `;
-export const PaymentMethodRefFragmentDoc = gql`
-    fragment PaymentMethodRef on PaymentMethod {
-  id
-  name
-}
-    `;
+    ${FullAvailablePaymentMethodFragmentDoc}`;
 export const MailTemplateRefFragmentDoc = gql`
     fragment MailTemplateRef on MailTemplateRef {
   id
@@ -1414,7 +3017,7 @@ export const SubscriptionFlowFragmentDoc = gql`
   }
   autoRenewal
   paymentMethods {
-    ...PaymentMethodRef
+    ...FullPaymentMethod
   }
   periodicities
   intervals {
@@ -1423,7 +3026,7 @@ export const SubscriptionFlowFragmentDoc = gql`
   numberOfSubscriptions
 }
     ${MemberPlanRefFragmentDoc}
-${PaymentMethodRefFragmentDoc}
+${FullPaymentMethodFragmentDoc}
 ${SubscriptionIntervalFragmentDoc}`;
 export const SystemMailFragmentDoc = gql`
     fragment SystemMail on SystemMailModel {
@@ -1433,6 +3036,174 @@ export const SystemMailFragmentDoc = gql`
   }
 }
     ${MailTemplateRefFragmentDoc}`;
+export const BannersDocument = gql`
+    query Banners($take: Int!, $skip: Int!) {
+  banners(take: $take, skip: $skip) {
+    ...FullBanner
+  }
+}
+    ${FullBannerFragmentDoc}`;
+
+/**
+ * __useBannersQuery__
+ *
+ * To run a query within a React component, call `useBannersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBannersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBannersQuery({
+ *   variables: {
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useBannersQuery(baseOptions: Apollo.QueryHookOptions<BannersQuery, BannersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BannersQuery, BannersQueryVariables>(BannersDocument, options);
+      }
+export function useBannersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BannersQuery, BannersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BannersQuery, BannersQueryVariables>(BannersDocument, options);
+        }
+export type BannersQueryHookResult = ReturnType<typeof useBannersQuery>;
+export type BannersLazyQueryHookResult = ReturnType<typeof useBannersLazyQuery>;
+export type BannersQueryResult = Apollo.QueryResult<BannersQuery, BannersQueryVariables>;
+export const BannerDocument = gql`
+    query Banner($id: String!) {
+  banner(id: $id) {
+    ...FullBanner
+  }
+}
+    ${FullBannerFragmentDoc}`;
+
+/**
+ * __useBannerQuery__
+ *
+ * To run a query within a React component, call `useBannerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBannerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBannerQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useBannerQuery(baseOptions: Apollo.QueryHookOptions<BannerQuery, BannerQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BannerQuery, BannerQueryVariables>(BannerDocument, options);
+      }
+export function useBannerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BannerQuery, BannerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BannerQuery, BannerQueryVariables>(BannerDocument, options);
+        }
+export type BannerQueryHookResult = ReturnType<typeof useBannerQuery>;
+export type BannerLazyQueryHookResult = ReturnType<typeof useBannerLazyQuery>;
+export type BannerQueryResult = Apollo.QueryResult<BannerQuery, BannerQueryVariables>;
+export const CreateBannerDocument = gql`
+    mutation CreateBanner($input: CreateBannerInput!) {
+  createBanner(input: $input) {
+    ...FullBanner
+  }
+}
+    ${FullBannerFragmentDoc}`;
+export type CreateBannerMutationFn = Apollo.MutationFunction<CreateBannerMutation, CreateBannerMutationVariables>;
+
+/**
+ * __useCreateBannerMutation__
+ *
+ * To run a mutation, you first call `useCreateBannerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBannerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBannerMutation, { data, loading, error }] = useCreateBannerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateBannerMutation(baseOptions?: Apollo.MutationHookOptions<CreateBannerMutation, CreateBannerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBannerMutation, CreateBannerMutationVariables>(CreateBannerDocument, options);
+      }
+export type CreateBannerMutationHookResult = ReturnType<typeof useCreateBannerMutation>;
+export type CreateBannerMutationResult = Apollo.MutationResult<CreateBannerMutation>;
+export type CreateBannerMutationOptions = Apollo.BaseMutationOptions<CreateBannerMutation, CreateBannerMutationVariables>;
+export const UpdateBannerDocument = gql`
+    mutation UpdateBanner($input: UpdateBannerInput!) {
+  updateBanner(input: $input) {
+    ...FullBanner
+  }
+}
+    ${FullBannerFragmentDoc}`;
+export type UpdateBannerMutationFn = Apollo.MutationFunction<UpdateBannerMutation, UpdateBannerMutationVariables>;
+
+/**
+ * __useUpdateBannerMutation__
+ *
+ * To run a mutation, you first call `useUpdateBannerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateBannerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateBannerMutation, { data, loading, error }] = useUpdateBannerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateBannerMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBannerMutation, UpdateBannerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateBannerMutation, UpdateBannerMutationVariables>(UpdateBannerDocument, options);
+      }
+export type UpdateBannerMutationHookResult = ReturnType<typeof useUpdateBannerMutation>;
+export type UpdateBannerMutationResult = Apollo.MutationResult<UpdateBannerMutation>;
+export type UpdateBannerMutationOptions = Apollo.BaseMutationOptions<UpdateBannerMutation, UpdateBannerMutationVariables>;
+export const DeleteBannerDocument = gql`
+    mutation DeleteBanner($id: String!) {
+  deleteBanner(id: $id)
+}
+    `;
+export type DeleteBannerMutationFn = Apollo.MutationFunction<DeleteBannerMutation, DeleteBannerMutationVariables>;
+
+/**
+ * __useDeleteBannerMutation__
+ *
+ * To run a mutation, you first call `useDeleteBannerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBannerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBannerMutation, { data, loading, error }] = useDeleteBannerMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteBannerMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBannerMutation, DeleteBannerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteBannerMutation, DeleteBannerMutationVariables>(DeleteBannerDocument, options);
+      }
+export type DeleteBannerMutationHookResult = ReturnType<typeof useDeleteBannerMutation>;
+export type DeleteBannerMutationResult = Apollo.MutationResult<DeleteBannerMutation>;
+export type DeleteBannerMutationOptions = Apollo.BaseMutationOptions<DeleteBannerMutation, DeleteBannerMutationVariables>;
 export const BlockStylesDocument = gql`
     query BlockStyles {
   blockStyles {
@@ -2258,39 +4029,39 @@ export function usePollVoteListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type PollVoteListQueryHookResult = ReturnType<typeof usePollVoteListQuery>;
 export type PollVoteListLazyQueryHookResult = ReturnType<typeof usePollVoteListLazyQuery>;
 export type PollVoteListQueryResult = Apollo.QueryResult<PollVoteListQuery, PollVoteListQueryVariables>;
-export const DeletePollVoteDocument = gql`
-    mutation DeletePollVote($id: ID!) {
-  deletePollVote(id: $id) {
-    ...FullPollVoteWithAnswer
+export const DeletePollVotesDocument = gql`
+    mutation DeletePollVotes($ids: [ID!]!) {
+  deletePollVotes(ids: $ids) {
+    count
   }
 }
-    ${FullPollVoteWithAnswerFragmentDoc}`;
-export type DeletePollVoteMutationFn = Apollo.MutationFunction<DeletePollVoteMutation, DeletePollVoteMutationVariables>;
+    `;
+export type DeletePollVotesMutationFn = Apollo.MutationFunction<DeletePollVotesMutation, DeletePollVotesMutationVariables>;
 
 /**
- * __useDeletePollVoteMutation__
+ * __useDeletePollVotesMutation__
  *
- * To run a mutation, you first call `useDeletePollVoteMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeletePollVoteMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useDeletePollVotesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePollVotesMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [deletePollVoteMutation, { data, loading, error }] = useDeletePollVoteMutation({
+ * const [deletePollVotesMutation, { data, loading, error }] = useDeletePollVotesMutation({
  *   variables: {
- *      id: // value for 'id'
+ *      ids: // value for 'ids'
  *   },
  * });
  */
-export function useDeletePollVoteMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollVoteMutation, DeletePollVoteMutationVariables>) {
+export function useDeletePollVotesMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollVotesMutation, DeletePollVotesMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePollVoteMutation, DeletePollVoteMutationVariables>(DeletePollVoteDocument, options);
+        return Apollo.useMutation<DeletePollVotesMutation, DeletePollVotesMutationVariables>(DeletePollVotesDocument, options);
       }
-export type DeletePollVoteMutationHookResult = ReturnType<typeof useDeletePollVoteMutation>;
-export type DeletePollVoteMutationResult = Apollo.MutationResult<DeletePollVoteMutation>;
-export type DeletePollVoteMutationOptions = Apollo.BaseMutationOptions<DeletePollVoteMutation, DeletePollVoteMutationVariables>;
+export type DeletePollVotesMutationHookResult = ReturnType<typeof useDeletePollVotesMutation>;
+export type DeletePollVotesMutationResult = Apollo.MutationResult<DeletePollVotesMutation>;
+export type DeletePollVotesMutationOptions = Apollo.BaseMutationOptions<DeletePollVotesMutation, DeletePollVotesMutationVariables>;
 export const SettingsListDocument = gql`
     query SettingsList {
   settings {
@@ -2641,10 +4412,10 @@ export type DeleteSubscriptionIntervalMutationOptions = Apollo.BaseMutationOptio
 export const ListPaymentMethodsDocument = gql`
     query ListPaymentMethods {
   paymentMethods {
-    ...PaymentMethodRef
+    ...FullPaymentMethod
   }
 }
-    ${PaymentMethodRefFragmentDoc}`;
+    ${FullPaymentMethodFragmentDoc}`;
 
 /**
  * __useListPaymentMethodsQuery__

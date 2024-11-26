@@ -111,6 +111,38 @@ type Author {
   id: ID!
 }
 
+type Banner {
+  actions: [BannerAction!]
+  active: Boolean!
+  cta: String
+  id: ID!
+  image: Image
+  imageId: String
+  showOnArticles: Boolean!
+  showOnPages: [PageModel!]
+  text: String!
+  title: String!
+}
+
+type BannerAction {
+  id: ID!
+  label: String!
+  role: BannerActionRole!
+  style: String!
+  url: String!
+}
+
+enum BannerActionRole {
+  CANCEL
+  OTHER
+  PRIMARY
+}
+
+enum BannerDocumentType {
+  ARTICLE
+  PAGE
+}
+
 interface BaseBlock {
   blockStyle: ID
   type: String!
@@ -261,6 +293,24 @@ input ConsentFilter {
   slug: String
 }
 
+input CreateBannerActionInput {
+  label: String!
+  role: BannerActionRole!
+  style: String!
+  url: String!
+}
+
+input CreateBannerInput {
+  actions: [CreateBannerActionInput!]
+  active: Boolean!
+  cta: String
+  imageId: String
+  showOnArticles: Boolean!
+  showOnPages: [PageModelInput!]
+  text: String!
+  title: String!
+}
+
 type CustomTeaser implements BaseTeaser & HasImage {
   contentUrl: String
   image: Image
@@ -319,6 +369,10 @@ enum DateFilterComparison {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type DeletePollVotesResult {
+  count: Int!
+}
 
 type Event {
   createdAt: DateTime!
@@ -690,6 +744,8 @@ type MemberPlan {
 }
 
 type Mutation {
+  createBanner(input: CreateBannerInput!): Banner!
+
   """Creates a new block style."""
   createBlockStyle(blocks: [BlockType!]!, name: String!): BlockStyle!
 
@@ -707,6 +763,7 @@ type Mutation {
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
+  deleteBanner(id: String!): Boolean
 
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
@@ -717,8 +774,8 @@ type Mutation {
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
 
-  """Delete poll vote"""
-  deletePollVote(id: ID!): PollVote!
+  """Delete poll votes"""
+  deletePollVotes(ids: [ID!]!): DeletePollVotesResult!
 
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
@@ -744,6 +801,7 @@ type Mutation {
 
   """Updates an article."""
   updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String!, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
   updateBlockStyle(blocks: [BlockType!], id: String!, name: String): BlockStyle!
@@ -779,6 +837,14 @@ type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
+}
+
+type PageModel {
+  id: ID!
+}
+
+input PageModelInput {
+  id: ID!
 }
 
 type PageTeaser implements BaseTeaser & HasImage & HasPage {
@@ -950,6 +1016,8 @@ type Query {
 
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: ID, filter: ArticleFilter, order: SortOrder = Ascending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
+  banner(id: String!): Banner!
+  banners(skip: Int!, take: Int!): [Banner!]!
 
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
@@ -1005,6 +1073,7 @@ type Query {
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: ID, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
+  primaryBanner(documentId: ID!, documentType: BannerDocumentType!): Banner!
   provider: MailProviderModel!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
@@ -1083,9 +1152,7 @@ enum SettingName {
   ALLOW_GUEST_COMMENTING
   ALLOW_GUEST_COMMENT_RATING
   ALLOW_GUEST_POLL_VOTING
-  BODY_SCRIPT
   COMMENT_CHAR_LIMIT
-  HEAD_SCRIPT
   MAIL_PROVIDER_NAME
   MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC
   MAKE_EXPECTED_REVENUE_API_PUBLIC
@@ -1263,6 +1330,18 @@ input TwitterTweetBlockInput {
 type UnknownBlock {
   blockStyle: ID
   type: String!
+}
+
+input UpdateBannerInput {
+  actions: [CreateBannerActionInput!]
+  active: Boolean!
+  cta: String
+  id: ID!
+  imageId: String
+  showOnArticles: Boolean!
+  showOnPages: [PageModelInput!]
+  text: String!
+  title: String!
 }
 
 type User {

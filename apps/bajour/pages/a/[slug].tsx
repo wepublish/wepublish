@@ -82,6 +82,17 @@ export default function ArticleBySlugIdOrToken() {
       <Container>
         <ArticleContainer {...containerProps} />
 
+        {/* Waiting for Samuel H. from Bajour to confirm - 2024-11-20
+         !isFDT && (
+          <ArticleWrapper>
+            <H5 component={'h2'} css={uppercase}>
+              Artikel Charts
+            </H5>
+
+            <ArticleCharts />
+          </ArticleWrapper>
+        ) */}
+
         <BriefingNewsletter />
 
         {data?.article && (
@@ -150,6 +161,12 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     }),
     client.query({
       query: ApiV1.SettingListDocument
+    }),
+    client.query({
+      query: ApiV1.HotAndTrendingDocument,
+      variables: {
+        take: 4
+      }
     })
   ])
 
@@ -174,6 +191,15 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       }),
       client.query({
         query: ApiV1.PeerProfileDocument
+      }),
+      client.query({
+        query: ApiV1.PrimaryBannerDocument,
+        variables: {
+          document: {
+            type: ApiV1.BannerDocumentType.Article,
+            id: article.data.article.id
+          }
+        }
       })
     ])
   }

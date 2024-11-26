@@ -1,6 +1,7 @@
 import {PaymentState} from '@prisma/client'
 import {logger} from '@wepublish/utils/api'
 import Stripe from 'stripe'
+
 import {
   BasePaymentProvider,
   CheckIntentProps,
@@ -15,6 +16,7 @@ import {
 export interface StripeCheckoutPaymentProviderProps extends PaymentProviderProps {
   secretKey: string
   webhookEndpointSecret: string
+  methods: Stripe.Checkout.SessionCreateParams.PaymentMethodType[]
 }
 
 function mapStripeCheckoutEventToPaymentStatue(event: string): PaymentState | null {
@@ -37,9 +39,11 @@ function mapStripeCheckoutEventToPaymentStatue(event: string): PaymentState | nu
 export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
   readonly stripe: Stripe
   readonly webhookEndpointSecret: string
+  readonly methods: Stripe.Checkout.SessionCreateParams.PaymentMethodType[]
 
   constructor(props: StripeCheckoutPaymentProviderProps) {
     super(props)
+    this.methods = props.methods
     this.stripe = new Stripe(props.secretKey, {
       apiVersion: '2020-08-27'
     })
@@ -85,8 +89,9 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
     if (!props.successURL) throw new Error('SuccessURL is not defined')
     if (!props.failureURL) throw new Error('FailureURL is not defined')
+
     const session = await this.stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: this.methods,
       line_items: props.invoice.items.map(item => ({
         price_data: {
           currency: props.currency,

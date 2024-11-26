@@ -130,7 +130,13 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               </Head>
 
               <Spacer>
-                <NavBar categorySlugs={[['abo']]} slug="main" headerSlug="header" loginUrl={''} />
+                <NavBar
+                  categorySlugs={[['abo']]}
+                  slug="main"
+                  headerSlug="header"
+                  iconSlug="icons"
+                  loginUrl={''}
+                />
 
                 <main>
                   <MainSpacer maxWidth="lg">
@@ -144,16 +150,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </LogoLink>
                 </FooterContainer>
               </Spacer>
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-                strategy="afterInteractive"
-              />
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-                strategy="lazyOnload"
-              />
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>

@@ -1007,13 +1007,11 @@
     "saveAndClose": "Sauvegarder & fermer",
     "settingList": {
       "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
-      "bodyScript": "Scripts à exécuter après le chargement du contenu",
       "comments": "Commentaires",
       "days": "jours",
       "errorTitle": "Erreur",
       "guestCommenting": "Autoriser les commentaires de personnes non connectées",
       "guestPollVote": "Autoriser les votes anonymes dans les sondages",
-      "headScript": "Scripts à exécuter avant le chargement du contenu",
       "login": "Login",
       "loginMinutes": "Durée de validité du token de l'email d'authentification",
       "minutes": "minutes",
@@ -1023,7 +1021,6 @@
       "peering": "Peering",
       "peerToken": "Peering timeout",
       "polls": "Sondages",
-      "scripts": "Propre code JavaScript",
       "settings": "Paramètres",
       "successMessage": "Paramètres mis à jour avec succès !",
       "successTitle": "Enregistré",
@@ -1035,8 +1032,7 @@
         "invoiceReminders": "Nombre de rappels de paiement par facture Délai entre les rappels de paiement — jours",
         "loginMinutes": "Durée de validité du token de connexion par email — minutes.",
         "passwordToken": "Durée de validité du token pour la réinitialisation du mot de passe par email — minutes.",
-        "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes",
-        "scripts": "Les scripts provenant de sources peu fiables peuvent causer de graves problèmes de sécurité et affecter considérablement la mise en page et la conception du site."
+        "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes"
       }
     },
     "subscriptionList": {
@@ -1262,7 +1258,9 @@
       "maxCountHelpText": "Limite le nombre d'abonnements qu'un:e utilisateur:trice peut souscrire pour ce plan d'abonnement. Cela inclut les abonnements désactivés.",
       "trialMemberplanAlert": "Ce plan d'abonnement est configuré pour des abonnements d'essai.",
       "forceAutoRenewNotPossible": "Le renouvellement automatique n'est pas possible, car le plan d'abonnement n'est pas extensible.",
-      "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela."
+      "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela.",
+      "migratePMTitle": "Migrer les abonnements vers le mode de paiement cible",
+      "migratePMHelptext": "Migre les abonnements de ce plan vers un nouveau mode de paiement. Les abonnements qui sont encore débités automatiquement ne sont pas migrés. La migration n'a lieu que lorsqu'un utilisateur agit lui-même et veut par exemple payer une facture ouverte dans son profil ou prolonger un abonnement de manière anticipée."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Paramètres avancés",

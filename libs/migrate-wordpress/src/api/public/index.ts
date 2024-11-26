@@ -13,14 +13,23 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
+  /** A hexidecimal color value. */
   Color: string
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: string
+  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: string
+  /** Setting Value */
   GraphQLSettingValueType: any
   RichText: Node[]
   Slug: string
+  /** The `Upload` scalar type represents a file upload. */
   Upload: File
+  /** A valid vote value */
   VoteValue: number
+  _Any: any
+  _FieldSet: any
+  link__Import: any
 }
 
 export type AllowedSettingVals = {
@@ -148,6 +157,40 @@ export type AvailablePaymentMethod = {
   paymentPeriodicities: Array<PaymentPeriodicity>
 }
 
+export type Banner = {
+  __typename?: 'Banner'
+  actions?: Maybe<Array<BannerAction>>
+  active: Scalars['Boolean']
+  cta?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  image?: Maybe<Image>
+  imageId?: Maybe<Scalars['String']>
+  showOnArticles: Scalars['Boolean']
+  showOnPages?: Maybe<Array<PageModel>>
+  text: Scalars['String']
+  title: Scalars['String']
+}
+
+export type BannerAction = {
+  __typename?: 'BannerAction'
+  id: Scalars['ID']
+  label: Scalars['String']
+  role: BannerActionRole
+  style: Scalars['String']
+  url: Scalars['String']
+}
+
+export enum BannerActionRole {
+  Cancel = 'CANCEL',
+  Other = 'OTHER',
+  Primary = 'PRIMARY'
+}
+
+export enum BannerDocumentType {
+  Article = 'ARTICLE',
+  Page = 'PAGE'
+}
+
 export type BaseNavigationLink = {
   label: Scalars['String']
 }
@@ -221,15 +264,21 @@ export type CalculatedRating = {
   total: Scalars['Int']
 }
 
+export enum CaptchaType {
+  Algebraic = 'Algebraic',
+  CfTurnstile = 'CfTurnstile'
+}
+
 export type Challenge = {
   __typename?: 'Challenge'
   challenge?: Maybe<Scalars['String']>
   challengeID?: Maybe<Scalars['String']>
+  type?: Maybe<CaptchaType>
   validUntil?: Maybe<Scalars['Date']>
 }
 
 export type ChallengeInput = {
-  challengeID: Scalars['String']
+  challengeID?: InputMaybe<Scalars['String']>
   challengeSolution: Scalars['String']
 }
 
@@ -345,6 +394,24 @@ export type ConsentFilter = {
   slug?: InputMaybe<Scalars['String']>
 }
 
+export type CreateBannerActionInput = {
+  label: Scalars['String']
+  role: BannerActionRole
+  style: Scalars['String']
+  url: Scalars['String']
+}
+
+export type CreateBannerInput = {
+  actions?: InputMaybe<Array<CreateBannerActionInput>>
+  active: Scalars['Boolean']
+  cta?: InputMaybe<Scalars['String']>
+  imageId?: InputMaybe<Scalars['String']>
+  showOnArticles: Scalars['Boolean']
+  showOnPages?: InputMaybe<Array<PageModelInput>>
+  text: Scalars['String']
+  title: Scalars['String']
+}
+
 export enum Currency {
   Chf = 'CHF',
   Eur = 'EUR'
@@ -382,6 +449,11 @@ export type DashboardSubscription = {
   startsAt: Scalars['DateTime']
 }
 
+export type DeletePollVotesResult = {
+  __typename?: 'DeletePollVotesResult'
+  count: Scalars['Int']
+}
+
 export type EmbedBlock = {
   __typename?: 'EmbedBlock'
   blockStyle?: Maybe<Scalars['String']>
@@ -410,7 +482,7 @@ export type Event = {
   page?: Maybe<Page>
   startsAt: Scalars['DateTime']
   status: EventStatus
-  tags?: Maybe<Array<Tag>>
+  tags: Array<Tag>
   url: Scalars['String']
 }
 
@@ -785,9 +857,14 @@ export type Mutation = {
   addComment: Comment
   /** This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now */
   cancelUserSubscription?: Maybe<Subscription>
+  createBanner: Banner
   /** Creates a new block style. */
   createBlockStyle: BlockStyle
-  /** Create a new consent. */
+  /**
+   *
+   *       Create a new consent.
+   *
+   */
   createConsent: Consent
   /** Creates a new event. */
   createEvent: Event
@@ -805,32 +882,43 @@ export type Mutation = {
   /** Create a subscription interval */
   createSubscriptionInterval: Array<SubscriptionFlowModel>
   /**
-   * Creates a new userConsent based on input.
-   * Returns created userConsent.
+   *
+   *       Creates a new userConsent based on input.
+   *       Returns created userConsent.
+   *
    */
   createUserConsent: UserConsent
+  deleteBanner?: Maybe<Scalars['Boolean']>
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle
-  /** Deletes an existing consent. */
+  /**
+   *
+   *       Deletes an existing consent.
+   *
+   */
   deleteConsent: Consent
   /** Deletes an existing event. */
   deleteEvent: Event
-  /** Delete poll vote */
-  deletePollVote: PollVote
+  /** Delete poll votes */
+  deletePollVotes: DeletePollVotesResult
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>
   /** Delete an existing subscription interval */
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>
   /**
-   * Delete an existing userConsent by id.
-   * Returns deleted userConsent.
+   *
+   *       Delete an existing userConsent by id.
+   *       Returns deleted userConsent.
+   *
    */
   deleteUserConsent: UserConsent
   /** This mutation extends an subscription early */
   extendSubscription: Payment
   /**
-   * Creates and event based on data from importable events list and an id and provider.
-   * Also, uploads an image to WePublish Image library.
+   *
+   *       Creates and event based on data from importable events list and an id and provider.
+   *       Also, uploads an image to WePublish Image library.
+   *
    */
   importEvent: Scalars['String']
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
@@ -846,11 +934,16 @@ export type Mutation = {
   syncTemplates?: Maybe<Scalars['Boolean']>
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean']
+  updateBanner: Banner
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle
   /** This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text. */
   updateComment: Comment
-  /** Updates an existing consent. */
+  /**
+   *
+   *       Updates an existing consent.
+   *
+   */
   updateConsent: Consent
   /** Updates an existing event. */
   updateEvent: Event
@@ -869,8 +962,10 @@ export type Mutation = {
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
   updateUser?: Maybe<User>
   /**
-   * Updates an existing userConsent based on input.
-   * Returns updated userConsent.
+   *
+   *       Updates an existing userConsent based on input.
+   *       Returns updated userConsent.
+   *
    */
   updateUserConsent: UserConsent
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
@@ -887,6 +982,10 @@ export type MutationAddCommentArgs = {
 
 export type MutationCancelUserSubscriptionArgs = {
   id: Scalars['ID']
+}
+
+export type MutationCreateBannerArgs = {
+  input: CreateBannerInput
 }
 
 export type MutationCreateBlockStyleArgs = {
@@ -970,6 +1069,10 @@ export type MutationCreateUserConsentArgs = {
   value: Scalars['Boolean']
 }
 
+export type MutationDeleteBannerArgs = {
+  id: Scalars['String']
+}
+
 export type MutationDeleteBlockStyleArgs = {
   id: Scalars['String']
 }
@@ -982,8 +1085,8 @@ export type MutationDeleteEventArgs = {
   id: Scalars['String']
 }
 
-export type MutationDeletePollVoteArgs = {
-  id: Scalars['ID']
+export type MutationDeletePollVotesArgs = {
+  ids: Array<Scalars['ID']>
 }
 
 export type MutationDeleteSubscriptionFlowArgs = {
@@ -1051,6 +1154,10 @@ export type MutationSendWebsiteLoginArgs = {
 
 export type MutationTestSystemMailArgs = {
   event: UserEvent
+}
+
+export type MutationUpdateBannerArgs = {
+  input: UpdateBannerInput
 }
 
 export type MutationUpdateBlockStyleArgs = {
@@ -1184,6 +1291,15 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean']
   hasPreviousPage: Scalars['Boolean']
   startCursor?: Maybe<Scalars['String']>
+}
+
+export type PageModel = {
+  __typename?: 'PageModel'
+  id: Scalars['ID']
+}
+
+export type PageModelInput = {
+  id: Scalars['ID']
 }
 
 export type PageNavigationLink = BaseNavigationLink & {
@@ -1431,9 +1547,13 @@ export enum PublishedPageSort {
 
 export type Query = {
   __typename?: 'Query'
+  _entities: Array<Maybe<_Entity>>
+  _service: _Service
   /**
-   * Returns all active subscribers.
-   * Includes subscribers with a cancelled but not run out subscription.
+   *
+   *       Returns all active subscribers.
+   *       Includes subscribers with a cancelled but not run out subscription.
+   *
    */
   activeSubscribers: Array<DashboardSubscription>
   /** This query takes either the ID, slug or token and returns the article. */
@@ -1446,6 +1566,8 @@ export type Query = {
   author?: Maybe<Author>
   /** This query is to get the authors. */
   authors: AuthorConnection
+  banner: Banner
+  banners: Array<Banner>
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>
   /** This query generates a challenge which can be used to access protected endpoints. */
@@ -1454,30 +1576,60 @@ export type Query = {
   checkInvoiceStatus?: Maybe<Invoice>
   /** This query returns the comments of an item. */
   comments: Array<Comment>
-  /** Returns a consent by id. */
+  /**
+   *
+   *       Returns a consent by id.
+   *
+   */
   consent: Consent
-  /** Returns all consents. */
+  /**
+   *
+   *       Returns all consents.
+   *
+   */
   consents: Array<Consent>
   /** Returns a event by id. */
   event: Event
-  /** Returns a list of Importable Event Providers */
+  /**
+   *
+   *       Returns a list of Importable Event Providers
+   *
+   */
   eventProviders: Array<Scalars['String']>
   /** Returns a paginated list of events based on the filters given. */
   events: PaginatedEvents
   /**
-   * Returns the expected revenue for the time period given.
-   * Excludes cancelled or manually set as paid invoices.
+   *
+   *       Returns the expected revenue for the time period given.
+   *       Excludes cancelled or manually set as paid invoices.
+   *
    */
   expectedRevenue: Array<DashboardInvoice>
   /** Returns an image by id. */
   getImage: ImageV2
-  /** Returns the most viewed articles in descending order. */
+  /**
+   *
+   *       Returns the most viewed articles in descending order.
+   *
+   */
   hotAndTrending: Array<Article>
-  /** Returns a more detailed version of a single importable event, by id and source. */
+  /**
+   *
+   *       Returns a more detailed version of a single importable event, by id and source.
+   *
+   */
   importedEvent: EventFromSource
-  /** Returns a list of imported events from external sources, transformed to match our model. */
+  /**
+   *
+   *       Returns a list of imported events from external sources, transformed to match our model.
+   *
+   */
   importedEvents: ImportedEventsDocument
-  /** Returns a list of external source ids of already imported events. */
+  /**
+   *
+   *       Returns a list of external source ids of already imported events.
+   *
+   */
   importedEventsIds: Array<Scalars['String']>
   /** This query returns the invoices  of the authenticated user. */
   invoices: Array<Invoice>
@@ -1494,13 +1646,17 @@ export type Query = {
   /** This query returns all navigations. */
   navigations?: Maybe<Array<Navigation>>
   /**
-   * Returns all new deactivations in a given timeframe.
-   * This considers the time the deactivation was made, not when the subscription runs out.
+   *
+   *       Returns all new deactivations in a given timeframe.
+   *       This considers the time the deactivation was made, not when the subscription runs out.
+   *
    */
   newDeactivations: Array<DashboardSubscription>
   /**
-   * Returns all new subscribers in a given timeframe.
-   * Includes already deactivated ones.
+   *
+   *       Returns all new subscribers in a given timeframe.
+   *       Includes already deactivated ones.
+   *
    */
   newSubscribers: Array<DashboardSubscription>
   /** This query takes either the ID, slug or token and returns the page. */
@@ -1522,20 +1678,39 @@ export type Query = {
   poll: FullPoll
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes
+  primaryBanner: Banner
   provider: MailProviderModel
   ratingSystem: FullCommentRatingSystem
-  /** Returns all renewing subscribers in a given timeframe. */
+  /**
+   *
+   *       Returns all renewing subscribers in a given timeframe.
+   *
+   */
   renewingSubscribers: Array<DashboardSubscription>
   /**
-   * Returns the revenue generated for the time period given.
-   * Only includes paid invoices that have not been manually paid.
+   *
+   *       Returns the revenue generated for the time period given.
+   *       Only includes paid invoices that have not been manually paid.
+   *
    */
   revenue: Array<DashboardInvoice>
-  /** Returns a single setting by name. */
+  /**
+   *
+   *       Returns a single setting by name.
+   *
+   */
   setting: Setting
-  /** Returns a single setting by id. */
+  /**
+   *
+   *       Returns a single setting by id.
+   *
+   */
   settingById: Setting
-  /** Returns all settings. */
+  /**
+   *
+   *       Returns all settings.
+   *
+   */
   settings: Array<Setting>
   stats?: Maybe<Stats>
   /** Returns all subscription flows */
@@ -1546,13 +1721,25 @@ export type Query = {
   systemMails: Array<SystemMailModel>
   /** This query returns a list of tags */
   tags?: Maybe<TagConnection>
-  /** Returns a single userConsent by id. */
+  /**
+   *
+   *       Returns a single userConsent by id.
+   *
+   */
   userConsent: UserConsent
-  /** Returns a list of userConsents. Possible to filter. */
+  /**
+   *
+   *       Returns a list of userConsents. Possible to filter.
+   *
+   */
   userConsents: Array<UserConsent>
   /** This query returns the answerId of a poll if the user has already voted on it. */
   userPollVote?: Maybe<Scalars['ID']>
   versionInformation: VersionInformation
+}
+
+export type Query_EntitiesArgs = {
+  representations: Array<Scalars['_Any']>
 }
 
 export type QueryArticleArgs = {
@@ -1586,6 +1773,15 @@ export type QueryAuthorsArgs = {
   skip?: InputMaybe<Scalars['Int']>
   sort?: InputMaybe<AuthorSort>
   take?: InputMaybe<Scalars['Int']>
+}
+
+export type QueryBannerArgs = {
+  id: Scalars['String']
+}
+
+export type QueryBannersArgs = {
+  skip: Scalars['Int']
+  take: Scalars['Int']
 }
 
 export type QueryCheckInvoiceStatusArgs = {
@@ -1727,6 +1923,11 @@ export type QueryPollVotesArgs = {
   take?: InputMaybe<Scalars['Int']>
 }
 
+export type QueryPrimaryBannerArgs = {
+  documentId: Scalars['ID']
+  documentType: BannerDocumentType
+}
+
 export type QueryRenewingSubscribersArgs = {
   end?: InputMaybe<Scalars['DateTime']>
   start: Scalars['DateTime']
@@ -1833,9 +2034,7 @@ export enum SettingName {
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
-  BodyScript = 'BODY_SCRIPT',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
-  HeadScript = 'HEAD_SCRIPT',
   MailProviderName = 'MAIL_PROVIDER_NAME',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
@@ -2054,6 +2253,18 @@ export type TwitterTweetBlock = {
   userID: Scalars['String']
 }
 
+export type UpdateBannerInput = {
+  actions?: InputMaybe<Array<CreateBannerActionInput>>
+  active: Scalars['Boolean']
+  cta?: InputMaybe<Scalars['String']>
+  id: Scalars['ID']
+  imageId?: InputMaybe<Scalars['String']>
+  showOnArticles: Scalars['Boolean']
+  showOnPages?: InputMaybe<Array<PageModelInput>>
+  text: Scalars['String']
+  title: Scalars['String']
+}
+
 export type UploadImageInput = {
   description?: InputMaybe<Scalars['String']>
   file: Scalars['Upload']
@@ -2155,6 +2366,22 @@ export type YouTubeVideoBlock = {
   videoID: Scalars['String']
 }
 
+export type _Entity =
+  | Article
+  | Event
+  | Image
+  | MemberPlan
+  | Page
+  | PaymentMethod
+  | PollVote
+  | Tag
+  | User
+
+export type _Service = {
+  __typename?: '_Service'
+  sdl?: Maybe<Scalars['String']>
+}
+
 export type OverriddenRating = {
   __typename?: 'overriddenRating'
   answerId: Scalars['ID']
@@ -2169,7 +2396,63 @@ export type ArticleQueryVariables = Exact<{
 
 export type ArticleQuery = {
   __typename?: 'Query'
-  article?: {__typename?: 'Article'; id: string; url: string} | null
+  article?: {
+    __typename?: 'Article'
+    id: string
+    url: string
+    authors: Array<{__typename?: 'Author'; id: string}>
+    tags: Array<{__typename?: 'Tag'; id: string}>
+    blocks: Array<
+      | {__typename: 'BildwurfAdBlock'}
+      | {__typename: 'CommentBlock'}
+      | {__typename: 'EmbedBlock'}
+      | {__typename: 'EventBlock'}
+      | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
+      | {__typename: 'HTMLBlock'}
+      | {__typename: 'ImageBlock'}
+      | {__typename: 'ImageGalleryBlock'}
+      | {__typename: 'InstagramPostBlock'}
+      | {__typename: 'LinkPageBreakBlock'}
+      | {__typename: 'ListicleBlock'}
+      | {__typename: 'PolisConversationBlock'}
+      | {__typename: 'PollBlock'}
+      | {__typename: 'QuoteBlock'}
+      | {__typename: 'RichTextBlock'; richText: Node[]}
+      | {__typename: 'SoundCloudTrackBlock'}
+      | {__typename: 'TeaserGridBlock'}
+      | {__typename: 'TeaserGridFlexBlock'}
+      | {__typename: 'TeaserListBlock'}
+      | {__typename: 'TikTokVideoBlock'}
+      | {__typename: 'TitleBlock'}
+      | {__typename: 'TwitterTweetBlock'}
+      | {__typename: 'VimeoVideoBlock'}
+      | {__typename: 'YouTubeVideoBlock'}
+    >
+  } | null
+}
+
+export type FullBlockStyleFragment = {
+  __typename?: 'BlockStyle'
+  id: string
+  createdAt: string
+  modifiedAt: string
+  name: string
+  blocks: Array<BlockType>
+}
+
+export type BlockStylesQueryVariables = Exact<{[key: string]: never}>
+
+export type BlockStylesQuery = {
+  __typename?: 'Query'
+  blockStyles: Array<{
+    __typename?: 'BlockStyle'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    name: string
+    blocks: Array<BlockType>
+  }>
 }
 
 export const ArticleRef = gql`
@@ -2177,11 +2460,40 @@ export const ArticleRef = gql`
     id
   }
 `
+export const FullBlockStyle = gql`
+  fragment FullBlockStyle on BlockStyle {
+    id
+    createdAt
+    modifiedAt
+    name
+    blocks
+  }
+`
 export const Article = gql`
   query Article($slug: Slug!) {
     article(slug: $slug) {
       id
       url
+      authors {
+        id
+      }
+      tags {
+        id
+      }
+      blocks {
+        __typename
+        ... on RichTextBlock {
+          richText
+        }
+      }
     }
   }
+`
+export const BlockStyles = gql`
+  query BlockStyles {
+    blockStyles {
+      ...FullBlockStyle
+    }
+  }
+  ${FullBlockStyle}
 `

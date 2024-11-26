@@ -2,6 +2,7 @@ import fs from 'fs'
 import YAML from 'yaml'
 import {MappedReplacer} from 'mapped-replacer'
 import {GoogleAnalyticsConfig} from '@wepublish/api'
+import StipeType from 'stripe'
 
 type General = {
   apolloPlayground: boolean
@@ -61,6 +62,7 @@ type Stripe = {
   offSessionPayments: boolean
   secretKey: string
   webhookEndpointSecret: string
+  methods: StipeType.Checkout.SessionCreateParams.PaymentMethodType[]
 }
 
 type StripeCheckout = {
@@ -70,6 +72,7 @@ type StripeCheckout = {
   offSessionPayments: boolean
   secretKey: string
   webhookEndpointSecret: string
+  methods: StipeType.Checkout.SessionCreateParams.PaymentMethodType[]
 }
 
 type Bexio = {
@@ -108,9 +111,28 @@ type novaMediaServer = {
   type: 'nova'
 }
 
-type PaymentProvider = Payrexx | PayrexxSubscription | Stripe | StripeCheckout | Bexio | noCharge
+type Mollie = {
+  type: 'mollie'
+  id: string
+  name: string
+  offSessionPayments: boolean
+  apiKey: string
+  webhookEndpointSecret: string
+  apiBaseUrl: string
+  methods?: string[]
+}
 
-type Challenge = {
+type PaymentProvider =
+  | Payrexx
+  | PayrexxSubscription
+  | Stripe
+  | StripeCheckout
+  | Bexio
+  | noCharge
+  | Mollie
+
+type AlgebraicCaptcha = {
+  type: 'algebraic'
   secret: string
   validTime: number
   width: number
@@ -125,13 +147,19 @@ type Challenge = {
   targetSymbol: string
 }
 
+type Turnstile = {
+  type: 'turnstile'
+  secret: string
+  siteKey: string
+}
+
 type Config = {
   general: General
   mailProvider: MailProvider
   OAuthProviders: OAuthProvider[]
   paymentProviders: PaymentProvider[]
   mediaServer: karmaMediaServer | novaMediaServer
-  challenge: Challenge
+  challenge: AlgebraicCaptcha | Turnstile
   ga?: GoogleAnalyticsConfig
 }
 

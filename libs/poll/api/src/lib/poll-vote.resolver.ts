@@ -1,5 +1,11 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {PaginatedPollVotes, PoleVoteByIdArgs, PoleVoteListArgs, PollVote} from './poll-vote.model'
+import {
+  DeletePollVotesResult,
+  PaginatedPollVotes,
+  PoleVoteByIdArgs,
+  PoleVoteListArgs,
+  PollVote
+} from './poll-vote.model'
 import {PollVoteService} from './poll-vote.service'
 
 @Resolver(() => PollVote)
@@ -13,10 +19,10 @@ export class PollVoteResolver {
     return this.pollService.getPollVotes(filter)
   }
 
-  @Mutation(returns => PollVote, {
-    description: `Delete poll vote`
+  @Mutation(returns => DeletePollVotesResult, {
+    description: `Delete poll votes`
   })
-  public deletePollVote(@Args() {id}: PoleVoteByIdArgs) {
-    return this.pollService.deletePollVote({id})
+  public deletePollVotes(@Args() {ids}: PoleVoteByIdArgs) {
+    return this.pollService.deletePollVotes({ids})
   }
 }

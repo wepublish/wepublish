@@ -8,13 +8,6 @@ export const SubscriptionListWrapper = styled('article')`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-export const canPaySubscription = (subscription: Subscription, invoices: Invoice[]) =>
-  // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
-  subscription.paymentMethod.slug !== 'payrexx-subscription' &&
-  invoices
-    .filter(({subscriptionID}) => subscriptionID === subscription.id)
-    .some(invoice => !invoice.canceledAt && !invoice.paidAt)
-
 export const canExtendSubscription = (subscription: Subscription, invoices: Invoice[]) =>
   subscription.memberPlan.extendable &&
   // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
@@ -30,7 +23,6 @@ export const SubscriptionList = ({
   invoices,
   onCancel,
   onExtend,
-  onPay,
   className
 }: BuilderSubscriptionListProps) => {
   const {
@@ -54,8 +46,6 @@ export const SubscriptionList = ({
         <SubscriptionListItem
           key={subscription.id}
           {...subscription}
-          canPay={canPaySubscription(subscription, invoices.data?.invoices ?? [])}
-          pay={async () => await onPay?.(subscription.id)}
           canExtend={canExtendSubscription(subscription, invoices.data?.invoices ?? [])}
           extend={async () => await onExtend?.(subscription.id)}
           cancel={async () => await onCancel?.(subscription.id)}

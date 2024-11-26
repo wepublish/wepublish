@@ -8,7 +8,6 @@ import {
 } from '@prisma/client'
 import {logger, mapPaymentPeriodToMonths} from '@wepublish/utils/api'
 import * as crypto from 'crypto'
-import {timingSafeEqual} from 'crypto'
 import add from 'date-fns/add'
 import parseISO from 'date-fns/parseISO'
 import startOfDay from 'date-fns/startOfDay'
@@ -48,14 +47,6 @@ function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
       return PaymentState.declined
     default:
       return null
-  }
-}
-
-function timeConstantCompare(a: string, b: string): boolean {
-  try {
-    return timingSafeEqual(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'))
-  } catch {
-    return false
   }
 }
 
@@ -396,10 +387,19 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
     // Protect endpoint
     const apiKey = props.req.query.apiKey as string
-    if (!timeConstantCompare(apiKey, this.webhookSecret)) {
+    if (!this.timeConstantCompare(apiKey, this.webhookSecret)) {
       return {
         status: 403,
         message: 'Invalid Api Key'
+      }
+    }
+
+    const contentType = props.req.headers['content-type']
+    if (contentType !== 'application/json' || typeof props.req.body === 'string') {
+      return {
+        status: 415,
+        message:
+          'Request does not contain valid json. Is Payrexx wrongly configured to send a PHP-Post?'
       }
     }
 

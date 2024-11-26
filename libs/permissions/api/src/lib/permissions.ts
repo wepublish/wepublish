@@ -28,6 +28,36 @@ export const CanDeleteNavigation: Permission = {
   deprecated: false
 }
 
+export const CanGetBanner: Permission = {
+  id: 'CAN_GET_BANNER',
+  description: 'Allows to get banner',
+  deprecated: false
+}
+
+export const CanGetBanners: Permission = {
+  id: 'CAN_GET_BANNERS',
+  description: 'Allows to get all banners',
+  deprecated: false
+}
+
+export const CanCreateBanner: Permission = {
+  id: 'CAN_CREATE_BANNER',
+  description: 'Allows to create banner',
+  deprecated: false
+}
+
+export const CanUpdateBanner: Permission = {
+  id: 'CAN_UPDATE_BANNER',
+  description: 'Allows to update banner',
+  deprecated: false
+}
+
+export const CanDeleteBanner: Permission = {
+  id: 'CAN_DELETE_BANNER',
+  description: 'Allows to delete banners',
+  deprecated: false
+}
+
 export const CanCreateAuthor: Permission = {
   id: 'CAN_CREATE_AUTHOR',
   description: 'Allows to create authors',
@@ -679,6 +709,12 @@ export const CanUpdateSystemMails: Permission = {
   deprecated: false
 }
 
+export const CanTestSystemMails: Permission = {
+  id: 'CAN_TEST_SYSTEM_MAILS',
+  description: 'Allows user to test a system mail.',
+  deprecated: false
+}
+
 /**
  * Periodic Job
  */
@@ -715,6 +751,11 @@ export const AllPermissions: Permission[] = [
   CanGetNavigation,
   CanGetNavigations,
   CanDeleteNavigation,
+  CanGetBanner,
+  CanGetBanners,
+  CanCreateBanner,
+  CanUpdateBanner,
+  CanDeleteBanner,
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,
@@ -813,6 +854,7 @@ export const AllPermissions: Permission[] = [
   CanSyncMailTemplates,
   CanGetSystemMails,
   CanUpdateSystemMails,
+  CanTestSystemMails,
   CanCreateApprovedComment,
   CanCreateBlockStyle,
   CanUpdateBlockStyle,
@@ -826,6 +868,11 @@ export const EditorPermissions: Permission[] = [
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,
+  CanGetBanner,
+  CanGetBanners,
+  CanCreateBanner,
+  CanUpdateBanner,
+  CanDeleteBanner,
   CanCreateImage,
   CanGetImage,
   CanGetImages,

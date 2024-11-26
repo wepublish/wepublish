@@ -72,6 +72,11 @@ const nextConfig = {
         source: '/fluchtmigration-mitmachmarkt',
         destination: '/a/mitmachmarkt-wo-kann-ich-mich-engagieren',
         permanent: false
+      },
+      {
+        source: '/tipp',
+        destination: '/a/crowdfunding-tsueritipp',
+        permanent: false
       }
     ]
   }

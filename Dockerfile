@@ -36,7 +36,7 @@ FROM ${BUILD_IMAGE} AS  build-website
 
 COPY . .
 RUN npx prisma generate && \
-    npx nx build ${NEXT_PROJECT}  && \
+    npx nx build ${NEXT_PROJECT} --skip-nx-cache && \
     bash /wepublish/deployment/map-secrets.sh clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website
@@ -58,6 +58,7 @@ RUN groupadd -r wepublish && \
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/${NEXT_PROJECT}/public
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/apps/${NEXT_PROJECT}/public/_next/static
+COPY --chown=wepublish:wepublish version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/deployment/map-secrets.sh /wepublish/map-secrets.sh
 EXPOSE 4001
@@ -89,6 +90,7 @@ RUN groupadd -r wepublish && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 COPY --chown=wepublish:wepublish apps/api-example/src/default.yaml /wepublish/config/default.yaml
+COPY --chown=wepublish:wepublish .version /wepublish/.version
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/node_modules/bcrypt node_modules/bcrypt
 EXPOSE 4000
@@ -152,7 +154,7 @@ RUN groupadd -r wepublish && \
     npm install prisma bcrypt && \
     perl -i -0777 -pe 's/generator fabbrica \{\n  provider = "prisma-fabbrica"\n  output   = "\.\.\/\.\.\/testing\/src\/__generated__\/fabbrica"\n\}//gs' prisma/schema.prisma && \
     npx prisma generate \
-USER wepublish
+    USER wepublish
 CMD ["bash", "./start.sh"]
 
 
@@ -178,11 +180,11 @@ LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 RUN groupadd -r wepublish && \
-        useradd -r -g wepublish -d /wepublish wepublish && \
-        apt-get update && \
-        apt-get install -y libjemalloc-dev && \
-        apt-get clean && \
-        rm -rf /var/lib/apt/lists/*
+    useradd -r -g wepublish -d /wepublish wepublish && \
+    apt-get update && \
+    apt-get install -y libjemalloc-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 COPY --from=build-media /app/dist/apps/media/ .
 COPY --from=build-media --chown=wepublish:wepublish /app/node_modules ./node_modules
 USER wepublish

@@ -555,9 +555,15 @@ enum MemberPlanSort {
 }
 
 type Challenge {
+  type: CaptchaType
   challenge: String
   challengeID: String
   validUntil: Date
+}
+
+enum CaptchaType {
+  Algebraic
+  CfTurnstile
 }
 
 """
@@ -743,7 +749,7 @@ input CommentInput {
 }
 
 input ChallengeInput {
-  challengeID: String!
+  challengeID: String
   challengeSolution: String!
 }
 

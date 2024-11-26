@@ -5,6 +5,7 @@ import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
+import {TextToIcon} from '@wepublish/ui'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -214,6 +215,7 @@ export function Navbar({
   categorySlugs,
   slug,
   headerSlug,
+  iconSlug,
   data,
   logo,
   loginUrl = '/login',
@@ -232,6 +234,7 @@ export function Navbar({
 
   const mainItems = data?.navigations?.find(({key}) => key === slug)
   const headerItems = data?.navigations?.find(({key}) => key === headerSlug)
+  const iconItems = data?.navigations?.find(({key}) => key === iconSlug)
 
   const categories = useMemo(
     () =>
@@ -259,11 +262,7 @@ export function Navbar({
         <NavbarInnerWrapper>
           <NavbarMain>
             <NavbarIconButtonWrapper>
-              <IconButton
-                size="large"
-                aria-label="Menu"
-                onClick={toggleMenu}
-                css={{color: 'white'}}>
+              <IconButton size="large" aria-label="Menu" onClick={toggleMenu} color={'inherit'}>
                 {!isMenuOpen && <MdMenu />}
                 {isMenuOpen && <MdClose />}
               </IconButton>
@@ -318,6 +317,16 @@ export function Navbar({
           main={mainItems}
           categories={categories}
           closeMenu={toggleMenu}>
+          {iconItems?.links.map(link => {
+            const url = navigationLinkToUrl(link)
+
+            return (
+              <Link href={url} color="inherit">
+                <TextToIcon title={link.label} size={32} />
+              </Link>
+            )
+          })}
+
           {children}
         </NavPaper>
       )}

@@ -20,6 +20,8 @@ import Head from 'next/head'
 import Script from 'next/script'
 import {AdConfig} from 'react-ad-manager'
 import {initReactI18next} from 'react-i18next'
+import {FaBluesky, FaInstagram, FaTiktok} from 'react-icons/fa6'
+import {MdFacebook, MdSearch} from 'react-icons/md'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
@@ -34,9 +36,9 @@ import {MannschaftBlocks} from '../src/mannschaft-blocks'
 import {MannschaftBreakBlock} from '../src/mannschaft-break-block'
 import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
 import {MannschaftPage} from '../src/mannschaft-page'
+import {MannschaftRichtextBlock} from '../src/mannschaft-richtext-block'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
-import {MannschaftRichtextBlock} from '../src/mannschaft-richtext-block'
 import theme from '../src/theme'
 
 setDefaultOptions({
@@ -89,6 +91,10 @@ const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
+
+const ButtonLink = styled('a')`
+  color: ${({theme}) => theme.palette.primary.contrastText};
+`
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
@@ -153,7 +159,27 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   categorySlugs={[['categories', 'other'], ['about-us']]}
                   slug="main"
                   headerSlug="header"
-                />
+                  iconSlug="icons">
+                  <ButtonLink href="/search">
+                    <MdSearch size="32" />
+                  </ButtonLink>
+
+                  <ButtonLink href="https://www.facebook.com/mannschaftmagazin">
+                    <MdFacebook size="32" />
+                  </ButtonLink>
+
+                  <ButtonLink href="https://www.instagram.com/mannschaftmagazin">
+                    <FaInstagram size="32" />
+                  </ButtonLink>
+
+                  <ButtonLink href="https://bsky.app/profile/mannschaftmagazin.bsky.social">
+                    <FaBluesky size="32" />
+                  </ButtonLink>
+
+                  <ButtonLink href="https://www.tiktok.com/@mannschaftmagazin">
+                    <FaTiktok size="32" />
+                  </ButtonLink>
+                </NavBar>
 
                 <main>
                   <MainSpacer maxWidth="lg">
@@ -167,16 +193,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </LogoLink>
                 </FooterContainer>
               </Spacer>
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-                strategy="afterInteractive"
-              />
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-                strategy="lazyOnload"
-              />
 
               {publicRuntimeConfig.env.GTM_ID && (
                 <>

@@ -4,6 +4,7 @@ import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
+  NavbarIconButtonWrapper,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
@@ -20,9 +21,11 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {CulturBreakBlock} from '../src/components/cultur-break'
+import {CulturTeaser} from '../src/components/cultur-teaser'
+import {Footer} from '../src/components/footer'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
-import {CulturTeaser} from '../src/components/cultur-teaser'
 
 setDefaultOptions({
   locale: de
@@ -79,6 +82,10 @@ const LogoWrapper = styled(Logo)`
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
+
+  ${NavbarIconButtonWrapper} {
+    color: inherit;
+  }
 `
 
 const dateFormatter = (date: Date, includeTime = true) =>
@@ -99,9 +106,11 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
+          Footer={Footer}
           elements={{Link: NextWepublishLink}}
           blocks={{
-            Teaser: CulturTeaser
+            Teaser: CulturTeaser,
+            Break: CulturBreakBlock
           }}
           date={{format: dateFormatter}}
           meta={{siteTitle}}>
@@ -121,13 +130,12 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
               {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+              <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+              <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+              <link rel="shortcut icon" href="/favicon.ico" />
               <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-              <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-              <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+              <meta name="apple-mobile-web-app-title" content="Cültür" />
               <link rel="manifest" href="/site.webmanifest" />
-              <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-              <meta name="msapplication-TileColor" content="#ffffff" />
-              <meta name="theme-color" content="#ffffff" />
             </Head>
 
             <Spacer>
@@ -135,6 +143,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 categorySlugs={[['categories']]}
                 slug="main"
                 headerSlug="header"
+                iconSlug="icons"
                 loginUrl={''}
               />
 
@@ -150,16 +159,6 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 </LogoLink>
               </FooterContainer>
             </Spacer>
-
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-              strategy="afterInteractive"
-            />
-
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-              strategy="lazyOnload"
-            />
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>
