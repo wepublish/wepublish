@@ -47,12 +47,8 @@ export const CrowdfundingGoal = ({current, goal, until, name}: CrowdfundingGoalP
 
       <CrowdfundingGoalText>
         <CrowdfundingGoalAmount>
-          {current} von <strong>{goal}</strong> Mitgliedern
+          {current} von <strong>{goal}</strong> machen mit
         </CrowdfundingGoalAmount>
-
-        <CrowdfundingGoalUntil>
-          {name} bis {date.format(until, false)}
-        </CrowdfundingGoalUntil>
       </CrowdfundingGoalText>
     </CrowdfundingGoalWrapper>
   )
