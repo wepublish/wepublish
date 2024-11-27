@@ -6,7 +6,7 @@ exports[`InvoiceList Container should render Default 1`] = `
     class="emotion-0 emotion-1"
   >
     <span
-      class="MuiTouchRipple-root emotion-20"
+      class="MuiSkeleton-root MuiSkeleton-rectangular MuiSkeleton-pulse emotion-2"
     />
   </article>
 </DocumentFragment>
