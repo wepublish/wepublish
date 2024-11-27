@@ -9,12 +9,14 @@ import {useUser} from '../session.context'
 export type LoginFormContainerProps = BuilderContainerProps & {
   afterLoginCallback?: () => void
   defaults?: BuilderLoginFormProps['defaults']
+  disablePasswordLogin?: BuilderLoginFormProps['disablePasswordLogin']
 }
 
 export function LoginFormContainer({
   className,
   afterLoginCallback,
-  defaults
+  defaults,
+  disablePasswordLogin
 }: LoginFormContainerProps) {
   const {LoginForm} = useWebsiteBuilder()
   const {setToken} = useUser()
@@ -53,6 +55,7 @@ export function LoginFormContainer({
       }}
       loginWithEmail={withEmail}
       defaults={defaults}
+      disablePasswordLogin={disablePasswordLogin}
     />
   )
 }
