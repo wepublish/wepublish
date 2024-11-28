@@ -309,7 +309,7 @@ export function MemberPlanForm({
                   if (!memberPlan) {
                     return
                   }
-                  setMemberPlan({...memberPlan, amountPerMonthMin: centAmount})
+                  setMemberPlan({...memberPlan, amountPerMonthMin: centAmount || 0})
                 }}
               />
               <HelpText>{t('memberplanForm.amountPerMonthMinHelpText')}</HelpText>
@@ -327,7 +327,7 @@ export function MemberPlanForm({
                   if (!memberPlan) {
                     return
                   }
-                  setMemberPlan({...memberPlan, amountPerMonthTarget: centAmount})
+                  setMemberPlan({...memberPlan, amountPerMonthTarget: centAmount || null})
                 }}
               />
               <HelpText>{t('memberplanForm.amountPerMonthTargetHelpText')}</HelpText>

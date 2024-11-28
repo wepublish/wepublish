@@ -132,6 +132,10 @@ function MemberPlanEdit() {
     amountPerMonthMin: Schema.Types.NumberType()
       .isRequired(t('memberPlanEdit.amountPerMonthMinRequired'))
       .min(0, t('memberPlanEdit.amountPerMonthMinZero')),
+    amountPerMonthTarget: Schema.Types.NumberType().min(
+      ((memberPlan?.amountPerMonthMin || 0) + 1) / 100,
+      t('memberPlanEdit.targetPriceMustBeGreaterThanMin')
+    ),
     currency: Schema.Types.StringType().isRequired(t('memberPlanEdit.currencyRequired'))
   })
 

@@ -510,7 +510,7 @@ model MemberPlan {
   active                         Boolean
   currency                       Currency
   amountPerMonthMin              Float
-  amountPerMonthTarget           Int?
+  amountPerMonthTarget           Float?
   availablePaymentMethods        AvailablePaymentMethod[]
   migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?
