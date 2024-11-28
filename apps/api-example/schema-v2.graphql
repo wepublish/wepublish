@@ -34,6 +34,9 @@ type Article {
   hidden: Boolean!
   id: ID!
   modifiedAt: DateTime!
+  peer: Peer
+  peerArticleId: String
+  peerId: String
   pending: ArticleRevision
   published: ArticleRevision
   shared: Boolean!
@@ -786,6 +789,9 @@ type Mutation {
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
 
+  """Imports an article from a given peer."""
+  importArticle(peerArticleId: String!, peerId: String!): Article!
+
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
 
@@ -800,7 +806,7 @@ type Mutation {
   unpublishArticle(id: String!): Article!
 
   """Updates an article."""
-  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String!, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String!, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, originalArticleId: String, peerId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""

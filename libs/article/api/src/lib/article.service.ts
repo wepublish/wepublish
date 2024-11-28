@@ -15,6 +15,7 @@ import {
   PrimeDataLoader,
   SortOrder
 } from '@wepublish/utils/api'
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import {mapBlockUnionMap} from '@wepublish/block-content/api'
 
 @Injectable()

@@ -16,6 +16,7 @@ import {DateFilter, PaginatedType, SortOrder} from '@wepublish/utils/api'
 // Circular dependency is intended as articles can have blocks, which can have article teasers
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import {BlockContent, BlockContentInput, HasBlockContent} from '@wepublish/block-content/api'
+import {Peer} from '@wepublish/peering/api'
 
 export enum ArticleSort {
   CreatedAt = 'CreatedAt',
@@ -141,6 +142,13 @@ export class Article {
 
   @Field(() => [Tag])
   tags!: Tag[]
+
+  @Field({nullable: true})
+  peerId?: string
+  @Field({nullable: true})
+  peer?: Peer
+  @Field({nullable: true})
+  peerArticleId?: string
 }
 
 @ObjectType()
@@ -183,6 +191,11 @@ export class CreateArticleInput extends OmitType(
 
   @Field(() => [PropertyInput])
   properties!: PropertyInput[]
+
+  @Field({nullable: true})
+  peerId?: string
+  @Field({nullable: true})
+  originalArticleId?: string
 }
 
 @ArgsType()

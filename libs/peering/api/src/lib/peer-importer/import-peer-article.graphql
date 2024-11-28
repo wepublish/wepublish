@@ -1,0 +1,82 @@
+fragment ImageRef on Image {
+  url
+}
+
+fragment ArticleRef on Article {
+  id
+}
+
+fragment PageRef on Page {
+  id
+}
+
+fragment EventRef on Event {
+  id
+}
+
+fragment FullComment on Comment {
+  id
+}
+
+fragment PeerWithProfile on Peer {
+  id
+}
+
+fragment ImportBlock on BlockContent {
+  ...FullBlock
+
+  ... on PollBlock {
+    __typename
+  }
+
+  ... on HTMLBlock {
+    __typename
+  }
+
+  ... on EventBlock {
+    __typename
+  }
+
+  ... on CommentBlock {
+    __typename
+  }
+
+  ... on TeaserListBlock {
+    __typename
+  }
+
+  ... on TeaserGridBlock {
+    __typename
+  }
+
+  ... on TeaserGridFlexBlock {
+    __typename
+  }
+}
+
+query Article($id: String!) {
+  article(id: $id) {
+    id
+
+    tags {
+      tag
+    }
+
+    published {
+      blocks {
+        ...ImportBlock
+      }
+
+      authors {
+        name
+        slug
+        bio
+        jobTitle
+        image {
+          url
+        }
+        hideOnArticle
+      }
+    }
+  }
+}

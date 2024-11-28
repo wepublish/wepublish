@@ -72,6 +72,10 @@ const modelFieldDefinitions = [{
     }, {
         name: "Article",
         fields: [{
+                name: "peer",
+                type: "Peer",
+                relationName: "ArticleToPeer"
+            }, {
                 name: "navigations",
                 type: "NavigationLink",
                 relationName: "ArticleToNavigationLink"
@@ -488,6 +492,10 @@ const modelFieldDefinitions = [{
                 name: "comments",
                 type: "Comment",
                 relationName: "CommentToPeer"
+            }, {
+                name: "articles",
+                type: "Article",
+                relationName: "ArticleToPeer"
             }]
     }, {
         name: "Token",
@@ -1149,6 +1157,9 @@ function defineArticleRevisionSocialMediaAuthorFactoryInternal({ defaultData: de
 export function defineArticleRevisionSocialMediaAuthorFactory(options) {
     return defineArticleRevisionSocialMediaAuthorFactoryInternal(options);
 }
+function isArticlepeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
+}
 function autoGenerateArticleScalarsOrEnums({ seq }) {
     return {
         shared: getScalarFieldValueGenerator().Boolean({ modelName: "Article", fieldName: "shared", isId: false, isUnique: false, seq })
@@ -1170,7 +1181,11 @@ function defineArticleFactoryInternal({ defaultData: defaultDataResolver, traits
                 const traitData = yield resolveTraitValue({ seq });
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
-            const defaultAssociations = {};
+            const defaultAssociations = {
+                peer: isArticlepeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
+            };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
         });

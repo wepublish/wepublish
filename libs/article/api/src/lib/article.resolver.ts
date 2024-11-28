@@ -52,6 +52,14 @@ export class ArticleResolver {
     return this.articleService.unpublishArticle(id)
   }
 
+  @Mutation(() => Article, {
+    description: `Imports an article from a given peer.`
+  })
+  public importArticle(
+    @Args('peerId') peerId: string,
+    @Args('peerArticleId') peerArticleId: string
+  ) {}
+
   @ResolveField(() => ArticleRevision, {nullable: true})
   async draft(@Parent() parent: Article) {
     const {id: articleId} = parent

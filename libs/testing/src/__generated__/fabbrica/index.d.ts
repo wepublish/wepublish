@@ -282,6 +282,10 @@ export interface ArticleRevisionSocialMediaAuthorFactoryInterface<TOptions exten
  * @returns factory {@link ArticleRevisionSocialMediaAuthorFactoryInterface}
  */
 export declare function defineArticleRevisionSocialMediaAuthorFactory<TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions>(options: TOptions): ArticleRevisionSocialMediaAuthorFactoryInterface<TOptions>;
+type ArticlepeerFactory = {
+    _factoryFor: "Peer";
+    build: () => PromiseLike<Prisma.PeerCreateNestedOneWithoutArticlesInput["create"]>;
+};
 type ArticleFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -291,6 +295,8 @@ type ArticleFactoryDefineInput = {
     shared?: boolean;
     hidden?: boolean;
     disableComments?: boolean;
+    peerArticleId?: string | null;
+    peer?: ArticlepeerFactory | Prisma.PeerCreateNestedOneWithoutArticlesInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutArticleInput;
     tags?: Prisma.TaggedArticlesCreateNestedManyWithoutArticleInput;
     revisions?: Prisma.ArticleRevisionCreateNestedManyWithoutArticleInput;
@@ -1554,6 +1560,7 @@ type PeerFactoryDefineInput = {
     token?: string;
     isDisabled?: boolean;
     comments?: Prisma.CommentCreateNestedManyWithoutPeerInput;
+    articles?: Prisma.ArticleCreateNestedManyWithoutPeerInput;
 };
 type PeerFactoryDefineOptions = {
     defaultData?: Resolver<PeerFactoryDefineInput, BuildDataOptions>;

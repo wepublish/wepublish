@@ -24,8 +24,6 @@ type Query {
   images(cursor: ID, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
   comment(id: ID!): Comment
   comments(cursor: ID, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
-  peerArticle(peerID: ID!, id: ID!): Article
-  peerArticles(cursors: String, take: Int = 10, first: Int, skip: Int = 0, sort: ArticleSort = ModifiedAt, order: SortOrder = Descending, peerFilter: String, filter: ArticleFilter): PeerArticleConnection!
   page(id: ID): Page
   pages(cursor: ID, take: Int = 10, skip: Int = 0, filter: PageFilter, sort: PageSort = modifiedAt, order: SortOrder = Descending): PageConnection!
   pagePreviewLink(id: ID!, hours: Int!): String
@@ -692,44 +690,6 @@ input CommentFilter {
 enum CommentSort {
   modifiedAt
   createdAt
-}
-
-type PeerArticleConnection {
-  nodes: [PeerArticle!]!
-  pageInfo: UnidirectionalPageInfo!
-  totalCount: Int!
-}
-
-type PeerArticle {
-  peer: Peer!
-  peeredArticleURL: String!
-  article: Article!
-}
-
-type UnidirectionalPageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-}
-
-enum ArticleSort {
-  CreatedAt
-  ModifiedAt
-  PublishedAt
-}
-
-input ArticleFilter {
-  title: String
-  preTitle: String
-  lead: String
-  publicationDateFrom: DateFilter
-  publicationDateTo: DateFilter
-  draft: Boolean
-  published: Boolean
-  pending: Boolean
-  authors: [ID!]
-  tags: [String!]
-  includeHidden: Boolean
-  shared: Boolean
 }
 
 type PageConnection {

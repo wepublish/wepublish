@@ -101,6 +101,10 @@ model Article {
   hidden          Boolean @default(false)
   disableComments Boolean @default(false)
 
+  peer          Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peerId        String?
+  peerArticleId String?
+
   navigations NavigationLink[]
   tags        TaggedArticles[]
   revisions   ArticleRevision[]
@@ -688,6 +692,7 @@ model Peer {
   isDisabled Boolean @default(false)
 
   comments Comment[]
+  articles Article[]
 
   @@map("peers")
 }

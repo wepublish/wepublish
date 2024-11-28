@@ -1,8 +1,4 @@
-import {
-  CanGetPaymentProviders,
-  CanGetPeerArticle,
-  CanLoginAsOtherUser
-} from '@wepublish/permissions/api'
+import {CanGetPaymentProviders, CanLoginAsOtherUser} from '@wepublish/permissions/api'
 import {SortOrder} from '@wepublish/utils/api'
 import {
   GraphQLID,
@@ -24,15 +20,9 @@ import {SubscriptionSort} from '../db/subscription'
 import {UserSort} from '../db/user'
 import {UserRoleSort} from '../db/userRole'
 import {GivenTokeExpiryToLongError, UserIdNotFound} from '../error'
-import {delegateToPeerSchema} from '../utility'
 import {GraphQLAction} from './action'
 import {getActions} from './action/action.private-queries'
-import {
-  GraphQLArticle,
-  GraphQLArticleFilter,
-  GraphQLArticleSort,
-  GraphQLPeerArticleConnection
-} from './article'
+
 import {GraphQLAuthProvider, GraphQLJWTToken} from './auth'
 import {
   GraphQLAuthor,
@@ -95,7 +85,6 @@ import {
 import {getAdminPayments, getPaymentById} from './payment/payment.private-queries'
 import {GraphQLPaymentMethod, GraphQLPaymentProvider} from './paymentMethod'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
-import {getAdminPeerArticles} from './peer-article/peer-article.private-queries'
 import {
   getAdminPeerProfile,
   getRemotePeerProfile
@@ -144,7 +133,6 @@ import {
   GraphQLUserRoleFilter,
   GraphQLUserRoleSort
 } from './userRole'
-import {ArticleSort} from '@wepublish/article/api'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -452,53 +440,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         {filter, sort, order, skip, take, cursor},
         {authenticate, prisma: {comment}}
       ) => getAdminComments(filter, sort, order, cursor, skip, take, authenticate, comment)
-    },
-
-    // Peer Article
-    // ============
-
-    peerArticle: {
-      type: GraphQLArticle,
-      args: {
-        peerID: {type: new GraphQLNonNull(GraphQLID)},
-        id: {type: new GraphQLNonNull(GraphQLID)}
-      },
-      resolve(root, {peerID, id}, context, info) {
-        const {authenticate} = context
-        const {roles} = authenticate()
-
-        authorise(CanGetPeerArticle, roles)
-        return delegateToPeerSchema(peerID, true, context, {fieldName: 'article', args: {id}, info})
-      }
-    },
-
-    peerArticles: {
-      type: new GraphQLNonNull(GraphQLPeerArticleConnection),
-      args: {
-        cursors: {type: GraphQLString},
-        take: {type: GraphQLInt, defaultValue: 10},
-        // Backwards compatability
-        first: {type: GraphQLInt},
-        skip: {type: GraphQLInt, defaultValue: 0},
-        sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
-        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending},
-        peerFilter: {type: GraphQLString},
-        filter: {type: GraphQLArticleFilter}
-      },
-
-      resolve: (root, {filter, sort, order, after, peerFilter, take, skip, first}, context, info) =>
-        getAdminPeerArticles(
-          filter,
-          sort,
-          order,
-          peerFilter,
-          after,
-          context,
-          info,
-          take,
-          skip,
-          first
-        )
     },
 
     // Page

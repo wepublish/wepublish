@@ -10,6 +10,7 @@ fragment FullTeaser on Teaser {
     title
     lead
 
+    articleID
     article {
       ...ArticleRef
     }
@@ -47,6 +48,7 @@ fragment FullTeaser on Teaser {
     title
     lead
 
+    pageID
     page {
       ...PageRef
     }
@@ -63,6 +65,7 @@ fragment FullTeaser on Teaser {
     title
     lead
 
+    eventID
     event {
       ...EventRef
     }
@@ -87,7 +90,7 @@ fragment FullTeaser on Teaser {
   }
 }
 
-fragment FullBlock on Block {
+fragment FullBlock on BlockContent {
   __typename
 
   ... on TitleBlock {
@@ -115,17 +118,14 @@ fragment FullBlock on Block {
     }
   }
 
-  ... on LinkPageBreakBlock {
+  ... on BreakBlock {
     blockStyle
     text
     linkText
     linkURL
-    styleOption
     richText
     linkTarget
     hideButton
-    templateOption
-    layoutOption
     image {
       ...ImageRef
     }
@@ -246,7 +246,7 @@ fragment FullBlock on Block {
     zoneID
   }
 
-  ... on EmbedBlock {
+  ... on IFrameBlock {
     blockStyle
     url
     title
