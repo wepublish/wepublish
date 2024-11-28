@@ -689,7 +689,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                             currency={currency}
                             centAmount={monthlyAmount}
                             onChange={centAmount => {
-                              setMonthlyAmount(centAmount)
+                              setMonthlyAmount(centAmount || 0)
                             }}
                             disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                           />

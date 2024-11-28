@@ -849,6 +849,7 @@ type MemberPlan {
   tags: [String!]
   currency: Currency!
   amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
   maxCount: Int
   extendable: Boolean!
   availablePaymentMethods: [AvailablePaymentMethod!]!

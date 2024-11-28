@@ -29,7 +29,7 @@ export type SubscribeContainerProps<
 > = BuilderContainerProps &
   Pick<
     BuilderSubscribeProps<T>,
-    'fields' | 'schema' | 'defaults' | 'extraMoneyOffset' | 'termsOfServiceUrl' | 'donate'
+    'fields' | 'schema' | 'defaults' | 'termsOfServiceUrl' | 'donate'
   > & {
     successURL: string
     failureURL: string
@@ -39,7 +39,6 @@ export type SubscribeContainerProps<
 
 export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   className,
-  extraMoneyOffset,
   failureURL,
   successURL,
   defaults,
@@ -123,7 +122,6 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
 
       <Subscribe
         className={className}
-        extraMoneyOffset={extraMoneyOffset}
         defaults={defaults}
         fields={fields}
         schema={schema}
