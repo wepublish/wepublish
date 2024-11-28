@@ -221,7 +221,7 @@ const fillCountry: StoryObj['play'] = async ({canvasElement, step}) => {
 
 const clickUpdate: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
-  const submitButton = canvas.getByText('Save')
+  const submitButton = canvas.getByText('Speichern')
 
   await step('Submit form', async () => {
     await userEvent.click(submitButton)

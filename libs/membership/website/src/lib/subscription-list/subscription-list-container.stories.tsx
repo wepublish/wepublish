@@ -278,7 +278,7 @@ export const Cancel: StoryObj = {
   ...Default,
   play: async ctx => {
     const canvas = within(ctx.canvasElement)
-    await waitFor(() => canvas.getByText('Abo Künden'))
+    await waitFor(() => canvas.getByText('Abo kündigen'))
 
     await WithCancelError.play?.(ctx)
   }

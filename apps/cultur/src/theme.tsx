@@ -90,6 +90,14 @@ const theme = createTheme(WePTheme, {
           textDecorationColor: 'currentColor'
         }
       }
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          color: '#383A4D',
+          borderColor: 'currentColor'
+        }
+      }
     }
   }
 } as PartialDeep<Theme> | ThemeOptions)
