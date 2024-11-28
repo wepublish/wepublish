@@ -16,7 +16,7 @@ export const generateFeed =
     'generator'
   >) =>
   async (articles: Article[]) => {
-    const items = articles.map(async article => {
+    const items = articles.map(async (article): Promise<Item> => {
       const seo = getArticleSEO(article)
 
       const content = await toHtml(
@@ -31,9 +31,9 @@ export const generateFeed =
 
       return {
         title: seo.schema.headline,
-        image: seo.schema.image,
+        image: seo.schema.image?.url ?? undefined,
         description: seo.schema.description,
-        content: content ? content : article.lead,
+        content: content ? content : article.lead ?? undefined,
         author: article.authors.map(author => ({
           name: author.name,
           link: author.url
@@ -42,10 +42,10 @@ export const generateFeed =
         link: article.url,
         date: new Date(article.publishedAt),
         category: article.tags.map(tag => ({
-          name: tag.tag,
-          term: tag.tag
+          name: tag.tag ?? undefined,
+          term: tag.tag ?? undefined
         }))
-      } as Item
+      }
     })
 
     const Feed = (await import('feed')).Feed
