@@ -30,15 +30,12 @@ export class HotAndTrendingResolver {
     })
     start: Date | null,
     @Args('take', {nullable: true, type: () => Int, defaultValue: 10}) take: number
-  ): Promise<ArticleModel[]> {
+  ): Promise<Article[]> {
     const result = await this.datasource.getMostViewedArticles({
       start,
       take
     })
 
-    return result.map(({id}) => ({
-      __typename: 'Article',
-      id
-    }))
+    return result
   }
 }

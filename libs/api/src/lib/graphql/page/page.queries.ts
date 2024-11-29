@@ -1,8 +1,12 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import {ConnectionResult} from '../../db/common'
 import {PageFilter, PageSort, PageWithRevisions} from '../../db/page'
-import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
-import {mapDateFilterToPrisma} from '../utils'
+import {
+  SortOrder,
+  getMaxTake,
+  graphQLSortOrderToPrisma,
+  mapDateFilterToPrisma
+} from '@wepublish/utils/api'
 
 export const createPageOrder = (
   field: PageSort,

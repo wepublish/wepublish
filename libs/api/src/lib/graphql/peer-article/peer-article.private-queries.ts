@@ -1,12 +1,13 @@
 import {GraphQLResolveInfo, Kind} from 'graphql'
 import {ExtractField, WrapQuery} from '@graphql-tools/wrap'
 import {Context} from '../../context'
-import {ArticleFilter, ArticleSort, PeerArticle} from '../../db/article'
+import {PeerArticle} from '../../db/article'
 import {ConnectionResult} from '../../db/common'
 import {SortOrder} from '@wepublish/utils/api'
 import {delegateToPeerSchema, base64Encode} from '../../utility'
 import {authorise} from '../permissions'
 import {CanGetPeerArticles} from '@wepublish/permissions/api'
+import {ArticleFilter, ArticleSort} from '@wepublish/article/api'
 
 export const getAdminPeerArticles = async (
   filter: Partial<ArticleFilter>,
@@ -224,27 +225,11 @@ export const getAdminPeerArticles = async (
       )
       break
 
-    case ArticleSort.PublishAt:
-      filtered.sort(
-        (a, b) =>
-          new Date(a.article.latest.publishAt).getTime() -
-          new Date(b.article.latest.publishAt).getTime()
-      )
-      break
-
     case ArticleSort.PublishedAt:
       filtered.sort(
         (a, b) =>
           new Date(a.article.latest.publishedAt).getTime() -
           new Date(b.article.latest.publishedAt).getTime()
-      )
-      break
-
-    case ArticleSort.UpdatedAt:
-      filtered.sort(
-        (a, b) =>
-          new Date(a.article.latest.updatedAt).getTime() -
-          new Date(b.article.latest.updatedAt).getTime()
       )
       break
   }

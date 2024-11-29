@@ -1,16 +1,12 @@
 import {PrismaClient} from '@prisma/client'
-import {ArticleSort, articleWithRevisionsToPublicArticle} from '../../db/article'
 import {PageSort, pageWithRevisionsToPublicPage} from '../../db/page'
-import {Context} from '../../context'
 import {createPageOrder} from '../page/page.queries'
-import {createArticleOrder} from '../article/article.queries'
 import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {ArticleSort, createArticleOrder} from '@wepublish/article/api'
 
 export const queryPhrase = async (
   query: string,
   prisma: PrismaClient,
-  publicArticlesLoader: Context['loaders']['publicArticles'],
-  publicPagesLoader: Context['loaders']['publicPagesByID'],
   take: number,
   skip: number,
   pageSort: PageSort,
@@ -47,15 +43,6 @@ export const queryPhrase = async (
           in: articleIds
         }
       },
-      include: {
-        published: {
-          include: {
-            properties: true,
-            authors: true,
-            socialMediaAuthors: true
-          }
-        }
-      },
       orderBy: createArticleOrder(articleSort, order),
       skip,
       take: getMaxTake(take)
@@ -80,15 +67,11 @@ export const queryPhrase = async (
     })
   ])
 
-  const publicArticles = articles.map(articleWithRevisionsToPublicArticle)
-  publicArticles.forEach(article => publicArticlesLoader.prime(article.id, article))
-
-  const firstArticle = publicArticles[0]
-  const lastArticle = publicArticles[publicArticles.length - 1]
-  const articlesHasNextPage = articleIds.length > skip + publicArticles.length
+  const firstArticle = articles[0]
+  const lastArticle = articles[articles.length - 1]
+  const articlesHasNextPage = articleIds.length > skip + articles.length
 
   const publicPages = pages.map(pageWithRevisionsToPublicPage)
-  publicPages.forEach(page => publicPagesLoader.prime(page.id, page))
 
   const firstPage = publicPages[0]
   const lastPage = publicPages[publicPages.length - 1]
@@ -96,7 +79,7 @@ export const queryPhrase = async (
 
   return {
     articles: {
-      nodes: publicArticles,
+      nodes: articles,
       totalCount: articleIds.length,
       pageInfo: {
         hasPreviousPage: Boolean(skip),

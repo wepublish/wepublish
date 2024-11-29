@@ -4,7 +4,7 @@ import {
   PageRevision as PrismaPageRevision
 } from '@prisma/client'
 import {PageBlock} from './block'
-import {DateFilter} from './common'
+import {DateFilter} from '@wepublish/utils/api'
 
 export interface PageData {
   readonly updatedAt?: Date | null

@@ -40,7 +40,6 @@ export const getActions = async (
     ? article
         .findMany({
           take: 50,
-          include: {draft: true, pending: true, published: true},
           orderBy: {createdAt: 'desc'}
         })
         .then(val =>

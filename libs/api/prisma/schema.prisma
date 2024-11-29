@@ -37,17 +37,15 @@ model MetadataProperty {
 }
 
 model ArticleRevision {
-  id                     String                             @id @default(cuid())
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
   preTitle               String?
   title                  String?
   lead                   String?
   seoTitle               String?
-  slug                   String?
-  tags                   String[]
   canonicalUrl           String?
   properties             MetadataProperty[]
-  image                  Image?                             @relation("articleRevisionImage", fields: [imageID], references: [id])
-  imageID                String?
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json
@@ -55,24 +53,18 @@ model ArticleRevision {
   socialMediaTitle       String?
   socialMediaDescription String?
   socialMediaAuthors     ArticleRevisionSocialMediaAuthor[]
-  socialMediaImage       Image?                             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
-  socialMediaImageID     String?
+  publishedAt            DateTime?
 
-  revision    Int       @default(0)
-  createdAt   DateTime  @default(now())
-  modifiedAt  DateTime? @updatedAt
-  updatedAt   DateTime?
-  publishAt   DateTime?
-  publishedAt DateTime?
+  image   Image?  @relation("articleRevisionImage", fields: [imageID], references: [id])
+  imageID String?
 
-  PublishedArticle Article[] @relation("publishedArticleRevision")
-  PendingArticle   Article[] @relation("pendingArticleRevision")
-  DraftArticle     Article[] @relation("draftArticleRevision")
+  socialMediaImage   Image?  @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
+  socialMediaImageID String?
 
-  @@index([publishAt])
+  articleId String
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
   @@index([publishedAt])
-  @@index([updatedAt])
-  @@index([tags])
   @@map("articles.revisions")
 }
 
@@ -99,30 +91,19 @@ model ArticleRevisionSocialMediaAuthor {
 }
 
 model Article {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  modifiedAt  DateTime  @updatedAt
+  publishedAt DateTime?
 
-  // The better way in the future to go around draft, pending, published is to have the articleId and a state on the revision
-  // There should then be a unique constraint on id + state.
-  // This would allow us to
-  //  cascade the revisions on article delete
-  //  promoting/demoting a revision to a different state easily
-  publishedId String?          @unique
-  published   ArticleRevision? @relation("publishedArticleRevision", fields: [publishedId], references: [id], onDelete: SetNull)
-
-  pendingId String?          @unique
-  pending   ArticleRevision? @relation("pendingArticleRevision", fields: [pendingId], references: [id], onDelete: SetNull)
-
-  draftId String?          @unique
-  draft   ArticleRevision? @relation("draftArticleRevision", fields: [draftId], references: [id], onDelete: SetNull)
-
+  slug            String? @unique
   shared          Boolean
   hidden          Boolean @default(false)
   disableComments Boolean @default(false)
 
   navigations NavigationLink[]
   tags        TaggedArticles[]
+  revisions   ArticleRevision[]
 
   @@index([createdAt])
   @@index([modifiedAt])

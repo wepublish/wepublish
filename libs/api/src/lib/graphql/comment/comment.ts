@@ -354,7 +354,7 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
         resolve: createProxyingResolver(async (comment, args, {urlAdapter, loaders}, info) => {
           const item =
             comment.itemType === 'article'
-              ? await loaders.publicArticles.load(comment.itemID)
+              ? null // @TODO: await loaders.publicArticles.load(comment.itemID)
               : comment.itemType === 'page'
               ? await loaders.publicPagesByID.load(comment.itemID)
               : null
@@ -426,3 +426,16 @@ export const GraphQLPublicCommentConnection = new GraphQLObjectType({
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
+
+export const GraphQLCommentResolver = {
+  __resolveReference: async (reference, {loaders}: Context) => {
+    const {id} = reference
+    const comment = await loaders.commentsById.load(id)
+
+    if (!comment) {
+      throw new Error('Comment not found')
+    }
+
+    return comment
+  }
+}

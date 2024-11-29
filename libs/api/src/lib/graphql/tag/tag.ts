@@ -74,7 +74,11 @@ export const GraphQLTagResolver = {
     const tag = await prisma.tag.findUnique({
       where: {id}
     })
-    if (!tag) throw new Error('Tag not found')
+
+    if (!tag) {
+      throw new Error('Tag not found')
+    }
+
     return tag
   }
 }

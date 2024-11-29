@@ -13,7 +13,6 @@ import {
   GraphQLString
 } from 'graphql'
 import {Context} from '../context'
-import {ArticleSort} from '../db/article'
 import {AuthorSort} from '../db/author'
 import {CommentSort} from '../db/comment'
 import {ImageSort} from '../db/image'
@@ -30,16 +29,10 @@ import {GraphQLAction} from './action'
 import {getActions} from './action/action.private-queries'
 import {
   GraphQLArticle,
-  GraphQLArticleConnection,
   GraphQLArticleFilter,
   GraphQLArticleSort,
   GraphQLPeerArticleConnection
 } from './article'
-import {
-  getAdminArticles,
-  getArticleById,
-  getArticlePreviewLink
-} from './article/article.private-queries'
 import {GraphQLAuthProvider, GraphQLJWTToken} from './auth'
 import {
   GraphQLAuthor,
@@ -151,6 +144,7 @@ import {
   GraphQLUserRoleFilter,
   GraphQLUserRoleSort
 } from './userRole'
+import {ArticleSort} from '@wepublish/article/api'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -460,33 +454,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       ) => getAdminComments(filter, sort, order, cursor, skip, take, authenticate, comment)
     },
 
-    // Article
-    // =======
-
-    article: {
-      type: GraphQLArticle,
-      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, loaders}) =>
-        getArticleById(id, authenticate, loaders.articles)
-    },
-
-    articles: {
-      type: new GraphQLNonNull(GraphQLArticleConnection),
-      args: {
-        cursor: {type: GraphQLID},
-        take: {type: GraphQLInt, defaultValue: 10},
-        skip: {type: GraphQLInt, defaultValue: 0},
-        filter: {type: GraphQLArticleFilter},
-        sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
-        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
-      },
-      resolve: (
-        root,
-        {filter, sort, order, skip, take, cursor},
-        {authenticate, prisma: {article}}
-      ) => getAdminArticles(filter, sort, order, cursor, skip, take, authenticate, article)
-    },
-
     // Peer Article
     // ============
 
@@ -532,19 +499,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           skip,
           first
         )
-    },
-
-    articlePreviewLink: {
-      type: GraphQLString,
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLID)},
-        hours: {type: new GraphQLNonNull(GraphQLInt)}
-      },
-      resolve: async (
-        root,
-        {id, hours},
-        {authenticate, loaders: {articles}, urlAdapter, generateJWT}
-      ) => getArticlePreviewLink(id, hours, authenticate, generateJWT, urlAdapter, articles)
     },
 
     // Page

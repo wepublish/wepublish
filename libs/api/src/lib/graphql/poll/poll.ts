@@ -206,3 +206,16 @@ export const GraphQLUpdatePollExternalVoteSources = new GraphQLInputObjectType({
     voteAmounts: {type: new GraphQLList(new GraphQLNonNull(GraphQLUpdatePollExternalVote))}
   }
 })
+
+export const GraphQLPollResolver = {
+  __resolveReference: async (reference, {loaders}: Context) => {
+    const {id} = reference
+    const poll = await loaders.pollById.load(id)
+
+    if (!poll) {
+      throw new Error('Poll not found')
+    }
+
+    return poll
+  }
+}

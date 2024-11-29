@@ -1,12 +1,9 @@
 import {
   MetadataProperty,
-  Article as PrismaArticle,
-  ArticleRevision as PrismaArticleRevision,
   ArticleRevisionAuthor,
   ArticleRevisionSocialMediaAuthor
 } from '@prisma/client'
 import {ArticleBlock} from './block'
-import {DateFilter} from './common'
 
 export interface ArticleData {
   readonly preTitle?: string | null
@@ -73,60 +70,4 @@ export interface PublicArticle extends ArticleData {
   readonly blocks: ArticleBlock[]
   readonly peeredArticleURL?: string
   readonly disableComments?: boolean | null
-}
-
-export interface ArticleFilter {
-  readonly title?: string
-  readonly preTitle?: string
-  readonly publicationDateFrom?: DateFilter
-  readonly publicationDateTo?: DateFilter
-  readonly lead?: string
-  readonly draft?: boolean
-  readonly published?: boolean
-  readonly pending?: boolean
-  readonly shared?: boolean
-  readonly authors?: string[]
-  readonly tags?: string[]
-  readonly includeHidden?: boolean
-}
-
-export interface PublicArticleFilter {
-  readonly authors?: string[]
-  readonly tags?: string[]
-  readonly includeHidden?: boolean
-}
-
-export enum ArticleSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt',
-  PublishedAt = 'publishedAt',
-  UpdatedAt = 'updatedAt',
-  PublishAt = 'publishAt'
-}
-
-export type ArticleRevisionWithRelations = PrismaArticleRevision & {
-  properties: MetadataProperty[]
-  authors: ArticleRevisionAuthor[]
-  socialMediaAuthors: ArticleRevisionSocialMediaAuthor[]
-}
-
-export type ArticleWithRevisions = PrismaArticle & {
-  draft: ArticleRevisionWithRelations | null
-  pending: ArticleRevisionWithRelations | null
-  published: ArticleRevisionWithRelations | null
-}
-
-export const articleWithRevisionsToPublicArticle = ({
-  id,
-  shared,
-  disableComments,
-  published,
-  pending
-}: Omit<ArticleWithRevisions, 'draft'>): PublicArticle => {
-  const returnValue = {shared, disableComments, ...(published || pending!), id}
-
-  return {
-    ...returnValue,
-    blocks: returnValue.blocks as ArticleBlock[]
-  }
 }
