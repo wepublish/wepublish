@@ -33,7 +33,6 @@ export const NavbarWrapper = styled('nav')`
   right: 0;
   z-index: 10;
   background-color: ${({theme}) => theme.palette.background.default};
-  height: var(--navbar-height);
 `
 
 const useAppBarStyles = (isMenuOpen: boolean) => {
