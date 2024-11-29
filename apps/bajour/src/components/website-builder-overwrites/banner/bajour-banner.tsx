@@ -15,6 +15,7 @@ ${PageBanner.BannerCta} {
   display: none;
 }
 &[data-collapsed='true'] {
+  top: unset;
   display: block;
   border-radius: 4px;
   grid-template-columns: 1fr;

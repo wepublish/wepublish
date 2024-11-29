@@ -1,4 +1,4 @@
-import {AppBar, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
+import {AppBar, GlobalStyles, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -14,6 +14,18 @@ declare module 'react' {
   }
 }
 
+const cssVariables = (theme: Theme) => css`
+  :root {
+    --navbar-height: ${theme.spacing(6.5)};
+    ${theme.breakpoints.up('md')} {
+      --navbar-height: ${theme.spacing(7.5)};
+    }
+    ${theme.breakpoints.up('lg')} {
+      --navbar-height: ${theme.spacing(12.5)};
+    }
+  }
+`
+
 export const NavbarWrapper = styled('nav')`
   position: sticky;
   top: 0;
@@ -21,6 +33,7 @@ export const NavbarWrapper = styled('nav')`
   right: 0;
   z-index: 10;
   background-color: ${({theme}) => theme.palette.background.default};
+  height: var(--navbar-height);
 `
 
 const useAppBarStyles = (isMenuOpen: boolean) => {
@@ -140,23 +153,17 @@ export const NavbarIconButtonWrapper = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${({theme}) => theme.spacing(6.5)};
-  height: ${({theme}) => theme.spacing(6.5)};
+  width: var(--navbar-height);
+  height: var(--navbar-height);
   color: ${({theme}) => theme.palette.common.white};
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    width: ${({theme}) => theme.spacing(7.5)};
-    height: ${({theme}) => theme.spacing(7.5)};
-
     svg {
       font-size: ${({theme}) => theme.spacing(4.5)};
     }
   }
 
   ${({theme}) => theme.breakpoints.up('lg')} {
-    width: ${({theme}) => theme.spacing(12.5)};
-    height: ${({theme}) => theme.spacing(12.5)};
-
     svg {
       font-size: ${({theme}) => theme.spacing(6.5)};
     }
@@ -258,6 +265,7 @@ export function Navbar({
 
   return (
     <NavbarWrapper className={className}>
+      <GlobalStyles styles={theme => cssVariables(theme)} />
       <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
         <NavbarInnerWrapper>
           <NavbarMain>
