@@ -152,8 +152,8 @@ export const NavbarIconButtonWrapper = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: var(--navbar-height);
   height: var(--navbar-height);
+  aspect-ratio: 1;
   color: ${({theme}) => theme.palette.common.white};
 
   ${({theme}) => theme.breakpoints.up('md')} {
