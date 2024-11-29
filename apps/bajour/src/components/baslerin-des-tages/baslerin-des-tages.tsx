@@ -1,42 +1,46 @@
-import {ApiV1, isRichTextBlock, RichTextBlock} from '@wepublish/website'
-import {useWebsiteBuilder} from '@wepublish/website'
+import {ApiV1, isRichTextBlock, RichTextBlock, SliderWrapper} from '@wepublish/website'
 import {format} from 'date-fns'
 import {useState} from 'react'
-import {LikeButton} from './like-button'
 import {useLikeStatus} from './use-like-status'
-import {
-  ArticleListDesktop,
-  ArticleListMobile,
-  BaslerinDesTagesWrapper,
-  Content,
-  DateDisplay,
-  DateWeekdayContainer,
-  DesktopGrid,
-  DesktopImage,
-  Heading,
-  HeadingLarge,
-  Headings,
-  HeadingsInner,
-  ImageWrapperMobile,
-  MobileGrid,
-  MobileImage,
-  Title,
-  WeekdayDisplay
-} from './styles'
+import {Grid} from '@mui/material'
+import styled from '@emotion/styled'
 
-interface BaslerinDesTagesArticle {
-  id: string
-  publishedAt: string
-  preTitle?: string | null
-  title: string
-  lead?: string | null
-  slug: string
-  url: string
-  blocks: ApiV1.Block[]
-}
+const SlideItem = styled.div`
+  cursor: pointer;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`
+
+const SlideTitle = styled.div`
+  font-weight: bold;
+  margin-top: 8px;
+`
+
+const StyledSliderWrapper = styled(SliderWrapper)<{gridArea: string}>`
+  grid-area: ${props => props.gridArea};
+`
+
+const DateWrapper = styled.div<{gridArea: string}>`
+  grid-area: ${props => props.gridArea};
+  display: flex;
+  flex-direction: column;
+  span:first-child {
+    font-weight: bold;
+    border-bottom: 2px solid black;
+  }
+`
+
+const ContentWrapper = styled.div<{gridArea: string}>`
+  grid-area: ${props => props.gridArea};
+`
+
+interface SliderArticle extends Omit<ApiV1.Article, 'comments' | 'socialMediaAuthors'> {}
 
 interface BaslerinDesTagesProps {
-  article: BaslerinDesTagesArticle
+  article: SliderArticle
   className?: string
 }
 
@@ -47,22 +51,22 @@ function ContentBlock(props: {
 }): JSX.Element {
   return (
     <>
-      <Content>
+      <section>
         <div style={{marginBottom: '1em'}}>
           {props.preTitle ? <span>{props.preTitle} </span> : <span>BASLER*IN des Tages ist </span>}
-          <Title>{props.title}</Title>
+          <h2>{props.title}</h2>
           <span>, weil ...</span>
         </div>
         <div style={{maxWidth: '500px'}}>
           <RichTextBlock richText={props.textBlock.richText} />
         </div>
-      </Content>
+      </section>
     </>
   )
 }
 
 export function BaslerinDesTages({article, className}: BaslerinDesTagesProps) {
-  const [currentArticle, setCurrentArticle] = useState(article)
+  const [currentArticle, setCurrentArticle] = useState<SliderArticle>(article)
 
   const {data: tagData, loading: tagLoading} = ApiV1.useTagQuery({
     variables: {
@@ -75,7 +79,7 @@ export function BaslerinDesTages({article, className}: BaslerinDesTagesProps) {
     data: articleData,
     loading: articleLoading,
     error: articleError
-  } = ApiV1.useArticleListQuery({
+  } = ApiV1.useFullArticleListQuery({
     skip: !tagData?.tags?.nodes.length,
     variables: {
       take: 6,
@@ -132,72 +136,42 @@ export function BaslerinDesTages({article, className}: BaslerinDesTagesProps) {
   }
 
   return (
-    <BaslerinDesTagesWrapper className={className}>
-      <DesktopGrid>
-        <DesktopImage style={{backgroundImage: `url(${currentArticle.image.url})`}} />
+    <div className={className}>
+      <Grid>
+        <StyledSliderWrapper gridArea="1 / 2 / 2 / 3">
+          <img src={currentArticle.image.url ?? ''} alt={currentArticle.image.description ?? ''} />
+        </StyledSliderWrapper>
 
-        <Headings>
-          <HeadingsInner>
-            <div>
-              <HeadingLarge>Basler*in</HeadingLarge>
-              <Heading>des Tages</Heading>
-            </div>
-            <DateWeekdayContainer>
-              <DateDisplay>{publicationDate}</DateDisplay>
-              <WeekdayDisplay>{publicationDay}</WeekdayDisplay>
-            </DateWeekdayContainer>
-          </HeadingsInner>
-        </Headings>
+        <StyledSliderWrapper gridArea="1 / 2 / 2 / 3">
+          {articleData?.articles?.nodes && (
+            <SliderWrapper>
+              {articleData.articles.nodes.map(article => (
+                <SlideItem key={article.id} onClick={() => setCurrentArticle(article)}>
+                  {article.image && (
+                    <>
+                      <img src={article.image.url} alt={article.image.description || ''} />
+                      <SlideTitle>{article.title}</SlideTitle>
+                    </>
+                  )}
+                </SlideItem>
+              ))}
+            </SliderWrapper>
+          )}
+        </StyledSliderWrapper>
 
-        <ArticleListDesktop
-          data={articleData}
-          loading={articleLoading || tagLoading}
-          error={articleError}
-        />
+        <DateWrapper gridArea="2 / 2 / 3 / 3">
+          <span>{publicationDay}</span>
+          <span>{publicationDate}</span>
+        </DateWrapper>
 
-        <div>
+        <ContentWrapper gridArea="3 / 1 / 4 / 3">
           <ContentBlock
-            preTitle={currentArticle?.preTitle}
+            preTitle={currentArticle.preTitle}
             title={currentArticle.title}
             textBlock={textBlock}
           />
-
-          <Content>
-            <LikeButton isLiked={isLiked} likes={likes} onLike={handleLike} />
-          </Content>
-        </div>
-      </DesktopGrid>
-
-      <MobileGrid>
-        <Headings>
-          <HeadingsInner>
-            <div>
-              <HeadingLarge>Basler*in</HeadingLarge>
-              <Heading>des Tages</Heading>
-            </div>
-          </HeadingsInner>
-        </Headings>
-
-        <ImageWrapperMobile>
-          <MobileImage style={{backgroundImage: `url(${currentArticle.image.url})`}} />
-          <ArticleListMobile data={articleData} loading={articleLoading} error={articleError} />
-
-          <DateWeekdayContainer>
-            <DateDisplay>{publicationDate}</DateDisplay>
-            <WeekdayDisplay>{publicationDay}</WeekdayDisplay>
-          </DateWeekdayContainer>
-        </ImageWrapperMobile>
-
-        <ContentBlock
-          preTitle={currentArticle?.preTitle}
-          title={currentArticle.title}
-          textBlock={textBlock}
-        />
-
-        <Content>
-          <LikeButton isLiked={isLiked} likes={likes} onLike={handleLike} />
-        </Content>
-      </MobileGrid>
-    </BaslerinDesTagesWrapper>
+        </ContentWrapper>
+      </Grid>
+    </div>
   )
 }
