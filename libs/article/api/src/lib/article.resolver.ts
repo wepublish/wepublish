@@ -10,13 +10,16 @@ import {
 import {Tag} from '@wepublish/tag/api'
 import {ArticleService} from './article.service'
 import {ArticleRevisionDataloaderService} from './article-revision-dataloader.service'
+import {URLAdapter} from '@wepublish/nest-modules'
+import {Article as PArticle} from '@prisma/client'
 
 @Resolver(() => Article)
 export class ArticleResolver {
   constructor(
     private articleDataloader: ArticleDataloaderService,
     private articleRevisionsDataloader: ArticleRevisionDataloaderService,
-    private articleService: ArticleService
+    private articleService: ArticleService,
+    private urlAdapter: URLAdapter
   ) {}
 
   @Query(() => Article, {description: `Returns an article by id.`})
@@ -52,16 +55,8 @@ export class ArticleResolver {
     return this.articleService.unpublishArticle(id)
   }
 
-  @Mutation(() => Article, {
-    description: `Imports an article from a given peer.`
-  })
-  public importArticle(
-    @Args('peerId') peerId: string,
-    @Args('peerArticleId') peerArticleId: string
-  ) {}
-
   @ResolveField(() => ArticleRevision, {nullable: true})
-  async draft(@Parent() parent: Article) {
+  async draft(@Parent() parent: PArticle) {
     const {id: articleId} = parent
     const {draft} = await this.articleRevisionsDataloader.load(articleId)
 
@@ -69,7 +64,7 @@ export class ArticleResolver {
   }
 
   @ResolveField(() => ArticleRevision, {nullable: true})
-  async pending(@Parent() parent: Article) {
+  async pending(@Parent() parent: PArticle) {
     const {id: articleId} = parent
     const {pending} = await this.articleRevisionsDataloader.load(articleId)
 
@@ -77,7 +72,7 @@ export class ArticleResolver {
   }
 
   @ResolveField(() => ArticleRevision, {nullable: true})
-  async published(@Parent() parent: Article) {
+  async published(@Parent() parent: PArticle) {
     const {id: articleId} = parent
     const {published} = await this.articleRevisionsDataloader.load(articleId)
 
@@ -85,13 +80,12 @@ export class ArticleResolver {
   }
 
   @ResolveField(() => String, {nullable: true})
-  async url(@Parent() parent: Article) {
-    // @TODO: implement
-    return ''
+  async url(@Parent() parent: PArticle) {
+    return this.urlAdapter.getArticleUrl(parent)
   }
 
   @ResolveField(() => [Tag])
-  async tags(@Parent() parent: Article) {
+  async tags(@Parent() parent: PArticle) {
     const {id: articleId} = parent
     const tagIds = await this.articleService.getTagIds(articleId)
 

@@ -173,7 +173,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -195,7 +195,7 @@ input BlockContentInput {
   soundCloudTrack: SoundCloudTrackBlockInput
   teaserGrid: TeaserGridBlockInput
   teaserGridFlex: TeaserGridFlexBlockInput
-  teaserList: TeaserGridFlexBlockInput
+  teaserList: TeaserListBlockInput
   tikTokVideo: TikTokVideoBlockInput
   title: TitleBlockInput
   twitterTweet: TwitterTweetBlockInput
@@ -1285,10 +1285,55 @@ input TeaserInput {
   peerArticle: PeerArticleTeaserInput
 }
 
+type TeaserListBlock implements BaseBlock {
+  blockStyle: ID
+  filter: TeaserListBlockFilter!
+  skip: Int
+  sort: TeaserListBlockSort
+  take: Int
+  teaserType: TeaserType!
+  teasers: [Teaser!]!
+  title: String
+  type: String!
+}
+
+type TeaserListBlockFilter {
+  tagObjects: [Tag!]!
+  tags: [ID!]!
+}
+
+input TeaserListBlockFilterInput {
+  tags: [ID!]!
+}
+
+input TeaserListBlockInput {
+  blockStyle: ID
+  filter: TeaserListBlockFilterInput!
+  skip: Int
+  sort: TeaserListBlockSort
+  take: Int
+  teaserType: TeaserType!
+  title: String
+  type: String!
+}
+
+enum TeaserListBlockSort {
+  HotAndTrending
+  PublishedAt
+}
+
 enum TeaserStyle {
   Default
   Light
   Text
+}
+
+enum TeaserType {
+  Article
+  Custom
+  Event
+  Page
+  PeerArticle
 }
 
 type TikTokVideoBlock implements BaseBlock {

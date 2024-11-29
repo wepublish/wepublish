@@ -63,6 +63,7 @@
       "@wepublish/payment/api": ["libs/payment/api/src/index.ts"],
       "@wepublish/payment/website": ["libs/payment/website/src/index.ts"],
       "@wepublish/peering/api": ["libs/peering/api/src/index.ts"],
+      "@wepublish/peering/api/import": ["libs/peering/api/import/src/index.ts"],
       "@wepublish/peering/website": ["libs/peering/website/src/index.ts"],
       "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],
       "@wepublish/poll/api": ["libs/poll/api/src/index.ts"],

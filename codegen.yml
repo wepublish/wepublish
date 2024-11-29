@@ -168,12 +168,12 @@ generates:
   #       Upload: File
 
 
-  ./libs/peering/api/src/lib/peer-importer/graphql.ts:
+  ./libs/peering/api/import/src/lib/import-peer-article/graphql.ts:
     schema:
       - ./apps/api-example/schema-v1.graphql
       - ./apps/api-example/schema-v2.graphql
     documents:
-      - ./libs/peering/api/src/lib/peer-importer/*.graphql
+      - ./libs/peering/api/import/src/lib/import-peer-article/*.graphql
       - ./libs/editor/api/src/lib/schemas/block.graphql
     plugins:
       - add:

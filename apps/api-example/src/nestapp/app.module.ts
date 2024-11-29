@@ -51,6 +51,7 @@ import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
 import {PageModule} from '@wepublish/page/api'
 import {PeerModule} from '@wepublish/peering/api'
+import {ImportPeerArticleModule} from '@wepublish/peering/api/import'
 import {CommentModule} from '@wepublish/comments/api'
 import {ArticleModule} from '@wepublish/article/api'
 
@@ -308,7 +309,8 @@ import {ArticleModule} from '@wepublish/article/api'
       useFactory: (datasource: GoogleAnalyticsService) => datasource,
       inject: [GoogleAnalyticsService]
     }),
-    BannerApiModule
+    BannerApiModule,
+    ImportPeerArticleModule
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [

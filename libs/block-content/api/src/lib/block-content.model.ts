@@ -34,6 +34,7 @@ import {
   TeaserGridFlexBlockInput
 } from './teaser/teaser-flex.model'
 import {Teaser, TeaserInput, TeaserType} from './teaser/teaser.model'
+import {TeaserListBlock, TeaserListBlockInput} from './teaser/teaser-list.model'
 
 export const BlockContent = createUnionType({
   name: 'BlockContent',
@@ -63,7 +64,8 @@ export const BlockContent = createUnionType({
       VimeoVideoBlock,
       YouTubeVideoBlock,
       TeaserGridBlock,
-      TeaserGridFlexBlock
+      TeaserGridFlexBlock,
+      TeaserListBlock
     ] as const,
   resolveType: (value: BaseBlock<string>) => {
     switch (value.type) {
@@ -115,6 +117,8 @@ export const BlockContent = createUnionType({
         return TeaserGridBlock.name
       case BlockType.TeaserGridFlex:
         return TeaserGridFlexBlock.name
+      case BlockType.TeaserList:
+        return TeaserListBlock.name
     }
 
     console.warn(`Block ${value.type} not implemented!`)
@@ -177,8 +181,8 @@ export class BlockContentInput {
   [BlockType.TeaserGrid]?: TeaserGridBlockInput;
   @Field(() => TeaserGridFlexBlockInput, {nullable: true})
   [BlockType.TeaserGridFlex]?: TeaserGridFlexBlockInput;
-  @Field(() => TeaserGridFlexBlockInput, {nullable: true})
-  [BlockType.TeaserList]?: any
+  @Field(() => TeaserListBlockInput, {nullable: true})
+  [BlockType.TeaserList]?: TeaserListBlockInput
 }
 
 export function mapTeaserUnionMap(value: TeaserInput): typeof Teaser {
@@ -216,24 +220,33 @@ export function mapBlockUnionMap(value: BlockContentInput): typeof BlockContent 
   }
 
   const type = Object.keys(value)[0] as BlockType
-  const blockValue = value[type]
 
   switch (type) {
-    case BlockType.TeaserGrid:
-      return {type, ...blockValue, teasers: blockValue.teasers.map(mapTeaserUnionMap)}
+    case BlockType.TeaserGrid: {
+      const blockValue = value[type]
 
-    case BlockType.TeaserGridFlex:
+      return {type, ...blockValue, teasers: blockValue?.teasers.map(mapTeaserUnionMap) ?? []}
+    }
+
+    case BlockType.TeaserGridFlex: {
+      const blockValue = value[type]
+
       return {
         type,
         ...blockValue,
-        flexTeasers: blockValue.flexTeasers.map(({teaser, ...value}: FlexTeaserInput) => ({
-          ...value,
-          teaser: mapTeaserUnionMap(teaser)
-        }))
+        flexTeasers:
+          blockValue?.flexTeasers.map(({teaser, ...value}: FlexTeaserInput) => ({
+            ...value,
+            teaser: mapTeaserUnionMap(teaser)
+          })) ?? []
       }
+    }
 
-    default:
+    default: {
+      const blockValue = value[type]
+
       return {type, ...blockValue}
+    }
   }
 }
 

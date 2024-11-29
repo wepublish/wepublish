@@ -274,6 +274,7 @@ export type BlockContent =
   | SoundCloudTrackBlock
   | TeaserGridBlock
   | TeaserGridFlexBlock
+  | TeaserListBlock
   | TikTokVideoBlock
   | TitleBlock
   | TwitterTweetBlock
@@ -301,7 +302,7 @@ export type BlockContentInput = {
   soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>
   teaserGrid?: InputMaybe<TeaserGridBlockInput>
   teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>
-  teaserList?: InputMaybe<TeaserGridFlexBlockInput>
+  teaserList?: InputMaybe<TeaserListBlockInput>
   tikTokVideo?: InputMaybe<TikTokVideoBlockInput>
   title?: InputMaybe<TitleBlockInput>
   twitterTweet?: InputMaybe<TwitterTweetBlockInput>
@@ -2636,10 +2637,57 @@ export type TeaserInput = {
   peerArticle?: InputMaybe<PeerArticleTeaserInput>
 }
 
+export type TeaserListBlock = BaseBlock & {
+  __typename?: 'TeaserListBlock'
+  blockStyle?: Maybe<Scalars['ID']>
+  filter: TeaserListBlockFilter
+  skip?: Maybe<Scalars['Int']>
+  sort?: Maybe<TeaserListBlockSort>
+  take?: Maybe<Scalars['Int']>
+  teaserType: TeaserType
+  teasers: Array<Teaser>
+  title?: Maybe<Scalars['String']>
+  type: Scalars['String']
+}
+
+export type TeaserListBlockFilter = {
+  __typename?: 'TeaserListBlockFilter'
+  tagObjects: Array<Tag>
+  tags: Array<Scalars['ID']>
+}
+
+export type TeaserListBlockFilterInput = {
+  tags: Array<Scalars['ID']>
+}
+
+export type TeaserListBlockInput = {
+  blockStyle?: InputMaybe<Scalars['ID']>
+  filter: TeaserListBlockFilterInput
+  skip?: InputMaybe<Scalars['Int']>
+  sort?: InputMaybe<TeaserListBlockSort>
+  take?: InputMaybe<Scalars['Int']>
+  teaserType: TeaserType
+  title?: InputMaybe<Scalars['String']>
+  type: Scalars['String']
+}
+
+export enum TeaserListBlockSort {
+  HotAndTrending = 'HotAndTrending',
+  PublishedAt = 'PublishedAt'
+}
+
 export enum TeaserStyle {
   Default = 'Default',
   Light = 'Light',
   Text = 'Text'
+}
+
+export enum TeaserType {
+  Article = 'Article',
+  Custom = 'Custom',
+  Event = 'Event',
+  Page = 'Page',
+  PeerArticle = 'PeerArticle'
 }
 
 export type TikTokVideoBlock = BaseBlock & {
@@ -2844,6 +2892,869 @@ export type OverriddenRating = {
   value?: Maybe<Scalars['Int']>
 }
 
+type FullTeaser_ArticleTeaser_Fragment = {
+  __typename?: 'ArticleTeaser'
+  style: TeaserStyle
+  preTitle?: string | null
+  title?: string | null
+  lead?: string | null
+  articleID?: string | null
+  image?: {__typename?: 'Image'; url?: string | null} | null
+  article?: {__typename?: 'Article'; id: string} | null
+}
+
+type FullTeaser_CustomTeaser_Fragment = {
+  __typename?: 'CustomTeaser'
+  style: TeaserStyle
+  preTitle?: string | null
+  title?: string | null
+  lead?: string | null
+  contentUrl?: string | null
+  image?: {__typename?: 'Image'; url?: string | null} | null
+  properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
+}
+
+type FullTeaser_EventTeaser_Fragment = {
+  __typename?: 'EventTeaser'
+  style: TeaserStyle
+  preTitle?: string | null
+  title?: string | null
+  lead?: string | null
+  eventID?: string | null
+  image?: {__typename?: 'Image'; url?: string | null} | null
+  event?: {__typename?: 'Event'; id: string} | null
+}
+
+type FullTeaser_PageTeaser_Fragment = {
+  __typename?: 'PageTeaser'
+  style: TeaserStyle
+  preTitle?: string | null
+  title?: string | null
+  lead?: string | null
+  pageID?: string | null
+  image?: {__typename?: 'Image'; url?: string | null} | null
+  page?: {__typename?: 'Page'; id: string} | null
+}
+
+type FullTeaser_PeerArticleTeaser_Fragment = {
+  __typename?: 'PeerArticleTeaser'
+  style: TeaserStyle
+  preTitle?: string | null
+  title?: string | null
+  lead?: string | null
+  articleID?: string | null
+  image?: {__typename?: 'Image'; url?: string | null} | null
+  peer?: {__typename?: 'Peer'; id: string} | null
+  article?: {__typename?: 'Article'; id: string} | null
+}
+
+export type FullTeaserFragment =
+  | FullTeaser_ArticleTeaser_Fragment
+  | FullTeaser_CustomTeaser_Fragment
+  | FullTeaser_EventTeaser_Fragment
+  | FullTeaser_PageTeaser_Fragment
+  | FullTeaser_PeerArticleTeaser_Fragment
+
+type FullBlock_BildwurfAdBlock_Fragment = {
+  __typename: 'BildwurfAdBlock'
+  blockStyle?: string | null
+  zoneID?: string | null
+}
+
+type FullBlock_BreakBlock_Fragment = {
+  __typename: 'BreakBlock'
+  blockStyle?: string | null
+  text?: string | null
+  linkText?: string | null
+  linkURL?: string | null
+  richText: Node[]
+  linkTarget?: string | null
+  hideButton?: boolean | null
+  image?: {__typename?: 'Image'; url?: string | null} | null
+}
+
+type FullBlock_CommentBlock_Fragment = {
+  __typename: 'CommentBlock'
+  blockStyle?: string | null
+  filter: {
+    __typename?: 'CommentBlockFilter'
+    item: string
+    tags: Array<string>
+    comments: Array<string>
+  }
+  comments: Array<{__typename?: 'Comment'; id: string}>
+}
+
+type FullBlock_EventBlock_Fragment = {
+  __typename: 'EventBlock'
+  blockStyle?: string | null
+  filter: {__typename?: 'EventBlockFilter'; tags: Array<string>; events: Array<string>}
+  events: Array<{__typename?: 'Event'; id: string}>
+}
+
+type FullBlock_FacebookPostBlock_Fragment = {
+  __typename: 'FacebookPostBlock'
+  blockStyle?: string | null
+  userID?: string | null
+  postID?: string | null
+}
+
+type FullBlock_FacebookVideoBlock_Fragment = {
+  __typename: 'FacebookVideoBlock'
+  blockStyle?: string | null
+  userID?: string | null
+  videoID?: string | null
+}
+
+type FullBlock_HtmlBlock_Fragment = {
+  __typename: 'HTMLBlock'
+  blockStyle?: string | null
+  html?: string | null
+}
+
+type FullBlock_IFrameBlock_Fragment = {
+  __typename: 'IFrameBlock'
+  blockStyle?: string | null
+  url?: string | null
+  title?: string | null
+  width?: number | null
+  height?: number | null
+  styleCustom?: string | null
+  sandbox?: string | null
+}
+
+type FullBlock_ImageBlock_Fragment = {
+  __typename: 'ImageBlock'
+  blockStyle?: string | null
+  caption?: string | null
+  linkUrl?: string | null
+  image?: {__typename?: 'Image'; url?: string | null} | null
+}
+
+type FullBlock_ImageGalleryBlock_Fragment = {
+  __typename: 'ImageGalleryBlock'
+  blockStyle?: string | null
+  images: Array<{
+    __typename?: 'ImageGalleryImage'
+    caption?: string | null
+    image?: {__typename?: 'Image'; url?: string | null} | null
+  }>
+}
+
+type FullBlock_InstagramPostBlock_Fragment = {
+  __typename: 'InstagramPostBlock'
+  blockStyle?: string | null
+  postID?: string | null
+}
+
+type FullBlock_ListicleBlock_Fragment = {
+  __typename: 'ListicleBlock'
+  blockStyle?: string | null
+  items: Array<{
+    __typename?: 'ListicleItem'
+    title?: string | null
+    richText: Node[]
+    image?: {__typename?: 'Image'; url?: string | null} | null
+  }>
+}
+
+type FullBlock_PolisConversationBlock_Fragment = {
+  __typename: 'PolisConversationBlock'
+  blockStyle?: string | null
+  conversationID?: string | null
+}
+
+type FullBlock_PollBlock_Fragment = {
+  __typename: 'PollBlock'
+  blockStyle?: string | null
+  poll?: {__typename?: 'FullPoll'; id: string; question?: string | null} | null
+}
+
+type FullBlock_QuoteBlock_Fragment = {
+  __typename: 'QuoteBlock'
+  blockStyle?: string | null
+  quote?: string | null
+  author?: string | null
+  image?: {__typename?: 'Image'; url?: string | null} | null
+}
+
+type FullBlock_RichTextBlock_Fragment = {
+  __typename: 'RichTextBlock'
+  blockStyle?: string | null
+  richText: Node[]
+}
+
+type FullBlock_SoundCloudTrackBlock_Fragment = {
+  __typename: 'SoundCloudTrackBlock'
+  blockStyle?: string | null
+  trackID?: string | null
+}
+
+type FullBlock_TeaserGridBlock_Fragment = {
+  __typename: 'TeaserGridBlock'
+  blockStyle?: string | null
+  numColumns: number
+  teasers: Array<
+    | {
+        __typename?: 'ArticleTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        articleID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        article?: {__typename?: 'Article'; id: string} | null
+      }
+    | {
+        __typename?: 'CustomTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        contentUrl?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
+      }
+    | {
+        __typename?: 'EventTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        eventID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        event?: {__typename?: 'Event'; id: string} | null
+      }
+    | {
+        __typename?: 'PageTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        pageID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        page?: {__typename?: 'Page'; id: string} | null
+      }
+    | {
+        __typename?: 'PeerArticleTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        articleID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        peer?: {__typename?: 'Peer'; id: string} | null
+        article?: {__typename?: 'Article'; id: string} | null
+      }
+  >
+}
+
+type FullBlock_TeaserGridFlexBlock_Fragment = {
+  __typename: 'TeaserGridFlexBlock'
+  blockStyle?: string | null
+  flexTeasers: Array<{
+    __typename?: 'FlexTeaser'
+    alignment: {
+      __typename?: 'FlexAlignment'
+      i: number
+      x: number
+      y: number
+      w: number
+      h: number
+      static: boolean
+    }
+    teaser:
+      | {
+          __typename?: 'ArticleTeaser'
+          style: TeaserStyle
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          articleID?: string | null
+          image?: {__typename?: 'Image'; url?: string | null} | null
+          article?: {__typename?: 'Article'; id: string} | null
+        }
+      | {
+          __typename?: 'CustomTeaser'
+          style: TeaserStyle
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          contentUrl?: string | null
+          image?: {__typename?: 'Image'; url?: string | null} | null
+          properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
+        }
+      | {
+          __typename?: 'EventTeaser'
+          style: TeaserStyle
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          eventID?: string | null
+          image?: {__typename?: 'Image'; url?: string | null} | null
+          event?: {__typename?: 'Event'; id: string} | null
+        }
+      | {
+          __typename?: 'PageTeaser'
+          style: TeaserStyle
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          pageID?: string | null
+          image?: {__typename?: 'Image'; url?: string | null} | null
+          page?: {__typename?: 'Page'; id: string} | null
+        }
+      | {
+          __typename?: 'PeerArticleTeaser'
+          style: TeaserStyle
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          articleID?: string | null
+          image?: {__typename?: 'Image'; url?: string | null} | null
+          peer?: {__typename?: 'Peer'; id: string} | null
+          article?: {__typename?: 'Article'; id: string} | null
+        }
+  }>
+}
+
+type FullBlock_TeaserListBlock_Fragment = {
+  __typename: 'TeaserListBlock'
+  title?: string | null
+  blockStyle?: string | null
+  teaserType: TeaserType
+  take?: number | null
+  skip?: number | null
+  sort?: TeaserListBlockSort | null
+  teasers: Array<
+    | {
+        __typename?: 'ArticleTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        articleID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        article?: {__typename?: 'Article'; id: string} | null
+      }
+    | {
+        __typename?: 'CustomTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        contentUrl?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
+      }
+    | {
+        __typename?: 'EventTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        eventID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        event?: {__typename?: 'Event'; id: string} | null
+      }
+    | {
+        __typename?: 'PageTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        pageID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        page?: {__typename?: 'Page'; id: string} | null
+      }
+    | {
+        __typename?: 'PeerArticleTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        articleID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        peer?: {__typename?: 'Peer'; id: string} | null
+        article?: {__typename?: 'Article'; id: string} | null
+      }
+  >
+  filter: {
+    __typename?: 'TeaserListBlockFilter'
+    tags: Array<string>
+    tagObjects: Array<{__typename?: 'Tag'; id: string; tag?: string | null}>
+  }
+}
+
+type FullBlock_TikTokVideoBlock_Fragment = {
+  __typename: 'TikTokVideoBlock'
+  blockStyle?: string | null
+  userID?: string | null
+  videoID?: string | null
+}
+
+type FullBlock_TitleBlock_Fragment = {
+  __typename: 'TitleBlock'
+  blockStyle?: string | null
+  title?: string | null
+  lead?: string | null
+}
+
+type FullBlock_TwitterTweetBlock_Fragment = {
+  __typename: 'TwitterTweetBlock'
+  blockStyle?: string | null
+  userID?: string | null
+  tweetID?: string | null
+}
+
+type FullBlock_UnknownBlock_Fragment = {__typename: 'UnknownBlock'}
+
+type FullBlock_VimeoVideoBlock_Fragment = {
+  __typename: 'VimeoVideoBlock'
+  blockStyle?: string | null
+  videoID?: string | null
+}
+
+type FullBlock_YouTubeVideoBlock_Fragment = {
+  __typename: 'YouTubeVideoBlock'
+  blockStyle?: string | null
+  videoID?: string | null
+}
+
+export type FullBlockFragment =
+  | FullBlock_BildwurfAdBlock_Fragment
+  | FullBlock_BreakBlock_Fragment
+  | FullBlock_CommentBlock_Fragment
+  | FullBlock_EventBlock_Fragment
+  | FullBlock_FacebookPostBlock_Fragment
+  | FullBlock_FacebookVideoBlock_Fragment
+  | FullBlock_HtmlBlock_Fragment
+  | FullBlock_IFrameBlock_Fragment
+  | FullBlock_ImageBlock_Fragment
+  | FullBlock_ImageGalleryBlock_Fragment
+  | FullBlock_InstagramPostBlock_Fragment
+  | FullBlock_ListicleBlock_Fragment
+  | FullBlock_PolisConversationBlock_Fragment
+  | FullBlock_PollBlock_Fragment
+  | FullBlock_QuoteBlock_Fragment
+  | FullBlock_RichTextBlock_Fragment
+  | FullBlock_SoundCloudTrackBlock_Fragment
+  | FullBlock_TeaserGridBlock_Fragment
+  | FullBlock_TeaserGridFlexBlock_Fragment
+  | FullBlock_TeaserListBlock_Fragment
+  | FullBlock_TikTokVideoBlock_Fragment
+  | FullBlock_TitleBlock_Fragment
+  | FullBlock_TwitterTweetBlock_Fragment
+  | FullBlock_UnknownBlock_Fragment
+  | FullBlock_VimeoVideoBlock_Fragment
+  | FullBlock_YouTubeVideoBlock_Fragment
+
+export type ImageRefFragment = {__typename?: 'Image'; url?: string | null}
+
+export type ArticleRefFragment = {__typename?: 'Article'; id: string}
+
+export type PageRefFragment = {__typename?: 'Page'; id: string}
+
+export type EventRefFragment = {__typename?: 'Event'; id: string}
+
+export type FullCommentFragment = {__typename?: 'Comment'; id: string}
+
+export type PeerWithProfileFragment = {__typename?: 'Peer'; id: string}
+
+type ImportBlock_BildwurfAdBlock_Fragment = {
+  __typename: 'BildwurfAdBlock'
+  blockStyle?: string | null
+  zoneID?: string | null
+}
+
+type ImportBlock_BreakBlock_Fragment = {
+  __typename: 'BreakBlock'
+  blockStyle?: string | null
+  text?: string | null
+  linkText?: string | null
+  linkURL?: string | null
+  richText: Node[]
+  linkTarget?: string | null
+  hideButton?: boolean | null
+  image?: {__typename?: 'Image'; url?: string | null} | null
+}
+
+type ImportBlock_CommentBlock_Fragment = {
+  __typename: 'CommentBlock'
+  blockStyle?: string | null
+  filter: {
+    __typename?: 'CommentBlockFilter'
+    item: string
+    tags: Array<string>
+    comments: Array<string>
+  }
+  comments: Array<{__typename?: 'Comment'; id: string}>
+}
+
+type ImportBlock_EventBlock_Fragment = {
+  __typename: 'EventBlock'
+  blockStyle?: string | null
+  filter: {__typename?: 'EventBlockFilter'; tags: Array<string>; events: Array<string>}
+  events: Array<{__typename?: 'Event'; id: string}>
+}
+
+type ImportBlock_FacebookPostBlock_Fragment = {
+  __typename: 'FacebookPostBlock'
+  blockStyle?: string | null
+  userID?: string | null
+  postID?: string | null
+}
+
+type ImportBlock_FacebookVideoBlock_Fragment = {
+  __typename: 'FacebookVideoBlock'
+  blockStyle?: string | null
+  userID?: string | null
+  videoID?: string | null
+}
+
+type ImportBlock_HtmlBlock_Fragment = {
+  __typename: 'HTMLBlock'
+  blockStyle?: string | null
+  html?: string | null
+}
+
+type ImportBlock_IFrameBlock_Fragment = {
+  __typename: 'IFrameBlock'
+  blockStyle?: string | null
+  url?: string | null
+  title?: string | null
+  width?: number | null
+  height?: number | null
+  styleCustom?: string | null
+  sandbox?: string | null
+}
+
+type ImportBlock_ImageBlock_Fragment = {
+  __typename: 'ImageBlock'
+  blockStyle?: string | null
+  caption?: string | null
+  linkUrl?: string | null
+  image?: {__typename?: 'Image'; url?: string | null} | null
+}
+
+type ImportBlock_ImageGalleryBlock_Fragment = {
+  __typename: 'ImageGalleryBlock'
+  blockStyle?: string | null
+  images: Array<{
+    __typename?: 'ImageGalleryImage'
+    caption?: string | null
+    image?: {__typename?: 'Image'; url?: string | null} | null
+  }>
+}
+
+type ImportBlock_InstagramPostBlock_Fragment = {
+  __typename: 'InstagramPostBlock'
+  blockStyle?: string | null
+  postID?: string | null
+}
+
+type ImportBlock_ListicleBlock_Fragment = {
+  __typename: 'ListicleBlock'
+  blockStyle?: string | null
+  items: Array<{
+    __typename?: 'ListicleItem'
+    title?: string | null
+    richText: Node[]
+    image?: {__typename?: 'Image'; url?: string | null} | null
+  }>
+}
+
+type ImportBlock_PolisConversationBlock_Fragment = {
+  __typename: 'PolisConversationBlock'
+  blockStyle?: string | null
+  conversationID?: string | null
+}
+
+type ImportBlock_PollBlock_Fragment = {
+  __typename: 'PollBlock'
+  blockStyle?: string | null
+  poll?: {__typename?: 'FullPoll'; id: string; question?: string | null} | null
+}
+
+type ImportBlock_QuoteBlock_Fragment = {
+  __typename: 'QuoteBlock'
+  blockStyle?: string | null
+  quote?: string | null
+  author?: string | null
+  image?: {__typename?: 'Image'; url?: string | null} | null
+}
+
+type ImportBlock_RichTextBlock_Fragment = {
+  __typename: 'RichTextBlock'
+  blockStyle?: string | null
+  richText: Node[]
+}
+
+type ImportBlock_SoundCloudTrackBlock_Fragment = {
+  __typename: 'SoundCloudTrackBlock'
+  blockStyle?: string | null
+  trackID?: string | null
+}
+
+type ImportBlock_TeaserGridBlock_Fragment = {
+  __typename: 'TeaserGridBlock'
+  blockStyle?: string | null
+  numColumns: number
+  teasers: Array<
+    | {
+        __typename?: 'ArticleTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        articleID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        article?: {__typename?: 'Article'; id: string} | null
+      }
+    | {
+        __typename?: 'CustomTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        contentUrl?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
+      }
+    | {
+        __typename?: 'EventTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        eventID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        event?: {__typename?: 'Event'; id: string} | null
+      }
+    | {
+        __typename?: 'PageTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        pageID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        page?: {__typename?: 'Page'; id: string} | null
+      }
+    | {
+        __typename?: 'PeerArticleTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        articleID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        peer?: {__typename?: 'Peer'; id: string} | null
+        article?: {__typename?: 'Article'; id: string} | null
+      }
+  >
+}
+
+type ImportBlock_TeaserGridFlexBlock_Fragment = {
+  __typename: 'TeaserGridFlexBlock'
+  blockStyle?: string | null
+  flexTeasers: Array<{
+    __typename?: 'FlexTeaser'
+    alignment: {
+      __typename?: 'FlexAlignment'
+      i: number
+      x: number
+      y: number
+      w: number
+      h: number
+      static: boolean
+    }
+    teaser:
+      | {
+          __typename?: 'ArticleTeaser'
+          style: TeaserStyle
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          articleID?: string | null
+          image?: {__typename?: 'Image'; url?: string | null} | null
+          article?: {__typename?: 'Article'; id: string} | null
+        }
+      | {
+          __typename?: 'CustomTeaser'
+          style: TeaserStyle
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          contentUrl?: string | null
+          image?: {__typename?: 'Image'; url?: string | null} | null
+          properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
+        }
+      | {
+          __typename?: 'EventTeaser'
+          style: TeaserStyle
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          eventID?: string | null
+          image?: {__typename?: 'Image'; url?: string | null} | null
+          event?: {__typename?: 'Event'; id: string} | null
+        }
+      | {
+          __typename?: 'PageTeaser'
+          style: TeaserStyle
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          pageID?: string | null
+          image?: {__typename?: 'Image'; url?: string | null} | null
+          page?: {__typename?: 'Page'; id: string} | null
+        }
+      | {
+          __typename?: 'PeerArticleTeaser'
+          style: TeaserStyle
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          articleID?: string | null
+          image?: {__typename?: 'Image'; url?: string | null} | null
+          peer?: {__typename?: 'Peer'; id: string} | null
+          article?: {__typename?: 'Article'; id: string} | null
+        }
+  }>
+}
+
+type ImportBlock_TeaserListBlock_Fragment = {
+  __typename: 'TeaserListBlock'
+  title?: string | null
+  blockStyle?: string | null
+  teaserType: TeaserType
+  take?: number | null
+  skip?: number | null
+  sort?: TeaserListBlockSort | null
+  teasers: Array<
+    | {
+        __typename?: 'ArticleTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        articleID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        article?: {__typename?: 'Article'; id: string} | null
+      }
+    | {
+        __typename?: 'CustomTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        contentUrl?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
+      }
+    | {
+        __typename?: 'EventTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        eventID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        event?: {__typename?: 'Event'; id: string} | null
+      }
+    | {
+        __typename?: 'PageTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        pageID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        page?: {__typename?: 'Page'; id: string} | null
+      }
+    | {
+        __typename?: 'PeerArticleTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        articleID?: string | null
+        image?: {__typename?: 'Image'; url?: string | null} | null
+        peer?: {__typename?: 'Peer'; id: string} | null
+        article?: {__typename?: 'Article'; id: string} | null
+      }
+  >
+  filter: {
+    __typename?: 'TeaserListBlockFilter'
+    tags: Array<string>
+    tagObjects: Array<{__typename?: 'Tag'; id: string; tag?: string | null}>
+  }
+}
+
+type ImportBlock_TikTokVideoBlock_Fragment = {
+  __typename: 'TikTokVideoBlock'
+  blockStyle?: string | null
+  userID?: string | null
+  videoID?: string | null
+}
+
+type ImportBlock_TitleBlock_Fragment = {
+  __typename: 'TitleBlock'
+  blockStyle?: string | null
+  title?: string | null
+  lead?: string | null
+}
+
+type ImportBlock_TwitterTweetBlock_Fragment = {
+  __typename: 'TwitterTweetBlock'
+  blockStyle?: string | null
+  userID?: string | null
+  tweetID?: string | null
+}
+
+type ImportBlock_UnknownBlock_Fragment = {__typename: 'UnknownBlock'}
+
+type ImportBlock_VimeoVideoBlock_Fragment = {
+  __typename: 'VimeoVideoBlock'
+  blockStyle?: string | null
+  videoID?: string | null
+}
+
+type ImportBlock_YouTubeVideoBlock_Fragment = {
+  __typename: 'YouTubeVideoBlock'
+  blockStyle?: string | null
+  videoID?: string | null
+}
+
+export type ImportBlockFragment =
+  | ImportBlock_BildwurfAdBlock_Fragment
+  | ImportBlock_BreakBlock_Fragment
+  | ImportBlock_CommentBlock_Fragment
+  | ImportBlock_EventBlock_Fragment
+  | ImportBlock_FacebookPostBlock_Fragment
+  | ImportBlock_FacebookVideoBlock_Fragment
+  | ImportBlock_HtmlBlock_Fragment
+  | ImportBlock_IFrameBlock_Fragment
+  | ImportBlock_ImageBlock_Fragment
+  | ImportBlock_ImageGalleryBlock_Fragment
+  | ImportBlock_InstagramPostBlock_Fragment
+  | ImportBlock_ListicleBlock_Fragment
+  | ImportBlock_PolisConversationBlock_Fragment
+  | ImportBlock_PollBlock_Fragment
+  | ImportBlock_QuoteBlock_Fragment
+  | ImportBlock_RichTextBlock_Fragment
+  | ImportBlock_SoundCloudTrackBlock_Fragment
+  | ImportBlock_TeaserGridBlock_Fragment
+  | ImportBlock_TeaserGridFlexBlock_Fragment
+  | ImportBlock_TeaserListBlock_Fragment
+  | ImportBlock_TikTokVideoBlock_Fragment
+  | ImportBlock_TitleBlock_Fragment
+  | ImportBlock_TwitterTweetBlock_Fragment
+  | ImportBlock_UnknownBlock_Fragment
+  | ImportBlock_VimeoVideoBlock_Fragment
+  | ImportBlock_YouTubeVideoBlock_Fragment
+
 export type ArticleQueryVariables = Exact<{
   id: Scalars['String']
 }>
@@ -2856,6 +3767,335 @@ export type ArticleQuery = {
     tags: Array<{__typename?: 'Tag'; tag?: string | null}>
     published?: {
       __typename?: 'ArticleRevision'
+      blocks: Array<
+        | {__typename: 'BildwurfAdBlock'; blockStyle?: string | null; zoneID?: string | null}
+        | {
+            __typename: 'BreakBlock'
+            blockStyle?: string | null
+            text?: string | null
+            linkText?: string | null
+            linkURL?: string | null
+            richText: Node[]
+            linkTarget?: string | null
+            hideButton?: boolean | null
+            image?: {__typename?: 'Image'; url?: string | null} | null
+          }
+        | {
+            __typename: 'CommentBlock'
+            blockStyle?: string | null
+            filter: {
+              __typename?: 'CommentBlockFilter'
+              item: string
+              tags: Array<string>
+              comments: Array<string>
+            }
+            comments: Array<{__typename?: 'Comment'; id: string}>
+          }
+        | {
+            __typename: 'EventBlock'
+            blockStyle?: string | null
+            filter: {__typename?: 'EventBlockFilter'; tags: Array<string>; events: Array<string>}
+            events: Array<{__typename?: 'Event'; id: string}>
+          }
+        | {
+            __typename: 'FacebookPostBlock'
+            blockStyle?: string | null
+            userID?: string | null
+            postID?: string | null
+          }
+        | {
+            __typename: 'FacebookVideoBlock'
+            blockStyle?: string | null
+            userID?: string | null
+            videoID?: string | null
+          }
+        | {__typename: 'HTMLBlock'; blockStyle?: string | null; html?: string | null}
+        | {
+            __typename: 'IFrameBlock'
+            blockStyle?: string | null
+            url?: string | null
+            title?: string | null
+            width?: number | null
+            height?: number | null
+            styleCustom?: string | null
+            sandbox?: string | null
+          }
+        | {
+            __typename: 'ImageBlock'
+            blockStyle?: string | null
+            caption?: string | null
+            linkUrl?: string | null
+            image?: {__typename?: 'Image'; url?: string | null} | null
+          }
+        | {
+            __typename: 'ImageGalleryBlock'
+            blockStyle?: string | null
+            images: Array<{
+              __typename?: 'ImageGalleryImage'
+              caption?: string | null
+              image?: {__typename?: 'Image'; url?: string | null} | null
+            }>
+          }
+        | {__typename: 'InstagramPostBlock'; blockStyle?: string | null; postID?: string | null}
+        | {
+            __typename: 'ListicleBlock'
+            blockStyle?: string | null
+            items: Array<{
+              __typename?: 'ListicleItem'
+              title?: string | null
+              richText: Node[]
+              image?: {__typename?: 'Image'; url?: string | null} | null
+            }>
+          }
+        | {
+            __typename: 'PolisConversationBlock'
+            blockStyle?: string | null
+            conversationID?: string | null
+          }
+        | {
+            __typename: 'PollBlock'
+            blockStyle?: string | null
+            poll?: {__typename?: 'FullPoll'; id: string; question?: string | null} | null
+          }
+        | {
+            __typename: 'QuoteBlock'
+            blockStyle?: string | null
+            quote?: string | null
+            author?: string | null
+            image?: {__typename?: 'Image'; url?: string | null} | null
+          }
+        | {__typename: 'RichTextBlock'; blockStyle?: string | null; richText: Node[]}
+        | {__typename: 'SoundCloudTrackBlock'; blockStyle?: string | null; trackID?: string | null}
+        | {
+            __typename: 'TeaserGridBlock'
+            blockStyle?: string | null
+            numColumns: number
+            teasers: Array<
+              | {
+                  __typename?: 'ArticleTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  articleID?: string | null
+                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  article?: {__typename?: 'Article'; id: string} | null
+                }
+              | {
+                  __typename?: 'CustomTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  contentUrl?: string | null
+                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  properties: Array<{
+                    __typename?: 'Property'
+                    key: string
+                    value: string
+                    public: boolean
+                  }>
+                }
+              | {
+                  __typename?: 'EventTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  eventID?: string | null
+                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  event?: {__typename?: 'Event'; id: string} | null
+                }
+              | {
+                  __typename?: 'PageTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  pageID?: string | null
+                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  page?: {__typename?: 'Page'; id: string} | null
+                }
+              | {
+                  __typename?: 'PeerArticleTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  articleID?: string | null
+                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  peer?: {__typename?: 'Peer'; id: string} | null
+                  article?: {__typename?: 'Article'; id: string} | null
+                }
+            >
+          }
+        | {
+            __typename: 'TeaserGridFlexBlock'
+            blockStyle?: string | null
+            flexTeasers: Array<{
+              __typename?: 'FlexTeaser'
+              alignment: {
+                __typename?: 'FlexAlignment'
+                i: number
+                x: number
+                y: number
+                w: number
+                h: number
+                static: boolean
+              }
+              teaser:
+                | {
+                    __typename?: 'ArticleTeaser'
+                    style: TeaserStyle
+                    preTitle?: string | null
+                    title?: string | null
+                    lead?: string | null
+                    articleID?: string | null
+                    image?: {__typename?: 'Image'; url?: string | null} | null
+                    article?: {__typename?: 'Article'; id: string} | null
+                  }
+                | {
+                    __typename?: 'CustomTeaser'
+                    style: TeaserStyle
+                    preTitle?: string | null
+                    title?: string | null
+                    lead?: string | null
+                    contentUrl?: string | null
+                    image?: {__typename?: 'Image'; url?: string | null} | null
+                    properties: Array<{
+                      __typename?: 'Property'
+                      key: string
+                      value: string
+                      public: boolean
+                    }>
+                  }
+                | {
+                    __typename?: 'EventTeaser'
+                    style: TeaserStyle
+                    preTitle?: string | null
+                    title?: string | null
+                    lead?: string | null
+                    eventID?: string | null
+                    image?: {__typename?: 'Image'; url?: string | null} | null
+                    event?: {__typename?: 'Event'; id: string} | null
+                  }
+                | {
+                    __typename?: 'PageTeaser'
+                    style: TeaserStyle
+                    preTitle?: string | null
+                    title?: string | null
+                    lead?: string | null
+                    pageID?: string | null
+                    image?: {__typename?: 'Image'; url?: string | null} | null
+                    page?: {__typename?: 'Page'; id: string} | null
+                  }
+                | {
+                    __typename?: 'PeerArticleTeaser'
+                    style: TeaserStyle
+                    preTitle?: string | null
+                    title?: string | null
+                    lead?: string | null
+                    articleID?: string | null
+                    image?: {__typename?: 'Image'; url?: string | null} | null
+                    peer?: {__typename?: 'Peer'; id: string} | null
+                    article?: {__typename?: 'Article'; id: string} | null
+                  }
+            }>
+          }
+        | {
+            __typename: 'TeaserListBlock'
+            title?: string | null
+            blockStyle?: string | null
+            teaserType: TeaserType
+            take?: number | null
+            skip?: number | null
+            sort?: TeaserListBlockSort | null
+            teasers: Array<
+              | {
+                  __typename?: 'ArticleTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  articleID?: string | null
+                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  article?: {__typename?: 'Article'; id: string} | null
+                }
+              | {
+                  __typename?: 'CustomTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  contentUrl?: string | null
+                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  properties: Array<{
+                    __typename?: 'Property'
+                    key: string
+                    value: string
+                    public: boolean
+                  }>
+                }
+              | {
+                  __typename?: 'EventTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  eventID?: string | null
+                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  event?: {__typename?: 'Event'; id: string} | null
+                }
+              | {
+                  __typename?: 'PageTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  pageID?: string | null
+                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  page?: {__typename?: 'Page'; id: string} | null
+                }
+              | {
+                  __typename?: 'PeerArticleTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  articleID?: string | null
+                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  peer?: {__typename?: 'Peer'; id: string} | null
+                  article?: {__typename?: 'Article'; id: string} | null
+                }
+            >
+            filter: {
+              __typename?: 'TeaserListBlockFilter'
+              tags: Array<string>
+              tagObjects: Array<{__typename?: 'Tag'; id: string; tag?: string | null}>
+            }
+          }
+        | {
+            __typename: 'TikTokVideoBlock'
+            blockStyle?: string | null
+            userID?: string | null
+            videoID?: string | null
+          }
+        | {
+            __typename: 'TitleBlock'
+            blockStyle?: string | null
+            title?: string | null
+            lead?: string | null
+          }
+        | {
+            __typename: 'TwitterTweetBlock'
+            blockStyle?: string | null
+            userID?: string | null
+            tweetID?: string | null
+          }
+        | {__typename: 'UnknownBlock'}
+        | {__typename: 'VimeoVideoBlock'; blockStyle?: string | null; videoID?: string | null}
+        | {__typename: 'YouTubeVideoBlock'; blockStyle?: string | null; videoID?: string | null}
+      >
       authors: Array<{
         __typename?: 'Author'
         name: string
@@ -2869,6 +4109,333 @@ export type ArticleQuery = {
   }
 }
 
+export const ImageRef = gql`
+  fragment ImageRef on Image {
+    url
+  }
+`
+export const EventRef = gql`
+  fragment EventRef on Event {
+    id
+  }
+`
+export const FullComment = gql`
+  fragment FullComment on Comment {
+    id
+  }
+`
+export const ArticleRef = gql`
+  fragment ArticleRef on Article {
+    id
+  }
+`
+export const PeerWithProfile = gql`
+  fragment PeerWithProfile on Peer {
+    id
+  }
+`
+export const PageRef = gql`
+  fragment PageRef on Page {
+    id
+  }
+`
+export const FullTeaser = gql`
+  fragment FullTeaser on Teaser {
+    ... on ArticleTeaser {
+      style
+      image {
+        ...ImageRef
+      }
+      preTitle
+      title
+      lead
+      articleID
+      article {
+        ...ArticleRef
+      }
+    }
+    ... on PeerArticleTeaser {
+      style
+      image {
+        ...ImageRef
+      }
+      preTitle
+      title
+      lead
+      peer {
+        ...PeerWithProfile
+      }
+      articleID
+      article {
+        ...ArticleRef
+      }
+    }
+    ... on PageTeaser {
+      style
+      image {
+        ...ImageRef
+      }
+      preTitle
+      title
+      lead
+      pageID
+      page {
+        ...PageRef
+      }
+    }
+    ... on EventTeaser {
+      style
+      image {
+        ...ImageRef
+      }
+      preTitle
+      title
+      lead
+      eventID
+      event {
+        ...EventRef
+      }
+    }
+    ... on CustomTeaser {
+      style
+      image {
+        ...ImageRef
+      }
+      preTitle
+      title
+      lead
+      contentUrl
+      properties {
+        key
+        value
+        public
+      }
+    }
+  }
+  ${ImageRef}
+  ${ArticleRef}
+  ${PeerWithProfile}
+  ${PageRef}
+  ${EventRef}
+`
+export const FullBlock = gql`
+  fragment FullBlock on BlockContent {
+    __typename
+    ... on TitleBlock {
+      blockStyle
+      title
+      lead
+    }
+    ... on HTMLBlock {
+      blockStyle
+      html
+    }
+    ... on RichTextBlock {
+      blockStyle
+      richText
+    }
+    ... on QuoteBlock {
+      blockStyle
+      quote
+      author
+      image {
+        ...ImageRef
+      }
+    }
+    ... on BreakBlock {
+      blockStyle
+      text
+      linkText
+      linkURL
+      richText
+      linkTarget
+      hideButton
+      image {
+        ...ImageRef
+      }
+    }
+    ... on PollBlock {
+      blockStyle
+      poll {
+        id
+        question
+      }
+    }
+    ... on EventBlock {
+      blockStyle
+      filter {
+        tags
+        events
+      }
+      events {
+        ...EventRef
+      }
+    }
+    ... on CommentBlock {
+      blockStyle
+      filter {
+        item
+        tags
+        comments
+      }
+      comments {
+        ...FullComment
+      }
+    }
+    ... on ImageBlock {
+      blockStyle
+      caption
+      linkUrl
+      image {
+        ...ImageRef
+      }
+    }
+    ... on ImageGalleryBlock {
+      blockStyle
+      images {
+        caption
+        image {
+          ...ImageRef
+        }
+      }
+    }
+    ... on ListicleBlock {
+      blockStyle
+      items {
+        title
+        image {
+          ...ImageRef
+        }
+        richText
+      }
+    }
+    ... on FacebookPostBlock {
+      blockStyle
+      userID
+      postID
+    }
+    ... on FacebookVideoBlock {
+      blockStyle
+      userID
+      videoID
+    }
+    ... on InstagramPostBlock {
+      blockStyle
+      postID
+    }
+    ... on TwitterTweetBlock {
+      blockStyle
+      userID
+      tweetID
+    }
+    ... on VimeoVideoBlock {
+      blockStyle
+      videoID
+    }
+    ... on YouTubeVideoBlock {
+      blockStyle
+      videoID
+    }
+    ... on SoundCloudTrackBlock {
+      blockStyle
+      trackID
+    }
+    ... on PolisConversationBlock {
+      blockStyle
+      conversationID
+    }
+    ... on TikTokVideoBlock {
+      blockStyle
+      userID
+      videoID
+    }
+    ... on BildwurfAdBlock {
+      blockStyle
+      zoneID
+    }
+    ... on IFrameBlock {
+      blockStyle
+      url
+      title
+      width
+      height
+      styleCustom
+      sandbox
+    }
+    ... on TeaserListBlock {
+      title
+      blockStyle
+      teaserType
+      teasers {
+        ...FullTeaser
+      }
+      take
+      skip
+      sort
+      filter {
+        tags
+        tagObjects {
+          id
+          tag
+        }
+      }
+    }
+    ... on TeaserGridBlock {
+      blockStyle
+      teasers {
+        ...FullTeaser
+      }
+      numColumns
+    }
+    ... on TeaserGridFlexBlock {
+      blockStyle
+      flexTeasers {
+        alignment {
+          i
+          x
+          y
+          w
+          h
+          static
+        }
+        teaser {
+          ...FullTeaser
+        }
+      }
+    }
+  }
+  ${ImageRef}
+  ${EventRef}
+  ${FullComment}
+  ${FullTeaser}
+`
+export const ImportBlock = gql`
+  fragment ImportBlock on BlockContent {
+    ...FullBlock
+    ... on PollBlock {
+      __typename
+    }
+    ... on HTMLBlock {
+      __typename
+    }
+    ... on EventBlock {
+      __typename
+    }
+    ... on CommentBlock {
+      __typename
+    }
+    ... on TeaserListBlock {
+      __typename
+    }
+    ... on TeaserGridBlock {
+      __typename
+    }
+    ... on TeaserGridFlexBlock {
+      __typename
+    }
+  }
+  ${FullBlock}
+`
 export const Article = gql`
   query Article($id: String!) {
     article(id: $id) {
@@ -2877,6 +4444,9 @@ export const Article = gql`
         tag
       }
       published {
+        blocks {
+          ...ImportBlock
+        }
         authors {
           name
           slug
@@ -2890,4 +4460,5 @@ export const Article = gql`
       }
     }
   }
+  ${ImportBlock}
 `

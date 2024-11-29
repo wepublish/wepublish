@@ -2,6 +2,9 @@ import {Injectable, NotFoundException} from '@nestjs/common'
 import {Prisma, PrismaClient, TagType} from '@prisma/client'
 import {GraphQLClient} from 'graphql-request'
 import {Article, ArticleQuery, ArticleQueryVariables} from './graphql'
+import {ImageFetcherService} from '@wepublish/image/api'
+import {PrimeDataLoader} from '@wepublish/utils/api'
+import {ArticleDataloaderService} from '@wepublish/article/api'
 
 type ImportArticleOptions = Partial<{
   importAuthors: boolean
@@ -10,12 +13,13 @@ type ImportArticleOptions = Partial<{
 
 @Injectable()
 export class ImportPeerArticleService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient, private imageFetcher: ImageFetcherService) {}
 
   getArticles() {
     return []
   }
 
+  @PrimeDataLoader(ArticleDataloaderService)
   async importArticle(peerId: string, articleId: string, options?: ImportArticleOptions) {
     const peer = await this.prisma.peer.findUnique({
       where: {
@@ -61,8 +65,7 @@ export class ImportPeerArticleService {
                 data: authors
               }
             },
-            // @TODO:
-            blocks: []
+            blocks: article.published!.blocks as Prisma.JsonArray
           }
         },
 
