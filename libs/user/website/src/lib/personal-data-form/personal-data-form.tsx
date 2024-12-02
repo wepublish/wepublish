@@ -172,7 +172,8 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   return (
     <PersonalDataFormWrapper className={className} onSubmit={onSubmit}>
       <PersonalDataInputForm>
-        {fieldsToDisplay.image && (
+        {/* todo: temporarily removed ability to change own profile picture. will be available again after v1 to v2 api migration is complete.  */}
+        {false && fieldsToDisplay.image && (
           <PersonalDataImageInputWrapper>
             <ImageUpload image={user.image} onUpload={callAction(onImageUpload)} />
           </PersonalDataImageInputWrapper>
