@@ -1,11 +1,43 @@
-import {ApiV1, isRichTextBlock, RichTextBlock, SliderWrapper} from '@wepublish/website'
+import {ApiV1, isRichTextBlock, RichTextBlock, useWebsiteBuilder} from '@wepublish/website'
 import {format} from 'date-fns'
 import {useState} from 'react'
 import {useLikeStatus} from './use-like-status'
-import {Grid} from '@mui/material'
 import styled from '@emotion/styled'
+import {Article} from '@wepublish/website/api'
+import {MdShare, MdSearch} from 'react-icons/md'
+import {SearchBar} from './search-bar'
+
+const Container = styled('div')`
+  display: grid;
+  grid-template-rows: auto 180px auto;
+  grid-template-columns: 10% 25% 1fr 15%;
+  gap: 2em;
+  grid-template-areas:
+    '.... main title  ....  '
+    'prev main slider slider'
+    '.... main text   ....  ';
+`
+
+const PageTitle = styled('h1')`
+  font-size: 2.3em;
+  margin: 0;
+`
+
+const PageDateWrapper = styled('div')`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const SlideWrapper = styled('div')`
+  display: flex;
+  gap: 1em;
+  border-top: 15px solid #feddd2;
+  padding-top: 15px;
+`
 
 const SlideItem = styled.div`
+  position: relative;
   cursor: pointer;
   img {
     width: 100%;
@@ -14,27 +46,42 @@ const SlideItem = styled.div`
   }
 `
 
-const SlideTitle = styled.div`
+const SlideTitle = styled('span')`
+  position: absolute;
   font-weight: bold;
-  margin-top: 8px;
+  bottom: 0.5em;
+  left: 0.5em;
+  right: 0.5em;
+  color: white;
+  text-transform: uppercase;
+  font-size: 0.7em;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.58);
 `
 
-const StyledSliderWrapper = styled(SliderWrapper)<{gridArea: string}>`
-  grid-area: ${props => props.gridArea};
-`
-
-const DateWrapper = styled.div<{gridArea: string}>`
-  grid-area: ${props => props.gridArea};
+const DateWrapper = styled('div')`
   display: flex;
   flex-direction: column;
+  text-align: right;
+  font-weight: 500;
   span:first-child {
-    font-weight: bold;
-    border-bottom: 2px solid black;
+    border-bottom: 1px solid black;
   }
 `
 
-const ContentWrapper = styled.div<{gridArea: string}>`
-  grid-area: ${props => props.gridArea};
+const LikeButton = styled('div')`
+  font-size: 2em;
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+  cursor: pointer;
+  span {
+    font-size: 0.7em;
+  }
+`
+
+const CopyButton = styled('div')`
+  font-size: 1.6em;
+  cursor: pointer;
 `
 
 interface SliderArticle extends Omit<ApiV1.Article, 'comments' | 'socialMediaAuthors'> {}
@@ -44,29 +91,14 @@ interface BaslerinDesTagesProps {
   className?: string
 }
 
-function ContentBlock(props: {
-  preTitle: string | null | undefined
-  title: string | null | undefined
-  textBlock: ApiV1.RichTextBlock
-}): JSX.Element {
-  return (
-    <>
-      <section>
-        <div style={{marginBottom: '1em'}}>
-          {props.preTitle ? <span>{props.preTitle} </span> : <span>BASLER*IN des Tages ist </span>}
-          <h2>{props.title}</h2>
-          <span>, weil ...</span>
-        </div>
-        <div style={{maxWidth: '500px'}}>
-          <RichTextBlock richText={props.textBlock.richText} />
-        </div>
-      </section>
-    </>
-  )
-}
-
 export function BaslerinDesTages({article, className}: BaslerinDesTagesProps) {
+  const {
+    elements: {Image}
+  } = useWebsiteBuilder()
+
   const [currentArticle, setCurrentArticle] = useState<SliderArticle>(article)
+  const [sliderArticles, setSliderArticles] = useState<SliderArticle[]>([])
+  const [skipCount, setSkipCount] = useState(0)
 
   const {data: tagData, loading: tagLoading} = ApiV1.useTagQuery({
     variables: {
@@ -75,14 +107,13 @@ export function BaslerinDesTages({article, className}: BaslerinDesTagesProps) {
     }
   })
 
-  const {
-    data: articleData,
-    loading: articleLoading,
-    error: articleError
-  } = ApiV1.useFullArticleListQuery({
-    skip: !tagData?.tags?.nodes.length,
+  const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined)
+
+  ApiV1.useFullArticleListQuery({
+    skip: tagLoading || !!searchQuery,
     variables: {
       take: 6,
+      skip: skipCount,
       order: ApiV1.SortOrder.Descending,
       filter: {
         tags: [tagData?.tags?.nodes.at(0)?.id ?? ''],
@@ -91,6 +122,10 @@ export function BaslerinDesTages({article, className}: BaslerinDesTagesProps) {
           date: currentArticle?.publishedAt
         }
       }
+    },
+    onCompleted: data => {
+      const articles = data.articles.nodes as SliderArticle[]
+      setSliderArticles(articles)
     }
   })
 
@@ -125,6 +160,71 @@ export function BaslerinDesTages({article, className}: BaslerinDesTagesProps) {
     }
   }
 
+  const [phraseWithTagQuery] = ApiV1.usePhraseWithTagLazyQuery()
+  const [getMoreArticles] = ApiV1.useFullArticleListLazyQuery()
+
+  const handleSearch = async (query: string | undefined) => {
+    setSearchQuery(query)
+    if (!query) {
+      return
+    }
+    const {data} = await phraseWithTagQuery({
+      variables: {take: 7, tag: 'baslerin-des-tages', query}
+    })
+    const articles = data?.phraseWithTag?.articles?.nodes as SliderArticle[]
+    if (articles.length > 0) {
+      setCurrentArticle(articles[0])
+      setSliderArticles(articles.slice(1))
+    }
+  }
+
+  const handleCopy = () => {
+    const url = currentArticle?.url
+    navigator.clipboard.writeText(url).then(
+      () => {
+        alert('Link in Zwischenablage!')
+      },
+      err => {
+        console.error('Failed to copy: ', err)
+      }
+    )
+  }
+
+  const loadMoreArticles = async (newCurrentArticle: SliderArticle, clickedPosition: number) => {
+    setSkipCount(prev => prev + clickedPosition + 1)
+    if (searchQuery) {
+      // Load more search results
+      const {data} = await phraseWithTagQuery({
+        variables: {
+          take: 6,
+          tag: 'baslerin-des-tages',
+          query: searchQuery,
+          skip: skipCount
+        }
+      })
+      const articles = data?.phraseWithTag?.articles?.nodes as SliderArticle[]
+      setSliderArticles(articles)
+    } else {
+      // Load more articles from regular list
+      const {data} = await getMoreArticles({
+        variables: {
+          take: 6,
+          skip: 0,
+          order: ApiV1.SortOrder.Descending,
+          filter: {
+            tags: [tagData?.tags?.nodes.at(0)?.id ?? ''],
+            publicationDateFrom: {
+              comparison: ApiV1.DateFilterComparison.Lower,
+              date: newCurrentArticle.publishedAt
+            }
+          }
+        }
+      })
+      const articles = (data?.articles?.nodes as SliderArticle[]) ?? []
+      setSliderArticles(articles)
+    }
+  }
+
   const textBlock = (currentArticle?.blocks as ApiV1.Block[]).find(isRichTextBlock)
 
   const publishedAt = currentArticle?.publishedAt
@@ -137,41 +237,77 @@ export function BaslerinDesTages({article, className}: BaslerinDesTagesProps) {
 
   return (
     <div className={className}>
-      <Grid>
-        <StyledSliderWrapper gridArea="1 / 2 / 2 / 3">
-          <img src={currentArticle.image.url ?? ''} alt={currentArticle.image.description ?? ''} />
-        </StyledSliderWrapper>
+      <Container>
+        <PageDateWrapper style={{gridArea: 'title'}}>
+          <PageTitle>
+            BASLER*IN
+            <br />
+            des Tages
+          </PageTitle>
+          <DateWrapper>
+            <SearchBar onSearchChange={handleSearch} />
+            <span>{publicationDate}</span>
+            <span>{publicationDay}</span>
+          </DateWrapper>
+        </PageDateWrapper>
 
-        <StyledSliderWrapper gridArea="1 / 2 / 2 / 3">
-          {articleData?.articles?.nodes && (
-            <SliderWrapper>
-              {articleData.articles.nodes.map(article => (
-                <SlideItem key={article.id} onClick={() => setCurrentArticle(article)}>
-                  {article.image && (
-                    <>
-                      <img src={article.image.url} alt={article.image.description || ''} />
-                      <SlideTitle>{article.title}</SlideTitle>
-                    </>
-                  )}
-                </SlideItem>
-              ))}
-            </SliderWrapper>
-          )}
-        </StyledSliderWrapper>
+        <Image
+          image={currentArticle.image}
+          style={{
+            gridArea: 'main',
+            height: '400px',
+            objectFit: 'cover',
+            borderRadius: '15px',
+            marginTop: '2em'
+          }}
+        />
 
-        <DateWrapper gridArea="2 / 2 / 3 / 3">
-          <span>{publicationDay}</span>
-          <span>{publicationDate}</span>
-        </DateWrapper>
+        <SlideWrapper style={{gridArea: 'slider'}}>
+          {sliderArticles.map(article => (
+            <SlideItem
+              key={article.id}
+              onClick={async () => {
+                setCurrentArticle(article as Article)
+                const clickedPosition = sliderArticles.findIndex(a => a.id === article.id)
+                await loadMoreArticles(article, clickedPosition)
+              }}>
+              {article.image && (
+                <>
+                  <Image image={article.image} style={{borderRadius: '15px', width: '120px'}} />
+                  <SlideTitle>{article.title}</SlideTitle>
+                </>
+              )}
+            </SlideItem>
+          ))}
+        </SlideWrapper>
 
-        <ContentWrapper gridArea="3 / 1 / 4 / 3">
-          <ContentBlock
-            preTitle={currentArticle.preTitle}
-            title={currentArticle.title}
-            textBlock={textBlock}
-          />
-        </ContentWrapper>
-      </Grid>
+        <section style={{gridArea: 'text'}}>
+          <div style={{marginBottom: '1em'}}>
+            {currentArticle.lead ? (
+              <h2>{currentArticle.lead} </h2>
+            ) : (
+              <>
+                <span>BASLER*IN des Tages ist </span>
+                <h2>
+                  {currentArticle.title}
+                  <span style={{fontSize: '1rem'}}>, weil ...</span>
+                </h2>
+              </>
+            )}
+          </div>
+          <div style={{maxWidth: '500px'}}>
+            <RichTextBlock richText={textBlock.richText} />
+          </div>
+          <div style={{display: 'flex', marginTop: '2em', alignItems: 'flex-end', gap: '1em'}}>
+            <LikeButton onClick={handleLike}>
+              {isLiked ? '❤️' : '🤍'} <span>{likes}</span>
+            </LikeButton>
+            <CopyButton onClick={handleCopy}>
+              <MdShare />
+            </CopyButton>
+          </div>
+        </section>
+      </Container>
     </div>
   )
 }
