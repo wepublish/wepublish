@@ -383,7 +383,9 @@ const TagList = memo<TagListProps>(({type}) => {
 
       <Modal open={!!tagToDelete} backdrop="static" size="xs" onClose={() => setTagToDelete(null)}>
         <Modal.Title>{t('tags.overview.areYouSure')}</Modal.Title>
-        <Modal.Body>{t('tags.overview.areYouSureBody', {tag: formValue[tagToDelete!]})}</Modal.Body>
+        <Modal.Body>
+          {t('tags.overview.areYouSureBody', {tag: formValue[tagToDelete!].tag})}
+        </Modal.Body>
         <Modal.Footer>
           <Button
             color="red"

@@ -266,11 +266,16 @@ type MemberPlan {
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
   currency: Currency!
   maxCount: Int
   extendable: Boolean!
   availablePaymentMethods: [AvailablePaymentMethod!]!
   migrateToTargetPaymentMethodID: ID
+  successPageId: ID
+  successPage: Page
+  failPageId: ID
+  failPage: Page
 }
 
 type AvailablePaymentMethod {
@@ -297,176 +302,6 @@ scalar Slug
 type PaymentProvider {
   id: ID!
   name: String!
-}
-
-type Invoice {
-  id: ID!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  mail: String!
-  description: String
-  paidAt: DateTime
-  manuallySetAsPaidByUserId: ID
-  items: [InvoiceItem!]!
-  canceledAt: DateTime
-  currency: Currency!
-  total: Int!
-}
-
-type InvoiceItem {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  description: String
-  quantity: Int!
-  amount: Int!
-  total: Int!
-}
-
-type Session {
-  id: ID!
-  user: User!
-  createdAt: DateTime!
-  expiresAt: DateTime!
-}
-
-type AuthProvider {
-  name: String!
-  url: String!
-}
-
-type UserConnection {
-  nodes: [User!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type PageInfo {
-  startCursor: String
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-}
-
-input UserFilter {
-  name: String
-  text: String
-  userRole: [String]
-}
-
-enum UserSort {
-  createdAt
-  modifiedAt
-  name
-  firstName
-}
-
-enum SortOrder {
-  Ascending
-  Descending
-}
-
-type Subscription {
-  id: ID!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  user: User
-  memberPlan: MemberPlan!
-  paymentPeriodicity: PaymentPeriodicity!
-  monthlyAmount: Int!
-  autoRenew: Boolean!
-  extendable: Boolean!
-  startsAt: DateTime!
-  paidUntil: DateTime
-  paymentMethod: PaymentMethod!
-  properties: [Properties!]!
-  deactivation: SubscriptionDeactivation
-  currency: Currency!
-}
-
-type SubscriptionConnection {
-  nodes: [Subscription!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input SubscriptionFilter {
-  startsAt: DateFilter
-  paidUntil: DateFilter
-  startsAtFrom: DateFilter
-  startsAtTo: DateFilter
-  paidUntilFrom: DateFilter
-  paidUntilTo: DateFilter
-  deactivationDateFrom: DateFilter
-  deactivationDateTo: DateFilter
-  cancellationDateFrom: DateFilter
-  cancellationDateTo: DateFilter
-  deactivationReason: SubscriptionDeactivationReason
-  autoRenew: Boolean
-  paymentMethodID: String
-  memberPlanID: String
-  paymentPeriodicity: PaymentPeriodicity
-  userHasAddress: Boolean
-  userID: ID
-  extendable: Boolean
-}
-
-input DateFilter {
-  date: DateTime = null
-  comparison: DateFilterComparison!
-}
-
-enum DateFilterComparison {
-  gt
-  gte
-  eq
-  lt
-  lte
-}
-
-enum SubscriptionSort {
-  createdAt
-  modifiedAt
-}
-
-type UserRoleConnection {
-  nodes: [UserRole!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input UserRoleFilter {
-  name: String
-}
-
-enum UserRoleSort {
-  createdAt
-  modifiedAt
-}
-
-type Token {
-  id: ID!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-}
-
-type Navigation {
-  id: ID!
-  key: String!
-  name: String!
-  links: [NavigationLink!]!
-}
-
-union NavigationLink = PageNavigationLink | ArticleNavigationLink | ExternalNavigationLink
-
-type PageNavigationLink implements BaseNavigationLink {
-  label: String!
-  page: Page
-}
-
-interface BaseNavigationLink {
-  label: String!
 }
 
 type Page {
@@ -958,6 +793,176 @@ type TeaserListBlockFilter {
 enum TeaserListBlockSort {
   publishedAt
   hotAndTrending
+}
+
+type Invoice {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  mail: String!
+  description: String
+  paidAt: DateTime
+  manuallySetAsPaidByUserId: ID
+  items: [InvoiceItem!]!
+  canceledAt: DateTime
+  currency: Currency!
+  total: Int!
+}
+
+type InvoiceItem {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  name: String!
+  description: String
+  quantity: Int!
+  amount: Int!
+  total: Int!
+}
+
+type Session {
+  id: ID!
+  user: User!
+  createdAt: DateTime!
+  expiresAt: DateTime!
+}
+
+type AuthProvider {
+  name: String!
+  url: String!
+}
+
+type UserConnection {
+  nodes: [User!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+input UserFilter {
+  name: String
+  text: String
+  userRole: [String]
+}
+
+enum UserSort {
+  createdAt
+  modifiedAt
+  name
+  firstName
+}
+
+enum SortOrder {
+  Ascending
+  Descending
+}
+
+type Subscription {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  user: User
+  memberPlan: MemberPlan!
+  paymentPeriodicity: PaymentPeriodicity!
+  monthlyAmount: Int!
+  autoRenew: Boolean!
+  extendable: Boolean!
+  startsAt: DateTime!
+  paidUntil: DateTime
+  paymentMethod: PaymentMethod!
+  properties: [Properties!]!
+  deactivation: SubscriptionDeactivation
+  currency: Currency!
+}
+
+type SubscriptionConnection {
+  nodes: [Subscription!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input SubscriptionFilter {
+  startsAt: DateFilter
+  paidUntil: DateFilter
+  startsAtFrom: DateFilter
+  startsAtTo: DateFilter
+  paidUntilFrom: DateFilter
+  paidUntilTo: DateFilter
+  deactivationDateFrom: DateFilter
+  deactivationDateTo: DateFilter
+  cancellationDateFrom: DateFilter
+  cancellationDateTo: DateFilter
+  deactivationReason: SubscriptionDeactivationReason
+  autoRenew: Boolean
+  paymentMethodID: String
+  memberPlanID: String
+  paymentPeriodicity: PaymentPeriodicity
+  userHasAddress: Boolean
+  userID: ID
+  extendable: Boolean
+}
+
+input DateFilter {
+  date: DateTime = null
+  comparison: DateFilterComparison!
+}
+
+enum DateFilterComparison {
+  gt
+  gte
+  eq
+  lt
+  lte
+}
+
+enum SubscriptionSort {
+  createdAt
+  modifiedAt
+}
+
+type UserRoleConnection {
+  nodes: [UserRole!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input UserRoleFilter {
+  name: String
+}
+
+enum UserRoleSort {
+  createdAt
+  modifiedAt
+}
+
+type Token {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+type Navigation {
+  id: ID!
+  key: String!
+  name: String!
+  links: [NavigationLink!]!
+}
+
+union NavigationLink = PageNavigationLink | ArticleNavigationLink | ExternalNavigationLink
+
+type PageNavigationLink implements BaseNavigationLink {
+  label: String!
+  page: Page
+}
+
+interface BaseNavigationLink {
+  label: String!
 }
 
 type ArticleNavigationLink implements BaseNavigationLink {
@@ -1921,11 +1926,14 @@ input MemberPlanInput {
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
   currency: Currency!
   extendable: Boolean!
   maxCount: Int
   availablePaymentMethods: [AvailablePaymentMethodInput!]!
   migrateToTargetPaymentMethodID: ID
+  successPageId: ID
+  failPageId: ID
 }
 
 input AvailablePaymentMethodInput {

@@ -1,10 +1,10 @@
 import {styled} from '@mui/material'
 import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
-import {ApiV1, AuthTokenStorageKey, SubscribeContainer} from '@wepublish/website'
+import {SubscribePage} from '@wepublish/utils/website'
+import {ApiV1, AuthTokenStorageKey} from '@wepublish/website'
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
-import {useRouter} from 'next/router'
 import {useMemo} from 'react'
 
 import {CrowdfundingGoal} from '../src/crowdfunding/crowdfunding-goal'
@@ -26,14 +26,12 @@ type MitmachenProps = {
 }
 
 export default function Mitmachen({donate}: MitmachenProps) {
-  const {
-    query: {firstName, mail, lastName}
-  } = useRouter()
-
-  const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
-  const thisLocation = typeof window !== 'undefined' ? location.href : ''
-
-  const {data: subscribers} = ApiV1.useActiveSubscribersQuery()
+  const {data: newSubscribers} = ApiV1.useNewSubscribersQuery({
+    variables: {
+      start: '2024-01-11T00:00:00.000Z',
+      end: '2025-01-11T00:00:00.000Z'
+    }
+  })
 
   const {data: memberplans} = ApiV1.useMemberPlanListQuery({
     variables: {
@@ -43,14 +41,14 @@ export default function Mitmachen({donate}: MitmachenProps) {
 
   const current = useMemo(
     () =>
-      subscribers?.activeSubscribers?.filter(
+      newSubscribers?.newSubscribers?.filter(
         ({memberPlan}) =>
           memberplans?.memberPlans.nodes.some(
             ({name, tags}) => name === memberPlan && tags?.includes('crowdfunding')
           ),
         0
       ).length ?? 0,
-    [memberplans?.memberPlans.nodes, subscribers?.activeSubscribers]
+    [memberplans?.memberPlans.nodes, newSubscribers?.newSubscribers]
   )
 
   return (
@@ -67,19 +65,12 @@ export default function Mitmachen({donate}: MitmachenProps) {
         </GoalsWrapper>
       )}
 
-      <SubscribeContainer
-        defaults={{
-          email: mail as string | undefined,
-          firstName: firstName as string | undefined,
-          name: lastName as string | undefined
-        }}
+      <SubscribePage
         filter={memberPlans =>
           memberPlans.filter(mb =>
             donate ? mb.tags?.includes('spende') : mb.tags?.includes('crowdfunding')
           )
         }
-        successURL={`${locationOrigin}/profile/subscription`}
-        failureURL={thisLocation}
         fields={['firstName']}
         termsOfServiceUrl="/agb"
         donate={() => !!donate}
@@ -128,9 +119,6 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
     }),
     client.query({
       query: ApiV1.PeerProfileDocument
-    }),
-    client.query({
-      query: ApiV1.ActiveSubscribersDocument
     })
   ]
 

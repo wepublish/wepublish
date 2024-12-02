@@ -1,6 +1,7 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import {IconButton, Modal, Theme, css, styled, useTheme} from '@mui/material'
 import {
+  Challenge,
   IntendedRouteExpiryInSeconds,
   IntendedRouteStorageKey,
   LoginFormContainer,
@@ -27,23 +28,6 @@ export const CommentEditorActions = styled('div')`
   display: flex;
   flex-flow: row wrap;
   gap: ${({theme}) => theme.spacing(1)};
-`
-
-export const CommentEditorChallengeWrapper = styled('div')`
-  display: grid;
-  grid-template-columns: minmax(max-content, 200px) 200px;
-  align-items: center;
-  gap: ${({theme}) => theme.spacing(3)};
-  justify-content: flex-start;
-`
-
-export const CommentEditorChallenge = styled('div')`
-  height: 100%;
-  display: grid;
-
-  svg {
-    height: 100%;
-  }
 `
 
 export const LoginWrapper = styled('div')`
@@ -327,31 +311,21 @@ export const CommentEditor = ({
           )}
         />
 
-        {!hasUser && challenge?.data && (
-          <CommentEditorChallengeWrapper>
-            <CommentEditorChallenge
-              dangerouslySetInnerHTML={{
-                __html:
-                  challenge.data.challenge.challenge
-                    ?.replace('#ffffff', 'transparent')
-                    .replace('width="200"', '')
-                    .replace('height="200"', '') ?? ''
-              }}
-            />
-
-            <Controller
-              name={'challenge.challengeSolution'}
-              control={control}
-              render={({field, fieldState: {error}}) => (
-                <TextField
-                  {...field}
-                  label={'Captcha'}
-                  error={!!error}
-                  helperText={error?.message}
-                />
-              )}
-            />
-          </CommentEditorChallengeWrapper>
+        {challenge?.data?.challenge && (
+          <Controller
+            name={'challenge.challengeSolution'}
+            control={control}
+            render={({field, fieldState: {error}}) => (
+              <Challenge
+                {...field}
+                onChange={field.onChange}
+                challenge={challenge.data!.challenge}
+                label={'Captcha'}
+                error={!!error}
+                helperText={error?.message}
+              />
+            )}
+          />
         )}
 
         {challenge?.error && <Alert severity="error">{challenge.error.message}</Alert>}

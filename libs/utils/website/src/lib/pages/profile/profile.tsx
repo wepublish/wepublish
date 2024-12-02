@@ -65,8 +65,6 @@ function Profile() {
             filter={subscriptions =>
               subscriptions.filter(subscription => !subscription.deactivation)
             }
-            failureURL=""
-            successURL=""
           />
 
           {hasDeactivatedSubscriptions && (
@@ -85,8 +83,6 @@ function Profile() {
                 invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt
               )
             }
-            failureURL=""
-            successURL=""
           />
         </SubscriptionListWrapper>
       </SubscriptionsWrapper>

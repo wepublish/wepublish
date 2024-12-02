@@ -48,8 +48,6 @@ function SubscriptionPage() {
 
         <SubscriptionListContainer
           filter={subscriptions => subscriptions.filter(subscription => subscription.id === id)}
-          failureURL=""
-          successURL=""
         />
       </SubscriptionListWrapper>
 
@@ -58,8 +56,6 @@ function SubscriptionPage() {
 
         <InvoiceListContainer
           filter={invoices => invoices.filter(invoice => invoice.subscriptionID === id)}
-          failureURL=""
-          successURL=""
         />
       </SubscriptionListWrapper>
     </SubscriptionsWrapper>

@@ -37,7 +37,7 @@ import {GraphQLTag} from './tag/tag'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
-  fields: {
+  fields: () => ({
     title: {type: GraphQLString},
     preTitle: {type: GraphQLString},
     lead: {type: GraphQLString},
@@ -50,17 +50,17 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     includeHidden: {type: GraphQLBoolean},
     shared: {type: GraphQLBoolean}
-  }
+  })
 })
 
 export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
-  fields: {
+  fields: () => ({
     authors: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     includeHidden: {type: GraphQLBoolean},
     shared: {type: GraphQLBoolean}
-  }
+  })
 })
 
 export const GraphQLArticleSort = new GraphQLEnumType({
@@ -84,7 +84,7 @@ export const GraphQLPublicArticleSort = new GraphQLEnumType({
 
 export const GraphQLArticleInput = new GraphQLInputObjectType({
   name: 'ArticleInput',
-  fields: {
+  fields: () => ({
     slug: {type: GraphQLSlug},
 
     preTitle: {type: GraphQLString},
@@ -119,12 +119,12 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     blocks: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlockInput)))
     }
-  }
+  })
 })
 
 export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Context>({
   name: 'ArticleRevision',
-  fields: {
+  fields: () => ({
     revision: {type: new GraphQLNonNull(GraphQLInt)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -203,12 +203,12 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     },
 
     blocks: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlock)))}
-  }
+  })
 })
 
 export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
   name: 'Article',
-  fields: {
+  fields: () => ({
     id: {type: new GraphQLNonNull(GraphQLID)},
     shared: {type: new GraphQLNonNull(GraphQLBoolean)},
     hidden: {type: GraphQLBoolean},
@@ -244,21 +244,21 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
         return tags
       })
     }
-  }
+  })
 })
 
 export const GraphQLArticleConnection = new GraphQLObjectType({
   name: 'ArticleConnection',
-  fields: {
+  fields: () => ({
     nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLArticle)))},
     pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
-  }
+  })
 })
 
 export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
   name: 'PeerArticle',
-  fields: {
+  fields: () => ({
     peer: {
       type: new GraphQLNonNull(GraphQLPeer),
       resolve: createProxyingResolver(({peerID}, _, {loaders}) => loaders.peer.load(peerID))
@@ -276,22 +276,22 @@ export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
       })
     },
     article: {type: new GraphQLNonNull(GraphQLArticle)}
-  }
+  })
 })
 
 export const GraphQLPeerArticleConnection = new GraphQLObjectType({
   name: 'PeerArticleConnection',
-  fields: {
+  fields: () => ({
     nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPeerArticle)))},
     pageInfo: {type: new GraphQLNonNull(GraphQLUnidirectionalPageInfo)},
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
-  }
+  })
 })
 
 export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
   new GraphQLObjectType<PublicArticle, Context>({
     name: 'Article',
-    fields: {
+    fields: () => ({
       id: {type: new GraphQLNonNull(GraphQLID)},
 
       updatedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -407,16 +407,16 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
           }
         )
       }
-    }
+    })
   })
 
 export const GraphQLPublicArticleConnection = new GraphQLObjectType({
   name: 'ArticleConnection',
-  fields: {
+  fields: () => ({
     nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicArticle)))},
     pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
-  }
+  })
 })
 
 export const GraphQLPublicArticleResolver = {

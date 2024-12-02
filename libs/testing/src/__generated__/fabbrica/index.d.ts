@@ -1132,6 +1132,14 @@ type MemberPlanimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutMemberPlanInput["create"]>;
 };
+type MemberPlansuccessPageFactory = {
+    _factoryFor: "Page";
+    build: () => PromiseLike<Prisma.PageCreateNestedOneWithoutMemberPlansSuccessInput["create"]>;
+};
+type MemberPlanfailPageFactory = {
+    _factoryFor: "Page";
+    build: () => PromiseLike<Prisma.PageCreateNestedOneWithoutMemberPlansFailInput["create"]>;
+};
 type MemberPlanFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -1143,12 +1151,15 @@ type MemberPlanFactoryDefineInput = {
     active?: boolean;
     currency?: Currency;
     amountPerMonthMin?: number;
+    amountPerMonthTarget?: number | null;
     extendable?: boolean;
     maxCount?: number | null;
     availablePaymentMethods?: Prisma.AvailablePaymentMethodCreateNestedManyWithoutMemberPlanInput;
     migrateToTargetPaymentMethod?: MemberPlanmigrateToTargetPaymentMethodFactory | Prisma.PaymentMethodCreateNestedOneWithoutMigrateFromPlansInput;
     image?: MemberPlanimageFactory | Prisma.ImageCreateNestedOneWithoutMemberPlanInput;
-    Subscription?: Prisma.SubscriptionCreateNestedManyWithoutMemberPlanInput;
+    successPage?: MemberPlansuccessPageFactory | Prisma.PageCreateNestedOneWithoutMemberPlansSuccessInput;
+    failPage?: MemberPlanfailPageFactory | Prisma.PageCreateNestedOneWithoutMemberPlansFailInput;
+    subscription?: Prisma.SubscriptionCreateNestedManyWithoutMemberPlanInput;
     subscriptionFlows?: Prisma.SubscriptionFlowCreateNestedManyWithoutMemberPlanInput;
 };
 type MemberPlanFactoryDefineOptions = {
@@ -1349,6 +1360,8 @@ type PageFactoryDefineInput = {
     draft?: PagedraftFactory | Prisma.PageRevisionCreateNestedOneWithoutDraftPageInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutPageInput;
     tags?: Prisma.TaggedPagesCreateNestedManyWithoutPageInput;
+    memberPlansSuccess?: Prisma.MemberPlanCreateNestedManyWithoutSuccessPageInput;
+    memberPlansFail?: Prisma.MemberPlanCreateNestedManyWithoutFailPageInput;
     banners?: Prisma.BannerCreateNestedManyWithoutShowOnPagesInput;
 };
 type PageFactoryDefineOptions = {
