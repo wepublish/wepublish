@@ -24,8 +24,6 @@ function DeactivatedSubscriptions() {
     <SubscriptionsWrapper>
       <SubscriptionListContainer
         filter={subscriptions => subscriptions.filter(subscription => subscription.deactivation)}
-        failureURL=""
-        successURL=""
       />
     </SubscriptionsWrapper>
   )
