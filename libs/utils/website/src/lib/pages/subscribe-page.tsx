@@ -54,8 +54,6 @@ export function SubscribePage(props: SubscribePageProps) {
       deactivateSubscriptionId={
         props.deactivateSubscriptionId ?? (deactivateSubscriptionId as string | undefined)
       }
-      failureURL=""
-      successURL=""
     />
   )
 }

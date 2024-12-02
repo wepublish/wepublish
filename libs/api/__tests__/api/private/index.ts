@@ -951,11 +951,14 @@ export type MemberPlan = {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
+  amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
   createdAt: Scalars['DateTime'];
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
+  failPage?: Maybe<Page>;
+  failPageId?: Maybe<Scalars['ID']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   maxCount?: Maybe<Scalars['Int']>;
@@ -963,6 +966,8 @@ export type MemberPlan = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['String'];
+  successPage?: Maybe<Page>;
+  successPageId?: Maybe<Scalars['ID']>;
   tags?: Maybe<Array<Scalars['String']>>;
 };
 
@@ -982,15 +987,18 @@ export type MemberPlanFilter = {
 export type MemberPlanInput = {
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
+  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
   currency: Currency;
   description?: InputMaybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
+  failPageId?: InputMaybe<Scalars['ID']>;
   imageID?: InputMaybe<Scalars['ID']>;
   maxCount?: InputMaybe<Scalars['Int']>;
   migrateToTargetPaymentMethodID?: InputMaybe<Scalars['ID']>;
   name: Scalars['String'];
   slug: Scalars['String'];
+  successPageId?: InputMaybe<Scalars['ID']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
 };
 

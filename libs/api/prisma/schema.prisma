@@ -510,6 +510,7 @@ model MemberPlan {
   active                         Boolean
   currency                       Currency
   amountPerMonthMin              Float
+  amountPerMonthTarget           Float?
   availablePaymentMethods        AvailablePaymentMethod[]
   migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?
@@ -519,8 +520,13 @@ model MemberPlan {
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
 
-  Subscription Subscription[]
+  successPageId String?
+  successPage   Page?   @relation("successPage", fields: [successPageId], references: [id])
 
+  failPageId String?
+  failPage   Page?   @relation("failPage", fields: [failPageId], references: [id])
+
+  subscription      Subscription[]
   subscriptionFlows SubscriptionFlow[]
 
   @@index([name])
@@ -608,8 +614,10 @@ model Page {
   draftId String?       @unique
   draft   PageRevision? @relation("draftPageRevision", fields: [draftId], references: [id], onDelete: SetNull)
 
-  navigations NavigationLink[]
-  tags        TaggedPages[]
+  navigations        NavigationLink[]
+  tags               TaggedPages[]
+  memberPlansSuccess MemberPlan[]     @relation("successPage")
+  memberPlansFail    MemberPlan[]     @relation("failPage")
 
   banners Banner[]
 

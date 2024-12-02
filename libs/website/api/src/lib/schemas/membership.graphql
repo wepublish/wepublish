@@ -29,11 +29,19 @@ fragment FullMemberPlan on MemberPlan {
   }
 
   amountPerMonthMin
+  amountPerMonthTarget
   currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
   }
   extendable
+
+  successPage {
+    url
+  }
+  failPage {
+    url
+  }
 }
 
 fragment FullPayment on Payment {
@@ -249,13 +257,6 @@ query Revenue($start: DateTime!, $end: DateTime) {
 
 query NewSubscribers($start: DateTime!, $end: DateTime) {
   newSubscribers(start: $start, end: $end) {
-    monthlyAmount
-    memberPlan
-  }
-}
-
-query ActiveSubscribers {
-  activeSubscribers {
     monthlyAmount
     memberPlan
   }

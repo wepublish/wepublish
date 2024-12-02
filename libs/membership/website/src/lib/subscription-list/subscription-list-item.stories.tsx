@@ -33,7 +33,7 @@ const clickPay: StoryObj['play'] = async ({canvasElement, step}) => {
 const clickCancel: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const button = canvas.getByText('Abo Künden', {
+  const button = canvas.getByText('Abo kündigen', {
     selector: 'button'
   })
 
@@ -46,7 +46,7 @@ const clickCancel: StoryObj['play'] = async ({canvasElement, step}) => {
   const body = canvasElement.ownerDocument.body
   const modal = within(body)
 
-  const modalButton = modal.getByText('Abo Künden', {
+  const modalButton = modal.getByText('Abo kündigen', {
     selector: '[role="presentation"] button'
   })
 

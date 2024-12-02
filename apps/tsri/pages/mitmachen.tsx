@@ -32,7 +32,6 @@ export default function Mitmachen() {
   return (
     <MitmachenPage slug={'mitmachen'}>
       <SubscribePage
-        extraMoneyOffset={() => 700}
         fields={['firstName']}
         filter={plans => plans.filter(plan => plan.tags?.some(tag => tag === 'selling'))}
       />

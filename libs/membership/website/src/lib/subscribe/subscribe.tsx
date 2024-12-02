@@ -10,7 +10,7 @@ import {
 } from '@wepublish/authentication/website'
 import {
   Currency,
-  MemberPlan,
+  FullMemberPlanFragment,
   PaymentPeriodicity,
   RegisterMutationVariables,
   SubscribeMutationVariables,
@@ -141,11 +141,8 @@ export const getPaymentText = (
         locale
       )}`
 
-const extraMoneyOffsetDefault = () => 0
-
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
-  extraMoneyOffset = extraMoneyOffsetDefault,
   memberPlans,
   challenge,
   userSubscriptions,
@@ -231,7 +228,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const sortedMemberPlans = useMemo(
     () =>
       sortBy(
-        (memberPlan: MemberPlan) => memberPlan.amountPerMonthMin,
+        (memberPlan: FullMemberPlanFragment) => memberPlan.amountPerMonthMin,
         memberPlans.data?.memberPlans.nodes ?? []
       ),
     [memberPlans.data?.memberPlans.nodes]
@@ -314,10 +311,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     if (selectedMemberPlan) {
       setValue<'monthlyAmount'>(
         'monthlyAmount',
-        selectedMemberPlan.amountPerMonthMin + extraMoneyOffset(selectedMemberPlan)
+        selectedMemberPlan.amountPerMonthTarget || selectedMemberPlan.amountPerMonthMin
       )
     }
-  }, [selectedMemberPlan, extraMoneyOffset, setValue])
+  }, [selectedMemberPlan, setValue])
 
   useEffect(() => {
     if (challenge.data?.challenge.challengeID) {

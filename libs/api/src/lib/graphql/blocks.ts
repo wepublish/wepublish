@@ -105,13 +105,13 @@ const resolveBlockStyleIdToName = async <TBlockStyle extends {blockStyle?: strin
 
 export const GraphQLRichTextBlock = new GraphQLObjectType<RichTextBlock>({
   name: 'RichTextBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     richText: {type: new GraphQLNonNull(GraphQLRichText)}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.RichText
   })
@@ -144,6 +144,7 @@ export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context
   }),
   isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Article)
 })
+
 export const GraphQLPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser, Context>({
   name: 'PeerArticleTeaser',
   fields: () => ({
@@ -283,14 +284,14 @@ export const GraphQLTeaser = new GraphQLUnionType({
 
 export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Context>({
   name: 'TeaserGridBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     teasers: {type: new GraphQLNonNull(new GraphQLList(GraphQLTeaser))},
     numColumns: {type: new GraphQLNonNull(GraphQLInt)}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TeaserGrid
   })
@@ -298,45 +299,45 @@ export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Con
 
 export const GraphQLFlexGridAlignment = new GraphQLObjectType<FlexAlignment, Context>({
   name: 'FlexAlignment',
-  fields: {
+  fields: () => ({
     i: {type: new GraphQLNonNull(GraphQLString)},
     x: {type: new GraphQLNonNull(GraphQLInt)},
     y: {type: new GraphQLNonNull(GraphQLInt)},
     w: {type: new GraphQLNonNull(GraphQLInt)},
     h: {type: new GraphQLNonNull(GraphQLInt)},
     static: {type: new GraphQLNonNull(GraphQLBoolean)}
-  }
+  })
 })
 
 export const GraphQLFlexGridAlignmentInput = new GraphQLInputObjectType({
   name: 'FlexAlignmentInput',
-  fields: {
+  fields: () => ({
     i: {type: new GraphQLNonNull(GraphQLString)},
     x: {type: new GraphQLNonNull(GraphQLInt)},
     y: {type: new GraphQLNonNull(GraphQLInt)},
     w: {type: new GraphQLNonNull(GraphQLInt)},
     h: {type: new GraphQLNonNull(GraphQLInt)},
     static: {type: new GraphQLNonNull(GraphQLBoolean)}
-  }
+  })
 })
 
 export const GraphQLFlexTeaser = new GraphQLObjectType<FlexTeaser, Context>({
   name: 'FlexTeaser',
-  fields: {
+  fields: () => ({
     alignment: {type: new GraphQLNonNull(GraphQLFlexGridAlignment)},
     teaser: {type: GraphQLTeaser}
-  }
+  })
 })
 
 export const GraphQLTeaserGridFlexBlock = new GraphQLObjectType<TeaserGridFlexBlock, Context>({
   name: 'TeaserGridFlexBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     flexTeasers: {type: new GraphQLNonNull(new GraphQLList(GraphQLFlexTeaser))}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TeaserGridFlex
   })
@@ -543,7 +544,7 @@ export const GraphQLTeaserListBlockFilter = new GraphQLObjectType<
   Context
 >({
   name: 'TeaserListBlockFilter',
-  fields: {
+  fields: () => ({
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
     tagObjects: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
@@ -559,14 +560,14 @@ export const GraphQLTeaserListBlockFilter = new GraphQLObjectType<
         return tagObjs
       })
     }
-  }
+  })
 })
 
 export const GraphQLTeaserListBlockFilterInput = new GraphQLInputObjectType({
   name: 'TeaserListBlockFilterInput',
-  fields: {
+  fields: () => ({
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
-  }
+  })
 })
 
 export const GraphQLTeaserListBlockSort = new GraphQLEnumType({
@@ -579,7 +580,7 @@ export const GraphQLTeaserListBlockSort = new GraphQLEnumType({
 
 export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Context>({
   name: 'TeaserListBlock',
-  fields: {
+  fields: () => ({
     title: {type: GraphQLString},
     blockStyle: {
       type: GraphQLString,
@@ -696,7 +697,7 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
         }
       )
     }
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TeaserList
   })
@@ -704,7 +705,7 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
 
 export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Context>({
   name: 'TeaserListBlock',
-  fields: {
+  fields: () => ({
     title: {type: GraphQLString},
     blockStyle: {
       type: GraphQLString,
@@ -823,7 +824,7 @@ export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBloc
         }
       )
     }
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TeaserList
   })
@@ -831,7 +832,7 @@ export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBloc
 
 export const GraphQLTeaserListBlockInput = new GraphQLInputObjectType({
   name: 'TeaserListBlockInput',
-  fields: {
+  fields: () => ({
     title: {type: GraphQLString},
     blockStyle: {type: GraphQLString},
     teaserType: {
@@ -841,19 +842,19 @@ export const GraphQLTeaserListBlockInput = new GraphQLInputObjectType({
     take: {type: GraphQLInt},
     skip: {type: GraphQLInt},
     sort: {type: GraphQLTeaserListBlockSort}
-  }
+  })
 })
 
 export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Context>({
   name: 'TeaserGridBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     teasers: {type: new GraphQLNonNull(new GraphQLList(GraphQLPublicTeaser))},
     numColumns: {type: new GraphQLNonNull(GraphQLInt)}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TeaserGrid
   })
@@ -861,26 +862,26 @@ export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBloc
 
 export const GraphQLPublicFlexAlignment = new GraphQLObjectType<FlexAlignment, Context>({
   name: 'FlexAlignment',
-  fields: {
+  fields: () => ({
     x: {type: new GraphQLNonNull(GraphQLInt)},
     y: {type: new GraphQLNonNull(GraphQLInt)},
     w: {type: new GraphQLNonNull(GraphQLInt)},
     h: {type: new GraphQLNonNull(GraphQLInt)}
-  }
+  })
 })
 
 export const GraphQLPublicFlexTeaser = new GraphQLObjectType<FlexTeaser, Context>({
   name: 'FlexTeaser',
-  fields: {
+  fields: () => ({
     alignment: {type: new GraphQLNonNull(GraphQLPublicFlexAlignment)},
     teaser: {type: GraphQLPublicTeaser}
-  }
+  })
 })
 
 export const GraphQLPublicTeaserGridFlexBlock = new GraphQLObjectType<TeaserGridFlexBlock, Context>(
   {
     name: 'TeaserGridFlexBlock',
-    fields: {
+    fields: () => ({
       blockStyle: {
         type: GraphQLString,
         resolve: resolveBlockStyleIdToName
@@ -888,7 +889,7 @@ export const GraphQLPublicTeaserGridFlexBlock = new GraphQLObjectType<TeaserGrid
       flexTeasers: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicFlexTeaser)))
       }
-    },
+    }),
     isTypeOf: createProxyingIsTypeOf(value => {
       return value.type === BlockType.TeaserGridFlex
     })
@@ -897,7 +898,7 @@ export const GraphQLPublicTeaserGridFlexBlock = new GraphQLObjectType<TeaserGrid
 
 export const GraphQLGalleryImageEdge = new GraphQLObjectType<ImageCaptionEdge, Context>({
   name: 'GalleryImageEdge',
-  fields: {
+  fields: () => ({
     caption: {type: GraphQLString},
     image: {
       type: GraphQLImage,
@@ -905,12 +906,12 @@ export const GraphQLGalleryImageEdge = new GraphQLObjectType<ImageCaptionEdge, C
         return imageID ? loaders.images.load(imageID) : null
       })
     }
-  }
+  })
 })
 
 export const GraphQLImageBlock = new GraphQLObjectType<ImageBlock, Context>({
   name: 'ImageBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -924,7 +925,7 @@ export const GraphQLImageBlock = new GraphQLObjectType<ImageBlock, Context>({
 
     caption: {type: GraphQLString},
     linkUrl: {type: GraphQLString}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Image
   })
@@ -932,7 +933,7 @@ export const GraphQLImageBlock = new GraphQLObjectType<ImageBlock, Context>({
 
 export const GraphQLImageGalleryBlock = new GraphQLObjectType<ImageGalleryBlock, Context>({
   name: 'ImageGalleryBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -940,7 +941,7 @@ export const GraphQLImageGalleryBlock = new GraphQLObjectType<ImageGalleryBlock,
     images: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLGalleryImageEdge)))
     }
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.ImageGallery
   })
@@ -948,14 +949,14 @@ export const GraphQLImageGalleryBlock = new GraphQLObjectType<ImageGalleryBlock,
 
 export const GraphQLFacebookPostBlock = new GraphQLObjectType<FacebookPostBlock, Context>({
   name: 'FacebookPostBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     userID: {type: new GraphQLNonNull(GraphQLString)},
     postID: {type: new GraphQLNonNull(GraphQLString)}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.FacebookPost
   })
@@ -963,14 +964,14 @@ export const GraphQLFacebookPostBlock = new GraphQLObjectType<FacebookPostBlock,
 
 export const GraphQLFacebookVideoBlock = new GraphQLObjectType<FacebookVideoBlock, Context>({
   name: 'FacebookVideoBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     userID: {type: new GraphQLNonNull(GraphQLString)},
     videoID: {type: new GraphQLNonNull(GraphQLString)}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.FacebookVideo
   })
@@ -978,13 +979,13 @@ export const GraphQLFacebookVideoBlock = new GraphQLObjectType<FacebookVideoBloc
 
 export const GraphQLInstagramPostBlock = new GraphQLObjectType<InstagramPostBlock, Context>({
   name: 'InstagramPostBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     postID: {type: new GraphQLNonNull(GraphQLString)}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.InstagramPost
   })
@@ -992,14 +993,14 @@ export const GraphQLInstagramPostBlock = new GraphQLObjectType<InstagramPostBloc
 
 export const GraphQLTwitterTweetBlock = new GraphQLObjectType<TwitterTweetBlock, Context>({
   name: 'TwitterTweetBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     userID: {type: new GraphQLNonNull(GraphQLString)},
     tweetID: {type: new GraphQLNonNull(GraphQLString)}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TwitterTweet
   })
@@ -1007,13 +1008,13 @@ export const GraphQLTwitterTweetBlock = new GraphQLObjectType<TwitterTweetBlock,
 
 export const GraphQLVimeoVideoBlock = new GraphQLObjectType<VimeoVideoBlock, Context>({
   name: 'VimeoVideoBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     videoID: {type: new GraphQLNonNull(GraphQLString)}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.VimeoVideo
   })
@@ -1021,13 +1022,13 @@ export const GraphQLVimeoVideoBlock = new GraphQLObjectType<VimeoVideoBlock, Con
 
 export const GraphQLYouTubeVideoBlock = new GraphQLObjectType<YouTubeVideoBlock, Context>({
   name: 'YouTubeVideoBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     videoID: {type: new GraphQLNonNull(GraphQLString)}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.YouTubeVideo
   })
@@ -1035,13 +1036,13 @@ export const GraphQLYouTubeVideoBlock = new GraphQLObjectType<YouTubeVideoBlock,
 
 export const GraphQLSoundCloudTrackBlock = new GraphQLObjectType<SoundCloudTrackBlock, Context>({
   name: 'SoundCloudTrackBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     trackID: {type: new GraphQLNonNull(GraphQLString)}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.SoundCloudTrack
   })
@@ -1050,13 +1051,13 @@ export const GraphQLSoundCloudTrackBlock = new GraphQLObjectType<SoundCloudTrack
 export const GraphQLPolisConversationBlock = new GraphQLObjectType<PolisConversationBlock, Context>(
   {
     name: 'PolisConversationBlock',
-    fields: {
+    fields: () => ({
       blockStyle: {
         type: GraphQLString,
         resolve: resolveBlockStyleIdToName
       },
       conversationID: {type: new GraphQLNonNull(GraphQLString)}
-    },
+    }),
     isTypeOf: createProxyingIsTypeOf(value => {
       return value.type === BlockType.PolisConversation
     })
@@ -1065,14 +1066,14 @@ export const GraphQLPolisConversationBlock = new GraphQLObjectType<PolisConversa
 
 export const GraphQLTikTokVideoBlock = new GraphQLObjectType<TikTokVideoBlock, Context>({
   name: 'TikTokVideoBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     videoID: {type: new GraphQLNonNull(GraphQLString)},
     userID: {type: new GraphQLNonNull(GraphQLString)}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TikTokVideo
   })
@@ -1080,13 +1081,13 @@ export const GraphQLTikTokVideoBlock = new GraphQLObjectType<TikTokVideoBlock, C
 
 export const GraphQLBildwurfAdBlock = new GraphQLObjectType<BildwurfAdBlock, Context>({
   name: 'BildwurfAdBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     zoneID: {type: new GraphQLNonNull(GraphQLString)}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.BildwurfAd
   })
@@ -1094,13 +1095,13 @@ export const GraphQLBildwurfAdBlock = new GraphQLObjectType<BildwurfAdBlock, Con
 
 export const GraphQLHTMLBlock = new GraphQLObjectType<HTMLBlock, Context>({
   name: 'HTMLBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     html: {type: GraphQLString}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.HTML
   })
@@ -1108,7 +1109,7 @@ export const GraphQLHTMLBlock = new GraphQLObjectType<HTMLBlock, Context>({
 
 export const GraphQLPollBlock = new GraphQLObjectType<PollBlock, Context>({
   name: 'PollBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -1117,7 +1118,7 @@ export const GraphQLPollBlock = new GraphQLObjectType<PollBlock, Context>({
       type: GraphQLFullPoll,
       resolve: ({pollId}, _, {loaders: {pollById}}) => pollById.load(pollId)
     }
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Poll
   })
@@ -1125,15 +1126,15 @@ export const GraphQLPollBlock = new GraphQLObjectType<PollBlock, Context>({
 
 export const GraphQLEventBlockFilter = new GraphQLObjectType({
   name: 'EventBlockFilter',
-  fields: {
+  fields: () => ({
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
     events: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
-  }
+  })
 })
 
 export const GraphQLEventBlock = new GraphQLObjectType<EventBlock, Context>({
   name: 'EventBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -1165,7 +1166,7 @@ export const GraphQLEventBlock = new GraphQLObjectType<EventBlock, Context>({
           })
         ).map(event => ({__typename: 'Event', id: event.id}))
     }
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Event
   })
@@ -1173,16 +1174,16 @@ export const GraphQLEventBlock = new GraphQLObjectType<EventBlock, Context>({
 
 export const GraphQLCommentBlockFilter = new GraphQLObjectType({
   name: 'CommentBlockFilter',
-  fields: {
+  fields: () => ({
     item: {type: GraphQLID},
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
     comments: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
-  }
+  })
 })
 
 export const GraphQLCommentBlock = new GraphQLObjectType<CommentBlock, Context>({
   name: 'CommentBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -1216,7 +1217,7 @@ export const GraphQLCommentBlock = new GraphQLObjectType<CommentBlock, Context>(
           }
         })
     }
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Comment
   })
@@ -1224,7 +1225,7 @@ export const GraphQLCommentBlock = new GraphQLObjectType<CommentBlock, Context>(
 
 export const GraphQLPublicCommentBlock = new GraphQLObjectType<CommentBlock, Context>({
   name: 'CommentBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -1264,7 +1265,7 @@ export const GraphQLPublicCommentBlock = new GraphQLObjectType<CommentBlock, Con
         }))
       }
     }
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Comment
   })
@@ -1272,7 +1273,7 @@ export const GraphQLPublicCommentBlock = new GraphQLObjectType<CommentBlock, Con
 
 export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
   name: 'EmbedBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -1283,7 +1284,7 @@ export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
     height: {type: GraphQLInt},
     styleCustom: {type: GraphQLString},
     sandbox: {type: GraphQLString}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Embed
   })
@@ -1291,7 +1292,7 @@ export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
 
 export const GraphQLListicleItem = new GraphQLObjectType<ListicleItem, Context>({
   name: 'ListicleItem',
-  fields: {
+  fields: () => ({
     title: {type: new GraphQLNonNull(GraphQLString)},
     image: {
       type: GraphQLImage,
@@ -1300,18 +1301,18 @@ export const GraphQLListicleItem = new GraphQLObjectType<ListicleItem, Context>(
       })
     },
     richText: {type: new GraphQLNonNull(GraphQLRichText)}
-  }
+  })
 })
 
 export const GraphQLListicleBlock = new GraphQLObjectType<ListicleBlock, Context>({
   name: 'ListicleBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLListicleItem)))}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Listicle
   })
@@ -1319,7 +1320,7 @@ export const GraphQLListicleBlock = new GraphQLObjectType<ListicleBlock, Context
 
 export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBlock, Context>({
   name: 'LinkPageBreakBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -1339,7 +1340,7 @@ export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBloc
         return imageID ? loaders.images.load(imageID) : null
       })
     }
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.LinkPageBreak
   })
@@ -1347,14 +1348,14 @@ export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBloc
 
 export const GraphQLTitleBlock = new GraphQLObjectType<TitleBlock, Context>({
   name: 'TitleBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
     },
     title: {type: GraphQLString},
     lead: {type: GraphQLString}
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Title
   })
@@ -1362,7 +1363,7 @@ export const GraphQLTitleBlock = new GraphQLObjectType<TitleBlock, Context>({
 
 export const GraphQLQuoteBlock = new GraphQLObjectType<QuoteBlock, Context>({
   name: 'QuoteBlock',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -1375,7 +1376,7 @@ export const GraphQLQuoteBlock = new GraphQLObjectType<QuoteBlock, Context>({
         return imageID ? loaders.images.load(imageID) : null
       })
     }
-  },
+  }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Quote
   })
@@ -1383,81 +1384,81 @@ export const GraphQLQuoteBlock = new GraphQLObjectType<QuoteBlock, Context>({
 
 export const GraphQLRichTextBlockInput = new GraphQLInputObjectType({
   name: 'RichTextBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {
       type: GraphQLString
     },
     richText: {
       type: new GraphQLNonNull(GraphQLRichText)
     }
-  }
+  })
 })
 
 export const GraphQLTitleBlockInput = new GraphQLInputObjectType({
   name: 'TitleBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     title: {type: GraphQLString},
     lead: {type: GraphQLString}
-  }
+  })
 })
 
 export const GraphQLImageBlockInput = new GraphQLInputObjectType({
   name: 'ImageBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     caption: {type: GraphQLString},
     linkUrl: {type: GraphQLString},
     imageID: {type: GraphQLID}
-  }
+  })
 })
 
 export const GraphQLGalleryImageEdgeInput = new GraphQLInputObjectType({
   name: 'GalleryImageEdgeInput',
-  fields: {
+  fields: () => ({
     caption: {type: GraphQLString},
     imageID: {type: GraphQLID}
-  }
+  })
 })
 
 export const GraphQLImageGalleryBlockInput = new GraphQLInputObjectType({
   name: 'ImageGalleryBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     images: {type: new GraphQLList(GraphQLGalleryImageEdgeInput)}
-  }
+  })
 })
 
 export const GraphQLListicleItemInput = new GraphQLInputObjectType({
   name: 'ListicleItemInput',
-  fields: {
+  fields: () => ({
     title: {type: new GraphQLNonNull(GraphQLString)},
     imageID: {type: GraphQLID},
     richText: {type: new GraphQLNonNull(GraphQLRichText)}
-  }
+  })
 })
 
 export const GraphQLListicleBlockInput = new GraphQLInputObjectType({
   name: 'ListicleBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     items: {type: new GraphQLList(GraphQLListicleItemInput)}
-  }
+  })
 })
 
 export const GraphQLQuoteBlockInput = new GraphQLInputObjectType({
   name: 'QuoteBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     quote: {type: GraphQLString},
     author: {type: GraphQLString},
     imageID: {type: GraphQLID}
-  }
+  })
 })
 
 export const GraphQLLinkPageBreakBlockInput = new GraphQLInputObjectType({
   name: 'LinkPageBreakBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     text: {type: GraphQLString},
     richText: {type: new GraphQLNonNull(GraphQLRichText)},
@@ -1481,96 +1482,96 @@ export const GraphQLLinkPageBreakBlockInput = new GraphQLInputObjectType({
       // deprecationReason: 'Use block styles instead of this'
     },
     imageID: {type: GraphQLID}
-  }
+  })
 })
 
 export const GraphQLFacebookPostBlockInput = new GraphQLInputObjectType({
   name: 'FacebookPostBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     userID: {type: new GraphQLNonNull(GraphQLString)},
     postID: {type: new GraphQLNonNull(GraphQLString)}
-  }
+  })
 })
 
 export const GraphQLFacebookVideoBlockInput = new GraphQLInputObjectType({
   name: 'FacebookVideoBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     userID: {type: new GraphQLNonNull(GraphQLString)},
     videoID: {type: new GraphQLNonNull(GraphQLString)}
-  }
+  })
 })
 
 export const GraphQLInstagramPostBlockInput = new GraphQLInputObjectType({
   name: 'InstagramPostBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     postID: {type: new GraphQLNonNull(GraphQLString)}
-  }
+  })
 })
 
 export const GraphQLTwitterTweetBlockInput = new GraphQLInputObjectType({
   name: 'TwitterTweetBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     userID: {type: new GraphQLNonNull(GraphQLString)},
     tweetID: {type: new GraphQLNonNull(GraphQLString)}
-  }
+  })
 })
 
 export const GraphQLVimeoVideoBlockInput = new GraphQLInputObjectType({
   name: 'VimeoVideoBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     videoID: {type: new GraphQLNonNull(GraphQLString)}
-  }
+  })
 })
 
 export const GraphQLYouTubeVideoBlockInput = new GraphQLInputObjectType({
   name: 'YouTubeVideoBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     videoID: {type: new GraphQLNonNull(GraphQLString)}
-  }
+  })
 })
 
 export const GraphQLSoundCloudTrackBlockInput = new GraphQLInputObjectType({
   name: 'SoundCloudTrackBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     trackID: {type: new GraphQLNonNull(GraphQLString)}
-  }
+  })
 })
 
 export const GraphQLPolisConversationBlockInput = new GraphQLInputObjectType({
   name: 'PolisConversationBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     conversationID: {type: new GraphQLNonNull(GraphQLString)}
-  }
+  })
 })
 
 export const GraphQLTikTokVideoBlockInput = new GraphQLInputObjectType({
   name: 'TikTokVideoBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     videoID: {type: new GraphQLNonNull(GraphQLString)},
     userID: {type: new GraphQLNonNull(GraphQLString)}
-  }
+  })
 })
 
 export const GraphQLBildwurfAdBlockInput = new GraphQLInputObjectType({
   name: 'BildwurfAdBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     zoneID: {type: new GraphQLNonNull(GraphQLString)}
-  }
+  })
 })
 
 export const GraphQLEmbedBlockInput = new GraphQLInputObjectType({
   name: 'EmbedBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     url: {type: GraphQLString},
     title: {type: GraphQLString},
@@ -1578,61 +1579,61 @@ export const GraphQLEmbedBlockInput = new GraphQLInputObjectType({
     height: {type: GraphQLInt},
     styleCustom: {type: GraphQLString},
     sandbox: {type: GraphQLString}
-  }
+  })
 })
 
 export const GraphQLHTMLBlockInput = new GraphQLInputObjectType({
   name: 'HTMLBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     html: {type: GraphQLString}
-  }
+  })
 })
 
 export const GraphQLPollBlockInput = new GraphQLInputObjectType({
   name: 'PollBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     pollId: {type: GraphQLID}
-  }
+  })
 })
 
 export const GraphQLEventBlockInputFilter = new GraphQLInputObjectType({
   name: 'EventBlockInputFilter',
-  fields: {
+  fields: () => ({
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
     events: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
-  }
+  })
 })
 
 export const GraphQLEventBlockInput = new GraphQLInputObjectType({
   name: 'EventBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     filter: {type: new GraphQLNonNull(GraphQLEventBlockInputFilter)}
-  }
+  })
 })
 
 export const GraphQLCommentBlockInputFilter = new GraphQLInputObjectType({
   name: 'CommentBlockInputFilter',
-  fields: {
+  fields: () => ({
     item: {type: GraphQLID},
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
     comments: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
-  }
+  })
 })
 
 export const GraphQLCommentBlockInput = new GraphQLInputObjectType({
   name: 'CommentBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     filter: {type: new GraphQLNonNull(GraphQLCommentBlockInputFilter)}
-  }
+  })
 })
 
 export const GraphQLArticleTeaserInput = new GraphQLInputObjectType({
   name: 'ArticleTeaserInput',
-  fields: {
+  fields: () => ({
     style: {
       type: GraphQLTeaserStyle
       // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
@@ -1643,12 +1644,12 @@ export const GraphQLArticleTeaserInput = new GraphQLInputObjectType({
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
     articleID: {type: new GraphQLNonNull(GraphQLID)}
-  }
+  })
 })
 
 export const GraphQLPeerArticleTeaserInput = new GraphQLInputObjectType({
   name: 'PeerArticleTeaserInput',
-  fields: {
+  fields: () => ({
     style: {
       type: GraphQLTeaserStyle
       // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
@@ -1660,12 +1661,12 @@ export const GraphQLPeerArticleTeaserInput = new GraphQLInputObjectType({
     lead: {type: GraphQLString},
     peerID: {type: new GraphQLNonNull(GraphQLID)},
     articleID: {type: new GraphQLNonNull(GraphQLID)}
-  }
+  })
 })
 
 export const GraphQLPageTeaserInput = new GraphQLInputObjectType({
   name: 'PageTeaserInput',
-  fields: {
+  fields: () => ({
     style: {
       type: GraphQLTeaserStyle
       // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
@@ -1676,12 +1677,12 @@ export const GraphQLPageTeaserInput = new GraphQLInputObjectType({
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
     pageID: {type: new GraphQLNonNull(GraphQLID)}
-  }
+  })
 })
 
 export const GraphQLEventTeaserInput = new GraphQLInputObjectType({
   name: 'EventTeaserInput',
-  fields: {
+  fields: () => ({
     style: {
       type: GraphQLTeaserStyle
       // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
@@ -1692,12 +1693,12 @@ export const GraphQLEventTeaserInput = new GraphQLInputObjectType({
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
     eventID: {type: new GraphQLNonNull(GraphQLID)}
-  }
+  })
 })
 
 export const GraphQLCustomTeaserInput = new GraphQLInputObjectType({
   name: 'CustomTeaserInput',
-  fields: {
+  fields: () => ({
     style: {
       type: GraphQLTeaserStyle
       // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
@@ -1711,7 +1712,7 @@ export const GraphQLCustomTeaserInput = new GraphQLInputObjectType({
     properties: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyInput)))
     }
-  }
+  })
 })
 
 export const GraphQLTeaserInput = new GraphQLInputObjectType({
@@ -1727,30 +1728,30 @@ export const GraphQLTeaserInput = new GraphQLInputObjectType({
 
 export const GraphQLTeaserGridBlockInput = new GraphQLInputObjectType({
   name: 'TeaserGridBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     teasers: {type: new GraphQLNonNull(new GraphQLList(GraphQLTeaserInput))},
     numColumns: {type: new GraphQLNonNull(GraphQLInt)}
-  }
+  })
 })
 
 export const GraphQLFlexTeaserInput = new GraphQLInputObjectType({
   name: 'FlexTeaserInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     teaser: {type: GraphQLTeaserInput},
     alignment: {type: new GraphQLNonNull(GraphQLFlexGridAlignmentInput)}
-  }
+  })
 })
 
 export const GraphQLTeaserGridFlexBlockInput = new GraphQLInputObjectType({
   name: 'TeaserGridFlexBlockInput',
-  fields: {
+  fields: () => ({
     blockStyle: {type: GraphQLString},
     flexTeasers: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLFlexTeaserInput)))
     }
-  }
+  })
 })
 
 export const GraphQLBlockInput = new GraphQLInputObjectType({

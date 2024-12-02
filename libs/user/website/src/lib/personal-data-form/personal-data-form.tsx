@@ -112,7 +112,8 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   const theme = useTheme()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
-  const callAction = useAsyncAction(setLoading, setError)
+  const [success, setSuccess] = useState(false)
+  const callAction = useAsyncAction(setLoading, setError, setSuccess)
   const [showPassword, togglePassword] = useReducer(state => !state, false)
   const [showRepeatPassword, toggleRepeatPassword] = useReducer(state => !state, false)
 
@@ -276,9 +277,10 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
       </PersonalDataInputForm>
 
       {error && <Alert severity="error">{error.message}</Alert>}
+      {success && <Alert severity="success">Änderungen erfolgreich gespeichert!</Alert>}
 
       <Button css={buttonStyles} disabled={loading} type="submit">
-        Save
+        Speichern
       </Button>
     </PersonalDataFormWrapper>
   )
