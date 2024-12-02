@@ -10,9 +10,6 @@ export default function Mitmachen() {
     query: {firstName, mail, lastName}
   } = useRouter()
 
-  const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
-  const thisLocation = typeof window !== 'undefined' ? location.href : ''
-
   return (
     <SubscribeContainer
       defaults={{
@@ -20,8 +17,6 @@ export default function Mitmachen() {
         firstName: firstName as string | undefined,
         name: lastName as string | undefined
       }}
-      successURL={`${locationOrigin}/profile/subscription`}
-      failureURL={thisLocation}
     />
   )
 }

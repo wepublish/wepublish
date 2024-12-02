@@ -698,7 +698,9 @@
       "slug": "Slug",
       "slugRequired": "Slug erforderlich",
       "tags": "Tags",
-      "savedChanges": "Gespeichert"
+      "savedChanges": "Gespeichert",
+      "successPage": "Weiterleitung zur Seite bei erfolgreicher Zahlung",
+      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler"
     },
     "memberPlanList": {
       "action": "Aktionen",

@@ -754,7 +754,9 @@
       "slug": "Slug",
       "slugRequired": "Slug required",
       "tags": "Tags",
-      "savedChanges": "Saved"
+      "savedChanges": "Saved",
+      "successPage": "Redirect to page on payment success",
+      "failPage": "Redirect to page on payment error"
     },
     "memberPlanList": {
       "action": "Actions",

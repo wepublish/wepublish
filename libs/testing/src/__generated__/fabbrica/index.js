@@ -366,7 +366,15 @@ const modelFieldDefinitions = [{
                 type: "Image",
                 relationName: "ImageToMemberPlan"
             }, {
-                name: "Subscription",
+                name: "successPage",
+                type: "Page",
+                relationName: "successPage"
+            }, {
+                name: "failPage",
+                type: "Page",
+                relationName: "failPage"
+            }, {
+                name: "subscription",
                 type: "Subscription",
                 relationName: "MemberPlanToSubscription"
             }, {
@@ -445,6 +453,14 @@ const modelFieldDefinitions = [{
                 name: "tags",
                 type: "TaggedPages",
                 relationName: "PageToTaggedPages"
+            }, {
+                name: "memberPlansSuccess",
+                type: "MemberPlan",
+                relationName: "successPage"
+            }, {
+                name: "memberPlansFail",
+                type: "MemberPlan",
+                relationName: "failPage"
             }, {
                 name: "banners",
                 type: "Banner",
@@ -2457,6 +2473,12 @@ function isMemberPlanmigrateToTargetPaymentMethodFactory(x) {
 function isMemberPlanimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
+function isMemberPlansuccessPageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
+function isMemberPlanfailPageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
 function autoGenerateMemberPlanScalarsOrEnums({ seq }) {
     return {
         name: getScalarFieldValueGenerator().String({ modelName: "MemberPlan", fieldName: "name", isId: false, isUnique: false, seq }),
@@ -2489,7 +2511,13 @@ function defineMemberPlanFactoryInternal({ defaultData: defaultDataResolver, tra
                 } : defaultData.migrateToTargetPaymentMethod,
                 image: isMemberPlanimageFactory(defaultData.image) ? {
                     create: yield defaultData.image.build()
-                } : defaultData.image
+                } : defaultData.image,
+                successPage: isMemberPlansuccessPageFactory(defaultData.successPage) ? {
+                    create: yield defaultData.successPage.build()
+                } : defaultData.successPage,
+                failPage: isMemberPlanfailPageFactory(defaultData.failPage) ? {
+                    create: yield defaultData.failPage.build()
+                } : defaultData.failPage
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;

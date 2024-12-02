@@ -19,6 +19,7 @@ import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLPageInfo} from './common'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
 import {AvailablePaymentMethod, Currency, PaymentPeriodicity} from '@prisma/client'
+import {GraphQLPage, GraphQLPublicPage} from './page'
 
 export const GraphQLSupportedCurrency = new GraphQLEnumType({
   name: 'Currency',
@@ -41,7 +42,7 @@ export const GraphQLPaymentPeriodicity = new GraphQLEnumType({
 export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaymentMethod, Context>(
   {
     name: 'AvailablePaymentMethod',
-    fields: {
+    fields: () => ({
       paymentMethods: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentMethod))),
         async resolve({paymentMethodIDs}, args, {prisma: {paymentMethod}}) {
@@ -63,7 +64,7 @@ export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaym
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentPeriodicity)))
       },
       forceAutoRenewal: {type: new GraphQLNonNull(GraphQLBoolean)}
-    }
+    })
   }
 )
 
@@ -72,7 +73,7 @@ export const GraphQLPublicAvailablePaymentMethod = new GraphQLObjectType<
   Context
 >({
   name: 'AvailablePaymentMethod',
-  fields: {
+  fields: () => ({
     paymentMethods: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicPaymentMethod))),
       async resolve({paymentMethodIDs}, args, {prisma: {paymentMethod}}) {
@@ -95,12 +96,12 @@ export const GraphQLPublicAvailablePaymentMethod = new GraphQLObjectType<
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentPeriodicity)))
     },
     forceAutoRenewal: {type: new GraphQLNonNull(GraphQLBoolean)}
-  }
+  })
 })
 
 export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
   name: 'MemberPlan',
-  fields: {
+  fields: () => ({
     id: {type: new GraphQLNonNull(GraphQLID)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -125,13 +126,27 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     availablePaymentMethods: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethod)))
     },
-    migrateToTargetPaymentMethodID: {type: GraphQLID}
-  }
+    migrateToTargetPaymentMethodID: {type: GraphQLID},
+    successPageId: {type: GraphQLID},
+    successPage: {
+      type: GraphQLPage,
+      resolve: createProxyingResolver(({successPageId}, args, {loaders}) => {
+        return successPageId ? loaders.pages.load(successPageId) : null
+      })
+    },
+    failPageId: {type: GraphQLID},
+    failPage: {
+      type: GraphQLPage,
+      resolve: createProxyingResolver(({failPageId}, args, {loaders}) => {
+        return failPageId ? loaders.pages.load(failPageId) : null
+      })
+    }
+  })
 })
 
 export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
   name: 'MemberPlan',
-  fields: {
+  fields: () => ({
     id: {type: new GraphQLNonNull(GraphQLID)},
 
     name: {type: new GraphQLNonNull(GraphQLString)},
@@ -153,17 +168,31 @@ export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context
       type: new GraphQLNonNull(
         new GraphQLList(new GraphQLNonNull(GraphQLPublicAvailablePaymentMethod))
       )
+    },
+    successPageId: {type: GraphQLID},
+    successPage: {
+      type: GraphQLPublicPage,
+      resolve: createProxyingResolver(({successPageId}, args, {loaders}) => {
+        return successPageId ? loaders.publicPagesByID.load(successPageId) : null
+      })
+    },
+    failPageId: {type: GraphQLID},
+    failPage: {
+      type: GraphQLPublicPage,
+      resolve: createProxyingResolver(({failPageId}, args, {loaders}) => {
+        return failPageId ? loaders.publicPagesByID.load(failPageId) : null
+      })
     }
-  }
+  })
 })
 
 export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
   name: 'MemberPlanFilter',
-  fields: {
+  fields: () => ({
     name: {type: GraphQLString},
     active: {type: GraphQLBoolean},
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
-  }
+  })
 })
 
 export const GraphQLMemberPlanSort = new GraphQLEnumType({
@@ -176,25 +205,25 @@ export const GraphQLMemberPlanSort = new GraphQLEnumType({
 
 export const GraphQLMemberPlanConnection = new GraphQLObjectType<any, Context>({
   name: 'MemberPlanConnection',
-  fields: {
+  fields: () => ({
     nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMemberPlan)))},
     pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
-  }
+  })
 })
 
 export const GraphQLPublicMemberPlanConnection = new GraphQLObjectType<any, Context>({
   name: 'MemberPlanConnection',
-  fields: {
+  fields: () => ({
     nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicMemberPlan)))},
     pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
-  }
+  })
 })
 
 export const GraphQLAvailablePaymentMethodInput = new GraphQLInputObjectType({
   name: 'AvailablePaymentMethodInput',
-  fields: {
+  fields: () => ({
     paymentMethodIDs: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))
     },
@@ -202,12 +231,12 @@ export const GraphQLAvailablePaymentMethodInput = new GraphQLInputObjectType({
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentPeriodicity)))
     },
     forceAutoRenewal: {type: new GraphQLNonNull(GraphQLBoolean)}
-  }
+  })
 })
 
 export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
   name: 'MemberPlanInput',
-  fields: {
+  fields: () => ({
     name: {type: new GraphQLNonNull(GraphQLString)},
     slug: {type: new GraphQLNonNull(GraphQLString)},
     imageID: {type: GraphQLID},
@@ -224,6 +253,8 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
         new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethodInput))
       )
     },
-    migrateToTargetPaymentMethodID: {type: GraphQLID}
-  }
+    migrateToTargetPaymentMethodID: {type: GraphQLID},
+    successPageId: {type: GraphQLID},
+    failPageId: {type: GraphQLID}
+  })
 })

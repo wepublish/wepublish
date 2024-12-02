@@ -30,9 +30,6 @@ export default function Mitmachen({donate}: MitmachenProps) {
     query: {firstName, mail, lastName}
   } = useRouter()
 
-  const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
-  const thisLocation = typeof window !== 'undefined' ? location.href : ''
-
   const {data: newSubscribers} = ApiV1.useNewSubscribersQuery({
     variables: {
       start: '2024-01-11T00:00:00.000Z',
@@ -83,8 +80,6 @@ export default function Mitmachen({donate}: MitmachenProps) {
             donate ? mb.tags?.includes('spende') : mb.tags?.includes('crowdfunding')
           )
         }
-        successURL={`${locationOrigin}/profile/subscription`}
-        failureURL={thisLocation}
         fields={['firstName']}
         termsOfServiceUrl="/agb"
         donate={() => !!donate}
