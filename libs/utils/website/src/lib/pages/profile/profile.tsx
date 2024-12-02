@@ -19,6 +19,7 @@ import {ComponentProps} from 'react'
 const SubscriptionsWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
+  justify-content: center;
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
