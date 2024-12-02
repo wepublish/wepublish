@@ -1048,6 +1048,7 @@ export type MutationCreateSubscriptionArgs = {
   paymentPeriodicity: PaymentPeriodicity
   subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>
   successURL?: InputMaybe<Scalars['String']>
+  userId?: InputMaybe<Scalars['ID']>
 }
 
 export type MutationCreateSubscriptionFlowArgs = {

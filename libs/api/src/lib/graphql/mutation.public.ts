@@ -438,6 +438,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     createSubscription: {
       type: new GraphQLNonNull(GraphQLPublicPayment),
       args: {
+        userId: {type: GraphQLID},
         memberPlanID: {type: GraphQLID},
         memberPlanSlug: {type: GraphQLSlug},
         autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
@@ -456,6 +457,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(
         root,
         {
+          userId,
           memberPlanID,
           memberPlanSlug,
           autoRenew,
@@ -471,7 +473,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {prisma, loaders, memberContext, createPaymentWithProvider, authenticateUser}
       ) {
         // authenticate user
-        const {user} = authenticateUser()
+        const getUserByUserId = async (userId: string) => ({
+          user: await prisma.user.findFirst({where: {id: userId}})
+        })
+        const {user} = userId ? await getUserByUserId(userId) : authenticateUser()
 
         await memberContext.validateInputParamsCreateSubscription(
           memberPlanID,
@@ -502,7 +507,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         // Check if subscription which should be deactivated exists
         let subscriptionToDeactivate: null | Subscription = null
-        if (deactivateSubscriptionId) {
+        if (deactivateSubscriptionId && !userId) {
           subscriptionToDeactivate = await prisma.subscription.findUnique({
             where: {
               id: deactivateSubscriptionId,

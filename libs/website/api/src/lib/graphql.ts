@@ -1038,6 +1038,7 @@ export type MutationCreateSubscriptionArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>;
   successURL?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['ID']>;
 };
 
 
@@ -2743,6 +2744,7 @@ export type FullInvoiceItemFragment = { __typename?: 'InvoiceItem', createdAt: s
 export type FullInvoiceFragment = { __typename?: 'Invoice', id: string, createdAt: string, modifiedAt: string, mail: string, paidAt?: string | null, dueAt: string, canceledAt?: string | null, subscriptionID: string, description?: string | null, total: number, subscription?: { __typename?: 'Subscription', id: string, url: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, extendable: boolean, paidUntil?: string | null, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: Node[] | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> }, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } | null, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> };
 
 export type SubscribeMutationVariables = Exact<{
+  userId?: InputMaybe<Scalars['ID']>;
   memberPlanId?: InputMaybe<Scalars['ID']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
   autoRenew: Scalars['Boolean'];
@@ -2758,6 +2760,23 @@ export type SubscribeMutationVariables = Exact<{
 
 
 export type SubscribeMutation = { __typename?: 'Mutation', createSubscription: { __typename?: 'Payment', id: string, intentSecret?: string | null, state: PaymentState, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } } };
+
+export type SubscribeForUserMutationVariables = Exact<{
+  memberPlanId?: InputMaybe<Scalars['ID']>;
+  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
+  autoRenew: Scalars['Boolean'];
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: Scalars['Int'];
+  paymentMethodId?: InputMaybe<Scalars['ID']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput> | PublicPropertiesInput>;
+  successURL?: InputMaybe<Scalars['String']>;
+  failureURL?: InputMaybe<Scalars['String']>;
+  deactivateSubscriptionId?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type SubscribeForUserMutation = { __typename?: 'Mutation', createSubscription: { __typename?: 'Payment', id: string, intentSecret?: string | null, state: PaymentState, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } } };
 
 export type PayInvoiceMutationVariables = Exact<{
   invoiceId: Scalars['ID'];
@@ -4508,8 +4527,9 @@ export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMuta
 export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
 export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
 export const SubscribeDocument = gql`
-    mutation Subscribe($memberPlanId: ID, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: ID, $paymentMethodSlug: Slug, $subscriptionProperties: [PublicPropertiesInput!], $successURL: String, $failureURL: String, $deactivateSubscriptionId: ID) {
+    mutation Subscribe($userId: ID, $memberPlanId: ID, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: ID, $paymentMethodSlug: Slug, $subscriptionProperties: [PublicPropertiesInput!], $successURL: String, $failureURL: String, $deactivateSubscriptionId: ID) {
   createSubscription(
+    userId: $userId
     memberPlanID: $memberPlanId
     memberPlanSlug: $memberPlanSlug
     autoRenew: $autoRenew
@@ -4541,6 +4561,7 @@ export type SubscribeMutationFn = Apollo.MutationFunction<SubscribeMutation, Sub
  * @example
  * const [subscribeMutation, { data, loading, error }] = useSubscribeMutation({
  *   variables: {
+ *      userId: // value for 'userId'
  *      memberPlanId: // value for 'memberPlanId'
  *      memberPlanSlug: // value for 'memberPlanSlug'
  *      autoRenew: // value for 'autoRenew'
@@ -4562,6 +4583,61 @@ export function useSubscribeMutation(baseOptions?: Apollo.MutationHookOptions<Su
 export type SubscribeMutationHookResult = ReturnType<typeof useSubscribeMutation>;
 export type SubscribeMutationResult = Apollo.MutationResult<SubscribeMutation>;
 export type SubscribeMutationOptions = Apollo.BaseMutationOptions<SubscribeMutation, SubscribeMutationVariables>;
+export const SubscribeForUserDocument = gql`
+    mutation SubscribeForUser($memberPlanId: ID, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: ID, $paymentMethodSlug: Slug, $subscriptionProperties: [PublicPropertiesInput!], $successURL: String, $failureURL: String, $deactivateSubscriptionId: ID) {
+  createSubscription(
+    memberPlanID: $memberPlanId
+    memberPlanSlug: $memberPlanSlug
+    autoRenew: $autoRenew
+    paymentPeriodicity: $paymentPeriodicity
+    monthlyAmount: $monthlyAmount
+    paymentMethodID: $paymentMethodId
+    paymentMethodSlug: $paymentMethodSlug
+    subscriptionProperties: $subscriptionProperties
+    successURL: $successURL
+    failureURL: $failureURL
+    deactivateSubscriptionId: $deactivateSubscriptionId
+  ) {
+    ...FullPayment
+  }
+}
+    ${FullPaymentFragmentDoc}`;
+export type SubscribeForUserMutationFn = Apollo.MutationFunction<SubscribeForUserMutation, SubscribeForUserMutationVariables>;
+
+/**
+ * __useSubscribeForUserMutation__
+ *
+ * To run a mutation, you first call `useSubscribeForUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubscribeForUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [subscribeForUserMutation, { data, loading, error }] = useSubscribeForUserMutation({
+ *   variables: {
+ *      memberPlanId: // value for 'memberPlanId'
+ *      memberPlanSlug: // value for 'memberPlanSlug'
+ *      autoRenew: // value for 'autoRenew'
+ *      paymentPeriodicity: // value for 'paymentPeriodicity'
+ *      monthlyAmount: // value for 'monthlyAmount'
+ *      paymentMethodId: // value for 'paymentMethodId'
+ *      paymentMethodSlug: // value for 'paymentMethodSlug'
+ *      subscriptionProperties: // value for 'subscriptionProperties'
+ *      successURL: // value for 'successURL'
+ *      failureURL: // value for 'failureURL'
+ *      deactivateSubscriptionId: // value for 'deactivateSubscriptionId'
+ *   },
+ * });
+ */
+export function useSubscribeForUserMutation(baseOptions?: Apollo.MutationHookOptions<SubscribeForUserMutation, SubscribeForUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SubscribeForUserMutation, SubscribeForUserMutationVariables>(SubscribeForUserDocument, options);
+      }
+export type SubscribeForUserMutationHookResult = ReturnType<typeof useSubscribeForUserMutation>;
+export type SubscribeForUserMutationResult = Apollo.MutationResult<SubscribeForUserMutation>;
+export type SubscribeForUserMutationOptions = Apollo.BaseMutationOptions<SubscribeForUserMutation, SubscribeForUserMutationVariables>;
 export const PayInvoiceDocument = gql`
     mutation PayInvoice($invoiceId: ID!, $paymentMethodId: ID, $paymentMethodSlug: Slug, $successURL: String, $failureURL: String) {
   createPaymentFromInvoice(

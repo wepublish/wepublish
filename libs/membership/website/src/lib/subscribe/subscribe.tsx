@@ -33,6 +33,7 @@ import {replace, sortBy, toLower} from 'ramda'
 import {MembershipModal} from '../membership-modal/membership-modal'
 import {ApolloError} from '@apollo/client'
 import {ApiAlert} from '@wepublish/errors/website'
+import {useRouter} from 'next/router'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
@@ -164,6 +165,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     PeriodicityPicker
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
+  const {query} = useRouter()
+  const userId = query.userId as string | undefined
   const [openConfirm, setOpenConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
@@ -177,6 +180,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       ),
     [fields]
   )
+  const hasUserContext = hasUser || !!userId
 
   /**
    * Done like this to avoid type errors due to z.ZodObject vs z.ZodEffect<z.ZodObject>.
@@ -200,7 +204,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const {control, handleSubmit, watch, setValue, resetField} = useForm<
     z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
   >({
-    resolver: zodResolver(hasUser ? loggedInSchema : loggedOutSchema),
+    resolver: zodResolver(hasUserContext ? loggedInSchema : loggedOutSchema),
     defaultValues: {
       ...defaults,
       monthlyAmount: 0,
@@ -276,6 +280,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const onSubmit = handleSubmit(data => {
     const subscribeData: SubscribeMutationVariables = {
+      userId,
       monthlyAmount,
       memberPlanId: data.memberPlanId,
       paymentMethodId: data.paymentMethodId,
@@ -283,7 +288,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       autoRenew: data.autoRenew
     }
 
-    if (hasUser) {
+    if (hasUserContext) {
       return callAction(onSubscribe)(subscribeData)
     }
 
@@ -459,7 +464,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           )}
         />
 
-        {!hasUser && <UserForm control={control} fields={fields} />}
+        {!hasUserContext && <UserForm control={control} fields={fields} />}
       </SubscribeSection>
 
       <SubscribeSection>
@@ -513,7 +518,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         </SubscribePayment>
       </SubscribeSection>
 
-      {!hasUser && (
+      {!hasUserContext && (
         <SubscribeSection>
           <H5 component="h2">Spam-Schutz</H5>
 
@@ -553,7 +558,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               setOpenConfirm(true)
             }
           }}>
-          {paymentText} {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
+          {paymentText} {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnierens'}
         </Button>
 
         {autoRenew && termsOfServiceUrl ? (
