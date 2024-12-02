@@ -1,17 +1,16 @@
 import {styled} from '@mui/material'
 import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
+import {SubscribePage} from '@wepublish/utils/website'
 import {
   ApiV1,
   AuthTokenStorageKey,
   PageContainer,
-  SubscribeContainer,
   SubscribeWrapper,
   UserFormWrapper
 } from '@wepublish/website'
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
-import {useRouter} from 'next/router'
 
 const MitmachenPage = styled(PageContainer)`
   ${SubscribeWrapper} {
@@ -30,18 +29,9 @@ const MitmachenPage = styled(PageContainer)`
 `
 
 export default function Mitmachen() {
-  const {
-    query: {firstName, mail, lastName}
-  } = useRouter()
-
   return (
     <MitmachenPage slug={'mitmachen'}>
-      <SubscribeContainer
-        defaults={{
-          email: mail as string | undefined,
-          firstName: firstName as string | undefined,
-          name: lastName as string | undefined
-        }}
+      <SubscribePage
         fields={['firstName']}
         filter={plans => plans.filter(plan => plan.tags?.some(tag => tag === 'selling'))}
       />

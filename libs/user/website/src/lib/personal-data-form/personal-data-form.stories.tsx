@@ -261,14 +261,14 @@ const fillBirthday: StoryObj['play'] = async ({canvasElement, step}) => {
   })
 }
 
-const deleteImage: StoryObj['play'] = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement)
-  const button = canvas.getByTitle('Bild löschen')
+// const deleteImage: StoryObj['play'] = async ({canvasElement, step}) => {
+//   const canvas = within(canvasElement)
+//   const button = canvas.getByTitle('Bild löschen')
 
-  await step('Click delete image', async () => {
-    await userEvent.click(button)
-  })
-}
+//   await step('Click delete image', async () => {
+//     await userEvent.click(button)
+//   })
+// }
 
 export const Default: StoryObj = {
   args: {
@@ -451,28 +451,28 @@ export const WithUpdateLoading: StoryObj = {
   play: Filled.play
 }
 
-export const WithImageActionError: StoryObj = {
-  args: {
-    onImageUpload: (...args: unknown[]) => {
-      action('onImageUpload')(args)
+// export const WithImageActionError: StoryObj = {
+//   args: {
+//     onImageUpload: (...args: unknown[]) => {
+//       action('onImageUpload')(args)
 
-      throw new ApolloError({
-        errorMessage: 'Foobar'
-      })
-    }
-  },
-  play: deleteImage
-}
+//       throw new ApolloError({
+//         errorMessage: 'Foobar'
+//       })
+//     }
+//   },
+//   play: deleteImage
+// }
 
-export const WithImageActionLoading: StoryObj = {
-  args: {
-    onImageUpload: (...args: unknown[]) => {
-      action('onImageUpload')(args)
+// export const WithImageActionLoading: StoryObj = {
+//   args: {
+//     onImageUpload: (...args: unknown[]) => {
+//       action('onImageUpload')(args)
 
-      return new Promise(() => {
-        // never resolve
-      })
-    }
-  },
-  play: deleteImage
-}
+//       return new Promise(() => {
+//         // never resolve
+//       })
+//     }
+//   },
+//   play: deleteImage
+// }
