@@ -17,7 +17,7 @@ import {
   SubscriptionDeactivationReason,
   SubscriptionsDocument
 } from '@wepublish/website/api'
-import {WithCancelError, WithExtendError, WithPayError} from './subscription-list-item.stories'
+import {WithCancelError, WithExtendError} from './subscription-list-item.stories'
 import {waitFor, within} from '@storybook/testing-library'
 import {InvoiceListContainer} from '../invoice-list/invoice-list-container'
 
@@ -246,16 +246,6 @@ export const WithFilter: StoryObj = {
   }
 }
 
-export const Pay: StoryObj = {
-  ...Unpaid,
-  play: async ctx => {
-    const canvas = within(ctx.canvasElement)
-    await waitFor(() => canvas.getByText('Jetzt Bezahlen'))
-
-    await WithPayError.play?.(ctx)
-  }
-}
-
 export const Extend: StoryObj = {
   ...Default,
   play: async ctx => {
@@ -288,7 +278,7 @@ export const Cancel: StoryObj = {
   ...Default,
   play: async ctx => {
     const canvas = within(ctx.canvasElement)
-    await waitFor(() => canvas.getByText('Abo Künden'))
+    await waitFor(() => canvas.getByText('Abo kündigen'))
 
     await WithCancelError.play?.(ctx)
   }

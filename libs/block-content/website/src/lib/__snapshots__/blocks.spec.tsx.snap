@@ -25,23 +25,20 @@ exports[`Blocks should render Default 1`] = `
       data-slate-node="value"
       style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
     >
-      <div>
-        <h2
-          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-2"
-          data-slate-node="element"
+      <h2
+        class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-2"
+        data-slate-node="element"
+      >
+        <span
+          data-slate-node="text"
         >
           <span
-            data-slate-node="text"
+            data-slate-string="true"
           >
-            <span
-              data-slate-string="true"
-            >
-              Title
-            </span>
+            Title
           </span>
-        </h2>
-        <hr />
-      </div>
+        </span>
+      </h2>
       <h3
         class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-3"
         data-slate-node="element"
@@ -716,7 +713,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
       />
-      <figcaption>
+      <figcaption
+        class="emotion-6 emotion-7"
+      >
         Caption 
       </figcaption>
     </div>
@@ -850,7 +849,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
               />
-              <figcaption>
+              <figcaption
+                class="emotion-12 emotion-13"
+              >
                 Caption 
               </figcaption>
             </div>
@@ -883,7 +884,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
               />
-              <figcaption>
+              <figcaption
+                class="emotion-12 emotion-13"
+              >
                 Caption 
               </figcaption>
             </div>
@@ -916,7 +919,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
               />
-              <figcaption>
+              <figcaption
+                class="emotion-12 emotion-13"
+              >
                 Caption 
               </figcaption>
             </div>
@@ -924,23 +929,23 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-24 emotion-25"
+        class="emotion-30 emotion-31"
       >
         <button
           aria-label="Slide 1"
-          class="emotion-26 emotion-27"
+          class="emotion-32 emotion-33"
         >
           <span
-            class="emotion-28 emotion-29"
+            class="emotion-34 emotion-35"
           />
         </button>
         <button
           aria-label="Slide 2"
-          class="emotion-26 emotion-27"
+          class="emotion-32 emotion-33"
         />
         <button
           aria-label="Slide 3"
-          class="emotion-26 emotion-27"
+          class="emotion-32 emotion-33"
         />
       </div>
     </div>
@@ -3657,23 +3662,20 @@ exports[`Blocks should render WithLayout 1`] = `
         data-slate-node="value"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
-        <div>
-          <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-9"
-            data-slate-node="element"
+        <h2
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-9"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
           >
             <span
-              data-slate-node="text"
+              data-slate-string="true"
             >
-              <span
-                data-slate-string="true"
-              >
-                Title
-              </span>
+              Title
             </span>
-          </h2>
-          <hr />
-        </div>
+          </span>
+        </h2>
         <h3
           class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-10"
           data-slate-node="element"
@@ -4348,25 +4350,27 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
         />
-        <figcaption>
+        <figcaption
+          class="emotion-69 emotion-70"
+        >
           Caption 
         </figcaption>
       </div>
     </figure>
     <figure
-      class="emotion-69 emotion-70"
+      class="emotion-71 emotion-72"
     >
       <ul
-        class="MuiImageList-root MuiImageList-standard emotion-71 emotion-72"
+        class="MuiImageList-root MuiImageList-standard emotion-73 emotion-74"
         style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
       >
         <li
-          class="MuiImageListItem-root MuiImageListItem-standard emotion-73"
+          class="MuiImageListItem-root MuiImageListItem-standard emotion-75"
           style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
         >
           <img
             alt="DSC07717"
-            class="emotion-74 emotion-28"
+            class="emotion-76 emotion-28"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4383,18 +4387,18 @@ https://unsplash.it/200/100 200w"
             title=""
           />
           <p
-            class="MuiTypography-root MuiTypography-body1 emotion-76"
+            class="MuiTypography-root MuiTypography-body1 emotion-78"
           >
             Caption
           </p>
         </li>
         <li
-          class="MuiImageListItem-root MuiImageListItem-standard emotion-73"
+          class="MuiImageListItem-root MuiImageListItem-standard emotion-75"
           style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
         >
           <img
             alt="DSC07717"
-            class="emotion-74 emotion-28"
+            class="emotion-76 emotion-28"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4411,18 +4415,18 @@ https://unsplash.it/200/100 200w"
             title=""
           />
           <p
-            class="MuiTypography-root MuiTypography-body1 emotion-76"
+            class="MuiTypography-root MuiTypography-body1 emotion-78"
           >
             Caption
           </p>
         </li>
         <li
-          class="MuiImageListItem-root MuiImageListItem-standard emotion-73"
+          class="MuiImageListItem-root MuiImageListItem-standard emotion-75"
           style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
         >
           <img
             alt="DSC07717"
-            class="emotion-74 emotion-28"
+            class="emotion-76 emotion-28"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4439,7 +4443,7 @@ https://unsplash.it/200/100 200w"
             title=""
           />
           <p
-            class="MuiTypography-root MuiTypography-body1 emotion-76"
+            class="MuiTypography-root MuiTypography-body1 emotion-78"
           >
             Caption
           </p>
@@ -4447,13 +4451,13 @@ https://unsplash.it/200/100 200w"
       </ul>
     </figure>
     <section
-      class="emotion-85 emotion-86"
+      class="emotion-87 emotion-88"
     >
       <div
-        class="emotion-87 emotion-88"
+        class="emotion-89 emotion-90"
       >
         <div
-          class="keen-slider emotion-89 emotion-90"
+          class="keen-slider emotion-91 emotion-92"
         >
           <div
             class="keen-slider__slide"
@@ -4482,7 +4486,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                   title=""
                 />
-                <figcaption>
+                <figcaption
+                  class="emotion-69 emotion-70"
+                >
                   Caption 
                 </figcaption>
               </div>
@@ -4515,7 +4521,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                   title=""
                 />
-                <figcaption>
+                <figcaption
+                  class="emotion-69 emotion-70"
+                >
                   Caption 
                 </figcaption>
               </div>
@@ -4548,7 +4556,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                   title=""
                 />
-                <figcaption>
+                <figcaption
+                  class="emotion-69 emotion-70"
+                >
                   Caption 
                 </figcaption>
               </div>
@@ -4556,46 +4566,46 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <div
-          class="emotion-109 emotion-110"
+          class="emotion-117 emotion-118"
         >
           <button
             aria-label="Slide 1"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           >
             <span
-              class="emotion-113 emotion-114"
+              class="emotion-121 emotion-122"
             />
           </button>
           <button
             aria-label="Slide 2"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 3"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           />
         </div>
       </div>
     </section>
     <div
-      class="emotion-119 emotion-120"
+      class="emotion-127 emotion-128"
     >
       <div
-        class="emotion-121 emotion-122"
+        class="emotion-129 emotion-130"
       >
         <div
-          class="emotion-123 emotion-124"
+          class="emotion-131 emotion-132"
         >
           1
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h3 emotion-125"
+          class="MuiTypography-root MuiTypography-h3 emotion-133"
         >
           Foobar
         </h3>
         <img
           alt="DSC07717"
-          class="emotion-74 emotion-28"
+          class="emotion-76 emotion-28"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4638,21 +4648,21 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-121 emotion-122"
+        class="emotion-129 emotion-130"
       >
         <div
-          class="emotion-123 emotion-124"
+          class="emotion-131 emotion-132"
         >
           2
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h3 emotion-125"
+          class="MuiTypography-root MuiTypography-h3 emotion-133"
         >
           Foobar
         </h3>
         <img
           alt="DSC07717"
-          class="emotion-74 emotion-28"
+          class="emotion-76 emotion-28"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4695,21 +4705,21 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-121 emotion-122"
+        class="emotion-129 emotion-130"
       >
         <div
-          class="emotion-123 emotion-124"
+          class="emotion-131 emotion-132"
         >
           3
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h3 emotion-125"
+          class="MuiTypography-root MuiTypography-h3 emotion-133"
         >
           Foobar
         </h3>
         <img
           alt="DSC07717"
-          class="emotion-74 emotion-28"
+          class="emotion-76 emotion-28"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4753,29 +4763,29 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <blockquote
-      class="emotion-151 emotion-152"
+      class="emotion-159 emotion-160"
     >
       <div
-        class="emotion-153 emotion-154"
+        class="emotion-161 emotion-162"
       >
         <p
-          class="MuiTypography-root MuiTypography-h4 emotion-155"
+          class="MuiTypography-root MuiTypography-h4 emotion-163"
         >
           Quote
         </p>
         <cite
-          class="MuiTypography-root MuiTypography-body1 emotion-76"
+          class="MuiTypography-root MuiTypography-body1 emotion-78"
         >
           By an Author
         </cite>
       </div>
     </blockquote>
     <div
-      class="emotion-157 emotion-158"
+      class="emotion-165 emotion-166"
     >
       <iframe
         allowfullscreen=""
-        class="emotion-159 emotion-160"
+        class="emotion-167 emotion-168"
         id="iFrameResizer1"
         scrolling="no"
         src="https://www.example.com"
@@ -4788,7 +4798,7 @@ https://unsplash.it/200/100 200w"
       src="https://media.online.bildwurf.ch/js/code.min.js"
     />
     <div
-      class="emotion-161 emotion-162"
+      class="emotion-169 emotion-170"
     >
       
             
@@ -4808,13 +4818,13 @@ https://unsplash.it/200/100 200w"
           
     </div>
     <div
-      class="emotion-163 emotion-164"
+      class="emotion-171 emotion-172"
     />
     <div
-      class="emotion-165 emotion-166"
+      class="emotion-173 emotion-174"
     >
       <div
-        class="emotion-167 emotion-168"
+        class="emotion-175 emotion-176"
         style="width: auto; height: auto;"
       >
         <div
@@ -4829,7 +4839,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-169 emotion-170"
+      class="emotion-177 emotion-178"
     >
       <blockquote
         class="instagram-media"
@@ -4844,13 +4854,13 @@ https://unsplash.it/200/100 200w"
       />
     </div>
     <div
-      class="emotion-171 emotion-172"
+      class="emotion-179 emotion-180"
     />
     <div
-      class="emotion-173 emotion-174"
+      class="emotion-181 emotion-182"
     >
       <div
-        class="emotion-175 emotion-176"
+        class="emotion-183 emotion-184"
         style="width: auto; height: auto;"
       >
         <iframe
@@ -4862,18 +4872,18 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-177 emotion-178"
+      class="emotion-185 emotion-186"
     >
       <iframe
         allow="encrypted-media;"
         allowfullscreen=""
-        class="emotion-179 emotion-180"
+        class="emotion-187 emotion-188"
         src="https://www.tiktok.com/embed/v2/6718335390845095173"
         title="Embedded TikTok Video"
       />
     </div>
     <div
-      class="emotion-181 emotion-182"
+      class="emotion-189 emotion-190"
       data-theme="dark"
     >
       <div>
@@ -4881,10 +4891,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-183 emotion-184"
+      class="emotion-191 emotion-192"
     >
       <div
-        class="emotion-185 emotion-186"
+        class="emotion-193 emotion-194"
         style="width: auto; height: auto;"
       >
         <div
@@ -4893,10 +4903,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-187 emotion-188"
+      class="emotion-195 emotion-196"
     >
       <div
-        class="emotion-189 emotion-190"
+        class="emotion-197 emotion-198"
         style="width: auto; height: auto;"
       >
         <div
@@ -4907,26 +4917,26 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-191 emotion-192"
+      class="emotion-199 emotion-200"
     >
       <article
-        class="emotion-193 emotion-194"
+        class="emotion-201 emotion-202"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4944,29 +4954,29 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-202 emotion-203"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-204 emotion-205"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             >
               <time
-                class="emotion-212 emotion-213"
+                class="emotion-220 emotion-221"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -4976,23 +4986,23 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-214 emotion-194"
+        class="emotion-222 emotion-202"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5010,23 +5020,23 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-223 emotion-224"
+              class="emotion-231 emotion-232"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Chur solidarisiert sich mit der Ukraine
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
             </p>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             >
               <time
-                class="emotion-212 emotion-213"
+                class="emotion-220 emotion-221"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -5036,23 +5046,23 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-233 emotion-194"
+        class="emotion-241 emotion-202"
         x="0"
         y="2"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5070,48 +5080,48 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-202 emotion-203"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-204 emotion-205"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
       <article
-        class="emotion-252 emotion-194"
+        class="emotion-260 emotion-202"
         x="0"
         y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5129,37 +5139,37 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-223 emotion-224"
+              class="emotion-231 emotion-232"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Home
             </h1>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
       <article
-        class="emotion-267 emotion-194"
+        class="emotion-275 emotion-202"
         x="0"
         y="4"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://google.com"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5177,52 +5187,52 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-202 emotion-203"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-204 emotion-205"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
     </div>
     <div
-      class="emotion-286 emotion-192"
+      class="emotion-294 emotion-200"
     >
       <article
-        class="emotion-288 emotion-194"
+        class="emotion-296 emotion-202"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5240,29 +5250,29 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-202 emotion-203"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-204 emotion-205"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             >
               <time
-                class="emotion-212 emotion-213"
+                class="emotion-220 emotion-221"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -5272,23 +5282,23 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-309 emotion-194"
+        class="emotion-317 emotion-202"
         x="4"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5306,23 +5316,23 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-223 emotion-224"
+              class="emotion-231 emotion-232"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Chur solidarisiert sich mit der Ukraine
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
             </p>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             >
               <time
-                class="emotion-212 emotion-213"
+                class="emotion-220 emotion-221"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -5332,23 +5342,23 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-328 emotion-194"
+        class="emotion-336 emotion-202"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5366,48 +5376,48 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-202 emotion-203"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-204 emotion-205"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
       <article
-        class="emotion-347 emotion-194"
+        class="emotion-355 emotion-202"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5425,37 +5435,37 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-223 emotion-224"
+              class="emotion-231 emotion-232"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Home
             </h1>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
       <article
-        class="emotion-362 emotion-194"
+        class="emotion-370 emotion-202"
         x="4"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://google.com"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5473,64 +5483,64 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-202 emotion-203"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-204 emotion-205"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
     </div>
     <section
-      class="emotion-85 emotion-86"
+      class="emotion-87 emotion-88"
     >
       <div
-        class="emotion-383 emotion-384"
+        class="emotion-391 emotion-392"
       />
       <div
-        class="emotion-87 emotion-88"
+        class="emotion-89 emotion-90"
       >
         <div
-          class="keen-slider emotion-89 emotion-90"
+          class="keen-slider emotion-91 emotion-92"
         >
           <div
             class="keen-slider__slide"
           >
             <article
-              class="emotion-288 emotion-194"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-196 emotion-197"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-198 emotion-199"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-200 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5548,29 +5558,29 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-202 emotion-203"
+                    class="emotion-210 emotion-211"
                   >
                     <div
-                      class="emotion-204 emotion-205"
+                      class="emotion-212 emotion-213"
                     >
                       Pre Title
                     </div>
                   </div>
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Title
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Lead
                   </p>
                   <div
-                    class="emotion-210 emotion-211"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-212 emotion-213"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -5584,23 +5594,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-288 emotion-194"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-196 emotion-197"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-198 emotion-199"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-200 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5618,23 +5628,23 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-223 emotion-224"
+                    class="emotion-231 emotion-232"
                   />
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Chur solidarisiert sich mit der Ukraine
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
                   </p>
                   <div
-                    class="emotion-210 emotion-211"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-212 emotion-213"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -5648,23 +5658,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-288 emotion-194"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
               >
                 <div
-                  class="emotion-196 emotion-197"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-198 emotion-199"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-200 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5682,26 +5692,26 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-202 emotion-203"
+                    class="emotion-210 emotion-211"
                   >
                     <div
-                      class="emotion-204 emotion-205"
+                      class="emotion-212 emotion-213"
                     >
                       Pre Title
                     </div>
                   </div>
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Title
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Lead
                   </p>
                   <div
-                    class="emotion-210 emotion-211"
+                    class="emotion-218 emotion-219"
                   />
                 </div>
               </a>
@@ -5711,23 +5721,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-288 emotion-194"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
               >
                 <div
-                  class="emotion-196 emotion-197"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-198 emotion-199"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-200 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5745,15 +5755,15 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-223 emotion-224"
+                    class="emotion-231 emotion-232"
                   />
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Home
                   </h1>
                   <div
-                    class="emotion-210 emotion-211"
+                    class="emotion-218 emotion-219"
                   />
                 </div>
               </a>
@@ -5763,23 +5773,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-288 emotion-194"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://google.com"
               >
                 <div
-                  class="emotion-196 emotion-197"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-198 emotion-199"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-200 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5797,26 +5807,26 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-202 emotion-203"
+                    class="emotion-210 emotion-211"
                   >
                     <div
-                      class="emotion-204 emotion-205"
+                      class="emotion-212 emotion-213"
                     >
                       Pre Title
                     </div>
                   </div>
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Title
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Lead
                   </p>
                   <div
-                    class="emotion-210 emotion-211"
+                    class="emotion-218 emotion-219"
                   />
                 </div>
               </a>
@@ -5824,59 +5834,59 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <div
-          class="emotion-109 emotion-110"
+          class="emotion-117 emotion-118"
         >
           <button
             aria-label="Slide 1"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           >
             <span
-              class="emotion-113 emotion-114"
+              class="emotion-121 emotion-122"
             />
           </button>
           <button
             aria-label="Slide 2"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 3"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 4"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 5"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           />
         </div>
       </div>
     </section>
     <section
-      class="emotion-496 emotion-497"
+      class="emotion-504 emotion-505"
     >
       <div
-        class="emotion-498 emotion-499"
+        class="emotion-506 emotion-507"
       >
         <article
-          class="emotion-288 emotion-194"
+          class="emotion-296 emotion-202"
           x="0"
           y="0"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
             href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
           >
             <div
-              class="emotion-196 emotion-197"
+              class="emotion-204 emotion-205"
             >
               <div
-                class="emotion-198 emotion-199"
+                class="emotion-206 emotion-207"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-200 emotion-28"
+                  class="emotion-208 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5894,29 +5904,29 @@ https://unsplash.it/200/100 200w"
                 />
               </div>
               <div
-                class="emotion-202 emotion-203"
+                class="emotion-210 emotion-211"
               >
                 <div
-                  class="emotion-204 emotion-205"
+                  class="emotion-212 emotion-213"
                 >
                   Pre Title
                 </div>
               </div>
               <h1
-                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
               >
                 Title
               </h1>
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
               >
                 Lead
               </p>
               <div
-                class="emotion-210 emotion-211"
+                class="emotion-218 emotion-219"
               >
                 <time
-                  class="emotion-212 emotion-213"
+                  class="emotion-220 emotion-221"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
                   01.01.2023 
@@ -5926,23 +5936,23 @@ https://unsplash.it/200/100 200w"
           </a>
         </article>
         <article
-          class="emotion-309 emotion-194"
+          class="emotion-317 emotion-202"
           x="4"
           y="0"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
             href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
           >
             <div
-              class="emotion-196 emotion-197"
+              class="emotion-204 emotion-205"
             >
               <div
-                class="emotion-198 emotion-199"
+                class="emotion-206 emotion-207"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-200 emotion-28"
+                  class="emotion-208 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5960,23 +5970,23 @@ https://unsplash.it/200/100 200w"
                 />
               </div>
               <div
-                class="emotion-223 emotion-224"
+                class="emotion-231 emotion-232"
               />
               <h1
-                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
               >
                 Chur solidarisiert sich mit der Ukraine
               </h1>
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
               <div
-                class="emotion-210 emotion-211"
+                class="emotion-218 emotion-219"
               >
                 <time
-                  class="emotion-212 emotion-213"
+                  class="emotion-220 emotion-221"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
                   01.01.2023 
@@ -5986,23 +5996,23 @@ https://unsplash.it/200/100 200w"
           </a>
         </article>
         <article
-          class="emotion-328 emotion-194"
+          class="emotion-336 emotion-202"
           x="8"
           y="0"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
             href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
           >
             <div
-              class="emotion-196 emotion-197"
+              class="emotion-204 emotion-205"
             >
               <div
-                class="emotion-198 emotion-199"
+                class="emotion-206 emotion-207"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-200 emotion-28"
+                  class="emotion-208 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6020,29 +6030,29 @@ https://unsplash.it/200/100 200w"
                 />
               </div>
               <div
-                class="emotion-202 emotion-203"
+                class="emotion-210 emotion-211"
               >
                 <div
-                  class="emotion-204 emotion-205"
+                  class="emotion-212 emotion-213"
                 >
                   Pre Title
                 </div>
               </div>
               <h1
-                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
               >
                 Title
               </h1>
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
               >
                 Lead
               </p>
               <div
-                class="emotion-210 emotion-211"
+                class="emotion-218 emotion-219"
               >
                 <time
-                  class="emotion-212 emotion-213"
+                  class="emotion-220 emotion-221"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
                   01.01.2023 
@@ -6052,23 +6062,23 @@ https://unsplash.it/200/100 200w"
           </a>
         </article>
         <article
-          class="emotion-347 emotion-194"
+          class="emotion-355 emotion-202"
           x="0"
           y="1"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
             href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
           >
             <div
-              class="emotion-196 emotion-197"
+              class="emotion-204 emotion-205"
             >
               <div
-                class="emotion-198 emotion-199"
+                class="emotion-206 emotion-207"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-200 emotion-28"
+                  class="emotion-208 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6086,23 +6096,23 @@ https://unsplash.it/200/100 200w"
                 />
               </div>
               <div
-                class="emotion-223 emotion-224"
+                class="emotion-231 emotion-232"
               />
               <h1
-                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
               >
                 Chur solidarisiert sich mit der Ukraine
               </h1>
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
               <div
-                class="emotion-210 emotion-211"
+                class="emotion-218 emotion-219"
               >
                 <time
-                  class="emotion-212 emotion-213"
+                  class="emotion-220 emotion-221"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
                   01.01.2023 
@@ -6112,23 +6122,23 @@ https://unsplash.it/200/100 200w"
           </a>
         </article>
         <article
-          class="emotion-362 emotion-194"
+          class="emotion-370 emotion-202"
           x="4"
           y="1"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
             href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
           >
             <div
-              class="emotion-196 emotion-197"
+              class="emotion-204 emotion-205"
             >
               <div
-                class="emotion-198 emotion-199"
+                class="emotion-206 emotion-207"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-200 emotion-28"
+                  class="emotion-208 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6146,29 +6156,29 @@ https://unsplash.it/200/100 200w"
                 />
               </div>
               <div
-                class="emotion-202 emotion-203"
+                class="emotion-210 emotion-211"
               >
                 <div
-                  class="emotion-204 emotion-205"
+                  class="emotion-212 emotion-213"
                 >
                   Pre Title
                 </div>
               </div>
               <h1
-                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
               >
                 Title
               </h1>
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
               >
                 Lead
               </p>
               <div
-                class="emotion-210 emotion-211"
+                class="emotion-218 emotion-219"
               >
                 <time
-                  class="emotion-212 emotion-213"
+                  class="emotion-220 emotion-221"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
                   01.01.2023 
@@ -6178,23 +6188,23 @@ https://unsplash.it/200/100 200w"
           </a>
         </article>
         <article
-          class="emotion-601 emotion-194"
+          class="emotion-609 emotion-202"
           x="8"
           y="1"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
             href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
           >
             <div
-              class="emotion-196 emotion-197"
+              class="emotion-204 emotion-205"
             >
               <div
-                class="emotion-198 emotion-199"
+                class="emotion-206 emotion-207"
               >
                 <img
                   alt="DSC07717"
-                  class="emotion-200 emotion-28"
+                  class="emotion-208 emotion-28"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6212,23 +6222,23 @@ https://unsplash.it/200/100 200w"
                 />
               </div>
               <div
-                class="emotion-223 emotion-224"
+                class="emotion-231 emotion-232"
               />
               <h1
-                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
               >
                 Chur solidarisiert sich mit der Ukraine
               </h1>
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
               <div
-                class="emotion-210 emotion-211"
+                class="emotion-218 emotion-219"
               >
                 <time
-                  class="emotion-212 emotion-213"
+                  class="emotion-220 emotion-221"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
                   01.01.2023 
@@ -6240,38 +6250,38 @@ https://unsplash.it/200/100 200w"
       </div>
     </section>
     <section
-      class="emotion-85 emotion-86"
+      class="emotion-87 emotion-88"
     >
       <div
-        class="emotion-383 emotion-384"
+        class="emotion-391 emotion-392"
       />
       <div
-        class="emotion-87 emotion-88"
+        class="emotion-89 emotion-90"
       >
         <div
-          class="keen-slider emotion-89 emotion-90"
+          class="keen-slider emotion-91 emotion-92"
         >
           <div
             class="keen-slider__slide"
           >
             <article
-              class="emotion-288 emotion-194"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-196 emotion-197"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-198 emotion-199"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-200 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6289,29 +6299,29 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-202 emotion-203"
+                    class="emotion-210 emotion-211"
                   >
                     <div
-                      class="emotion-204 emotion-205"
+                      class="emotion-212 emotion-213"
                     >
                       Pre Title
                     </div>
                   </div>
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Title
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Lead
                   </p>
                   <div
-                    class="emotion-210 emotion-211"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-212 emotion-213"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -6325,23 +6335,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-288 emotion-194"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-196 emotion-197"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-198 emotion-199"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-200 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6359,23 +6369,23 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-223 emotion-224"
+                    class="emotion-231 emotion-232"
                   />
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Chur solidarisiert sich mit der Ukraine
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
                   </p>
                   <div
-                    class="emotion-210 emotion-211"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-212 emotion-213"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -6389,23 +6399,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-288 emotion-194"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-196 emotion-197"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-198 emotion-199"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-200 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6423,29 +6433,29 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-202 emotion-203"
+                    class="emotion-210 emotion-211"
                   >
                     <div
-                      class="emotion-204 emotion-205"
+                      class="emotion-212 emotion-213"
                     >
                       Pre Title
                     </div>
                   </div>
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Title
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Lead
                   </p>
                   <div
-                    class="emotion-210 emotion-211"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-212 emotion-213"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -6459,23 +6469,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-288 emotion-194"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-196 emotion-197"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-198 emotion-199"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-200 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6493,23 +6503,23 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-223 emotion-224"
+                    class="emotion-231 emotion-232"
                   />
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Chur solidarisiert sich mit der Ukraine
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
                   </p>
                   <div
-                    class="emotion-210 emotion-211"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-212 emotion-213"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -6523,23 +6533,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-288 emotion-194"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-196 emotion-197"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-198 emotion-199"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-200 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6557,29 +6567,29 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-202 emotion-203"
+                    class="emotion-210 emotion-211"
                   >
                     <div
-                      class="emotion-204 emotion-205"
+                      class="emotion-212 emotion-213"
                     >
                       Pre Title
                     </div>
                   </div>
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Title
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Lead
                   </p>
                   <div
-                    class="emotion-210 emotion-211"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-212 emotion-213"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -6593,23 +6603,23 @@ https://unsplash.it/200/100 200w"
             class="keen-slider__slide"
           >
             <article
-              class="emotion-288 emotion-194"
+              class="emotion-296 emotion-202"
               x="0"
               y="0"
             >
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
                 href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
               >
                 <div
-                  class="emotion-196 emotion-197"
+                  class="emotion-204 emotion-205"
                 >
                   <div
-                    class="emotion-198 emotion-199"
+                    class="emotion-206 emotion-207"
                   >
                     <img
                       alt="DSC07717"
-                      class="emotion-200 emotion-28"
+                      class="emotion-208 emotion-28"
                       loading="lazy"
                       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6627,23 +6637,23 @@ https://unsplash.it/200/100 200w"
                     />
                   </div>
                   <div
-                    class="emotion-223 emotion-224"
+                    class="emotion-231 emotion-232"
                   />
                   <h1
-                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+                    class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
                   >
                     Chur solidarisiert sich mit der Ukraine
                   </h1>
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
                   >
                     Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
                   </p>
                   <div
-                    class="emotion-210 emotion-211"
+                    class="emotion-218 emotion-219"
                   >
                     <time
-                      class="emotion-212 emotion-213"
+                      class="emotion-220 emotion-221"
                       datetime="2023-01-01T00:00:00.000Z"
                     >
                       01.01.2023 
@@ -6655,60 +6665,60 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <div
-          class="emotion-109 emotion-110"
+          class="emotion-117 emotion-118"
         >
           <button
             aria-label="Slide 1"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           >
             <span
-              class="emotion-113 emotion-114"
+              class="emotion-121 emotion-122"
             />
           </button>
           <button
             aria-label="Slide 2"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 3"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 4"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 5"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           />
           <button
             aria-label="Slide 6"
-            class="emotion-111 emotion-112"
+            class="emotion-119 emotion-120"
           />
         </div>
       </div>
     </section>
     <div
-      class="emotion-764 emotion-765"
+      class="emotion-772 emotion-773"
     >
       <article
-        class="emotion-766 emotion-194"
+        class="emotion-774 emotion-202"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6726,29 +6736,29 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-202 emotion-203"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-204 emotion-205"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             >
               <time
-                class="emotion-212 emotion-213"
+                class="emotion-220 emotion-221"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -6758,23 +6768,23 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-787 emotion-194"
+        class="emotion-795 emotion-202"
         x="3"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6792,23 +6802,23 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-223 emotion-224"
+              class="emotion-231 emotion-232"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Chur solidarisiert sich mit der Ukraine
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
             </p>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             >
               <time
-                class="emotion-212 emotion-213"
+                class="emotion-220 emotion-221"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -6818,23 +6828,23 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-806 emotion-194"
+        class="emotion-814 emotion-202"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6852,37 +6862,37 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-223 emotion-224"
+              class="emotion-231 emotion-232"
             />
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Home
             </h1>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
       <article
-        class="emotion-821 emotion-194"
+        class="emotion-829 emotion-202"
         x="3"
         y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6900,48 +6910,48 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-202 emotion-203"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-204 emotion-205"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
       <article
-        class="emotion-840 emotion-194"
+        class="emotion-848 emotion-202"
         x="0"
         y="6"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-195"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-203"
           href="https://google.com"
         >
           <div
-            class="emotion-196 emotion-197"
+            class="emotion-204 emotion-205"
           >
             <div
-              class="emotion-198 emotion-199"
+              class="emotion-206 emotion-207"
             >
               <img
                 alt="DSC07717"
-                class="emotion-200 emotion-28"
+                class="emotion-208 emotion-28"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6959,33 +6969,33 @@ https://unsplash.it/200/100 200w"
               />
             </div>
             <div
-              class="emotion-202 emotion-203"
+              class="emotion-210 emotion-211"
             >
               <div
-                class="emotion-204 emotion-205"
+                class="emotion-212 emotion-213"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-206 emotion-207"
+              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-214 emotion-215"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-208 emotion-209"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-216 emotion-217"
             >
               Lead
             </p>
             <div
-              class="emotion-210 emotion-211"
+              class="emotion-218 emotion-219"
             />
           </div>
         </a>
       </article>
     </div>
     <div
-      class="emotion-859 emotion-860"
+      class="emotion-867 emotion-868"
     >
       <div>
         <div>
@@ -6999,10 +7009,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <article
-      class="emotion-861 emotion-862"
+      class="emotion-869 emotion-870"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h4 emotion-863 emotion-864"
+        class="MuiTypography-root MuiTypography-h4 emotion-871 emotion-872"
       >
         Question
       </h1>
@@ -7032,63 +7042,63 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-868 emotion-869"
+        class="emotion-876 emotion-877"
       >
         <div
-          class="emotion-870 emotion-871"
+          class="emotion-878 emotion-879"
         >
           <div
-            class="emotion-872 emotion-873"
+            class="emotion-880 emotion-881"
           >
             <div
-              class="emotion-874 emotion-875"
+              class="emotion-882 emotion-883"
             >
               Ja
             </div>
             <div
-              class="emotion-876 emotion-877"
+              class="emotion-884 emotion-885"
             >
               52%
             </div>
           </div>
           <div
-            class="emotion-878 emotion-879"
+            class="emotion-886 emotion-887"
           >
             <div
-              class="emotion-880 emotion-881"
+              class="emotion-888 emotion-889"
             />
             <div
-              class="emotion-882 emotion-883"
+              class="emotion-890 emotion-891"
             >
               11 Stimmen
             </div>
           </div>
         </div>
         <div
-          class="emotion-870 emotion-871"
+          class="emotion-878 emotion-879"
         >
           <div
-            class="emotion-872 emotion-873"
+            class="emotion-880 emotion-881"
           >
             <div
-              class="emotion-874 emotion-875"
+              class="emotion-882 emotion-883"
             >
               Nein
             </div>
             <div
-              class="emotion-876 emotion-877"
+              class="emotion-884 emotion-885"
             >
               48%
             </div>
           </div>
           <div
-            class="emotion-878 emotion-879"
+            class="emotion-886 emotion-887"
           >
             <div
-              class="emotion-894 emotion-881"
+              class="emotion-902 emotion-889"
             />
             <div
-              class="emotion-896 emotion-883"
+              class="emotion-904 emotion-891"
             >
               10 Stimmen
             </div>
@@ -7096,7 +7106,7 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="emotion-898 emotion-899"
+        class="emotion-906 emotion-907"
       >
         21 Stimmen – Schliesst am 
         <time
@@ -7107,24 +7117,24 @@ https://unsplash.it/200/100 200w"
       </div>
     </article>
     <article
-      class="emotion-900 emotion-901"
+      class="emotion-908 emotion-909"
     />
     <aside
-      class="emotion-902 emotion-903"
+      class="emotion-910 emotion-911"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-904"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-912"
         href="https://example.com"
       >
         <article
-          class="emotion-905 emotion-906"
+          class="emotion-913 emotion-914"
         >
           <div
-            class="emotion-907 emotion-908"
+            class="emotion-915 emotion-916"
           >
             <img
               alt="DSC07717"
-              class="emotion-74 emotion-28"
+              class="emotion-76 emotion-28"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -7142,13 +7152,13 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <div
-            class="emotion-911 emotion-912"
+            class="emotion-919 emotion-920"
           >
             <div
-              class="emotion-913 emotion-914"
+              class="emotion-921 emotion-922"
             >
               <div
-                class="emotion-915 emotion-916"
+                class="emotion-923 emotion-924"
               >
                 <svg
                   fill="currentColor"
@@ -7181,7 +7191,7 @@ https://unsplash.it/200/100 200w"
               </time>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 emotion-155"
+              class="MuiTypography-root MuiTypography-h4 emotion-163"
             >
               Cool concert
             </h1>

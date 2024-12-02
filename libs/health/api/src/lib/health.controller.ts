@@ -26,11 +26,6 @@ export class HealthController {
       console.log(`Found API version: ${this.versionString}`)
     } catch (error) {
       this.versionString = null
-      if (error instanceof Error) {
-        console.error('Error reading .version file:', error.message)
-      } else {
-        console.error('Unknown error reading .version file')
-      }
     }
   }
 

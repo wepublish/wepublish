@@ -2,6 +2,7 @@
   "website": {
     "production": {
       "deployment": true,
+      "custom_domain": "https://bajour.ch",
       "env": {
         "MAILCHIMP_POPUP_SCRIPT_URL": "https://chimpstatic.com/mcjs-connected/js/users/c30add995be4a0a845d9e933a/30862514707cdff67aa2a6483.js",
         "GA_ID": "G-9LP77LLVG9",

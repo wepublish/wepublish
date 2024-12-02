@@ -29,6 +29,7 @@ fragment FullMemberPlan on MemberPlan {
   }
 
   amountPerMonthMin
+  amountPerMonthTarget
   currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
@@ -236,5 +237,20 @@ query MemberPlanList(
     }
 
     totalCount
+  }
+}
+
+query Revenue($start: DateTime!, $end: DateTime) {
+  revenue(start: $start, end: $end) {
+    amount
+    paidAt
+    memberPlan
+  }
+}
+
+query NewSubscribers($start: DateTime!, $end: DateTime) {
+  newSubscribers(start: $start, end: $end) {
+    monthlyAmount
+    memberPlan
   }
 }

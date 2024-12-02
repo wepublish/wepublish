@@ -19,7 +19,7 @@ exports[`Navbar Container should render Default 1`] = `
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -138,7 +138,7 @@ exports[`Navbar Container should render WithClassName 1`] = `
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >
@@ -257,7 +257,7 @@ exports[`Navbar Container should render WithEmotion 1`] = `
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-9"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
               tabindex="0"
               type="button"
             >

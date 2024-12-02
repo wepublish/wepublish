@@ -74,7 +74,7 @@ const createV1ApiClient = (
     link,
     cache: new InMemoryCache({
       possibleTypes: possibleTypes.possibleTypes,
-      typePolicies: absoluteUrlToRelative,
+      typePolicies: process.env.NODE_ENV !== 'production' ? absoluteUrlToRelative : undefined,
       ...cacheConfig
     }).restore(cache ?? {}),
     ssrMode: typeof window === 'undefined',

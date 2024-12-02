@@ -2767,7 +2767,7 @@ exports[`Registration Form should render OnlyBirthdayFilled 1`] = `
         </div>
       </div>
       <div
-        class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
+        class="css-16ax9di-AlgebraicChallengeWrapper eof0zzz1"
       >
 @@ -185,12 +192,12 @@
         </div>
@@ -2930,7 +2930,7 @@ exports[`Registration Form should render OnlyBirthdayInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
+        class="css-16ax9di-AlgebraicChallengeWrapper eof0zzz1"
       >
 @@ -185,22 +206,23 @@
         </div>
@@ -3485,7 +3485,7 @@ exports[`Registration Form should render OnlyFirstNameInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
+        class="css-16ax9di-AlgebraicChallengeWrapper eof0zzz1"
       >
 @@ -181,22 +202,23 @@
         </div>
@@ -4083,7 +4083,7 @@ exports[`Registration Form should render OnlyPasswordInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
+        class="css-16ax9di-AlgebraicChallengeWrapper eof0zzz1"
 @@ -215,22 +236,23 @@
         </div>
         <div
@@ -4826,7 +4826,7 @@ exports[`Registration Form should render OnlyPasswordWithRepeatInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
+        class="css-16ax9di-AlgebraicChallengeWrapper eof0zzz1"
 @@ -282,22 +310,23 @@
         </div>
         <div
@@ -5269,7 +5269,7 @@ exports[`Registration Form should render OnlyRequiredInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
+        class="css-16ax9di-AlgebraicChallengeWrapper eof0zzz1"
       >
 @@ -144,22 +158,23 @@
         </div>
@@ -6385,7 +6385,7 @@ exports[`Registration Form should render WithCustomValidation 1`] = `
         </div>
       </div>
       <div
-        class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
+        class="css-16ax9di-AlgebraicChallengeWrapper eof0zzz1"
 @@ -215,22 +236,23 @@
         </div>
         <div

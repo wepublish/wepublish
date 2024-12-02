@@ -50,12 +50,26 @@ export default function Login({sessionToken}: LoginProps) {
         <div>
           <H3 component="h1">Login für Abonnent*innen</H3>
 
-          <Typography variant="body1" paragraph>
-            (Falls du noch keinen Account hast, <Link href={'/signup'}>klicke hier.</Link>)
-          </Typography>
+          {!router.query?.mail ? (
+            <Typography sx={{marginTop: 2}}>
+              Falls du noch keinen Account hast, <Link href={'/mitmachen'}>klicke hier.</Link>
+            </Typography>
+          ) : (
+            <Typography sx={{marginTop: 2}}>
+              So schön, bist du da. Aus Sicherheitsgründen müssen wir den Umweg über ein E-Mail
+              gehen, das wir dir sofort zuschicken. Darin enthalten ist ein Link, mit dem du dein
+              Abo einfach und schnell abschliessen kannst.
+            </Typography>
+          )}
         </div>
 
-        <LoginFormContainer />
+        <LoginFormContainer
+          defaults={{
+            email: router.query?.mail as string | undefined,
+            requirePassword: !!router.query?.requirePassword
+          }}
+          disablePasswordLogin={!!router.query?.mail}
+        />
       </LoginWrapper>
     </Container>
   )

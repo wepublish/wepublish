@@ -162,6 +162,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   categorySlugs={[['categories', 'about-us']]}
                   slug="main"
                   headerSlug="header"
+                  iconSlug="icons"
                   actions={<MitmachenButton />}
                 />
 
@@ -181,16 +182,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </LogoLink>
                 </FooterContainer>
               </Spacer>
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-                strategy="afterInteractive"
-              />
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-                strategy="lazyOnload"
-              />
 
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />

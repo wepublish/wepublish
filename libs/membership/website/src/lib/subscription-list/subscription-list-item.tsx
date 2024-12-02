@@ -68,8 +68,6 @@ export function SubscriptionListItem({
   deactivation,
   memberPlan: {image, name, currency},
   url,
-  canPay,
-  pay,
   cancel,
   canExtend,
   extend,
@@ -184,14 +182,8 @@ export function SubscriptionListItem({
               disabled={loading}
               variant="text"
               color="secondary">
-              Abo Künden
+              Abo kündigen
             </Button>
-
-            {canPay && (
-              <Button onClick={callAction(pay)} disabled={loading}>
-                Jetzt Bezahlen
-              </Button>
-            )}
 
             {canExtend && (
               <Button
@@ -213,9 +205,9 @@ export function SubscriptionListItem({
           await callAction(cancel)()
         }}
         onCancel={() => setConfirmCancel(false)}
-        submitText={`Abo Künden`}>
+        submitText={`Abo kündigen`}>
         <H5 id="modal-modal-title" component="h1">
-          {name} wirklich künden?
+          {name} wirklich kündigen?
         </H5>
 
         <Paragraph gutterBottom={false}>

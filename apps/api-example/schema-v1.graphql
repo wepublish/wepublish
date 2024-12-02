@@ -849,6 +849,7 @@ type MemberPlan {
   tags: [String!]
   currency: Currency!
   amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
   maxCount: Int
   extendable: Boolean!
   availablePaymentMethods: [AvailablePaymentMethod!]!
@@ -911,9 +912,15 @@ enum MemberPlanSort {
 }
 
 type Challenge {
+  type: CaptchaType
   challenge: String
   challengeID: String
   validUntil: Date
+}
+
+enum CaptchaType {
+  Algebraic
+  CfTurnstile
 }
 
 """
@@ -1062,7 +1069,7 @@ input CommentInput {
 }
 
 input ChallengeInput {
-  challengeID: String!
+  challengeID: String
   challengeSolution: String!
 }
 

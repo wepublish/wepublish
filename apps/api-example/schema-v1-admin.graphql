@@ -266,6 +266,7 @@ type MemberPlan {
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
   currency: Currency!
   maxCount: Int
   extendable: Boolean!
@@ -1196,8 +1197,6 @@ enum SettingName {
   makeRevenueApiPublic
   commentCharLimit
   allowCommentEditing
-  headScript
-  bodyScript
 }
 
 scalar GraphQLSettingValueType
@@ -1923,6 +1922,7 @@ input MemberPlanInput {
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
   currency: Currency!
   extendable: Boolean!
   maxCount: Int
