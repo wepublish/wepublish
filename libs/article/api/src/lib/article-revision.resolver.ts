@@ -1,5 +1,4 @@
-import {Args, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
-import {ArticleDataloaderService} from './article-dataloader.service'
+import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {ArticleRevision, Property} from './article.model'
 import {Author} from '@wepublish/author/api'
 import {Image} from '@wepublish/image/api'
@@ -7,15 +6,7 @@ import {ArticleRevisionService} from './article-revision.service'
 
 @Resolver(() => ArticleRevision)
 export class ArticleRevisionResolver {
-  constructor(
-    private articleDataloader: ArticleDataloaderService,
-    private revisionService: ArticleRevisionService
-  ) {}
-
-  @Query(() => ArticleRevision, {description: `Returns an article revision by id.`})
-  public getArticle(@Args('id') id: string) {
-    return this.articleDataloader.load(id)
-  }
+  constructor(private revisionService: ArticleRevisionService) {}
 
   @ResolveField(() => [Property])
   public async properties(@Parent() revision: ArticleRevision) {

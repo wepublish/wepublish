@@ -399,32 +399,16 @@ const modelFieldDefinitions = [{
                 type: "Image",
                 relationName: "pageRevisionSocialMediaImage"
             }, {
-                name: "PublishedPage",
+                name: "page",
                 type: "Page",
-                relationName: "publishedPageRevision"
-            }, {
-                name: "PendingPage",
-                type: "Page",
-                relationName: "pendingPageRevision"
-            }, {
-                name: "DraftPage",
-                type: "Page",
-                relationName: "draftPageRevision"
+                relationName: "PageToPageRevision"
             }]
     }, {
         name: "Page",
         fields: [{
-                name: "published",
+                name: "revisions",
                 type: "PageRevision",
-                relationName: "publishedPageRevision"
-            }, {
-                name: "pending",
-                type: "PageRevision",
-                relationName: "pendingPageRevision"
-            }, {
-                name: "draft",
-                type: "PageRevision",
-                relationName: "draftPageRevision"
+                relationName: "PageToPageRevision"
             }, {
                 name: "navigations",
                 type: "NavigationLink",
@@ -2665,9 +2649,11 @@ function isPageRevisionimageFactory(x) {
 function isPageRevisionsocialMediaImageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
+function isPageRevisionpageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
 function autoGeneratePageRevisionScalarsOrEnums({ seq }) {
     return {
-        title: getScalarFieldValueGenerator().String({ modelName: "PageRevision", fieldName: "title", isId: false, isUnique: false, seq }),
         blocks: getScalarFieldValueGenerator().Json({ modelName: "PageRevision", fieldName: "blocks", isId: false, isUnique: false, seq })
     };
 }
@@ -2693,7 +2679,10 @@ function definePageRevisionFactoryInternal({ defaultData: defaultDataResolver, t
                 } : defaultData.image,
                 socialMediaImage: isPageRevisionsocialMediaImageFactory(defaultData.socialMediaImage) ? {
                     create: yield defaultData.socialMediaImage.build()
-                } : defaultData.socialMediaImage
+                } : defaultData.socialMediaImage,
+                page: isPageRevisionpageFactory(defaultData.page) ? {
+                    create: yield defaultData.page.build()
+                } : defaultData.page
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -2732,16 +2721,7 @@ function definePageRevisionFactoryInternal({ defaultData: defaultDataResolver, t
  * @returns factory {@link PageRevisionFactoryInterface}
  */
 export function definePageRevisionFactory(options) {
-    return definePageRevisionFactoryInternal(options !== null && options !== void 0 ? options : {});
-}
-function isPagepublishedFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PageRevision";
-}
-function isPagependingFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PageRevision";
-}
-function isPagedraftFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PageRevision";
+    return definePageRevisionFactoryInternal(options);
 }
 function autoGeneratePageScalarsOrEnums({ seq }) {
     return {};
@@ -2762,17 +2742,7 @@ function definePageFactoryInternal({ defaultData: defaultDataResolver, traits: t
                 const traitData = yield resolveTraitValue({ seq });
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
-            const defaultAssociations = {
-                published: isPagepublishedFactory(defaultData.published) ? {
-                    create: yield defaultData.published.build()
-                } : defaultData.published,
-                pending: isPagependingFactory(defaultData.pending) ? {
-                    create: yield defaultData.pending.build()
-                } : defaultData.pending,
-                draft: isPagedraftFactory(defaultData.draft) ? {
-                    create: yield defaultData.draft.build()
-                } : defaultData.draft
-            };
+            const defaultAssociations = {};
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
         });

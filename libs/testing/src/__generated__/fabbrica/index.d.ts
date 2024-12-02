@@ -1267,30 +1267,26 @@ type PageRevisionsocialMediaImageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutPageRevisionSocialMediaImagesInput["create"]>;
 };
+type PageRevisionpageFactory = {
+    _factoryFor: "Page";
+    build: () => PromiseLike<Prisma.PageCreateNestedOneWithoutRevisionsInput["create"]>;
+};
 type PageRevisionFactoryDefineInput = {
     id?: string;
-    revision?: number;
     createdAt?: Date;
-    modifiedAt?: Date | null;
-    updatedAt?: Date | null;
     publishedAt?: Date | null;
-    publishAt?: Date | null;
-    slug?: string | null;
-    title?: string;
+    title?: string | null;
     description?: string | null;
-    tags?: Prisma.PageRevisionCreatetagsInput | Prisma.Enumerable<string>;
     socialMediaTitle?: string | null;
     socialMediaDescription?: string | null;
     blocks?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutPageRevisionInput;
     image?: PageRevisionimageFactory | Prisma.ImageCreateNestedOneWithoutPageRevisionImagesInput;
     socialMediaImage?: PageRevisionsocialMediaImageFactory | Prisma.ImageCreateNestedOneWithoutPageRevisionSocialMediaImagesInput;
-    PublishedPage?: Prisma.PageCreateNestedManyWithoutPublishedInput;
-    PendingPage?: Prisma.PageCreateNestedManyWithoutPendingInput;
-    DraftPage?: Prisma.PageCreateNestedManyWithoutDraftInput;
+    page: PageRevisionpageFactory | Prisma.PageCreateNestedOneWithoutRevisionsInput;
 };
 type PageRevisionFactoryDefineOptions = {
-    defaultData?: Resolver<PageRevisionFactoryDefineInput, BuildDataOptions>;
+    defaultData: Resolver<PageRevisionFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
             data: Resolver<Partial<PageRevisionFactoryDefineInput>, BuildDataOptions>;
@@ -1317,26 +1313,14 @@ export interface PageRevisionFactoryInterface<TOptions extends PageRevisionFacto
  * @param options
  * @returns factory {@link PageRevisionFactoryInterface}
  */
-export declare function definePageRevisionFactory<TOptions extends PageRevisionFactoryDefineOptions>(options?: TOptions): PageRevisionFactoryInterface<TOptions>;
-type PagepublishedFactory = {
-    _factoryFor: "PageRevision";
-    build: () => PromiseLike<Prisma.PageRevisionCreateNestedOneWithoutPublishedPageInput["create"]>;
-};
-type PagependingFactory = {
-    _factoryFor: "PageRevision";
-    build: () => PromiseLike<Prisma.PageRevisionCreateNestedOneWithoutPendingPageInput["create"]>;
-};
-type PagedraftFactory = {
-    _factoryFor: "PageRevision";
-    build: () => PromiseLike<Prisma.PageRevisionCreateNestedOneWithoutDraftPageInput["create"]>;
-};
+export declare function definePageRevisionFactory<TOptions extends PageRevisionFactoryDefineOptions>(options: TOptions): PageRevisionFactoryInterface<TOptions>;
 type PageFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
-    published?: PagepublishedFactory | Prisma.PageRevisionCreateNestedOneWithoutPublishedPageInput;
-    pending?: PagependingFactory | Prisma.PageRevisionCreateNestedOneWithoutPendingPageInput;
-    draft?: PagedraftFactory | Prisma.PageRevisionCreateNestedOneWithoutDraftPageInput;
+    publishedAt?: Date | null;
+    slug?: string | null;
+    revisions?: Prisma.PageRevisionCreateNestedManyWithoutPageInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutPageInput;
     tags?: Prisma.TaggedPagesCreateNestedManyWithoutPageInput;
     banners?: Prisma.BannerCreateNestedManyWithoutShowOnPagesInput;

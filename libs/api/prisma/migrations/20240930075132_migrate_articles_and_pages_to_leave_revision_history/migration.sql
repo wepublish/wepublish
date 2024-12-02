@@ -108,79 +108,85 @@ DROP COLUMN "publishedId";
  * Page
 **/
 
--- -- AlterTable
--- ALTER TABLE "pages" ADD COLUMN     "publishedAt" TIMESTAMP(3);
+-- AlterTable
+ALTER TABLE "pages" ADD COLUMN     "publishedAt" TIMESTAMP(3);
 
--- -- AlterTable
--- ALTER TABLE "pages" ADD COLUMN     "slug" TEXT;
+-- AlterTable
+ALTER TABLE "pages" ADD COLUMN     "slug" TEXT;
 
--- -- Migrate publishedAt
--- UPDATE "pages.revisions"
--- SET "publishedAt" = "publishAt"
--- WHERE "publishedAt" IS NULL;
+-- CreateIndex
+CREATE UNIQUE INDEX "pages_slug_key" ON "pages"("slug");
 
--- UPDATE "pages" p
--- SET "publishedAt" = pr."publishedAt"
--- FROM "pages.revisions" pr
--- WHERE pr.id = a."publishedId";
+-- Migrate publishedAt
+UPDATE "pages.revisions"
+SET "publishedAt" = "publishAt"
+WHERE "publishedAt" IS NULL;
 
--- -- Migrate slug
--- UPDATE "articles" a
--- SET "slug" = ar."slug"
--- FROM "articles.revisions" ar
--- WHERE ar.id = a."publishedId" or ar.id = a."pendingId";
+UPDATE "pages" p
+SET "publishedAt" = pr."publishedAt"
+FROM "pages.revisions" pr
+WHERE pr.id = p."publishedId";
 
--- -- AlterTable
--- ALTER TABLE "pages.revisions" ADD COLUMN "pageId" TEXT;
+-- Migrate slug
+UPDATE "pages" p
+SET "slug" = pr."slug"
+FROM "pages.revisions" pr
+WHERE pr.id = p."publishedId" or pr.id = p."pendingId";
 
--- -- Migrate pageId
--- UPDATE "pages.revisions" pr
--- SET "pageId" = p.id
--- FROM "pages" p
--- WHERE pr.id = p."draftId" OR pr.id = p."pendingId" OR pr.id = p."publishedId";
+-- AlterTable
+ALTER TABLE "pages.revisions" ADD COLUMN "pageId" TEXT;
 
--- -- AlterTable
--- ALTER TABLE "pages.revisions" ALTER COLUMN "pageId" SET NOT NULL;
+-- Migrate pageId
+UPDATE "pages.revisions" pr
+SET "pageId" = p.id
+FROM "pages" p
+WHERE pr.id = p."draftId" OR pr.id = p."pendingId" OR pr.id = p."publishedId";
 
--- -- AddForeignKey
--- ALTER TABLE "pages.revisions" ADD CONSTRAINT "pages.revisions_pageId_fkey" FOREIGN KEY ("pageId") REFERENCES "pages"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- AlterTable
+ALTER TABLE "pages.revisions" ALTER COLUMN "pageId" SET NOT NULL;
 
--- -- DropForeignKey
--- ALTER TABLE "pages" DROP CONSTRAINT "pages_draftId_fkey";
+-- AddForeignKey
+ALTER TABLE "pages.revisions" ADD CONSTRAINT "pages.revisions_pageId_fkey" FOREIGN KEY ("pageId") REFERENCES "pages"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- -- DropForeignKey
--- ALTER TABLE "pages" DROP CONSTRAINT "pages_pendingId_fkey";
+-- DropForeignKey
+ALTER TABLE "pages" DROP CONSTRAINT "pages_draftId_fkey";
 
--- -- DropForeignKey
--- ALTER TABLE "pages" DROP CONSTRAINT "pages_publishedId_fkey";
+-- DropForeignKey
+ALTER TABLE "pages" DROP CONSTRAINT "pages_pendingId_fkey";
 
--- -- DropIndex
--- DROP INDEX "pages_draftId_key";
+-- DropForeignKey
+ALTER TABLE "pages" DROP CONSTRAINT "pages_publishedId_fkey";
 
--- -- DropIndex
--- DROP INDEX "pages_pendingId_key";
+-- DropIndex
+DROP INDEX "pages_draftId_key";
 
--- -- DropIndex
--- DROP INDEX "pages_publishedId_key";
+-- DropIndex
+DROP INDEX "pages_pendingId_key";
 
--- -- DropIndex
--- DROP INDEX "pages.revisions_publishAt_idx";
+-- DropIndex
+DROP INDEX "pages_publishedId_key";
 
--- -- DropIndex
--- DROP INDEX "pages.revisions_tags_idx";
+-- DropIndex
+DROP INDEX "pages.revisions_publishAt_idx";
 
--- -- DropIndex
--- DROP INDEX "pages.revisions_updatedAt_idx";
+-- DropIndex
+DROP INDEX "pages.revisions_tags_idx";
 
--- -- AlterTable
--- ALTER TABLE "pages.revisions" DROP COLUMN "modifiedAt",
--- DROP COLUMN "publishAt",
--- DROP COLUMN "revision",
--- DROP COLUMN "tags",
--- DROP COLUMN "updatedAt",
--- DROP COLUMN "slug";
+-- DropIndex
+DROP INDEX "pages.revisions_updatedAt_idx";
 
--- -- AlterTable
--- ALTER TABLE "pages" DROP COLUMN "draftId",
--- DROP COLUMN "pendingId",
--- DROP COLUMN "publishedId";
+-- AlterTable
+ALTER TABLE "pages.revisions" DROP COLUMN "modifiedAt",
+DROP COLUMN "publishAt",
+DROP COLUMN "revision",
+DROP COLUMN "tags",
+DROP COLUMN "updatedAt",
+DROP COLUMN "slug";
+
+-- AlterTable
+ALTER TABLE "pages.revisions" ALTER COLUMN "title" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "pages" DROP COLUMN "draftId",
+DROP COLUMN "pendingId",
+DROP COLUMN "publishedId";

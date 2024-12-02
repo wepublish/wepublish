@@ -191,11 +191,6 @@ export class CreateArticleInput extends OmitType(
 
   @Field(() => [PropertyInput])
   properties!: PropertyInput[]
-
-  @Field({nullable: true})
-  peerId?: string
-  @Field({nullable: true})
-  originalArticleId?: string
 }
 
 @ArgsType()
