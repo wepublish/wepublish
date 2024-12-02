@@ -808,6 +808,71 @@ async function seedComments(prisma: PrismaClient, articleIds: string[], imageIds
   return comments
 }
 
+async function seedPaymentMethods(prisma: PrismaClient) {
+  await prisma.paymentMethod.createMany({
+    data: [
+      {
+        id: 'payrexx',
+        name: 'Payrexx',
+        slug: 'payrexx',
+        description: '',
+        paymentProviderID: 'payrexx',
+        active: true
+      },
+      {
+        id: 'stripe',
+        name: 'Stripe',
+        slug: 'stripe',
+        description: '',
+        paymentProviderID: 'stripe',
+        active: true
+      }
+    ]
+  })
+}
+
+async function seedMemberPlans(prisma: PrismaClient) {
+  const testAbo1 = prisma.memberPlan.create({
+    data: {
+      active: true,
+      name: 'Test-Abo CHF',
+      description: [],
+      slug: 'test-abo-chf',
+      amountPerMonthMin: 1000,
+      extendable: true,
+      currency: 'CHF',
+      availablePaymentMethods: {
+        create: {
+          forceAutoRenewal: true,
+          paymentMethodIDs: ['payrexx'],
+          paymentPeriodicities: ['yearly']
+        }
+      }
+    }
+  })
+
+  const testAbo2 = prisma.memberPlan.create({
+    data: {
+      active: true,
+      name: 'Test-Abo EUR',
+      description: [],
+      slug: 'test-abo-eur',
+      amountPerMonthMin: 2000,
+      extendable: true,
+      currency: 'EUR',
+      availablePaymentMethods: {
+        create: {
+          forceAutoRenewal: false,
+          paymentMethodIDs: ['stripe'],
+          paymentPeriodicities: ['yearly', 'monthly']
+        }
+      }
+    }
+  })
+
+  await Promise.all([testAbo1, testAbo2])
+}
+
 async function seed() {
   const {app} = await bootstrap(['error'])
   const prisma = new PrismaClient()
@@ -893,6 +958,12 @@ async function seed() {
         }
       })
     ])
+
+    console.log('Seeding Payment Methods')
+    await seedPaymentMethods(prisma)
+
+    console.log('Seeding Member Plans')
+    await seedMemberPlans(prisma)
   } catch (e) {
     if (typeof e === 'string') {
       console.warn(e)

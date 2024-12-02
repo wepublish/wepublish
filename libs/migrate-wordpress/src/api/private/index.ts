@@ -983,6 +983,7 @@ export type MemberPlan = {
   __typename?: 'MemberPlan'
   active: Scalars['Boolean']
   amountPerMonthMin: Scalars['Int']
+  amountPerMonthTarget?: Maybe<Scalars['Int']>
   availablePaymentMethods: Array<AvailablePaymentMethod>
   createdAt: Scalars['DateTime']
   currency: Currency
@@ -1018,6 +1019,7 @@ export type MemberPlanFilter = {
 export type MemberPlanInput = {
   active: Scalars['Boolean']
   amountPerMonthMin: Scalars['Int']
+  amountPerMonthTarget?: InputMaybe<Scalars['Int']>
   availablePaymentMethods: Array<AvailablePaymentMethodInput>
   currency: Currency
   description?: InputMaybe<Scalars['RichText']>

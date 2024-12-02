@@ -1312,7 +1312,10 @@
       "forceAutoRenewNotPossible": "Automatische Erneuerung ist nicht möglich, weil der Abo-Plan nicht verlängerbar ist.",
       "trialSubscriptionNotPossible": "Der Abo-Plan muss verlängerbar bleiben, weil in einer Zahlungseinstellung eine automatische Verlängerung eingestellt ist. Du kannst das natürlich ändern.",
       "migratePMTitle": "Migraton der Abos zu Ziel-Zahlungsmethode",
-      "migratePMHelptext": "Migriere die Abos dieses Planes zu einer neuen Zahlungsmethode. Abos, die noch automatisch abgebucht werden, werden nicht migriert. Die Migration findet erst dann statt, wenn ein User selbst tätig wird und in seinem Profil etwa eine offene Rechnung bezahlen will oder ein Abo frühzeitig verlängert."
+      "migratePMHelptext": "Migriere die Abos dieses Planes zu einer neuen Zahlungsmethode. Abos, die noch automatisch abgebucht werden, werden nicht migriert. Die Migration findet erst dann statt, wenn ein User selbst tätig wird und in seinem Profil etwa eine offene Rechnung bezahlen will oder ein Abo frühzeitig verlängert.",
+      "amountPerMonthTarget": "Ziel-Betrag / Monat",
+      "amountPerMonthTargetHelpText": "Der monatliche Zielbetrag legt den gewünschten Abopreis fest, den die Benutzer:innen bezahlen sollten. Er muss höher als der Minimalbetrag sein und definiert typischerweise die Voreinstellung im Zahlungsformular.",
+      "amountPerMonthMinHelpText": "Der minimale monatliche Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Erweiterte Einstellungen",

@@ -799,6 +799,7 @@ export type MailTemplateWithUrlAndStatusModel = {
 export type MemberPlan = {
   __typename?: 'MemberPlan';
   amountPerMonthMin: Scalars['Int'];
+  amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;

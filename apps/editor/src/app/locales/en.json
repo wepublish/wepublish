@@ -1453,7 +1453,10 @@
       "forceAutoRenewNotPossible": "Automatic renewal is not possible because the subscription plan is not extendable.",
       "trialSubscriptionNotPossible": "The subscription plan must remain renewable because an automatic renewal is forced in a payment setting. You can of course change this.",
       "migratePMTitle": "Migration of subscriptions to target payment method",
-      "migratePMHelptext": "Migrate the subscriptions of this plan to a new Payment Method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early."
+      "migratePMHelptext": "Migrate the subscriptions of this plan to a new Payment Method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early.",
+      "amountPerMonthTarget": "Target amount / month",
+      "amountPerMonthTargetHelpText": "The monthly target amount defines the desired member plan price that users should pay. It must be higher than the minimum amount and typically defines the default setting in the payment form.",
+      "amountPerMonthMinHelpText": "The minimum monthly amount is the actual member plan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Advanced settings",

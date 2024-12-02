@@ -37,7 +37,6 @@ export default function Mitmachen() {
   return (
     <MitmachenPage slug={'mitmachen'}>
       <SubscribeContainer
-        extraMoneyOffset={() => 700}
         defaults={{
           email: mail as string | undefined,
           firstName: firstName as string | undefined,

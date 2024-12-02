@@ -58,7 +58,7 @@ function Subscriptions() {
 
         {hasDeactivatedSubscriptions && (
           <DeactivatedSubscriptions>
-            <Link href="/profile/subscription/deactivated">Gekündete Abos anzeigen</Link>
+            <Link href="/profile/subscription/deactivated">Gekündigte Abos anzeigen</Link>
           </DeactivatedSubscriptions>
         )}
       </SubscriptionListWrapper>

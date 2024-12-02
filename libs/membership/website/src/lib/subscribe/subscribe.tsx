@@ -141,11 +141,8 @@ export const getPaymentText = (
         locale
       )}`
 
-const extraMoneyOffsetDefault = () => 0
-
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
-  extraMoneyOffset = extraMoneyOffsetDefault,
   memberPlans,
   challenge,
   userSubscriptions,
@@ -314,10 +311,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     if (selectedMemberPlan) {
       setValue<'monthlyAmount'>(
         'monthlyAmount',
-        selectedMemberPlan.amountPerMonthMin + extraMoneyOffset(selectedMemberPlan)
+        selectedMemberPlan.amountPerMonthTarget || selectedMemberPlan.amountPerMonthMin
       )
     }
-  }, [selectedMemberPlan, extraMoneyOffset, setValue])
+  }, [selectedMemberPlan, setValue])
 
   useEffect(() => {
     if (challenge.data?.challenge.challengeID) {

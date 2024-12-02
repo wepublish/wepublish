@@ -29,7 +29,7 @@ export type SubscribeContainerProps<
 > = BuilderContainerProps &
   Pick<
     BuilderSubscribeProps<T>,
-    'fields' | 'schema' | 'defaults' | 'extraMoneyOffset' | 'termsOfServiceUrl' | 'donate'
+    'fields' | 'schema' | 'defaults' | 'termsOfServiceUrl' | 'donate'
   > & {
     filter?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
     deactivateSubscriptionId?: string
@@ -37,7 +37,6 @@ export type SubscribeContainerProps<
 
 export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   className,
-  extraMoneyOffset,
   defaults,
   fields,
   schema,
@@ -124,7 +123,6 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
 
       <Subscribe
         className={className}
-        extraMoneyOffset={extraMoneyOffset}
         defaults={defaults}
         fields={fields}
         schema={schema}
