@@ -9,8 +9,9 @@ import {
   SubscriptionListContainer
 } from '@wepublish/website'
 import {setCookie} from 'cookies-next'
-import {NextPageContext} from 'next'
+import {NextPage, NextPageContext} from 'next'
 import getConfig from 'next/config'
+import {ComponentProps} from 'react'
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
@@ -29,10 +30,10 @@ function DeactivatedSubscriptions() {
   )
 }
 
-const GuardedDeactivatedSubscriptions = withAuthGuard(DeactivatedSubscriptions)
-
-export {GuardedDeactivatedSubscriptions as DeactivatedSubscriptionsPage}
-;(GuardedDeactivatedSubscriptions as any).getInitialProps = async (ctx: NextPageContext) => {
+const GuardedDeactivatedSubscriptions = withAuthGuard(DeactivatedSubscriptions) as NextPage<
+  ComponentProps<typeof DeactivatedSubscriptions>
+>
+GuardedDeactivatedSubscriptions.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}
   }
@@ -82,3 +83,5 @@ export {GuardedDeactivatedSubscriptions as DeactivatedSubscriptionsPage}
 
   return props
 }
+
+export {GuardedDeactivatedSubscriptions as DeactivatedSubscriptionsPage}

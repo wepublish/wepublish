@@ -8,12 +8,13 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website'
 import {setCookie} from 'cookies-next'
-import {NextPageContext} from 'next'
+import {NextPage, NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {withAuthGuard} from '../../../auth-guard'
 import {ssrAuthLink} from '../../../auth-link'
 import {getSessionTokenProps} from '../../../get-session-token-props'
+import {ComponentProps} from 'react'
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
@@ -62,9 +63,10 @@ function SubscriptionPage() {
   )
 }
 
-const GuardedSubscription = withAuthGuard(SubscriptionPage)
-
-;(GuardedSubscription as any).getInitialProps = async (ctx: NextPageContext) => {
+const GuardedSubscription = withAuthGuard(SubscriptionPage) as NextPage<
+  ComponentProps<typeof SubscriptionPage>
+>
+GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}
   }

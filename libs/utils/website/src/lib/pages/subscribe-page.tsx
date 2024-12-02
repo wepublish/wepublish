@@ -7,10 +7,7 @@ import {ComponentProps} from 'react'
 import {ssrAuthLink} from '../auth-link'
 import {getSessionTokenProps} from '../get-session-token-props'
 
-type SubscribePageProps = Omit<
-  ComponentProps<typeof SubscribeContainer>,
-  'failureURL' | 'successURL'
->
+type SubscribePageProps = Omit<ComponentProps<typeof SubscribeContainer>, ''>
 
 export function SubscribePage(props: SubscribePageProps) {
   const {
