@@ -107,6 +107,9 @@ const styles = (theme: Theme) => css`
     scroll-padding-top: ${theme.spacing(7)};
     font-family: ${theme.typography.fontFamily};
     hyphens: auto;
+    hyphenate-limit-chars: auto 5 5;
+    -webkit-hyphenate-limit-before: 5;
+    -webkit-hyphenate-limit-after: 5;
     word-break: break-word;
 
     ${theme.breakpoints.up('lg')} {
