@@ -16,6 +16,7 @@ import {GraphQLMetadataPropertyPublic} from './common'
 import {GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
 import {GraphQLPublicPaymentMethod} from './paymentMethod'
 import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
+import {add} from 'date-fns'
 
 export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithRelations, Context>({
   name: 'Subscription',
@@ -50,6 +51,39 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
       type: new GraphQLNonNull(GraphQLString),
       resolve: createProxyingResolver(async (subscription, _, {urlAdapter}) => {
         return await urlAdapter.getSubscriptionURL(subscription)
+      })
+    },
+    canExtend: {
+      type: new GraphQLNonNull(GraphQLBoolean),
+      resolve: createProxyingResolver(async (subscription, _, context) => {
+        const [paymentMethod, unpaidInvoice] = await Promise.all([
+          context.loaders.paymentMethodsByID.load(subscription.paymentMethodID),
+          context.prisma.invoice.findFirst({
+            where: {
+              subscription: {
+                userID: subscription.userID
+              },
+              OR: [{canceledAt: null}, {paidAt: null}]
+            }
+          })
+        ])
+
+        /**
+         * Can only extend when:
+         *   Subscription is extendable
+         *   Subscription is not deactivated
+         *   Subscription is about to run out (less than 1 month)
+         *   All invoices have been paid (or cancelled)
+         *   Not using a deprecated payment method
+         */
+        return (
+          subscription.extendable &&
+          !subscription.deactivation &&
+          +add(new Date(), {months: 1}) > +subscription.paidUntil &&
+          !unpaidInvoice &&
+          // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
+          paymentMethod.slug !== 'payrexx-subscription'
+        )
       })
     }
   }
