@@ -381,6 +381,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
+      {!hasUser && returningUserId && (
+        <SubscribeSection>
+          <H5 component="h2">
+            {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}, willkommen
+            zurück!
+          </H5>
+        </SubscribeSection>
+      )}
       <SubscribeSection>
         {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
           <H5 component="h2">Abo wählen</H5>
