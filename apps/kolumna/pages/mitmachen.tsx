@@ -88,7 +88,7 @@ export default function Mitmachen({donate}: MitmachenProps) {
         fields={['firstName']}
         termsOfServiceUrl="/agb"
         donate={() => !!donate}
-        userId={userId as string | undefined}
+        returningUserId={userId as string | undefined}
       />
     </>
   )

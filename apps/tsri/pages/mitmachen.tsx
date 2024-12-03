@@ -49,7 +49,7 @@ export default function Mitmachen() {
         failureURL={thisLocation}
         fields={['firstName']}
         filter={plans => plans.filter(plan => plan.tags?.some(tag => tag === 'selling'))}
-        userId={userId as string | undefined}
+        returningUserId={userId as string | undefined}
       />
     </MitmachenPage>
   )

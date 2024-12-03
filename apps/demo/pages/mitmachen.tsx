@@ -22,7 +22,7 @@ export default function Mitmachen() {
       }}
       successURL={`${locationOrigin}/profile/subscription`}
       failureURL={thisLocation}
-      userId={userId as string | undefined}
+      returningUserId={userId as string | undefined}
     />
   )
 }

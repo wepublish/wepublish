@@ -22,7 +22,7 @@ export default function Mitmachen() {
       }}
       successURL={`${locationOrigin}/payment/success`}
       failureURL={`${locationOrigin}/payment/fail`}
-      userId={userId as string | undefined}
+      returningUserId={userId as string | undefined}
     />
   )
 }
