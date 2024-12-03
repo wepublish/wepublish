@@ -10,15 +10,17 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website'
 import {setCookie} from 'cookies-next'
-import {NextPageContext} from 'next'
+import {NextPage, NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {withAuthGuard} from '../../auth-guard'
 import {ssrAuthLink} from '../../auth-link'
 import {getSessionTokenProps} from '../../get-session-token-props'
+import {ComponentProps} from 'react'
 
 const SubscriptionsWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
+  justify-content: center;
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
@@ -44,7 +46,9 @@ const ProfileWrapper = styled(ContentWrapper)`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-function Profile() {
+type ProfilePageProps = Omit<ComponentProps<typeof PersonalDataFormContainer>, ''>
+
+function ProfilePage(props: ProfilePageProps) {
   const {
     elements: {Link, H4}
   } = useWebsiteBuilder()
@@ -72,8 +76,6 @@ function Profile() {
                   invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt
                 )
               }
-              failureURL=""
-              successURL=""
             />
           </SubscriptionListWrapper>
         )}
@@ -85,8 +87,6 @@ function Profile() {
             filter={subscriptions =>
               subscriptions.filter(subscription => !subscription.deactivation)
             }
-            failureURL=""
-            successURL=""
           />
 
           {hasDeactivatedSubscriptions && (
@@ -100,16 +100,14 @@ function Profile() {
       <ProfileWrapper>
         <H4 component={'h1'}>Profil</H4>
 
-        <PersonalDataFormContainer mediaEmail="abo@gruppetto-magazin.ch" />
+        <PersonalDataFormContainer {...props} />
       </ProfileWrapper>
     </>
   )
 }
 
-const GuardedProfile = withAuthGuard(Profile)
-
-export {GuardedProfile as ProfilePage}
-;(GuardedProfile as any).getInitialProps = async (ctx: NextPageContext) => {
+const GuardedProfile = withAuthGuard(ProfilePage) as NextPage<ComponentProps<typeof ProfilePage>>
+GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}
   }
@@ -156,3 +154,5 @@ export {GuardedProfile as ProfilePage}
 
   return props
 }
+
+export {GuardedProfile as ProfilePage}

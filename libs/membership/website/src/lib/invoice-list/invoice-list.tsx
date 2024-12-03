@@ -1,18 +1,22 @@
 import {Skeleton, styled} from '@mui/material'
 import {BuilderInvoiceListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {InvoiceListItemContent, InvoiceListItemWrapper} from './invoice-list-item'
-import {Invoice} from '@wepublish/website/api'
+import {FullInvoiceFragment} from '@wepublish/website/api'
 
 export const InvoiceListWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-export const canPayInvoice = (invoice: Invoice) =>
+export const canPayInvoice = (invoice: FullInvoiceFragment) =>
   // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
   invoice.subscription?.paymentMethod.slug !== 'payrexx-subscription' &&
   !invoice.canceledAt &&
-  !invoice.paidAt
+  !invoice.paidAt &&
+  !isSepa(invoice)
+
+export const isSepa = (invoice: FullInvoiceFragment) =>
+  invoice.subscription?.paymentMethod.description === 'sepa'
 
 export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInvoiceListProps) => {
   const {
@@ -39,6 +43,7 @@ export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInv
           <InvoiceListItem
             key={invoice.id}
             {...invoice}
+            isSepa={isSepa(invoice)}
             canPay={canPayInvoice(invoice)}
             pay={async () => {
               if (invoice?.subscription) {

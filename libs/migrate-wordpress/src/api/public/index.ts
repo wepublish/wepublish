@@ -821,15 +821,20 @@ export type MailTemplateWithUrlAndStatusModel = {
 export type MemberPlan = {
   __typename?: 'MemberPlan'
   amountPerMonthMin: Scalars['Int']
+  amountPerMonthTarget?: Maybe<Scalars['Int']>
   availablePaymentMethods: Array<AvailablePaymentMethod>
   currency: Currency
   description?: Maybe<Scalars['RichText']>
   extendable: Scalars['Boolean']
+  failPage?: Maybe<Page>
+  failPageId?: Maybe<Scalars['ID']>
   id: Scalars['ID']
   image?: Maybe<Image>
   maxCount?: Maybe<Scalars['Int']>
   name: Scalars['String']
   slug: Scalars['String']
+  successPage?: Maybe<Page>
+  successPageId?: Maybe<Scalars['ID']>
   tags?: Maybe<Array<Scalars['String']>>
 }
 
@@ -2081,6 +2086,7 @@ export type Stats = {
 export type Subscription = {
   __typename?: 'Subscription'
   autoRenew: Scalars['Boolean']
+  canExtend: Scalars['Boolean']
   deactivation?: Maybe<SubscriptionDeactivation>
   extendable: Scalars['Boolean']
   id: Scalars['ID']

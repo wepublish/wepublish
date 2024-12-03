@@ -4,6 +4,7 @@ import {
   Currency,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
+  MemberPlanInput,
   PaymentMethod,
   useCreateMemberPlanMutation,
   useMemberPlanLazyQuery,
@@ -86,6 +87,7 @@ function MemberPlanEdit() {
       description: [],
       currency: Currency.Chf,
       amountPerMonthMin: 0,
+      amountPerMonthTarget: null,
       image: undefined,
       active: true,
       tags: [],
@@ -131,6 +133,10 @@ function MemberPlanEdit() {
     amountPerMonthMin: Schema.Types.NumberType()
       .isRequired(t('memberPlanEdit.amountPerMonthMinRequired'))
       .min(0, t('memberPlanEdit.amountPerMonthMinZero')),
+    amountPerMonthTarget: Schema.Types.NumberType().min(
+      ((memberPlan?.amountPerMonthMin || 0) + 1) / 100,
+      t('memberPlanEdit.targetPriceMustBeGreaterThanMin')
+    ),
     currency: Schema.Types.StringType().isRequired(t('memberPlanEdit.currencyRequired'))
   })
 
@@ -153,10 +159,13 @@ function MemberPlanEdit() {
       })),
       currency: memberPlan.currency,
       amountPerMonthMin: memberPlan.amountPerMonthMin,
+      amountPerMonthTarget: memberPlan.amountPerMonthTarget,
       extendable: memberPlan.extendable,
       maxCount: memberPlan.maxCount,
-      migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID
-    }
+      migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID,
+      successPageId: memberPlan.successPageId,
+      failPageId: memberPlan.failPageId
+    } as MemberPlanInput
 
     // update member plan
     if (memberPlanId) {

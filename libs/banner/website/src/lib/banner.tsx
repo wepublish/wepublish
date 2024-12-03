@@ -61,7 +61,8 @@ const BannerActions = styled('div')`
 const BannerWrapper = styled('div')<BannerWrapperProps & {theme?: Theme}>(
   ({theme, hasImage}) => `
   z-index: 11;
-  position: relative;
+  position: sticky;
+  top: var(--navbar-height);
   display: grid;
   grid-template-columns: 1fr;
   background-color: ${theme.palette.secondary.main};
