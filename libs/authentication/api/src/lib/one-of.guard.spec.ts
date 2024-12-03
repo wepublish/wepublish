@@ -44,7 +44,7 @@ describe('OneOfGuard', () => {
     })
   })
 
-  it('should return true if no guards are set', async () => {
+  it('should return false if no guards are set', async () => {
     const reflectorSpy = jest.spyOn(reflector, 'getAllAndMerge').mockReturnValue([])
     const mockContext = {
       getHandler: () => ({}),
@@ -52,7 +52,7 @@ describe('OneOfGuard', () => {
     } as any
 
     const result = await guard.canActivate(mockContext)
-    expect(result).toBeTruthy()
+    expect(result).toBeFalsy()
     expect(reflectorSpy).toHaveBeenCalledWith(ONE_OF_METADATA_KEY, [{}, {}])
   })
 

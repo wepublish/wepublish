@@ -4,6 +4,7 @@ import {
   Currency,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
+  MemberPlanInput,
   PaymentMethod,
   useCreateMemberPlanMutation,
   useMemberPlanLazyQuery,
@@ -161,8 +162,10 @@ function MemberPlanEdit() {
       amountPerMonthTarget: memberPlan.amountPerMonthTarget,
       extendable: memberPlan.extendable,
       maxCount: memberPlan.maxCount,
-      migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID
-    }
+      migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID,
+      successPageId: memberPlan.successPageId,
+      failPageId: memberPlan.failPageId
+    } as MemberPlanInput
 
     // update member plan
     if (memberPlanId) {

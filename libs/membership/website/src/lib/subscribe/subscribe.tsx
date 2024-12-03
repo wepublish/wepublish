@@ -10,7 +10,7 @@ import {
 } from '@wepublish/authentication/website'
 import {
   Currency,
-  MemberPlan,
+  FullMemberPlanFragment,
   PaymentPeriodicity,
   RegisterMutationVariables,
   SubscribeMutationVariables,
@@ -230,7 +230,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const sortedMemberPlans = useMemo(
     () =>
       sortBy(
-        (memberPlan: MemberPlan) => memberPlan.amountPerMonthMin,
+        (memberPlan: FullMemberPlanFragment) => memberPlan.amountPerMonthMin,
         memberPlans.data?.memberPlans.nodes ?? []
       ),
     [memberPlans.data?.memberPlans.nodes]
