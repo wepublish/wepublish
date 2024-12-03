@@ -33,7 +33,6 @@ import {replace, sortBy, toLower} from 'ramda'
 import {MembershipModal} from '../membership-modal/membership-modal'
 import {ApolloError} from '@apollo/client'
 import {ApiAlert} from '@wepublish/errors/website'
-import {useRouter} from 'next/router'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
@@ -155,7 +154,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   onSubscribeWithRegister,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate
+  donate,
+  userId
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale, siteTitle},
@@ -165,8 +165,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     PeriodicityPicker
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
-  const {query} = useRouter()
-  const userId = query.userId as string | undefined
   const [openConfirm, setOpenConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()

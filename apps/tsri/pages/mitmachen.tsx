@@ -31,7 +31,7 @@ const MitmachenPage = styled(PageContainer)`
 
 export default function Mitmachen() {
   const {
-    query: {firstName, mail, lastName}
+    query: {firstName, mail, lastName, userId}
   } = useRouter()
 
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
@@ -49,6 +49,7 @@ export default function Mitmachen() {
         failureURL={thisLocation}
         fields={['firstName']}
         filter={plans => plans.filter(plan => plan.tags?.some(tag => tag === 'selling'))}
+        userId={userId as string | undefined}
       />
     </MitmachenPage>
   )

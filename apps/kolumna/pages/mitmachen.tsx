@@ -27,7 +27,7 @@ type MitmachenProps = {
 
 export default function Mitmachen({donate}: MitmachenProps) {
   const {
-    query: {firstName, mail, lastName}
+    query: {firstName, mail, lastName, userId}
   } = useRouter()
 
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
@@ -88,6 +88,7 @@ export default function Mitmachen({donate}: MitmachenProps) {
         fields={['firstName']}
         termsOfServiceUrl="/agb"
         donate={() => !!donate}
+        userId={userId as string | undefined}
       />
     </>
   )

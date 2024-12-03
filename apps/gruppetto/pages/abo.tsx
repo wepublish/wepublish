@@ -7,7 +7,7 @@ import {useRouter} from 'next/router'
 
 export default function Mitmachen() {
   const {
-    query: {firstName, mail, lastName}
+    query: {firstName, mail, lastName, userId}
   } = useRouter()
 
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
@@ -22,6 +22,7 @@ export default function Mitmachen() {
       }}
       successURL={`${locationOrigin}/payment/success`}
       failureURL={`${locationOrigin}/payment/fail`}
+      userId={userId as string | undefined}
     />
   )
 }

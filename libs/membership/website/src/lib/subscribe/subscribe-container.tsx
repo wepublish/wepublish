@@ -29,7 +29,7 @@ export type SubscribeContainerProps<
 > = BuilderContainerProps &
   Pick<
     BuilderSubscribeProps<T>,
-    'fields' | 'schema' | 'defaults' | 'termsOfServiceUrl' | 'donate'
+    'fields' | 'schema' | 'defaults' | 'termsOfServiceUrl' | 'donate' | 'userId'
   > & {
     successURL: string
     failureURL: string
@@ -47,7 +47,8 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
   filter,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate
+  donate,
+  userId
 }: SubscribeContainerProps<T>) => {
   const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
@@ -131,6 +132,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
         memberPlans={filteredMemberPlans}
         termsOfServiceUrl={termsOfServiceUrl}
         donate={donate}
+        userId={userId}
         onSubscribe={async formData => {
           await subscribe({
             variables: {

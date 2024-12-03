@@ -16,7 +16,8 @@ export default function Mitmachen() {
       firstName,
       mail,
       lastName,
-      deactivateSubscriptionId
+      deactivateSubscriptionId,
+      userId
     }
   } = useRouter()
 
@@ -48,6 +49,7 @@ export default function Mitmachen() {
             : memberPlans
         }}
         deactivateSubscriptionId={deactivateSubscriptionId as string | undefined}
+        userId={userId as string | undefined}
       />
     </Container>
   )
