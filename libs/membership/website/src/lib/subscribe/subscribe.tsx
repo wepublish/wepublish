@@ -2,9 +2,9 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import {Checkbox, FormControlLabel, InputAdornment, Slider, styled} from '@mui/material'
 import {
   Challenge,
-  UserForm,
   defaultRegisterSchema,
   requiredRegisterSchema,
+  UserForm,
   useUser,
   zodAlwaysRefine
 } from '@wepublish/authentication/website'
@@ -558,7 +558,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               setOpenConfirm(true)
             }
           }}>
-          {paymentText} {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnierens'}
+          {paymentText} {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
         </Button>
 
         {autoRenew && termsOfServiceUrl ? (
