@@ -9,8 +9,6 @@ export * from './lib/graphql/page'
 export * from './lib/graphql/peer'
 export * from './lib/graphql/token'
 
-export * from './lib/graphql/slug'
-
 export * from './lib/graphql/schema'
 export * from './lib/graphql/permissions'
 

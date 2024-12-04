@@ -17,7 +17,7 @@ import {Context} from '../context'
 import {GraphQLImage} from './image'
 import {GraphQLAuthor} from './author'
 import {PublicArticle, ArticleRevision, Article, ArticleSort, PeerArticle} from '../db/article'
-import {GraphQLSlug} from './slug'
+import {GraphQLSlug} from '@wepublish/utils/api'
 import {
   GraphQLDateFilter,
   GraphQLMetadataProperty,

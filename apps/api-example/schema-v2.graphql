@@ -394,8 +394,13 @@ type PaginatedPollVotes {
 }
 
 type PaymentMethod {
+  description: String!
   id: ID!
+  image: Image
+  imageId: String
   name: String!
+  paymentProviderID: String!
+  slug: Slug!
 }
 
 enum PaymentPeriodicity {
@@ -578,6 +583,8 @@ input SingleEventFilter {
   id: String!
   source: String!
 }
+
+scalar Slug
 
 enum SortOrder {
   Ascending

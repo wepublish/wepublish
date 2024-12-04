@@ -10,6 +10,8 @@ import {
   ID
 } from '@nestjs/graphql'
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
+import {Image} from '@wepublish/image/api'
+import {GraphQLSlug} from '@wepublish/utils/api'
 
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'
@@ -44,6 +46,21 @@ export class PaymentMethod {
 
   @Field()
   name!: string
+
+  @Field()
+  paymentProviderID!: string
+
+  @Field(() => GraphQLSlug)
+  slug!: typeof GraphQLSlug
+
+  @Field()
+  description!: string
+
+  @Field({nullable: true})
+  imageId?: string
+
+  @Field(() => Image, {nullable: true})
+  image?: Image
 }
 
 @ObjectType()
