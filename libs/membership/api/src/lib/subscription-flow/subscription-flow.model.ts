@@ -50,7 +50,7 @@ class AvailablePaymentMethod {
   paymentPeriodicities!: PaymentPeriodicity[]
 
   @Field()
-  forceAutoRenewal!: Boolean
+  forceAutoRenewal!: boolean
 }
 
 @ObjectType()
