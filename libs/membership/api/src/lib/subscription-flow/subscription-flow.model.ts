@@ -12,6 +12,8 @@ import {
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
 import {Image} from '@wepublish/image/api'
 import {GraphQLSlug} from '@wepublish/utils/api'
+import {PageV2} from '@wepublish/event/api'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'
@@ -30,6 +32,27 @@ export class MailTemplateRef {
   name!: string
 }
 
+enum Currency {
+  CHF = 'CHF',
+  EUR = 'EUR'
+}
+
+registerEnumType(Currency, {
+  name: 'Currency'
+})
+
+@ObjectType()
+class AvailablePaymentMethod {
+  @Field(() => [PaymentMethod])
+  paymentMethods!: PaymentMethod[]
+
+  @Field(() => [PaymentPeriodicity])
+  paymentPeriodicities!: PaymentPeriodicity[]
+
+  @Field()
+  forceAutoRenewal!: boolean
+}
+
 @ObjectType()
 class MemberPlan {
   @Field(() => ID)
@@ -37,6 +60,48 @@ class MemberPlan {
 
   @Field()
   name!: string
+
+  @Field()
+  slug!: string
+
+  @Field(() => Image, {nullable: true})
+  image?: Image
+
+  @Field(() => GraphQLRichText, {nullable: true})
+  description?: Node[]
+
+  @Field(() => [String], {nullable: true})
+  tags?: string[]
+
+  @Field(() => Currency)
+  currency!: Currency
+
+  @Field(() => Int)
+  amountPerMonthMin!: number
+
+  @Field(() => Int, {nullable: true})
+  amountPerMonthTarget?: number
+
+  @Field(() => Int, {nullable: true})
+  maxCount?: number
+
+  @Field()
+  extendable!: boolean
+
+  @Field(() => [AvailablePaymentMethod])
+  availablePaymentMethods!: AvailablePaymentMethod[]
+
+  @Field(() => ID, {nullable: true})
+  successPageId?: string
+
+  @Field({nullable: true})
+  successPage?: PageV2
+
+  @Field(() => ID, {nullable: true})
+  failPageId?: string
+
+  @Field({nullable: true})
+  failPage?: PageV2
 }
 
 @ObjectType()
