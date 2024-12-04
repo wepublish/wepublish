@@ -11,7 +11,7 @@ import {
 } from '@nestjs/graphql'
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
 import {Image} from '@wepublish/image/api'
-import {GraphQLSlug} from '@wepublish/api'
+import {GraphQLSlug} from '@wepublish/utils/api'
 
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'

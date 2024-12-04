@@ -60,7 +60,7 @@ import {
   createUserSession,
   revokeSessionByToken
 } from './session/session.mutation'
-import {GraphQLSlug} from './slug'
+import {GraphQLSlug} from '@wepublish/utils/api'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription-public'
 import {updatePublicSubscription} from './subscription/subscription.public-mutation'
 import {
