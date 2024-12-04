@@ -62,15 +62,6 @@ import {
   deleteNavigationById,
   updateNavigation
 } from './navigation/navigation.private-mutation'
-import {GraphQLPage, GraphQLPageInput} from './page'
-import {
-  createPage,
-  deletePageById,
-  duplicatePage,
-  publishPage,
-  unpublishPage,
-  updatePage
-} from './page/page.private-mutation'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {
   createPaymentMethod,
@@ -615,59 +606,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {id: {type: new GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, mediaAdapter, prisma: {image}}) =>
         deleteImageById(id, authenticate, image, mediaAdapter)
-    },
-
-    // Page
-    // =======
-
-    createPage: {
-      type: new GraphQLNonNull(GraphQLPage),
-      args: {input: {type: new GraphQLNonNull(GraphQLPageInput)}},
-      resolve: (root, {input}, {authenticate, prisma: {page}}) =>
-        createPage(input, authenticate, page)
-    },
-
-    updatePage: {
-      type: GraphQLPage,
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLID)},
-        input: {type: new GraphQLNonNull(GraphQLPageInput)}
-      },
-      resolve: (root, {id, input}, {authenticate, prisma: {page}, loaders}) =>
-        updatePage(id, input, authenticate, page, loaders.pages)
-    },
-
-    deletePage: {
-      type: GraphQLPage,
-      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma}) => deletePageById(id, authenticate, prisma)
-    },
-
-    publishPage: {
-      type: GraphQLPage,
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLID)},
-        publishAt: {type: GraphQLDateTime},
-        updatedAt: {type: GraphQLDateTime},
-        publishedAt: {type: GraphQLDateTime}
-      },
-      resolve: (root, {id, publishAt, updatedAt, publishedAt}, {authenticate, prisma: {page}}) =>
-        publishPage(id, {publishAt, updatedAt, publishedAt}, authenticate, page)
-    },
-
-    unpublishPage: {
-      type: GraphQLPage,
-      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma: {page}}) => unpublishPage(id, authenticate, page)
-    },
-
-    duplicatePage: {
-      type: new GraphQLNonNull(GraphQLPage),
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLID)}
-      },
-      resolve: (root, {id}, {prisma: {page}, loaders: {pages}, authenticate}) =>
-        duplicatePage(id, authenticate, pages, page)
     },
 
     // MemberPlan

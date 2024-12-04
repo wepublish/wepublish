@@ -12,8 +12,6 @@ import {
 import {Image} from '@wepublish/image/api'
 import {Tag} from '@wepublish/tag/api'
 import {DateFilter, PaginatedType, SortOrder} from '@wepublish/utils/api'
-// Circular dependency is intended as pages can have blocks, which can have page teasers
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import {BlockContent, BlockContentInput, HasBlockContent} from '@wepublish/block-content/api'
 
 export enum PageSort {

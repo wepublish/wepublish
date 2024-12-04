@@ -1,5 +1,5 @@
 import {AuthSessionType} from '@wepublish/authentication/api'
-import {SortOrder, logger} from '@wepublish/utils/api'
+import {SortOrder} from '@wepublish/utils/api'
 import {UserInputError} from 'apollo-server-express'
 import {
   GraphQLID,
@@ -12,10 +12,7 @@ import {
 import {Context} from '../context'
 import {AuthorSort} from '../db/author'
 import {MemberPlanSort} from '../db/memberPlan'
-import {PageSort, PublicPage} from '../db/page'
 import {NotFound} from '../error'
-import {delegateToPeerSchema} from '../utility'
-import {GraphQLPublicArticle, GraphQLPublicArticleSort} from './article'
 import {GraphQLAuthProvider} from './auth'
 import {
   GraphQLAuthor,
@@ -42,18 +39,9 @@ import {
 } from './memberPlan'
 import {GraphQLPublicNavigation} from './navigation'
 import {getNavigations} from './navigation/navigation.public-queries'
-import {
-  GraphQLPublicPage,
-  GraphQLPublicPageConnection,
-  GraphQLPublishedPageFilter,
-  GraphQLPublishedPageSort
-} from './page'
-import {getPublishedPages} from './page/page.public-queries'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {getPublicPeerProfile} from './peer-profile/peer-profile.public-queries'
 import {getPeerByIdOrSlug} from './peer/peer.public-queries'
-import {GraphQLPublicPhrase} from './phrase/phrase'
-import {queryPhrase} from './phrase/phrase.public-queries'
 import {GraphQLFullPoll} from './poll/poll'
 import {getPoll, userPollVote} from './poll/poll.public-queries'
 import {GraphQLSlug} from './slug'
@@ -61,7 +49,6 @@ import {GraphQLPublicSubscription} from './subscription-public'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
 import {TagSort, getTags} from './tag/tag.query'
 import {GraphQLPublicUser} from './user'
-import {ArticleSort} from '@wepublish/article/api'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -132,103 +119,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       description: 'This query is to get the authors.',
       resolve: (root, {filter, sort, order, take, skip, cursor}, {prisma: {author}}) =>
         getPublicAuthors(filter, sort, order, cursor, skip, take, author)
-    },
-
-    // Peer Article
-    // ============
-
-    peerArticle: {
-      type: GraphQLPublicArticle,
-      args: {
-        peerID: {type: GraphQLID},
-        peerSlug: {type: GraphQLSlug},
-        id: {type: new GraphQLNonNull(GraphQLID)}
-      },
-      description: 'This query takes either the peer ID or the peer slug and returns the article.',
-      async resolve(root, {peerID, peerSlug, id}, context, info) {
-        const {loaders} = context
-
-        if ((peerID == null && peerSlug == null) || (peerID != null && peerSlug != null)) {
-          throw new UserInputError('You must provide either `peerID` or `peerSlug`.')
-        }
-
-        if (peerSlug) {
-          const peer = await loaders.peerBySlug.load(peerSlug)
-
-          if (peer) {
-            peerID = peer.id
-            loaders.peer.prime(peer.id, peer)
-          }
-        }
-
-        if (!peerID) return null
-
-        return delegateToPeerSchema(peerID, false, context, {
-          fieldName: 'article',
-          args: {id},
-          info
-        })
-      }
-    },
-
-    // Page
-    // =======
-
-    page: {
-      type: GraphQLPublicPage,
-      args: {
-        id: {type: GraphQLID},
-        slug: {type: GraphQLSlug},
-        token: {type: GraphQLString}
-      },
-      description: 'This query takes either the ID, slug or token and returns the page.',
-      async resolve(root, {id, slug, token}, {session, loaders, verifyJWT}) {
-        let page = id ? await loaders.publicPagesByID.load(id) : null
-
-        if (!page && slug !== undefined) {
-          // slug can be empty string
-          page = await loaders.publicPagesBySlug.load(slug)
-        }
-
-        if (!page && token) {
-          try {
-            const pageId = verifyJWT(token)
-            const privatePage = await loaders.pages.load(pageId)
-
-            page = privatePage?.draft
-              ? ({
-                  ...privatePage.draft,
-                  id: privatePage.id,
-                  updatedAt: new Date(),
-                  publishedAt: new Date()
-                } as PublicPage)
-              : null
-          } catch (error) {
-            logger('graphql-query').warn(
-              error as Error,
-              'Error while verifying token with page id.'
-            )
-          }
-        }
-        if (!page) throw new NotFound('Page', id ?? slug ?? token)
-
-        return page
-      }
-    },
-
-    pages: {
-      type: new GraphQLNonNull(GraphQLPublicPageConnection),
-      args: {
-        cursor: {type: GraphQLID},
-        take: {type: GraphQLInt, defaultValue: 10},
-        skip: {type: GraphQLInt, defaultValue: 0},
-        filter: {type: GraphQLPublishedPageFilter},
-        sort: {type: GraphQLPublishedPageSort, defaultValue: PageSort.PublishedAt},
-        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
-      },
-      description: 'This query returns the pages.',
-      resolve: (root, {filter, sort, order, cursor, take, skip}, {prisma: {page}}) =>
-        getPublishedPages(filter, sort, order, cursor, skip, take, page)
     },
 
     // Comments
@@ -505,25 +395,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {filter, sort, order, cursor, take, skip}, {prisma}) =>
         getTags(filter, sort, order, cursor, skip, take, prisma.tag)
-    },
-
-    // Phrase
-    // =======
-
-    phrase: {
-      type: GraphQLPublicPhrase,
-      description:
-        'This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones.',
-      args: {
-        query: {type: new GraphQLNonNull(GraphQLString)},
-        take: {type: GraphQLInt, defaultValue: 10},
-        skip: {type: GraphQLInt, defaultValue: 0},
-        pageSort: {type: GraphQLPublishedPageSort, defaultValue: PageSort.PublishedAt},
-        articleSort: {type: GraphQLPublicArticleSort, defaultValue: ArticleSort.PublishedAt},
-        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
-      },
-      resolve: (root, {query, take, skip, pageSort, articleSort, order}, {prisma, loaders}) =>
-        queryPhrase(query, prisma, take, skip, pageSort, articleSort, order)
     }
   }
 })

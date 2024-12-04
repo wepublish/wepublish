@@ -56,7 +56,6 @@ export const getActions = async (
     ? page
         .findMany({
           take: 50,
-          include: {draft: true, pending: true, published: true},
           orderBy: {createdAt: 'desc'}
         })
         .then(val =>

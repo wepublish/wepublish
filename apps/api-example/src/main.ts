@@ -42,8 +42,7 @@ async function bootstrap() {
     mediaAdapter,
     paymentProviders,
     mailProvider,
-    hotAndTrendingDataSource,
-    articleService
+    hotAndTrendingDataSource
   }).catch(err => {
     console.error(err)
     process.exit(1)

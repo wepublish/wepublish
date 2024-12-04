@@ -13,8 +13,6 @@ import {Image} from '@wepublish/image/api'
 import {Author} from '@wepublish/author/api'
 import {Tag} from '@wepublish/tag/api'
 import {DateFilter, PaginatedType, SortOrder} from '@wepublish/utils/api'
-// Circular dependency is intended as articles can have blocks, which can have article teasers
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import {BlockContent, BlockContentInput, HasBlockContent} from '@wepublish/block-content/api'
 import {Peer} from '@wepublish/peering/api'
 

@@ -1,10 +1,18 @@
 import {Injectable, NotFoundException} from '@nestjs/common'
 import {Prisma, PrismaClient, TagType} from '@prisma/client'
 import {GraphQLClient} from 'graphql-request'
-import {Article, ArticleQuery, ArticleQueryVariables} from './graphql'
-import {ImageFetcherService} from '@wepublish/image/api'
+import {
+  Article,
+  ArticleQuery,
+  ArticleQueryVariables,
+  BlockContent,
+  ImageBlock,
+  ImageRefFragment
+} from './graphql'
+import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
 import {PrimeDataLoader} from '@wepublish/utils/api'
 import {ArticleDataloaderService} from '@wepublish/article/api'
+import {cond, T} from 'ramda'
 
 type ImportArticleOptions = Partial<{
   importAuthors: boolean
@@ -13,7 +21,11 @@ type ImportArticleOptions = Partial<{
 
 @Injectable()
 export class ImportPeerArticleService {
-  constructor(private prisma: PrismaClient, private imageFetcher: ImageFetcherService) {}
+  constructor(
+    private prisma: PrismaClient,
+    private imageFetcher: ImageFetcherService,
+    private mediaAdapter: MediaAdapter
+  ) {}
 
   getArticles() {
     return []
@@ -46,6 +58,7 @@ export class ImportPeerArticleService {
       ? await this.importAuthors(article.published!.authors)
       : []
     const tags = options?.importAuthors ? await this.importTags(article.tags) : []
+    const blocks = await this.prepareBlocksForImport(article.published!.blocks)
 
     const created = await this.prisma.article.create({
       data: {
@@ -65,7 +78,7 @@ export class ImportPeerArticleService {
                 data: authors
               }
             },
-            blocks: article.published!.blocks as Prisma.JsonArray
+            blocks
           }
         },
 
@@ -86,20 +99,34 @@ export class ImportPeerArticleService {
     const res = await Promise.all(
       authors
         .filter(author => !author.hideOnArticle)
-        .map(author =>
-          this.prisma.author.upsert({
+        .map(async author => {
+          let imageId: string | undefined
+
+          if (author.image?.url) {
+            const file = this.imageFetcher.fetch(author.image?.url)
+            const image = await this.mediaAdapter.uploadImageFromArrayBuffer(file)
+
+            await this.prisma.image.create({
+              data: image
+            })
+
+            imageId = image.id
+          }
+
+          return this.prisma.author.upsert({
             where: {
               slug: author.slug
             },
             create: {
               name: author.name,
               slug: author.slug,
+              imageID: imageId,
               bio: author.bio as Prisma.JsonArray,
               hideOnTeam: true
             },
             update: {}
           })
-        )
+        })
     )
 
     return res.map(r => ({
@@ -138,5 +165,40 @@ export class ImportPeerArticleService {
     return res.map(r => ({
       tagId: r.id
     }))
+  }
+
+  private async prepareBlocksForImport(
+    blocks: Exclude<ArticleQuery['article']['published'], undefined | null>['blocks']
+  ): Promise<Prisma.InputJsonValue[]> {
+    return Promise.all(
+      blocks.map(
+        cond([
+          [
+            (block: BlockContent) => block.__typename === 'ImageBlock',
+            async (block: ImageBlock) => {
+              let imageId: string | undefined
+
+              if (block.image?.url) {
+                const file = this.imageFetcher.fetch(block.image.url)
+                const image = await this.mediaAdapter.uploadImageFromArrayBuffer(file)
+
+                await this.prisma.image.create({
+                  data: image
+                })
+
+                imageId = image.id
+              }
+
+              return {
+                type: block.type,
+                imageId,
+                caption: block.caption
+              }
+            }
+          ],
+          [(_block: BlockContent) => true, async (block: BlockContent) => block]
+        ])
+      )
+    )
   }
 }

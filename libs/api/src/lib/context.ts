@@ -12,7 +12,6 @@ import {
   PaymentState,
   Peer,
   PrismaClient,
-  TaggedPages,
   User,
   UserRole
 } from '@prisma/client'
@@ -42,7 +41,6 @@ import {ChallengeProvider} from './challenges/challengeProvider'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
-import {PageWithRevisions, PublicPage, pageWithRevisionsToPublicPage} from './db/page'
 import {SubscriptionWithRelations} from './db/subscription'
 import {TokenExpiredError} from './error'
 import {getEvent} from './graphql/event/event.query'
@@ -50,9 +48,8 @@ import {createSafeHostUrl} from './graphql/peer/create-safe-host-url'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
 import {MemberContext} from './memberContext'
-import {URLAdapter} from './urlAdapter'
 import {BlockStylesDataloaderService} from '@wepublish/block-content/api'
-import {ArticleService, HotAndTrendingDataSource} from '@wepublish/article/api'
+import {URLAdapter} from '@wepublish/nest-modules'
 
 /**
  * Peered article cache configuration and setup
@@ -74,10 +71,6 @@ export interface DataLoaderContext {
   readonly authorsBySlug: DataLoader<string, Author | null>
 
   readonly images: DataLoader<string, Image | null>
-
-  readonly pages: DataLoader<string, (PageWithRevisions & {tags: TaggedPages[]}) | null>
-  readonly publicPagesByID: DataLoader<string, PublicPage | null>
-  readonly publicPagesBySlug: DataLoader<string, PublicPage | null>
 
   readonly events: DataLoader<string, Event | null>
 
@@ -126,8 +119,6 @@ export interface Context {
 
   readonly session: AuthSession | null
   readonly loaders: DataLoaderContext
-  readonly hotAndTrendingDataSource: HotAndTrendingDataSource
-  readonly articleService: ArticleService
 
   readonly mailContext: MailContext
   readonly memberContext: MemberContext
@@ -198,8 +189,6 @@ export interface ContextOptions {
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
   readonly challenge: ChallengeProvider
-  readonly hotAndTrendingDataSource: HotAndTrendingDataSource
-  readonly articleService: ArticleService
 }
 
 export interface SendMailFromProviderProps {
@@ -236,9 +225,7 @@ export async function contextFromRequest(
     paymentProviders,
     challenge,
     sessionTTL,
-    hashCostFactor,
-    hotAndTrendingDataSource,
-    articleService
+    hashCostFactor
   }: ContextOptions
 ): Promise<Context> {
   const authService = new AuthenticationService(prisma)
@@ -344,121 +331,6 @@ export async function contextFromRequest(
           }
         }),
         'id'
-      )
-    ),
-
-    pages: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        await prisma.page.findMany({
-          where: {
-            id: {
-              in: ids as string[]
-            }
-          },
-          include: {
-            tags: true,
-            draft: {
-              include: {
-                properties: true
-              }
-            },
-            pending: {
-              include: {
-                properties: true
-              }
-            },
-            published: {
-              include: {
-                properties: true
-              }
-            }
-          }
-        }),
-        'id'
-      )
-    ),
-    publicPagesByID: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        (
-          await prisma.page.findMany({
-            where: {
-              id: {
-                in: ids as string[]
-              },
-              OR: [
-                {
-                  published: {
-                    isNot: null
-                  }
-                },
-                {
-                  pending: {
-                    isNot: null
-                  }
-                }
-              ]
-            },
-            include: {
-              published: {
-                include: {
-                  properties: true
-                }
-              },
-              pending: {
-                include: {
-                  properties: true
-                }
-              }
-            }
-          })
-        ).map(pageWithRevisionsToPublicPage),
-        'id'
-      )
-    ),
-    publicPagesBySlug: new DataLoader(async slugs =>
-      createOptionalsArray(
-        slugs as string[],
-        (
-          await prisma.page.findMany({
-            where: {
-              OR: [
-                {
-                  published: {
-                    is: {
-                      slug: {
-                        in: slugs as string[]
-                      }
-                    }
-                  }
-                },
-                {
-                  pending: {
-                    is: {
-                      slug: {
-                        in: slugs as string[]
-                      }
-                    }
-                  }
-                }
-              ]
-            },
-            include: {
-              published: {
-                include: {
-                  properties: true
-                }
-              },
-              pending: {
-                include: {
-                  properties: true
-                }
-              }
-            }
-          })
-        ).map(pageWithRevisionsToPublicPage),
-        'slug'
       )
     ),
 
@@ -843,8 +715,6 @@ export async function contextFromRequest(
     urlAdapter,
     oauth2Providers,
     paymentProviders,
-    hotAndTrendingDataSource,
-    articleService,
     hooks,
     requestIP,
     fingerprint,

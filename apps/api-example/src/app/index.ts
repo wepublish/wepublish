@@ -8,7 +8,6 @@ import {
   MediaAdapter,
   Oauth2Provider,
   PaymentProvider,
-  URLAdapter,
   WepublishServer
 } from '@wepublish/api'
 import pinoMultiStream from 'pino-multi-stream'
@@ -16,10 +15,8 @@ import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
 import {Application} from 'express'
-import {DefaultURLAdapter} from '../urlAdapters'
 import {readConfig} from '../readConfig'
-import {MannschaftURLAdapter} from '../urlAdapters/URLAdapter-mannschaft'
-import {ArticleService} from '@wepublish/article/api'
+import {URLAdapter} from '@wepublish/nest-modules'
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
@@ -30,7 +27,6 @@ type RunServerProps = {
   paymentProviders: PaymentProvider[]
   mailProvider: MailProvider
   hotAndTrendingDataSource: HotAndTrendingDataSource
-  articleService: ArticleService
 }
 
 export async function runServer({
@@ -39,8 +35,7 @@ export async function runServer({
   mediaAdapter,
   mailProvider,
   paymentProviders,
-  hotAndTrendingDataSource,
-  articleService
+  hotAndTrendingDataSource
 }: RunServerProps) {
   /*
    * Load User specific configuration
@@ -118,11 +113,7 @@ export async function runServer({
     level: 'debug'
   })
 
-  let urlAdapter: URLAdapter = new DefaultURLAdapter({websiteURL})
-
-  if (config.general.urlAdapter === 'mannschaft') {
-    urlAdapter = new MannschaftURLAdapter({websiteURL, prisma})
-  }
+  const urlAdapter = new URLAdapter(websiteURL)
 
   /**
    * Challenge
@@ -171,9 +162,7 @@ export async function runServer({
         ? config.general.apolloIntrospection
         : false,
       logger,
-      challenge,
-      hotAndTrendingDataSource,
-      articleService
+      challenge
     },
     privateExpressApp,
     publicExpressApp

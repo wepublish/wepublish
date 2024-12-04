@@ -8,8 +8,6 @@ import {
   OmitType,
   registerEnumType
 } from '@nestjs/graphql'
-// Intended
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import {Article, HasArticle, Property, PropertyInput} from '@wepublish/article/api'
 import {HasPage, Page} from '@wepublish/page/api'
 import {HasPeer, Peer} from '@wepublish/peering/api'

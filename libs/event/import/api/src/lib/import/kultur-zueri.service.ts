@@ -64,17 +64,10 @@ export class KulturZueriService implements EventsProvider {
 
     if (event.imageUrl) {
       const file = this.imageFetcher.fetch(event.imageUrl)
-      const {id, ...image} = await this.mediaAdapter.uploadImageFromArrayBuffer(file)
+      const image = await this.mediaAdapter.uploadImageFromArrayBuffer(file)
 
       const createdImage = await this.prisma.image.create({
-        data: {
-          id,
-          ...image,
-          filename: image.filename
-        },
-        include: {
-          focalPoint: true
-        }
+        data: image
       })
 
       createdImageId = createdImage.id

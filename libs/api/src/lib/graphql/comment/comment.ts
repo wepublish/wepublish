@@ -356,7 +356,7 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
             comment.itemType === 'article'
               ? null // @TODO: await loaders.publicArticles.load(comment.itemID)
               : comment.itemType === 'page'
-              ? await loaders.publicPagesByID.load(comment.itemID)
+              ? null // @TODO: await loaders.publicPagesByID.load(comment.itemID)
               : null
 
           if (!item) {

@@ -1,15 +1,15 @@
 import {GraphQLObjectType, GraphQLNonNull, GraphQLUnionType} from 'graphql'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {Action, ActionType} from '../db/action'
-import {GraphQLPage} from './page'
 import {GraphQLPoll} from './poll/poll'
-import {GraphQLArticle} from './article'
 import {GraphQLAuthor} from './author'
 import {GraphQLComment} from './comment/comment'
 import {GraphQLSubscription} from './subscription'
 import {GraphQLUser} from './user'
 import {GraphQLEvent} from './event/event'
 import {Context} from '../context'
+import {Article} from '@wepublish/article/api'
+import {Page} from '@wepublish/page/api'
 
 const actionFields = {
   date: {type: new GraphQLNonNull(GraphQLDateTime)}
@@ -20,7 +20,7 @@ const GraphQLArticleCreatedAction = new GraphQLObjectType<Action, Context>({
   fields: {
     ...actionFields,
     article: {
-      type: new GraphQLNonNull(GraphQLArticle),
+      type: new GraphQLNonNull(Article),
       async resolve({id}, args, {loaders}) {
         return {
           __typename: 'Article',
@@ -36,9 +36,12 @@ const GraphQLPageCreatedAction = new GraphQLObjectType<Action, Context>({
   fields: {
     ...actionFields,
     page: {
-      type: new GraphQLNonNull(GraphQLPage),
+      type: new GraphQLNonNull(Page),
       async resolve({id}, args, {loaders}) {
-        return await loaders.pages.load(id)
+        return {
+          __typename: 'Page',
+          id
+        }
       }
     }
   }

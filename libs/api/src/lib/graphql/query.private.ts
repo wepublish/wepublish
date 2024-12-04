@@ -14,7 +14,6 @@ import {CommentSort} from '../db/comment'
 import {ImageSort} from '../db/image'
 import {InvoiceSort} from '../db/invoice'
 import {MemberPlanSort} from '../db/memberPlan'
-import {PageSort} from '../db/page'
 import {PaymentSort} from '../db/payment'
 import {SubscriptionSort} from '../db/subscription'
 import {UserSort} from '../db/user'
@@ -70,8 +69,6 @@ import {
 } from './memberPlan'
 import {GraphQLNavigation} from './navigation'
 import {getNavigationByIdOrKey, getNavigations} from './navigation/navigation.private-queries'
-import {GraphQLPage, GraphQLPageConnection, GraphQLPageFilter, GraphQLPageSort} from './page'
-import {getAdminPages, getPageById, getPagePreviewLink} from './page/page.private-queries'
 import {
   GraphQLPayment,
   GraphQLPaymentConnection,
@@ -440,40 +437,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         {filter, sort, order, skip, take, cursor},
         {authenticate, prisma: {comment}}
       ) => getAdminComments(filter, sort, order, cursor, skip, take, authenticate, comment)
-    },
-
-    // Page
-    // ====
-
-    page: {
-      type: GraphQLPage,
-      args: {id: {type: GraphQLID}},
-      resolve: (root, {id}, {authenticate, loaders: {pages}}) =>
-        getPageById(id, authenticate, pages)
-    },
-
-    pages: {
-      type: new GraphQLNonNull(GraphQLPageConnection),
-      args: {
-        cursor: {type: GraphQLID},
-        take: {type: GraphQLInt, defaultValue: 10},
-        skip: {type: GraphQLInt, defaultValue: 0},
-        filter: {type: GraphQLPageFilter},
-        sort: {type: GraphQLPageSort, defaultValue: PageSort.ModifiedAt},
-        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
-      },
-      resolve: (root, {filter, sort, order, skip, take, cursor}, {authenticate, prisma: {page}}) =>
-        getAdminPages(filter, sort, order, cursor, skip, take, authenticate, page)
-    },
-
-    pagePreviewLink: {
-      type: GraphQLString,
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLID)},
-        hours: {type: new GraphQLNonNull(GraphQLInt)}
-      },
-      resolve: (root, {id, hours}, {authenticate, loaders: {pages}, urlAdapter, generateJWT}) =>
-        getPagePreviewLink(id, hours, authenticate, generateJWT, urlAdapter, pages)
     },
 
     // MemberPlan

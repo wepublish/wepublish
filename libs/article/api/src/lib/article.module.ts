@@ -9,8 +9,6 @@ import {ArticleRevisionResolver} from './article-revision.resolver'
 import {ArticleRevisionService} from './article-revision.service'
 import {AuthorModule} from '@wepublish/author/api'
 import {HasArticleResolver} from './has-article/has-article.resolver'
-// Intended, we use forwardRef below
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import {BlockContentModule} from '@wepublish/block-content/api'
 
 @Module({

@@ -27,30 +27,37 @@ fragment ImportBlock on BlockContent {
 
   ... on PollBlock {
     __typename
+    type
   }
 
   ... on HTMLBlock {
     __typename
+    type
   }
 
   ... on EventBlock {
     __typename
+    type
   }
 
   ... on CommentBlock {
     __typename
+    type
   }
 
   ... on TeaserListBlock {
     __typename
+    type
   }
 
   ... on TeaserGridBlock {
     __typename
+    type
   }
 
   ... on TeaserGridFlexBlock {
     __typename
+    type
   }
 }
 

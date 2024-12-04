@@ -6,12 +6,11 @@ import {CommentBlockResolver} from './comment/comment-block.resolver'
 import {ImageModule} from '@wepublish/image/api'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {CommentModule} from '@wepublish/comments/api'
-import {PageModule} from '@wepublish/page/api'
 import {EventModule} from '@wepublish/event/api'
 import {PeerModule} from '@wepublish/peering/api'
-// Intended, we use forwardRef below
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import {ArticleModule} from '@wepublish/article/api'
+import {PageModule} from '@wepublish/page/api'
+import {TeaserListBlockResolver} from './teaser/teaser-list.resolver'
 
 @Module({
   imports: [
@@ -19,11 +18,12 @@ import {ArticleModule} from '@wepublish/article/api'
     BlockStylesModule,
     ImageModule,
     forwardRef(() => ArticleModule),
+    forwardRef(() => PageModule),
     PageModule,
     EventModule,
     PeerModule,
     CommentModule
   ],
-  providers: [PollBlockResolver, EventBlockResolver, CommentBlockResolver]
+  providers: [PollBlockResolver, EventBlockResolver, CommentBlockResolver, TeaserListBlockResolver]
 })
 export class BlockContentModule {}

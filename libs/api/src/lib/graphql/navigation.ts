@@ -17,9 +17,9 @@ import {
   PageNavigationLink,
   ExternalNavigationLink
 } from '../db/navigation'
-import {GraphQLArticle, GraphQLPublicArticle} from './article'
-import {GraphQLPage, GraphQLPublicPage} from './page'
 import {createProxyingResolver, createProxyingIsTypeOf} from '../utility'
+import {Page} from '@wepublish/page/api'
+import {Article} from '@wepublish/article/api'
 
 export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   name: 'BaseNavigationLink',
@@ -34,9 +34,12 @@ export const GraphQLPageNavigationLink = new GraphQLObjectType<PageNavigationLin
   fields: {
     label: {type: new GraphQLNonNull(GraphQLString)},
     page: {
-      type: GraphQLPage,
+      type: Page,
       resolve: createProxyingResolver(({pageID}, _args, {loaders}) => {
-        return loaders.pages.load(pageID)
+        return {
+          __typename: 'Page',
+          id: pageID
+        }
       })
     }
   },
@@ -51,7 +54,7 @@ export const GraphQLArticleNavigationLink = new GraphQLObjectType<ArticleNavigat
   fields: {
     label: {type: new GraphQLNonNull(GraphQLString)},
     article: {
-      type: GraphQLArticle,
+      type: Article,
       resolve: createProxyingResolver(({articleID}, _args, {loaders}) => {
         return {
           __typename: 'Article',
@@ -100,9 +103,12 @@ export const GraphQLPublicPageNavigationLink = new GraphQLObjectType<PageNavigat
   fields: {
     label: {type: new GraphQLNonNull(GraphQLString)},
     page: {
-      type: GraphQLPublicPage,
+      type: Page,
       resolve: createProxyingResolver(({pageID}, _args, {loaders}) => {
-        return loaders.publicPagesByID.load(pageID)
+        return {
+          __typename: 'Page',
+          id: pageID
+        }
       })
     }
   },
@@ -120,7 +126,7 @@ export const GraphQLPublicArticleNavigationLink = new GraphQLObjectType<
   fields: {
     label: {type: new GraphQLNonNull(GraphQLString)},
     article: {
-      type: GraphQLPublicArticle,
+      type: Article,
       resolve: createProxyingResolver(({articleID}, _args, {loaders}) => {
         return {
           __typename: 'Article',
