@@ -101,23 +101,15 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
             }
           }
         }
-      },
-      include: {
-        revisions: {
-          orderBy: {
-            publishedAt: 'desc'
-          },
-          take: 1
-        }
       }
     })
 
     return articles.sort((a, b) => {
-      if (!a?.slug || !articleViewMap[a.slug]) {
+      if (!a.slug || !articleViewMap[a.slug]) {
         return -1
       }
 
-      if (!b?.slug || !articleViewMap[b.slug]) {
+      if (!b.slug || !articleViewMap[b.slug]) {
         return 1
       }
 
