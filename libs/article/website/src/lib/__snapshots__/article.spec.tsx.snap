@@ -36,35 +36,11 @@ exports[`Article should render Default 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/200/100"
+        content="https://unsplash.it/1200/400"
         property="og:image"
       />
       <meta
-        content="200"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/300/200"
-        property="og:image"
-      />
-      <meta
-        content="300"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="500"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/800/400"
-        property="og:image"
-      />
-      <meta
-        content="800"
+        content="1200"
         property="og:image:width"
       />
       <meta
@@ -76,11 +52,35 @@ exports[`Article should render Default 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1200/400"
+        content="https://unsplash.it/800/400"
         property="og:image"
       />
       <meta
-        content="1200"
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
         property="og:image:width"
       />
       <meta
@@ -2671,35 +2671,11 @@ exports[`Article should render WithChildren 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/200/100"
+        content="https://unsplash.it/1200/400"
         property="og:image"
       />
       <meta
-        content="200"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/300/200"
-        property="og:image"
-      />
-      <meta
-        content="300"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="500"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/800/400"
-        property="og:image"
-      />
-      <meta
-        content="800"
+        content="1200"
         property="og:image:width"
       />
       <meta
@@ -2711,11 +2687,35 @@ exports[`Article should render WithChildren 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1200/400"
+        content="https://unsplash.it/800/400"
         property="og:image"
       />
       <meta
-        content="1200"
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
         property="og:image:width"
       />
       <meta
@@ -5336,35 +5336,11 @@ exports[`Article should render WithClassName 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/200/100"
+        content="https://unsplash.it/1200/400"
         property="og:image"
       />
       <meta
-        content="200"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/300/200"
-        property="og:image"
-      />
-      <meta
-        content="300"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="500"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/800/400"
-        property="og:image"
-      />
-      <meta
-        content="800"
+        content="1200"
         property="og:image:width"
       />
       <meta
@@ -5376,11 +5352,35 @@ exports[`Article should render WithClassName 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1200/400"
+        content="https://unsplash.it/800/400"
         property="og:image"
       />
       <meta
-        content="1200"
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
         property="og:image:width"
       />
       <meta
@@ -7998,35 +7998,11 @@ exports[`Article should render WithEmotion 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/200/100"
+        content="https://unsplash.it/1200/400"
         property="og:image"
       />
       <meta
-        content="200"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/300/200"
-        property="og:image"
-      />
-      <meta
-        content="300"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="500"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/800/400"
-        property="og:image"
-      />
-      <meta
-        content="800"
+        content="1200"
         property="og:image:width"
       />
       <meta
@@ -8038,11 +8014,35 @@ exports[`Article should render WithEmotion 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1200/400"
+        content="https://unsplash.it/800/400"
         property="og:image"
       />
       <meta
-        content="1200"
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
         property="og:image:width"
       />
       <meta
@@ -10684,35 +10684,11 @@ exports[`Article should render WithoutAuthors 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/200/100"
+        content="https://unsplash.it/1200/400"
         property="og:image"
       />
       <meta
-        content="200"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/300/200"
-        property="og:image"
-      />
-      <meta
-        content="300"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="500"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/800/400"
-        property="og:image"
-      />
-      <meta
-        content="800"
+        content="1200"
         property="og:image:width"
       />
       <meta
@@ -10724,11 +10700,35 @@ exports[`Article should render WithoutAuthors 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1200/400"
+        content="https://unsplash.it/800/400"
         property="og:image"
       />
       <meta
-        content="1200"
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
         property="og:image:width"
       />
       <meta
@@ -13098,35 +13098,11 @@ exports[`Article should render WithoutImageMetadata 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/200/100"
+        content="https://unsplash.it/1200/400"
         property="og:image"
       />
       <meta
-        content="200"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/300/200"
-        property="og:image"
-      />
-      <meta
-        content="300"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="500"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/800/400"
-        property="og:image"
-      />
-      <meta
-        content="800"
+        content="1200"
         property="og:image:width"
       />
       <meta
@@ -13138,11 +13114,35 @@ exports[`Article should render WithoutImageMetadata 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1200/400"
+        content="https://unsplash.it/800/400"
         property="og:image"
       />
       <meta
-        content="1200"
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
         property="og:image:width"
       />
       <meta
@@ -15756,35 +15756,11 @@ exports[`Article should render WithoutLead 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/200/100"
+        content="https://unsplash.it/1200/400"
         property="og:image"
       />
       <meta
-        content="200"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/300/200"
-        property="og:image"
-      />
-      <meta
-        content="300"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="500"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/800/400"
-        property="og:image"
-      />
-      <meta
-        content="800"
+        content="1200"
         property="og:image:width"
       />
       <meta
@@ -15796,11 +15772,35 @@ exports[`Article should render WithoutLead 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1200/400"
+        content="https://unsplash.it/800/400"
         property="og:image"
       />
       <meta
-        content="1200"
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
         property="og:image:width"
       />
       <meta
@@ -18418,35 +18418,11 @@ exports[`Article should render WithoutSocialMedia 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/200/100"
+        content="https://unsplash.it/1200/400"
         property="og:image"
       />
       <meta
-        content="200"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/300/200"
-        property="og:image"
-      />
-      <meta
-        content="300"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="500"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/800/400"
-        property="og:image"
-      />
-      <meta
-        content="800"
+        content="1200"
         property="og:image:width"
       />
       <meta
@@ -18458,11 +18434,35 @@ exports[`Article should render WithoutSocialMedia 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1200/400"
+        content="https://unsplash.it/800/400"
         property="og:image"
       />
       <meta
-        content="1200"
+        content="800"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
         property="og:image:width"
       />
       <meta
