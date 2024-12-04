@@ -9,7 +9,7 @@ export class ImportPeerArticleResolver {
   @Mutation(() => Article, {
     description: `Imports an article from a peer as a draft.`
   })
-  public publishArticle(@Args('peerId') peerId: string, @Args('articleId') articleId: string) {
+  public importPeerArticle(@Args('peerId') peerId: string, @Args('articleId') articleId: string) {
     return this.importPeerArticleService.importArticle(peerId, articleId)
   }
 }

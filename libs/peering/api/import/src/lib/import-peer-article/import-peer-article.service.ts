@@ -1,14 +1,7 @@
 import {Injectable, NotFoundException} from '@nestjs/common'
 import {Prisma, PrismaClient, TagType} from '@prisma/client'
 import {GraphQLClient} from 'graphql-request'
-import {
-  Article,
-  ArticleQuery,
-  ArticleQueryVariables,
-  BlockContent,
-  ImageBlock,
-  ImageRefFragment
-} from './graphql'
+import {Article, ArticleQuery, ArticleQueryVariables, BlockContent, ImageBlock} from './graphql'
 import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
 import {PrimeDataLoader} from '@wepublish/utils/api'
 import {ArticleDataloaderService} from '@wepublish/article/api'
@@ -108,6 +101,7 @@ export class ImportPeerArticleService {
 
             await this.prisma.image.create({
               data: image
+              // @TODO: add peerId
             })
 
             imageId = image.id
@@ -120,11 +114,14 @@ export class ImportPeerArticleService {
             create: {
               name: author.name,
               slug: author.slug,
-              imageID: imageId,
               bio: author.bio as Prisma.JsonArray,
-              hideOnTeam: true
+              hideOnTeam: true,
+              imageID: imageId
+              // @TODO: add peerId, author page if 2 authors with same slug exists, take peerId: null
             },
-            update: {}
+            update: {
+              imageID: imageId
+            }
           })
         })
     )
@@ -151,6 +148,7 @@ export class ImportPeerArticleService {
         .map(({tag}) => ({
           tag,
           type: TagType.Article
+          // @TODO: add peerId
         }))
     })
 
@@ -184,6 +182,7 @@ export class ImportPeerArticleService {
 
                 await this.prisma.image.create({
                   data: image
+                  // @TODO: add peerId
                 })
 
                 imageId = image.id
@@ -191,8 +190,8 @@ export class ImportPeerArticleService {
 
               return {
                 type: block.type,
-                imageId,
-                caption: block.caption
+                caption: block.caption,
+                imageId
               }
             }
           ],

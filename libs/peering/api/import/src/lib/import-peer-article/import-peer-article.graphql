@@ -1,5 +1,7 @@
 fragment ImageRef on Image {
   url
+  license
+  source
 }
 
 fragment ArticleRef on Article {
