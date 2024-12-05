@@ -55,7 +55,7 @@ const nextConfig = {
       },
       {
         source: '/account/subscriptions',
-        destination: '/profile/subscription',
+        destination: '/profile',
         permanent: false
       },
       {
