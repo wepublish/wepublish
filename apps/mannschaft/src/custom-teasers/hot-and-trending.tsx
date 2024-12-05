@@ -1,6 +1,7 @@
+import {UTCDate} from '@date-fns/utc'
 import {styled} from '@mui/material'
 import {ApiV1, BuilderTeaserProps, TeaserWrapper, useWebsiteBuilder} from '@wepublish/website'
-import {startOfDay, subDays} from 'date-fns'
+import {startOfDay} from 'date-fns'
 import {allPass} from 'ramda'
 import {useMemo} from 'react'
 
@@ -45,7 +46,7 @@ export const HotAndTrendingTeaser = ({alignment, teaser}: BuilderTeaserProps) =>
     elements: {H4, Link}
   } = useWebsiteBuilder()
 
-  const yesterday = useMemo(() => startOfDay(subDays(new Date(), 1)).toISOString(), [])
+  const yesterday = useMemo(() => startOfDay(new UTCDate()).toISOString(), [])
 
   const {data} = ApiV1.useHotAndTrendingQuery({
     variables: {

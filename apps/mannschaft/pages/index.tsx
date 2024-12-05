@@ -1,5 +1,6 @@
+import {UTCDate} from '@date-fns/utc'
 import {ApiV1, PageContainer} from '@wepublish/website'
-import {startOfDay, subDays} from 'date-fns'
+import {startOfDay} from 'date-fns'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
@@ -32,7 +33,7 @@ export const getStaticProps: GetStaticProps = async () => {
       query: ApiV1.HotAndTrendingDocument,
       variables: {
         take: 5,
-        start: startOfDay(subDays(new Date(), 1)).toISOString()
+        start: startOfDay(new UTCDate()).toISOString()
       }
     })
   ])

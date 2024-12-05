@@ -210,6 +210,7 @@
     "@apollo/gateway": "^2.8.4",
     "@apollo/server": "^4.9.1",
     "@apollo/subgraph": "^2.2.3",
+    "@date-fns/utc": "^2.1.0",
     "@dnd-kit/core": "^6.0.7",
     "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.11.1",
