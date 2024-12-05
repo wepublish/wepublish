@@ -102,4 +102,5 @@ export type BuilderSubscribeProps<
   deactivateSubscriptionId?: string
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean
   termsOfServiceUrl?: string
+  returningUserId?: string
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>
