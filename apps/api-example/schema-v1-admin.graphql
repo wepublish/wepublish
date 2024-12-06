@@ -683,6 +683,7 @@ type ArticleRevision {
   socialMediaDescription: String
   socialMediaAuthors: [Author!]!
   socialMediaImage: Image
+  likes: Int
   blocks: [Block!]!
 }
 
