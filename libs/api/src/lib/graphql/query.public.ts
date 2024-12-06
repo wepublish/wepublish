@@ -37,8 +37,6 @@ import {
   GraphQLPublicMemberPlan,
   GraphQLPublicMemberPlanConnection
 } from './memberPlan'
-import {GraphQLPublicNavigation} from './navigation'
-import {getNavigations} from './navigation/navigation.public-queries'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {getPublicPeerProfile} from './peer-profile/peer-profile.public-queries'
 import {getPeerByIdOrSlug} from './peer/peer.public-queries'
@@ -66,28 +64,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       description: 'This query takes either the ID or the slug and returns the peer profile.',
       resolve: (root, {id, slug}, {loaders: {peer, peerBySlug}}) =>
         getPeerByIdOrSlug(id, slug, peer, peerBySlug)
-    },
-
-    // Navigation
-    // ==========
-
-    navigation: {
-      type: GraphQLPublicNavigation,
-      args: {id: {type: GraphQLID}, key: {type: GraphQLID}},
-      description: 'This query takes either the ID or the key and returns the navigation.',
-      resolve(root, {id, key}, {loaders}) {
-        if ((id == null && key == null) || (id != null && key != null)) {
-          throw new UserInputError('You must provide either `id` or `key`.')
-        }
-
-        return id ? loaders.navigationByID.load(id) : loaders.navigationByKey.load(key)
-      }
-    },
-
-    navigations: {
-      type: new GraphQLList(new GraphQLNonNull(GraphQLPublicNavigation)),
-      description: 'This query returns all navigations.',
-      resolve: (root, _, {prisma: {navigation}}) => getNavigations(navigation)
     },
 
     // Author

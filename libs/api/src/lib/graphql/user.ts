@@ -341,3 +341,16 @@ export const GraphQLMemberRegistrationAndPayment = new GraphQLObjectType({
     session: {type: new GraphQLNonNull(GraphQLUserSession)}
   }
 })
+
+export const GraphQLUserResolver = {
+  __resolveReference: async (reference, {loaders}: Context) => {
+    const {id} = reference
+    const user = await loaders.usersById.load(id)
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    return user
+  }
+}

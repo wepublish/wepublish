@@ -1,15 +1,9 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {CanCreateNavigation, CanDeleteNavigation, Permissions} from '@wepublish/permissions/api'
-import {
-  CreateNavigationArgs,
-  Navigation,
-  NavigationIdArgs,
-  NavigationKeyArgs,
-  UpdateNavigationArgs
-} from './navigation.model'
+import {CreateNavigationInput, Navigation, UpdateNavigationInput} from './navigation.model'
 import {NavigationService} from './navigation.service'
-import {UserInputError} from '@nestjs/apollo'
 import {NavigationDataloader} from './navigation.dataloader'
+import {NotFoundException} from '@nestjs/common'
 
 @Resolver(() => Navigation)
 export class NavigationResolver {
@@ -19,20 +13,24 @@ export class NavigationResolver {
   ) {}
 
   @Query(() => Navigation, {description: `Returns a navigation by key.`})
-  async getNavigationByKey(@Args() {key}: NavigationKeyArgs) {
+  async getNavigationByKey(@Args('key') key: string) {
     const navigation = await this.navigationService.getNavigationByKey(key)
+
     if (navigation === null) {
-      throw new UserInputError('Navigation not found')
+      throw new NotFoundException()
     }
+
     return navigation
   }
 
   @Query(() => Navigation, {description: `Returns a navigation by id.`})
-  async getNavigationById(@Args() {id}: NavigationIdArgs) {
+  async getNavigationById(@Args('id') id: string) {
     const navigation = await this.navigationDataLoader.load(id)
+
     if (navigation === null) {
-      throw new UserInputError('Navigation not found')
+      throw new NotFoundException('Navigation not found')
     }
+
     return navigation
   }
 
@@ -43,19 +41,19 @@ export class NavigationResolver {
 
   @Mutation(() => Navigation, {description: `Creates a new navigation.`})
   @Permissions(CanCreateNavigation)
-  createNavigation(@Args() {navigation}: CreateNavigationArgs) {
+  createNavigation(@Args() navigation: CreateNavigationInput) {
     return this.navigationService.createNavigation(navigation)
   }
 
   @Mutation(() => Navigation, {description: `Updates an existing navigation.`})
   @Permissions(CanCreateNavigation)
-  updateNavigation(@Args() {navigation}: UpdateNavigationArgs) {
+  updateNavigation(@Args() navigation: UpdateNavigationInput) {
     return this.navigationService.updateNavigation(navigation)
   }
 
   @Mutation(() => Navigation, {description: `Deletes an existing navigation.`})
   @Permissions(CanDeleteNavigation)
-  deleteNavigation(@Args() {id}: NavigationIdArgs) {
+  deleteNavigation(@Args('id') id: string) {
     return this.navigationService.deleteNavigationById(id)
   }
 }

@@ -10,7 +10,7 @@ import {
   User,
   Event
 } from '@prisma/client'
-import {AbstractAction, ActionType} from './action.model'
+import {ActionType} from './action.model'
 
 @Injectable()
 export class ActionService {
@@ -27,7 +27,7 @@ export class ActionService {
           return {
             date: article.createdAt,
             actionType: ActionType.ArticleCreated,
-            id: article.id
+            articleId: article.id
           }
         })
       )
@@ -42,7 +42,7 @@ export class ActionService {
           return {
             date: page.createdAt,
             actionType: ActionType.PageCreated,
-            id: page.id
+            pageId: page.id
           }
         })
       )
@@ -54,7 +54,7 @@ export class ActionService {
           return {
             date: comment.createdAt,
             actionType: ActionType.CommentCreated,
-            id: comment.id
+            commentId: comment.id
           }
         })
       )
@@ -66,7 +66,7 @@ export class ActionService {
           return {
             date: author.createdAt,
             actionType: ActionType.AuthorCreated,
-            id: author.id
+            authorId: author.id
           }
         })
       )
@@ -78,7 +78,7 @@ export class ActionService {
           return {
             date: subscription.createdAt,
             actionType: ActionType.SubscriptionCreated,
-            id: subscription.id
+            subscriptionId: subscription.id
           }
         })
       )
@@ -88,7 +88,7 @@ export class ActionService {
         return {
           date: poll.opensAt,
           actionType: ActionType.PollStarted,
-          id: poll.id
+          pollId: poll.id
         }
       })
     )
@@ -98,7 +98,7 @@ export class ActionService {
         return {
           date: user.createdAt,
           actionType: ActionType.UserCreated,
-          id: user.id
+          userId: user.id
         }
       })
     )
@@ -108,7 +108,7 @@ export class ActionService {
         return {
           date: event.createdAt,
           actionType: ActionType.EventCreated,
-          id: event.id
+          eventId: event.id
         }
       })
     )
@@ -117,8 +117,6 @@ export class ActionService {
       await Promise.all([articles, pages, comments, authors, subscriptions, polls, users, events])
     ).flat()
 
-    return actions
-      .sort((v1: AbstractAction, v2: AbstractAction) => v2.date.getTime() - v1.date.getTime())
-      .slice(0, 50)
+    return actions.sort((v1, v2) => v2.date.getTime() - v1.date.getTime()).slice(0, 50)
   }
 }

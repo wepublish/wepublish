@@ -25,28 +25,11 @@ type Query {
   """
   peer(id: ID, slug: Slug): Peer
 
-  """This query takes either the ID or the key and returns the navigation."""
-  navigation(id: ID, key: ID): Navigation
-
-  """This query returns all navigations."""
-  navigations: [Navigation!]
-
   """This query takes either the ID or the slug and returns the author."""
   author(id: ID, slug: Slug): Author
 
   """This query is to get the authors."""
   authors(cursor: ID, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = modifiedAt, order: SortOrder = Descending): AuthorConnection!
-
-  """
-  This query takes either the peer ID or the peer slug and returns the article.
-  """
-  peerArticle(peerID: ID, peerSlug: Slug, id: ID!): Article
-
-  """This query takes either the ID, slug or token and returns the page."""
-  page(id: ID, slug: Slug, token: String): Page
-
-  """This query returns the pages."""
-  pages(cursor: ID, take: Int = 10, skip: Int = 0, filter: PublishedPageFilter, sort: PublishedPageSort = publishedAt, order: SortOrder = Descending): PageConnection!
 
   """This query returns the comments of an item."""
   comments(itemId: ID!, sort: CommentSort, order: SortOrder = Descending): [Comment!]!
@@ -90,11 +73,6 @@ type Query {
 
   """This query returns a list of tags"""
   tags(cursor: ID, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
-
-  """
-  This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones.
-  """
-  phrase(query: String!, take: Int = 10, skip: Int = 0, pageSort: PublishedPageSort = publishedAt, articleSort: ArticleSort = PublishedAt, order: SortOrder = Descending): Phrase
   _entities(representations: [_Any!]!): [_Entity]!
   _service: _Service!
 }
@@ -184,75 +162,6 @@ type Peer {
 
 scalar Slug
 
-type Navigation {
-  id: ID!
-  key: String!
-  name: String!
-  links: [NavigationLink!]!
-}
-
-union NavigationLink = PageNavigationLink | ArticleNavigationLink | ExternalNavigationLink
-
-type PageNavigationLink implements BaseNavigationLink {
-  label: String!
-  page: Page
-}
-
-interface BaseNavigationLink {
-  label: String!
-}
-
-type Page {
-  id: ID!
-  updatedAt: DateTime!
-  publishedAt: DateTime!
-  slug: Slug!
-  url: String!
-  title: String!
-  description: String
-  tags: [Tag!]!
-  properties: [PublicProperties!]!
-  image: Image
-  socialMediaTitle: String
-  socialMediaDescription: String
-  socialMediaImage: Image
-}
-
-type Tag {
-  id: ID!
-  tag: String
-  type: TagType
-  main: Boolean!
-  url: String!
-}
-
-enum TagType {
-  Comment
-  Event
-  Author
-  Article
-  Page
-}
-
-type PublicProperties {
-  key: String!
-  value: String!
-}
-
-type ArticleNavigationLink implements BaseNavigationLink {
-  label: String!
-  article: Article
-}
-
-type Article {
-  id: ID!
-}
-
-type ExternalNavigationLink implements BaseNavigationLink {
-  label: String!
-  url: String!
-}
-
 type Author {
   id: ID!
   createdAt: DateTime!
@@ -273,6 +182,22 @@ type Author {
 type AuthorLink {
   title: String!
   url: String!
+}
+
+type Tag {
+  id: ID!
+  tag: String
+  type: TagType
+  main: Boolean!
+  url: String!
+}
+
+enum TagType {
+  Comment
+  Event
+  Author
+  Article
+  Page
 }
 
 type AuthorConnection {
@@ -305,21 +230,6 @@ enum SortOrder {
   Descending
 }
 
-type PageConnection {
-  nodes: [Page!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input PublishedPageFilter {
-  tags: [String!]
-}
-
-enum PublishedPageSort {
-  publishedAt
-  updatedAt
-}
-
 type Comment {
   id: ID!
   parentID: ID
@@ -330,7 +240,6 @@ type Comment {
   authorType: CommentAuthorType!
   itemID: ID!
   itemType: CommentItemType!
-  peerId: ID
   children: [Comment!]!
   title: String
   lead: String
@@ -381,6 +290,11 @@ type OAuth2Account {
   scope: String!
 }
 
+type PublicProperties {
+  key: String!
+  value: String!
+}
+
 enum CommentAuthorType {
   author
   team
@@ -390,7 +304,6 @@ enum CommentAuthorType {
 
 enum CommentItemType {
   article
-  peerArticle
   page
 }
 
@@ -626,28 +539,6 @@ enum TagSort {
   Tag
 }
 
-type Phrase {
-  articles: PhraseResultArticleContent
-  pages: PhraseResultPageContent
-}
-
-type PhraseResultArticleContent {
-  nodes: [Article!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type PhraseResultPageContent {
-  nodes: [Page!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-enum ArticleSort {
-  PublishedAt
-  ModifiedAt
-}
-
 type Mutation {
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
@@ -744,7 +635,6 @@ input CommentInput {
   itemID: ID!
   itemType: CommentItemType!
   title: String
-  peerId: ID
   text: RichText!
 }
 
@@ -876,4 +766,4 @@ type _Service {
   sdl: String
 }
 
-union _Entity = Author | Comment | FullPoll | Image | MemberPlan | Page | PaymentMethod | Peer | PollVote | Tag | User
+union _Entity = Author | Comment | FullPoll | Image | MemberPlan | PaymentMethod | Peer | PollVote | Subscription | Tag | User

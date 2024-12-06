@@ -1,7 +1,8 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {PageRevision, Property} from './page.model'
+import {PageRevision} from './page.model'
 import {Image} from '@wepublish/image/api'
 import {PageRevisionService} from './page-revision.service'
+import {Property} from '@wepublish/utils/api'
 
 @Resolver(() => PageRevision)
 export class PageRevisionResolver {

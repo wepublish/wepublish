@@ -25,6 +25,8 @@ import {GraphQLAuthorResolver} from './graphql/author'
 import {GraphQLPollResolver} from './graphql/poll/poll'
 import {GraphQLCommentResolver} from './graphql/comment/comment'
 import {GraphQLPeerResolver} from './graphql/peer'
+import {GraphQLUserResolver} from './graphql/user'
+import {GraphQLSubscriptionResolver} from './graphql/subscription'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -93,6 +95,7 @@ export class WepublishServer {
       ) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
       extend type Author @key(fields: "id")
+      extend type Subscription @key(fields: "id")
       extend type Comment @key(fields: "id")
       extend type FullPoll @key(fields: "id")
       extend type Peer @key(fields: "id")
@@ -148,7 +151,9 @@ export class WepublishServer {
       FullPoll: GraphQLPollResolver,
       Peer: GraphQLPeerResolver,
       Tag: GraphQLTagResolver,
-      Image: GraphQLImageResolver
+      Image: GraphQLImageResolver,
+      User: GraphQLUserResolver,
+      Subscription: GraphQLSubscriptionResolver
     }
 
     for (const type in federatedResolvers) {

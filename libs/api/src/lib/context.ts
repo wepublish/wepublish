@@ -40,7 +40,6 @@ import {Client, Issuer} from 'openid-client'
 import {ChallengeProvider} from './challenges/challengeProvider'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
-import {NavigationWithLinks} from './db/navigation'
 import {SubscriptionWithRelations} from './db/subscription'
 import {TokenExpiredError} from './error'
 import {getEvent} from './graphql/event/event.query'
@@ -64,9 +63,6 @@ const fetcherCache = new NodeCache({
 })
 
 export interface DataLoaderContext {
-  readonly navigationByID: DataLoader<string, NavigationWithLinks | null>
-  readonly navigationByKey: DataLoader<string, NavigationWithLinks | null>
-
   readonly authorsByID: DataLoader<string, Author | null>
   readonly authorsBySlug: DataLoader<string, Author | null>
 
@@ -251,39 +247,6 @@ export async function contextFromRequest(
   )
 
   const loaders: DataLoaderContext = {
-    navigationByID: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        await prisma.navigation.findMany({
-          where: {
-            id: {
-              in: ids as string[]
-            }
-          },
-          include: {
-            links: true
-          }
-        }),
-        'id'
-      )
-    ),
-    navigationByKey: new DataLoader(async keys =>
-      createOptionalsArray(
-        keys as string[],
-        await prisma.navigation.findMany({
-          where: {
-            key: {
-              in: keys as string[]
-            }
-          },
-          include: {
-            links: true
-          }
-        }),
-        'key'
-      )
-    ),
-
     authorsByID: new DataLoader(async ids =>
       createOptionalsArray(
         ids as string[],

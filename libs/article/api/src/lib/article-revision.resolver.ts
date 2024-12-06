@@ -1,8 +1,9 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {ArticleRevision, Property} from './article.model'
+import {ArticleRevision} from './article.model'
 import {Author} from '@wepublish/author/api'
 import {Image} from '@wepublish/image/api'
 import {ArticleRevisionService} from './article-revision.service'
+import {Property} from '@wepublish/utils/api'
 
 @Resolver(() => ArticleRevision)
 export class ArticleRevisionResolver {

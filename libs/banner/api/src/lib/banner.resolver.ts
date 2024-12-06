@@ -37,18 +37,22 @@ export class BannerResolver {
   @Query(() => Banner)
   async banner(@Args('id') args: string): Promise<Banner> {
     const banner = await this.bannerService.findOne(args)
+
     if (!banner) {
       throw new NotFoundException()
     }
+
     return banner
   }
 
   @Query(() => Banner)
   async primaryBanner(@Args() args: PrimaryBannerArgs): Promise<Banner> {
     const banner = await this.bannerService.findFirst(args)
+
     if (!banner) {
       throw new NotFoundException()
     }
+
     return banner
   }
 
@@ -61,6 +65,7 @@ export class BannerResolver {
   @ResolveField(() => [PageModel])
   async showOnPages(@Parent() banner: Banner) {
     const {id} = banner
+
     return this.bannerService.findPages(id)
   }
 

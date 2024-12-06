@@ -125,6 +125,10 @@ const modelFieldDefinitions = [{
                 type: "ArticleRevisionSocialMediaAuthor",
                 relationName: "ArticleRevisionSocialMediaAuthorToAuthor"
             }, {
+                name: "peer",
+                type: "Peer",
+                relationName: "AuthorToPeer"
+            }, {
                 name: "tags",
                 type: "TaggedAuthors",
                 relationName: "AuthorToTaggedAuthors"
@@ -186,6 +190,10 @@ const modelFieldDefinitions = [{
                 type: "PageRevision",
                 relationName: "pageRevisionImage"
             }, {
+                name: "peer",
+                type: "Peer",
+                relationName: "ImageToPeer"
+            }, {
                 name: "users",
                 type: "User",
                 relationName: "ImageToUser"
@@ -212,10 +220,6 @@ const modelFieldDefinitions = [{
     }, {
         name: "Comment",
         fields: [{
-                name: "peer",
-                type: "Peer",
-                relationName: "CommentToPeer"
-            }, {
                 name: "revisions",
                 type: "CommentsRevisions",
                 relationName: "CommentToCommentsRevisions"
@@ -473,13 +477,21 @@ const modelFieldDefinitions = [{
     }, {
         name: "Peer",
         fields: [{
-                name: "comments",
-                type: "Comment",
-                relationName: "CommentToPeer"
-            }, {
                 name: "articles",
                 type: "Article",
                 relationName: "ArticleToPeer"
+            }, {
+                name: "images",
+                type: "Image",
+                relationName: "ImageToPeer"
+            }, {
+                name: "tags",
+                type: "Tag",
+                relationName: "PeerToTag"
+            }, {
+                name: "authors",
+                type: "Author",
+                relationName: "AuthorToPeer"
             }]
     }, {
         name: "Token",
@@ -621,6 +633,10 @@ const modelFieldDefinitions = [{
     }, {
         name: "Tag",
         fields: [{
+                name: "peer",
+                type: "Peer",
+                relationName: "PeerToTag"
+            }, {
                 name: "comments",
                 type: "TaggedComments",
                 relationName: "TagToTaggedComments"
@@ -1354,6 +1370,9 @@ export function defineAuthorsLinksFactory(options) {
 function isAuthorimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
+function isAuthorpeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
+}
 function autoGenerateAuthorScalarsOrEnums({ seq }) {
     return {
         name: getScalarFieldValueGenerator().String({ modelName: "Author", fieldName: "name", isId: false, isUnique: false, seq }),
@@ -1379,7 +1398,10 @@ function defineAuthorFactoryInternal({ defaultData: defaultDataResolver, traits:
             const defaultAssociations = {
                 image: isAuthorimageFactory(defaultData.image) ? {
                     create: yield defaultData.image.build()
-                } : defaultData.image
+                } : defaultData.image,
+                peer: isAuthorpeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -1562,6 +1584,9 @@ export function defineFocalPointFactory(options) {
 function isImagefocalPointFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "FocalPoint";
 }
+function isImagepeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
+}
 function autoGenerateImageScalarsOrEnums({ seq }) {
     return {
         id: getScalarFieldValueGenerator().String({ modelName: "Image", fieldName: "id", isId: true, isUnique: false, seq }),
@@ -1592,7 +1617,10 @@ function defineImageFactoryInternal({ defaultData: defaultDataResolver, traits: 
             const defaultAssociations = {
                 focalPoint: isImagefocalPointFactory(defaultData.focalPoint) ? {
                     create: yield defaultData.focalPoint.build()
-                } : defaultData.focalPoint
+                } : defaultData.focalPoint,
+                peer: isImagepeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -1699,9 +1727,6 @@ function defineCommentsRevisionsFactoryInternal({ defaultData: defaultDataResolv
 export function defineCommentsRevisionsFactory(options) {
     return defineCommentsRevisionsFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-function isCommentpeerFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
-}
 function isCommentguestUserImageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
@@ -1711,7 +1736,7 @@ function isCommentuserFactory(x) {
 function autoGenerateCommentScalarsOrEnums({ seq }) {
     return {
         itemID: getScalarFieldValueGenerator().String({ modelName: "Comment", fieldName: "itemID", isId: false, isUnique: false, seq }),
-        itemType: "peerArticle",
+        itemType: "article",
         state: "approved",
         authorType: "team"
     };
@@ -1733,9 +1758,6 @@ function defineCommentFactoryInternal({ defaultData: defaultDataResolver, traits
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
             const defaultAssociations = {
-                peer: isCommentpeerFactory(defaultData.peer) ? {
-                    create: yield defaultData.peer.build()
-                } : defaultData.peer,
                 guestUserImage: isCommentguestUserImageFactory(defaultData.guestUserImage) ? {
                     create: yield defaultData.guestUserImage.build()
                 } : defaultData.guestUserImage,
@@ -3911,6 +3933,9 @@ function defineSettingFactoryInternal({ defaultData: defaultDataResolver, traits
 export function defineSettingFactory(options) {
     return defineSettingFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
+function isTagpeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
+}
 function autoGenerateTagScalarsOrEnums({ seq }) {
     return {
         type: "Comment"
@@ -3932,7 +3957,11 @@ function defineTagFactoryInternal({ defaultData: defaultDataResolver, traits: tr
                 const traitData = yield resolveTraitValue({ seq });
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
-            const defaultAssociations = {};
+            const defaultAssociations = {
+                peer: isTagpeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
+            };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
         });

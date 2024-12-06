@@ -1,5 +1,4 @@
 export * from './lib/graphql/session'
-export * from './lib/graphql/navigation'
 export * from './lib/graphql/author'
 export * from './lib/graphql/image'
 export * from './lib/graphql/comment/comment'
@@ -13,7 +12,6 @@ export * from './lib/graphql/permissions'
 
 export * from './lib/db/user'
 export * from './lib/db/userRole'
-export * from './lib/db/navigation'
 export * from './lib/db/author'
 export * from './lib/db/image'
 export * from './lib/db/block'

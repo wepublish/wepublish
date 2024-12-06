@@ -9,7 +9,6 @@ import {
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
-import {Block, BlockMap} from '../db/block'
 import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
 import {NotFound} from '../error'
@@ -56,12 +55,6 @@ import {
   updateMemberPlan
 } from './member-plan/member-plan.private-mutation'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
-import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
-import {
-  createNavigation,
-  deleteNavigationById,
-  updateNavigation
-} from './navigation/navigation.private-mutation'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {
   createPaymentMethod,
@@ -146,25 +139,6 @@ import {
 import {CanSendJWTLogin} from '@wepublish/permissions/api'
 import {mailLogType} from '@wepublish/mail/api'
 import {GraphQLSubscriptionDeactivationReason} from './subscriptionDeactivation'
-
-function mapNavigationLinkInput(value: any) {
-  const valueKeys = Object.keys(value)
-
-  if (valueKeys.length === 0) {
-    throw new Error(`Received no navigation link types in ${GraphQLNavigationLinkInput.name}.`)
-  }
-
-  if (valueKeys.length > 1) {
-    throw new Error(
-      `Received multiple navigation link  types (${JSON.stringify(Object.keys(value))}) in ${
-        GraphQLNavigationLinkInput.name
-      }, they're mutually exclusive.`
-    )
-  }
-
-  const key = Object.keys(value)[0] as keyof BlockMap
-  return {type: key, ...value[key]} as Block
-}
 
 export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -509,47 +483,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {id}, {authenticate, prisma: {userRole}}) =>
         deleteUserRoleById(id, authenticate, userRole)
-    },
-
-    // Navigation
-    // ==========
-
-    createNavigation: {
-      type: GraphQLNavigation,
-      args: {input: {type: new GraphQLNonNull(GraphQLNavigationInput)}},
-      resolve: (root, {input}, {authenticate, prisma: {navigation}}) =>
-        createNavigation(
-          {
-            ...input,
-            links: input.links.map(mapNavigationLinkInput)
-          },
-          authenticate,
-          navigation
-        )
-    },
-
-    updateNavigation: {
-      type: GraphQLNavigation,
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLID)},
-        input: {type: new GraphQLNonNull(GraphQLNavigationInput)}
-      },
-      resolve: (root, {id, input}, {authenticate, prisma: {navigation}}) =>
-        updateNavigation(
-          id,
-          {...input, links: input.links.map(mapNavigationLinkInput)},
-          authenticate,
-          navigation
-        )
-    },
-
-    deleteNavigation: {
-      type: GraphQLNavigation,
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLID)}
-      },
-      resolve: (root, {id}, {authenticate, prisma: {navigation}}) =>
-        deleteNavigationById(id, authenticate, navigation)
     },
 
     // Author

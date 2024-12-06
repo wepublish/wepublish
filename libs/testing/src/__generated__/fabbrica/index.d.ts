@@ -418,6 +418,10 @@ type AuthorimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutAuthorInput["create"]>;
 };
+type AuthorpeerFactory = {
+    _factoryFor: "Peer";
+    build: () => PromiseLike<Prisma.PeerCreateNestedOneWithoutAuthorsInput["create"]>;
+};
 type AuthorFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -433,6 +437,7 @@ type AuthorFactoryDefineInput = {
     image?: AuthorimageFactory | Prisma.ImageCreateNestedOneWithoutAuthorInput;
     articlesAsAuthor?: Prisma.ArticleRevisionAuthorCreateNestedManyWithoutAuthorInput;
     articlesAsSocialMediaAuthor?: Prisma.ArticleRevisionSocialMediaAuthorCreateNestedManyWithoutAuthorInput;
+    peer?: AuthorpeerFactory | Prisma.PeerCreateNestedOneWithoutAuthorsInput;
     tags?: Prisma.TaggedAuthorsCreateNestedManyWithoutAuthorInput;
 };
 type AuthorFactoryDefineOptions = {
@@ -549,6 +554,10 @@ type ImagefocalPointFactory = {
     _factoryFor: "FocalPoint";
     build: () => PromiseLike<Prisma.FocalPointCreateNestedOneWithoutImageInput["create"]>;
 };
+type ImagepeerFactory = {
+    _factoryFor: "Peer";
+    build: () => PromiseLike<Prisma.PeerCreateNestedOneWithoutImagesInput["create"]>;
+};
 type ImageFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -575,6 +584,7 @@ type ImageFactoryDefineInput = {
     articleRevisionImages?: Prisma.ArticleRevisionCreateNestedManyWithoutImageInput;
     pageRevisionSocialMediaImages?: Prisma.PageRevisionCreateNestedManyWithoutSocialMediaImageInput;
     pageRevisionImages?: Prisma.PageRevisionCreateNestedManyWithoutImageInput;
+    peer?: ImagepeerFactory | Prisma.PeerCreateNestedOneWithoutImagesInput;
     users?: Prisma.UserCreateNestedManyWithoutUserImageInput;
     events?: Prisma.EventCreateNestedManyWithoutImageInput;
     paymentMethods?: Prisma.PaymentMethodCreateNestedManyWithoutImageInput;
@@ -650,10 +660,6 @@ export interface CommentsRevisionsFactoryInterface<TOptions extends CommentsRevi
  * @returns factory {@link CommentsRevisionsFactoryInterface}
  */
 export declare function defineCommentsRevisionsFactory<TOptions extends CommentsRevisionsFactoryDefineOptions>(options?: TOptions): CommentsRevisionsFactoryInterface<TOptions>;
-type CommentpeerFactory = {
-    _factoryFor: "Peer";
-    build: () => PromiseLike<Prisma.PeerCreateNestedOneWithoutCommentsInput["create"]>;
-};
 type CommentguestUserImageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutCommentInput["create"]>;
@@ -675,7 +681,6 @@ type CommentFactoryDefineInput = {
     authorType?: CommentAuthorType;
     guestUsername?: string | null;
     featured?: boolean;
-    peer?: CommentpeerFactory | Prisma.PeerCreateNestedOneWithoutCommentsInput;
     revisions?: Prisma.CommentsRevisionsCreateNestedManyWithoutCommentInput;
     guestUserImage?: CommentguestUserImageFactory | Prisma.ImageCreateNestedOneWithoutCommentInput;
     user?: CommentuserFactory | Prisma.UserCreateNestedOneWithoutCommentInput;
@@ -1543,8 +1548,10 @@ type PeerFactoryDefineInput = {
     hostURL?: string;
     token?: string;
     isDisabled?: boolean;
-    comments?: Prisma.CommentCreateNestedManyWithoutPeerInput;
     articles?: Prisma.ArticleCreateNestedManyWithoutPeerInput;
+    images?: Prisma.ImageCreateNestedManyWithoutPeerInput;
+    tags?: Prisma.TagCreateNestedManyWithoutPeerInput;
+    authors?: Prisma.AuthorCreateNestedManyWithoutPeerInput;
 };
 type PeerFactoryDefineOptions = {
     defaultData?: Resolver<PeerFactoryDefineInput, BuildDataOptions>;
@@ -2080,6 +2087,10 @@ export interface SettingFactoryInterface<TOptions extends SettingFactoryDefineOp
  * @returns factory {@link SettingFactoryInterface}
  */
 export declare function defineSettingFactory<TOptions extends SettingFactoryDefineOptions>(options?: TOptions): SettingFactoryInterface<TOptions>;
+type TagpeerFactory = {
+    _factoryFor: "Peer";
+    build: () => PromiseLike<Prisma.PeerCreateNestedOneWithoutTagsInput["create"]>;
+};
 type TagFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -2087,6 +2098,7 @@ type TagFactoryDefineInput = {
     type?: TagType;
     tag?: string | null;
     main?: boolean;
+    peer?: TagpeerFactory | Prisma.PeerCreateNestedOneWithoutTagsInput;
     comments?: Prisma.TaggedCommentsCreateNestedManyWithoutTagInput;
     events?: Prisma.TaggedEventsCreateNestedManyWithoutTagInput;
     authors?: Prisma.TaggedAuthorsCreateNestedManyWithoutTagInput;

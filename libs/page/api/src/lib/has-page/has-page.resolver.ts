@@ -1,17 +1,23 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {HasPage} from './has-page.model'
+import {HasPage, HasPageLc, HasOptionalPage, HasOptionalPageLc} from './has-page.model'
 import {Page} from '../page.model'
+import {PageDataloaderService} from '../page-dataloader.service'
 
+@Resolver(() => HasOptionalPage)
 @Resolver(() => HasPage)
+@Resolver(() => HasOptionalPageLc)
+@Resolver(() => HasPageLc)
 export class HasPageResolver {
-  @ResolveField(() => Page, {nullable: true})
-  public page(@Parent() block: HasPage) {
-    const {pageID} = block
+  constructor(private dataloader: PageDataloaderService) {}
 
-    if (!pageID) {
+  @ResolveField(() => Page, {nullable: true})
+  public page(@Parent() block: HasOptionalPage | HasPage | HasOptionalPageLc | HasPageLc) {
+    const id = 'pageId' in block ? block.pageId : 'pageID' in block ? block.pageID : null
+
+    if (!id) {
       return null
     }
 
-    return {__typename: 'Page', id: pageID}
+    return this.dataloader.load(id)
   }
 }

@@ -1,6 +1,6 @@
 import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {BaseBlock} from '../base-block.model'
-import {BlockType} from '@prisma/client'
+import {BlockType} from '../block-type.model'
 import {HasImage, Image} from '@wepublish/image/api'
 import {Node} from 'slate'
 import {GraphQLRichText} from '@wepublish/richtext/api'

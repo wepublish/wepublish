@@ -8,11 +8,12 @@ import {
   OmitType,
   registerEnumType
 } from '@nestjs/graphql'
-import {Article, HasArticle, Property, PropertyInput} from '@wepublish/article/api'
-import {HasPage, Page} from '@wepublish/page/api'
+import {Article, HasOptionalArticle} from '@wepublish/article/api'
+import {HasOptionalPage, Page} from '@wepublish/page/api'
 import {HasPeer, Peer} from '@wepublish/peering/api'
 import {HasImage} from '@wepublish/image/api'
-import {Event, HasEvent} from '@wepublish/event/api'
+import {Event, HasOptionalEvent} from '@wepublish/event/api'
+import {Property, PropertyInput} from '@wepublish/utils/api'
 
 export enum TeaserType {
   Article = 'article',
@@ -55,9 +56,9 @@ export abstract class BaseTeaser<Type extends TeaserType> extends HasImage {
 }
 
 @ObjectType({
-  implements: () => [BaseTeaser, HasArticle]
+  implements: () => [BaseTeaser, HasOptionalArticle]
 })
-export class ArticleTeaser extends BaseTeaser<TeaserType.Article> implements HasArticle {
+export class ArticleTeaser extends BaseTeaser<TeaserType.Article> implements HasOptionalArticle {
   articleID?: string
   article?: Article
 }
@@ -90,9 +91,9 @@ export class PeerArticleTeaserInput extends OmitType(
 ) {}
 
 @ObjectType({
-  implements: () => [BaseTeaser, HasPage]
+  implements: () => [BaseTeaser, HasOptionalPage]
 })
-export class PageTeaser extends BaseTeaser<TeaserType.Page> implements HasPage {
+export class PageTeaser extends BaseTeaser<TeaserType.Page> implements HasOptionalPage {
   pageID?: string
   page?: Page
 }
@@ -101,9 +102,9 @@ export class PageTeaser extends BaseTeaser<TeaserType.Page> implements HasPage {
 export class PageTeaserInput extends OmitType(PageTeaser, ['page', 'image'] as const, InputType) {}
 
 @ObjectType({
-  implements: () => [BaseTeaser, HasEvent]
+  implements: () => [BaseTeaser, HasOptionalEvent]
 })
-export class EventTeaser extends BaseTeaser<TeaserType.Event> implements HasEvent {
+export class EventTeaser extends BaseTeaser<TeaserType.Event> implements HasOptionalEvent {
   eventID?: string
   event?: Event
 }

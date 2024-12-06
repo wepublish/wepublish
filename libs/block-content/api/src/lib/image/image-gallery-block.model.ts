@@ -1,8 +1,8 @@
 import {Field, InputType, ObjectType, OmitType, PickType} from '@nestjs/graphql'
 import {BaseBlock} from '../base-block.model'
-import {BlockType} from '@prisma/client'
 import {ImageBlock} from './image-block.model'
 import {HasImage} from '@wepublish/image/api'
+import {BlockType} from '../block-type.model'
 
 @ObjectType({
   implements: () => [HasImage]

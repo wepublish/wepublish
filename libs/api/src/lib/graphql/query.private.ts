@@ -65,8 +65,6 @@ import {
   GraphQLMemberPlanFilter,
   GraphQLMemberPlanSort
 } from './memberPlan'
-import {GraphQLNavigation} from './navigation'
-import {getNavigationByIdOrKey, getNavigations} from './navigation/navigation.private-queries'
 import {
   GraphQLPayment,
   GraphQLPaymentConnection,
@@ -338,22 +336,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLToken))),
       resolve: (root, args, {authenticateUser, prisma: {token}}) =>
         getTokens(authenticateUser, token)
-    },
-
-    // Navigation
-    // ==========
-
-    navigation: {
-      type: GraphQLNavigation,
-      args: {id: {type: GraphQLID}, key: {type: GraphQLID}},
-      resolve: (root, {id, key}, {authenticate, loaders: {navigationByID, navigationByKey}}) =>
-        getNavigationByIdOrKey(id, key, authenticate, navigationByID, navigationByKey)
-    },
-
-    navigations: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLNavigation))),
-      resolve: (root, args, {authenticate, prisma: {navigation}}) =>
-        getNavigations(authenticate, navigation)
     },
 
     // Author

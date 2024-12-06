@@ -84,12 +84,6 @@ export class Event {
 @ObjectType()
 export class PaginatedEvents extends PaginatedType(Event) {}
 
-@ArgsType()
-export class EventId {
-  @Field(() => ID)
-  id!: string
-}
-
 @InputType()
 export class EventFilter {
   @Field({nullable: true})

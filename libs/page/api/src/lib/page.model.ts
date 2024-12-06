@@ -11,7 +11,7 @@ import {
 } from '@nestjs/graphql'
 import {Image} from '@wepublish/image/api'
 import {Tag} from '@wepublish/tag/api'
-import {DateFilter, PaginatedType, SortOrder} from '@wepublish/utils/api'
+import {DateFilter, PaginatedType, Property, PropertyInput, SortOrder} from '@wepublish/utils/api'
 import {BlockContent, BlockContentInput, HasBlockContent} from '@wepublish/block-content/api'
 
 export enum PageSort {
@@ -27,24 +27,6 @@ registerEnumType(SortOrder, {
 registerEnumType(PageSort, {
   name: 'PageSort'
 })
-
-@ObjectType()
-export class Property {
-  @Field()
-  id!: string
-
-  @Field()
-  key!: string
-
-  @Field()
-  value!: string
-
-  @Field()
-  public!: boolean
-}
-
-@InputType()
-export class PropertyInput extends OmitType(Property, [] as const, InputType) {}
 
 @ObjectType({
   implements: () => [HasBlockContent]

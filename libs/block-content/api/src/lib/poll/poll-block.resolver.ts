@@ -1,5 +1,5 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {PollBlock} from './poll.model'
+import {PollBlock} from './poll-block.model'
 import {Image} from '@wepublish/image/api'
 
 @Resolver(() => PollBlock)

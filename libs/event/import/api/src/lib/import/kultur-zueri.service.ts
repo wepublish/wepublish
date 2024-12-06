@@ -1,7 +1,7 @@
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {Inject, Injectable} from '@nestjs/common'
 import {Prisma, PrismaClient} from '@prisma/client'
-import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
+import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
 import {Cache} from 'cache-manager'
 import {EventFromSource} from './events-import.model'
 import {CreateEventParams, EventsProvider, ImportedEventParams} from './events-import.service'
@@ -12,7 +12,7 @@ export class KulturZueriService implements EventsProvider {
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private prisma: PrismaClient,
-    private mediaAdapter: MediaAdapterService,
+    private mediaAdapter: MediaAdapter,
     private imageFetcher: ImageFetcherService,
     private parser: KulturagendaParser
   ) {}

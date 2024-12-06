@@ -37,8 +37,8 @@ export class Banner {
   @Field()
   text!: string
 
-  @Field(() => String, {nullable: true})
-  cta?: string | null
+  @Field({nullable: true})
+  cta?: string
 
   @Field()
   active!: boolean
@@ -46,8 +46,8 @@ export class Banner {
   @Field()
   showOnArticles!: boolean
 
-  @Field(() => String, {nullable: true})
-  imageId?: string | null
+  @Field({nullable: true})
+  imageId?: string
 
   @Field(() => [PageModel], {nullable: true})
   showOnPages?: PageModel[]

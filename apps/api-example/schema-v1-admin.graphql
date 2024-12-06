@@ -16,17 +16,12 @@ type Query {
   userRoles(cursor: ID, take: Int = 10, skip: Int = 0, filter: UserRoleFilter, sort: UserRoleSort = modifiedAt, order: SortOrder = Descending): UserRoleConnection!
   permissions: [Permission!]
   tokens: [Token!]!
-  navigation(id: ID, key: ID): Navigation
-  navigations: [Navigation!]!
   author(id: ID, slug: Slug): Author
   authors(cursor: ID, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = modifiedAt, order: SortOrder = Descending): AuthorConnection!
   image(id: ID): Image
   images(cursor: ID, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
   comment(id: ID!): Comment
   comments(cursor: ID, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
-  page(id: ID): Page
-  pages(cursor: ID, take: Int = 10, skip: Int = 0, filter: PageFilter, sort: PageSort = modifiedAt, order: SortOrder = Descending): PageConnection!
-  pagePreviewLink(id: ID!, hours: Int!): String
   memberPlan(id: ID, slug: Slug): MemberPlan
   memberPlans(cursor: ID, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = modifiedAt, order: SortOrder = Descending): MemberPlanConnection!
   paymentMethod(id: ID): PaymentMethod
@@ -48,7 +43,6 @@ type Query {
   """This query returns a list of original ids of imported events"""
   importedEventsIds: [String]
   newSubscribersPerMonth(monthsBack: Int): [SubscribersPerMonth]
-  actions: [Action!]!
 }
 
 type PeerProfile {
@@ -446,114 +440,6 @@ type Token {
   name: String!
 }
 
-type Navigation {
-  id: ID!
-  key: String!
-  name: String!
-  links: [NavigationLink!]!
-}
-
-union NavigationLink = PageNavigationLink | ArticleNavigationLink | ExternalNavigationLink
-
-type PageNavigationLink implements BaseNavigationLink {
-  label: String!
-  page: Page
-}
-
-interface BaseNavigationLink {
-  label: String!
-}
-
-type Page {
-  id: ID!
-  shared: Boolean!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  draft: PageRevision
-  published: PageRevision
-  pending: PageRevision
-  latest: PageRevision!
-  tags: [Tag!]!
-}
-
-type PageRevision {
-  revision: Int!
-  createdAt: DateTime!
-  publishAt: DateTime
-  updatedAt: DateTime
-  publishedAt: DateTime
-  slug: Slug
-  title: String
-  description: String
-  tags: [String!]! @deprecated(reason: "Tags now live on the Page itself")
-  properties: [Properties!]!
-  url: String!
-  image: Image
-  socialMediaTitle: String
-  socialMediaDescription: String
-  socialMediaImage: Image
-}
-
-type Tag {
-  id: ID!
-  tag: String
-  type: TagType
-  main: Boolean!
-  url: String!
-}
-
-enum TagType {
-  Comment
-  Event
-  Author
-  Article
-  Page
-}
-
-type ArticleNavigationLink implements BaseNavigationLink {
-  label: String!
-  article: Article
-}
-
-type Article {
-  id: ID!
-  shared: Boolean!
-  hidden: Boolean
-  disableComments: Boolean
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  draft: ArticleRevision
-  published: ArticleRevision
-  pending: ArticleRevision
-  latest: ArticleRevision!
-  tags: [Tag!]!
-}
-
-type ArticleRevision {
-  revision: Int!
-  createdAt: DateTime!
-  publishAt: DateTime
-  updatedAt: DateTime
-  publishedAt: DateTime
-  hideAuthor: Boolean!
-  preTitle: String
-  title: String
-  lead: String
-  seoTitle: String
-  slug: String
-  tags: [String!]! @deprecated(reason: "Tags now live on the Article itself")
-  properties: [Properties!]!
-  canonicalUrl: String
-  url: String!
-  image: Image
-  authors: [Author!]!
-  breaking: Boolean!
-  socialMediaTitle: String
-  socialMediaDescription: String
-  socialMediaAuthors: [Author!]!
-  socialMediaImage: Image
-}
-
 type Author {
   id: ID!
   createdAt: DateTime!
@@ -576,9 +462,20 @@ type AuthorLink {
   url: String!
 }
 
-type ExternalNavigationLink implements BaseNavigationLink {
-  label: String!
+type Tag {
+  id: ID!
+  tag: String
+  type: TagType
+  main: Boolean!
   url: String!
+}
+
+enum TagType {
+  Comment
+  Event
+  Author
+  Article
+  Page
 }
 
 type AuthorConnection {
@@ -624,7 +521,6 @@ type Comment {
   authorType: CommentAuthorType!
   itemID: ID!
   itemType: CommentItemType!
-  peerId: ID
   parentComment: Comment
   revisions: [CommentRevision!]!
   source: String
@@ -645,7 +541,6 @@ enum CommentAuthorType {
 
 enum CommentItemType {
   article
-  peerArticle
   page
 }
 
@@ -690,31 +585,6 @@ input CommentFilter {
 enum CommentSort {
   modifiedAt
   createdAt
-}
-
-type PageConnection {
-  nodes: [Page!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input PageFilter {
-  title: String
-  draft: Boolean
-  description: String
-  publicationDateFrom: DateFilter
-  publicationDateTo: DateFilter
-  published: Boolean
-  pending: Boolean
-  tags: [String!]
-}
-
-enum PageSort {
-  createdAt
-  modifiedAt
-  publishAt
-  publishedAt
-  updatedAt
 }
 
 type MemberPlanConnection {
@@ -974,48 +844,6 @@ type SubscribersPerMonth {
   subscriberCount: Int!
 }
 
-union Action = ArticleCreatedAction | PageCreatedAction | CommentCreatedAction | PollStartedAction | SubscriptionCreatedAction | AuthorCreatedAction | UserCreatedAction | EventCreatedAction
-
-type ArticleCreatedAction {
-  date: DateTime!
-  article: Article!
-}
-
-type PageCreatedAction {
-  date: DateTime!
-  page: Page!
-}
-
-type CommentCreatedAction {
-  date: DateTime!
-  comment: Comment!
-}
-
-type PollStartedAction {
-  date: DateTime!
-  poll: Poll!
-}
-
-type SubscriptionCreatedAction {
-  date: DateTime!
-  subscription: Subscription!
-}
-
-type AuthorCreatedAction {
-  date: DateTime!
-  author: Author!
-}
-
-type UserCreatedAction {
-  date: DateTime!
-  user: User!
-}
-
-type EventCreatedAction {
-  date: DateTime!
-  event: Event!
-}
-
 type Mutation {
   updatePeerProfile(input: PeerProfileInput!): PeerProfile!
   createPeer(input: CreatePeerInput!): Peer!
@@ -1044,21 +872,12 @@ type Mutation {
   createUserRole(input: UserRoleInput!): UserRole
   updateUserRole(id: ID!, input: UserRoleInput!): UserRole
   deleteUserRole(id: ID!): UserRole
-  createNavigation(input: NavigationInput!): Navigation
-  updateNavigation(id: ID!, input: NavigationInput!): Navigation
-  deleteNavigation(id: ID!): Navigation
   createAuthor(input: AuthorInput!): Author
   updateAuthor(id: ID!, input: AuthorInput!): Author
   deleteAuthor(id: ID!): Author
   uploadImage(input: UploadImageInput!): Image
   updateImage(id: ID!, input: UpdateImageInput!): Image
   deleteImage(id: ID!): Image
-  createPage(input: PageInput!): Page!
-  updatePage(id: ID!, input: PageInput!): Page
-  deletePage(id: ID!): Page
-  publishPage(id: ID!, publishAt: DateTime, updatedAt: DateTime, publishedAt: DateTime): Page
-  unpublishPage(id: ID!): Page
-  duplicatePage(id: ID!): Page!
   createMemberPlan(input: MemberPlanInput!): MemberPlan
   updateMemberPlan(id: ID!, input: MemberPlanInput!): MemberPlan
   deleteMemberPlan(id: ID!): MemberPlan
@@ -1195,33 +1014,6 @@ input UserRoleInput {
   permissionIDs: [String!]
 }
 
-input NavigationInput {
-  key: String!
-  name: String!
-  links: [NavigationLinkInput!]!
-}
-
-input NavigationLinkInput {
-  page: PageNavigationLinkInput
-  article: ArticleNavigationLinkInput
-  external: ExternalNavigationLinkInput
-}
-
-input PageNavigationLinkInput {
-  label: String!
-  pageID: ID!
-}
-
-input ArticleNavigationLinkInput {
-  label: String!
-  articleID: ID!
-}
-
-input ExternalNavigationLinkInput {
-  label: String!
-  url: String!
-}
-
 input AuthorInput {
   name: String!
   slug: Slug!
@@ -1269,18 +1061,6 @@ input UpdateImageInput {
   source: String
   license: String
   focalPoint: InputPoint
-}
-
-input PageInput {
-  slug: Slug!
-  title: String!
-  description: String
-  tags: [String!]!
-  properties: [PropertiesInput!]!
-  imageID: ID
-  socialMediaTitle: String
-  socialMediaDescription: String
-  socialMediaImageID: ID
 }
 
 input MemberPlanInput {

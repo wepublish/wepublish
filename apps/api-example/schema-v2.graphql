@@ -22,24 +22,25 @@ directive @shareable on FIELD_DEFINITION | OBJECT
 
 directive @tag(name: String!) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
+union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
+
+enum ActionType {
+  ArticleCreated
+  AuthorCreated
+  CommentCreated
+  EventCreated
+  PageCreated
+  PollStarted
+  SubscriptionCreated
+  UserCreated
+}
+
 type AllowedSettingVals {
   boolChoice: Boolean
   stringChoice: [String!]
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 type Article {
-=======
-type ArticleCreatedAction {
-  actionType: ActionType!
-  date: DateTime!
-  id: ID!
-}
-
-type ArticleNavigationLink implements BaseNavigationLink {
-  articleID: String!
->>>>>>> 2416ad87d (chore(migrate-v2-action): Migrate actions to v2 (#1362))
   createdAt: DateTime!
   disableComments: Boolean!
   draft: ArticleRevision
@@ -56,6 +57,13 @@ type ArticleNavigationLink implements BaseNavigationLink {
   url: String!
 }
 
+type ArticleCreatedAction implements BaseAction & HasArticleLc {
+  actionType: ActionType!
+  article: Article!
+  articleId: ID!
+  date: DateTime!
+}
+
 input ArticleFilter {
   authors: [String!]
   draft: Boolean
@@ -69,6 +77,16 @@ input ArticleFilter {
   shared: Boolean
   tags: [String!]
   title: String
+}
+
+type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
+  article: Article!
+  articleID: ID!
+  createdAt: DateTime!
+  id: String!
+  label: String!
+  modifiedAt: DateTime!
+  type: String!
 }
 
 type ArticleRevision implements HasBlockContent {
@@ -101,7 +119,7 @@ enum ArticleSort {
   PublishedAt
 }
 
-type ArticleTeaser implements BaseTeaser & HasArticle & HasImage {
+type ArticleTeaser implements BaseTeaser & HasImage & HasOptionalArticle {
   article: Article
   articleID: ID
   image: Image
@@ -126,7 +144,13 @@ type Author {
   id: ID!
 }
 
-<<<<<<< HEAD
+type AuthorCreatedAction implements BaseAction & HasAuthor {
+  actionType: ActionType!
+  author: Author!
+  authorId: ID!
+  date: DateTime!
+}
+
 type Banner {
   actions: [BannerAction!]
   active: Boolean!
@@ -137,30 +161,6 @@ type Banner {
   showOnArticles: Boolean!
   showOnPages: [PageModel!]
   text: String!
-=======
-type AuthorCreatedAction {
-  actionType: ActionType!
-  author: Author!
-  date: DateTime!
-  id: ID!
-}
-
-input AuthorFilter {
-  name: String
-  tagIds: [String!]
-}
-
-enum AuthorSort {
-  CreatedAt
-  ModifiedAt
-  Name
-}
-
-type AuthorsLinks {
-  createdAt: DateTime!
-  id: String!
-  modifiedAt: DateTime!
->>>>>>> 2416ad87d (chore(migrate-v2-action): Migrate actions to v2 (#1362))
   title: String!
 }
 
@@ -183,9 +183,30 @@ enum BannerDocumentType {
   PAGE
 }
 
+interface BaseAction {
+  actionType: ActionType!
+  date: DateTime!
+}
+
 interface BaseBlock {
   blockStyle: ID
   type: String!
+}
+
+interface BaseNavigationLink {
+  createdAt: DateTime!
+  id: String!
+  label: String!
+  modifiedAt: DateTime!
+  type: String!
+}
+
+input BaseNavigationLinkInput {
+  articleID: String
+  label: String!
+  pageID: String
+  type: String!
+  url: String
 }
 
 interface BaseTeaser implements HasImage {
@@ -238,31 +259,6 @@ input BlockContentInput {
   twitterTweet: TwitterTweetBlockInput
   vimeoVideo: VimeoVideoBlockInput
   youTubeVideo: YouTubeVideoBlockInput
-=======
-type ArticleNavigationLink implements BaseNavigationLink {
-  articleID: String!
-  createdAt: DateTime!
-  id: String!
-  label: String!
-  modifiedAt: DateTime!
-  type: String!
-}
-
-interface BaseNavigationLink {
-  createdAt: DateTime!
-  id: String!
-  label: String!
-  modifiedAt: DateTime!
-  type: String!
-}
-
-input BaseNavigationLinkInput {
-  articleID: String
-  label: String!
-  pageID: String
-  type: String!
-  url: String
->>>>>>> fe4a767e2 (chore(v2-migration): Migrate navigation to v2 (#1317))
 }
 
 type BlockStyle {
@@ -292,7 +288,6 @@ enum BlockType {
   Title
 }
 
-<<<<<<< HEAD
 type BreakBlock implements BaseBlock & HasImage {
   blockStyle: ID
   hideButton: Boolean
@@ -344,14 +339,13 @@ input CommentBlockInput {
   filter: CommentBlockFilterInput!
 }
 
-=======
-type CommentCreatedAction {
+type CommentCreatedAction implements BaseAction & HasComment {
   actionType: ActionType!
+  comment: Comment!
+  commentId: ID!
   date: DateTime!
-  id: ID!
 }
 
->>>>>>> 2416ad87d (chore(migrate-v2-action): Migrate actions to v2 (#1362))
 type Consent {
   createdAt: DateTime!
   defaultValue: Boolean!
@@ -367,7 +361,6 @@ input ConsentFilter {
   slug: String
 }
 
-<<<<<<< HEAD
 input CreateBannerActionInput {
   label: String!
   role: BannerActionRole!
@@ -407,12 +400,6 @@ input CustomTeaserInput {
   style: TeaserStyle!
   title: String
   type: String!
-=======
-input CreateNavigationInput {
-  key: String!
-  links: [BaseNavigationLinkInput!]!
-  name: String!
->>>>>>> fe4a767e2 (chore(v2-migration): Migrate navigation to v2 (#1317))
 }
 
 type DashboardInvoice {
@@ -494,11 +481,11 @@ input EventBlockInput {
   filter: EventBlockFilterInput!
 }
 
-type EventCreatedAction {
+type EventCreatedAction implements BaseAction & HasEventLc {
   actionType: ActionType!
   date: DateTime!
   event: Event!
-  id: ID!
+  eventId: ID!
 }
 
 input EventFilter {
@@ -540,8 +527,7 @@ enum EventStatus {
   Scheduled
 }
 
-<<<<<<< HEAD
-type EventTeaser implements BaseTeaser & HasEvent & HasImage {
+type EventTeaser implements BaseTeaser & HasImage & HasOptionalEvent {
   event: Event
   eventID: ID
   image: Image
@@ -560,6 +546,15 @@ input EventTeaserInput {
   style: TeaserStyle!
   title: String
   type: String!
+}
+
+type ExternalNavigationLink implements BaseNavigationLink {
+  createdAt: DateTime!
+  id: String!
+  label: String!
+  modifiedAt: DateTime!
+  type: String!
+  url: String
 }
 
 type FacebookPostBlock implements BaseBlock {
@@ -616,15 +611,6 @@ type FlexTeaser {
 input FlexTeaserInput {
   alignment: FlexAlignmentInput!
   teaser: TeaserInput!
-=======
-type ExternalNavigationLink implements BaseNavigationLink {
-  createdAt: DateTime!
-  id: String!
-  label: String!
-  modifiedAt: DateTime!
-  type: String!
-  url: String
->>>>>>> fe4a767e2 (chore(v2-migration): Migrate navigation to v2 (#1317))
 }
 
 type FocalPoint {
@@ -652,17 +638,32 @@ input HTMLBlockInput {
 }
 
 interface HasArticle {
-  article: Article
-  articleID: ID
+  article: Article!
+  articleID: ID!
+}
+
+interface HasArticleLc {
+  article: Article!
+  articleId: ID!
+}
+
+interface HasAuthor {
+  author: Author!
+  authorId: ID!
 }
 
 interface HasBlockContent {
   blocks: [BlockContent!]!
 }
 
-interface HasEvent {
-  event: Event
-  eventID: ID
+interface HasComment {
+  comment: Comment!
+  commentId: ID!
+}
+
+interface HasEventLc {
+  event: Event!
+  eventId: ID!
 }
 
 interface HasImage {
@@ -670,14 +671,54 @@ interface HasImage {
   imageID: ID
 }
 
-interface HasPage {
+interface HasOptionalArticle {
+  article: Article
+  articleID: ID
+}
+
+interface HasOptionalEvent {
+  event: Event
+  eventID: ID
+}
+
+interface HasOptionalPage {
   page: Page
   pageID: ID
+}
+
+interface HasOptionalPoll {
+  poll: FullPoll
+  pollId: ID
+}
+
+interface HasPage {
+  page: Page!
+  pageID: ID!
+}
+
+interface HasPageLc {
+  page: Page!
+  pageId: ID!
 }
 
 interface HasPeer {
   peer: Peer
   peerID: ID
+}
+
+interface HasPoll {
+  poll: FullPoll!
+  pollId: ID!
+}
+
+interface HasSubscription {
+  subscription: Subscription!
+  subscriptionId: ID!
+}
+
+interface HasUserLc {
+  user: User!
+  userId: ID!
 }
 
 type IFrameBlock implements BaseBlock {
@@ -854,7 +895,7 @@ type Mutation {
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
 
   """Creates a new navigation."""
-  createNavigation(navigation: CreateNavigationInput!): Navigation!
+  createNavigation(key: String!, links: [BaseNavigationLinkInput!]!, name: String!): Navigation!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -875,13 +916,11 @@ type Mutation {
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
 
-<<<<<<< HEAD
+  """Deletes an existing navigation."""
+  deleteNavigation(id: String!): Navigation!
+
   """Delete poll votes"""
   deletePollVotes(ids: [ID!]!): DeletePollVotesResult!
-=======
-  """Deletes an existing navigation."""
-  deleteNavigation(id: ID!): Navigation!
->>>>>>> fe4a767e2 (chore(v2-migration): Migrate navigation to v2 (#1317))
 
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
@@ -892,14 +931,17 @@ type Mutation {
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
 
-  """Imports an article from a given peer."""
-  importArticle(peerArticleId: String!, peerId: String!): Article!
-
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
 
+  """Imports an article from a peer as a draft."""
+  importPeerArticle(articleId: String!, peerId: String!): Article!
+
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
+
+  """Publishes an page at the given time."""
+  publishPage(id: String!, publishedAt: DateTime!): Page!
   syncTemplates: Boolean
 
   """Sends a test email for the given event"""
@@ -908,8 +950,11 @@ type Mutation {
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!
 
+  """Unpublishes all revisions of an page."""
+  unpublishPage(id: String!): Page!
+
   """Updates an article."""
-  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String!, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, originalArticleId: String, peerId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String!, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
@@ -922,7 +967,10 @@ type Mutation {
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
 
   """Updates an existing navigation."""
-  updateNavigation(navigation: UpdateNavigationInput!): Navigation!
+  updateNavigation(id: String!, key: String!, links: [BaseNavigationLinkInput!]!, name: String!): Navigation!
+
+  """Updates an page."""
+  updatePage(blocks: [BlockContentInput!]!, description: String, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -940,16 +988,6 @@ type Mutation {
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
 }
 
-<<<<<<< HEAD
-type Page {
-  id: ID!
-}
-
-type PageCreatedAction {
-  actionType: ActionType!
-  date: DateTime!
-  id: ID!
-=======
 type Navigation {
   createdAt: DateTime!
   id: String!
@@ -957,7 +995,38 @@ type Navigation {
   links: [BaseNavigationLink!]!
   modifiedAt: DateTime!
   name: String!
->>>>>>> fe4a767e2 (chore(v2-migration): Migrate navigation to v2 (#1317))
+}
+
+type Page {
+  createdAt: DateTime!
+  disableComments: Boolean!
+  draft: PageRevision
+  hidden: Boolean!
+  id: ID!
+  modifiedAt: DateTime!
+  pending: PageRevision
+  published: PageRevision
+  shared: Boolean!
+  tags: [Tag!]!
+  url: String!
+}
+
+type PageCreatedAction implements BaseAction & HasPageLc {
+  actionType: ActionType!
+  date: DateTime!
+  page: Page!
+  pageId: ID!
+}
+
+input PageFilter {
+  description: String
+  draft: Boolean
+  pending: Boolean
+  publicationDateFrom: DateFilter
+  publicationDateTo: DateFilter
+  published: Boolean
+  tags: [String!]
+  title: String
 }
 
 type PageInfo {
@@ -967,7 +1036,6 @@ type PageInfo {
   startCursor: String
 }
 
-<<<<<<< HEAD
 type PageModel {
   id: ID!
 }
@@ -976,7 +1044,40 @@ input PageModelInput {
   id: ID!
 }
 
-type PageTeaser implements BaseTeaser & HasImage & HasPage {
+type PageNavigationLink implements BaseNavigationLink & HasPage {
+  createdAt: DateTime!
+  id: String!
+  label: String!
+  modifiedAt: DateTime!
+  page: Page!
+  pageID: ID!
+  type: String!
+}
+
+type PageRevision implements HasBlockContent {
+  blocks: [BlockContent!]!
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  image: Image
+  imageID: String
+  properties: [Property!]!
+  publishedAt: DateTime!
+  slug: String
+  socialMediaDescription: String
+  socialMediaImage: Image
+  socialMediaImageID: String
+  socialMediaTitle: String
+  title: String
+}
+
+enum PageSort {
+  CreatedAt
+  ModifiedAt
+  PublishedAt
+}
+
+type PageTeaser implements BaseTeaser & HasImage & HasOptionalPage {
   image: Image
   imageID: ID
   lead: String
@@ -1003,19 +1104,14 @@ type PaginatedArticles {
   totalCount: Float!
 }
 
-=======
-type PageNavigationLink implements BaseNavigationLink {
-  createdAt: DateTime!
-  id: String!
-  label: String!
-  modifiedAt: DateTime!
-  pageID: String!
-  type: String!
-}
-
->>>>>>> fe4a767e2 (chore(v2-migration): Migrate navigation to v2 (#1317))
 type PaginatedEvents {
   nodes: [Event!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
+}
+
+type PaginatedPages {
+  nodes: [Page!]!
   pageInfo: PageInfo!
   totalCount: Float!
 }
@@ -1078,6 +1174,11 @@ type PeriodicJob {
   tries: Float!
 }
 
+type Phrase {
+  articles: PaginatedArticles!
+  pages: PaginatedPages!
+}
+
 type PolisConversationBlock implements BaseBlock {
   blockStyle: ID
   conversationID: String
@@ -1095,18 +1196,24 @@ type PollAnswerInVote {
   id: ID!
 }
 
-type PollBlock implements BaseBlock {
+type PollBlock implements BaseBlock & HasOptionalPoll {
   blockStyle: ID
   image: Image
   poll: FullPoll
-  pollId: String
+  pollId: ID
   type: String!
 }
 
 input PollBlockInput {
   blockStyle: ID
-  pollId: String
   type: String!
+}
+
+type PollStartedAction implements BaseAction & HasPoll {
+  actionType: ActionType!
+  date: DateTime!
+  poll: FullPoll!
+  pollId: ID!
 }
 
 type PollVote {
@@ -1147,14 +1254,8 @@ input PropertyInput {
   value: String!
 }
 
-type PollStartedAction {
-  actionType: ActionType!
-  date: DateTime!
-  id: ID!
-}
-
 type Query {
-  """Returns latest user actions"""
+  """Returns latest actions"""
   actions: [Action!]!
 
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
@@ -1178,7 +1279,7 @@ type Query {
   consents(filter: ConsentFilter): [Consent!]!
 
   """Returns a event by id."""
-  event(id: ID!): Event!
+  event(id: String!): Event!
 
   "\n      Returns a list of Importable Event Providers\n    "
   eventProviders: [String!]!
@@ -1189,22 +1290,17 @@ type Query {
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
-<<<<<<< HEAD
-  """Returns an article revision by id."""
-  getArticle(id: String!): ArticleRevision!
-=======
+  """Returns an image by id."""
+  getImage(id: String!): ImageV2!
+
   """Returns a navigation by id."""
-  getNavigationById(id: ID!): Navigation!
+  getNavigationById(id: String!): Navigation!
 
   """Returns a navigation by key."""
   getNavigationByKey(key: String!): Navigation!
 
   """Returns a list of navigations."""
   getNavigations: [Navigation!]!
->>>>>>> fe4a767e2 (chore(v2-migration): Migrate navigation to v2 (#1317))
-
-  """Returns an image by id."""
-  getImage(id: String!): ImageV2!
 
   "\n      Returns the most viewed articles in descending order.\n    "
   hotAndTrending(start: DateTime, take: Int = 10): [Article!]!
@@ -1227,9 +1323,20 @@ type Query {
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
+  """Returns an page by id."""
+  page(id: String!): Page!
+
+  """Returns a paginated list of pages based on the filters given."""
+  pages(cursorId: ID, filter: PageFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PageSort = PublishedAt, take: Int = 10): PaginatedPages!
+
   """Returns all payment methods"""
   paymentMethods: [PaymentMethod!]!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
+
+  """
+  This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones.
+  """
+  phrase(articleSort: ArticleSort! = PublishedAt, order: SortOrder! = Descending, pageSort: PageSort! = PublishedAt, query: String!, skip: Int! = 0, take: Int! = 10): Phrase!
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: ID, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
@@ -1360,10 +1467,15 @@ type Stats {
   firstArticleDate: DateTime
 }
 
-type SubscriptionCreatedAction {
+type Subscription {
+  id: ID!
+}
+
+type SubscriptionCreatedAction implements BaseAction & HasSubscription {
   actionType: ActionType!
   date: DateTime!
-  id: ID!
+  subscription: Subscription!
+  subscriptionId: ID!
 }
 
 enum SubscriptionDeactivationReason {
@@ -1405,7 +1517,6 @@ type SystemMailModel {
   mailTemplate: MailTemplateRef
 }
 
-<<<<<<< HEAD
 type Tag {
   id: ID!
 }
@@ -1546,16 +1657,6 @@ type UnknownBlock {
 
 input UpdateBannerInput {
   actions: [CreateBannerActionInput!]
-=======
-input UpdateNavigationInput {
-  id: String!
-  key: String!
-  links: [BaseNavigationLinkInput!]!
-  name: String!
-}
-
-type User {
->>>>>>> fe4a767e2 (chore(v2-migration): Migrate navigation to v2 (#1317))
   active: Boolean!
   cta: String
   id: ID!
@@ -1586,10 +1687,11 @@ type UserConsent {
   value: Boolean!
 }
 
-type UserCreatedAction {
+type UserCreatedAction implements BaseAction & HasUserLc {
   actionType: ActionType!
   date: DateTime!
-  id: ID!
+  user: User!
+  userId: ID!
 }
 
 enum UserEvent {

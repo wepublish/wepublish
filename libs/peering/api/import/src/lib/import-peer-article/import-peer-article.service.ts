@@ -1,11 +1,16 @@
 import {Injectable, NotFoundException} from '@nestjs/common'
 import {Prisma, PrismaClient, TagType} from '@prisma/client'
 import {GraphQLClient} from 'graphql-request'
-import {Article, ArticleQuery, ArticleQueryVariables, BlockContent, ImageBlock} from './graphql'
+import {Article, ArticleQuery, ArticleQueryVariables} from './graphql'
 import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
 import {PrimeDataLoader} from '@wepublish/utils/api'
 import {ArticleDataloaderService} from '@wepublish/article/api'
-import {cond, T} from 'ramda'
+import {
+  BlockType,
+  ImageBlockInput,
+  ImageGalleryBlockInput,
+  ImageGalleryImageInput
+} from '@wepublish/block-content/api'
 
 type ImportArticleOptions = Partial<{
   importAuthors: boolean
@@ -48,10 +53,10 @@ export class ImportPeerArticleService {
     })
 
     const authors = options?.importAuthors
-      ? await this.importAuthors(article.published!.authors)
+      ? await this.importAuthors(peerId, article.published!.authors)
       : []
-    const tags = options?.importAuthors ? await this.importTags(article.tags) : []
-    const blocks = await this.prepareBlocksForImport(article.published!.blocks)
+    const tags = options?.importAuthors ? await this.importTags(peerId, article.tags) : []
+    const blocks = await this.prepareBlocksForImport(peerId, article.published!.blocks)
 
     const created = await this.prisma.article.create({
       data: {
@@ -64,6 +69,7 @@ export class ImportPeerArticleService {
 
         revisions: {
           create: {
+            // canonicalUrl: article.url,
             breaking: false,
             hideAuthor: false,
             authors: {
@@ -87,6 +93,7 @@ export class ImportPeerArticleService {
   }
 
   private async importAuthors(
+    peerId: string,
     authors: Exclude<ArticleQuery['article']['published'], undefined | null>['authors']
   ): Promise<Prisma.ArticleRevisionAuthorCreateManyRevisionInput[]> {
     const res = await Promise.all(
@@ -100,8 +107,10 @@ export class ImportPeerArticleService {
             const image = await this.mediaAdapter.uploadImageFromArrayBuffer(file)
 
             await this.prisma.image.create({
-              data: image
-              // @TODO: add peerId
+              data: {
+                ...image,
+                peerId
+              }
             })
 
             imageId = image.id
@@ -116,8 +125,9 @@ export class ImportPeerArticleService {
               slug: author.slug,
               bio: author.bio as Prisma.JsonArray,
               hideOnTeam: true,
-              imageID: imageId
-              // @TODO: add peerId, author page if 2 authors with same slug exists, take peerId: null
+              imageID: imageId,
+              peerId
+              // @TODO: author page if 2 authors with same slug exists, take peerId: null
             },
             update: {
               imageID: imageId
@@ -132,6 +142,7 @@ export class ImportPeerArticleService {
   }
 
   private async importTags(
+    peerId: string,
     tags: ArticleQuery['article']['tags']
   ): Promise<Prisma.TaggedArticlesUncheckedCreateWithoutArticleInput[]> {
     const existingTags = await this.prisma.tag.findMany({
@@ -147,8 +158,8 @@ export class ImportPeerArticleService {
         .filter(({tag}) => !existingTags.some(t => t.tag === tag))
         .map(({tag}) => ({
           tag,
-          type: TagType.Article
-          // @TODO: add peerId
+          type: TagType.Article,
+          peerId
         }))
     })
 
@@ -166,38 +177,71 @@ export class ImportPeerArticleService {
   }
 
   private async prepareBlocksForImport(
+    peerId: string,
     blocks: Exclude<ArticleQuery['article']['published'], undefined | null>['blocks']
   ): Promise<Prisma.InputJsonValue[]> {
     return Promise.all(
-      blocks.map(
-        cond([
-          [
-            (block: BlockContent) => block.__typename === 'ImageBlock',
-            async (block: ImageBlock) => {
+      blocks.map(async block => {
+        if (block.__typename === 'ImageBlock') {
+          let imageId: string | undefined
+
+          if (block.image?.url) {
+            const file = this.imageFetcher.fetch(block.image.url)
+            const image = await this.mediaAdapter.uploadImageFromArrayBuffer(file)
+
+            await this.prisma.image.create({
+              data: {
+                ...image,
+                peerId
+              }
+            })
+
+            imageId = image.id
+          }
+
+          return {
+            type: BlockType.Image,
+            caption: block.caption,
+            imageID: imageId
+          } as ImageBlockInput
+        }
+
+        if (block.__typename === 'ImageGalleryBlock') {
+          const images = await Promise.all(
+            block.images.map(async item => {
               let imageId: string | undefined
 
-              if (block.image?.url) {
-                const file = this.imageFetcher.fetch(block.image.url)
+              if (item.image?.url) {
+                const file = this.imageFetcher.fetch(item.image.url)
                 const image = await this.mediaAdapter.uploadImageFromArrayBuffer(file)
 
                 await this.prisma.image.create({
-                  data: image
-                  // @TODO: add peerId
+                  data: {
+                    ...image,
+                    peerId
+                  }
                 })
 
                 imageId = image.id
               }
 
               return {
-                type: block.type,
-                caption: block.caption,
-                imageId
-              }
-            }
-          ],
-          [(_block: BlockContent) => true, async (block: BlockContent) => block]
-        ])
-      )
+                caption: item.caption,
+                imageID: imageId
+              } as ImageGalleryImageInput
+            })
+          )
+
+          return {
+            type: BlockType.ImageGallery,
+            images
+          } as ImageGalleryBlockInput
+        }
+
+        return stripTypename(block)
+      })
     )
   }
 }
+
+export const stripTypename = <T extends {__typename?: string}>({__typename, ...rest}: T) => rest

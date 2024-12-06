@@ -8,7 +8,6 @@ import {
 import {
   CreateEventInput,
   Event,
-  EventId,
   EventListArgs,
   PaginatedEvents,
   UpdateEventInput
@@ -33,7 +32,7 @@ export class EventResolver {
   }
 
   @Query(() => Event, {description: `Returns a event by id.`})
-  public event(@Args() {id}: EventId) {
+  public event(@Args('id') id: string) {
     return this.eventDataloader.load(id)
   }
 

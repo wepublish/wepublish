@@ -22,7 +22,6 @@ import {
   MailchimpMailProvider,
   MailgunMailProvider,
   MailsModule,
-  MediaAdapterService,
   MembershipModule,
   MolliePaymentProvider,
   NeverChargePaymentProvider,
@@ -37,9 +36,10 @@ import {
   StatsModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  SystemInfoModule
+  SystemInfoModule,
+  MediaAdapterModule
 } from '@wepublish/api'
-import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
+import {ApiModule, PrismaModule, URLAdapter, URLAdapterModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
 import FormData from 'form-data'
 import Mailgun from 'mailgun.js'
@@ -81,7 +81,6 @@ import {NavigationModule} from '@wepublish/navigation/api'
         }
       }
     }),
-
     PrismaModule,
     MailsModule.registerAsync({
       imports: [ConfigModule],
@@ -316,12 +315,16 @@ import {NavigationModule} from '@wepublish/navigation/api'
       inject: [GoogleAnalyticsService]
     }),
     BannerApiModule,
-    ImportPeerArticleModule
-  ],
-  exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
-  providers: [
-    {
-      provide: MediaAdapterService,
+    ImportPeerArticleModule,
+    URLAdapterModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => {
+        return new URLAdapter(config.getOrThrow('WEBSITE_URL'))
+      },
+      inject: [ConfigService]
+    }),
+    MediaAdapterModule.registerAsync({
+      imports: [ConfigModule],
       useFactory: async (config: ConfigService) => {
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
         const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL')
@@ -343,7 +346,9 @@ import {NavigationModule} from '@wepublish/navigation/api'
         )
       },
       inject: [ConfigService]
-    },
+    })
+  ],
+  providers: [
     {
       provide: 'SYSTEM_INFO_KEY',
       useFactory: (config: ConfigService) => {
@@ -351,6 +356,7 @@ import {NavigationModule} from '@wepublish/navigation/api'
       },
       inject: [ConfigService]
     }
-  ]
+  ],
+  exports: ['SYSTEM_INFO_KEY']
 })
 export class AppModule {}

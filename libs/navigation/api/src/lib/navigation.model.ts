@@ -3,11 +3,12 @@ import {
   ObjectType,
   InputType,
   InterfaceType,
-  ArgsType,
   OmitType,
   registerEnumType,
-  ID
+  ArgsType
 } from '@nestjs/graphql'
+import {Article, HasArticle} from '@wepublish/article/api'
+import {HasPage, Page} from '@wepublish/page/api'
 
 export enum NavigationLinkType {
   Page = 'page',
@@ -21,7 +22,7 @@ registerEnumType(NavigationLinkType, {
 
 @ObjectType()
 export class Navigation {
-  @Field(() => String)
+  @Field()
   id!: string
 
   @Field()
@@ -56,7 +57,7 @@ export class Navigation {
   }
 })
 abstract class BaseNavigationLink {
-  @Field(() => String)
+  @Field()
   id!: string
 
   @Field()
@@ -68,20 +69,20 @@ abstract class BaseNavigationLink {
   @Field()
   label!: string
 
-  @Field(() => String)
+  @Field()
   type!: string
 }
 
-@ObjectType({implements: BaseNavigationLink})
-export class ArticleNavigationLink extends BaseNavigationLink {
-  @Field(() => String)
+@ObjectType({implements: () => [BaseNavigationLink, HasArticle]})
+export class ArticleNavigationLink extends BaseNavigationLink implements HasArticle {
   articleID!: string
+  article!: Article
 }
 
-@ObjectType({implements: BaseNavigationLink})
-export class PageNavigationLink extends BaseNavigationLink {
-  @Field(() => String)
+@ObjectType({implements: () => [BaseNavigationLink, HasPage]})
+export class PageNavigationLink extends BaseNavigationLink implements HasPage {
   pageID!: string
+  page!: Page
 }
 
 @ObjectType({implements: BaseNavigationLink})
@@ -95,55 +96,31 @@ export class NavigationLinkInput {
   @Field()
   label!: string
 
-  @Field(() => String)
+  @Field()
   type!: string
 
   @Field({nullable: true})
   url?: string
 
-  @Field(() => String, {nullable: true})
+  @Field({nullable: true})
   pageID?: string
 
-  @Field(() => String, {nullable: true})
+  @Field({nullable: true})
   articleID?: string
-}
-
-@ArgsType()
-export class NavigationKeyArgs {
-  @Field(() => String)
-  key!: string
-}
-
-@ArgsType()
-export class NavigationIdArgs {
-  @Field(() => ID)
-  id!: string
 }
 
 @InputType()
 class BaseNavigationLinkInput extends NavigationLinkInput {}
 
-@InputType()
+@ArgsType()
 export class UpdateNavigationInput extends OmitType(
   Navigation,
   ['createdAt', 'modifiedAt', 'links'],
-  InputType
+  ArgsType
 ) {
   @Field(() => [BaseNavigationLinkInput])
   links!: BaseNavigationLinkInput[]
 }
 
-@InputType()
-export class CreateNavigationInput extends OmitType(UpdateNavigationInput, ['id'], InputType) {}
-
 @ArgsType()
-export class UpdateNavigationArgs {
-  @Field(() => UpdateNavigationInput)
-  navigation!: UpdateNavigationInput
-}
-
-@ArgsType()
-export class CreateNavigationArgs {
-  @Field(() => CreateNavigationInput)
-  navigation!: CreateNavigationInput
-}
+export class CreateNavigationInput extends OmitType(UpdateNavigationInput, ['id'], ArgsType) {}

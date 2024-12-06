@@ -12,7 +12,6 @@ import {faker} from '@faker-js/faker'
 import {createReadStream} from 'fs'
 import {Node} from 'slate'
 import {seed as rootSeed} from '../../../libs/api/prisma/seed'
-import {NavigationLinkType} from '../../../libs/api/src/lib/db/navigation'
 import {hashPassword} from '../../../libs/api/src/lib/db/user'
 import {NovaMediaAdapter} from '../../../libs/api/src/lib/media/novaMediaAdapter'
 import {capitalize} from '@mui/material'
@@ -31,6 +30,7 @@ import {
   EventBlock
 } from '../../../libs/api/src/lib/db/block'
 import {bootstrap} from '../../media/src/bootstrap'
+import {NavigationLinkType} from 'libs/navigation/api/src/lib/navigation.model'
 
 const shuffle = <T>(list: T[]): T[] => {
   let idx = -1
@@ -437,14 +437,14 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
   const [home] = await Promise.all([
     prisma.page.create({
       data: {
-        published: {
+        publishedAt: new Date(),
+        slug: '',
+        revisions: {
           create: {
             title: 'Home',
             description: faker.lorem.paragraph(),
             socialMediaTitle: 'Home',
             socialMediaDescription: faker.lorem.paragraph(),
-            slug: '',
-            revision: 0,
             blocks: [
               {
                 type: BlockType.TeaserGridFlex,
@@ -624,9 +624,7 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                 ]
               } as TeaserGridFlexBlock
             ] as any,
-            publishedAt: new Date(),
-            updatedAt: new Date(),
-            createdAt: new Date()
+            publishedAt: new Date()
           }
         }
       }
@@ -640,7 +638,6 @@ async function seedArticles(
   prisma: PrismaClient,
   imageIds: string[] = [],
   authorIds: string[] = [],
-  tags: string[] = [],
   pollIds: string[] = [],
   eventIds: string[] = []
 ) {
@@ -648,15 +645,15 @@ async function seedArticles(
     Array.from({length: faker.number.int({min: 10, max: 20})}, () =>
       prisma.article.create({
         data: {
-          shared: false,
-          published: {
+          shared: true,
+          slug: faker.lorem.slug(),
+          publishedAt: new Date(),
+          revisions: {
             create: {
               title: capitalize(faker.lorem.words({min: 3, max: 8})),
               lead: faker.lorem.paragraph(),
               socialMediaTitle: capitalize(faker.lorem.words({min: 3, max: 8})),
               socialMediaDescription: faker.lorem.paragraph(),
-              slug: faker.lorem.slug(),
-              revision: 0,
               blocks: [
                 {
                   type: BlockType.Title,
@@ -747,27 +744,23 @@ async function seedArticles(
               ] as any,
               breaking: false,
               hideAuthor: false,
-              publishedAt: new Date(),
-              updatedAt: new Date(),
-              createdAt: new Date(),
-              tags: [
-                shuffle(tags).at(0),
-                ...pickRandom(shuffle(tags).at(0), 0.2),
-                ...pickRandom(shuffle(tags).at(0), 0.1)
-              ]
+              publishedAt: new Date()
             }
           }
+        },
+        include: {
+          revisions: true
         }
       })
     )
   )
 
   await Promise.all(
-    articles.map(({publishedId}) =>
+    articles.map(({revisions}) =>
       prisma.articleRevisionAuthor.create({
         data: {
           authorId: shuffle(authorIds).at(0),
-          revisionId: publishedId
+          revisionId: revisions[0].id
         }
       })
     )
@@ -842,7 +835,6 @@ async function seed() {
       prisma,
       [],
       authors.map(({id}) => id),
-      tags,
       polls.map(({id}) => id),
       events.map(({id}) => id)
     )

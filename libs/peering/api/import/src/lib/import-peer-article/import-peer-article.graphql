@@ -66,6 +66,7 @@ fragment ImportBlock on BlockContent {
 query Article($id: String!) {
   article(id: $id) {
     id
+    url
 
     tags {
       tag

@@ -32,6 +32,27 @@ export type Scalars = {
   link__Import: any
 }
 
+export type Action =
+  | ArticleCreatedAction
+  | AuthorCreatedAction
+  | CommentCreatedAction
+  | EventCreatedAction
+  | PageCreatedAction
+  | PollStartedAction
+  | SubscriptionCreatedAction
+  | UserCreatedAction
+
+export enum ActionType {
+  ArticleCreated = 'ArticleCreated',
+  AuthorCreated = 'AuthorCreated',
+  CommentCreated = 'CommentCreated',
+  EventCreated = 'EventCreated',
+  PageCreated = 'PageCreated',
+  PollStarted = 'PollStarted',
+  SubscriptionCreated = 'SubscriptionCreated',
+  UserCreated = 'UserCreated'
+}
+
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals'
   boolChoice?: Maybe<Scalars['Boolean']>
@@ -56,6 +77,15 @@ export type Article = {
   url: Scalars['String']
 }
 
+export type ArticleCreatedAction = BaseAction &
+  HasArticleLc & {
+    __typename?: 'ArticleCreatedAction'
+    actionType: ActionType
+    article: Article
+    articleId: Scalars['ID']
+    date: Scalars['DateTime']
+  }
+
 export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>
   draft?: InputMaybe<Scalars['Boolean']>
@@ -71,11 +101,17 @@ export type ArticleFilter = {
   title?: InputMaybe<Scalars['String']>
 }
 
-export type ArticleNavigationLink = BaseNavigationLink & {
-  __typename?: 'ArticleNavigationLink'
-  article?: Maybe<Article>
-  label: Scalars['String']
-}
+export type ArticleNavigationLink = BaseNavigationLink &
+  HasArticle & {
+    __typename?: 'ArticleNavigationLink'
+    article: Article
+    articleID: Scalars['ID']
+    createdAt: Scalars['DateTime']
+    id: Scalars['String']
+    label: Scalars['String']
+    modifiedAt: Scalars['DateTime']
+    type: Scalars['String']
+  }
 
 export type ArticleRevision = HasBlockContent & {
   __typename?: 'ArticleRevision'
@@ -109,8 +145,8 @@ export enum ArticleSort {
 }
 
 export type ArticleTeaser = BaseTeaser &
-  HasArticle &
-  HasImage & {
+  HasImage &
+  HasOptionalArticle & {
     __typename?: 'ArticleTeaser'
     article?: Maybe<Article>
     articleID?: Maybe<Scalars['ID']>
@@ -162,6 +198,15 @@ export type AuthorConnection = {
   pageInfo: PageInfo
   totalCount: Scalars['Int']
 }
+
+export type AuthorCreatedAction = BaseAction &
+  HasAuthor & {
+    __typename?: 'AuthorCreatedAction'
+    actionType: ActionType
+    author: Author
+    authorId: Scalars['ID']
+    date: Scalars['DateTime']
+  }
 
 export type AuthorFilter = {
   hideOnTeam?: InputMaybe<Scalars['Boolean']>
@@ -222,13 +267,30 @@ export enum BannerDocumentType {
   Page = 'PAGE'
 }
 
+export type BaseAction = {
+  actionType: ActionType
+  date: Scalars['DateTime']
+}
+
 export type BaseBlock = {
   blockStyle?: Maybe<Scalars['ID']>
   type: Scalars['String']
 }
 
 export type BaseNavigationLink = {
+  createdAt: Scalars['DateTime']
+  id: Scalars['String']
   label: Scalars['String']
+  modifiedAt: Scalars['DateTime']
+  type: Scalars['String']
+}
+
+export type BaseNavigationLinkInput = {
+  articleID?: InputMaybe<Scalars['String']>
+  label: Scalars['String']
+  pageID?: InputMaybe<Scalars['String']>
+  type: Scalars['String']
+  url?: InputMaybe<Scalars['String']>
 }
 
 export type BaseTeaser = {
@@ -406,7 +468,6 @@ export type Comment = {
   modifiedAt?: Maybe<Scalars['DateTime']>
   overriddenRatings: Array<OverriddenRating>
   parentID?: Maybe<Scalars['ID']>
-  peerId?: Maybe<Scalars['ID']>
   rejectionReason?: Maybe<Scalars['String']>
   source?: Maybe<Scalars['String']>
   state: CommentState
@@ -450,21 +511,28 @@ export type CommentBlockInput = {
   filter: CommentBlockFilterInput
 }
 
+export type CommentCreatedAction = BaseAction &
+  HasComment & {
+    __typename?: 'CommentCreatedAction'
+    actionType: ActionType
+    comment: Comment
+    commentId: Scalars['ID']
+    date: Scalars['DateTime']
+  }
+
 export type CommentInput = {
   challenge?: InputMaybe<ChallengeInput>
   guestUsername?: InputMaybe<Scalars['String']>
   itemID: Scalars['ID']
   itemType: CommentItemType
   parentID?: InputMaybe<Scalars['ID']>
-  peerId?: InputMaybe<Scalars['ID']>
   text: Scalars['RichText']
   title?: InputMaybe<Scalars['String']>
 }
 
 export enum CommentItemType {
   Article = 'article',
-  Page = 'page',
-  PeerArticle = 'peerArticle'
+  Page = 'page'
 }
 
 export type CommentRating = {
@@ -649,6 +717,15 @@ export type EventBlockInput = {
   filter: EventBlockFilterInput
 }
 
+export type EventCreatedAction = BaseAction &
+  HasEventLc & {
+    __typename?: 'EventCreatedAction'
+    actionType: ActionType
+    date: Scalars['DateTime']
+    event: Event
+    eventId: Scalars['ID']
+  }
+
 export type EventFilter = {
   from?: InputMaybe<Scalars['DateTime']>
   location?: InputMaybe<Scalars['String']>
@@ -690,8 +767,8 @@ export enum EventStatus {
 }
 
 export type EventTeaser = BaseTeaser &
-  HasEvent &
-  HasImage & {
+  HasImage &
+  HasOptionalEvent & {
     __typename?: 'EventTeaser'
     event?: Maybe<Event>
     eventID?: Maybe<Scalars['ID']>
@@ -715,8 +792,12 @@ export type EventTeaserInput = {
 
 export type ExternalNavigationLink = BaseNavigationLink & {
   __typename?: 'ExternalNavigationLink'
+  createdAt: Scalars['DateTime']
+  id: Scalars['String']
   label: Scalars['String']
-  url: Scalars['String']
+  modifiedAt: Scalars['DateTime']
+  type: Scalars['String']
+  url?: Maybe<Scalars['String']>
 }
 
 export type FacebookPostBlock = BaseBlock & {
@@ -817,17 +898,32 @@ export type HtmlBlockInput = {
 }
 
 export type HasArticle = {
-  article?: Maybe<Article>
-  articleID?: Maybe<Scalars['ID']>
+  article: Article
+  articleID: Scalars['ID']
+}
+
+export type HasArticleLc = {
+  article: Article
+  articleId: Scalars['ID']
+}
+
+export type HasAuthor = {
+  author: Author
+  authorId: Scalars['ID']
 }
 
 export type HasBlockContent = {
   blocks: Array<BlockContent>
 }
 
-export type HasEvent = {
-  event?: Maybe<Event>
-  eventID?: Maybe<Scalars['ID']>
+export type HasComment = {
+  comment: Comment
+  commentId: Scalars['ID']
+}
+
+export type HasEventLc = {
+  event: Event
+  eventId: Scalars['ID']
 }
 
 export type HasImage = {
@@ -835,14 +931,54 @@ export type HasImage = {
   imageID?: Maybe<Scalars['ID']>
 }
 
-export type HasPage = {
+export type HasOptionalArticle = {
+  article?: Maybe<Article>
+  articleID?: Maybe<Scalars['ID']>
+}
+
+export type HasOptionalEvent = {
+  event?: Maybe<Event>
+  eventID?: Maybe<Scalars['ID']>
+}
+
+export type HasOptionalPage = {
   page?: Maybe<Page>
   pageID?: Maybe<Scalars['ID']>
+}
+
+export type HasOptionalPoll = {
+  poll?: Maybe<FullPoll>
+  pollId?: Maybe<Scalars['ID']>
+}
+
+export type HasPage = {
+  page: Page
+  pageID: Scalars['ID']
+}
+
+export type HasPageLc = {
+  page: Page
+  pageId: Scalars['ID']
 }
 
 export type HasPeer = {
   peer?: Maybe<Peer>
   peerID?: Maybe<Scalars['ID']>
+}
+
+export type HasPoll = {
+  poll: FullPoll
+  pollId: Scalars['ID']
+}
+
+export type HasSubscription = {
+  subscription: Subscription
+  subscriptionId: Scalars['ID']
+}
+
+export type HasUserLc = {
+  user: User
+  userId: Scalars['ID']
 }
 
 export type IFrameBlock = BaseBlock & {
@@ -1141,6 +1277,8 @@ export type Mutation = {
   createConsent: Consent
   /** Creates a new event. */
   createEvent: Event
+  /** Creates a new navigation. */
+  createNavigation: Navigation
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
   createPaymentFromInvoice?: Maybe<Payment>
   /** This mutation allows to create payment by referencing a subscription. */
@@ -1172,6 +1310,8 @@ export type Mutation = {
   deleteConsent: Consent
   /** Deletes an existing event. */
   deleteEvent: Event
+  /** Deletes an existing navigation. */
+  deleteNavigation: Navigation
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult
   /** Delete an existing subscription flow */
@@ -1187,8 +1327,6 @@ export type Mutation = {
   deleteUserConsent: UserConsent
   /** This mutation extends an subscription early */
   extendSubscription: Payment
-  /** Imports an article from a given peer. */
-  importArticle: Article
   /**
    *
    *       Creates and event based on data from importable events list and an id and provider.
@@ -1196,8 +1334,12 @@ export type Mutation = {
    *
    */
   importEvent: Scalars['String']
+  /** Imports an article from a peer as a draft. */
+  importPeerArticle: Article
   /** Publishes an article at the given time. */
   publishArticle: Article
+  /** Publishes an page at the given time. */
+  publishPage: Page
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
   rateComment: Comment
   /** This mutation allows to register a new member, */
@@ -1213,6 +1355,8 @@ export type Mutation = {
   testSystemMail: Scalars['Boolean']
   /** Unpublishes all revisions of an article. */
   unpublishArticle: Article
+  /** Unpublishes all revisions of an page. */
+  unpublishPage: Page
   /** Updates an article. */
   updateArticle: Article
   updateBanner: Banner
@@ -1228,6 +1372,10 @@ export type Mutation = {
   updateConsent: Consent
   /** Updates an existing event. */
   updateEvent: Event
+  /** Updates an existing navigation. */
+  updateNavigation: Navigation
+  /** Updates an page. */
+  updatePage: Page
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
   updatePassword?: Maybe<User>
   /** This mutation allows to update the Payment Provider Customers */
@@ -1289,6 +1437,12 @@ export type MutationCreateEventArgs = {
   name: Scalars['String']
   startsAt: Scalars['DateTime']
   tagIds?: InputMaybe<Array<Scalars['String']>>
+}
+
+export type MutationCreateNavigationArgs = {
+  key: Scalars['String']
+  links: Array<BaseNavigationLinkInput>
+  name: Scalars['String']
 }
 
 export type MutationCreatePaymentFromInvoiceArgs = {
@@ -1366,6 +1520,10 @@ export type MutationDeleteEventArgs = {
   id: Scalars['String']
 }
 
+export type MutationDeleteNavigationArgs = {
+  id: Scalars['String']
+}
+
 export type MutationDeletePollVotesArgs = {
   ids: Array<Scalars['ID']>
 }
@@ -1388,17 +1546,22 @@ export type MutationExtendSubscriptionArgs = {
   successURL?: InputMaybe<Scalars['String']>
 }
 
-export type MutationImportArticleArgs = {
-  peerArticleId: Scalars['String']
-  peerId: Scalars['String']
-}
-
 export type MutationImportEventArgs = {
   id: Scalars['String']
   source: Scalars['String']
 }
 
+export type MutationImportPeerArticleArgs = {
+  articleId: Scalars['String']
+  peerId: Scalars['String']
+}
+
 export type MutationPublishArticleArgs = {
+  id: Scalars['String']
+  publishedAt: Scalars['DateTime']
+}
+
+export type MutationPublishPageArgs = {
   id: Scalars['String']
   publishedAt: Scalars['DateTime']
 }
@@ -1451,6 +1614,10 @@ export type MutationUnpublishArticleArgs = {
   id: Scalars['String']
 }
 
+export type MutationUnpublishPageArgs = {
+  id: Scalars['String']
+}
+
 export type MutationUpdateArticleArgs = {
   authorIds: Array<Scalars['String']>
   blocks: Array<BlockContentInput>
@@ -1462,8 +1629,6 @@ export type MutationUpdateArticleArgs = {
   id: Scalars['String']
   imageID?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
-  originalArticleId?: InputMaybe<Scalars['String']>
-  peerId?: InputMaybe<Scalars['String']>
   preTitle?: InputMaybe<Scalars['String']>
   properties: Array<PropertyInput>
   seoTitle?: InputMaybe<Scalars['String']>
@@ -1508,6 +1673,27 @@ export type MutationUpdateEventArgs = {
   name?: InputMaybe<Scalars['String']>
   startsAt?: InputMaybe<Scalars['DateTime']>
   tagIds?: InputMaybe<Array<Scalars['String']>>
+}
+
+export type MutationUpdateNavigationArgs = {
+  id: Scalars['String']
+  key: Scalars['String']
+  links: Array<BaseNavigationLinkInput>
+  name: Scalars['String']
+}
+
+export type MutationUpdatePageArgs = {
+  blocks: Array<BlockContentInput>
+  description?: InputMaybe<Scalars['String']>
+  id: Scalars['String']
+  imageID?: InputMaybe<Scalars['String']>
+  properties: Array<PropertyInput>
+  slug?: InputMaybe<Scalars['String']>
+  socialMediaDescription?: InputMaybe<Scalars['String']>
+  socialMediaImageID?: InputMaybe<Scalars['String']>
+  socialMediaTitle?: InputMaybe<Scalars['String']>
+  tagIds: Array<Scalars['String']>
+  title?: InputMaybe<Scalars['String']>
 }
 
 export type MutationUpdatePasswordArgs = {
@@ -1566,13 +1752,13 @@ export type MutationVoteOnPollArgs = {
 
 export type Navigation = {
   __typename?: 'Navigation'
-  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  id: Scalars['String']
   key: Scalars['String']
-  links: Array<NavigationLink>
+  links: Array<BaseNavigationLink>
+  modifiedAt: Scalars['DateTime']
   name: Scalars['String']
 }
-
-export type NavigationLink = ArticleNavigationLink | ExternalNavigationLink | PageNavigationLink
 
 export type OAuth2Account = {
   __typename?: 'OAuth2Account'
@@ -1583,26 +1769,37 @@ export type OAuth2Account = {
 
 export type Page = {
   __typename?: 'Page'
-  description?: Maybe<Scalars['String']>
+  createdAt: Scalars['DateTime']
+  disableComments: Scalars['Boolean']
+  draft?: Maybe<PageRevision>
+  hidden: Scalars['Boolean']
   id: Scalars['ID']
-  image?: Maybe<Image>
-  properties: Array<PublicProperties>
-  publishedAt: Scalars['DateTime']
-  slug: Scalars['Slug']
-  socialMediaDescription?: Maybe<Scalars['String']>
-  socialMediaImage?: Maybe<Image>
-  socialMediaTitle?: Maybe<Scalars['String']>
+  modifiedAt: Scalars['DateTime']
+  pending?: Maybe<PageRevision>
+  published?: Maybe<PageRevision>
+  shared: Scalars['Boolean']
   tags: Array<Tag>
-  title: Scalars['String']
-  updatedAt: Scalars['DateTime']
   url: Scalars['String']
 }
 
-export type PageConnection = {
-  __typename?: 'PageConnection'
-  nodes: Array<Page>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
+export type PageCreatedAction = BaseAction &
+  HasPageLc & {
+    __typename?: 'PageCreatedAction'
+    actionType: ActionType
+    date: Scalars['DateTime']
+    page: Page
+    pageId: Scalars['ID']
+  }
+
+export type PageFilter = {
+  description?: InputMaybe<Scalars['String']>
+  draft?: InputMaybe<Scalars['Boolean']>
+  pending?: InputMaybe<Scalars['Boolean']>
+  publicationDateFrom?: InputMaybe<DateFilter>
+  publicationDateTo?: InputMaybe<DateFilter>
+  published?: InputMaybe<Scalars['Boolean']>
+  tags?: InputMaybe<Array<Scalars['String']>>
+  title?: InputMaybe<Scalars['String']>
 }
 
 export type PageInfo = {
@@ -1622,15 +1819,45 @@ export type PageModelInput = {
   id: Scalars['ID']
 }
 
-export type PageNavigationLink = BaseNavigationLink & {
-  __typename?: 'PageNavigationLink'
-  label: Scalars['String']
-  page?: Maybe<Page>
+export type PageNavigationLink = BaseNavigationLink &
+  HasPage & {
+    __typename?: 'PageNavigationLink'
+    createdAt: Scalars['DateTime']
+    id: Scalars['String']
+    label: Scalars['String']
+    modifiedAt: Scalars['DateTime']
+    page: Page
+    pageID: Scalars['ID']
+    type: Scalars['String']
+  }
+
+export type PageRevision = HasBlockContent & {
+  __typename?: 'PageRevision'
+  blocks: Array<BlockContent>
+  createdAt: Scalars['DateTime']
+  description?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  image?: Maybe<Image>
+  imageID?: Maybe<Scalars['String']>
+  properties: Array<Property>
+  publishedAt: Scalars['DateTime']
+  slug?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaImage?: Maybe<Image>
+  socialMediaImageID?: Maybe<Scalars['String']>
+  socialMediaTitle?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>
+}
+
+export enum PageSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  PublishedAt = 'PublishedAt'
 }
 
 export type PageTeaser = BaseTeaser &
   HasImage &
-  HasPage & {
+  HasOptionalPage & {
     __typename?: 'PageTeaser'
     image?: Maybe<Image>
     imageID?: Maybe<Scalars['ID']>
@@ -1662,6 +1889,13 @@ export type PaginatedArticles = {
 export type PaginatedEvents = {
   __typename?: 'PaginatedEvents'
   nodes: Array<Event>
+  pageInfo: PageInfo
+  totalCount: Scalars['Float']
+}
+
+export type PaginatedPages = {
+  __typename?: 'PaginatedPages'
+  nodes: Array<Page>
   pageInfo: PageInfo
   totalCount: Scalars['Float']
 }
@@ -1796,22 +2030,8 @@ export type PeriodicJob = {
 
 export type Phrase = {
   __typename?: 'Phrase'
-  articles?: Maybe<PhraseResultArticleContent>
-  pages?: Maybe<PhraseResultPageContent>
-}
-
-export type PhraseResultArticleContent = {
-  __typename?: 'PhraseResultArticleContent'
-  nodes: Array<Article>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
-}
-
-export type PhraseResultPageContent = {
-  __typename?: 'PhraseResultPageContent'
-  nodes: Array<Page>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
+  articles: PaginatedArticles
+  pages: PaginatedPages
 }
 
 export type PolisConversationBlock = BaseBlock & {
@@ -1841,18 +2061,18 @@ export type PollAnswerWithVoteCount = {
   votes: Scalars['Int']
 }
 
-export type PollBlock = BaseBlock & {
-  __typename?: 'PollBlock'
-  blockStyle?: Maybe<Scalars['ID']>
-  image?: Maybe<Image>
-  poll?: Maybe<FullPoll>
-  pollId?: Maybe<Scalars['String']>
-  type: Scalars['String']
-}
+export type PollBlock = BaseBlock &
+  HasOptionalPoll & {
+    __typename?: 'PollBlock'
+    blockStyle?: Maybe<Scalars['ID']>
+    image?: Maybe<Image>
+    poll?: Maybe<FullPoll>
+    pollId?: Maybe<Scalars['ID']>
+    type: Scalars['String']
+  }
 
 export type PollBlockInput = {
   blockStyle?: InputMaybe<Scalars['ID']>
-  pollId?: InputMaybe<Scalars['String']>
   type: Scalars['String']
 }
 
@@ -1869,6 +2089,15 @@ export type PollExternalVoteSource = {
   source?: Maybe<Scalars['String']>
   voteAmounts: Array<PollExternalVote>
 }
+
+export type PollStartedAction = BaseAction &
+  HasPoll & {
+    __typename?: 'PollStartedAction'
+    actionType: ActionType
+    date: Scalars['DateTime']
+    poll: FullPoll
+    pollId: Scalars['ID']
+  }
 
 export type PollVote = {
   __typename?: 'PollVote'
@@ -1921,19 +2150,12 @@ export type PublicPropertiesInput = {
   value: Scalars['String']
 }
 
-export type PublishedPageFilter = {
-  tags?: InputMaybe<Array<Scalars['String']>>
-}
-
-export enum PublishedPageSort {
-  PublishedAt = 'publishedAt',
-  UpdatedAt = 'updatedAt'
-}
-
 export type Query = {
   __typename?: 'Query'
   _entities: Array<Maybe<_Entity>>
   _service: _Service
+  /** Returns latest actions */
+  actions: Array<Action>
   /**
    *
    *       Returns all active subscribers.
@@ -1990,10 +2212,14 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>
-  /** Returns an article revision by id. */
-  getArticle: ArticleRevision
   /** Returns an image by id. */
   getImage: ImageV2
+  /** Returns a navigation by id. */
+  getNavigationById: Navigation
+  /** Returns a navigation by key. */
+  getNavigationByKey: Navigation
+  /** Returns a list of navigations. */
+  getNavigations: Array<Navigation>
   /**
    *
    *       Returns the most viewed articles in descending order.
@@ -2028,10 +2254,6 @@ export type Query = {
   memberPlan?: Maybe<MemberPlan>
   /** This query returns the member plans. */
   memberPlans: MemberPlanConnection
-  /** This query takes either the ID or the key and returns the navigation. */
-  navigation?: Maybe<Navigation>
-  /** This query returns all navigations. */
-  navigations?: Maybe<Array<Navigation>>
   /**
    *
    *       Returns all new deactivations in a given timeframe.
@@ -2046,21 +2268,19 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>
-  /** This query takes either the ID, slug or token and returns the page. */
-  page?: Maybe<Page>
-  /** This query returns the pages. */
-  pages: PageConnection
+  /** Returns an page by id. */
+  page: Page
+  /** Returns a paginated list of pages based on the filters given. */
+  pages: PaginatedPages
   /** Returns all payment methods */
   paymentMethods: Array<PaymentMethod>
   /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>
-  /** This query takes either the peer ID or the peer slug and returns the article. */
-  peerArticle?: Maybe<Article>
   /** This query returns the peer profile. */
   peerProfile: PeerProfile
   periodicJobLog: Array<PeriodicJob>
-  /** This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones. */
-  phrase?: Maybe<Phrase>
+  /** This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones. */
+  phrase: Phrase
   /** This query returns a poll with all the needed data */
   poll: FullPoll
   /** Returns a paginated list of poll votes */
@@ -2188,7 +2408,7 @@ export type QueryConsentsArgs = {
 }
 
 export type QueryEventArgs = {
-  id: Scalars['ID']
+  id: Scalars['String']
 }
 
 export type QueryEventsArgs = {
@@ -2205,12 +2425,16 @@ export type QueryExpectedRevenueArgs = {
   start: Scalars['DateTime']
 }
 
-export type QueryGetArticleArgs = {
+export type QueryGetImageArgs = {
   id: Scalars['String']
 }
 
-export type QueryGetImageArgs = {
+export type QueryGetNavigationByIdArgs = {
   id: Scalars['String']
+}
+
+export type QueryGetNavigationByKeyArgs = {
+  key: Scalars['String']
 }
 
 export type QueryHotAndTrendingArgs = {
@@ -2244,11 +2468,6 @@ export type QueryMemberPlansArgs = {
   take?: InputMaybe<Scalars['Int']>
 }
 
-export type QueryNavigationArgs = {
-  id?: InputMaybe<Scalars['ID']>
-  key?: InputMaybe<Scalars['ID']>
-}
-
 export type QueryNewDeactivationsArgs = {
   end?: InputMaybe<Scalars['DateTime']>
   start: Scalars['DateTime']
@@ -2260,17 +2479,15 @@ export type QueryNewSubscribersArgs = {
 }
 
 export type QueryPageArgs = {
-  id?: InputMaybe<Scalars['ID']>
-  slug?: InputMaybe<Scalars['Slug']>
-  token?: InputMaybe<Scalars['String']>
+  id: Scalars['String']
 }
 
 export type QueryPagesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>
-  filter?: InputMaybe<PublishedPageFilter>
+  cursorId?: InputMaybe<Scalars['ID']>
+  filter?: InputMaybe<PageFilter>
   order?: InputMaybe<SortOrder>
   skip?: InputMaybe<Scalars['Int']>
-  sort?: InputMaybe<PublishedPageSort>
+  sort?: InputMaybe<PageSort>
   take?: InputMaybe<Scalars['Int']>
 }
 
@@ -2279,24 +2496,18 @@ export type QueryPeerArgs = {
   slug?: InputMaybe<Scalars['Slug']>
 }
 
-export type QueryPeerArticleArgs = {
-  id: Scalars['ID']
-  peerID?: InputMaybe<Scalars['ID']>
-  peerSlug?: InputMaybe<Scalars['Slug']>
-}
-
 export type QueryPeriodicJobLogArgs = {
   skip?: InputMaybe<Scalars['Int']>
   take?: InputMaybe<Scalars['Int']>
 }
 
 export type QueryPhraseArgs = {
-  articleSort?: InputMaybe<ArticleSort>
-  order?: InputMaybe<SortOrder>
-  pageSort?: InputMaybe<PublishedPageSort>
+  articleSort?: ArticleSort
+  order?: SortOrder
+  pageSort?: PageSort
   query: Scalars['String']
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: Scalars['Int']
+  take?: Scalars['Int']
 }
 
 export type QueryPollArgs = {
@@ -2506,6 +2717,15 @@ export type Subscription = {
   startsAt: Scalars['DateTime']
   url: Scalars['String']
 }
+
+export type SubscriptionCreatedAction = BaseAction &
+  HasSubscription & {
+    __typename?: 'SubscriptionCreatedAction'
+    actionType: ActionType
+    date: Scalars['DateTime']
+    subscription: Subscription
+    subscriptionId: Scalars['ID']
+  }
 
 export type SubscriptionDeactivation = {
   __typename?: 'SubscriptionDeactivation'
@@ -2813,6 +3033,15 @@ export type UserConsent = {
   value: Scalars['Boolean']
 }
 
+export type UserCreatedAction = BaseAction &
+  HasUserLc & {
+    __typename?: 'UserCreatedAction'
+    actionType: ActionType
+    date: Scalars['DateTime']
+    user: User
+    userId: Scalars['ID']
+  }
+
 export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
   LoginLink = 'LOGIN_LINK',
@@ -2874,10 +3103,10 @@ export type _Entity =
   | FullPoll
   | Image
   | MemberPlan
-  | Page
   | PaymentMethod
   | Peer
   | PollVote
+  | Subscription
   | Tag
   | User
 
@@ -2899,7 +3128,12 @@ type FullTeaser_ArticleTeaser_Fragment = {
   title?: string | null
   lead?: string | null
   articleID?: string | null
-  image?: {__typename?: 'Image'; url?: string | null} | null
+  image?: {
+    __typename?: 'Image'
+    url?: string | null
+    license?: string | null
+    source?: string | null
+  } | null
   article?: {__typename?: 'Article'; id: string} | null
 }
 
@@ -2910,7 +3144,12 @@ type FullTeaser_CustomTeaser_Fragment = {
   title?: string | null
   lead?: string | null
   contentUrl?: string | null
-  image?: {__typename?: 'Image'; url?: string | null} | null
+  image?: {
+    __typename?: 'Image'
+    url?: string | null
+    license?: string | null
+    source?: string | null
+  } | null
   properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
 }
 
@@ -2921,7 +3160,12 @@ type FullTeaser_EventTeaser_Fragment = {
   title?: string | null
   lead?: string | null
   eventID?: string | null
-  image?: {__typename?: 'Image'; url?: string | null} | null
+  image?: {
+    __typename?: 'Image'
+    url?: string | null
+    license?: string | null
+    source?: string | null
+  } | null
   event?: {__typename?: 'Event'; id: string} | null
 }
 
@@ -2932,7 +3176,12 @@ type FullTeaser_PageTeaser_Fragment = {
   title?: string | null
   lead?: string | null
   pageID?: string | null
-  image?: {__typename?: 'Image'; url?: string | null} | null
+  image?: {
+    __typename?: 'Image'
+    url?: string | null
+    license?: string | null
+    source?: string | null
+  } | null
   page?: {__typename?: 'Page'; id: string} | null
 }
 
@@ -2943,7 +3192,12 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
   title?: string | null
   lead?: string | null
   articleID?: string | null
-  image?: {__typename?: 'Image'; url?: string | null} | null
+  image?: {
+    __typename?: 'Image'
+    url?: string | null
+    license?: string | null
+    source?: string | null
+  } | null
   peer?: {__typename?: 'Peer'; id: string} | null
   article?: {__typename?: 'Article'; id: string} | null
 }
@@ -2970,7 +3224,12 @@ type FullBlock_BreakBlock_Fragment = {
   richText: Node[]
   linkTarget?: string | null
   hideButton?: boolean | null
-  image?: {__typename?: 'Image'; url?: string | null} | null
+  image?: {
+    __typename?: 'Image'
+    url?: string | null
+    license?: string | null
+    source?: string | null
+  } | null
 }
 
 type FullBlock_CommentBlock_Fragment = {
@@ -3028,7 +3287,12 @@ type FullBlock_ImageBlock_Fragment = {
   blockStyle?: string | null
   caption?: string | null
   linkUrl?: string | null
-  image?: {__typename?: 'Image'; url?: string | null} | null
+  image?: {
+    __typename?: 'Image'
+    url?: string | null
+    license?: string | null
+    source?: string | null
+  } | null
 }
 
 type FullBlock_ImageGalleryBlock_Fragment = {
@@ -3037,7 +3301,12 @@ type FullBlock_ImageGalleryBlock_Fragment = {
   images: Array<{
     __typename?: 'ImageGalleryImage'
     caption?: string | null
-    image?: {__typename?: 'Image'; url?: string | null} | null
+    image?: {
+      __typename?: 'Image'
+      url?: string | null
+      license?: string | null
+      source?: string | null
+    } | null
   }>
 }
 
@@ -3054,7 +3323,12 @@ type FullBlock_ListicleBlock_Fragment = {
     __typename?: 'ListicleItem'
     title?: string | null
     richText: Node[]
-    image?: {__typename?: 'Image'; url?: string | null} | null
+    image?: {
+      __typename?: 'Image'
+      url?: string | null
+      license?: string | null
+      source?: string | null
+    } | null
   }>
 }
 
@@ -3075,7 +3349,12 @@ type FullBlock_QuoteBlock_Fragment = {
   blockStyle?: string | null
   quote?: string | null
   author?: string | null
-  image?: {__typename?: 'Image'; url?: string | null} | null
+  image?: {
+    __typename?: 'Image'
+    url?: string | null
+    license?: string | null
+    source?: string | null
+  } | null
 }
 
 type FullBlock_RichTextBlock_Fragment = {
@@ -3102,7 +3381,12 @@ type FullBlock_TeaserGridBlock_Fragment = {
         title?: string | null
         lead?: string | null
         articleID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         article?: {__typename?: 'Article'; id: string} | null
       }
     | {
@@ -3112,7 +3396,12 @@ type FullBlock_TeaserGridBlock_Fragment = {
         title?: string | null
         lead?: string | null
         contentUrl?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
       }
     | {
@@ -3122,7 +3411,12 @@ type FullBlock_TeaserGridBlock_Fragment = {
         title?: string | null
         lead?: string | null
         eventID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         event?: {__typename?: 'Event'; id: string} | null
       }
     | {
@@ -3132,7 +3426,12 @@ type FullBlock_TeaserGridBlock_Fragment = {
         title?: string | null
         lead?: string | null
         pageID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         page?: {__typename?: 'Page'; id: string} | null
       }
     | {
@@ -3142,7 +3441,12 @@ type FullBlock_TeaserGridBlock_Fragment = {
         title?: string | null
         lead?: string | null
         articleID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         peer?: {__typename?: 'Peer'; id: string} | null
         article?: {__typename?: 'Article'; id: string} | null
       }
@@ -3171,7 +3475,12 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           title?: string | null
           lead?: string | null
           articleID?: string | null
-          image?: {__typename?: 'Image'; url?: string | null} | null
+          image?: {
+            __typename?: 'Image'
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
           article?: {__typename?: 'Article'; id: string} | null
         }
       | {
@@ -3181,7 +3490,12 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           title?: string | null
           lead?: string | null
           contentUrl?: string | null
-          image?: {__typename?: 'Image'; url?: string | null} | null
+          image?: {
+            __typename?: 'Image'
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
           properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
         }
       | {
@@ -3191,7 +3505,12 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           title?: string | null
           lead?: string | null
           eventID?: string | null
-          image?: {__typename?: 'Image'; url?: string | null} | null
+          image?: {
+            __typename?: 'Image'
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
           event?: {__typename?: 'Event'; id: string} | null
         }
       | {
@@ -3201,7 +3520,12 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           title?: string | null
           lead?: string | null
           pageID?: string | null
-          image?: {__typename?: 'Image'; url?: string | null} | null
+          image?: {
+            __typename?: 'Image'
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
           page?: {__typename?: 'Page'; id: string} | null
         }
       | {
@@ -3211,7 +3535,12 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           title?: string | null
           lead?: string | null
           articleID?: string | null
-          image?: {__typename?: 'Image'; url?: string | null} | null
+          image?: {
+            __typename?: 'Image'
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
           peer?: {__typename?: 'Peer'; id: string} | null
           article?: {__typename?: 'Article'; id: string} | null
         }
@@ -3234,7 +3563,12 @@ type FullBlock_TeaserListBlock_Fragment = {
         title?: string | null
         lead?: string | null
         articleID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         article?: {__typename?: 'Article'; id: string} | null
       }
     | {
@@ -3244,7 +3578,12 @@ type FullBlock_TeaserListBlock_Fragment = {
         title?: string | null
         lead?: string | null
         contentUrl?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
       }
     | {
@@ -3254,7 +3593,12 @@ type FullBlock_TeaserListBlock_Fragment = {
         title?: string | null
         lead?: string | null
         eventID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         event?: {__typename?: 'Event'; id: string} | null
       }
     | {
@@ -3264,7 +3608,12 @@ type FullBlock_TeaserListBlock_Fragment = {
         title?: string | null
         lead?: string | null
         pageID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         page?: {__typename?: 'Page'; id: string} | null
       }
     | {
@@ -3274,7 +3623,12 @@ type FullBlock_TeaserListBlock_Fragment = {
         title?: string | null
         lead?: string | null
         articleID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         peer?: {__typename?: 'Peer'; id: string} | null
         article?: {__typename?: 'Article'; id: string} | null
       }
@@ -3349,7 +3703,12 @@ export type FullBlockFragment =
   | FullBlock_VimeoVideoBlock_Fragment
   | FullBlock_YouTubeVideoBlock_Fragment
 
-export type ImageRefFragment = {__typename?: 'Image'; url?: string | null}
+export type ImageRefFragment = {
+  __typename?: 'Image'
+  url?: string | null
+  license?: string | null
+  source?: string | null
+}
 
 export type ArticleRefFragment = {__typename?: 'Article'; id: string}
 
@@ -3376,11 +3735,17 @@ type ImportBlock_BreakBlock_Fragment = {
   richText: Node[]
   linkTarget?: string | null
   hideButton?: boolean | null
-  image?: {__typename?: 'Image'; url?: string | null} | null
+  image?: {
+    __typename?: 'Image'
+    url?: string | null
+    license?: string | null
+    source?: string | null
+  } | null
 }
 
 type ImportBlock_CommentBlock_Fragment = {
   __typename: 'CommentBlock'
+  type: string
   blockStyle?: string | null
   filter: {
     __typename?: 'CommentBlockFilter'
@@ -3393,6 +3758,7 @@ type ImportBlock_CommentBlock_Fragment = {
 
 type ImportBlock_EventBlock_Fragment = {
   __typename: 'EventBlock'
+  type: string
   blockStyle?: string | null
   filter: {__typename?: 'EventBlockFilter'; tags: Array<string>; events: Array<string>}
   events: Array<{__typename?: 'Event'; id: string}>
@@ -3414,6 +3780,7 @@ type ImportBlock_FacebookVideoBlock_Fragment = {
 
 type ImportBlock_HtmlBlock_Fragment = {
   __typename: 'HTMLBlock'
+  type: string
   blockStyle?: string | null
   html?: string | null
 }
@@ -3434,7 +3801,12 @@ type ImportBlock_ImageBlock_Fragment = {
   blockStyle?: string | null
   caption?: string | null
   linkUrl?: string | null
-  image?: {__typename?: 'Image'; url?: string | null} | null
+  image?: {
+    __typename?: 'Image'
+    url?: string | null
+    license?: string | null
+    source?: string | null
+  } | null
 }
 
 type ImportBlock_ImageGalleryBlock_Fragment = {
@@ -3443,7 +3815,12 @@ type ImportBlock_ImageGalleryBlock_Fragment = {
   images: Array<{
     __typename?: 'ImageGalleryImage'
     caption?: string | null
-    image?: {__typename?: 'Image'; url?: string | null} | null
+    image?: {
+      __typename?: 'Image'
+      url?: string | null
+      license?: string | null
+      source?: string | null
+    } | null
   }>
 }
 
@@ -3460,7 +3837,12 @@ type ImportBlock_ListicleBlock_Fragment = {
     __typename?: 'ListicleItem'
     title?: string | null
     richText: Node[]
-    image?: {__typename?: 'Image'; url?: string | null} | null
+    image?: {
+      __typename?: 'Image'
+      url?: string | null
+      license?: string | null
+      source?: string | null
+    } | null
   }>
 }
 
@@ -3472,6 +3854,7 @@ type ImportBlock_PolisConversationBlock_Fragment = {
 
 type ImportBlock_PollBlock_Fragment = {
   __typename: 'PollBlock'
+  type: string
   blockStyle?: string | null
   poll?: {__typename?: 'FullPoll'; id: string; question?: string | null} | null
 }
@@ -3481,7 +3864,12 @@ type ImportBlock_QuoteBlock_Fragment = {
   blockStyle?: string | null
   quote?: string | null
   author?: string | null
-  image?: {__typename?: 'Image'; url?: string | null} | null
+  image?: {
+    __typename?: 'Image'
+    url?: string | null
+    license?: string | null
+    source?: string | null
+  } | null
 }
 
 type ImportBlock_RichTextBlock_Fragment = {
@@ -3498,6 +3886,7 @@ type ImportBlock_SoundCloudTrackBlock_Fragment = {
 
 type ImportBlock_TeaserGridBlock_Fragment = {
   __typename: 'TeaserGridBlock'
+  type: string
   blockStyle?: string | null
   numColumns: number
   teasers: Array<
@@ -3508,7 +3897,12 @@ type ImportBlock_TeaserGridBlock_Fragment = {
         title?: string | null
         lead?: string | null
         articleID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         article?: {__typename?: 'Article'; id: string} | null
       }
     | {
@@ -3518,7 +3912,12 @@ type ImportBlock_TeaserGridBlock_Fragment = {
         title?: string | null
         lead?: string | null
         contentUrl?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
       }
     | {
@@ -3528,7 +3927,12 @@ type ImportBlock_TeaserGridBlock_Fragment = {
         title?: string | null
         lead?: string | null
         eventID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         event?: {__typename?: 'Event'; id: string} | null
       }
     | {
@@ -3538,7 +3942,12 @@ type ImportBlock_TeaserGridBlock_Fragment = {
         title?: string | null
         lead?: string | null
         pageID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         page?: {__typename?: 'Page'; id: string} | null
       }
     | {
@@ -3548,7 +3957,12 @@ type ImportBlock_TeaserGridBlock_Fragment = {
         title?: string | null
         lead?: string | null
         articleID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         peer?: {__typename?: 'Peer'; id: string} | null
         article?: {__typename?: 'Article'; id: string} | null
       }
@@ -3557,6 +3971,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
 
 type ImportBlock_TeaserGridFlexBlock_Fragment = {
   __typename: 'TeaserGridFlexBlock'
+  type: string
   blockStyle?: string | null
   flexTeasers: Array<{
     __typename?: 'FlexTeaser'
@@ -3577,7 +3992,12 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
           title?: string | null
           lead?: string | null
           articleID?: string | null
-          image?: {__typename?: 'Image'; url?: string | null} | null
+          image?: {
+            __typename?: 'Image'
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
           article?: {__typename?: 'Article'; id: string} | null
         }
       | {
@@ -3587,7 +4007,12 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
           title?: string | null
           lead?: string | null
           contentUrl?: string | null
-          image?: {__typename?: 'Image'; url?: string | null} | null
+          image?: {
+            __typename?: 'Image'
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
           properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
         }
       | {
@@ -3597,7 +4022,12 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
           title?: string | null
           lead?: string | null
           eventID?: string | null
-          image?: {__typename?: 'Image'; url?: string | null} | null
+          image?: {
+            __typename?: 'Image'
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
           event?: {__typename?: 'Event'; id: string} | null
         }
       | {
@@ -3607,7 +4037,12 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
           title?: string | null
           lead?: string | null
           pageID?: string | null
-          image?: {__typename?: 'Image'; url?: string | null} | null
+          image?: {
+            __typename?: 'Image'
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
           page?: {__typename?: 'Page'; id: string} | null
         }
       | {
@@ -3617,7 +4052,12 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
           title?: string | null
           lead?: string | null
           articleID?: string | null
-          image?: {__typename?: 'Image'; url?: string | null} | null
+          image?: {
+            __typename?: 'Image'
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
           peer?: {__typename?: 'Peer'; id: string} | null
           article?: {__typename?: 'Article'; id: string} | null
         }
@@ -3626,6 +4066,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
 
 type ImportBlock_TeaserListBlock_Fragment = {
   __typename: 'TeaserListBlock'
+  type: string
   title?: string | null
   blockStyle?: string | null
   teaserType: TeaserType
@@ -3640,7 +4081,12 @@ type ImportBlock_TeaserListBlock_Fragment = {
         title?: string | null
         lead?: string | null
         articleID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         article?: {__typename?: 'Article'; id: string} | null
       }
     | {
@@ -3650,7 +4096,12 @@ type ImportBlock_TeaserListBlock_Fragment = {
         title?: string | null
         lead?: string | null
         contentUrl?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         properties: Array<{__typename?: 'Property'; key: string; value: string; public: boolean}>
       }
     | {
@@ -3660,7 +4111,12 @@ type ImportBlock_TeaserListBlock_Fragment = {
         title?: string | null
         lead?: string | null
         eventID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         event?: {__typename?: 'Event'; id: string} | null
       }
     | {
@@ -3670,7 +4126,12 @@ type ImportBlock_TeaserListBlock_Fragment = {
         title?: string | null
         lead?: string | null
         pageID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         page?: {__typename?: 'Page'; id: string} | null
       }
     | {
@@ -3680,7 +4141,12 @@ type ImportBlock_TeaserListBlock_Fragment = {
         title?: string | null
         lead?: string | null
         articleID?: string | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
         peer?: {__typename?: 'Peer'; id: string} | null
         article?: {__typename?: 'Article'; id: string} | null
       }
@@ -3764,6 +4230,7 @@ export type ArticleQuery = {
   article: {
     __typename?: 'Article'
     id: string
+    url: string
     tags: Array<{__typename?: 'Tag'; tag?: string | null}>
     published?: {
       __typename?: 'ArticleRevision'
@@ -3778,10 +4245,16 @@ export type ArticleQuery = {
             richText: Node[]
             linkTarget?: string | null
             hideButton?: boolean | null
-            image?: {__typename?: 'Image'; url?: string | null} | null
+            image?: {
+              __typename?: 'Image'
+              url?: string | null
+              license?: string | null
+              source?: string | null
+            } | null
           }
         | {
             __typename: 'CommentBlock'
+            type: string
             blockStyle?: string | null
             filter: {
               __typename?: 'CommentBlockFilter'
@@ -3793,6 +4266,7 @@ export type ArticleQuery = {
           }
         | {
             __typename: 'EventBlock'
+            type: string
             blockStyle?: string | null
             filter: {__typename?: 'EventBlockFilter'; tags: Array<string>; events: Array<string>}
             events: Array<{__typename?: 'Event'; id: string}>
@@ -3809,7 +4283,7 @@ export type ArticleQuery = {
             userID?: string | null
             videoID?: string | null
           }
-        | {__typename: 'HTMLBlock'; blockStyle?: string | null; html?: string | null}
+        | {__typename: 'HTMLBlock'; type: string; blockStyle?: string | null; html?: string | null}
         | {
             __typename: 'IFrameBlock'
             blockStyle?: string | null
@@ -3825,7 +4299,12 @@ export type ArticleQuery = {
             blockStyle?: string | null
             caption?: string | null
             linkUrl?: string | null
-            image?: {__typename?: 'Image'; url?: string | null} | null
+            image?: {
+              __typename?: 'Image'
+              url?: string | null
+              license?: string | null
+              source?: string | null
+            } | null
           }
         | {
             __typename: 'ImageGalleryBlock'
@@ -3833,7 +4312,12 @@ export type ArticleQuery = {
             images: Array<{
               __typename?: 'ImageGalleryImage'
               caption?: string | null
-              image?: {__typename?: 'Image'; url?: string | null} | null
+              image?: {
+                __typename?: 'Image'
+                url?: string | null
+                license?: string | null
+                source?: string | null
+              } | null
             }>
           }
         | {__typename: 'InstagramPostBlock'; blockStyle?: string | null; postID?: string | null}
@@ -3844,7 +4328,12 @@ export type ArticleQuery = {
               __typename?: 'ListicleItem'
               title?: string | null
               richText: Node[]
-              image?: {__typename?: 'Image'; url?: string | null} | null
+              image?: {
+                __typename?: 'Image'
+                url?: string | null
+                license?: string | null
+                source?: string | null
+              } | null
             }>
           }
         | {
@@ -3854,6 +4343,7 @@ export type ArticleQuery = {
           }
         | {
             __typename: 'PollBlock'
+            type: string
             blockStyle?: string | null
             poll?: {__typename?: 'FullPoll'; id: string; question?: string | null} | null
           }
@@ -3862,12 +4352,18 @@ export type ArticleQuery = {
             blockStyle?: string | null
             quote?: string | null
             author?: string | null
-            image?: {__typename?: 'Image'; url?: string | null} | null
+            image?: {
+              __typename?: 'Image'
+              url?: string | null
+              license?: string | null
+              source?: string | null
+            } | null
           }
         | {__typename: 'RichTextBlock'; blockStyle?: string | null; richText: Node[]}
         | {__typename: 'SoundCloudTrackBlock'; blockStyle?: string | null; trackID?: string | null}
         | {
             __typename: 'TeaserGridBlock'
+            type: string
             blockStyle?: string | null
             numColumns: number
             teasers: Array<
@@ -3878,7 +4374,12 @@ export type ArticleQuery = {
                   title?: string | null
                   lead?: string | null
                   articleID?: string | null
-                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  image?: {
+                    __typename?: 'Image'
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
                   article?: {__typename?: 'Article'; id: string} | null
                 }
               | {
@@ -3888,7 +4389,12 @@ export type ArticleQuery = {
                   title?: string | null
                   lead?: string | null
                   contentUrl?: string | null
-                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  image?: {
+                    __typename?: 'Image'
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
                   properties: Array<{
                     __typename?: 'Property'
                     key: string
@@ -3903,7 +4409,12 @@ export type ArticleQuery = {
                   title?: string | null
                   lead?: string | null
                   eventID?: string | null
-                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  image?: {
+                    __typename?: 'Image'
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
                   event?: {__typename?: 'Event'; id: string} | null
                 }
               | {
@@ -3913,7 +4424,12 @@ export type ArticleQuery = {
                   title?: string | null
                   lead?: string | null
                   pageID?: string | null
-                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  image?: {
+                    __typename?: 'Image'
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
                   page?: {__typename?: 'Page'; id: string} | null
                 }
               | {
@@ -3923,7 +4439,12 @@ export type ArticleQuery = {
                   title?: string | null
                   lead?: string | null
                   articleID?: string | null
-                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  image?: {
+                    __typename?: 'Image'
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
                   peer?: {__typename?: 'Peer'; id: string} | null
                   article?: {__typename?: 'Article'; id: string} | null
                 }
@@ -3931,6 +4452,7 @@ export type ArticleQuery = {
           }
         | {
             __typename: 'TeaserGridFlexBlock'
+            type: string
             blockStyle?: string | null
             flexTeasers: Array<{
               __typename?: 'FlexTeaser'
@@ -3951,7 +4473,12 @@ export type ArticleQuery = {
                     title?: string | null
                     lead?: string | null
                     articleID?: string | null
-                    image?: {__typename?: 'Image'; url?: string | null} | null
+                    image?: {
+                      __typename?: 'Image'
+                      url?: string | null
+                      license?: string | null
+                      source?: string | null
+                    } | null
                     article?: {__typename?: 'Article'; id: string} | null
                   }
                 | {
@@ -3961,7 +4488,12 @@ export type ArticleQuery = {
                     title?: string | null
                     lead?: string | null
                     contentUrl?: string | null
-                    image?: {__typename?: 'Image'; url?: string | null} | null
+                    image?: {
+                      __typename?: 'Image'
+                      url?: string | null
+                      license?: string | null
+                      source?: string | null
+                    } | null
                     properties: Array<{
                       __typename?: 'Property'
                       key: string
@@ -3976,7 +4508,12 @@ export type ArticleQuery = {
                     title?: string | null
                     lead?: string | null
                     eventID?: string | null
-                    image?: {__typename?: 'Image'; url?: string | null} | null
+                    image?: {
+                      __typename?: 'Image'
+                      url?: string | null
+                      license?: string | null
+                      source?: string | null
+                    } | null
                     event?: {__typename?: 'Event'; id: string} | null
                   }
                 | {
@@ -3986,7 +4523,12 @@ export type ArticleQuery = {
                     title?: string | null
                     lead?: string | null
                     pageID?: string | null
-                    image?: {__typename?: 'Image'; url?: string | null} | null
+                    image?: {
+                      __typename?: 'Image'
+                      url?: string | null
+                      license?: string | null
+                      source?: string | null
+                    } | null
                     page?: {__typename?: 'Page'; id: string} | null
                   }
                 | {
@@ -3996,7 +4538,12 @@ export type ArticleQuery = {
                     title?: string | null
                     lead?: string | null
                     articleID?: string | null
-                    image?: {__typename?: 'Image'; url?: string | null} | null
+                    image?: {
+                      __typename?: 'Image'
+                      url?: string | null
+                      license?: string | null
+                      source?: string | null
+                    } | null
                     peer?: {__typename?: 'Peer'; id: string} | null
                     article?: {__typename?: 'Article'; id: string} | null
                   }
@@ -4004,6 +4551,7 @@ export type ArticleQuery = {
           }
         | {
             __typename: 'TeaserListBlock'
+            type: string
             title?: string | null
             blockStyle?: string | null
             teaserType: TeaserType
@@ -4018,7 +4566,12 @@ export type ArticleQuery = {
                   title?: string | null
                   lead?: string | null
                   articleID?: string | null
-                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  image?: {
+                    __typename?: 'Image'
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
                   article?: {__typename?: 'Article'; id: string} | null
                 }
               | {
@@ -4028,7 +4581,12 @@ export type ArticleQuery = {
                   title?: string | null
                   lead?: string | null
                   contentUrl?: string | null
-                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  image?: {
+                    __typename?: 'Image'
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
                   properties: Array<{
                     __typename?: 'Property'
                     key: string
@@ -4043,7 +4601,12 @@ export type ArticleQuery = {
                   title?: string | null
                   lead?: string | null
                   eventID?: string | null
-                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  image?: {
+                    __typename?: 'Image'
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
                   event?: {__typename?: 'Event'; id: string} | null
                 }
               | {
@@ -4053,7 +4616,12 @@ export type ArticleQuery = {
                   title?: string | null
                   lead?: string | null
                   pageID?: string | null
-                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  image?: {
+                    __typename?: 'Image'
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
                   page?: {__typename?: 'Page'; id: string} | null
                 }
               | {
@@ -4063,7 +4631,12 @@ export type ArticleQuery = {
                   title?: string | null
                   lead?: string | null
                   articleID?: string | null
-                  image?: {__typename?: 'Image'; url?: string | null} | null
+                  image?: {
+                    __typename?: 'Image'
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
                   peer?: {__typename?: 'Peer'; id: string} | null
                   article?: {__typename?: 'Article'; id: string} | null
                 }
@@ -4112,6 +4685,8 @@ export type ArticleQuery = {
 export const ImageRef = gql`
   fragment ImageRef on Image {
     url
+    license
+    source
   }
 `
 export const EventRef = gql`
@@ -4414,24 +4989,31 @@ export const ImportBlock = gql`
     ...FullBlock
     ... on PollBlock {
       __typename
+      type
     }
     ... on HTMLBlock {
       __typename
+      type
     }
     ... on EventBlock {
       __typename
+      type
     }
     ... on CommentBlock {
       __typename
+      type
     }
     ... on TeaserListBlock {
       __typename
+      type
     }
     ... on TeaserGridBlock {
       __typename
+      type
     }
     ... on TeaserGridFlexBlock {
       __typename
+      type
     }
   }
   ${FullBlock}
@@ -4440,6 +5022,7 @@ export const Article = gql`
   query Article($id: String!) {
     article(id: $id) {
       id
+      url
       tags {
         tag
       }

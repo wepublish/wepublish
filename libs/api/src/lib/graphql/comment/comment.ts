@@ -76,7 +76,6 @@ export const GraphQLCommentItemType = new GraphQLEnumType({
   name: 'CommentItemType',
   values: {
     [CommentItemType.article]: {value: CommentItemType.article},
-    [CommentItemType.peerArticle]: {value: CommentItemType.peerArticle},
     [CommentItemType.page]: {value: CommentItemType.page}
   }
 })
@@ -169,7 +168,7 @@ export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
       type: new GraphQLNonNull(GraphQLCommentItemType)
     },
     title: {type: GraphQLString},
-    peerId: {type: GraphQLID},
+
     text: {
       type: new GraphQLNonNull(GraphQLRichText)
     }
@@ -238,7 +237,6 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     itemType: {
       type: new GraphQLNonNull(GraphQLCommentItemType)
     },
-    peerId: {type: GraphQLID},
     parentComment: {
       type: GraphQLComment,
       resolve: createProxyingResolver(({parentID}, _, {prisma: {comment}}) =>
@@ -328,7 +326,6 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
       itemType: {
         type: new GraphQLNonNull(GraphQLCommentItemType)
       },
-      peerId: {type: GraphQLID},
 
       children: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicComment))),
