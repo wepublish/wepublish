@@ -31,6 +31,7 @@ import {
   BaslerinDesTages,
   SliderArticle
 } from '../../src/components/baslerin-des-tages/baslerin-des-tages'
+import {Bdt} from 'apps/bajour/src/components/baslerin-des-tages/bdt'
 
 const uppercase = css`
   text-transform: uppercase;
@@ -86,7 +87,7 @@ export default function ArticleBySlugIdOrToken() {
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
         {isBaslerinDesTages && data?.article && (
-          <BaslerinDesTages key={data.article.id} article={data.article as SliderArticle} />
+          <Bdt key={data.article.id} article={data.article as SliderArticle} />
         )}
         {!isBaslerinDesTages && <ArticleContainer {...containerProps} />}
 

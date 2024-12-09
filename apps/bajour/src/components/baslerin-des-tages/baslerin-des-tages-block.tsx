@@ -1,4 +1,5 @@
-import {BaslerinDesTages} from './baslerin-des-tages'
+// import {BaslerinDesTages} from './baslerin-des-tages'
+import {Bdt} from './bdt'
 import {ApiV1, BuilderTeaserListBlockProps} from '@wepublish/website'
 
 export const BaslerinDesTagesBlock = ({teasers, className}: BuilderTeaserListBlockProps) => {
@@ -8,5 +9,7 @@ export const BaslerinDesTagesBlock = ({teasers, className}: BuilderTeaserListBlo
     return null
   }
 
-  return <BaslerinDesTages article={article} className={className} />
+  return <Bdt article={article} />
+
+  // return <BaslerinDesTages article={article} className={className} />
 }
