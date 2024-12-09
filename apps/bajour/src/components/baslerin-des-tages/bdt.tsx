@@ -6,7 +6,7 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website'
 import {SliderArticle} from './baslerin-des-tages'
-import {useMemo, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {format} from 'date-fns'
 import {useKeenSlider} from 'keen-slider/react'
 
@@ -139,10 +139,15 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
 
   const [mainIndex, setMainIndex] = useState<number>(1)
   const [sliderArticles, setSliderArticles] = useState<SliderArticle[]>([])
+  const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined)
   const [skipCount, setSkipCount] = useState(0)
 
+  const [phraseWithTagQuery] = ApiV1.usePhraseWithTagLazyQuery()
   const [getMoreArticles] = ApiV1.useFullArticleListLazyQuery()
 
+  /**
+   * Instanciate Keen Slider
+   */
   const [sliderRef, sliderInstance] = useKeenSlider({
     mode: 'free-snap',
     slides: {
@@ -150,7 +155,7 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
       spacing: SLIDER_SPACING
     },
     loop: false,
-    slideChanged: slider => {
+    slideChanged: async slider => {
       // update main image
       const activeIndex = slider.track.details.rel
       setMainIndex(activeIndex + 1)
@@ -161,8 +166,12 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
   sliderInstance.current?.on('animationEnded', async slider => {
     slider.update()
     await loadMoreArticles()
-    slider.update()
   })
+
+  // update slider after changes have been made to the articles array
+  useEffect(() => {
+    sliderInstance.current?.update()
+  }, [sliderArticles])
 
   async function loadMoreArticles() {
     // only load more, if at least 10 articles before end
@@ -170,25 +179,40 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
       return
     }
 
-    const latestArticle = sliderArticles[sliderArticles.length - 1]
+    const endOfQueueArticle = sliderArticles[sliderArticles.length - 1]
 
-    // Load more articles from regular list
-    const {data} = await getMoreArticles({
-      variables: {
-        take: TAKE,
-        skip: 0,
-        order: ApiV1.SortOrder.Descending,
-        filter: {
-          tags: [tagData?.tags?.nodes.at(0)?.id ?? ''],
-          publicationDateFrom: {
-            comparison: ApiV1.DateFilterComparison.Lt,
-            date: latestArticle.publishedAt
+    if (searchQuery) {
+      // Load more search results
+      setSkipCount(prev => prev + TAKE)
+
+      const {data} = await phraseWithTagQuery({
+        variables: {
+          take: TAKE,
+          tag: 'baslerin-des-tages',
+          query: searchQuery,
+          skip: skipCount
+        }
+      })
+    } else {
+      console.log('load more regular articles')
+      // Load more articles from regular list
+      const {data} = await getMoreArticles({
+        variables: {
+          take: TAKE,
+          skip: 0,
+          order: ApiV1.SortOrder.Descending,
+          filter: {
+            tags: [tagData?.tags?.nodes.at(0)?.id ?? ''],
+            publicationDateFrom: {
+              comparison: ApiV1.DateFilterComparison.Lt,
+              date: endOfQueueArticle.publishedAt
+            }
           }
         }
-      }
-    })
-    const articles = (data?.articles?.nodes as SliderArticle[]) ?? []
-    setSliderArticles([...sliderArticles, ...articles])
+      })
+      const articles = (data?.articles?.nodes as SliderArticle[]) ?? []
+      setSliderArticles([...sliderArticles, ...articles])
+    }
   }
 
   const {data: tagData, loading: tagLoading} = ApiV1.useTagQuery({
@@ -198,13 +222,14 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
     }
   })
 
-  const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined)
-
+  /**
+   * Initial articles load
+   */
   ApiV1.useFullArticleListQuery({
     skip: tagLoading || !!searchQuery,
     variables: {
       take: TAKE,
-      skip: skipCount,
+      skip: 0,
       order: ApiV1.SortOrder.Descending,
       filter: {
         tags: [tagData?.tags?.nodes.at(0)?.id ?? ''],
@@ -228,6 +253,26 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
     }
     return sliderArticles[mainIndex]
   }, [mainIndex, sliderArticles])
+
+  /**
+   * Search functionality
+   */
+  const handleSearch = async (query: string | undefined) => {
+    console.log('handle search', query)
+    setSearchQuery(query)
+    if (!query) {
+      return
+    }
+    sliderInstance.current?.moveToIdx(0)
+    const {data} = await phraseWithTagQuery({
+      variables: {take: TAKE, tag: 'baslerin-des-tages', query}
+    })
+    const articles = data?.phraseWithTag?.articles?.nodes as SliderArticle[]
+    if (articles.length > 0) {
+      setSliderArticles(articles)
+      setMainIndex(1)
+    }
+  }
 
   /**
    * Like Btn
@@ -287,7 +332,7 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
           Basler*in <br /> des Tages
         </TitleContainer>
         <SearchContainer>
-          <SearchBar onSearchChange={() => {}} />
+          <SearchBar onSearchChange={handleSearch} />
           <UnderlineDate>{publicationDate}</UnderlineDate>
           <div>{publicationDay}</div>
         </SearchContainer>
