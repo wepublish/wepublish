@@ -187,7 +187,8 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
     },
     onCompleted: data => {
       const articles = data.articles.nodes as SliderArticle[]
-      setSliderArticles([article, ...articles])
+      // insert main article in second position
+      setSliderArticles([...articles.slice(0, 1), article, ...articles.slice(1, articles.length)])
     }
   })
 
