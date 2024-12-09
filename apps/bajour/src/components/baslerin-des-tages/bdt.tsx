@@ -13,9 +13,9 @@ import {useKeenSlider} from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
 import {styled} from '@mui/material'
 import {useLikeStatus} from './use-like-status'
-import {SearchInput} from 'apps/bajour/pages/search'
 import {SearchBar} from './search-bar'
-import {Article} from '@wepublish/website/api'
+
+const TAKE = 20
 
 const SLIDER_SPACING = 24
 const SLIDER_WIDTH = 120
@@ -137,11 +137,11 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
     elements: {Image}
   } = useWebsiteBuilder()
 
-  const [currentArticle, setCurrentArticle] = useState<SliderArticle>(article)
   const [mainIndex, setMainIndex] = useState<number>(1)
   const [sliderArticles, setSliderArticles] = useState<SliderArticle[]>([])
   const [skipCount, setSkipCount] = useState(0)
-  const [updated, setUpdated] = useState<boolean>(false)
+
+  const [getMoreArticles] = ApiV1.useFullArticleListLazyQuery()
 
   const [sliderRef, sliderInstance] = useKeenSlider({
     mode: 'free-snap',
@@ -149,7 +149,7 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
       perView: 'auto',
       spacing: SLIDER_SPACING
     },
-    loop: true,
+    loop: false,
     slideChanged: slider => {
       // update main image
       const activeIndex = slider.track.details.rel
@@ -157,10 +157,39 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
     }
   })
 
-  // update slide distances after changing the main index.
-  sliderInstance.current?.on('animationEnded', slider => {
+  // update main image and load more articles
+  sliderInstance.current?.on('animationEnded', async slider => {
+    slider.update()
+    await loadMoreArticles()
     slider.update()
   })
+
+  async function loadMoreArticles() {
+    // only load more, if at least 10 articles before end
+    if (mainIndex + 10 < sliderArticles.length) {
+      return
+    }
+
+    const latestArticle = sliderArticles[sliderArticles.length - 1]
+
+    // Load more articles from regular list
+    const {data} = await getMoreArticles({
+      variables: {
+        take: TAKE,
+        skip: 0,
+        order: ApiV1.SortOrder.Descending,
+        filter: {
+          tags: [tagData?.tags?.nodes.at(0)?.id ?? ''],
+          publicationDateFrom: {
+            comparison: ApiV1.DateFilterComparison.Lt,
+            date: latestArticle.publishedAt
+          }
+        }
+      }
+    })
+    const articles = (data?.articles?.nodes as SliderArticle[]) ?? []
+    setSliderArticles([...sliderArticles, ...articles])
+  }
 
   const {data: tagData, loading: tagLoading} = ApiV1.useTagQuery({
     variables: {
@@ -174,14 +203,14 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
   ApiV1.useFullArticleListQuery({
     skip: tagLoading || !!searchQuery,
     variables: {
-      take: 20,
+      take: TAKE,
       skip: skipCount,
       order: ApiV1.SortOrder.Descending,
       filter: {
         tags: [tagData?.tags?.nodes.at(0)?.id ?? ''],
         publicationDateFrom: {
           comparison: ApiV1.DateFilterComparison.Lt,
-          date: currentArticle?.publishedAt
+          date: article?.publishedAt
         }
       }
     },
@@ -192,11 +221,19 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
     }
   })
 
+  // render main article
+  const mainArticle = useMemo(() => {
+    if (sliderArticles?.length < mainIndex) {
+      return
+    }
+    return sliderArticles[mainIndex]
+  }, [mainIndex, sliderArticles])
+
   /**
    * Like Btn
    */
-  const [likes, setLikes] = useState(currentArticle?.likes || 0)
-  const {isLiked, updateLikeStatus} = useLikeStatus(currentArticle?.id ?? '')
+  const [likes, setLikes] = useState(mainArticle?.likes || 0)
+  const {isLiked, updateLikeStatus} = useLikeStatus(mainArticle?.id ?? '')
 
   const handleLike = async () => {
     if (isLiked) {
@@ -213,7 +250,7 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
   const [removeLikeMutation] = ApiV1.useRemoveLikeMutation({
     variables: {
       input: {
-        articleId: currentArticle?.id ?? ''
+        articleId: mainArticle?.id ?? ''
       }
     }
   })
@@ -221,18 +258,10 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
   const [addLikeMutation] = ApiV1.useAddLikeMutation({
     variables: {
       input: {
-        articleId: currentArticle?.id ?? ''
+        articleId: mainArticle?.id ?? ''
       }
     }
   })
-
-  // render main article
-  const mainArticle = useMemo(() => {
-    if (sliderArticles?.length < mainIndex) {
-      return
-    }
-    return sliderArticles[mainIndex]
-  }, [mainIndex, sliderArticles])
 
   function getUrl(article: SliderArticle): string {
     if (typeof window !== 'undefined') {
