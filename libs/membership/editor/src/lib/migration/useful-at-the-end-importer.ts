@@ -51,7 +51,7 @@ export class UsefulAtTheEndImporter extends BaseImporter {
     }
     console.log(`Running importer for ${this.useful.title}`)
 
-    const tagId = await this.getTagId('useful-at-the-end')
+    const tagId = await this.getOrCreateTagId('useful-at-the-end')
     if (!tagId) {
       console.error(`    Tag not found`)
       return

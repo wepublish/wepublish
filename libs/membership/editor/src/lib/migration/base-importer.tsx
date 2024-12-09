@@ -1,8 +1,10 @@
 import {
   BlockInput,
+  TagType,
   useArticleLazyQuery,
   useArticleListLazyQuery,
   useCreateArticleMutation,
+  useCreateTagMutation,
   useImageListLazyQuery,
   usePublishArticleMutation,
   useTagListLazyQuery,
@@ -18,6 +20,7 @@ export interface RequestCollection {
   getExistingImages: ReturnType<typeof useImageListLazyQuery>[0]
   getExistingArticle: ReturnType<typeof useArticleLazyQuery>[0]
   getTags: ReturnType<typeof useTagListLazyQuery>[0]
+  createTag: ReturnType<typeof useCreateTagMutation>[0]
 }
 
 export class BaseImporter {
@@ -30,16 +33,28 @@ export class BaseImporter {
     protected requests: RequestCollection
   ) {}
 
-  protected async getTagId(tag: string): Promise<string | undefined> {
-    const {data} = await this.requests.getTags({
+  protected async getOrCreateTagId(tag: string): Promise<string | undefined> {
+    const {data: existingData} = await this.requests.getTags({
       variables: {
         filter: {
           tag
         }
+      },
+      fetchPolicy: 'no-cache'
+    })
+
+    if (existingData?.tags?.totalCount === 1) {
+      return existingData?.tags?.nodes.find(t => t.tag === tag)?.id
+    }
+
+    const {data: newData} = await this.requests.createTag({
+      variables: {
+        tag,
+        type: TagType.Article
       }
     })
 
-    return data?.tags?.nodes.find(t => t.tag === tag)?.id
+    return newData?.createTag?.id
   }
 
   protected async checkImageExists(title: string, filename: string): Promise<string | null> {
