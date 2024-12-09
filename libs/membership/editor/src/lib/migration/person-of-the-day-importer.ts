@@ -49,10 +49,9 @@ export class PersonOfTheDayImporter extends BaseImporter {
   async run() {
     console.log(`Running importer for ${this.person.name}`)
 
-    const tagId = await this.getTagId('baslerin-des-tages')
+    const tagId = await this.getOrCreateTagId(this.person.categories)
     if (!tagId) {
-      console.error(`    Tag not found`)
-      return
+      throw new Error(`Tag ${this.person.categories} not found`)
     }
 
     if (this.person.image) {
