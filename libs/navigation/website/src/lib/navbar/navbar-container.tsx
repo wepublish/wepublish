@@ -9,14 +9,7 @@ import {PropsWithChildren} from 'react'
 export type NavbarContainerProps = PropsWithChildren<
   Pick<
     BuilderNavbarProps,
-    | 'categorySlugs'
-    | 'slug'
-    | 'headerSlug'
-    | 'iconSlug'
-    | 'loginUrl'
-    | 'profileUrl'
-    | 'subscriptionsUrl'
-    | 'actions'
+    'categorySlugs' | 'slug' | 'headerSlug' | 'iconSlug' | 'loginUrl' | 'profileUrl' | 'actions'
   > &
     BuilderContainerProps
 >
@@ -29,7 +22,6 @@ export function NavbarContainer({
   iconSlug,
   loginUrl,
   profileUrl,
-  subscriptionsUrl,
   children,
   actions
 }: NavbarContainerProps) {
@@ -46,7 +38,6 @@ export function NavbarContainer({
       slug={slug}
       loginUrl={loginUrl}
       profileUrl={profileUrl}
-      subscriptionsUrl={subscriptionsUrl}
       data={data}
       loading={loading}
       error={error}
