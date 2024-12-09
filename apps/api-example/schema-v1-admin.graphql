@@ -1626,6 +1626,7 @@ input ArticleInput {
   socialMediaAuthorIDs: [ID!]!
   socialMediaImageID: ID
   blocks: [BlockInput!]!
+  likes: Int
 }
 
 input BlockInput {

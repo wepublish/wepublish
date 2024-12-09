@@ -102,7 +102,8 @@ export class PersonOfTheDayImporter extends BaseImporter {
           breaking: false,
           socialMediaAuthorIDs: [],
           blocks: blocks,
-          imageID: this.person.image ? this.imageID : null
+          imageID: this.person.image ? this.imageID : null,
+          likes: this.person.likes
         }
       }
     })
