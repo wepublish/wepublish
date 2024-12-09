@@ -1,12 +1,21 @@
-import {ApiV1, isRichTextBlock, RichTextBlock, useWebsiteBuilder} from '@wepublish/website'
+import {
+  ApiV1,
+  CommentListItemShare,
+  isRichTextBlock,
+  RichTextBlock,
+  useWebsiteBuilder
+} from '@wepublish/website'
 import {SliderArticle} from './baslerin-des-tages'
-import {useState} from 'react'
+import {useMemo, useState} from 'react'
 import {format} from 'date-fns'
 import {useKeenSlider} from 'keen-slider/react'
 
 import 'keen-slider/keen-slider.min.css'
 import {styled} from '@mui/material'
 import {useLikeStatus} from './use-like-status'
+import {SearchInput} from 'apps/bajour/pages/search'
+import {SearchBar} from './search-bar'
+import {Article} from '@wepublish/website/api'
 
 const SLIDER_SPACING = 24
 const SLIDER_WIDTH = 120
@@ -17,9 +26,9 @@ const SLIDER_DOWN_SHIFT = 120
 
 const Container = styled('div')`
   display: grid;
-  grid-template-columns: calc(
-      ${SLIDER_MAIN_WIDTH}px + ${SLIDER_WIDTH}px + (2 * ${SLIDER_SPACING}px)
-    ) auto;
+  grid-template-columns:
+    calc(${SLIDER_MAIN_WIDTH}px + ${SLIDER_WIDTH}px + (2 * ${SLIDER_SPACING}px))
+    auto;
 `
 
 const HeaderContainer = styled('div')`
@@ -30,23 +39,32 @@ const HeaderContainer = styled('div')`
   grid-column-end: 3;
 `
 
-const HeaderUnderline = styled('div')`
-  height: ${({theme}) => theme.spacing(2)};
-  grid-column-start: 1;
-  grid-column-end: 3;
-  margin-bottom: ${({theme}) => theme.spacing(3)};
-  background-color: ${({theme}) => theme.palette.secondary.main};
-`
-
 const TitleContainer = styled('div')`
   grid-column-start: 1;
   grid-column-end: 2;
   font-size: 1.7;
+  font-size: 2.5em;
+  line-height: 1.2;
+  font-weight: bold;
 `
 
 const SearchContainer = styled('div')`
   grid-column-start: 2;
   grid-column-end: 3;
+  text-align: end;
+`
+
+const UnderlineDate = styled('div')`
+  text-decoration: underline;
+`
+
+const HeaderUnderline = styled('div')`
+  height: ${({theme}) => theme.spacing(2)};
+  grid-column-start: 1;
+  grid-column-end: 3;
+  margin-bottom: ${({theme}) => theme.spacing(3)};
+  margin-top: ${({theme}) => theme.spacing(3)};
+  background-color: ${({theme}) => theme.palette.secondary.main};
 `
 
 const SliderContainer = styled('div')`
@@ -64,11 +82,17 @@ const TextContainer = styled('div')`
 
 const TextIntroduction = styled('div')``
 
-const LikeButton = styled('div')`
+const BtnContainer = styled('div')`
+  display: grid;
+  grid-template-columns: min-content auto;
+  gap: ${({theme}) => theme.spacing(1)};
+  padding-top: ${({theme}) => theme.spacing(2)};
   font-size: 2em;
+`
+
+const LikeButton = styled('div')`
   display: flex;
   align-items: center;
-  padding-top: ${({theme}) => theme.spacing(2)};
   gap: 0.2em;
   cursor: pointer;
   span {
@@ -127,6 +151,7 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
     },
     loop: true,
     slideChanged: slider => {
+      // update main image
       const activeIndex = slider.track.details.rel
       setMainIndex(activeIndex + 1)
     }
@@ -200,17 +225,28 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
     }
   })
 
-  const textBlock = (currentArticle?.blocks as ApiV1.Block[])?.find(isRichTextBlock)
+  // render main article
+  const mainArticle = useMemo(() => {
+    if (sliderArticles?.length < mainIndex) {
+      return
+    }
+    return sliderArticles[mainIndex]
+  }, [mainIndex, sliderArticles])
 
-  const publishedAt = currentArticle?.publishedAt
+  function getUrl(article: SliderArticle): string {
+    if (typeof window !== 'undefined') {
+      return `${window.location.host}${article.url}`
+    }
+    return ''
+  }
+
+  const textBlock = (mainArticle?.blocks as ApiV1.Block[])?.find(isRichTextBlock)
+
+  const publishedAt = mainArticle?.publishedAt
   const publicationDate = publishedAt ? format(new Date(publishedAt), 'd. MMM yyyy') : ''
   const publicationDay = publishedAt ? format(new Date(publishedAt), 'eeee') : ''
 
-  if (!currentArticle?.title || !currentArticle.image || !textBlock?.richText) {
-    return <></>
-  }
-
-  if (!sliderArticles.length) {
+  if (!sliderArticles.length || !mainArticle) {
     return <div>loading</div>
   }
 
@@ -218,10 +254,13 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
     <Container>
       <HeaderContainer>
         <TitleContainer>
-          <h1>
-            Basler*in <br /> des Tages
-          </h1>
+          Basler*in <br /> des Tages
         </TitleContainer>
+        <SearchContainer>
+          <SearchBar onSearchChange={() => {}} />
+          <UnderlineDate>{publicationDate}</UnderlineDate>
+          <div>{publicationDay}</div>
+        </SearchContainer>
         <HeaderUnderline />
       </HeaderContainer>
 
@@ -234,7 +273,7 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
             {article.image && (
               <>
                 <Image image={article.image} />
-                <SlideTitle>{article.title}</SlideTitle>
+                {mainIndex !== index && <SlideTitle>{article.title}</SlideTitle>}
               </>
             )}
           </SlideItem>
@@ -243,20 +282,24 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
 
       <TextContainer>
         <TextIntroduction>
-          {currentArticle.lead ? (
-            <h2>{currentArticle.lead} </h2>
+          {mainArticle.lead ? (
+            <h2>{mainArticle.lead} </h2>
           ) : (
             <h2>
-              {currentArticle.title}
+              {mainArticle?.title}
               <span style={{fontSize: '1rem'}}>, weil ...</span>
             </h2>
           )}
         </TextIntroduction>
-        <RichTextBlock richText={textBlock.richText} />
+        {textBlock?.richText && <RichTextBlock richText={textBlock.richText} />}
 
-        <LikeButton onClick={handleLike}>
-          {isLiked ? '❤️' : '🤍'} <span>{likes}</span>
-        </LikeButton>
+        <BtnContainer>
+          <LikeButton onClick={handleLike}>
+            {isLiked ? '❤️' : '🤍'} <span>{likes}</span>
+          </LikeButton>
+
+          <CommentListItemShare url={getUrl(mainArticle)} title="Share" />
+        </BtnContainer>
       </TextContainer>
     </Container>
   )
