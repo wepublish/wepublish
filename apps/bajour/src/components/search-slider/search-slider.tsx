@@ -1,6 +1,7 @@
 import 'keen-slider/keen-slider.min.css'
 
 import {styled} from '@mui/material'
+import {H1, H4} from '@wepublish/ui'
 import {
   ApiV1,
   CommentListItemShare,
@@ -48,6 +49,18 @@ const TitleContainer = styled('div')`
   font-size: 2.5em;
   line-height: 1.2;
   font-weight: bold;
+`
+
+const TitleUpperPart = styled(H1)`
+  margin: 0;
+  font-size: 3rem;
+  line-height: 1.3;
+  font-weight: 400;
+`
+
+const TitleLowerPart = styled(H4)`
+  margin: 0;
+  font-weight: 400;
 `
 
 const SearchContainer = styled('div')`
@@ -336,6 +349,19 @@ export function SearchSlider({article}: SearchSliderProps) {
     return ''
   }
 
+  // generate an upper and lower part of the title
+  const title = useMemo(() => {
+    const splitTag = tag.split(' ')
+    const firstWordLength = Math.floor(splitTag.length / 2)
+    const upperTitlePart = splitTag.slice(0, firstWordLength).join(' ')
+    const lowerTitlePart = splitTag.slice(firstWordLength).join(' ')
+
+    return {
+      upperTitlePart,
+      lowerTitlePart
+    }
+  }, [tag])
+
   const textBlock = (mainArticle?.blocks as ApiV1.Block[])?.find(isRichTextBlock)
 
   const publishedAt = mainArticle?.publishedAt
@@ -350,7 +376,8 @@ export function SearchSlider({article}: SearchSliderProps) {
     <Container>
       <HeaderContainer>
         <TitleContainer>
-          Basler*in <br /> des Tages
+          <TitleUpperPart>{title.upperTitlePart}</TitleUpperPart>
+          <TitleLowerPart>{title.lowerTitlePart}</TitleLowerPart>
         </TitleContainer>
         <SearchContainer>
           <SearchBar onSearchChange={handleSearch} />
