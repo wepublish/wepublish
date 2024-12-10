@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useEffect, useState} from 'react'
 
 export function useLikeStatus(articleId: string) {
   const [isLiked, setIsLiked] = useState(false)

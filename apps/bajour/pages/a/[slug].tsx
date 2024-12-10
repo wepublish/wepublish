@@ -23,12 +23,12 @@ import {BriefingNewsletter} from '../../src/components/briefing-newsletter/brief
 import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
 import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
 import {Container} from '../../src/components/layout/container'
+import {SliderArticle} from '../../src/components/search-slider/search-slider'
+import {SearchSlider} from '../../src/components/search-slider/search-slider'
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {BajourTeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
-import {SliderArticle} from '../../src/components/baslerin-des-tages/baslerin-des-tages'
-import {Bdt} from '../../src/components/baslerin-des-tages/bdt'
 
 const uppercase = css`
   text-transform: uppercase;
@@ -72,7 +72,11 @@ export default function ArticleBySlugIdOrToken() {
   } as ComponentProps<typeof ArticleContainer>
 
   const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
-  const isBaslerinDesTages = data?.article?.tags.some(({tag}) => tag === 'baslerin-des-tages')
+  // add more tags
+  const SEARCH_SLIDER_TAGS = ['baslerin-des-tages']
+  const isSearchSlider = data?.article?.tags.some(
+    ({tag}) => tag && SEARCH_SLIDER_TAGS.includes(tag)
+  )
 
   return (
     <WebsiteBuilderProvider
@@ -83,10 +87,10 @@ export default function ArticleBySlugIdOrToken() {
       Article={isFDT ? FdTArticle : Article}
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
-        {isBaslerinDesTages && data?.article && (
-          <Bdt key={data.article.id} article={data.article as SliderArticle} />
+        {isSearchSlider && data?.article && (
+          <SearchSlider key={data.article.id} article={data.article as SliderArticle} />
         )}
-        {!isBaslerinDesTages && <ArticleContainer {...containerProps} />}
+        {!isSearchSlider && <ArticleContainer {...containerProps} />}
 
         {/* Waiting for Samuel H. from Bajour to confirm - 2024-11-20
          !isFDT && (
@@ -99,9 +103,9 @@ export default function ArticleBySlugIdOrToken() {
           </ArticleWrapper>
         ) */}
 
-        {!isBaslerinDesTages && <BriefingNewsletter />}
+        {!isSearchSlider && <BriefingNewsletter />}
 
-        {data?.article && !isBaslerinDesTages && (
+        {data?.article && !isSearchSlider && (
           <>
             <ArticleWrapper>
               <H5 component={'h2'} css={uppercase}>

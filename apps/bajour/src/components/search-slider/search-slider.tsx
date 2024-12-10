@@ -1,3 +1,6 @@
+import 'keen-slider/keen-slider.min.css'
+
+import {styled} from '@mui/material'
 import {
   ApiV1,
   CommentListItemShare,
@@ -5,15 +8,13 @@ import {
   RichTextBlock,
   useWebsiteBuilder
 } from '@wepublish/website'
-import {SliderArticle} from './baslerin-des-tages'
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {format} from 'date-fns'
-import {KeenSliderHooks, KeenSliderInstance, useKeenSlider} from 'keen-slider/react'
+import {useKeenSlider} from 'keen-slider/react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 
-import 'keen-slider/keen-slider.min.css'
-import {styled} from '@mui/material'
-import {useLikeStatus} from './use-like-status'
 import {SearchBar} from './search-bar'
+import {useLikeStatus} from './use-like-status'
+import {Maybe} from 'graphql/jsutils/Maybe'
 
 const TAKE = 20
 
@@ -127,12 +128,15 @@ const SlideTitle = styled('span')`
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.58);
 `
 
-interface BaslerinDesTagesProps {
-  article: SliderArticle
-  className?: string
+type SliderArticle = Omit<ApiV1.Article, 'comments' | 'socialMediaAuthors'> & {
+  blocks: ApiV1.Block[]
 }
 
-export function Bdt({article, className}: BaslerinDesTagesProps) {
+interface SearchSliderProps {
+  article: SliderArticle
+}
+
+export function SearchSlider({article}: SearchSliderProps) {
   const {
     elements: {Image}
   } = useWebsiteBuilder()
@@ -144,6 +148,9 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
 
   const [phraseWithTagQuery] = ApiV1.usePhraseWithTagLazyQuery()
   const [getMoreArticles] = ApiV1.useFullArticleListLazyQuery()
+
+  // getting the tag out of the inital article
+  const tag = useMemo<string>(() => article?.tags[0]?.tag || '', [article])
 
   /**
    * Instanciate Keen Slider
@@ -177,7 +184,7 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
       const {data} = await phraseWithTagQuery({
         variables: {
           take: TAKE,
-          tag: 'baslerin-des-tages',
+          tag,
           query: searchQuery,
           skip: skipCount
         }
@@ -212,6 +219,7 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
       await loadMoreArticles()
     }
 
+    // initiate loading more articles in the background
     keenSlider.current?.on('animationEnded', animationEnded)
 
     // remove event listener
@@ -227,7 +235,7 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
 
   const {data: tagData, loading: tagLoading} = ApiV1.useTagQuery({
     variables: {
-      tag: 'baslerin-des-tages',
+      tag,
       type: ApiV1.TagType.Article
     }
   })
@@ -274,7 +282,7 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
     }
     keenSlider.current?.moveToIdx(0)
     const {data} = await phraseWithTagQuery({
-      variables: {take: TAKE, tag: 'baslerin-des-tages', query}
+      variables: {take: TAKE, tag, query}
     })
     const articles = data?.phraseWithTag?.articles?.nodes as SliderArticle[]
     if (articles.length > 0) {
