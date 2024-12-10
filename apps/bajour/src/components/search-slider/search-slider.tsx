@@ -11,76 +11,124 @@ import {
 } from '@wepublish/website'
 import {format} from 'date-fns'
 import {useKeenSlider} from 'keen-slider/react'
+import {useRouter} from 'next/router'
 import {useCallback, useEffect, useMemo, useState} from 'react'
 
 import {SearchBar} from './search-bar'
 import {useLikeStatus} from './use-like-status'
-import {useRouter} from 'next/router'
 
 export const SEARCH_SLIDER_TAG = 'search-slider'
 
 const TAKE = 20
 
-const SLIDER_SPACING = 24
-const SLIDER_WIDTH = 120
-const SLIDER_MAIN_WIDTH = 320
-const SLIDER_HEIGHT = 150
-const SLIDER_MAIN_HEIGHT = 390
-const SLIDER_DOWN_SHIFT = 120
+const SLIDER_SPACING = 12
+
+const SLIDER_EXTRA_SPACING_MAIN = 0
+const SLIDER_EXTRA_SPACING_MAIN_MD = 20
+
+const SLIDER_RATIO = 1.2
+
+const SLIDER_WIDTH = 80
+const SLIDER_WIDTH_MD = 130
+
+const SLIDER_MAIN_WIDTH = 150
+const SLIDER_MAIN_WIDTH_MD = 320
+
+const SLIDER_HEIGHT = SLIDER_WIDTH * SLIDER_RATIO
+const SLIDER_HEIGHT_MD = SLIDER_WIDTH_MD * SLIDER_RATIO
+
+const SLIDER_MAIN_HEIGHT = (SLIDER_MAIN_WIDTH - SLIDER_EXTRA_SPACING_MAIN) * SLIDER_RATIO
+const SLIDER_MAIN_HEIGHT_MD = (SLIDER_MAIN_WIDTH_MD - SLIDER_EXTRA_SPACING_MAIN_MD) * SLIDER_RATIO
+
+const SLIDER_DOWN_SHIFT = (SLIDER_MAIN_HEIGHT - SLIDER_HEIGHT) / 2
+const SLIDER_DOWN_SHIFT_MD = (SLIDER_MAIN_HEIGHT_MD - SLIDER_HEIGHT_MD) / 3
 
 const Container = styled('div')`
   display: grid;
   grid-template-columns:
-    calc(${SLIDER_MAIN_WIDTH}px + ${SLIDER_WIDTH}px + (2 * ${SLIDER_SPACING}px))
+    calc(${SLIDER_WIDTH}px + ${SLIDER_SPACING}px)
     auto;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-template-columns:
+      calc(${SLIDER_MAIN_WIDTH_MD}px + ${SLIDER_WIDTH_MD}px + (2 * ${SLIDER_SPACING}px))
+      auto;
+  }
 `
 
 const HeaderContainer = styled('div')`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: -${SLIDER_DOWN_SHIFT}px;
+  grid-template-columns: auto auto;
   grid-column-start: 2;
   grid-column-end: 3;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: -${SLIDER_DOWN_SHIFT_MD}px;
+  }
 `
 
 const TitleContainer = styled('div')`
   grid-column-start: 1;
   grid-column-end: 2;
-  font-size: 1.7;
-  font-size: 2.5em;
-  line-height: 1.2;
   font-weight: bold;
 `
 
 const TitleUpperPart = styled(H1)`
   margin: 0;
-  font-size: 3rem;
-  line-height: 1.3;
+  font-size: 2.2em;
+  line-height: 1;
   font-weight: 400;
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    font-size: 2.5em;
+  }
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    font-size: 3em;
+  }
 `
 
 const TitleLowerPart = styled(H4)`
   margin: 0;
+  line-height: 1.6;
   font-weight: 400;
 `
 
 const SearchContainer = styled('div')`
   grid-column-start: 2;
   grid-column-end: 3;
+  padding-right: ${({theme}) => theme.spacing(2)};
+
   text-align: end;
+  font-size: ${({theme}) => theme.typography.subtitle2};
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    padding-right: 0;
+    font-size: ${({theme}) => theme.typography.subtitle1};
+  }
 `
 
-const UnderlineDate = styled('div')`
-  text-decoration: underline;
+const DateContainer = styled('div')`
+  margin-top: -${({theme}) => theme.spacing(1)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    margin-top: 0;
+  }
 `
 
 const HeaderUnderline = styled('div')`
   height: ${({theme}) => theme.spacing(2)};
   grid-column-start: 1;
   grid-column-end: 3;
-  margin-bottom: ${({theme}) => theme.spacing(3)};
-  margin-top: ${({theme}) => theme.spacing(3)};
+  margin-bottom: ${({theme}) => theme.spacing(2)};
+  margin-top: ${({theme}) => theme.spacing(2)};
   background-color: ${({theme}) => theme.palette.secondary.main};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    margin-bottom: ${({theme}) => theme.spacing(3)};
+    margin-top: ${({theme}) => theme.spacing(3)};
+  }
 `
 
 const SliderContainer = styled('div')`
@@ -93,10 +141,14 @@ const TextContainer = styled('div')`
   grid-column-start: 2;
   grid-column-end: 3;
   max-width: 500px;
-  margin-top: -80px;
-`
 
-const TextIntroduction = styled('div')``
+  margin-right: ${({theme}) => theme.spacing(2)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    margin-top: -${SLIDER_DOWN_SHIFT_MD * 2}px;
+    margin-right: 0;
+  }
+`
 
 const BtnContainer = styled('div')`
   display: grid;
@@ -119,16 +171,29 @@ const LikeButton = styled('div')`
 const SlideItem = styled('div')<{mainImage?: boolean}>`
   cursor: pointer;
   min-height: unset !important;
-  margin-top: ${props => (props.mainImage ? 0 : SLIDER_DOWN_SHIFT)}px;
   height: ${props => (props.mainImage ? SLIDER_MAIN_HEIGHT : SLIDER_HEIGHT)}px;
-
   min-width: ${props => (props.mainImage ? SLIDER_MAIN_WIDTH : SLIDER_WIDTH)}px;
+
+  margin-top: ${props => (props.mainImage ? 0 : SLIDER_DOWN_SHIFT)}px;
+
+  padding-left: ${props => (props.mainImage ? SLIDER_EXTRA_SPACING_MAIN : 0)}px;
+  padding-right: ${props => (props.mainImage ? SLIDER_EXTRA_SPACING_MAIN : 0)}px;
 
   img {
     width: 100%;
     height: 100%;
     border-radius: 15px;
     object-fit: cover;
+  }
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    height: ${props => (props.mainImage ? SLIDER_MAIN_HEIGHT_MD : SLIDER_HEIGHT_MD)}px;
+    min-width: ${props => (props.mainImage ? SLIDER_MAIN_WIDTH_MD : SLIDER_WIDTH_MD)}px;
+
+    margin-top: ${props => (props.mainImage ? 0 : SLIDER_DOWN_SHIFT_MD)}px;
+
+    padding-left: ${props => (props.mainImage ? SLIDER_EXTRA_SPACING_MAIN_MD : 0)}px;
+    padding-right: ${props => (props.mainImage ? SLIDER_EXTRA_SPACING_MAIN_MD : 0)}px;
   }
 `
 const SlideTitle = styled('span')`
@@ -398,7 +463,9 @@ export function SearchSlider({article}: SearchSliderProps) {
         </TitleContainer>
         <SearchContainer>
           <SearchBar onSearchChange={handleSearch} />
-          <UnderlineDate>{publicationDate}</UnderlineDate>
+          <DateContainer>
+            <u>{publicationDate}</u>
+          </DateContainer>
           <div>{publicationDay}</div>
         </SearchContainer>
         <HeaderUnderline />
@@ -422,7 +489,7 @@ export function SearchSlider({article}: SearchSliderProps) {
       </SliderContainer>
 
       <TextContainer>
-        <TextIntroduction>
+        <div>
           {mainArticle.lead ? (
             <h2>{mainArticle.lead} </h2>
           ) : (
@@ -431,7 +498,7 @@ export function SearchSlider({article}: SearchSliderProps) {
               <span style={{fontSize: '1rem'}}>, weil ...</span>
             </h2>
           )}
-        </TextIntroduction>
+        </div>
         {textBlock?.richText && <RichTextBlock richText={textBlock.richText} />}
 
         <BtnContainer>
