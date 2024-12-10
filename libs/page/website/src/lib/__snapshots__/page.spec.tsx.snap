@@ -40,10 +40,6 @@ exports[`Page should render Default 1`] = `
         property="og:image"
       />
       <meta
-        content="https://unsplash.it/1200/400"
-        property="og:image"
-      />
-      <meta
         content="1200"
         property="og:image:width"
       />
@@ -85,6 +81,14 @@ exports[`Page should render Default 1`] = `
       />
       <meta
         content="200"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/1000/400"
+        property="og:image"
+      />
+      <meta
+        content="1000"
         property="og:image:width"
       />
       <meta
@@ -2379,10 +2383,6 @@ exports[`Page should render WithChildren 1`] = `
         property="og:image"
       />
       <meta
-        content="https://unsplash.it/1200/400"
-        property="og:image"
-      />
-      <meta
         content="1200"
         property="og:image:width"
       />
@@ -2424,6 +2424,14 @@ exports[`Page should render WithChildren 1`] = `
       />
       <meta
         content="200"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/1000/400"
+        property="og:image"
+      />
+      <meta
+        content="1000"
         property="og:image:width"
       />
       <meta
@@ -4748,10 +4756,6 @@ exports[`Page should render WithClassName 1`] = `
         property="og:image"
       />
       <meta
-        content="https://unsplash.it/1200/400"
-        property="og:image"
-      />
-      <meta
         content="1200"
         property="og:image:width"
       />
@@ -4793,6 +4797,14 @@ exports[`Page should render WithClassName 1`] = `
       />
       <meta
         content="200"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/1000/400"
+        property="og:image"
+      />
+      <meta
+        content="1000"
         property="og:image:width"
       />
       <meta
@@ -7114,10 +7126,6 @@ exports[`Page should render WithEmotion 1`] = `
         property="og:image"
       />
       <meta
-        content="https://unsplash.it/1200/400"
-        property="og:image"
-      />
-      <meta
         content="1200"
         property="og:image:width"
       />
@@ -7159,6 +7167,14 @@ exports[`Page should render WithEmotion 1`] = `
       />
       <meta
         content="200"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/1000/400"
+        property="og:image"
+      />
+      <meta
+        content="1000"
         property="og:image:width"
       />
       <meta
@@ -9496,10 +9512,6 @@ exports[`Page should render WithoutDescription 1`] = `
         property="og:image"
       />
       <meta
-        content="https://unsplash.it/1200/400"
-        property="og:image"
-      />
-      <meta
         content="1200"
         property="og:image:width"
       />
@@ -9541,6 +9553,14 @@ exports[`Page should render WithoutDescription 1`] = `
       />
       <meta
         content="200"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/1000/400"
+        property="og:image"
+      />
+      <meta
+        content="1000"
         property="og:image:width"
       />
       <meta
@@ -11862,10 +11882,6 @@ exports[`Page should render WithoutImageMetadata 1`] = `
         property="og:image"
       />
       <meta
-        content="https://unsplash.it/1200/400"
-        property="og:image"
-      />
-      <meta
         content="1200"
         property="og:image:width"
       />
@@ -11907,6 +11923,14 @@ exports[`Page should render WithoutImageMetadata 1`] = `
       />
       <meta
         content="200"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/1000/400"
+        property="og:image"
+      />
+      <meta
+        content="1000"
         property="og:image:width"
       />
       <meta
@@ -14220,10 +14244,6 @@ exports[`Page should render WithoutSocialMedia 1`] = `
         property="og:image"
       />
       <meta
-        content="https://unsplash.it/1200/400"
-        property="og:image"
-      />
-      <meta
         content="1200"
         property="og:image:width"
       />
@@ -14265,6 +14285,14 @@ exports[`Page should render WithoutSocialMedia 1`] = `
       />
       <meta
         content="200"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/1000/400"
+        property="og:image"
+      />
+      <meta
+        content="1000"
         property="og:image:width"
       />
       <meta
