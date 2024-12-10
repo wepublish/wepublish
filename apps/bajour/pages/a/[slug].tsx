@@ -27,11 +27,8 @@ import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {BajourTeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
-import {
-  BaslerinDesTages,
-  SliderArticle
-} from '../../src/components/baslerin-des-tages/baslerin-des-tages'
-import {Bdt} from 'apps/bajour/src/components/baslerin-des-tages/bdt'
+import {SliderArticle} from '../../src/components/baslerin-des-tages/baslerin-des-tages'
+import {Bdt} from '../../src/components/baslerin-des-tages/bdt'
 
 const uppercase = css`
   text-transform: uppercase;
