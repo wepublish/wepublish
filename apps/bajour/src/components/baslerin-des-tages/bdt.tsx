@@ -6,9 +6,9 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website'
 import {SliderArticle} from './baslerin-des-tages'
-import {useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {format} from 'date-fns'
-import {useKeenSlider} from 'keen-slider/react'
+import {KeenSliderHooks, KeenSliderInstance, useKeenSlider} from 'keen-slider/react'
 
 import 'keen-slider/keen-slider.min.css'
 import {styled} from '@mui/material'
@@ -132,6 +132,8 @@ interface BaslerinDesTagesProps {
   className?: string
 }
 
+type KeenSlider = KeenSliderInstance<object, object, KeenSliderHooks>
+
 export function Bdt({article, className}: BaslerinDesTagesProps) {
   const {
     elements: {Image}
@@ -145,10 +147,17 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
   const [phraseWithTagQuery] = ApiV1.usePhraseWithTagLazyQuery()
   const [getMoreArticles] = ApiV1.useFullArticleListLazyQuery()
 
+  // update main image and load more articles
+  const animationEnded = async (slider: KeenSlider) => {
+    console.log('animation ended. update slider and load more articles')
+    slider.update()
+    await loadMoreArticles()
+  }
+
   /**
    * Instanciate Keen Slider
    */
-  const [sliderRef, sliderInstance] = useKeenSlider({
+  const [sliderRef, keenSlider] = useKeenSlider({
     mode: 'free-snap',
     slides: {
       perView: 'auto',
@@ -159,27 +168,29 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
       // update main image
       const activeIndex = slider.track.details.rel
       setMainIndex(activeIndex + 1)
+    },
+    created: instance => {
+      instance.on('animationEnded', animationEnded, false)
+    },
+    destroyed: instance => {
+      instance.on('animationEnded', animationEnded, true)
     }
-  })
-
-  // update main image and load more articles
-  sliderInstance.current?.on('animationEnded', async slider => {
-    slider.update()
-    await loadMoreArticles()
   })
 
   // update slider after changes have been made to the articles array
   useEffect(() => {
-    sliderInstance.current?.update()
+    keenSlider.current?.update()
   }, [sliderArticles])
 
   async function loadMoreArticles() {
+    console.log(mainIndex, sliderArticles.length)
     // only load more, if at least 10 articles before end
     if (mainIndex + 10 < sliderArticles.length) {
       return
     }
 
     const endOfQueueArticle = sliderArticles[sliderArticles.length - 1]
+    console.log(endOfQueueArticle, sliderArticles)
 
     if (searchQuery) {
       // Load more search results
@@ -194,7 +205,7 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
         }
       })
     } else {
-      console.log('load more regular articles')
+      // console.log('load more regular articles')
       // Load more articles from regular list
       const {data} = await getMoreArticles({
         variables: {
@@ -263,7 +274,7 @@ export function Bdt({article, className}: BaslerinDesTagesProps) {
     if (!query) {
       return
     }
-    sliderInstance.current?.moveToIdx(0)
+    keenSlider.current?.moveToIdx(0)
     const {data} = await phraseWithTagQuery({
       variables: {take: TAKE, tag: 'baslerin-des-tages', query}
     })
