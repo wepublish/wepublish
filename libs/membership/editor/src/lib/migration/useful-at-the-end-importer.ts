@@ -57,6 +57,11 @@ export class UsefulAtTheEndImporter extends BaseImporter {
       return
     }
 
+    const searchSliderTagId = await this.getOrCreateTagId('search-slider')
+    if (!searchSliderTagId) {
+      throw new Error(`Tag search-slider not found`)
+    }
+
     if (this.useful.image) {
       this.imageID = await this.transferImage(
         this.useful.title,
@@ -94,7 +99,7 @@ export class UsefulAtTheEndImporter extends BaseImporter {
           title: this.useful.title,
           lead: '',
           authorIDs: [],
-          tags: [tagId],
+          tags: [tagId, searchSliderTagId],
           properties: [],
           hideAuthor: false,
           shared: false,
