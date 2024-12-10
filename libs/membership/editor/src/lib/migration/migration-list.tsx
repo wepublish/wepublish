@@ -53,25 +53,23 @@ function MigrationList() {
   }
 
   return (
-    <>
-      <Container>
-        <h1>Migrator</h1>
-        <Accordion>
-          <AccordionSummary expandIcon={<MdExpand />}>Bajour - Person of the Day</AccordionSummary>
-          <AccordionDetails>
-            <BajourPersonOfTheDayList {...requestCollection} />
-          </AccordionDetails>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary expandIcon={<MdExpand />}>
-            Bajour - The useful at the End
-          </AccordionSummary>
-          <AccordionDetails>
-            <BajourUsefulAtTheEndList {...requestCollection} />
-          </AccordionDetails>
-        </Accordion>
-      </Container>
-    </>
+    <Container>
+      <h1>Migrator</h1>
+      <Accordion>
+        <AccordionSummary expandIcon={<MdExpand />}>Bajour - Person of the Day</AccordionSummary>
+        <AccordionDetails>
+          <BajourPersonOfTheDayList {...requestCollection} />
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary expandIcon={<MdExpand />}>
+          Bajour - The useful at the End
+        </AccordionSummary>
+        <AccordionDetails>
+          <BajourUsefulAtTheEndList {...requestCollection} />
+        </AccordionDetails>
+      </Accordion>
+    </Container>
   )
 }
 

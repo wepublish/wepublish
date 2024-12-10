@@ -15,6 +15,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 
 import {SearchBar} from './search-bar'
 import {useLikeStatus} from './use-like-status'
+import {useRouter} from 'next/router'
 
 export const SEARCH_SLIDER_TAG = 'search-slider'
 
@@ -154,6 +155,7 @@ export function SearchSlider({article}: SearchSliderProps) {
   const {
     elements: {Image}
   } = useWebsiteBuilder()
+  const {replace} = useRouter()
 
   const [mainIndex, setMainIndex] = useState<number>(1)
   const [sliderArticles, setSliderArticles] = useState<SliderArticle[]>([])
@@ -233,6 +235,7 @@ export function SearchSlider({article}: SearchSliderProps) {
   useEffect(() => {
     const animationEnded = async () => {
       keenSlider.current?.update()
+      // goToArticle(mainArticle)
       await loadMoreArticles()
     }
 
@@ -306,6 +309,20 @@ export function SearchSlider({article}: SearchSliderProps) {
       setSliderArticles(articles)
       setMainIndex(1)
     }
+  }
+
+  async function goToArticle(article: SliderArticle) {
+    const newUrl = article?.url
+    if (!newUrl) return
+    await replace(newUrl)
+  }
+
+  function clickSlideItem(index: number) {
+    if (mainIndex === index || index < 1) {
+      return
+    }
+    setMainIndex(index - 1)
+    keenSlider.current?.moveToIdx(index - 1)
   }
 
   /**
@@ -392,7 +409,8 @@ export function SearchSlider({article}: SearchSliderProps) {
           <SlideItem
             key={article.id}
             className={`keen-slider__slide number-slide${index}`}
-            mainImage={mainIndex === index}>
+            mainImage={mainIndex === index}
+            onClick={() => clickSlideItem(index)}>
             {article.image && (
               <>
                 <Image image={article.image} />
