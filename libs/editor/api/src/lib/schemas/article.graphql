@@ -82,7 +82,7 @@ fragment ArticleRef on Article {
 
 query ArticleList(
   $filter: ArticleFilter
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -149,14 +149,14 @@ mutation CreateArticle($input: ArticleInput!) {
   }
 }
 
-mutation UpdateArticle($id: ID!, $input: ArticleInput!) {
+mutation UpdateArticle($id: String!, $input: ArticleInput!) {
   updateArticle(id: $id, input: $input) {
     ...MutationArticle
   }
 }
 
 mutation PublishArticle(
-  $id: ID!
+  $id: String!
   $publishAt: DateTime!
   $publishedAt: DateTime!
   $updatedAt: DateTime!
@@ -166,29 +166,29 @@ mutation PublishArticle(
   }
 }
 
-mutation UnpublishArticle($id: ID!) {
+mutation UnpublishArticle($id: String!) {
   unpublishArticle(id: $id) {
     ...MutationArticle
   }
 }
 
-mutation DeleteArticle($id: ID!) {
+mutation DeleteArticle($id: String!) {
   deleteArticle(id: $id) {
     ...MutationArticle
   }
 }
 
-mutation DuplicateArticle($id: ID!) {
+mutation DuplicateArticle($id: String!) {
   duplicateArticle(id: $id) {
     ...MutationArticle
   }
 }
 
-query ArticlePreviewLink($id: ID!, $hours: Int!) {
+query ArticlePreviewLink($id: String!, $hours: Int!) {
   articlePreviewLink(id: $id, hours: $hours)
 }
 
-query Article($id: ID!) {
+query Article($id: String!) {
   article(id: $id) {
     id
     shared

@@ -3,7 +3,7 @@ import {CanCreateNavigation, CanDeleteNavigation, Permissions} from '@wepublish/
 import {CreateNavigationInput, Navigation, UpdateNavigationInput} from './navigation.model'
 import {NavigationService} from './navigation.service'
 import {NavigationDataloader} from './navigation.dataloader'
-import {NotFoundException} from '@nestjs/common'
+import {BadRequestException} from '@nestjs/common'
 
 @Resolver(() => Navigation)
 export class NavigationResolver {
@@ -12,30 +12,24 @@ export class NavigationResolver {
     private readonly navigationDataLoader: NavigationDataloader
   ) {}
 
-  @Query(() => Navigation, {description: `Returns a navigation by key.`})
-  async getNavigationByKey(@Args('key') key: string) {
-    const navigation = await this.navigationService.getNavigationByKey(key)
-
-    if (navigation === null) {
-      throw new NotFoundException()
+  @Query(() => Navigation, {description: `Returns a navigation by id or key.`})
+  async navigation(
+    @Args('id', {nullable: true}) id?: string,
+    @Args('key', {nullable: true}) key?: string
+  ) {
+    if (id != null) {
+      return this.navigationDataLoader.load(id)
     }
 
-    return navigation
-  }
-
-  @Query(() => Navigation, {description: `Returns a navigation by id.`})
-  async getNavigationById(@Args('id') id: string) {
-    const navigation = await this.navigationDataLoader.load(id)
-
-    if (navigation === null) {
-      throw new NotFoundException('Navigation not found')
+    if (key != null) {
+      return this.navigationService.getNavigationByKey(key)
     }
 
-    return navigation
+    throw new BadRequestException('id or key required.')
   }
 
   @Query(() => [Navigation], {description: `Returns a list of navigations.`})
-  getNavigations() {
+  navigations() {
     return this.navigationService.getNavigations()
   }
 

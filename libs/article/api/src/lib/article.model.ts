@@ -2,7 +2,6 @@ import {
   ArgsType,
   Directive,
   Field,
-  ID,
   InputType,
   Int,
   ObjectType,
@@ -37,13 +36,11 @@ registerEnumType(ArticleSort, {
 export class ArticleRevision implements HasBlockContent {
   blocks!: Array<typeof BlockContent>
 
-  @Field(() => ID)
+  @Field()
   id!: string
   @Field()
   createdAt!: Date
 
-  @Field({nullable: true})
-  slug?: string
   @Field()
   publishedAt!: Date
 
@@ -90,7 +87,7 @@ export class ArticleRevision implements HasBlockContent {
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Article {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
@@ -98,6 +95,15 @@ export class Article {
 
   @Field()
   modifiedAt!: Date
+
+  @Field({nullable: true})
+  slug?: string
+
+  @Field()
+  url!: string
+
+  @Field()
+  publishedAt!: Date
 
   @Field()
   shared!: boolean
@@ -107,9 +113,6 @@ export class Article {
 
   @Field()
   disableComments!: boolean
-
-  @Field()
-  url!: string
 
   @Field(() => ArticleRevision, {nullable: true})
   draft?: ArticleRevision
@@ -156,6 +159,8 @@ export class CreateArticleInput extends OmitType(
   hidden!: boolean
   @Field()
   disableComments!: boolean
+  @Field({nullable: true})
+  slug?: string
 
   @Field(() => [BlockContentInput])
   blocks!: BlockContentInput[]
@@ -228,6 +233,6 @@ export class ArticleListArgs {
   @Field(() => Int, {nullable: true, defaultValue: 0})
   skip?: number
 
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   cursorId?: string
 }

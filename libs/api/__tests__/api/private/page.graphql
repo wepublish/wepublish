@@ -75,7 +75,7 @@ fragment PageRef on Page {
   }
 }
 
-query PageList($filter: String, $cursor: ID, $take: Int) {
+query PageList($filter: String, $cursor: String, $take: Int) {
   pages(take: $take, cursor: $cursor, filter: {title: $filter}) {
     nodes {
       ...PageRef
@@ -98,31 +98,36 @@ mutation CreatePage($input: PageInput!) {
   }
 }
 
-mutation UpdatePage($id: ID!, $input: PageInput!) {
+mutation UpdatePage($id: String!, $input: PageInput!) {
   updatePage(id: $id, input: $input) {
     ...MutationPage
   }
 }
 
-mutation PublishPage($id: ID!, $publishAt: DateTime, $publishedAt: DateTime, $updatedAt: DateTime) {
+mutation PublishPage(
+  $id: String!
+  $publishAt: DateTime
+  $publishedAt: DateTime
+  $updatedAt: DateTime
+) {
   publishPage(id: $id, publishAt: $publishAt, publishedAt: $publishedAt, updatedAt: $updatedAt) {
     ...MutationPage
   }
 }
 
-mutation UnpublishPage($id: ID!) {
+mutation UnpublishPage($id: String!) {
   unpublishPage(id: $id) {
     ...MutationPage
   }
 }
 
-mutation DeletePage($id: ID!) {
+mutation DeletePage($id: String!) {
   deletePage(id: $id) {
     ...MutationPage
   }
 }
 
-query Page($id: ID!) {
+query Page($id: String!) {
   page(id: $id) {
     id
 

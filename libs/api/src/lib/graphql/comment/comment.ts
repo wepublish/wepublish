@@ -11,7 +11,6 @@ import {
   GraphQLBoolean,
   GraphQLEnumType,
   GraphQLFloat,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -98,11 +97,11 @@ export const GraphQLPublicCommentSort = new GraphQLEnumType({
 export const GraphQLCommentFilter = new GraphQLInputObjectType({
   name: 'CommentFilter',
   fields: {
-    item: {type: GraphQLID},
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    item: {type: GraphQLString},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     states: {type: new GraphQLList(new GraphQLNonNull(GraphQLCommentState))},
     itemType: {type: GraphQLCommentItemType},
-    itemID: {type: GraphQLID}
+    itemID: {type: GraphQLString}
   }
 })
 
@@ -128,7 +127,7 @@ export const GraphQLCommentRevisionUpdateInput = new GraphQLInputObjectType({
 export const GraphQLCommentRatingOverrideUpdateInput = new GraphQLInputObjectType({
   name: 'CommentRatingOverrideUpdateInput',
   fields: {
-    answerId: {type: new GraphQLNonNull(GraphQLID)},
+    answerId: {type: new GraphQLNonNull(GraphQLString)},
     value: {type: GraphQLInt}
   }
 })
@@ -136,7 +135,7 @@ export const GraphQLCommentRatingOverrideUpdateInput = new GraphQLInputObjectTyp
 export const GraphQLPublicCommentUpdateInput = new GraphQLInputObjectType({
   name: 'CommentUpdateInput',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     text: {type: GraphQLRichText},
     title: {type: GraphQLString},
     lead: {type: GraphQLString}
@@ -158,12 +157,12 @@ export const GraphQLChallengeInput = new GraphQLInputObjectType({
 export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
   name: 'CommentInput',
   fields: {
-    parentID: {type: GraphQLID},
+    parentID: {type: GraphQLString},
     guestUsername: {type: GraphQLString},
     challenge: {
       type: GraphQLChallengeInput
     },
-    itemID: {type: new GraphQLNonNull(GraphQLID)},
+    itemID: {type: new GraphQLNonNull(GraphQLString)},
     itemType: {
       type: new GraphQLNonNull(GraphQLCommentItemType)
     },
@@ -178,7 +177,7 @@ export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
 export const GraphQLoverriddenRating = new GraphQLObjectType<CalculatedRating, Context>({
   name: 'overriddenRating',
   fields: {
-    answerId: {type: new GraphQLNonNull(GraphQLID)},
+    answerId: {type: new GraphQLNonNull(GraphQLString)},
     value: {type: GraphQLInt}
   }
 })
@@ -189,7 +188,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
 >({
   name: 'Comment',
   fields: () => ({
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     guestUsername: {type: GraphQLString},
     guestUserImage: {
       type: GraphQLImage,
@@ -233,7 +232,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
       })
     },
     authorType: {type: new GraphQLNonNull(GraphQLCommentAuthorType)},
-    itemID: {type: new GraphQLNonNull(GraphQLID)},
+    itemID: {type: new GraphQLNonNull(GraphQLString)},
     itemType: {
       type: new GraphQLNonNull(GraphQLCommentItemType)
     },
@@ -283,8 +282,8 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
   new GraphQLObjectType<PublicComment, Context>({
     name: 'Comment',
     fields: () => ({
-      id: {type: new GraphQLNonNull(GraphQLID)},
-      parentID: {type: GraphQLID},
+      id: {type: new GraphQLNonNull(GraphQLString)},
+      parentID: {type: GraphQLString},
       guestUsername: {type: GraphQLString},
       guestUserImage: {
         type: GraphQLImage,
@@ -322,7 +321,7 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
       },
       authorType: {type: new GraphQLNonNull(GraphQLCommentAuthorType)},
 
-      itemID: {type: new GraphQLNonNull(GraphQLID)},
+      itemID: {type: new GraphQLNonNull(GraphQLString)},
       itemType: {
         type: new GraphQLNonNull(GraphQLCommentItemType)
       },

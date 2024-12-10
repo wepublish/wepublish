@@ -23,11 +23,11 @@ fragment FullPoll on FullPoll {
   }
 }
 
-query UserPollVote($pollId: ID!) {
+query UserPollVote($pollId: String!) {
   userPollVote(pollId: $pollId)
 }
 
-mutation PollVote($answerId: ID!) {
+mutation PollVote($answerId: String!) {
   voteOnPoll(answerId: $answerId) {
     answerId
     pollId

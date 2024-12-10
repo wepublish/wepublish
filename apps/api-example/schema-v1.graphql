@@ -23,16 +23,16 @@ type Query {
   """
   This query takes either the ID or the slug and returns the peer profile.
   """
-  peer(id: ID, slug: Slug): Peer
+  peer(id: String, slug: Slug): Peer
 
   """This query takes either the ID or the slug and returns the author."""
-  author(id: ID, slug: Slug): Author
+  author(id: String, slug: Slug): Author
 
   """This query is to get the authors."""
-  authors(cursor: ID, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = modifiedAt, order: SortOrder = Descending): AuthorConnection!
+  authors(cursor: String, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = modifiedAt, order: SortOrder = Descending): AuthorConnection!
 
   """This query returns the comments of an item."""
-  comments(itemId: ID!, sort: CommentSort, order: SortOrder = Descending): [Comment!]!
+  comments(itemId: String!, sort: CommentSort, order: SortOrder = Descending): [Comment!]!
 
   """This query returns the redirect Uri."""
   authProviders(redirectUri: String): [AuthProvider!]!
@@ -47,15 +47,15 @@ type Query {
   subscriptions: [Subscription!]!
 
   """This query returns a member plan."""
-  memberPlan(id: ID, slug: Slug): MemberPlan
+  memberPlan(id: String, slug: Slug): MemberPlan
 
   """This query returns the member plans."""
-  memberPlans(cursor: ID, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = createdAt, order: SortOrder = Descending): MemberPlanConnection!
+  memberPlans(cursor: String, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = createdAt, order: SortOrder = Descending): MemberPlanConnection!
 
   """
   This mutation will check the invoice status and update with information from the paymentProvider
   """
-  checkInvoiceStatus(id: ID!): Invoice
+  checkInvoiceStatus(id: String!): Invoice
 
   """
   This query generates a challenge which can be used to access protected endpoints.
@@ -64,15 +64,15 @@ type Query {
   ratingSystem: FullCommentRatingSystem!
 
   """This query returns a poll with all the needed data"""
-  poll(id: ID!): FullPoll!
+  poll(id: String!): FullPoll!
 
   """
   This query returns the answerId of a poll if the user has already voted on it.
   """
-  userPollVote(pollId: ID!): ID
+  userPollVote(pollId: String!): String
 
   """This query returns a list of tags"""
-  tags(cursor: ID, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
+  tags(cursor: String, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
   _entities(representations: [_Any!]!): [_Entity]!
   _service: _Service!
 }
@@ -91,7 +91,7 @@ type PeerProfile {
 }
 
 type Image {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   filename: String
@@ -150,7 +150,7 @@ scalar Color
 scalar RichText
 
 type Peer {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   name: String!
@@ -163,7 +163,7 @@ type Peer {
 scalar Slug
 
 type Author {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   name: String!
@@ -185,7 +185,7 @@ type AuthorLink {
 }
 
 type Tag {
-  id: ID!
+  id: String!
   tag: String
   type: TagType
   main: Boolean!
@@ -215,7 +215,7 @@ type PageInfo {
 
 input AuthorFilter {
   name: String
-  tagIds: [ID!]
+  tagIds: [String!]
   hideOnTeam: Boolean
 }
 
@@ -231,14 +231,14 @@ enum SortOrder {
 }
 
 type Comment {
-  id: ID!
-  parentID: ID
+  id: String!
+  parentID: String
   guestUsername: String
   guestUserImage: Image
   user: User
   tags: [Tag!]!
   authorType: CommentAuthorType!
-  itemID: ID!
+  itemID: String!
   itemType: CommentItemType!
   children: [Comment!]!
   title: String
@@ -322,8 +322,8 @@ type CalculatedRating {
 }
 
 type CommentRatingSystemAnswer {
-  id: ID!
-  ratingSystemId: ID!
+  id: String!
+  ratingSystemId: String!
   answer: String
   type: RatingSystemType!
 }
@@ -333,14 +333,14 @@ enum RatingSystemType {
 }
 
 type overriddenRating {
-  answerId: ID!
+  answerId: String!
   value: Int
 }
 
 type CommentRating {
-  id: ID!
-  userId: ID
-  commentId: ID!
+  id: String!
+  userId: String
+  commentId: String!
   value: Int!
   createdAt: DateTime!
   fingerprint: String
@@ -358,7 +358,7 @@ type AuthProvider {
 }
 
 type Invoice {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   mail: String!
@@ -367,7 +367,7 @@ type Invoice {
   dueAt: DateTime!
   canceledAt: DateTime
   items: [InvoiceItem!]!
-  subscriptionID: ID!
+  subscriptionID: String!
   subscription: Subscription
   total: Int!
 }
@@ -383,7 +383,7 @@ type InvoiceItem {
 }
 
 type Subscription {
-  id: ID!
+  id: String!
   memberPlan: MemberPlan!
   paymentPeriodicity: PaymentPeriodicity!
   monthlyAmount: Int!
@@ -398,7 +398,7 @@ type Subscription {
 }
 
 type MemberPlan {
-  id: ID!
+  id: String!
   name: String!
   slug: String!
   image: Image
@@ -423,7 +423,7 @@ type AvailablePaymentMethod {
 }
 
 type PaymentMethod {
-  id: ID!
+  id: String!
   paymentProviderID: String!
   name: String!
   slug: Slug!
@@ -485,13 +485,13 @@ A date string, such as 2007-12-03, compliant with the `full-date` format outline
 scalar Date
 
 type FullCommentRatingSystem {
-  id: ID!
+  id: String!
   name: String
   answers: [CommentRatingSystemAnswer!]!
 }
 
 type FullPoll {
-  id: ID!
+  id: String!
   question: String
   opensAt: DateTime!
   closedAt: DateTime
@@ -501,21 +501,21 @@ type FullPoll {
 }
 
 type PollAnswerWithVoteCount {
-  id: ID!
-  pollId: ID!
+  id: String!
+  pollId: String!
   answer: String
   votes: Int!
 }
 
 type PollExternalVoteSource {
-  id: ID!
+  id: String!
   source: String
   voteAmounts: [PollExternalVote!]!
 }
 
 type PollExternalVote {
-  id: ID!
-  answerId: ID!
+  id: String!
+  answerId: String!
   amount: VoteValue!
 }
 
@@ -560,7 +560,7 @@ type Mutation {
   """
   This mutation allows to rate a comment. Supports logged in and anonymous
   """
-  rateComment(commentId: ID!, answerId: ID!, value: Int!): Comment!
+  rateComment(commentId: String!, answerId: String!, value: Int!): Comment!
 
   """This mutation allows to register a new member,"""
   registerMember(name: String!, firstName: String, email: String!, address: UserAddressInput, password: String, birthday: DateTime, challengeAnswer: ChallengeInput!): Registration!
@@ -568,13 +568,13 @@ type Mutation {
   """
   This mutation allows to register a new member, select a member plan, payment method and create an invoice. 
   """
-  registerMemberAndReceivePayment(name: String!, birthday: DateTime, firstName: String, email: String!, address: UserAddressInput, password: String, memberPlanID: ID, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: ID, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, challengeAnswer: ChallengeInput!): RegistrationAndPayment!
+  registerMemberAndReceivePayment(name: String!, birthday: DateTime, firstName: String, email: String!, address: UserAddressInput, password: String, memberPlanID: String, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, challengeAnswer: ChallengeInput!): RegistrationAndPayment!
 
   """Allows authenticated users to create additional subscriptions"""
-  createSubscription(memberPlanID: ID, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: ID, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, deactivateSubscriptionId: ID): Payment!
+  createSubscription(memberPlanID: String, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, deactivateSubscriptionId: String): Payment!
 
   """This mutation extends an subscription early"""
-  extendSubscription(subscriptionId: ID!, successURL: String, failureURL: String): Payment!
+  extendSubscription(subscriptionId: String!, successURL: String, failureURL: String): Payment!
 
   """
   This mutation sends a login link to the email if the user exists. Method will always return email address
@@ -597,12 +597,12 @@ type Mutation {
   """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
-  updateUserSubscription(id: ID!, input: SubscriptionInput!): Subscription
+  updateUserSubscription(id: String!, input: SubscriptionInput!): Subscription
 
   """
   This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now
   """
-  cancelUserSubscription(id: ID!): Subscription
+  cancelUserSubscription(id: String!): Subscription
 
   """This mutation allows to update the Payment Provider Customers"""
   updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
@@ -613,12 +613,12 @@ type Mutation {
   createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
 
   """This mutation allows to create payment by referencing a subscription."""
-  createPaymentFromSubscription(subscriptionId: ID, successURL: String, failureURL: String): Payment
+  createPaymentFromSubscription(subscriptionId: String, successURL: String, failureURL: String): Payment
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
   """
-  voteOnPoll(answerId: ID!): PollVote
+  voteOnPoll(answerId: String!): PollVote
 }
 
 type SessionWithToken {
@@ -629,10 +629,10 @@ type SessionWithToken {
 }
 
 input CommentInput {
-  parentID: ID
+  parentID: String
   guestUsername: String
   challenge: ChallengeInput
-  itemID: ID!
+  itemID: String!
   itemType: CommentItemType!
   title: String
   text: RichText!
@@ -644,7 +644,7 @@ input ChallengeInput {
 }
 
 input CommentUpdateInput {
-  id: ID!
+  id: String!
   text: RichText
   title: String
   lead: String
@@ -677,7 +677,7 @@ type RegistrationAndPayment {
 }
 
 type Payment {
-  id: ID!
+  id: String!
   intentSecret: String
   state: PaymentState!
   paymentMethod: PaymentMethod!
@@ -729,7 +729,7 @@ input InputPoint {
 }
 
 input SubscriptionInput {
-  id: ID!
+  id: String!
   memberPlanID: String!
   paymentPeriodicity: PaymentPeriodicity!
   monthlyAmount: Int!
@@ -743,17 +743,17 @@ input PaymentProviderCustomerInput {
 }
 
 input PaymentFromInvoiceInput {
-  invoiceID: ID!
-  paymentMethodID: ID
+  invoiceID: String!
+  paymentMethodID: String
   paymentMethodSlug: Slug
   successURL: String
   failureURL: String
 }
 
 type PollVote {
-  id: ID!
-  answerId: ID!
-  pollId: ID!
+  id: String!
+  answerId: String!
+  pollId: String!
   createdAt: DateTime!
   disabled: Boolean!
 }

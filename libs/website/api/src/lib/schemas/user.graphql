@@ -1,4 +1,4 @@
-fragment FullProperty on PublicProperties {
+fragment FullPublicProperty on PublicProperties {
   key
   value
 }
@@ -39,7 +39,7 @@ fragment FullUser on User {
   }
 
   properties {
-    ...FullProperty
+    ...FullPublicProperty
   }
 }
 

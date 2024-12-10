@@ -1,16 +1,16 @@
 import {styled} from '@mui/material'
-import {Block, EmbedBlock as EmbedBlockType} from '@wepublish/website/api'
-import {BuilderEmbedBlockProps} from '@wepublish/website/builder'
+import {BlockContent, IFrameBlock as IFrameBlockType} from '@wepublish/website/api'
+import {BuilderIFrameBlockProps} from '@wepublish/website/builder'
 import {css} from '@emotion/react'
 import {useMemo} from 'react'
 import IframeResizer from 'iframe-resizer-react'
 
-export const isEmbedBlock = (block: Block): block is EmbedBlockType =>
-  block.__typename === 'EmbedBlock'
+export const isIFrameBlock = (block: BlockContent): block is IFrameBlockType =>
+  block.__typename === 'IFrameBlock'
 
-export const EmbedBlockWrapper = styled('div')``
+export const IFrameBlockWrapper = styled('div')``
 
-export const EmbedBlockIframe = styled(IframeResizer, {
+export const IFrameBlockIframe = styled(IframeResizer, {
   shouldForwardProp: propName => propName !== 'aspectRatio'
 })<{aspectRatio: number | null}>`
   width: 100%;
@@ -23,7 +23,7 @@ export const EmbedBlockIframe = styled(IframeResizer, {
     `}
 `
 
-export function EmbedBlock({
+export function IFrameBlock({
   url,
   title,
   width,
@@ -31,7 +31,7 @@ export function EmbedBlock({
   styleCustom,
   sandbox,
   className
-}: BuilderEmbedBlockProps) {
+}: BuilderIFrameBlockProps) {
   const ratio = width && height ? width / height : null
 
   const styleCustomCss = useMemo(
@@ -42,8 +42,8 @@ export function EmbedBlock({
   )
 
   return url ? (
-    <EmbedBlockWrapper className={className}>
-      <EmbedBlockIframe
+    <IFrameBlockWrapper className={className}>
+      <IFrameBlockIframe
         aspectRatio={ratio}
         css={styleCustomCss}
         src={url}
@@ -51,7 +51,7 @@ export function EmbedBlock({
         allowFullScreen
         sandbox={sandbox || undefined}
       />
-    </EmbedBlockWrapper>
+    </IFrameBlockWrapper>
   ) : (
     <div></div>
   )

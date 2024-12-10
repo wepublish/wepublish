@@ -12,6 +12,7 @@ import {ArticleService} from './article.service'
 import {ArticleRevisionDataloaderService} from './article-revision-dataloader.service'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Article as PArticle} from '@prisma/client'
+import {BadRequestException} from '@nestjs/common'
 
 @Resolver(() => Article)
 export class ArticleResolver {
@@ -22,9 +23,20 @@ export class ArticleResolver {
     private urlAdapter: URLAdapter
   ) {}
 
-  @Query(() => Article, {description: `Returns an article by id.`})
-  public article(@Args('id') id: string) {
-    return this.articleDataloader.load(id)
+  @Query(() => Article, {description: `Returns an article by id or slug.`})
+  public article(
+    @Args('id', {nullable: true}) id?: string,
+    @Args('slug', {nullable: true}) slug?: string
+  ) {
+    if (id != null) {
+      return this.articleDataloader.load(id)
+    }
+
+    if (slug != null) {
+      return this.articleService.getArticleBySlug(slug)
+    }
+
+    throw new BadRequestException('id or slug required.')
   }
 
   @Query(() => PaginatedArticles, {

@@ -18,7 +18,7 @@ fragment EventRef on Event {
 
 query EventList(
   $filter: EventFilter
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -40,7 +40,7 @@ query EventList(
   }
 }
 
-query Event($id: ID!) {
+query Event($id: String!) {
   event(id: $id) {
     ...EventRef
   }
@@ -53,7 +53,7 @@ mutation CreateEvent(
   $location: String
   $startsAt: DateTime!
   $endsAt: DateTime
-  $imageId: ID
+  $imageId: String
   $tagIds: [ID!]
 ) {
   createEvent(
@@ -71,7 +71,7 @@ mutation CreateEvent(
 }
 
 mutation UpdateEvent(
-  $id: ID!
+  $id: String!
   $name: String
   $lead: String
   $description: RichText
@@ -79,7 +79,7 @@ mutation UpdateEvent(
   $location: String
   $startsAt: DateTime
   $endsAt: DateTime
-  $imageId: ID
+  $imageId: String
   $tagIds: [ID!]
 ) {
   updateEvent(
@@ -98,7 +98,7 @@ mutation UpdateEvent(
   }
 }
 
-mutation DeleteEvent($id: ID!) {
+mutation DeleteEvent($id: String!) {
   deleteEvent(id: $id) {
     ...EventRef
   }

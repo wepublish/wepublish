@@ -1,14 +1,7 @@
-fragment PageWithoutBlocks on Page {
+fragment PageRevisionsWithoutBlocks on PageRevision {
   id
-  slug
   description
   title
-  url
-
-  tags {
-    ...FullTag
-  }
-
   image {
     ...FullImage
   }
@@ -24,29 +17,49 @@ fragment PageWithoutBlocks on Page {
   }
 }
 
-fragment FullPage on Page {
-  ...PageWithoutBlocks
+fragment PageWithoutBlocks on Page {
+  id
+  publishedAt
+  modifiedAt
+  url
+  slug
 
-  blocks {
-    ...FullBlock
+  tags {
+    ...FullTag
+  }
+
+  published {
+    ...PageRevisionsWithoutBlocks
   }
 }
 
-query Page($slug: Slug, $id: ID, $token: String) {
-  page(slug: $slug, id: $id, token: $token) {
+fragment FullPage on Page {
+  ...PageWithoutBlocks
+
+  published {
+    ...PageRevisionsWithoutBlocks
+
+    blocks {
+      ...FullBlock
+    }
+  }
+}
+
+query Page($slug: String, $id: String) {
+  page(slug: $slug, id: $id) {
     ...FullPage
   }
 }
 
 query PageList(
-  $filter: PublishedPageFilter
-  $cursor: ID
+  $filter: PageFilter
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
-  $sort: PublishedPageSort
+  $sort: PageSort
 ) {
-  pages(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  pages(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullPage
     }
@@ -63,14 +76,14 @@ query PageList(
 }
 
 query SitemapPageList(
-  $filter: PublishedPageFilter
-  $cursor: ID
+  $filter: PageFilter
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
-  $sort: PublishedPageSort
+  $sort: PageSort
 ) {
-  pages(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  pages(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       url
     }

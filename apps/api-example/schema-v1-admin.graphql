@@ -3,42 +3,42 @@ type Query {
   createJWTForUser(userId: String!, expiresInMinutes: Int!): JWTToken
   peerProfile: PeerProfile!
   peers: [Peer!]
-  peer(id: ID!): Peer
+  peer(id: String!): Peer
   me: User
   sessions: [Session!]!
   authProviders(redirectUri: String): [AuthProvider!]!
-  user(id: ID): User
-  users(cursor: ID, take: Int = 10, skip: Int = 0, filter: UserFilter, sort: UserSort = modifiedAt, order: SortOrder = Descending): UserConnection!
-  subscription(id: ID!): Subscription
-  subscriptions(cursor: ID, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
+  user(id: String): User
+  users(cursor: String, take: Int = 10, skip: Int = 0, filter: UserFilter, sort: UserSort = modifiedAt, order: SortOrder = Descending): UserConnection!
+  subscription(id: String!): Subscription
+  subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
   subscriptionsAsCsv(filter: SubscriptionFilter): String
-  userRole(id: ID): UserRole
-  userRoles(cursor: ID, take: Int = 10, skip: Int = 0, filter: UserRoleFilter, sort: UserRoleSort = modifiedAt, order: SortOrder = Descending): UserRoleConnection!
+  userRole(id: String): UserRole
+  userRoles(cursor: String, take: Int = 10, skip: Int = 0, filter: UserRoleFilter, sort: UserRoleSort = modifiedAt, order: SortOrder = Descending): UserRoleConnection!
   permissions: [Permission!]
   tokens: [Token!]!
-  author(id: ID, slug: Slug): Author
-  authors(cursor: ID, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = modifiedAt, order: SortOrder = Descending): AuthorConnection!
-  image(id: ID): Image
-  images(cursor: ID, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
-  comment(id: ID!): Comment
-  comments(cursor: ID, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
-  memberPlan(id: ID, slug: Slug): MemberPlan
-  memberPlans(cursor: ID, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = modifiedAt, order: SortOrder = Descending): MemberPlanConnection!
-  paymentMethod(id: ID): PaymentMethod
+  author(id: String, slug: Slug): Author
+  authors(cursor: String, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = modifiedAt, order: SortOrder = Descending): AuthorConnection!
+  image(id: String): Image
+  images(cursor: String, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
+  comment(id: String!): Comment
+  comments(cursor: String, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
+  memberPlan(id: String, slug: Slug): MemberPlan
+  memberPlans(cursor: String, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = modifiedAt, order: SortOrder = Descending): MemberPlanConnection!
+  paymentMethod(id: String): PaymentMethod
   paymentMethods: [PaymentMethod!]!
   paymentProviders: [PaymentProvider!]!
-  invoice(id: ID): Invoice
-  invoices(cursor: ID, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
-  payment(id: ID): Payment
-  payments(cursor: ID, take: Int = 10, skip: Int = 0, filter: PaymentFilter, sort: PaymentSort = modifiedAt, order: SortOrder = Descending): PaymentConnection!
+  invoice(id: String): Invoice
+  invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
+  payment(id: String): Payment
+  payments(cursor: String, take: Int = 10, skip: Int = 0, filter: PaymentFilter, sort: PaymentSort = modifiedAt, order: SortOrder = Descending): PaymentConnection!
   setting(name: String!): Setting
   settings: [Setting!]!
   ratingSystem: FullCommentRatingSystem!
-  tags(cursor: ID, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
-  polls(cursor: ID, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
-  poll(id: ID): FullPoll
-  events(cursor: ID, take: Int = 10, skip: Int = 0, filter: EventFilter, sort: EventSort = StartsAt, order: SortOrder = Descending): EventConnection
-  event(id: ID): Event
+  tags(cursor: String, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
+  polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
+  poll(id: String): FullPoll
+  events(cursor: String, take: Int = 10, skip: Int = 0, filter: EventFilter, sort: EventSort = StartsAt, order: SortOrder = Descending): EventConnection
+  event(id: String): Event
 
   """This query returns a list of original ids of imported events"""
   importedEventsIds: [String]
@@ -59,7 +59,7 @@ type PeerProfile {
 }
 
 type Image {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   filename: String
@@ -123,7 +123,7 @@ type JWTToken {
 }
 
 type Peer {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   name: String!
@@ -195,7 +195,7 @@ type OAuth2Account {
 }
 
 type UserSubscription {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   paymentPeriodicity: PaymentPeriodicity!
@@ -235,8 +235,8 @@ enum SubscriptionDeactivationReason {
 }
 
 type SubscriptionPeriod {
-  id: ID!
-  invoiceID: ID!
+  id: String!
+  invoiceID: String!
   amount: Int!
   createdAt: DateTime!
   startsAt: DateTime!
@@ -245,7 +245,7 @@ type SubscriptionPeriod {
 }
 
 type MemberPlan {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   name: String!
@@ -259,7 +259,7 @@ type MemberPlan {
   maxCount: Int
   extendable: Boolean!
   availablePaymentMethods: [AvailablePaymentMethod!]!
-  migrateToTargetPaymentMethodID: ID
+  migrateToTargetPaymentMethodID: String
 }
 
 type AvailablePaymentMethod {
@@ -269,7 +269,7 @@ type AvailablePaymentMethod {
 }
 
 type PaymentMethod {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   name: String!
@@ -284,18 +284,18 @@ type PaymentMethod {
 scalar Slug
 
 type PaymentProvider {
-  id: ID!
+  id: String!
   name: String!
 }
 
 type Invoice {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   mail: String!
   description: String
   paidAt: DateTime
-  manuallySetAsPaidByUserId: ID
+  manuallySetAsPaidByUserId: String
   items: [InvoiceItem!]!
   canceledAt: DateTime
   currency: Currency!
@@ -313,7 +313,7 @@ type InvoiceItem {
 }
 
 type Session {
-  id: ID!
+  id: String!
   user: User!
   createdAt: DateTime!
   expiresAt: DateTime!
@@ -356,7 +356,7 @@ enum SortOrder {
 }
 
 type Subscription {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   user: User
@@ -396,7 +396,7 @@ input SubscriptionFilter {
   memberPlanID: String
   paymentPeriodicity: PaymentPeriodicity
   userHasAddress: Boolean
-  userID: ID
+  userID: String
   extendable: Boolean
 }
 
@@ -434,14 +434,14 @@ enum UserRoleSort {
 }
 
 type Token {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   name: String!
 }
 
 type Author {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   name: String!
@@ -463,7 +463,7 @@ type AuthorLink {
 }
 
 type Tag {
-  id: ID!
+  id: String!
   tag: String
   type: TagType
   main: Boolean!
@@ -486,7 +486,7 @@ type AuthorConnection {
 
 input AuthorFilter {
   name: String
-  tagIds: [ID!]
+  tagIds: [String!]
   hideOnTeam: Boolean
 }
 
@@ -513,13 +513,13 @@ enum ImageSort {
 }
 
 type Comment {
-  id: ID!
+  id: String!
   guestUsername: String
   guestUserImage: Image
   user: User
   tags: [Tag!]!
   authorType: CommentAuthorType!
-  itemID: ID!
+  itemID: String!
   itemType: CommentItemType!
   parentComment: Comment
   revisions: [CommentRevision!]!
@@ -564,7 +564,7 @@ enum CommentRejectionReason {
 }
 
 type overriddenRating {
-  answerId: ID!
+  answerId: String!
   value: Int
 }
 
@@ -575,11 +575,11 @@ type CommentConnection {
 }
 
 input CommentFilter {
-  item: ID
-  tags: [ID!]
+  item: String
+  tags: [String!]
   states: [CommentState!]
   itemType: CommentItemType
-  itemID: ID
+  itemID: String
 }
 
 enum CommentSort {
@@ -614,8 +614,8 @@ input InvoiceFilter {
   mail: String
   paidAt: Date
   canceledAt: Date
-  userID: ID
-  subscriptionID: ID
+  userID: String
+  subscriptionID: String
 }
 
 """
@@ -630,7 +630,7 @@ enum InvoiceSort {
 }
 
 type Payment {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   intentID: String
@@ -668,7 +668,7 @@ enum PaymentSort {
 }
 
 type Setting {
-  id: ID!
+  id: String!
   name: SettingName!
   value: GraphQLSettingValueType!
   settingRestriction: SettingRestriction
@@ -706,14 +706,14 @@ type AllowedSettingVals {
 }
 
 type FullCommentRatingSystem {
-  id: ID!
+  id: String!
   name: String
   answers: [CommentRatingSystemAnswer!]!
 }
 
 type CommentRatingSystemAnswer {
-  id: ID!
-  ratingSystemId: ID!
+  id: String!
+  ratingSystemId: String!
   answer: String
   type: RatingSystemType!
 }
@@ -746,7 +746,7 @@ type PollConnection {
 }
 
 type Poll {
-  id: ID!
+  id: String!
   question: String
   opensAt: DateTime!
   closedAt: DateTime
@@ -763,7 +763,7 @@ enum PollSort {
 }
 
 type FullPoll {
-  id: ID!
+  id: String!
   question: String
   opensAt: DateTime!
   closedAt: DateTime
@@ -773,21 +773,21 @@ type FullPoll {
 }
 
 type PollAnswerWithVoteCount {
-  id: ID!
-  pollId: ID!
+  id: String!
+  pollId: String!
   answer: String
   votes: Int!
 }
 
 type PollExternalVoteSource {
-  id: ID!
+  id: String!
   source: String
   voteAmounts: [PollExternalVote!]!
 }
 
 type PollExternalVote {
-  id: ID!
-  answerId: ID!
+  id: String!
+  answerId: String!
   amount: VoteValue!
 }
 
@@ -801,7 +801,7 @@ type EventConnection {
 }
 
 type Event {
-  id: ID!
+  id: String!
   name: String!
   lead: String
   status: EventStatus!
@@ -827,7 +827,7 @@ input EventFilter {
   upcomingOnly: Boolean
   from: DateTime
   to: DateTime
-  tags: [ID!]
+  tags: [String!]
   name: String
   location: String
 }
@@ -847,82 +847,82 @@ type SubscribersPerMonth {
 type Mutation {
   updatePeerProfile(input: PeerProfileInput!): PeerProfile!
   createPeer(input: CreatePeerInput!): Peer!
-  updatePeer(id: ID!, input: UpdatePeerInput!): Peer!
-  deletePeer(id: ID!): Peer
+  updatePeer(id: String!, input: UpdatePeerInput!): Peer!
+  deletePeer(id: String!): Peer
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
   createSessionWithOAuth2Code(name: String!, code: String!, redirectUri: String!): SessionWithToken!
-  revokeSession(id: ID!): Boolean!
+  revokeSession(id: String!): Boolean!
   revokeActiveSession: Boolean!
   sessions: [Session!]!
   sendJWTLogin(url: String!, email: String!): String!
   sendWebsiteLogin(email: String!): String!
   createToken(input: TokenInput!): CreatedToken!
-  deleteToken(id: ID!): CreatedToken
+  deleteToken(id: String!): CreatedToken
   createUser(input: UserInput!, password: String!): User
-  updateUser(id: ID!, input: UserInput!): User
-  resetUserPassword(id: ID!, password: String!, sendMail: Boolean): User
-  deleteUser(id: ID!): User
+  updateUser(id: String!, input: UserInput!): User
+  resetUserPassword(id: String!, password: String!, sendMail: Boolean): User
+  deleteUser(id: String!): User
   createSubscription(input: SubscriptionInput!): Subscription
   importSubscription(input: SubscriptionInput!): Subscription
-  renewSubscription(id: ID!): Invoice
-  updateSubscription(id: ID!, input: SubscriptionInput!): Subscription
-  deleteSubscription(id: ID!): Subscription
-  cancelSubscription(id: ID!, reason: SubscriptionDeactivationReason!): Subscription
+  renewSubscription(id: String!): Invoice
+  updateSubscription(id: String!, input: SubscriptionInput!): Subscription
+  deleteSubscription(id: String!): Subscription
+  cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): Subscription
   createUserRole(input: UserRoleInput!): UserRole
-  updateUserRole(id: ID!, input: UserRoleInput!): UserRole
-  deleteUserRole(id: ID!): UserRole
+  updateUserRole(id: String!, input: UserRoleInput!): UserRole
+  deleteUserRole(id: String!): UserRole
   createAuthor(input: AuthorInput!): Author
-  updateAuthor(id: ID!, input: AuthorInput!): Author
-  deleteAuthor(id: ID!): Author
+  updateAuthor(id: String!, input: AuthorInput!): Author
+  deleteAuthor(id: String!): Author
   uploadImage(input: UploadImageInput!): Image
-  updateImage(id: ID!, input: UpdateImageInput!): Image
-  deleteImage(id: ID!): Image
+  updateImage(id: String!, input: UpdateImageInput!): Image
+  deleteImage(id: String!): Image
   createMemberPlan(input: MemberPlanInput!): MemberPlan
-  updateMemberPlan(id: ID!, input: MemberPlanInput!): MemberPlan
-  deleteMemberPlan(id: ID!): MemberPlan
+  updateMemberPlan(id: String!, input: MemberPlanInput!): MemberPlan
+  deleteMemberPlan(id: String!): MemberPlan
   createPaymentMethod(input: PaymentMethodInput!): PaymentMethod
-  updatePaymentMethod(id: ID!, input: PaymentMethodInput!): PaymentMethod
-  deletePaymentMethod(id: ID!): PaymentMethod
+  updatePaymentMethod(id: String!, input: PaymentMethodInput!): PaymentMethod
+  deletePaymentMethod(id: String!): PaymentMethod
   createInvoice(input: InvoiceInput!): Invoice
   createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
-  updateInvoice(id: ID!, input: InvoiceInput!): Invoice
-  deleteInvoice(id: ID!): Invoice
-  markInvoiceAsPaid(id: ID!): Invoice
-  updateComment(id: ID!, revision: CommentRevisionUpdateInput, userID: ID, guestUsername: String, guestUserImageID: ID, featured: Boolean, source: String, tagIds: [ID!], ratingOverrides: [CommentRatingOverrideUpdateInput!]): Comment!
-  createComment(text: RichText, tagIds: [ID!], itemID: ID!, parentID: ID, itemType: CommentItemType!): Comment!
-  approveComment(id: ID!): Comment!
-  rejectComment(id: ID!, rejectionReason: CommentRejectionReason): Comment!
-  requestChangesOnComment(id: ID!, rejectionReason: CommentRejectionReason!): Comment!
-  deleteComment(id: ID!): Comment!
+  updateInvoice(id: String!, input: InvoiceInput!): Invoice
+  deleteInvoice(id: String!): Invoice
+  markInvoiceAsPaid(id: String!): Invoice
+  updateComment(id: String!, revision: CommentRevisionUpdateInput, userID: String, guestUsername: String, guestUserImageID: String, featured: Boolean, source: String, tagIds: [String!], ratingOverrides: [CommentRatingOverrideUpdateInput!]): Comment!
+  createComment(text: RichText, tagIds: [String!], itemID: String!, parentID: String, itemType: CommentItemType!): Comment!
+  approveComment(id: String!): Comment!
+  rejectComment(id: String!, rejectionReason: CommentRejectionReason): Comment!
+  requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
+  deleteComment(id: String!): Comment!
   updateSettingList(value: [UpdateSettingArgs]): [Setting]
-  createRatingSystemAnswer(ratingSystemId: ID!, type: RatingSystemType = star, answer: String): CommentRatingSystemAnswer!
-  updateRatingSystem(ratingSystemId: ID!, name: String, answers: [UpdateCommentRatingSystemAnswer!]): FullCommentRatingSystem!
-  deleteRatingSystemAnswer(id: ID!): CommentRatingSystemAnswer!
+  createRatingSystemAnswer(ratingSystemId: String!, type: RatingSystemType = star, answer: String): CommentRatingSystemAnswer!
+  updateRatingSystem(ratingSystemId: String!, name: String, answers: [UpdateCommentRatingSystemAnswer!]): FullCommentRatingSystem!
+  deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
   createPoll(opensAt: DateTime, closedAt: DateTime, question: String): PollWithAnswers
-  createPollAnswer(pollId: ID!, answer: String): PollAnswer
-  createPollExternalVoteSource(pollId: ID!, source: String): PollExternalVoteSource
-  updatePoll(pollId: ID!, opensAt: DateTime, closedAt: DateTime, question: String, infoText: RichText, answers: [UpdatePollAnswer!], externalVoteSources: [UpdatePollExternalVoteSources!]): FullPoll
-  deletePoll(id: ID!): FullPoll
-  deletePollAnswer(id: ID!): PollAnswerWithVoteCount
-  deletePollExternalVoteSource(id: ID!): PollExternalVoteSource
+  createPollAnswer(pollId: String!, answer: String): PollAnswer
+  createPollExternalVoteSource(pollId: String!, source: String): PollExternalVoteSource
+  updatePoll(pollId: String!, opensAt: DateTime, closedAt: DateTime, question: String, infoText: RichText, answers: [UpdatePollAnswer!], externalVoteSources: [UpdatePollExternalVoteSources!]): FullPoll
+  deletePoll(id: String!): FullPoll
+  deletePollAnswer(id: String!): PollAnswerWithVoteCount
+  deletePollExternalVoteSource(id: String!): PollExternalVoteSource
   createTag(tag: String, type: TagType!, main: Boolean): Tag
-  updateTag(id: ID!, tag: String, main: Boolean): Tag
-  deleteTag(id: ID!): Tag
-  createEvent(name: String!, lead: String, description: RichText, location: String, startsAt: DateTime!, endsAt: DateTime, imageId: ID, externalSourceId: String, externalSourceName: String, tagIds: [ID!]): Event
-  updateEvent(id: ID!, name: String, lead: String, description: RichText, status: EventStatus, location: String, startsAt: DateTime, endsAt: DateTime, imageId: ID, externalSourceId: String, externalSourceName: String, tagIds: [ID!]): Event
-  deleteEvent(id: ID!): Event
+  updateTag(id: String!, tag: String, main: Boolean): Tag
+  deleteTag(id: String!): Tag
+  createEvent(name: String!, lead: String, description: RichText, location: String, startsAt: DateTime!, endsAt: DateTime, imageId: String, externalSourceId: String, externalSourceName: String, tagIds: [String!]): Event
+  updateEvent(id: String!, name: String, lead: String, description: RichText, status: EventStatus, location: String, startsAt: DateTime, endsAt: DateTime, imageId: String, externalSourceId: String, externalSourceName: String, tagIds: [String!]): Event
+  deleteEvent(id: String!): Event
 }
 
 input PeerProfileInput {
   name: String!
-  logoID: ID
+  logoID: String
   themeColor: Color!
   themeFontColor: Color!
   callToActionText: RichText!
   callToActionURL: String!
   callToActionImageURL: String
-  callToActionImageID: ID
+  callToActionImageID: String
 }
 
 input CreatePeerInput {
@@ -941,7 +941,7 @@ input UpdatePeerInput {
 }
 
 type SessionWithToken {
-  id: ID!
+  id: String!
   user: User!
   token: String!
   createdAt: DateTime!
@@ -949,7 +949,7 @@ type SessionWithToken {
 }
 
 type CreatedToken {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   name: String!
@@ -968,7 +968,7 @@ input UserInput {
   birthday: DateTime
   address: UserAddressInput
   flair: String
-  userImageID: ID
+  userImageID: String
   active: Boolean!
   properties: [PropertiesInput!]!
   roleIDs: [String!]
@@ -990,7 +990,7 @@ input PropertiesInput {
 }
 
 input SubscriptionInput {
-  userID: ID!
+  userID: String!
   memberPlanID: String!
   paymentPeriodicity: PaymentPeriodicity!
   monthlyAmount: Int!
@@ -1020,8 +1020,8 @@ input AuthorInput {
   links: [AuthorLinkInput!]
   bio: RichText
   jobTitle: String
-  imageID: ID
-  tagIds: [ID!]
+  imageID: String
+  tagIds: [String!]
   hideOnArticle: Boolean
   hideOnTeaser: Boolean
   hideOnTeam: Boolean
@@ -1066,7 +1066,7 @@ input UpdateImageInput {
 input MemberPlanInput {
   name: String!
   slug: String!
-  imageID: ID
+  imageID: String
   description: RichText
   tags: [String!]
   active: Boolean!
@@ -1075,7 +1075,7 @@ input MemberPlanInput {
   extendable: Boolean!
   maxCount: Int
   availablePaymentMethods: [AvailablePaymentMethodInput!]!
-  migrateToTargetPaymentMethodID: ID
+  migrateToTargetPaymentMethodID: String
 }
 
 input AvailablePaymentMethodInput {
@@ -1096,8 +1096,8 @@ input PaymentMethodInput {
 input InvoiceInput {
   mail: String!
   description: String
-  subscriptionID: ID
-  manuallySetAsPaidByUserId: ID
+  subscriptionID: String
+  manuallySetAsPaidByUserId: String
   items: [InvoiceItemInput!]!
 }
 
@@ -1111,8 +1111,8 @@ input InvoiceItemInput {
 }
 
 input PaymentFromInvoiceInput {
-  invoiceID: ID!
-  paymentMethodID: ID
+  invoiceID: String!
+  paymentMethodID: String
   paymentMethodSlug: Slug
   successURL: String
   failureURL: String
@@ -1125,7 +1125,7 @@ input CommentRevisionUpdateInput {
 }
 
 input CommentRatingOverrideUpdateInput {
-  answerId: ID!
+  answerId: String!
   value: Int
 }
 
@@ -1135,13 +1135,13 @@ input UpdateSettingArgs {
 }
 
 input UpdateCommentRatingSystemAnswer {
-  id: ID!
+  id: String!
   type: RatingSystemType
   answer: String
 }
 
 type PollWithAnswers {
-  id: ID!
+  id: String!
   question: String
   opensAt: DateTime!
   closedAt: DateTime
@@ -1149,23 +1149,23 @@ type PollWithAnswers {
 }
 
 type PollAnswer {
-  id: ID!
-  pollId: ID!
+  id: String!
+  pollId: String!
   answer: String
 }
 
 input UpdatePollAnswer {
-  id: ID!
+  id: String!
   answer: String
 }
 
 input UpdatePollExternalVoteSources {
-  id: ID!
+  id: String!
   source: String
   voteAmounts: [UpdatePollExternalVote!]
 }
 
 input UpdatePollExternalVote {
-  id: ID!
+  id: String!
   amount: VoteValue
 }

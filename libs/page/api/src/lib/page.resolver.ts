@@ -6,6 +6,7 @@ import {PageService} from './page.service'
 import {PageRevisionDataloaderService} from './page-revision-dataloader.service'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Page as PPage} from '@prisma/client'
+import {BadRequestException} from '@nestjs/common'
 
 @Resolver(() => Page)
 export class PageResolver {
@@ -16,9 +17,20 @@ export class PageResolver {
     private urlAdapter: URLAdapter
   ) {}
 
-  @Query(() => Page, {description: `Returns an page by id.`})
-  public page(@Args('id') id: string) {
-    return this.pageDataloader.load(id)
+  @Query(() => Page, {description: `Returns a page by id or slug.`})
+  public page(
+    @Args('id', {nullable: true}) id?: string,
+    @Args('slug', {nullable: true}) slug?: string
+  ) {
+    if (id != null) {
+      return this.pageDataloader.load(id)
+    }
+
+    if (slug != null) {
+      return this.pageService.getPageBySlug(slug)
+    }
+
+    throw new BadRequestException('id or slug required.')
   }
 
   @Query(() => PaginatedPages, {

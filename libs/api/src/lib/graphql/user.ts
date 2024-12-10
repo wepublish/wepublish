@@ -6,8 +6,7 @@ import {
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString,
-  GraphQLBoolean,
-  GraphQLID
+  GraphQLBoolean
 } from 'graphql'
 import {UserSort, UserWithRelations} from '../db/user'
 import {
@@ -61,7 +60,7 @@ export const GraphQLOAuth2Account = new GraphQLObjectType({
 const GraphQLUserSubscription = new GraphQLObjectType<Subscription, Context>({
   name: 'UserSubscription',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
@@ -281,7 +280,7 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
     address: {type: GraphQLUserAddressInput},
     flair: {type: GraphQLString},
 
-    userImageID: {type: GraphQLID},
+    userImageID: {type: GraphQLString},
 
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
 

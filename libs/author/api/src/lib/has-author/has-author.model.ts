@@ -3,7 +3,7 @@ import {Author} from '../author.model'
 
 @InterfaceType()
 export abstract class HasOptionalAuthor {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   authorId?: string
 
   @Field(() => Author, {nullable: true})
@@ -12,7 +12,7 @@ export abstract class HasOptionalAuthor {
 
 @InterfaceType()
 export abstract class HasAuthor {
-  @Field(() => ID)
+  @Field()
   authorId!: string
 
   @Field(() => Author)

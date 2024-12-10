@@ -16,6 +16,15 @@ export class PageService {
   constructor(private prisma: PrismaClient) {}
 
   @PrimeDataLoader(PageDataloaderService)
+  async getPageBySlug(slug: string) {
+    return this.prisma.page.findUnique({
+      where: {
+        slug
+      }
+    })
+  }
+
+  @PrimeDataLoader(PageDataloaderService)
   async getPages({
     filter,
     cursorId,

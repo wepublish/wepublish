@@ -1,6 +1,5 @@
 import {
   GraphQLBoolean,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -20,7 +19,7 @@ import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
 export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithRelations, Context>({
   name: 'Subscription',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     memberPlan: {
       type: new GraphQLNonNull(GraphQLPublicMemberPlan),
       resolve({memberPlanID}, args, {loaders}) {
@@ -58,7 +57,7 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
 export const GraphQLPublicSubscriptionInput = new GraphQLInputObjectType({
   name: 'SubscriptionInput',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     memberPlanID: {type: new GraphQLNonNull(GraphQLString)},
     paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
     monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},

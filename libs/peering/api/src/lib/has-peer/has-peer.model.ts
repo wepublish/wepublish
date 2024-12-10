@@ -3,7 +3,7 @@ import {Peer} from '../peer.model'
 
 @InterfaceType()
 export abstract class HasPeer {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   peerID?: string
 
   @Field(() => Peer, {nullable: true})

@@ -30,7 +30,7 @@ query NavigationList {
   }
 }
 
-query Navigation($id: ID!) {
+query Navigation($id: String!) {
   navigation(id: $id) {
     ...FullNavigation
   }
@@ -42,13 +42,13 @@ mutation CreateNavigation($input: NavigationInput!) {
   }
 }
 
-mutation UpdateNavigation($id: ID!, $input: NavigationInput!) {
+mutation UpdateNavigation($id: String!, $input: NavigationInput!) {
   updateNavigation(id: $id, input: $input) {
     ...FullNavigation
   }
 }
 
-mutation DeleteNavigation($id: ID!) {
+mutation DeleteNavigation($id: String!) {
   deleteNavigation(id: $id) {
     ...FullNavigation
   }

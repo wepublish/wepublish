@@ -4,7 +4,7 @@ import {ObjectType, Field, ID, Directive} from '@nestjs/graphql'
 @Directive('@extends')
 @Directive('@key(fields: "id")')
 export class Peer {
-  @Field(() => ID)
+  @Field()
   @Directive('@external')
   id!: string
 }

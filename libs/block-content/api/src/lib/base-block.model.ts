@@ -5,7 +5,7 @@ export abstract class BaseBlock<Type extends string> {
   @Field(() => String)
   type!: Type
 
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   blockStyle?: string
 }
 

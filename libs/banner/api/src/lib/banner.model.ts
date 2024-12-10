@@ -1,12 +1,4 @@
-import {
-  ArgsType,
-  Field,
-  ID,
-  InputType,
-  ObjectType,
-  OmitType,
-  registerEnumType
-} from '@nestjs/graphql'
+import {ArgsType, Field, InputType, ObjectType, OmitType, registerEnumType} from '@nestjs/graphql'
 import {BannerAction, CreateBannerActionInput} from './banner-action.model'
 import {Image} from '@wepublish/image/api'
 
@@ -16,19 +8,19 @@ and can be removed when Pages are moved to APIv2
 */
 @ObjectType()
 export class PageModel {
-  @Field(() => ID)
+  @Field()
   id!: string
 }
 
 @InputType()
 export class PageModelInput {
-  @Field(() => ID)
+  @Field()
   id!: string
 }
 
 @ObjectType()
 export class Banner {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
@@ -99,6 +91,6 @@ export class PrimaryBannerArgs {
   @Field(() => BannerDocumentType)
   documentType!: BannerDocumentType
 
-  @Field(() => ID)
+  @Field()
   documentId!: string
 }

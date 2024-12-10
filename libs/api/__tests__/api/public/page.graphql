@@ -13,7 +13,7 @@ fragment PageRef on Page {
   }
 }
 
-query PageList($filter: [String!], $cursor: ID, $take: Int) {
+query PageList($filter: [String!], $cursor: String, $take: Int) {
   pages(take: $take, cursor: $cursor, filter: {tags: $filter}) {
     nodes {
       ...PageRef
@@ -30,7 +30,7 @@ query PageList($filter: [String!], $cursor: ID, $take: Int) {
   }
 }
 
-query Page($id: ID!) {
+query Page($id: String!) {
   page(id: $id) {
     id
     publishedAt

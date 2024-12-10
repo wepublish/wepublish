@@ -1,21 +1,21 @@
 fragment FullBanner on Banner {
-    id
-    title
-    text
-    cta
+  id
+  title
+  text
+  cta
 
-    showOnArticles
-    showOnPages {
-        ...PageRef
-    }
+  showOnArticles
+  showOnPages {
+    ...PageRef
+  }
 
-    image {
-        ...FullImage
-    }
+  image {
+    ...FullImage
+  }
 
-    actions {
-        ...FullBannerAction
-    }
+  actions {
+    ...FullBannerAction
+  }
 }
 
 fragment FullBannerAction on BannerAction {
@@ -33,8 +33,8 @@ fragment PageRef on PageModel {
   #}
 }
 
-query PrimaryBanner($documentType: BannerDocumentType!, $documentId: ID!) {
-    primaryBanner(documentType: $documentType, documentId: $documentId) {
-        ...FullBanner
-    }
+query PrimaryBanner($documentType: BannerDocumentType!, $documentId: String!) {
+  primaryBanner(documentType: $documentType, documentId: $documentId) {
+    ...FullBanner
+  }
 }

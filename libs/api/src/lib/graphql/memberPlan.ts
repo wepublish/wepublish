@@ -5,7 +5,6 @@ import {GraphQLImage} from './image'
 import {Context} from '../context'
 import {createProxyingResolver} from '../utility'
 import {
-  GraphQLID,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString,
@@ -101,7 +100,7 @@ export const GraphQLPublicAvailablePaymentMethod = new GraphQLObjectType<
 export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
   name: 'MemberPlan',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -124,14 +123,14 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     availablePaymentMethods: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethod)))
     },
-    migrateToTargetPaymentMethodID: {type: GraphQLID}
+    migrateToTargetPaymentMethodID: {type: GraphQLString}
   }
 })
 
 export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
   name: 'MemberPlan',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     name: {type: new GraphQLNonNull(GraphQLString)},
     slug: {type: new GraphQLNonNull(GraphQLString)},
@@ -208,7 +207,7 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
   fields: {
     name: {type: new GraphQLNonNull(GraphQLString)},
     slug: {type: new GraphQLNonNull(GraphQLString)},
-    imageID: {type: GraphQLID},
+    imageID: {type: GraphQLString},
     description: {type: GraphQLRichText},
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
@@ -221,6 +220,6 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
         new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethodInput))
       )
     },
-    migrateToTargetPaymentMethodID: {type: GraphQLID}
+    migrateToTargetPaymentMethodID: {type: GraphQLString}
   }
 })

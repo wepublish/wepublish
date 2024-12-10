@@ -2,7 +2,6 @@ import {
   ArgsType,
   Directive,
   Field,
-  ID,
   InputType,
   Int,
   ObjectType,
@@ -38,7 +37,7 @@ registerEnumType(EventStatus, {
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Event {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
@@ -79,6 +78,9 @@ export class Event {
 
   @Field({nullable: true})
   externalSourceName?: string
+
+  @Field()
+  url!: string
 }
 
 @ObjectType()
@@ -122,7 +124,7 @@ export class EventListArgs {
   @Field(type => Int, {nullable: true, defaultValue: 0})
   skip?: number
 
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   cursorId?: string
 }
 

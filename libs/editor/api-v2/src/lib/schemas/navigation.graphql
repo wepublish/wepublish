@@ -1,51 +1,51 @@
 fragment FullNavigation on Navigation {
-    id
-    key
-    name
-    links {
-        __typename
+  id
+  key
+  name
+  links {
+    __typename
 
-        ... on PageNavigationLink {
-            label
-            pageID
-        }
-        ... on ArticleNavigationLink {
-            label
-            articleID
-        }
-        ... on ExternalNavigationLink {
-            label
-            url
-        }
+    ... on PageNavigationLink {
+      label
+      pageID
     }
+    ... on ArticleNavigationLink {
+      label
+      articleID
+    }
+    ... on ExternalNavigationLink {
+      label
+      url
+    }
+  }
 }
 
 query NavigationList {
-    getNavigations {
-        ...FullNavigation
-    }
+  getNavigations {
+    ...FullNavigation
+  }
 }
 
-query Navigation($id: ID!) {
-    getNavigationById(id: $id) {
-        ...FullNavigation
-    }
+query Navigation($id: String!) {
+  getNavigationById(id: $id) {
+    ...FullNavigation
+  }
 }
 
 mutation CreateNavigation($navigation: CreateNavigationInput!) {
-    createNavigation(navigation: $navigation) {
-        ...FullNavigation
-    }
+  createNavigation(navigation: $navigation) {
+    ...FullNavigation
+  }
 }
 
 mutation UpdateNavigation($navigation: UpdateNavigationInput!) {
-    updateNavigation(navigation: $navigation) {
-        ...FullNavigation
-    }
+  updateNavigation(navigation: $navigation) {
+    ...FullNavigation
+  }
 }
 
-mutation DeleteNavigation($id: ID!) {
-    deleteNavigation(id: $id) {
-        ...FullNavigation
-    }
+mutation DeleteNavigation($id: String!) {
+  deleteNavigation(id: $id) {
+    ...FullNavigation
+  }
 }

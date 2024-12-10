@@ -1,4 +1,4 @@
-fragment BlockWithoutTeaser on Block {
+fragment BlockWithoutTeaser on BlockContent {
   __typename
 
   ... on TitleBlock {
@@ -70,17 +70,14 @@ fragment BlockWithoutTeaser on Block {
     }
   }
 
-  ... on LinkPageBreakBlock {
+  ... on BreakBlock {
     blockStyle
     text
     richText
-    layoutOption
     hideButton
     linkTarget
     linkText
     linkURL
-    styleOption
-    templateOption
     image {
       ...FullImage
     }
@@ -140,7 +137,7 @@ fragment BlockWithoutTeaser on Block {
     zoneID
   }
 
-  ... on EmbedBlock {
+  ... on IFrameBlock {
     blockStyle
     url
     title
@@ -166,13 +163,15 @@ fragment FullTeaser on Teaser {
     article {
       ...ArticleWithoutBlocks
 
-      blocks {
-        __typename
+      published {
+        blocks {
+          __typename
 
-        ... on PollBlock {
-          blockStyle
-          poll {
-            ...FullPoll
+          ... on PollBlock {
+            blockStyle
+            poll {
+              ...FullPoll
+            }
           }
         }
       }
@@ -249,7 +248,7 @@ fragment FullTeaser on Teaser {
   }
 }
 
-fragment FullBlock on Block {
+fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
 
   ... on TeaserGridFlexBlock {

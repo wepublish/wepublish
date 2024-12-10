@@ -16,8 +16,7 @@ export function ArticleContainer({id, slug, token, className, children}: Article
   const {data, loading, error} = useArticleQuery({
     variables: {
       id,
-      slug,
-      token
+      slug
     }
   })
 

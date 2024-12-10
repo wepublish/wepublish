@@ -35,13 +35,11 @@ registerEnumType(PageSort, {
 export class PageRevision implements HasBlockContent {
   blocks!: Array<typeof BlockContent>
 
-  @Field(() => ID)
+  @Field()
   id!: string
   @Field()
   createdAt!: Date
 
-  @Field({nullable: true})
-  slug?: string
   @Field()
   publishedAt!: Date
 
@@ -71,7 +69,7 @@ export class PageRevision implements HasBlockContent {
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Page {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
@@ -80,14 +78,11 @@ export class Page {
   @Field()
   modifiedAt!: Date
 
-  @Field()
-  shared!: boolean
+  @Field({nullable: true})
+  slug?: string
 
   @Field()
-  hidden!: boolean
-
-  @Field()
-  disableComments!: boolean
+  publishedAt!: Date
 
   @Field()
   url!: string
@@ -114,6 +109,9 @@ export class CreatePageInput extends OmitType(
   ['id', 'createdAt', 'publishedAt', 'image', 'socialMediaImage', 'blocks', 'properties'] as const,
   ArgsType
 ) {
+  @Field({nullable: true})
+  slug?: string
+
   @Field(() => [BlockContentInput])
   blocks!: BlockContentInput[]
 
@@ -170,6 +168,6 @@ export class PageListArgs {
   @Field(() => Int, {nullable: true, defaultValue: 0})
   skip?: number
 
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   cursorId?: string
 }

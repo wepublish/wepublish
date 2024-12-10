@@ -3,7 +3,7 @@ import {Subscription} from '../subscription.model'
 
 @InterfaceType()
 export abstract class HasOptionalSubscription {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   subscriptionId?: string
 
   @Field(() => Subscription, {nullable: true})
@@ -12,7 +12,7 @@ export abstract class HasOptionalSubscription {
 
 @InterfaceType()
 export abstract class HasSubscription {
-  @Field(() => ID)
+  @Field()
   subscriptionId!: string
 
   @Field(() => Subscription)

@@ -3,7 +3,7 @@ import {Article} from '../article.model'
 
 @InterfaceType()
 export abstract class HasOptionalArticle {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   articleID?: string
 
   @Field(() => Article, {nullable: true})
@@ -12,7 +12,7 @@ export abstract class HasOptionalArticle {
 
 @InterfaceType()
 export abstract class HasArticle {
-  @Field(() => ID)
+  @Field()
   articleID!: string
 
   @Field(() => Article)
@@ -23,7 +23,7 @@ export abstract class HasArticle {
 
 @InterfaceType()
 export abstract class HasArticleLc {
-  @Field(() => ID)
+  @Field()
   articleId!: string
 
   @Field(() => Article)
@@ -32,7 +32,7 @@ export abstract class HasArticleLc {
 
 @InterfaceType()
 export abstract class HasOptionalArticleLc {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   articleId?: string
 
   @Field(() => Article, {nullable: true})

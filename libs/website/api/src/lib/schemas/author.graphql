@@ -19,13 +19,13 @@ fragment FullAuthor on Author {
 
   image {
     ...FullImage
-  },
+  }
   hideOnArticle
   hideOnTeaser
   hideOnTeam
 }
 
-query Author($id: ID, $slug: Slug) {
+query Author($id: String, $slug: Slug) {
   author(id: $id, slug: $slug) {
     ...FullAuthor
   }
@@ -33,7 +33,7 @@ query Author($id: ID, $slug: Slug) {
 
 query AuthorList(
   $filter: AuthorFilter
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $sort: AuthorSort

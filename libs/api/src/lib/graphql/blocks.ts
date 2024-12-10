@@ -1,7 +1,7 @@
 // import {
 //   GraphQLBoolean,
 //   GraphQLEnumType,
-//   GraphQLID,
+//
 //   GraphQLInputObjectType,
 //   GraphQLInt,
 //   GraphQLList,
@@ -170,7 +170,7 @@
 //       })
 //     },
 
-//     articleID: {type: new GraphQLNonNull(GraphQLID)},
+//     articleID: {type: new GraphQLNonNull(GraphQLString)},
 //     article: {
 //       type: GraphQLArticle,
 //       resolve: createProxyingResolver(async ({peerID, articleID}, args, context, info) => {
@@ -399,7 +399,7 @@
 //       })
 //     },
 
-//     articleID: {type: new GraphQLNonNull(GraphQLID)},
+//     articleID: {type: new GraphQLNonNull(GraphQLString)},
 //     article: {
 //       type: GraphQLPublicArticle,
 //       resolve: createProxyingResolver(async ({peerID, articleID}, args, context, info) => {
@@ -544,7 +544,7 @@
 // >({
 //   name: 'TeaserListBlockFilter',
 //   fields: {
-//     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+//     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
 //     tagObjects: {
 //       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
 //       resolve: createProxyingResolver(async ({tags}, _, {prisma: {tag}}) => {
@@ -565,7 +565,7 @@
 // export const GraphQLTeaserListBlockFilterInput = new GraphQLInputObjectType({
 //   name: 'TeaserListBlockFilterInput',
 //   fields: {
-//     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
+//     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
 //   }
 // })
 
@@ -1126,8 +1126,8 @@
 // export const GraphQLEventBlockFilter = new GraphQLObjectType({
 //   name: 'EventBlockFilter',
 //   fields: {
-//     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
-//     events: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
+//     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+//     events: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
 //   }
 // })
 
@@ -1174,9 +1174,9 @@
 // export const GraphQLCommentBlockFilter = new GraphQLObjectType({
 //   name: 'CommentBlockFilter',
 //   fields: {
-//     item: {type: GraphQLID},
-//     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
-//     comments: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
+//     item: {type: GraphQLString},
+//     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+//     comments: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
 //   }
 // })
 
@@ -1408,7 +1408,7 @@
 //     blockStyle: {type: GraphQLString},
 //     caption: {type: GraphQLString},
 //     linkUrl: {type: GraphQLString},
-//     imageID: {type: GraphQLID}
+//     imageID: {type: GraphQLString}
 //   }
 // })
 
@@ -1416,7 +1416,7 @@
 //   name: 'GalleryImageEdgeInput',
 //   fields: {
 //     caption: {type: GraphQLString},
-//     imageID: {type: GraphQLID}
+//     imageID: {type: GraphQLString}
 //   }
 // })
 
@@ -1432,7 +1432,7 @@
 //   name: 'ListicleItemInput',
 //   fields: {
 //     title: {type: new GraphQLNonNull(GraphQLString)},
-//     imageID: {type: GraphQLID},
+//     imageID: {type: GraphQLString},
 //     richText: {type: new GraphQLNonNull(GraphQLRichText)}
 //   }
 // })
@@ -1451,7 +1451,7 @@
 //     blockStyle: {type: GraphQLString},
 //     quote: {type: GraphQLString},
 //     author: {type: GraphQLString},
-//     imageID: {type: GraphQLID}
+//     imageID: {type: GraphQLString}
 //   }
 // })
 
@@ -1480,7 +1480,7 @@
 //       // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
 //       // deprecationReason: 'Use block styles instead of this'
 //     },
-//     imageID: {type: GraphQLID}
+//     imageID: {type: GraphQLString}
 //   }
 // })
 
@@ -1593,15 +1593,15 @@
 //   name: 'PollBlockInput',
 //   fields: {
 //     blockStyle: {type: GraphQLString},
-//     pollId: {type: GraphQLID}
+//     pollId: {type: GraphQLString}
 //   }
 // })
 
 // export const GraphQLEventBlockInputFilter = new GraphQLInputObjectType({
 //   name: 'EventBlockInputFilter',
 //   fields: {
-//     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
-//     events: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
+//     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+//     events: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
 //   }
 // })
 
@@ -1616,9 +1616,9 @@
 // export const GraphQLCommentBlockInputFilter = new GraphQLInputObjectType({
 //   name: 'CommentBlockInputFilter',
 //   fields: {
-//     item: {type: GraphQLID},
-//     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
-//     comments: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
+//     item: {type: GraphQLString},
+//     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+//     comments: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
 //   }
 // })
 
@@ -1638,11 +1638,11 @@
 //       // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
 //       // deprecationReason: 'Use block styles instead of this'
 //     },
-//     imageID: {type: GraphQLID},
+//     imageID: {type: GraphQLString},
 //     preTitle: {type: GraphQLString},
 //     title: {type: GraphQLString},
 //     lead: {type: GraphQLString},
-//     articleID: {type: new GraphQLNonNull(GraphQLID)}
+//     articleID: {type: new GraphQLNonNull(GraphQLString)}
 //   }
 // })
 
@@ -1654,12 +1654,12 @@
 //       // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
 //       // deprecationReason: 'Use block styles instead of this'
 //     },
-//     imageID: {type: GraphQLID},
+//     imageID: {type: GraphQLString},
 //     preTitle: {type: GraphQLString},
 //     title: {type: GraphQLString},
 //     lead: {type: GraphQLString},
-//     peerID: {type: new GraphQLNonNull(GraphQLID)},
-//     articleID: {type: new GraphQLNonNull(GraphQLID)}
+//     peerID: {type: new GraphQLNonNull(GraphQLString)},
+//     articleID: {type: new GraphQLNonNull(GraphQLString)}
 //   }
 // })
 
@@ -1671,11 +1671,11 @@
 //       // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
 //       // deprecationReason: 'Use block styles instead of this'
 //     },
-//     imageID: {type: GraphQLID},
+//     imageID: {type: GraphQLString},
 //     preTitle: {type: GraphQLString},
 //     title: {type: GraphQLString},
 //     lead: {type: GraphQLString},
-//     pageID: {type: new GraphQLNonNull(GraphQLID)}
+//     pageID: {type: new GraphQLNonNull(GraphQLString)}
 //   }
 // })
 
@@ -1687,11 +1687,11 @@
 //       // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
 //       // deprecationReason: 'Use block styles instead of this'
 //     },
-//     imageID: {type: GraphQLID},
+//     imageID: {type: GraphQLString},
 //     preTitle: {type: GraphQLString},
 //     title: {type: GraphQLString},
 //     lead: {type: GraphQLString},
-//     eventID: {type: new GraphQLNonNull(GraphQLID)}
+//     eventID: {type: new GraphQLNonNull(GraphQLString)}
 //   }
 // })
 
@@ -1703,7 +1703,7 @@
 //       // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
 //       // deprecationReason: 'Use block styles instead of this'
 //     },
-//     imageID: {type: GraphQLID},
+//     imageID: {type: GraphQLString},
 //     preTitle: {type: GraphQLString},
 //     title: {type: GraphQLString},
 //     lead: {type: GraphQLString},

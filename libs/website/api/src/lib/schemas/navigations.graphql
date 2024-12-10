@@ -30,7 +30,7 @@ query NavigationList {
   }
 }
 
-query Navigation($slug: ID) {
+query Navigation($slug: String) {
   navigation(key: $slug) {
     ...FullNavigation
   }

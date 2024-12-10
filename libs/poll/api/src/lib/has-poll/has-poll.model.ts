@@ -3,7 +3,7 @@ import {FullPoll} from '../poll.model'
 
 @InterfaceType()
 export abstract class HasOptionalPoll {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   pollId?: string
 
   @Field(() => FullPoll, {nullable: true})
@@ -12,7 +12,7 @@ export abstract class HasOptionalPoll {
 
 @InterfaceType()
 export abstract class HasPoll {
-  @Field(() => ID)
+  @Field()
   pollId!: string
 
   @Field(() => FullPoll)

@@ -9,14 +9,14 @@ import {PropsWithChildren, useMemo} from 'react'
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      const titleBlock = teaser.page?.blocks?.find(isTitleBlock)
-      return teaser.title || teaser.page?.title || titleBlock?.title
+      const titleBlock = teaser.page?.published?.blocks?.find(isTitleBlock)
+      return teaser.title || teaser.page?.published?.title || titleBlock?.title
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
-      const titleBlock = teaser.article?.blocks?.find(isTitleBlock)
-      return teaser.title || teaser.article?.title || titleBlock?.title
+      const titleBlock = teaser.article?.published?.blocks?.find(isTitleBlock)
+      return teaser.title || teaser.article?.published?.title || titleBlock?.title
     }
 
     case 'EventTeaser':
@@ -33,7 +33,7 @@ export const selectTeaserPreTitle = (teaser: TeaserType) => {
     case 'ArticleTeaser':
       return (
         teaser.preTitle ||
-        teaser.article?.preTitle ||
+        teaser.article?.published?.preTitle ||
         teaser.article?.tags?.find(({main}) => !!main)?.tag
       )
     case 'PageTeaser':
@@ -47,14 +47,14 @@ export const selectTeaserPreTitle = (teaser: TeaserType) => {
 export const selectTeaserLead = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      const titleBlock = teaser.page?.blocks?.find(isTitleBlock)
-      return teaser.lead || teaser.page?.description || titleBlock?.lead
+      const titleBlock = teaser.page?.published?.blocks?.find(isTitleBlock)
+      return teaser.lead || teaser.page?.published?.description || titleBlock?.lead
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
-      const titleBlock = teaser.article?.blocks?.find(isTitleBlock)
-      return teaser.lead || teaser.article?.lead || titleBlock?.lead
+      const titleBlock = teaser.article?.published?.blocks?.find(isTitleBlock)
+      return teaser.lead || teaser.article?.published?.lead || titleBlock?.lead
     }
 
     case 'EventTeaser':
@@ -78,9 +78,6 @@ export const selectTeaserUrl = (teaser: TeaserType) => {
     case 'ArticleTeaser':
       return teaser.article?.url
 
-    case 'PeerArticleTeaser':
-      return teaser.article?.peeredArticleURL
-
     case 'EventTeaser':
       return teaser.event?.url
 
@@ -92,14 +89,14 @@ export const selectTeaserUrl = (teaser: TeaserType) => {
 export const selectTeaserImage = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      const imageBlock = teaser.page?.blocks?.find(isImageBlock)
-      return teaser.image ?? teaser?.page?.image ?? imageBlock?.image
+      const imageBlock = teaser.page?.published?.blocks?.find(isImageBlock)
+      return teaser.image ?? teaser?.page?.published?.image ?? imageBlock?.image
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
-      const imageBlock = teaser.article?.blocks?.find(isImageBlock)
-      return teaser.image ?? teaser?.article?.image ?? imageBlock?.image
+      const imageBlock = teaser.article?.published?.blocks?.find(isImageBlock)
+      return teaser.image ?? teaser?.article?.published?.image ?? imageBlock?.image
     }
 
     case 'EventTeaser':
@@ -138,7 +135,7 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
-      return teaser.article?.authors
+      return teaser.article?.published?.authors
         .filter(author => !author.hideOnTeaser)
         .map(author => author.name)
     }

@@ -28,8 +28,26 @@ mutation UpdatePaymentProviderCustomers($customers: [PaymentProviderCustomerInpu
   }
 }
 
-mutation RegisterMemberAndReceivePayment($name: String!, $email: String!, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $challengeAnswer: ChallengeInput!, $paymentMethodId: ID, $memberPlanId: ID) {
-  registerMemberAndReceivePayment(name: $name, email: $email, autoRenew: $autoRenew, paymentPeriodicity: $paymentPeriodicity, monthlyAmount: $monthlyAmount, challengeAnswer: $challengeAnswer, paymentMethodID: $paymentMethodId, memberPlanID: $memberPlanId) {
+mutation RegisterMemberAndReceivePayment(
+  $name: String!
+  $email: String!
+  $autoRenew: Boolean!
+  $paymentPeriodicity: PaymentPeriodicity!
+  $monthlyAmount: Int!
+  $challengeAnswer: ChallengeInput!
+  $paymentMethodId: String
+  $memberPlanId: String
+) {
+  registerMemberAndReceivePayment(
+    name: $name
+    email: $email
+    autoRenew: $autoRenew
+    paymentPeriodicity: $paymentPeriodicity
+    monthlyAmount: $monthlyAmount
+    challengeAnswer: $challengeAnswer
+    paymentMethodID: $paymentMethodId
+    memberPlanID: $memberPlanId
+  ) {
     payment {
       id
     }

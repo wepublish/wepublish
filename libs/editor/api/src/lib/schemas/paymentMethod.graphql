@@ -31,7 +31,7 @@ query PaymentMethodList {
   }
 }
 
-query PaymentMethod($id: ID!) {
+query PaymentMethod($id: String!) {
   paymentMethod(id: $id) {
     ...FullPaymentMethod
   }
@@ -43,13 +43,13 @@ mutation CreatePaymentMethod($input: PaymentMethodInput!) {
   }
 }
 
-mutation UpdatePaymentMethod($id: ID!, $input: PaymentMethodInput!) {
+mutation UpdatePaymentMethod($id: String!, $input: PaymentMethodInput!) {
   updatePaymentMethod(id: $id, input: $input) {
     ...FullPaymentMethod
   }
 }
 
-mutation DeletePaymentMethod($id: ID!) {
+mutation DeletePaymentMethod($id: String!) {
   deletePaymentMethod(id: $id) {
     ...FullPaymentMethod
   }

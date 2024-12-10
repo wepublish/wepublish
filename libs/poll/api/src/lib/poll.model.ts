@@ -4,7 +4,7 @@ import {Field, ID, ObjectType, Directive} from '@nestjs/graphql'
 @Directive('@extends')
 @Directive('@key(fields: "id")')
 export class FullPoll {
-  @Field(() => ID)
+  @Field()
   @Directive('@external')
   id!: string
 }

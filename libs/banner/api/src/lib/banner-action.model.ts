@@ -21,7 +21,7 @@ registerEnumType(BannerActionRole, {
 
 @ObjectType()
 export class BannerAction {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()

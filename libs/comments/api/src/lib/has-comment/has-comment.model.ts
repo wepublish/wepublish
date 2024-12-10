@@ -3,7 +3,7 @@ import {Comment} from '../comment.model'
 
 @InterfaceType()
 export abstract class HasOptionalComment {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   commentId?: string
 
   @Field(() => Comment, {nullable: true})
@@ -12,7 +12,7 @@ export abstract class HasOptionalComment {
 
 @InterfaceType()
 export abstract class HasComment {
-  @Field(() => ID)
+  @Field()
   commentId!: string
 
   @Field(() => Comment)

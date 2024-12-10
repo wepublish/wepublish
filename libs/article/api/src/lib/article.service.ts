@@ -22,6 +22,15 @@ export class ArticleService {
   constructor(private prisma: PrismaClient) {}
 
   @PrimeDataLoader(ArticleDataloaderService)
+  async getArticleBySlug(slug: string) {
+    return this.prisma.article.findUnique({
+      where: {
+        slug
+      }
+    })
+  }
+
+  @PrimeDataLoader(ArticleDataloaderService)
   async getArticles({
     filter,
     cursorId,

@@ -1,22 +1,11 @@
-fragment ArticleWithoutBlocks on Article {
+fragment ArticleRevisionsWithoutBlocks on ArticleRevision {
   id
-  publishedAt
-  updatedAt
   preTitle
   title
   lead
-  slug
   breaking
   lead
-  publishedAt
   title
-  url
-  peeredArticleURL
-  disableComments
-
-  tags {
-    ...FullTag
-  }
 
   authors {
     ...FullAuthor
@@ -37,35 +26,59 @@ fragment ArticleWithoutBlocks on Article {
   }
 }
 
+fragment ArticleWithoutBlocks on Article {
+  id
+  publishedAt
+  modifiedAt
+  url
+  slug
+  disableComments
+  peerId
+  peerArticleId
+
+  tags {
+    ...FullTag
+  }
+
+  published {
+    ...ArticleRevisionsWithoutBlocks
+  }
+}
+
 fragment FullArticle on Article {
   ...ArticleWithoutBlocks
 
-  blocks {
-    ...FullBlock
+  published {
+    ...ArticleRevisionsWithoutBlocks
+
+    blocks {
+      ...FullBlock
+    }
   }
 }
 
-query Article($slug: Slug, $id: ID, $token: String) {
-  article(slug: $slug, id: $id, token: $token) {
-    ...FullArticle
-  }
-}
-
-query PeerArticle($peerSlug: Slug, $peerId: ID, $articleId: ID!) {
-  peerArticle(peerSlug: $peerSlug, peerID: $peerId, id: $articleId) {
+query Article($slug: String, $id: String) {
+  article(slug: $slug, id: $id) {
     ...FullArticle
   }
 }
 
 query ArticleList(
   $filter: ArticleFilter
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
   $sort: ArticleSort
 ) {
-  articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  articles(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...ArticleWithoutBlocks
     }

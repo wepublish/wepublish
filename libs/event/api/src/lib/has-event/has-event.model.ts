@@ -3,7 +3,7 @@ import {Event} from '../event.model'
 
 @InterfaceType()
 export abstract class HasOptionalEvent {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   eventID?: string
 
   @Field(() => Event, {nullable: true})
@@ -12,7 +12,7 @@ export abstract class HasOptionalEvent {
 
 @InterfaceType()
 export abstract class HasEvent {
-  @Field(() => ID)
+  @Field()
   eventID!: string
 
   @Field(() => Event)
@@ -23,7 +23,7 @@ export abstract class HasEvent {
 
 @InterfaceType()
 export abstract class HasEventLc {
-  @Field(() => ID)
+  @Field()
   eventId!: string
 
   @Field(() => Event)
@@ -32,7 +32,7 @@ export abstract class HasEventLc {
 
 @InterfaceType()
 export abstract class HasOptionalEventLc {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   eventId?: string
 
   @Field(() => Event, {nullable: true})

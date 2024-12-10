@@ -3,7 +3,7 @@ import {Page} from '../page.model'
 
 @InterfaceType()
 export abstract class HasOptionalPage {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   pageID?: string
 
   @Field(() => Page, {nullable: true})
@@ -12,7 +12,7 @@ export abstract class HasOptionalPage {
 
 @InterfaceType()
 export abstract class HasPage {
-  @Field(() => ID)
+  @Field()
   pageID!: string
 
   @Field(() => Page)
@@ -23,7 +23,7 @@ export abstract class HasPage {
 
 @InterfaceType()
 export abstract class HasPageLc {
-  @Field(() => ID)
+  @Field()
   pageId!: string
 
   @Field(() => Page)
@@ -32,7 +32,7 @@ export abstract class HasPageLc {
 
 @InterfaceType()
 export abstract class HasOptionalPageLc {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   pageId?: string
 
   @Field(() => Page, {nullable: true})

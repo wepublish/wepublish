@@ -2,7 +2,6 @@ import {Event, EventStatus} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -33,7 +32,7 @@ export const GraphQLEventStatus = new GraphQLEnumType({
 export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
   name: 'Event',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     name: {type: new GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
@@ -93,7 +92,7 @@ export const GraphQLEventFilter = new GraphQLInputObjectType({
     upcomingOnly: {type: GraphQLBoolean},
     from: {type: GraphQLDateTime},
     to: {type: GraphQLDateTime},
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     name: {type: GraphQLString},
     location: {type: GraphQLString}
   }

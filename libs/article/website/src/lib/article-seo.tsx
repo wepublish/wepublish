@@ -5,11 +5,11 @@ import {BuilderArticleSEOProps, useWebsiteBuilder} from '@wepublish/website/buil
 import {Fragment, useMemo} from 'react'
 
 export const getArticleSEO = (article: Article) => {
-  const firstTitle = article.blocks?.find(isTitleBlock)
-  const firstRichText = article.blocks?.find(isRichTextBlock)
-  const firstImageBlock = article.blocks?.find(isImageBlock)
+  const firstTitle = article.published?.blocks?.find(isTitleBlock)
+  const firstRichText = article.published?.blocks?.find(isRichTextBlock)
+  const firstImageBlock = article.published?.blocks?.find(isImageBlock)
 
-  const articleBody = article.blocks
+  const articleBody = article.published?.blocks
     ?.filter(isRichTextBlock)
     .reduce((body, richText) => {
       const text = toPlaintext(richText.richText)
@@ -23,21 +23,28 @@ export const getArticleSEO = (article: Article) => {
     .join('\n')
 
   const socialMediaDescription =
-    article.socialMediaDescription ||
-    article.lead ||
+    article.published?.socialMediaDescription ||
+    article.published?.lead ||
     firstParagraphToPlaintext(firstRichText?.richText)
-  const description = article.lead || firstParagraphToPlaintext(firstRichText?.richText)
+  const description = article.published?.lead || firstParagraphToPlaintext(firstRichText?.richText)
 
-  const image = (article.socialMediaImage ?? article.image ?? firstImageBlock?.image) as
-    | FullImageFragment
-    | undefined
-  const title = article.seoTitle || article.title || firstTitle?.title || article.socialMediaTitle
+  const image = (article.published?.socialMediaImage ??
+    article.published?.image ??
+    firstImageBlock?.image) as FullImageFragment | undefined
+  const title =
+    article.published?.seoTitle ||
+    article.published?.title ||
+    firstTitle?.title ||
+    article.published?.socialMediaTitle
   const socialMediaTitle =
-    article.socialMediaTitle || article.seoTitle || article.title || firstTitle?.title
-  const headline = firstTitle?.title || article.title
-  const url = article.canonicalUrl ?? article.url
+    article.published?.socialMediaTitle ||
+    article.published?.seoTitle ||
+    article.published?.title ||
+    firstTitle?.title
+  const headline = firstTitle?.title || article.published?.title
+  const url = article.published?.canonicalUrl ?? article.url
 
-  const firstAuthor = article.authors.at(0)
+  const firstAuthor = article.published?.authors.at(0)
 
   return {
     type: 'article',
@@ -48,7 +55,7 @@ export const getArticleSEO = (article: Article) => {
     image,
     tags: article.tags,
     publishedAt: article.publishedAt,
-    authors: article.authors,
+    authors: article.published?.authors ?? [],
     schema: {
       '@context': 'http://schema.org',
       '@type': 'NewsArticle',

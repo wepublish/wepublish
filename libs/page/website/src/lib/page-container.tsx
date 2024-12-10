@@ -16,8 +16,7 @@ export function PageContainer({id, slug, token, className, children}: PageContai
   const {data, loading, error} = usePageQuery({
     variables: {
       id,
-      slug,
-      token
+      slug
     }
   })
 

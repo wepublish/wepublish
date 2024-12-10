@@ -1,6 +1,5 @@
 import {
   GraphQLNonNull,
-  GraphQLID,
   GraphQLString,
   GraphQLObjectType,
   GraphQLList,
@@ -32,7 +31,7 @@ export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({
 export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
   name: 'Author',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -80,7 +79,7 @@ export const GraphQLAuthorFilter = new GraphQLInputObjectType({
   name: 'AuthorFilter',
   fields: {
     name: {type: GraphQLString},
-    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     hideOnTeam: {type: GraphQLBoolean}
   }
 })
@@ -119,8 +118,8 @@ export const GraphQLAuthorInput = new GraphQLInputObjectType({
     links: {type: new GraphQLList(new GraphQLNonNull(GraphQLAuthorLinkInput))},
     bio: {type: GraphQLRichText},
     jobTitle: {type: GraphQLString},
-    imageID: {type: GraphQLID},
-    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    imageID: {type: GraphQLString},
+    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     hideOnArticle: {type: GraphQLBoolean},
     hideOnTeaser: {type: GraphQLBoolean},
     hideOnTeam: {type: GraphQLBoolean}

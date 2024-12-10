@@ -5,7 +5,7 @@ import {Comment} from '@wepublish/comments/api'
 
 @ObjectType()
 export class CommentBlockFilter {
-  @Field(() => ID)
+  @Field()
   item!: string
 
   @Field(() => [ID])

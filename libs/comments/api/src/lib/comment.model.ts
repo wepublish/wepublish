@@ -4,7 +4,7 @@ import {Directive, Field, ID, ObjectType} from '@nestjs/graphql'
 @Directive('@extends')
 @Directive('@key(fields: "id")')
 export class Comment {
-  @Field(() => ID)
+  @Field()
   @Directive('@external')
   id!: string
 }

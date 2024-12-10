@@ -58,7 +58,7 @@ fragment FullComment on Comment {
 
 query CommentList(
   $filter: CommentFilter
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -80,26 +80,26 @@ query CommentList(
   }
 }
 
-query Comment($id: ID!) {
+query Comment($id: String!) {
   comment(id: $id) {
     ...FullComment
   }
 }
 
-mutation ApproveComment($id: ID!) {
+mutation ApproveComment($id: String!) {
   approveComment(id: $id) {
     state
   }
 }
 
-mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason) {
+mutation RejectComment($id: String!, $rejectionReason: CommentRejectionReason) {
   rejectComment(id: $id, rejectionReason: $rejectionReason) {
     state
     rejectionReason
   }
 }
 
-mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+mutation RequestChangesOnComment($id: String!, $rejectionReason: CommentRejectionReason!) {
   requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
     state
     rejectionReason
@@ -107,11 +107,11 @@ mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionRea
 }
 
 mutation updateComment(
-  $id: ID!
+  $id: String!
   $revision: CommentRevisionUpdateInput
-  $userID: ID
+  $userID: String
   $guestUsername: String
-  $guestUserImageID: ID
+  $guestUserImageID: String
   $featured: Boolean
   $source: String
   $tagIds: [ID!]
@@ -133,9 +133,9 @@ mutation updateComment(
 }
 
 mutation createComment(
-  $itemID: ID!
+  $itemID: String!
   $itemType: CommentItemType!
-  $parentID: ID
+  $parentID: String
   $text: RichText
   $tagIds: [ID!]
 ) {
@@ -150,7 +150,7 @@ mutation createComment(
   }
 }
 
-mutation DeleteComment($deleteCommentId: ID!) {
+mutation DeleteComment($deleteCommentId: String!) {
   deleteComment(id: $deleteCommentId) {
     id
   }

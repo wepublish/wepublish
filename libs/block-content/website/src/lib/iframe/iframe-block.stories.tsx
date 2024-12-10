@@ -1,10 +1,10 @@
 import {Meta} from '@storybook/react'
-import {EmbedBlock} from './embed-block'
+import {IFrameBlock} from './iframe-block'
 import {css} from '@emotion/react'
 
 export default {
-  component: EmbedBlock,
-  title: 'Blocks/Embed'
+  component: IFrameBlock,
+  title: 'Blocks/IFrame'
 } as Meta
 
 export const Default = {

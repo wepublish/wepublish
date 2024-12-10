@@ -5,25 +5,26 @@ import {BuilderPageSEOProps, useWebsiteBuilder} from '@wepublish/website/builder
 import {useMemo} from 'react'
 
 export const getPageSEO = (page: Page) => {
-  const firstTitle = page.blocks?.find(isTitleBlock)
-  const firstRichText = page.blocks?.find(isRichTextBlock)
-  const firstImageBlock = page.blocks?.find(isImageBlock)
+  const firstTitle = page.published?.blocks?.find(isTitleBlock)
+  const firstRichText = page.published?.blocks?.find(isRichTextBlock)
+  const firstImageBlock = page.published?.blocks?.find(isImageBlock)
 
   const socialMediaDescription =
-    page.socialMediaDescription ||
-    page.description ||
+    page.published?.socialMediaDescription ||
+    page.published?.description ||
     firstParagraphToPlaintext(firstRichText?.richText)
   const description =
-    page.socialMediaDescription ||
-    page.description ||
+    page.published?.socialMediaDescription ||
+    page.published?.description ||
     firstParagraphToPlaintext(firstRichText?.richText)
-  const image = (page.socialMediaImage ?? page.image ?? firstImageBlock?.image) as
-    | FullImageFragment
-    | undefined
+  const image = (page.published?.socialMediaImage ??
+    page.published?.image ??
+    firstImageBlock?.image) as FullImageFragment | undefined
 
-  const title = page.title || firstTitle?.title || page.socialMediaTitle
-  const socialMediaTitle = page.socialMediaTitle || page.title || firstTitle?.title
-  const headline = firstTitle?.title || page.title
+  const title = page.published?.title || firstTitle?.title || page.published?.socialMediaTitle
+  const socialMediaTitle =
+    page.published?.socialMediaTitle || page.published?.title || firstTitle?.title
+  const headline = firstTitle?.title || page.published?.title
   const url = page.url
 
   return {

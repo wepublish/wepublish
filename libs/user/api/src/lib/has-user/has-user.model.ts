@@ -3,7 +3,7 @@ import {User} from '../user.model'
 
 @InterfaceType()
 export abstract class HasOptionalUser {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   userID?: string
 
   @Field(() => User, {nullable: true})
@@ -12,7 +12,7 @@ export abstract class HasOptionalUser {
 
 @InterfaceType()
 export abstract class HasUser {
-  @Field(() => ID)
+  @Field()
   userID!: string
 
   @Field(() => User)
@@ -23,7 +23,7 @@ export abstract class HasUser {
 
 @InterfaceType()
 export abstract class HasUserLc {
-  @Field(() => ID)
+  @Field()
   userId!: string
 
   @Field(() => User)
@@ -32,7 +32,7 @@ export abstract class HasUserLc {
 
 @InterfaceType()
 export abstract class HasOptionalUserLc {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   userId?: string
 
   @Field(() => User, {nullable: true})

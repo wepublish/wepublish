@@ -77,7 +77,7 @@ export class PeerArticleTeaser extends BaseTeaser<TeaserType.PeerArticle> implem
   peerID?: string
   peer?: Peer
 
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   articleID?: string
   @Field(() => Article, {nullable: true})
   article?: Article

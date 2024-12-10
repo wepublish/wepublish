@@ -1,5 +1,5 @@
 import {
-  Block,
+  BlockContent,
   EventBlock,
   FlexAlignment,
   HtmlBlock,
@@ -20,57 +20,61 @@ import {
   PolisConversationBlock,
   TikTokVideoBlock,
   BildwurfAdBlock,
-  EmbedBlock,
+  IFrameBlock,
   ListicleBlock,
   TeaserGridFlexBlock,
   TitleBlock,
-  LinkPageBreakBlock,
+  BreakBlock,
   CommentBlock,
   TeaserListBlock
 } from '@wepublish/website/api'
 
 export type BuilderBlockRendererProps = {
-  block: Block
+  block: BlockContent
   index: number
   count: number
   type: 'Page' | 'Article'
 }
 
 export type BuilderBlocksProps = {
-  blocks: Block[]
+  blocks: BlockContent[]
   type: BuilderBlockRendererProps['type']
 }
 
-export type BuilderTitleBlockProps = TitleBlock & {className?: string}
-export type BuilderBreakBlockProps = LinkPageBreakBlock & {className?: string}
-export type BuilderImageBlockProps = ImageBlock & {className?: string}
-export type BuilderImageGalleryBlockProps = ImageGalleryBlock & {className?: string}
-export type BuilderQuoteBlockProps = QuoteBlock & {className?: string}
-export type BuilderEventBlockProps = EventBlock & {className?: string}
-export type BuilderRichTextBlockProps = RichTextBlock & {className?: string}
-export type BuilderHTMLBlockProps = HtmlBlock & {className?: string}
-export type BuilderFacebookPostBlockProps = FacebookPostBlock & {className?: string}
-export type BuilderFacebookVideoBlockProps = FacebookVideoBlock & {className?: string}
-export type BuilderInstagramPostBlockProps = InstagramPostBlock & {className?: string}
-export type BuilderTwitterTweetBlockProps = TwitterTweetBlock & {className?: string}
-export type BuilderVimeoVideoBlockProps = VimeoVideoBlock & {className?: string}
-export type BuilderYouTubeVideoBlockProps = YouTubeVideoBlock & {className?: string}
-export type BuilderSoundCloudTrackBlockProps = SoundCloudTrackBlock & {className?: string}
-export type BuilderPolisConversationBlockProps = PolisConversationBlock & {className?: string}
-export type BuilderTikTokVideoBlockProps = TikTokVideoBlock & {className?: string}
-export type BuilderBildwurfAdBlockProps = BildwurfAdBlock & {className?: string}
-export type BuilderEmbedBlockProps = EmbedBlock & {className?: string}
-export type BuilderPollBlockProps = PollBlock & {className?: string}
-export type BuilderListicleBlockProps = ListicleBlock & {className?: string}
-export type BuilderCommentBlockProps = CommentBlock & {className?: string}
+export type BuilderTitleBlockProps = Omit<TitleBlock, 'type'> & {className?: string}
+export type BuilderBreakBlockProps = Omit<BreakBlock, 'type'> & {className?: string}
+export type BuilderImageBlockProps = Omit<ImageBlock, 'type'> & {className?: string}
+export type BuilderImageGalleryBlockProps = Omit<ImageGalleryBlock, 'type'> & {className?: string}
+export type BuilderQuoteBlockProps = Omit<QuoteBlock, 'type'> & {className?: string}
+export type BuilderEventBlockProps = Omit<EventBlock, 'type'> & {className?: string}
+export type BuilderRichTextBlockProps = Omit<RichTextBlock, 'type'> & {className?: string}
+export type BuilderHTMLBlockProps = Omit<HtmlBlock, 'type'> & {className?: string}
+export type BuilderFacebookPostBlockProps = Omit<FacebookPostBlock, 'type'> & {className?: string}
+export type BuilderFacebookVideoBlockProps = Omit<FacebookVideoBlock, 'type'> & {className?: string}
+export type BuilderInstagramPostBlockProps = Omit<InstagramPostBlock, 'type'> & {className?: string}
+export type BuilderTwitterTweetBlockProps = Omit<TwitterTweetBlock, 'type'> & {className?: string}
+export type BuilderVimeoVideoBlockProps = Omit<VimeoVideoBlock, 'type'> & {className?: string}
+export type BuilderYouTubeVideoBlockProps = Omit<YouTubeVideoBlock, 'type'> & {className?: string}
+export type BuilderSoundCloudTrackBlockProps = Omit<SoundCloudTrackBlock, 'type'> & {
+  className?: string
+}
+export type BuilderPolisConversationBlockProps = Omit<PolisConversationBlock, 'type'> & {
+  className?: string
+}
+export type BuilderTikTokVideoBlockProps = Omit<TikTokVideoBlock, 'type'> & {className?: string}
+export type BuilderBildwurfAdBlockProps = Omit<BildwurfAdBlock, 'type'> & {className?: string}
+export type BuilderIFrameBlockProps = Omit<IFrameBlock, 'type'> & {className?: string}
+export type BuilderPollBlockProps = Omit<PollBlock, 'type'> & {className?: string}
+export type BuilderListicleBlockProps = Omit<ListicleBlock, 'type'> & {className?: string}
+export type BuilderCommentBlockProps = Omit<CommentBlock, 'type'> & {className?: string}
 export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
   className?: string
 }
-export type BuilderTeaserGridBlockProps = TeaserGridBlock & {
+export type BuilderTeaserGridBlockProps = Omit<TeaserGridBlock, 'type'> & {
   className?: string
 }
 
-export type BuilderTeaserListBlockProps = TeaserListBlock & {
+export type BuilderTeaserListBlockProps = Omit<TeaserListBlock, 'type'> & {
   className?: string
 }
 

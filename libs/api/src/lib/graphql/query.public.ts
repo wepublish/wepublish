@@ -1,14 +1,7 @@
 import {AuthSessionType} from '@wepublish/authentication/api'
 import {SortOrder} from '@wepublish/utils/api'
 import {UserInputError} from 'apollo-server-express'
-import {
-  GraphQLID,
-  GraphQLInt,
-  GraphQLList,
-  GraphQLNonNull,
-  GraphQLObjectType,
-  GraphQLString
-} from 'graphql'
+import {GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 import {Context} from '../context'
 import {AuthorSort} from '../db/author'
 import {MemberPlanSort} from '../db/memberPlan'
@@ -60,7 +53,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     peer: {
       type: GraphQLPeer,
-      args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      args: {id: {type: GraphQLString}, slug: {type: GraphQLSlug}},
       description: 'This query takes either the ID or the slug and returns the peer profile.',
       resolve: (root, {id, slug}, {loaders: {peer, peerBySlug}}) =>
         getPeerByIdOrSlug(id, slug, peer, peerBySlug)
@@ -71,7 +64,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     author: {
       type: GraphQLAuthor,
-      args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      args: {id: {type: GraphQLString}, slug: {type: GraphQLSlug}},
       description: 'This query takes either the ID or the slug and returns the author.',
       resolve(root, {id, slug}, {authenticateUser, loaders}) {
         if ((id == null && slug == null) || (id != null && slug != null)) {
@@ -85,7 +78,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     authors: {
       type: new GraphQLNonNull(GraphQLAuthorConnection),
       args: {
-        cursor: {type: GraphQLID},
+        cursor: {type: GraphQLString},
         take: {type: GraphQLInt, defaultValue: 10},
         skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLAuthorFilter},
@@ -103,7 +96,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     comments: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicComment))),
       args: {
-        itemId: {type: new GraphQLNonNull(GraphQLID)},
+        itemId: {type: new GraphQLNonNull(GraphQLString)},
         sort: {type: GraphQLPublicCommentSort},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
@@ -189,7 +182,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     memberPlan: {
       type: GraphQLPublicMemberPlan,
-      args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      args: {id: {type: GraphQLString}, slug: {type: GraphQLSlug}},
       description: 'This query returns a member plan.',
       resolve(root, {id, slug}, {loaders}) {
         if ((!id && !slug) || (id && slug)) {
@@ -205,7 +198,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     memberPlans: {
       type: new GraphQLNonNull(GraphQLPublicMemberPlanConnection),
       args: {
-        cursor: {type: GraphQLID},
+        cursor: {type: GraphQLString},
         take: {type: GraphQLInt, defaultValue: 10},
         skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLMemberPlanFilter},
@@ -220,7 +213,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     checkInvoiceStatus: {
       type: GraphQLPublicInvoice,
       args: {
-        id: {type: new GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       description:
         'This mutation will check the invoice status and update with information from the paymentProvider',
@@ -340,16 +333,16 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       type: new GraphQLNonNull(GraphQLFullPoll),
       description: 'This query returns a poll with all the needed data',
       args: {
-        id: {type: new GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {prisma: {poll}}) => getPoll(id, poll)
     },
 
     userPollVote: {
-      type: GraphQLID,
+      type: GraphQLString,
       description: 'This query returns the answerId of a poll if the user has already voted on it.',
       args: {
-        pollId: {type: new GraphQLNonNull(GraphQLID)}
+        pollId: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {pollId}, {authenticateUser, prisma: {pollVote}}) =>
         userPollVote(pollId, authenticateUser, pollVote)
@@ -362,7 +355,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLTagConnection,
       description: 'This query returns a list of tags',
       args: {
-        cursor: {type: GraphQLID},
+        cursor: {type: GraphQLString},
         take: {type: GraphQLInt, defaultValue: 10},
         skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLTagFilter},

@@ -3,7 +3,7 @@ import {Image} from '../image.model'
 
 @InterfaceType()
 export abstract class HasImage {
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   imageID?: string
 
   @Field(() => Image, {nullable: true})

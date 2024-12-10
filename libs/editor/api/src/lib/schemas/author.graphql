@@ -27,7 +27,7 @@ fragment FullAuthor on Author {
 
 query AuthorList(
   $filter: String
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -56,7 +56,7 @@ query AuthorList(
   }
 }
 
-query Author($id: ID!) {
+query Author($id: String!) {
   author(id: $id) {
     ...FullAuthor
   }
@@ -68,13 +68,13 @@ mutation CreateAuthor($input: AuthorInput!) {
   }
 }
 
-mutation UpdateAuthor($id: ID!, $input: AuthorInput!) {
+mutation UpdateAuthor($id: String!, $input: AuthorInput!) {
   updateAuthor(id: $id, input: $input) {
     ...FullAuthor
   }
 }
 
-mutation DeleteAuthor($id: ID!) {
+mutation DeleteAuthor($id: String!) {
   deleteAuthor(id: $id) {
     ...FullAuthor
   }

@@ -30,7 +30,7 @@ export class MailTemplateRef {
 
 @ObjectType()
 class MemberPlan {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
@@ -39,7 +39,7 @@ class MemberPlan {
 
 @ObjectType()
 export class PaymentMethod {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()

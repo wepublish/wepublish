@@ -14,7 +14,7 @@ fragment ArticleRef on Article {
   }
 }
 
-query ArticleList($filter: [String!], $cursor: ID, $take: Int) {
+query ArticleList($filter: [String!], $cursor: String, $take: Int) {
   articles(take: $take, cursor: $cursor, filter: {tags: $filter}) {
     nodes {
       ...ArticleRef
@@ -31,7 +31,7 @@ query ArticleList($filter: [String!], $cursor: ID, $take: Int) {
   }
 }
 
-query Article($id: ID!) {
+query Article($id: String!) {
   article(id: $id) {
     id
     updatedAt
@@ -63,7 +63,7 @@ query Article($id: ID!) {
   }
 }
 
-query PeerArticle($id: ID!, $peerSlug: Slug, $peerID: ID) {
+query PeerArticle($id: String!, $peerSlug: Slug, $peerID: String) {
   peerArticle(id: $id, peerSlug: $peerSlug, peerID: $peerID) {
     id
     updatedAt

@@ -65,14 +65,16 @@ export type Article = {
   disableComments: Scalars['Boolean']
   draft?: Maybe<ArticleRevision>
   hidden: Scalars['Boolean']
-  id: Scalars['ID']
+  id: Scalars['String']
   modifiedAt: Scalars['DateTime']
   peer?: Maybe<Peer>
   peerArticleId?: Maybe<Scalars['String']>
   peerId?: Maybe<Scalars['String']>
   pending?: Maybe<ArticleRevision>
   published?: Maybe<ArticleRevision>
+  publishedAt: Scalars['DateTime']
   shared: Scalars['Boolean']
+  slug?: Maybe<Scalars['String']>
   tags: Array<Tag>
   url: Scalars['String']
 }
@@ -82,7 +84,7 @@ export type ArticleCreatedAction = BaseAction &
     __typename?: 'ArticleCreatedAction'
     actionType: ActionType
     article: Article
-    articleId: Scalars['ID']
+    articleId: Scalars['String']
     date: Scalars['DateTime']
   }
 
@@ -105,7 +107,7 @@ export type ArticleNavigationLink = BaseNavigationLink &
   HasArticle & {
     __typename?: 'ArticleNavigationLink'
     article: Article
-    articleID: Scalars['ID']
+    articleID: Scalars['String']
     createdAt: Scalars['DateTime']
     id: Scalars['String']
     label: Scalars['String']
@@ -121,7 +123,7 @@ export type ArticleRevision = HasBlockContent & {
   canonicalUrl: Scalars['String']
   createdAt: Scalars['DateTime']
   hideAuthor: Scalars['Boolean']
-  id: Scalars['ID']
+  id: Scalars['String']
   image?: Maybe<Image>
   imageID?: Maybe<Scalars['String']>
   lead?: Maybe<Scalars['String']>
@@ -129,7 +131,6 @@ export type ArticleRevision = HasBlockContent & {
   properties: Array<Property>
   publishedAt: Scalars['DateTime']
   seoTitle?: Maybe<Scalars['String']>
-  slug?: Maybe<Scalars['String']>
   socialMediaAuthors: Array<Author>
   socialMediaDescription?: Maybe<Scalars['String']>
   socialMediaImage?: Maybe<Image>
@@ -149,9 +150,9 @@ export type ArticleTeaser = BaseTeaser &
   HasOptionalArticle & {
     __typename?: 'ArticleTeaser'
     article?: Maybe<Article>
-    articleID?: Maybe<Scalars['ID']>
+    articleID?: Maybe<Scalars['String']>
     image?: Maybe<Image>
-    imageID?: Maybe<Scalars['ID']>
+    imageID?: Maybe<Scalars['String']>
     lead?: Maybe<Scalars['String']>
     preTitle?: Maybe<Scalars['String']>
     style: TeaserStyle
@@ -160,7 +161,7 @@ export type ArticleTeaser = BaseTeaser &
   }
 
 export type ArticleTeaserInput = {
-  imageID?: InputMaybe<Scalars['ID']>
+  imageID?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
   preTitle?: InputMaybe<Scalars['String']>
   style: TeaserStyle
@@ -181,7 +182,7 @@ export type Author = {
   hideOnArticle?: Maybe<Scalars['Boolean']>
   hideOnTeam?: Maybe<Scalars['Boolean']>
   hideOnTeaser?: Maybe<Scalars['Boolean']>
-  id: Scalars['ID']
+  id: Scalars['String']
   image?: Maybe<Image>
   jobTitle?: Maybe<Scalars['String']>
   links?: Maybe<Array<AuthorLink>>
@@ -204,14 +205,14 @@ export type AuthorCreatedAction = BaseAction &
     __typename?: 'AuthorCreatedAction'
     actionType: ActionType
     author: Author
-    authorId: Scalars['ID']
+    authorId: Scalars['String']
     date: Scalars['DateTime']
   }
 
 export type AuthorFilter = {
   hideOnTeam?: InputMaybe<Scalars['Boolean']>
   name?: InputMaybe<Scalars['String']>
-  tagIds?: InputMaybe<Array<Scalars['ID']>>
+  tagIds?: InputMaybe<Array<Scalars['String']>>
 }
 
 export type AuthorLink = {
@@ -238,7 +239,7 @@ export type Banner = {
   actions?: Maybe<Array<BannerAction>>
   active: Scalars['Boolean']
   cta?: Maybe<Scalars['String']>
-  id: Scalars['ID']
+  id: Scalars['String']
   image?: Maybe<Image>
   imageId?: Maybe<Scalars['String']>
   showOnArticles: Scalars['Boolean']
@@ -249,7 +250,7 @@ export type Banner = {
 
 export type BannerAction = {
   __typename?: 'BannerAction'
-  id: Scalars['ID']
+  id: Scalars['String']
   label: Scalars['String']
   role: BannerActionRole
   style: Scalars['String']
@@ -273,7 +274,7 @@ export type BaseAction = {
 }
 
 export type BaseBlock = {
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   type: Scalars['String']
 }
 
@@ -295,7 +296,7 @@ export type BaseNavigationLinkInput = {
 
 export type BaseTeaser = {
   image?: Maybe<Image>
-  imageID?: Maybe<Scalars['ID']>
+  imageID?: Maybe<Scalars['String']>
   lead?: Maybe<Scalars['String']>
   preTitle?: Maybe<Scalars['String']>
   style: TeaserStyle
@@ -305,13 +306,13 @@ export type BaseTeaser = {
 
 export type BildwurfAdBlock = BaseBlock & {
   __typename?: 'BildwurfAdBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   type: Scalars['String']
   zoneID?: Maybe<Scalars['String']>
 }
 
 export type BildwurfAdBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   type: Scalars['String']
   zoneID?: InputMaybe<Scalars['String']>
 }
@@ -403,10 +404,10 @@ export enum BlockType {
 export type BreakBlock = BaseBlock &
   HasImage & {
     __typename?: 'BreakBlock'
-    blockStyle?: Maybe<Scalars['ID']>
+    blockStyle?: Maybe<Scalars['String']>
     hideButton?: Maybe<Scalars['Boolean']>
     image?: Maybe<Image>
-    imageID?: Maybe<Scalars['ID']>
+    imageID?: Maybe<Scalars['String']>
     linkTarget?: Maybe<Scalars['String']>
     linkText?: Maybe<Scalars['String']>
     linkURL?: Maybe<Scalars['String']>
@@ -416,7 +417,7 @@ export type BreakBlock = BaseBlock &
   }
 
 export type BreakBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   hideButton?: InputMaybe<Scalars['Boolean']>
   linkTarget?: InputMaybe<Scalars['String']>
   linkText?: InputMaybe<Scalars['String']>
@@ -461,13 +462,13 @@ export type Comment = {
   featured?: Maybe<Scalars['Boolean']>
   guestUserImage?: Maybe<Image>
   guestUsername?: Maybe<Scalars['String']>
-  id: Scalars['ID']
-  itemID: Scalars['ID']
+  id: Scalars['String']
+  itemID: Scalars['String']
   itemType: CommentItemType
   lead?: Maybe<Scalars['String']>
   modifiedAt?: Maybe<Scalars['DateTime']>
   overriddenRatings: Array<OverriddenRating>
-  parentID?: Maybe<Scalars['ID']>
+  parentID?: Maybe<Scalars['String']>
   rejectionReason?: Maybe<Scalars['String']>
   source?: Maybe<Scalars['String']>
   state: CommentState
@@ -488,7 +489,7 @@ export enum CommentAuthorType {
 
 export type CommentBlock = BaseBlock & {
   __typename?: 'CommentBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   comments: Array<Comment>
   filter: CommentBlockFilter
   type: Scalars['String']
@@ -497,13 +498,13 @@ export type CommentBlock = BaseBlock & {
 export type CommentBlockFilter = {
   __typename?: 'CommentBlockFilter'
   comments: Array<Scalars['ID']>
-  item: Scalars['ID']
+  item: Scalars['String']
   tags: Array<Scalars['ID']>
 }
 
 export type CommentBlockFilterInput = {
   comments: Array<Scalars['ID']>
-  item: Scalars['ID']
+  item: Scalars['String']
   tags: Array<Scalars['ID']>
 }
 
@@ -516,16 +517,16 @@ export type CommentCreatedAction = BaseAction &
     __typename?: 'CommentCreatedAction'
     actionType: ActionType
     comment: Comment
-    commentId: Scalars['ID']
+    commentId: Scalars['String']
     date: Scalars['DateTime']
   }
 
 export type CommentInput = {
   challenge?: InputMaybe<ChallengeInput>
   guestUsername?: InputMaybe<Scalars['String']>
-  itemID: Scalars['ID']
+  itemID: Scalars['String']
   itemType: CommentItemType
-  parentID?: InputMaybe<Scalars['ID']>
+  parentID?: InputMaybe<Scalars['String']>
   text: Scalars['RichText']
   title?: InputMaybe<Scalars['String']>
 }
@@ -538,20 +539,20 @@ export enum CommentItemType {
 export type CommentRating = {
   __typename?: 'CommentRating'
   answer: CommentRatingSystemAnswer
-  commentId: Scalars['ID']
+  commentId: Scalars['String']
   createdAt: Scalars['DateTime']
   disabled?: Maybe<Scalars['Boolean']>
   fingerprint?: Maybe<Scalars['String']>
-  id: Scalars['ID']
-  userId?: Maybe<Scalars['ID']>
+  id: Scalars['String']
+  userId?: Maybe<Scalars['String']>
   value: Scalars['Int']
 }
 
 export type CommentRatingSystemAnswer = {
   __typename?: 'CommentRatingSystemAnswer'
   answer?: Maybe<Scalars['String']>
-  id: Scalars['ID']
-  ratingSystemId: Scalars['ID']
+  id: Scalars['String']
+  ratingSystemId: Scalars['String']
   type: RatingSystemType
 }
 
@@ -567,7 +568,7 @@ export enum CommentState {
 }
 
 export type CommentUpdateInput = {
-  id: Scalars['ID']
+  id: Scalars['String']
   lead?: InputMaybe<Scalars['String']>
   text?: InputMaybe<Scalars['RichText']>
   title?: InputMaybe<Scalars['String']>
@@ -617,7 +618,7 @@ export type CustomTeaser = BaseTeaser &
     __typename?: 'CustomTeaser'
     contentUrl?: Maybe<Scalars['String']>
     image?: Maybe<Image>
-    imageID?: Maybe<Scalars['ID']>
+    imageID?: Maybe<Scalars['String']>
     lead?: Maybe<Scalars['String']>
     preTitle?: Maybe<Scalars['String']>
     properties: Array<Property>
@@ -628,7 +629,7 @@ export type CustomTeaser = BaseTeaser &
 
 export type CustomTeaserInput = {
   contentUrl?: InputMaybe<Scalars['String']>
-  imageID?: InputMaybe<Scalars['ID']>
+  imageID?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
   preTitle?: InputMaybe<Scalars['String']>
   properties?: Array<PropertyInput>
@@ -682,7 +683,7 @@ export type Event = {
   endsAt?: Maybe<Scalars['DateTime']>
   externalSourceId?: Maybe<Scalars['String']>
   externalSourceName?: Maybe<Scalars['String']>
-  id: Scalars['ID']
+  id: Scalars['String']
   image?: Maybe<Image>
   imageId?: Maybe<Scalars['String']>
   lead?: Maybe<Scalars['String']>
@@ -692,11 +693,12 @@ export type Event = {
   startsAt: Scalars['DateTime']
   status: EventStatus
   tags?: Maybe<Array<Tag>>
+  url: Scalars['String']
 }
 
 export type EventBlock = BaseBlock & {
   __typename?: 'EventBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   events: Array<Event>
   filter: EventBlockFilter
   type: Scalars['String']
@@ -723,7 +725,7 @@ export type EventCreatedAction = BaseAction &
     actionType: ActionType
     date: Scalars['DateTime']
     event: Event
-    eventId: Scalars['ID']
+    eventId: Scalars['String']
   }
 
 export type EventFilter = {
@@ -742,7 +744,7 @@ export type EventFromSource = {
   endsAt?: Maybe<Scalars['DateTime']>
   externalSourceId?: Maybe<Scalars['String']>
   externalSourceName?: Maybe<Scalars['String']>
-  id: Scalars['ID']
+  id: Scalars['String']
   imageUrl?: Maybe<Scalars['String']>
   lead?: Maybe<Scalars['String']>
   location?: Maybe<Scalars['String']>
@@ -750,6 +752,7 @@ export type EventFromSource = {
   name: Scalars['String']
   startsAt: Scalars['DateTime']
   status: EventStatus
+  url: Scalars['String']
 }
 
 export enum EventSort {
@@ -771,9 +774,9 @@ export type EventTeaser = BaseTeaser &
   HasOptionalEvent & {
     __typename?: 'EventTeaser'
     event?: Maybe<Event>
-    eventID?: Maybe<Scalars['ID']>
+    eventID?: Maybe<Scalars['String']>
     image?: Maybe<Image>
-    imageID?: Maybe<Scalars['ID']>
+    imageID?: Maybe<Scalars['String']>
     lead?: Maybe<Scalars['String']>
     preTitle?: Maybe<Scalars['String']>
     style: TeaserStyle
@@ -782,7 +785,7 @@ export type EventTeaser = BaseTeaser &
   }
 
 export type EventTeaserInput = {
-  imageID?: InputMaybe<Scalars['ID']>
+  imageID?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
   preTitle?: InputMaybe<Scalars['String']>
   style: TeaserStyle
@@ -802,14 +805,14 @@ export type ExternalNavigationLink = BaseNavigationLink & {
 
 export type FacebookPostBlock = BaseBlock & {
   __typename?: 'FacebookPostBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   postID?: Maybe<Scalars['String']>
   type: Scalars['String']
   userID?: Maybe<Scalars['String']>
 }
 
 export type FacebookPostBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   postID?: InputMaybe<Scalars['String']>
   type: Scalars['String']
   userID?: InputMaybe<Scalars['String']>
@@ -817,14 +820,14 @@ export type FacebookPostBlockInput = {
 
 export type FacebookVideoBlock = BaseBlock & {
   __typename?: 'FacebookVideoBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   type: Scalars['String']
   userID?: Maybe<Scalars['String']>
   videoID?: Maybe<Scalars['String']>
 }
 
 export type FacebookVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   type: Scalars['String']
   userID?: InputMaybe<Scalars['String']>
   videoID?: InputMaybe<Scalars['String']>
@@ -869,7 +872,7 @@ export type FocalPoint = {
 export type FullCommentRatingSystem = {
   __typename?: 'FullCommentRatingSystem'
   answers: Array<CommentRatingSystemAnswer>
-  id: Scalars['ID']
+  id: Scalars['String']
   name?: Maybe<Scalars['String']>
 }
 
@@ -878,7 +881,7 @@ export type FullPoll = {
   answers: Array<PollAnswerWithVoteCount>
   closedAt?: Maybe<Scalars['DateTime']>
   externalVoteSources: Array<PollExternalVoteSource>
-  id: Scalars['ID']
+  id: Scalars['String']
   infoText?: Maybe<Scalars['RichText']>
   opensAt: Scalars['DateTime']
   question?: Maybe<Scalars['String']>
@@ -886,30 +889,30 @@ export type FullPoll = {
 
 export type HtmlBlock = BaseBlock & {
   __typename?: 'HTMLBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   html?: Maybe<Scalars['String']>
   type: Scalars['String']
 }
 
 export type HtmlBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   html?: InputMaybe<Scalars['String']>
   type: Scalars['String']
 }
 
 export type HasArticle = {
   article: Article
-  articleID: Scalars['ID']
+  articleID: Scalars['String']
 }
 
 export type HasArticleLc = {
   article: Article
-  articleId: Scalars['ID']
+  articleId: Scalars['String']
 }
 
 export type HasAuthor = {
   author: Author
-  authorId: Scalars['ID']
+  authorId: Scalars['String']
 }
 
 export type HasBlockContent = {
@@ -918,72 +921,72 @@ export type HasBlockContent = {
 
 export type HasComment = {
   comment: Comment
-  commentId: Scalars['ID']
+  commentId: Scalars['String']
 }
 
 export type HasEventLc = {
   event: Event
-  eventId: Scalars['ID']
+  eventId: Scalars['String']
 }
 
 export type HasImage = {
   image?: Maybe<Image>
-  imageID?: Maybe<Scalars['ID']>
+  imageID?: Maybe<Scalars['String']>
 }
 
 export type HasOptionalArticle = {
   article?: Maybe<Article>
-  articleID?: Maybe<Scalars['ID']>
+  articleID?: Maybe<Scalars['String']>
 }
 
 export type HasOptionalEvent = {
   event?: Maybe<Event>
-  eventID?: Maybe<Scalars['ID']>
+  eventID?: Maybe<Scalars['String']>
 }
 
 export type HasOptionalPage = {
   page?: Maybe<Page>
-  pageID?: Maybe<Scalars['ID']>
+  pageID?: Maybe<Scalars['String']>
 }
 
 export type HasOptionalPoll = {
   poll?: Maybe<FullPoll>
-  pollId?: Maybe<Scalars['ID']>
+  pollId?: Maybe<Scalars['String']>
 }
 
 export type HasPage = {
   page: Page
-  pageID: Scalars['ID']
+  pageID: Scalars['String']
 }
 
 export type HasPageLc = {
   page: Page
-  pageId: Scalars['ID']
+  pageId: Scalars['String']
 }
 
 export type HasPeer = {
   peer?: Maybe<Peer>
-  peerID?: Maybe<Scalars['ID']>
+  peerID?: Maybe<Scalars['String']>
 }
 
 export type HasPoll = {
   poll: FullPoll
-  pollId: Scalars['ID']
+  pollId: Scalars['String']
 }
 
 export type HasSubscription = {
   subscription: Subscription
-  subscriptionId: Scalars['ID']
+  subscriptionId: Scalars['String']
 }
 
 export type HasUserLc = {
   user: User
-  userId: Scalars['ID']
+  userId: Scalars['String']
 }
 
 export type IFrameBlock = BaseBlock & {
   __typename?: 'IFrameBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   height?: Maybe<Scalars['Int']>
   sandbox?: Maybe<Scalars['String']>
   styleCustom?: Maybe<Scalars['String']>
@@ -994,7 +997,7 @@ export type IFrameBlock = BaseBlock & {
 }
 
 export type IFrameBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   height?: InputMaybe<Scalars['Int']>
   sandbox?: InputMaybe<Scalars['String']>
   styleCustom?: InputMaybe<Scalars['String']>
@@ -1014,7 +1017,7 @@ export type Image = {
   focalPoint?: Maybe<FocalPoint>
   format: Scalars['String']
   height: Scalars['Int']
-  id: Scalars['ID']
+  id: Scalars['String']
   license?: Maybe<Scalars['String']>
   link?: Maybe<Scalars['String']>
   mimeType: Scalars['String']
@@ -1034,16 +1037,16 @@ export type ImageTransformUrlArgs = {
 export type ImageBlock = BaseBlock &
   HasImage & {
     __typename?: 'ImageBlock'
-    blockStyle?: Maybe<Scalars['ID']>
+    blockStyle?: Maybe<Scalars['String']>
     caption?: Maybe<Scalars['String']>
     image?: Maybe<Image>
-    imageID?: Maybe<Scalars['ID']>
+    imageID?: Maybe<Scalars['String']>
     linkUrl?: Maybe<Scalars['String']>
     type: Scalars['String']
   }
 
 export type ImageBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   caption?: InputMaybe<Scalars['String']>
   linkUrl?: InputMaybe<Scalars['String']>
   type: Scalars['String']
@@ -1051,7 +1054,7 @@ export type ImageBlockInput = {
 
 export type ImageGalleryBlock = BaseBlock & {
   __typename?: 'ImageGalleryBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   images: Array<ImageGalleryImage>
   type: Scalars['String']
 }
@@ -1064,7 +1067,7 @@ export type ImageGalleryImage = HasImage & {
   __typename?: 'ImageGalleryImage'
   caption?: Maybe<Scalars['String']>
   image?: Maybe<Image>
-  imageID?: Maybe<Scalars['ID']>
+  imageID?: Maybe<Scalars['String']>
 }
 
 export type ImageGalleryImageInput = {
@@ -1103,7 +1106,7 @@ export type ImageV2 = {
   focalPoint?: Maybe<FocalPoint>
   format: Scalars['String']
   height: Scalars['Int']
-  id: Scalars['ID']
+  id: Scalars['String']
   license?: Maybe<Scalars['String']>
   link?: Maybe<Scalars['String']>
   mimeType: Scalars['String']
@@ -1143,13 +1146,13 @@ export type InputPoint = {
 
 export type InstagramPostBlock = BaseBlock & {
   __typename?: 'InstagramPostBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   postID?: Maybe<Scalars['String']>
   type: Scalars['String']
 }
 
 export type InstagramPostBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   postID?: InputMaybe<Scalars['String']>
   type: Scalars['String']
 }
@@ -1160,13 +1163,13 @@ export type Invoice = {
   createdAt: Scalars['DateTime']
   description?: Maybe<Scalars['String']>
   dueAt: Scalars['DateTime']
-  id: Scalars['ID']
+  id: Scalars['String']
   items: Array<InvoiceItem>
   mail: Scalars['String']
   modifiedAt: Scalars['DateTime']
   paidAt?: Maybe<Scalars['DateTime']>
   subscription?: Maybe<Subscription>
-  subscriptionID: Scalars['ID']
+  subscriptionID: Scalars['String']
   total: Scalars['Int']
 }
 
@@ -1183,7 +1186,7 @@ export type InvoiceItem = {
 
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   items: Array<ListicleItem>
   type: Scalars['String']
 }
@@ -1195,7 +1198,7 @@ export type ListicleBlockInput = {
 export type ListicleItem = HasImage & {
   __typename?: 'ListicleItem'
   image?: Maybe<Image>
-  imageID?: Maybe<Scalars['ID']>
+  imageID?: Maybe<Scalars['String']>
   richText: Scalars['RichText']
   title?: Maybe<Scalars['String']>
 }
@@ -1234,7 +1237,7 @@ export type MemberPlan = {
   currency: Currency
   description?: Maybe<Scalars['RichText']>
   extendable: Scalars['Boolean']
-  id: Scalars['ID']
+  id: Scalars['String']
   image?: Maybe<Image>
   maxCount?: Maybe<Scalars['Int']>
   name: Scalars['String']
@@ -1410,7 +1413,7 @@ export type MutationAddCommentArgs = {
 }
 
 export type MutationCancelUserSubscriptionArgs = {
-  id: Scalars['ID']
+  id: Scalars['String']
 }
 
 export type MutationCreateBannerArgs = {
@@ -1451,7 +1454,7 @@ export type MutationCreatePaymentFromInvoiceArgs = {
 
 export type MutationCreatePaymentFromSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>
-  subscriptionId?: InputMaybe<Scalars['ID']>
+  subscriptionId?: InputMaybe<Scalars['String']>
   successURL?: InputMaybe<Scalars['String']>
 }
 
@@ -1472,12 +1475,12 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
 
 export type MutationCreateSubscriptionArgs = {
   autoRenew: Scalars['Boolean']
-  deactivateSubscriptionId?: InputMaybe<Scalars['ID']>
+  deactivateSubscriptionId?: InputMaybe<Scalars['String']>
   failureURL?: InputMaybe<Scalars['String']>
-  memberPlanID?: InputMaybe<Scalars['ID']>
+  memberPlanID?: InputMaybe<Scalars['String']>
   memberPlanSlug?: InputMaybe<Scalars['Slug']>
   monthlyAmount: Scalars['Int']
-  paymentMethodID?: InputMaybe<Scalars['ID']>
+  paymentMethodID?: InputMaybe<Scalars['String']>
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>
   paymentPeriodicity: PaymentPeriodicity
   subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>
@@ -1542,7 +1545,7 @@ export type MutationDeleteUserConsentArgs = {
 
 export type MutationExtendSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>
-  subscriptionId: Scalars['ID']
+  subscriptionId: Scalars['String']
   successURL?: InputMaybe<Scalars['String']>
 }
 
@@ -1567,8 +1570,8 @@ export type MutationPublishPageArgs = {
 }
 
 export type MutationRateCommentArgs = {
-  answerId: Scalars['ID']
-  commentId: Scalars['ID']
+  answerId: Scalars['String']
+  commentId: Scalars['String']
   value: Scalars['Int']
 }
 
@@ -1590,12 +1593,12 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
   email: Scalars['String']
   failureURL?: InputMaybe<Scalars['String']>
   firstName?: InputMaybe<Scalars['String']>
-  memberPlanID?: InputMaybe<Scalars['ID']>
+  memberPlanID?: InputMaybe<Scalars['String']>
   memberPlanSlug?: InputMaybe<Scalars['Slug']>
   monthlyAmount: Scalars['Int']
   name: Scalars['String']
   password?: InputMaybe<Scalars['String']>
-  paymentMethodID?: InputMaybe<Scalars['ID']>
+  paymentMethodID?: InputMaybe<Scalars['String']>
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>
   paymentPeriodicity: PaymentPeriodicity
   subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>
@@ -1738,7 +1741,7 @@ export type MutationUpdateUserConsentArgs = {
 }
 
 export type MutationUpdateUserSubscriptionArgs = {
-  id: Scalars['ID']
+  id: Scalars['String']
   input: SubscriptionInput
 }
 
@@ -1747,7 +1750,7 @@ export type MutationUploadUserProfileImageArgs = {
 }
 
 export type MutationVoteOnPollArgs = {
-  answerId: Scalars['ID']
+  answerId: Scalars['String']
 }
 
 export type Navigation = {
@@ -1770,14 +1773,13 @@ export type OAuth2Account = {
 export type Page = {
   __typename?: 'Page'
   createdAt: Scalars['DateTime']
-  disableComments: Scalars['Boolean']
   draft?: Maybe<PageRevision>
-  hidden: Scalars['Boolean']
-  id: Scalars['ID']
+  id: Scalars['String']
   modifiedAt: Scalars['DateTime']
   pending?: Maybe<PageRevision>
   published?: Maybe<PageRevision>
-  shared: Scalars['Boolean']
+  publishedAt: Scalars['DateTime']
+  slug?: Maybe<Scalars['String']>
   tags: Array<Tag>
   url: Scalars['String']
 }
@@ -1788,7 +1790,7 @@ export type PageCreatedAction = BaseAction &
     actionType: ActionType
     date: Scalars['DateTime']
     page: Page
-    pageId: Scalars['ID']
+    pageId: Scalars['String']
   }
 
 export type PageFilter = {
@@ -1812,11 +1814,11 @@ export type PageInfo = {
 
 export type PageModel = {
   __typename?: 'PageModel'
-  id: Scalars['ID']
+  id: Scalars['String']
 }
 
 export type PageModelInput = {
-  id: Scalars['ID']
+  id: Scalars['String']
 }
 
 export type PageNavigationLink = BaseNavigationLink &
@@ -1827,7 +1829,7 @@ export type PageNavigationLink = BaseNavigationLink &
     label: Scalars['String']
     modifiedAt: Scalars['DateTime']
     page: Page
-    pageID: Scalars['ID']
+    pageID: Scalars['String']
     type: Scalars['String']
   }
 
@@ -1836,12 +1838,11 @@ export type PageRevision = HasBlockContent & {
   blocks: Array<BlockContent>
   createdAt: Scalars['DateTime']
   description?: Maybe<Scalars['String']>
-  id: Scalars['ID']
+  id: Scalars['String']
   image?: Maybe<Image>
   imageID?: Maybe<Scalars['String']>
   properties: Array<Property>
   publishedAt: Scalars['DateTime']
-  slug?: Maybe<Scalars['String']>
   socialMediaDescription?: Maybe<Scalars['String']>
   socialMediaImage?: Maybe<Image>
   socialMediaImageID?: Maybe<Scalars['String']>
@@ -1860,10 +1861,10 @@ export type PageTeaser = BaseTeaser &
   HasOptionalPage & {
     __typename?: 'PageTeaser'
     image?: Maybe<Image>
-    imageID?: Maybe<Scalars['ID']>
+    imageID?: Maybe<Scalars['String']>
     lead?: Maybe<Scalars['String']>
     page?: Maybe<Page>
-    pageID?: Maybe<Scalars['ID']>
+    pageID?: Maybe<Scalars['String']>
     preTitle?: Maybe<Scalars['String']>
     style: TeaserStyle
     title?: Maybe<Scalars['String']>
@@ -1871,7 +1872,7 @@ export type PageTeaser = BaseTeaser &
   }
 
 export type PageTeaserInput = {
-  imageID?: InputMaybe<Scalars['ID']>
+  imageID?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
   preTitle?: InputMaybe<Scalars['String']>
   style: TeaserStyle
@@ -1909,7 +1910,7 @@ export type PaginatedPollVotes = {
 
 export type Payment = {
   __typename?: 'Payment'
-  id: Scalars['ID']
+  id: Scalars['String']
   intentSecret?: Maybe<Scalars['String']>
   paymentMethod: PaymentMethod
   state: PaymentState
@@ -1917,8 +1918,8 @@ export type Payment = {
 
 export type PaymentFromInvoiceInput = {
   failureURL?: InputMaybe<Scalars['String']>
-  invoiceID: Scalars['ID']
-  paymentMethodID?: InputMaybe<Scalars['ID']>
+  invoiceID: Scalars['String']
+  paymentMethodID?: InputMaybe<Scalars['String']>
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>
   successURL?: InputMaybe<Scalars['String']>
 }
@@ -1926,7 +1927,7 @@ export type PaymentFromInvoiceInput = {
 export type PaymentMethod = {
   __typename?: 'PaymentMethod'
   description: Scalars['String']
-  id: Scalars['ID']
+  id: Scalars['String']
   image?: Maybe<Image>
   imageId?: Maybe<Scalars['String']>
   name: Scalars['String']
@@ -1966,7 +1967,7 @@ export type Peer = {
   __typename?: 'Peer'
   createdAt: Scalars['DateTime']
   hostURL: Scalars['String']
-  id: Scalars['ID']
+  id: Scalars['String']
   isDisabled?: Maybe<Scalars['Boolean']>
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
@@ -1979,12 +1980,12 @@ export type PeerArticleTeaser = BaseTeaser &
   HasPeer & {
     __typename?: 'PeerArticleTeaser'
     article?: Maybe<Article>
-    articleID?: Maybe<Scalars['ID']>
+    articleID?: Maybe<Scalars['String']>
     image?: Maybe<Image>
-    imageID?: Maybe<Scalars['ID']>
+    imageID?: Maybe<Scalars['String']>
     lead?: Maybe<Scalars['String']>
     peer?: Maybe<Peer>
-    peerID?: Maybe<Scalars['ID']>
+    peerID?: Maybe<Scalars['String']>
     preTitle?: Maybe<Scalars['String']>
     style: TeaserStyle
     title?: Maybe<Scalars['String']>
@@ -1992,8 +1993,8 @@ export type PeerArticleTeaser = BaseTeaser &
   }
 
 export type PeerArticleTeaserInput = {
-  articleID?: InputMaybe<Scalars['ID']>
-  imageID?: InputMaybe<Scalars['ID']>
+  articleID?: InputMaybe<Scalars['String']>
+  imageID?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
   preTitle?: InputMaybe<Scalars['String']>
   style: TeaserStyle
@@ -2036,13 +2037,13 @@ export type Phrase = {
 
 export type PolisConversationBlock = BaseBlock & {
   __typename?: 'PolisConversationBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   conversationID?: Maybe<Scalars['String']>
   type: Scalars['String']
 }
 
 export type PolisConversationBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   conversationID?: InputMaybe<Scalars['String']>
   type: Scalars['String']
 }
@@ -2050,42 +2051,42 @@ export type PolisConversationBlockInput = {
 export type PollAnswerInVote = {
   __typename?: 'PollAnswerInVote'
   answer: Scalars['String']
-  id: Scalars['ID']
+  id: Scalars['String']
 }
 
 export type PollAnswerWithVoteCount = {
   __typename?: 'PollAnswerWithVoteCount'
   answer?: Maybe<Scalars['String']>
-  id: Scalars['ID']
-  pollId: Scalars['ID']
+  id: Scalars['String']
+  pollId: Scalars['String']
   votes: Scalars['Int']
 }
 
 export type PollBlock = BaseBlock &
   HasOptionalPoll & {
     __typename?: 'PollBlock'
-    blockStyle?: Maybe<Scalars['ID']>
+    blockStyle?: Maybe<Scalars['String']>
     image?: Maybe<Image>
     poll?: Maybe<FullPoll>
-    pollId?: Maybe<Scalars['ID']>
+    pollId?: Maybe<Scalars['String']>
     type: Scalars['String']
   }
 
 export type PollBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   type: Scalars['String']
 }
 
 export type PollExternalVote = {
   __typename?: 'PollExternalVote'
   amount: Scalars['VoteValue']
-  answerId: Scalars['ID']
-  id: Scalars['ID']
+  answerId: Scalars['String']
+  id: Scalars['String']
 }
 
 export type PollExternalVoteSource = {
   __typename?: 'PollExternalVoteSource'
-  id: Scalars['ID']
+  id: Scalars['String']
   source?: Maybe<Scalars['String']>
   voteAmounts: Array<PollExternalVote>
 }
@@ -2096,19 +2097,19 @@ export type PollStartedAction = BaseAction &
     actionType: ActionType
     date: Scalars['DateTime']
     poll: FullPoll
-    pollId: Scalars['ID']
+    pollId: Scalars['String']
   }
 
 export type PollVote = {
   __typename?: 'PollVote'
   answer: PollAnswerInVote
-  answerId: Scalars['ID']
+  answerId: Scalars['String']
   createdAt: Scalars['DateTime']
   disabled: Scalars['Boolean']
   fingerprint?: Maybe<Scalars['String']>
-  id: Scalars['ID']
-  pollId: Scalars['ID']
-  userId?: Maybe<Scalars['ID']>
+  id: Scalars['String']
+  pollId: Scalars['String']
+  userId?: Maybe<Scalars['String']>
 }
 
 export type PollVoteFilter = {
@@ -2163,7 +2164,7 @@ export type Query = {
    *
    */
   activeSubscribers: Array<DashboardSubscription>
-  /** Returns an article by id. */
+  /** Returns an article by id or slug. */
   article: Article
   /** Returns a paginated list of articles based on the filters given. */
   articles: PaginatedArticles
@@ -2214,12 +2215,6 @@ export type Query = {
   expectedRevenue: Array<DashboardInvoice>
   /** Returns an image by id. */
   getImage: ImageV2
-  /** Returns a navigation by id. */
-  getNavigationById: Navigation
-  /** Returns a navigation by key. */
-  getNavigationByKey: Navigation
-  /** Returns a list of navigations. */
-  getNavigations: Array<Navigation>
   /**
    *
    *       Returns the most viewed articles in descending order.
@@ -2254,6 +2249,10 @@ export type Query = {
   memberPlan?: Maybe<MemberPlan>
   /** This query returns the member plans. */
   memberPlans: MemberPlanConnection
+  /** Returns a navigation by id or key. */
+  navigation: Navigation
+  /** Returns a list of navigations. */
+  navigations: Array<Navigation>
   /**
    *
    *       Returns all new deactivations in a given timeframe.
@@ -2268,7 +2267,7 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>
-  /** Returns an page by id. */
+  /** Returns a page by id or slug. */
   page: Page
   /** Returns a paginated list of pages based on the filters given. */
   pages: PaginatedPages
@@ -2341,7 +2340,7 @@ export type Query = {
    */
   userConsents: Array<UserConsent>
   /** This query returns the answerId of a poll if the user has already voted on it. */
-  userPollVote?: Maybe<Scalars['ID']>
+  userPollVote?: Maybe<Scalars['String']>
   versionInformation: VersionInformation
 }
 
@@ -2350,11 +2349,12 @@ export type Query_EntitiesArgs = {
 }
 
 export type QueryArticleArgs = {
-  id: Scalars['String']
+  id?: InputMaybe<Scalars['String']>
+  slug?: InputMaybe<Scalars['String']>
 }
 
 export type QueryArticlesArgs = {
-  cursorId?: InputMaybe<Scalars['ID']>
+  cursorId?: InputMaybe<Scalars['String']>
   filter?: InputMaybe<ArticleFilter>
   order?: InputMaybe<SortOrder>
   skip?: InputMaybe<Scalars['Int']>
@@ -2367,12 +2367,12 @@ export type QueryAuthProvidersArgs = {
 }
 
 export type QueryAuthorArgs = {
-  id?: InputMaybe<Scalars['ID']>
+  id?: InputMaybe<Scalars['String']>
   slug?: InputMaybe<Scalars['Slug']>
 }
 
 export type QueryAuthorsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>
+  cursor?: InputMaybe<Scalars['String']>
   filter?: InputMaybe<AuthorFilter>
   order?: InputMaybe<SortOrder>
   skip?: InputMaybe<Scalars['Int']>
@@ -2390,11 +2390,11 @@ export type QueryBannersArgs = {
 }
 
 export type QueryCheckInvoiceStatusArgs = {
-  id: Scalars['ID']
+  id: Scalars['String']
 }
 
 export type QueryCommentsArgs = {
-  itemId: Scalars['ID']
+  itemId: Scalars['String']
   order?: InputMaybe<SortOrder>
   sort?: InputMaybe<CommentSort>
 }
@@ -2412,7 +2412,7 @@ export type QueryEventArgs = {
 }
 
 export type QueryEventsArgs = {
-  cursorId?: InputMaybe<Scalars['ID']>
+  cursorId?: InputMaybe<Scalars['String']>
   filter?: InputMaybe<EventFilter>
   order?: InputMaybe<SortOrder>
   skip?: InputMaybe<Scalars['Int']>
@@ -2427,14 +2427,6 @@ export type QueryExpectedRevenueArgs = {
 
 export type QueryGetImageArgs = {
   id: Scalars['String']
-}
-
-export type QueryGetNavigationByIdArgs = {
-  id: Scalars['String']
-}
-
-export type QueryGetNavigationByKeyArgs = {
-  key: Scalars['String']
 }
 
 export type QueryHotAndTrendingArgs = {
@@ -2455,17 +2447,22 @@ export type QueryImportedEventsArgs = {
 }
 
 export type QueryMemberPlanArgs = {
-  id?: InputMaybe<Scalars['ID']>
+  id?: InputMaybe<Scalars['String']>
   slug?: InputMaybe<Scalars['Slug']>
 }
 
 export type QueryMemberPlansArgs = {
-  cursor?: InputMaybe<Scalars['ID']>
+  cursor?: InputMaybe<Scalars['String']>
   filter?: InputMaybe<MemberPlanFilter>
   order?: InputMaybe<SortOrder>
   skip?: InputMaybe<Scalars['Int']>
   sort?: InputMaybe<MemberPlanSort>
   take?: InputMaybe<Scalars['Int']>
+}
+
+export type QueryNavigationArgs = {
+  id?: InputMaybe<Scalars['String']>
+  key?: InputMaybe<Scalars['String']>
 }
 
 export type QueryNewDeactivationsArgs = {
@@ -2479,11 +2476,12 @@ export type QueryNewSubscribersArgs = {
 }
 
 export type QueryPageArgs = {
-  id: Scalars['String']
+  id?: InputMaybe<Scalars['String']>
+  slug?: InputMaybe<Scalars['String']>
 }
 
 export type QueryPagesArgs = {
-  cursorId?: InputMaybe<Scalars['ID']>
+  cursorId?: InputMaybe<Scalars['String']>
   filter?: InputMaybe<PageFilter>
   order?: InputMaybe<SortOrder>
   skip?: InputMaybe<Scalars['Int']>
@@ -2492,7 +2490,7 @@ export type QueryPagesArgs = {
 }
 
 export type QueryPeerArgs = {
-  id?: InputMaybe<Scalars['ID']>
+  id?: InputMaybe<Scalars['String']>
   slug?: InputMaybe<Scalars['Slug']>
 }
 
@@ -2511,11 +2509,11 @@ export type QueryPhraseArgs = {
 }
 
 export type QueryPollArgs = {
-  id: Scalars['ID']
+  id: Scalars['String']
 }
 
 export type QueryPollVotesArgs = {
-  cursorId?: InputMaybe<Scalars['ID']>
+  cursorId?: InputMaybe<Scalars['String']>
   filter?: InputMaybe<PollVoteFilter>
   order?: InputMaybe<SortOrder>
   skip?: InputMaybe<Scalars['Int']>
@@ -2524,7 +2522,7 @@ export type QueryPollVotesArgs = {
 }
 
 export type QueryPrimaryBannerArgs = {
-  documentId: Scalars['ID']
+  documentId: Scalars['String']
   documentType: BannerDocumentType
 }
 
@@ -2556,7 +2554,7 @@ export type QuerySubscriptionFlowsArgs = {
 }
 
 export type QueryTagsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>
+  cursor?: InputMaybe<Scalars['String']>
   filter?: InputMaybe<TagFilter>
   order?: InputMaybe<SortOrder>
   skip?: InputMaybe<Scalars['Int']>
@@ -2575,23 +2573,23 @@ export type QueryUserConsentsArgs = {
 }
 
 export type QueryUserPollVoteArgs = {
-  pollId: Scalars['ID']
+  pollId: Scalars['String']
 }
 
 export type QuoteBlock = BaseBlock &
   HasImage & {
     __typename?: 'QuoteBlock'
     author?: Maybe<Scalars['String']>
-    blockStyle?: Maybe<Scalars['ID']>
+    blockStyle?: Maybe<Scalars['String']>
     image?: Maybe<Image>
-    imageID?: Maybe<Scalars['ID']>
+    imageID?: Maybe<Scalars['String']>
     quote?: Maybe<Scalars['String']>
     type: Scalars['String']
   }
 
 export type QuoteBlockInput = {
   author?: InputMaybe<Scalars['String']>
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   quote?: InputMaybe<Scalars['String']>
   type: Scalars['String']
 }
@@ -2615,13 +2613,13 @@ export type RegistrationAndPayment = {
 
 export type RichTextBlock = BaseBlock & {
   __typename?: 'RichTextBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   richText: Scalars['RichText']
   type: Scalars['String']
 }
 
 export type RichTextBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   richText: Scalars['RichText']
   type: Scalars['String']
 }
@@ -2684,13 +2682,13 @@ export enum SortOrder {
 
 export type SoundCloudTrackBlock = BaseBlock & {
   __typename?: 'SoundCloudTrackBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   trackID?: Maybe<Scalars['String']>
   type: Scalars['String']
 }
 
 export type SoundCloudTrackBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   trackID?: InputMaybe<Scalars['String']>
   type: Scalars['String']
 }
@@ -2707,7 +2705,7 @@ export type Subscription = {
   autoRenew: Scalars['Boolean']
   deactivation?: Maybe<SubscriptionDeactivation>
   extendable: Scalars['Boolean']
-  id: Scalars['ID']
+  id: Scalars['String']
   memberPlan: MemberPlan
   monthlyAmount: Scalars['Int']
   paidUntil?: Maybe<Scalars['DateTime']>
@@ -2724,7 +2722,7 @@ export type SubscriptionCreatedAction = BaseAction &
     actionType: ActionType
     date: Scalars['DateTime']
     subscription: Subscription
-    subscriptionId: Scalars['ID']
+    subscriptionId: Scalars['String']
   }
 
 export type SubscriptionDeactivation = {
@@ -2763,7 +2761,7 @@ export type SubscriptionFlowModel = {
 
 export type SubscriptionInput = {
   autoRenew: Scalars['Boolean']
-  id: Scalars['ID']
+  id: Scalars['String']
   memberPlanID: Scalars['String']
   monthlyAmount: Scalars['Int']
   paymentMethodID: Scalars['String']
@@ -2786,7 +2784,7 @@ export type SystemMailModel = {
 
 export type Tag = {
   __typename?: 'Tag'
-  id: Scalars['ID']
+  id: Scalars['String']
   main: Scalars['Boolean']
   tag?: Maybe<Scalars['String']>
   type?: Maybe<TagType>
@@ -2823,14 +2821,14 @@ export type Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | P
 
 export type TeaserGridBlock = BaseBlock & {
   __typename?: 'TeaserGridBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   numColumns: Scalars['Int']
   teasers: Array<Teaser>
   type: Scalars['String']
 }
 
 export type TeaserGridBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   numColumns: Scalars['Int']
   teasers: Array<TeaserInput>
   type: Scalars['String']
@@ -2838,13 +2836,13 @@ export type TeaserGridBlockInput = {
 
 export type TeaserGridFlexBlock = BaseBlock & {
   __typename?: 'TeaserGridFlexBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   flexTeasers: Array<FlexTeaser>
   type: Scalars['String']
 }
 
 export type TeaserGridFlexBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   flexTeasers: Array<FlexTeaserInput>
   type: Scalars['String']
 }
@@ -2859,7 +2857,7 @@ export type TeaserInput = {
 
 export type TeaserListBlock = BaseBlock & {
   __typename?: 'TeaserListBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   filter: TeaserListBlockFilter
   skip?: Maybe<Scalars['Int']>
   sort?: Maybe<TeaserListBlockSort>
@@ -2881,7 +2879,7 @@ export type TeaserListBlockFilterInput = {
 }
 
 export type TeaserListBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   filter: TeaserListBlockFilterInput
   skip?: InputMaybe<Scalars['Int']>
   sort?: InputMaybe<TeaserListBlockSort>
@@ -2912,14 +2910,14 @@ export enum TeaserType {
 
 export type TikTokVideoBlock = BaseBlock & {
   __typename?: 'TikTokVideoBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   type: Scalars['String']
   userID?: Maybe<Scalars['String']>
   videoID?: Maybe<Scalars['String']>
 }
 
 export type TikTokVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   type: Scalars['String']
   userID?: InputMaybe<Scalars['String']>
   videoID?: InputMaybe<Scalars['String']>
@@ -2927,14 +2925,14 @@ export type TikTokVideoBlockInput = {
 
 export type TitleBlock = BaseBlock & {
   __typename?: 'TitleBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   lead?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
   type: Scalars['String']
 }
 
 export type TitleBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
   title?: InputMaybe<Scalars['String']>
   type: Scalars['String']
@@ -2942,14 +2940,14 @@ export type TitleBlockInput = {
 
 export type TwitterTweetBlock = BaseBlock & {
   __typename?: 'TwitterTweetBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   tweetID?: Maybe<Scalars['String']>
   type: Scalars['String']
   userID?: Maybe<Scalars['String']>
 }
 
 export type TwitterTweetBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   tweetID?: InputMaybe<Scalars['String']>
   type: Scalars['String']
   userID?: InputMaybe<Scalars['String']>
@@ -2957,7 +2955,7 @@ export type TwitterTweetBlockInput = {
 
 export type UnknownBlock = {
   __typename?: 'UnknownBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   type: Scalars['String']
 }
 
@@ -2965,7 +2963,7 @@ export type UpdateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>
   active: Scalars['Boolean']
   cta?: InputMaybe<Scalars['String']>
-  id: Scalars['ID']
+  id: Scalars['String']
   imageId?: InputMaybe<Scalars['String']>
   showOnArticles: Scalars['Boolean']
   showOnPages?: InputMaybe<Array<PageModelInput>>
@@ -3039,7 +3037,7 @@ export type UserCreatedAction = BaseAction &
     actionType: ActionType
     date: Scalars['DateTime']
     user: User
-    userId: Scalars['ID']
+    userId: Scalars['String']
   }
 
 export enum UserEvent {
@@ -3073,26 +3071,26 @@ export type VersionInformation = {
 
 export type VimeoVideoBlock = BaseBlock & {
   __typename?: 'VimeoVideoBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   type: Scalars['String']
   videoID?: Maybe<Scalars['String']>
 }
 
 export type VimeoVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   type: Scalars['String']
   videoID?: InputMaybe<Scalars['String']>
 }
 
 export type YouTubeVideoBlock = BaseBlock & {
   __typename?: 'YouTubeVideoBlock'
-  blockStyle?: Maybe<Scalars['ID']>
+  blockStyle?: Maybe<Scalars['String']>
   type: Scalars['String']
   videoID?: Maybe<Scalars['String']>
 }
 
 export type YouTubeVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['ID']>
+  blockStyle?: InputMaybe<Scalars['String']>
   type: Scalars['String']
   videoID?: InputMaybe<Scalars['String']>
 }
@@ -3117,7 +3115,7 @@ export type _Service = {
 
 export type OverriddenRating = {
   __typename?: 'overriddenRating'
-  answerId: Scalars['ID']
+  answerId: Scalars['String']
   value?: Maybe<Scalars['Int']>
 }
 

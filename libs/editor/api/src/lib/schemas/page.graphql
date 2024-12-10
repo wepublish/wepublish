@@ -70,7 +70,7 @@ fragment PageRef on Page {
 
 query PageList(
   $filter: PageFilter
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -98,41 +98,46 @@ mutation CreatePage($input: PageInput!) {
   }
 }
 
-mutation UpdatePage($id: ID!, $input: PageInput!) {
+mutation UpdatePage($id: String!, $input: PageInput!) {
   updatePage(id: $id, input: $input) {
     ...MutationPage
   }
 }
 
-mutation PublishPage($id: ID!, $publishAt: DateTime, $publishedAt: DateTime, $updatedAt: DateTime) {
+mutation PublishPage(
+  $id: String!
+  $publishAt: DateTime
+  $publishedAt: DateTime
+  $updatedAt: DateTime
+) {
   publishPage(id: $id, publishAt: $publishAt, publishedAt: $publishedAt, updatedAt: $updatedAt) {
     ...MutationPage
   }
 }
 
-mutation UnpublishPage($id: ID!) {
+mutation UnpublishPage($id: String!) {
   unpublishPage(id: $id) {
     ...MutationPage
   }
 }
 
-mutation DeletePage($id: ID!) {
+mutation DeletePage($id: String!) {
   deletePage(id: $id) {
     ...MutationPage
   }
 }
 
-mutation DuplicatePage($id: ID!) {
+mutation DuplicatePage($id: String!) {
   duplicatePage(id: $id) {
     ...MutationPage
   }
 }
 
-query PagePreviewLink($id: ID!, $hours: Int!) {
+query PagePreviewLink($id: String!, $hours: Int!) {
   pagePreviewLink(id: $id, hours: $hours)
 }
 
-query Page($id: ID!) {
+query Page($id: String!) {
   page(id: $id) {
     id
 

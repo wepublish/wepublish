@@ -27,12 +27,12 @@ mutation DeleteBanner($id: String!) {
 }
 
 input CreateBannerInput {
-  title: ID!
+  title: String!
   text: String!
   active: Boolean!
   showOnArticles: Boolean!
   actions: [CreateBannerActionInput]!
-  imageId: ID!
+  imageId: String!
 }
 
 input CreateBannerActionInput {
@@ -42,13 +42,13 @@ input CreateBannerActionInput {
 }
 
 input UpdateBannerInput {
-  id: ID!
+  id: String!
   title: String!
   text: String!
   active: Boolean!
   showOnArticles: Boolean!
   actions: [CreateBannerActionInput!]
-  imageId: ID!
+  imageId: String!
 }
 
 fragment PageRef on PageModel {

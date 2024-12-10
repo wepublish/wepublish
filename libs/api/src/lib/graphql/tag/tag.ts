@@ -2,7 +2,6 @@ import {Tag, TagType} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -29,7 +28,7 @@ export const GraphQLTagType = new GraphQLEnumType({
 export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
   name: 'Tag',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     tag: {type: GraphQLString},
     type: {type: GraphQLTagType},
     main: {type: new GraphQLNonNull(GraphQLBoolean)},
