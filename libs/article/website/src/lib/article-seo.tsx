@@ -110,9 +110,6 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
             <meta key={'og:image:xl'} property="og:image" content={seo.image.xl ?? ''} />
             <meta key={'og:image:width:xl'} property="og:image:width" content="1200" />
 
-            <meta key={'og:image:l'} property="og:image" content={seo.image.l ?? ''} />
-            <meta key={'og:image:width:l'} property="og:image:width" content="1000" />
-
             <meta key={'og:image:m'} property="og:image" content={seo.image.m ?? ''} />
             <meta key={'og:image:width:m'} property="og:image:width" content="800" />
 
@@ -124,6 +121,9 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
 
             <meta key={'og:image:xxs'} property="og:image" content={seo.image.xxs ?? ''} />
             <meta key={'og:image:width:xxs'} property="og:image:width" content="200" />
+
+            <meta key={'og:image:l'} property="og:image" content={seo.image.l ?? ''} />
+            <meta key={'og:image:width:l'} property="og:image:width" content="1000" />
           </>
         )}
 
