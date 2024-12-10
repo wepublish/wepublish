@@ -120,7 +120,9 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
 
     blocks: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlockInput)))
-    }
+    },
+
+    likes: {type: GraphQLInt}
   })
 })
 

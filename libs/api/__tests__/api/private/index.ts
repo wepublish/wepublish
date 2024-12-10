@@ -89,6 +89,7 @@ export type ArticleInput = {
   hideAuthor: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['ID']>;
   lead?: InputMaybe<Scalars['String']>;
+  likes?: InputMaybe<Scalars['Int']>;
   preTitle?: InputMaybe<Scalars['String']>;
   properties: Array<PropertiesInput>;
   seoTitle?: InputMaybe<Scalars['String']>;
