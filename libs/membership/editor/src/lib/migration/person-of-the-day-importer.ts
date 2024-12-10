@@ -54,6 +54,11 @@ export class PersonOfTheDayImporter extends BaseImporter {
       throw new Error(`Tag ${this.person.categories} not found`)
     }
 
+    const searchSliderTagId = await this.getOrCreateTagId('search-slider')
+    if (!searchSliderTagId) {
+      throw new Error(`Tag search-slider not found`)
+    }
+
     if (this.person.image) {
       this.imageID = await this.transferImage(
         this.person.name,
@@ -95,13 +100,13 @@ export class PersonOfTheDayImporter extends BaseImporter {
           title: this.person.name,
           lead: this.person.title || '',
           authorIDs: [],
-          tags: [tagId],
+          tags: [tagId, searchSliderTagId],
           properties: [],
           hideAuthor: false,
           shared: false,
           breaking: false,
           socialMediaAuthorIDs: [],
-          blocks: blocks,
+          blocks,
           imageID: this.person.image ? this.imageID : null,
           likes: this.person.likes
         }

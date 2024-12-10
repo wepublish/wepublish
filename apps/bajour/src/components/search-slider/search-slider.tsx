@@ -14,7 +14,8 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 
 import {SearchBar} from './search-bar'
 import {useLikeStatus} from './use-like-status'
-import {Maybe} from 'graphql/jsutils/Maybe'
+
+export const SEARCH_SLIDER_TAG = 'search-slider'
 
 const TAKE = 20
 
@@ -128,7 +129,7 @@ const SlideTitle = styled('span')`
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.58);
 `
 
-type SliderArticle = Omit<ApiV1.Article, 'comments' | 'socialMediaAuthors'> & {
+export type SliderArticle = Omit<ApiV1.Article, 'comments' | 'socialMediaAuthors'> & {
   blocks: ApiV1.Block[]
 }
 
@@ -149,8 +150,11 @@ export function SearchSlider({article}: SearchSliderProps) {
   const [phraseWithTagQuery] = ApiV1.usePhraseWithTagLazyQuery()
   const [getMoreArticles] = ApiV1.useFullArticleListLazyQuery()
 
-  // getting the tag out of the inital article
-  const tag = useMemo<string>(() => article?.tags[0]?.tag || '', [article])
+  // getting the first tag from initial article which is not the technical search-slider tag.
+  const tag = useMemo<string>(
+    () => article?.tags.find(tag => tag.tag !== SEARCH_SLIDER_TAG)?.tag || '',
+    [article]
+  )
 
   /**
    * Instanciate Keen Slider

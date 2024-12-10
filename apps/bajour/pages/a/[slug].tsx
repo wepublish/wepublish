@@ -23,7 +23,7 @@ import {BriefingNewsletter} from '../../src/components/briefing-newsletter/brief
 import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
 import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
 import {Container} from '../../src/components/layout/container'
-import {SliderArticle} from '../../src/components/search-slider/search-slider'
+import {SEARCH_SLIDER_TAG, SliderArticle} from '../../src/components/search-slider/search-slider'
 import {SearchSlider} from '../../src/components/search-slider/search-slider'
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
@@ -72,11 +72,7 @@ export default function ArticleBySlugIdOrToken() {
   } as ComponentProps<typeof ArticleContainer>
 
   const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
-  // add more tags
-  const SEARCH_SLIDER_TAGS = ['baslerin-des-tages']
-  const isSearchSlider = data?.article?.tags.some(
-    ({tag}) => tag && SEARCH_SLIDER_TAGS.includes(tag)
-  )
+  const isSearchSlider = data?.article?.tags.some(({tag}) => tag === SEARCH_SLIDER_TAG)
 
   return (
     <WebsiteBuilderProvider
