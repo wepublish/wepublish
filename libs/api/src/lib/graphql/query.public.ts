@@ -60,7 +60,7 @@ import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {getPublicPeerProfile} from './peer-profile/peer-profile.public-queries'
 import {getPeerByIdOrSlug} from './peer/peer.public-queries'
 import {GraphQLPublicPhrase} from './phrase/phrase'
-import {queryPhrase} from './phrase/phrase.public-queries'
+import {queryPhrase, queryPhraseWithTag} from './phrase/phrase.public-queries'
 import {GraphQLFullPoll} from './poll/poll'
 import {getPoll, userPollVote} from './poll/poll.public-queries'
 import {GraphQLSlug} from '@wepublish/utils/api'
@@ -580,6 +580,31 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           take,
           skip,
           pageSort,
+          articleSort,
+          order
+        )
+    },
+
+    phraseWithTag: {
+      type: GraphQLPublicPhrase,
+      description:
+        'This query performs a fulltext search on titles and blocks of articles with a specific tag and returns all matching ones.',
+      args: {
+        query: {type: new GraphQLNonNull(GraphQLString)},
+        tag: {type: new GraphQLNonNull(GraphQLString)},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        articleSort: {type: GraphQLPublicArticleSort, defaultValue: ArticleSort.PublishedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve: (root, {query, tag, take, skip, articleSort, order}, {prisma, loaders}) =>
+        queryPhraseWithTag(
+          query,
+          tag,
+          prisma,
+          loaders.publicArticles,
+          take,
+          skip,
           articleSort,
           order
         )
