@@ -2,9 +2,9 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import {Checkbox, FormControlLabel, InputAdornment, Slider, styled} from '@mui/material'
 import {
   Challenge,
-  UserForm,
   defaultRegisterSchema,
   requiredRegisterSchema,
+  UserForm,
   useUser,
   zodAlwaysRefine
 } from '@wepublish/authentication/website'
@@ -154,7 +154,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   onSubscribeWithRegister,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate
+  donate,
+  returningUserId
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale, siteTitle},
@@ -177,6 +178,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       ),
     [fields]
   )
+  const hasUserContext = hasUser || !!returningUserId
 
   /**
    * Done like this to avoid type errors due to z.ZodObject vs z.ZodEffect<z.ZodObject>.
@@ -200,7 +202,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const {control, handleSubmit, watch, setValue, resetField} = useForm<
     z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
   >({
-    resolver: zodResolver(hasUser ? loggedInSchema : loggedOutSchema),
+    resolver: zodResolver(hasUserContext ? loggedInSchema : loggedOutSchema),
     defaultValues: {
       ...defaults,
       monthlyAmount: 0,
@@ -276,6 +278,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const onSubmit = handleSubmit(data => {
     const subscribeData: SubscribeMutationVariables = {
+      userId: hasUser ? undefined : returningUserId,
       monthlyAmount,
       memberPlanId: data.memberPlanId,
       paymentMethodId: data.paymentMethodId,
@@ -283,7 +286,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       autoRenew: data.autoRenew
     }
 
-    if (hasUser) {
+    if (hasUserContext) {
       return callAction(onSubscribe)(subscribeData)
     }
 
@@ -378,6 +381,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
+      {!hasUser && returningUserId && (
+        <SubscribeSection>
+          <H5 component="h2">
+            {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}, willkommen
+            zurück!
+          </H5>
+        </SubscribeSection>
+      )}
       <SubscribeSection>
         {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
           <H5 component="h2">Abo wählen</H5>
@@ -459,7 +470,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           )}
         />
 
-        {!hasUser && <UserForm control={control} fields={fields} />}
+        {!hasUserContext && <UserForm control={control} fields={fields} />}
       </SubscribeSection>
 
       <SubscribeSection>
@@ -513,7 +524,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         </SubscribePayment>
       </SubscribeSection>
 
-      {!hasUser && (
+      {!hasUserContext && (
         <SubscribeSection>
           <H5 component="h2">Spam-Schutz</H5>
 
