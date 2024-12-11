@@ -122,6 +122,7 @@ export interface ArticleMetadata {
   readonly socialMediaDescription?: string
   readonly socialMediaAuthors: AuthorRefFragment[]
   readonly socialMediaImage?: ImageRefFragment
+  readonly likes: number
 }
 
 export interface InfoData {
@@ -313,6 +314,9 @@ function ArticleMetadataPanel({
           <Panel>
             <PaddingBottom>
               {t('articleEditor.panels.totalCharCount', {totalCharCount: infoData.charCount})}
+            </PaddingBottom>
+            <PaddingBottom>
+              {t('articleEditor.panels.likeCount', {likeCount: value.likes})}
             </PaddingBottom>
             <Group>
               <ControlLabel>

@@ -18,6 +18,8 @@ import {BaselBriefing, BaselBriefingProps} from '../../briefing/basel-briefing'
 import {isAnyBriefing} from '../../briefing/is-briefing'
 import {FrageDesTages} from '../../frage-des-tages/frage-des-tages'
 import {isFrageDesTages} from '../../frage-des-tages/is-frage-des-tages'
+import {isSearchSlider} from '../../search-slider/is-search-slider'
+import {SearchSliderBlock} from '../../search-slider/search-slider-block'
 import {isSmallTeaser, SmallTeaser} from '../blocks/small-teaser'
 import {isWideTeaser, WideTeaser} from '../blocks/wide-teaser'
 import {
@@ -49,6 +51,7 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
       cond([
         [isOldRelatedArticles, block => <Fragment />],
         [isFrageDesTages, block => <FrageDesTages {...block} />],
+        [isSearchSlider, block => <SearchSliderBlock {...block} />],
         [isBestOfWePublish, block => <BestOfWePublish {...block} />],
         [isAnyBriefing, block => <BaselBriefing {...(block as BaselBriefingProps)} />],
         [isArchive, block => <Archive {...block} />],

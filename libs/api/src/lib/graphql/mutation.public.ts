@@ -83,6 +83,8 @@ import {
 import {mailLogType} from '@wepublish/mail/api'
 import {sub} from 'date-fns'
 import {GraphQLDateTime} from 'graphql-scalars'
+import {GraphQLPublicLikeCreateInput, GraphQLPublicLikeDeleteInput} from './like/like'
+import {updateLikes} from './like/like.public-mutation'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -135,6 +137,22 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description: 'This mutation revokes and deletes the active session.',
       resolve: (root, _, {authenticateUser, prisma: {session}}) =>
         revokeSessionByToken(authenticateUser, session)
+    },
+
+    addLike: {
+      type: new GraphQLNonNull(GraphQLInt),
+      args: {input: {type: new GraphQLNonNull(GraphQLPublicLikeCreateInput)}},
+      description: 'Add a like to an existing article.',
+      resolve: (_, {input}, {prisma: {article, articleRevision}}) =>
+        updateLikes(input, 1, article, articleRevision)
+    },
+
+    removeLike: {
+      type: new GraphQLNonNull(GraphQLInt),
+      args: {input: {type: new GraphQLNonNull(GraphQLPublicLikeDeleteInput)}},
+      description: 'Remove a like from an existing article.',
+      resolve: (_, {input}, {prisma: {article, articleRevision}}) =>
+        updateLikes(input, -1, article, articleRevision)
     },
 
     // Comment
