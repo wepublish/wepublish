@@ -31,6 +31,12 @@ type Article {
   id: ID!
 }
 
+type AvailablePaymentMethod {
+  forceAutoRenewal: Boolean!
+  paymentMethods: [PaymentMethod!]!
+  paymentPeriodicities: [PaymentPeriodicity!]!
+}
+
 type Banner {
   actions: [BannerAction!]
   active: Boolean!
@@ -121,6 +127,11 @@ input CreateBannerInput {
   showOnPages: [PageModelInput!]
   text: String!
   title: String!
+}
+
+enum Currency {
+  CHF
+  EUR
 }
 
 type DashboardInvoice {
@@ -282,8 +293,22 @@ type MailTemplateWithUrlAndStatusModel {
 }
 
 type MemberPlan {
+  amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
+  availablePaymentMethods: [AvailablePaymentMethod!]!
+  currency: Currency!
+  description: RichText
+  extendable: Boolean!
+  failPage: Page
+  failPageId: ID
   id: ID!
+  image: Image
+  maxCount: Int
   name: String!
+  slug: String!
+  successPage: Page
+  successPageId: ID
+  tags: [String!]
 }
 
 type Mutation {
@@ -394,8 +419,13 @@ type PaginatedPollVotes {
 }
 
 type PaymentMethod {
+  description: String!
   id: ID!
+  image: Image
+  imageId: String
   name: String!
+  paymentProviderID: String!
+  slug: Slug!
 }
 
 enum PaymentPeriodicity {
@@ -578,6 +608,8 @@ input SingleEventFilter {
   id: String!
   source: String!
 }
+
+scalar Slug
 
 enum SortOrder {
   Ascending

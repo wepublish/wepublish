@@ -36,27 +36,11 @@ exports[`Event should render Default 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/200/100"
+        content="https://unsplash.it/1200/400"
         property="og:image"
       />
       <meta
-        content="200"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/300/200"
-        property="og:image"
-      />
-      <meta
-        content="300"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="500"
+        content="1200"
         property="og:image:width"
       />
       <meta
@@ -68,19 +52,35 @@ exports[`Event should render Default 1`] = `
         property="og:image:width"
       />
       <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
+        property="og:image:width"
+      />
+      <meta
         content="https://unsplash.it/1000/400"
         property="og:image"
       />
       <meta
         content="1000"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/1200/400"
-        property="og:image"
-      />
-      <meta
-        content="1200"
         property="og:image:width"
       />
       <meta
@@ -576,27 +576,11 @@ exports[`Event should render WithClassName 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/200/100"
+        content="https://unsplash.it/1200/400"
         property="og:image"
       />
       <meta
-        content="200"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/300/200"
-        property="og:image"
-      />
-      <meta
-        content="300"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="500"
+        content="1200"
         property="og:image:width"
       />
       <meta
@@ -608,19 +592,35 @@ exports[`Event should render WithClassName 1`] = `
         property="og:image:width"
       />
       <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
+        property="og:image:width"
+      />
+      <meta
         content="https://unsplash.it/1000/400"
         property="og:image"
       />
       <meta
         content="1000"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/1200/400"
-        property="og:image"
-      />
-      <meta
-        content="1200"
         property="og:image:width"
       />
       <meta
@@ -1116,27 +1116,11 @@ exports[`Event should render WithEmotion 1`] = `
         rel="canonical"
       />
       <meta
-        content="https://unsplash.it/200/100"
+        content="https://unsplash.it/1200/400"
         property="og:image"
       />
       <meta
-        content="200"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/300/200"
-        property="og:image"
-      />
-      <meta
-        content="300"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="500"
+        content="1200"
         property="og:image:width"
       />
       <meta
@@ -1148,19 +1132,35 @@ exports[`Event should render WithEmotion 1`] = `
         property="og:image:width"
       />
       <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="500"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/300/200"
+        property="og:image"
+      />
+      <meta
+        content="300"
+        property="og:image:width"
+      />
+      <meta
+        content="https://unsplash.it/200/100"
+        property="og:image"
+      />
+      <meta
+        content="200"
+        property="og:image:width"
+      />
+      <meta
         content="https://unsplash.it/1000/400"
         property="og:image"
       />
       <meta
         content="1000"
-        property="og:image:width"
-      />
-      <meta
-        content="https://unsplash.it/1200/400"
-        property="og:image"
-      />
-      <meta
-        content="1200"
         property="og:image:width"
       />
       <meta
