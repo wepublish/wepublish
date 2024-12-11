@@ -151,8 +151,7 @@ const TextContainer = styled('div')`
 `
 
 const BtnContainer = styled('div')`
-  display: grid;
-  grid-template-columns: min-content auto;
+  display: flex;
   gap: ${({theme}) => theme.spacing(1)};
   padding-top: ${({theme}) => theme.spacing(2)};
   font-size: 2em;
@@ -395,6 +394,10 @@ export function SearchSlider({article}: SearchSliderProps) {
    */
   const [likes, setLikes] = useState(mainArticle?.likes || 0)
   const {isLiked, updateLikeStatus} = useLikeStatus(mainArticle?.id ?? '')
+
+  useEffect(() => {
+    setLikes(mainArticle?.likes || 0)
+  }, [mainArticle])
 
   const handleLike = async () => {
     if (isLiked) {
