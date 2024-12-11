@@ -85,7 +85,6 @@ export const PageSEO = ({page}: BuilderPageSEOProps) => {
         {seo.image && (
           <>
             <meta key={'og:image:xl'} property="og:image" content={seo.image.xl ?? ''} />
-            <meta key={'og:image:xl'} property="og:image" content={seo.image.xl ?? ''} />
             <meta key={'og:image:width:xl'} property="og:image:width" content="1200" />
 
             <meta key={'og:image:l'} property="og:image" content={seo.image.l ?? ''} />
@@ -102,6 +101,9 @@ export const PageSEO = ({page}: BuilderPageSEOProps) => {
 
             <meta key={'og:image:xxs'} property="og:image" content={seo.image.xxs ?? ''} />
             <meta key={'og:image:width:xxs'} property="og:image:width" content="200" />
+
+            <meta key={'og:image:l'} property="og:image" content={seo.image.l ?? ''} />
+            <meta key={'og:image:width:l'} property="og:image:width" content="1000" />
           </>
         )}
 
