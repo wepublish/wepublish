@@ -1,8 +1,8 @@
 import {styled} from '@mui/material'
 import {BuilderListicleBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Block, ListicleBlock as ListicleBlockType} from '@wepublish/website/api'
+import {BlockContent, ListicleBlock as ListicleBlockType} from '@wepublish/website/api'
 
-export const isListicleBlock = (block: Block): block is ListicleBlockType =>
+export const isListicleBlock = (block: BlockContent): block is ListicleBlockType =>
   block.__typename === 'ListicleBlock'
 
 export const ListicleBlockWrapper = styled('div')`

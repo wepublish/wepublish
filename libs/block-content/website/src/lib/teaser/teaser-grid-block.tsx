@@ -1,13 +1,13 @@
 import {css, styled} from '@mui/material'
 import {
-  Block,
+  BlockContent,
   FlexAlignment,
   Teaser,
   TeaserGridBlock as TeaserGridBlockType
 } from '@wepublish/website/api'
 import {BuilderTeaserGridBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-export const isTeaserGridBlock = (block: Block): block is TeaserGridBlockType =>
+export const isTeaserGridBlock = (block: BlockContent): block is TeaserGridBlockType =>
   block.__typename === 'TeaserGridBlock'
 
 export const TeaserGridBlockWrapper = styled('div', {
@@ -61,6 +61,8 @@ export const alignmentForTeaserBlock = (index: number, numColumns: number): Flex
   const rowIndex = Math.floor(index / numColumns)
 
   return {
+    i: index,
+    static: false,
     h: 1,
     w: 12 / numColumns,
     x: (12 / numColumns) * columnIndex,

@@ -9,6 +9,6 @@ export const navigationLinkToUrl = <T extends NonNullable<NavigationQuery['navig
     case 'PageNavigationLink':
       return link.page?.url
     case 'ExternalNavigationLink':
-      return link.url
+      return link.url ?? undefined
   }
 }

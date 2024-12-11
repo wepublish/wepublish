@@ -886,6 +886,8 @@ type MemberPlan {
 }
 
 type Mutation {
+  """Creates an article."""
+  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String!, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   createBanner(input: CreateBannerInput!): Banner!
 
   """Creates a new block style."""
@@ -900,6 +902,9 @@ type Mutation {
   """Creates a new navigation."""
   createNavigation(key: String!, links: [BaseNavigationLinkInput!]!, name: String!): Navigation!
 
+  """Creates a page."""
+  createPage(blocks: [BlockContentInput!]!, description: String, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
@@ -908,6 +913,9 @@ type Mutation {
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
+
+  """Deletes an article."""
+  deleteArticle(id: String!): String!
   deleteBanner(id: String!): Boolean
 
   """Deletes an existing block style."""
@@ -922,6 +930,9 @@ type Mutation {
   """Deletes an existing navigation."""
   deleteNavigation(id: String!): Navigation!
 
+  """Deletes a page."""
+  deletePage(id: String!): String!
+
   """Delete poll votes"""
   deletePollVotes(ids: [ID!]!): DeletePollVotesResult!
 
@@ -934,6 +945,12 @@ type Mutation {
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
 
+  """Duplicates an article."""
+  duplicateArticle(id: String!): Article!
+
+  """Duplicates a page."""
+  duplicatePage(id: String!): Page!
+
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
 
@@ -943,7 +960,7 @@ type Mutation {
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
 
-  """Publishes an page at the given time."""
+  """Publishes a page at the given time."""
   publishPage(id: String!, publishedAt: DateTime!): Page!
   syncTemplates: Boolean
 
@@ -953,7 +970,7 @@ type Mutation {
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!
 
-  """Unpublishes all revisions of an page."""
+  """Unpublishes all revisions of a page."""
   unpublishPage(id: String!): Page!
 
   """Updates an article."""
@@ -972,7 +989,7 @@ type Mutation {
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [BaseNavigationLinkInput!]!, name: String!): Navigation!
 
-  """Updates an page."""
+  """Updates a page."""
   updatePage(blocks: [BlockContentInput!]!, description: String, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """Updates an existing setting."""

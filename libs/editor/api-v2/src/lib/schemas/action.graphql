@@ -1,0 +1,126 @@
+query RecentActions {
+  actions {
+    ...FullAction
+  }
+}
+
+fragment ArticleCreatedActionRevision on ArticleRevision {
+  title
+}
+
+fragment PageCreatedActionRevision on PageRevision {
+  title
+}
+
+fragment FullAction on Action {
+  __typename
+
+  ... on ArticleCreatedAction {
+    date
+    article {
+      id
+      createdAt
+      url
+
+      draft {
+        ...ArticleCreatedActionRevision
+      }
+
+      pending {
+        ...ArticleCreatedActionRevision
+      }
+
+      published {
+        ...ArticleCreatedActionRevision
+      }
+    }
+  }
+
+  ... on PageCreatedAction {
+    date
+    page {
+      id
+      createdAt
+      url
+
+      draft {
+        ...PageCreatedActionRevision
+      }
+
+      pending {
+        ...PageCreatedActionRevision
+      }
+
+      published {
+        ...PageCreatedActionRevision
+      }
+    }
+  }
+
+  ... on CommentCreatedAction {
+    date
+    comment {
+      id
+      user {
+        name
+      }
+      guestUsername
+      title
+      text
+    }
+  }
+
+  ... on PollStartedAction {
+    date
+    poll {
+      id
+      question
+    }
+  }
+
+  ... on SubscriptionCreatedAction {
+    date
+    subscription {
+      id
+
+      # @TODO: Figure out a good way to go about this
+      #   user {
+      #     email
+      #   }
+
+      memberPlan {
+        name
+      }
+    }
+  }
+
+  ... on AuthorCreatedAction {
+    date
+    author {
+      id
+      name
+      jobTitle
+    }
+  }
+
+  ... on UserCreatedAction {
+    date
+    user {
+      id
+      firstName
+      name
+      address {
+        city
+      }
+    }
+  }
+
+  ... on EventCreatedAction {
+    date
+    event {
+      id
+      name
+      location
+    }
+  }
+}

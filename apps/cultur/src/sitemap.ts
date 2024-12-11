@@ -29,7 +29,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
       query: ApiV1.SitemapPageListDocument,
       variables: {
         take: 100,
-        sort: ApiV1.PublishedPageSort.PublishedAt,
+        sort: ApiV1.PageSort.PublishedAt,
         order: ApiV1.SortOrder.Descending
       } as ApiV1.PageListQueryVariables
     })

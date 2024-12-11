@@ -1,7 +1,7 @@
 import {Meta} from '@storybook/react'
 import {BreakBlock} from '../break/break-block'
 import {css} from '@emotion/react'
-import {FullImageFragment, LinkPageBreakBlock} from '@wepublish/website/api'
+import {FullImageFragment, BreakBlock as BreakBlockType} from '@wepublish/website/api'
 
 export default {
   component: BreakBlock,
@@ -46,11 +46,10 @@ const image = {
 } as FullImageFragment
 
 const breakBlock = {
-  __typename: 'LinkPageBreakBlock',
+  __typename: 'BreakBlock',
   text: 'Break block test',
   linkText: 'Link Text',
   linkURL: 'https://example.com',
-  styleOption: 'default',
   richText: [
     {
       type: 'paragraph',
@@ -106,21 +105,12 @@ const breakBlock = {
   ],
   linkTarget: null,
   hideButton: true,
-  templateOption: 'none',
-  layoutOption: 'image-left',
   image
-} as LinkPageBreakBlock
+} as BreakBlockType
 
 export const Default = {
   args: {
     ...breakBlock
-  }
-}
-
-export const ImageRight = {
-  args: {
-    ...breakBlock,
-    layoutOption: 'image-right'
   }
 }
 
@@ -152,13 +142,5 @@ export const WithoutImage = {
   args: {
     ...breakBlock,
     image: null
-  }
-}
-
-export const WithoutImageRight = {
-  args: {
-    ...breakBlock,
-    image: null,
-    layoutOption: 'image-right'
   }
 }

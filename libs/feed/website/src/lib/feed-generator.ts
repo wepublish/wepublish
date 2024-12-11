@@ -20,21 +20,21 @@ export const generateFeed =
       const seo = getArticleSEO(article)
 
       const content = await toHtml(
-        article.blocks?.reduce((acc, curr) => {
+        article.published?.blocks?.reduce((acc, curr) => {
           if (isRichTextBlock(curr)) {
             acc.push(...curr.richText)
           }
 
           return acc
-        }, [] as Node[])
+        }, [] as Node[]) ?? []
       )
 
       return {
         title: seo.schema.headline,
         image: seo.schema.image,
         description: seo.schema.description,
-        content: content ? content : article.lead,
-        author: article.authors.map(author => ({
+        content: content ? content : article.published?.lead,
+        author: article.published?.authors.map(author => ({
           name: author.name,
           link: author.url
         })),

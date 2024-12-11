@@ -51,7 +51,7 @@ input UpdateBannerInput {
   imageId: String!
 }
 
-fragment PageRef on PageModel {
+fragment Page2Ref on PageModel {
   id
 }
 
@@ -65,7 +65,7 @@ fragment FullBanner on Banner {
 
   showOnArticles
   showOnPages {
-    ...PageRef
+    ...Page2Ref
   }
 
   image {

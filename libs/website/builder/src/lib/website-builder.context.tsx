@@ -31,7 +31,7 @@ import {
   BuilderBlocksProps,
   BuilderBreakBlockProps,
   BuilderCommentBlockProps,
-  BuilderIframeBlockProps,
+  BuilderIFrameBlockProps,
   BuilderEventBlockProps,
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
@@ -194,7 +194,7 @@ export type WebsiteBuilderProps = {
     PolisConversation: ComponentType<BuilderPolisConversationBlockProps>
     TikTokVideo: ComponentType<BuilderTikTokVideoBlockProps>
     BildwurfAd: ComponentType<BuilderBildwurfAdBlockProps>
-    IFrame: ComponentType<BuilderIframeBlockProps>
+    IFrame: ComponentType<BuilderIFrameBlockProps>
     Event: ComponentType<BuilderEventBlockProps>
     Poll: ComponentType<BuilderPollBlockProps>
     Listicle: ComponentType<BuilderListicleBlockProps>

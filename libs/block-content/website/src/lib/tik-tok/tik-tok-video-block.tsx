@@ -1,8 +1,8 @@
 import {styled} from '@mui/material'
 import {BuilderTikTokVideoBlockProps} from '@wepublish/website/builder'
-import {Block, TikTokVideoBlock as TikTokVideoBlockType} from '@wepublish/website/api'
+import {BlockContent, TikTokVideoBlock as TikTokVideoBlockType} from '@wepublish/website/api'
 
-export const isTikTokVideoBlock = (block: Block): block is TikTokVideoBlockType =>
+export const isTikTokVideoBlock = (block: BlockContent): block is TikTokVideoBlockType =>
   block.__typename === 'TikTokVideoBlock'
 
 export const TikTokVideoBlockWrapper = styled('div')`

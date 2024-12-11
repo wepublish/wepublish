@@ -15,7 +15,7 @@ import {
   SliderBall,
   SliderBallFill
 } from '../teaser-slider/teaser-slider'
-import {Block, ImageGalleryBlock} from '@wepublish/website/api'
+import {BlockContent, ImageGalleryBlock} from '@wepublish/website/api'
 
 export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => {
   const {
@@ -72,5 +72,5 @@ export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => 
   )
 }
 
-export const isImageSliderBlockStyle = (block: Block): block is ImageGalleryBlock =>
+export const isImageSliderBlockStyle = (block: BlockContent): block is ImageGalleryBlock =>
   allPass([hasBlockStyle('Slider'), isImageGalleryBlock])(block)

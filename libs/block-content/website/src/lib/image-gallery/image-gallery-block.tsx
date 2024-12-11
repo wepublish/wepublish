@@ -1,8 +1,8 @@
 import {ImageList, ImageListItem, styled} from '@mui/material'
-import {Block, ImageGalleryBlock as ImageGalleryBlockType} from '@wepublish/website/api'
+import {BlockContent, ImageGalleryBlock as ImageGalleryBlockType} from '@wepublish/website/api'
 import {BuilderImageGalleryBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-export const isImageGalleryBlock = (block: Block): block is ImageGalleryBlockType =>
+export const isImageGalleryBlock = (block: BlockContent): block is ImageGalleryBlockType =>
   block.__typename === 'ImageGalleryBlock'
 
 export const ImageGalleryBlockWrapper = styled('figure')`

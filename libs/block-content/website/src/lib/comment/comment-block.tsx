@@ -1,8 +1,8 @@
 import {styled} from '@mui/material'
-import {Block, CommentBlock as CommentBlockType} from '@wepublish/website/api'
+import {BlockContent, CommentBlock as CommentBlockType} from '@wepublish/website/api'
 import {BuilderCommentBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-export const isCommentBlock = (block: Block): block is CommentBlockType =>
+export const isCommentBlock = (block: BlockContent): block is CommentBlockType =>
   block.__typename === 'CommentBlock'
 
 export const CommentBlockWrapper = styled('article')`

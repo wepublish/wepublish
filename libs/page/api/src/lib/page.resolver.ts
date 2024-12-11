@@ -1,6 +1,13 @@
 import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
 import {PageDataloaderService} from './page-dataloader.service'
-import {Page, PageListArgs, PageRevision, PaginatedPages, UpdatePageInput} from './page.model'
+import {
+  CreatePageInput,
+  Page,
+  PageListArgs,
+  PageRevision,
+  PaginatedPages,
+  UpdatePageInput
+} from './page.model'
 import {Tag} from '@wepublish/tag/api'
 import {PageService} from './page.service'
 import {PageRevisionDataloaderService} from './page-revision-dataloader.service'
@@ -41,21 +48,42 @@ export class PageResolver {
   }
 
   @Mutation(() => Page, {
-    description: `Updates an page.`
+    description: `Creates a page.`
+  })
+  public createPage(@Args() input: CreatePageInput) {
+    return this.pageService.createPage(input)
+  }
+
+  @Mutation(() => Page, {
+    description: `Updates a page.`
   })
   public updatePage(@Args() input: UpdatePageInput) {
     return this.pageService.updatePage(input)
   }
 
   @Mutation(() => Page, {
-    description: `Publishes an page at the given time.`
+    description: `Duplicates a page.`
+  })
+  public duplicatePage(@Args('id') id: string) {
+    return this.pageService.duplicatePage(id)
+  }
+
+  @Mutation(() => String, {
+    description: `Deletes a page.`
+  })
+  public async deletePage(@Args('id') id: string) {
+    return (await this.pageService.deletePage(id)).id
+  }
+
+  @Mutation(() => Page, {
+    description: `Publishes a page at the given time.`
   })
   public publishPage(@Args('id') id: string, @Args('publishedAt') publishedAt: Date) {
     return this.pageService.publishPage(id, publishedAt)
   }
 
   @Mutation(() => Page, {
-    description: `Unpublishes all revisions of an page.`
+    description: `Unpublishes all revisions of a page.`
   })
   public unpublishPage(@Args('id') id: string) {
     return this.pageService.unpublishPage(id)

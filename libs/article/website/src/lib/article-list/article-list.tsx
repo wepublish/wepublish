@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {Article, ArticleTeaser, TeaserStyle} from '@wepublish/website/api'
+import {Article, ArticleTeaser, TeaserStyle, TeaserType} from '@wepublish/website/api'
 import {BuilderArticleListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useMemo} from 'react'
 
@@ -7,6 +7,7 @@ export const ArticleListWrapper = styled('article')``
 
 export const articleToTeaser = (article: Article): ArticleTeaser => ({
   __typename: 'ArticleTeaser',
+  type: TeaserType.Article,
   style: TeaserStyle.Default,
   article,
   image: null,

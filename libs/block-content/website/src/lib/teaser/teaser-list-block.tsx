@@ -1,9 +1,9 @@
-import {Block, TeaserListBlock as TeaserListBlockType} from '@wepublish/website/api'
+import {BlockContent, TeaserListBlock as TeaserListBlockType} from '@wepublish/website/api'
 import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {alignmentForTeaserBlock} from './teaser-grid-block'
 import {css, styled} from '@mui/material'
 
-export const isTeaserListBlock = (block: Block): block is TeaserListBlockType =>
+export const isTeaserListBlock = (block: BlockContent): block is TeaserListBlockType =>
   block.__typename === 'TeaserListBlock'
 
 export const TeaserListBlockWrapper = styled('section')`

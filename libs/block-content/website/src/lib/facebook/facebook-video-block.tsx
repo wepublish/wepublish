@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import {Block, FacebookVideoBlock as FacebookVideoBlockType} from '@wepublish/website/api'
+import {BlockContent, FacebookVideoBlock as FacebookVideoBlockType} from '@wepublish/website/api'
 import {BuilderFacebookVideoBlockProps} from '@wepublish/website/builder'
 import ReactPlayer from 'react-player'
 import {useId} from 'react'
 
-export const isFacebookVideoBlock = (block: Block): block is FacebookVideoBlockType =>
+export const isFacebookVideoBlock = (block: BlockContent): block is FacebookVideoBlockType =>
   block.__typename === 'FacebookVideoBlock'
 
 export const FacebookVideoBlockWrapper = styled('div')`

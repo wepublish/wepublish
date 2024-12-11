@@ -4,6 +4,7 @@ import {
   Article,
   ArticleListArgs,
   ArticleRevision,
+  CreateArticleInput,
   PaginatedArticles,
   UpdateArticleInput
 } from './article.model'
@@ -47,10 +48,31 @@ export class ArticleResolver {
   }
 
   @Mutation(() => Article, {
+    description: `Creates an article.`
+  })
+  public createArticle(@Args() input: CreateArticleInput) {
+    return this.articleService.createArticle(input)
+  }
+
+  @Mutation(() => Article, {
     description: `Updates an article.`
   })
   public updateArticle(@Args() input: UpdateArticleInput) {
     return this.articleService.updateArticle(input)
+  }
+
+  @Mutation(() => Article, {
+    description: `Duplicates an article.`
+  })
+  public duplicateArticle(@Args('id') id: string) {
+    return this.articleService.duplicateArticle(id)
+  }
+
+  @Mutation(() => String, {
+    description: `Deletes an article.`
+  })
+  public async deleteArticle(@Args('id') id: string) {
+    return (await this.articleService.deleteArticle(id)).id
   }
 
   @Mutation(() => Article, {
