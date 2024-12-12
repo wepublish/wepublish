@@ -13,6 +13,7 @@ import {
   FullMemberPlanFragment,
   PaymentPeriodicity,
   RegisterMutationVariables,
+  ResubscribeMutationVariables,
   SubscribeMutationVariables,
   UserAddressInput
 } from '@wepublish/website/api'
@@ -152,6 +153,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   className,
   onSubscribe,
   onSubscribeWithRegister,
+  onResubscribe,
   deactivateSubscriptionId,
   termsOfServiceUrl,
   donate,
@@ -278,7 +280,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const onSubmit = handleSubmit(data => {
     const subscribeData: SubscribeMutationVariables = {
-      userId: hasUser ? undefined : returningUserId,
       monthlyAmount,
       memberPlanId: data.memberPlanId,
       paymentMethodId: data.paymentMethodId,
@@ -286,7 +287,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       autoRenew: data.autoRenew
     }
 
-    if (hasUserContext) {
+    if (returningUserId) {
+      const resubscribeData: ResubscribeMutationVariables = {
+        ...subscribeData,
+        userId: returningUserId
+      }
+      return callAction(onResubscribe)(resubscribeData)
+    }
+
+    if (hasUser) {
       return callAction(onSubscribe)(subscribeData)
     }
 

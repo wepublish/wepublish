@@ -123,7 +123,6 @@ fragment FullInvoice on Invoice {
 }
 
 mutation Subscribe(
-    $userId: ID
     $memberPlanId: ID
     $memberPlanSlug: Slug
     $autoRenew: Boolean!
@@ -137,7 +136,6 @@ mutation Subscribe(
     $deactivateSubscriptionId: ID
 ) {
     createSubscription(
-        userId: $userId
         memberPlanID: $memberPlanId
         memberPlanSlug: $memberPlanSlug
         autoRenew: $autoRenew
@@ -154,7 +152,8 @@ mutation Subscribe(
     }
 }
 
-mutation SubscribeForUser(
+mutation Resubscribe(
+    $userId: ID
     $memberPlanId: ID
     $memberPlanSlug: Slug
     $autoRenew: Boolean!
@@ -163,11 +162,9 @@ mutation SubscribeForUser(
     $paymentMethodId: ID
     $paymentMethodSlug: Slug
     $subscriptionProperties: [PublicPropertiesInput!]
-    $successURL: String
-    $failureURL: String
-    $deactivateSubscriptionId: ID
 ) {
-    createSubscription(
+    createSubscriptionWithConfirmation(
+        userId: $userId
         memberPlanID: $memberPlanId
         memberPlanSlug: $memberPlanSlug
         autoRenew: $autoRenew
@@ -176,12 +173,7 @@ mutation SubscribeForUser(
         paymentMethodID: $paymentMethodId
         paymentMethodSlug: $paymentMethodSlug
         subscriptionProperties: $subscriptionProperties
-        successURL: $successURL
-        failureURL: $failureURL
-        deactivateSubscriptionId: $deactivateSubscriptionId
-    ) {
-        ...FullPayment
-    }
+    )
 }
 
 mutation PayInvoice(

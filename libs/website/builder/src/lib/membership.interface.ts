@@ -2,16 +2,16 @@ import {QueryResult} from '@apollo/client'
 import {RadioProps} from '@mui/material'
 import {
   ChallengeQuery,
-  FullSubscriptionFragment,
   FullInvoiceFragment,
+  FullMemberPlanFragment,
+  FullSubscriptionFragment,
   InvoicesQuery,
   MemberPlanListQuery,
   PaymentMethod,
   PaymentPeriodicity,
   RegisterMutationVariables,
   SubscribeMutationVariables,
-  SubscriptionsQuery,
-  FullMemberPlanFragment
+  SubscriptionsQuery
 } from '@wepublish/website/api'
 import {BuilderRegistrationFormProps} from './authentication.interface'
 import {BuilderUserFormFields} from './user.interface'
@@ -91,6 +91,9 @@ export type BuilderSubscribeProps<
     register: RegisterMutationVariables
   }) => Promise<void>
   onSubscribe?: (
+    data: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
+  ) => Promise<void>
+  onResubscribe?: (
     data: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
   ) => Promise<void>
   defaults?: Partial<{

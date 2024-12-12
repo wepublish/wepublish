@@ -1004,7 +1004,10 @@ type Mutation {
   registerMemberAndReceivePayment(name: String!, birthday: DateTime, firstName: String, email: String!, address: UserAddressInput, password: String, memberPlanID: ID, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: ID, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, challengeAnswer: ChallengeInput!): RegistrationAndPayment!
 
   """Allows authenticated users to create additional subscriptions"""
-  createSubscription(userId: ID, memberPlanID: ID, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: ID, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, deactivateSubscriptionId: ID): Payment!
+  createSubscription(memberPlanID: ID, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: ID, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, deactivateSubscriptionId: ID): Payment!
+
+  """Allows authenticated users to create additional subscriptions"""
+  createSubscriptionWithConfirmation(userId: ID, memberPlanID: ID, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: ID, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!]): Boolean!
 
   """This mutation extends an subscription early"""
   extendSubscription(subscriptionId: ID!, successURL: String, failureURL: String): Payment!

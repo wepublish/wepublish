@@ -12,18 +12,16 @@ import {
   SubscriptionEvent,
   User
 } from '@prisma/client'
-import {mailLogType} from '@wepublish/mail/api'
+import {MailContext, mailLogType} from '@wepublish/mail/api'
 import {unselectPassword} from '@wepublish/user/api'
 import {DataLoaderContext} from './context'
-import {InvoiceWithItems} from '@wepublish/payment/api'
+import {InvoiceWithItems, PaymentProvider} from '@wepublish/payment/api'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {SubscriptionWithRelations} from './db/subscription'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
-import {MailContext} from '@wepublish/mail/api'
-import {PaymentProvider} from '@wepublish/payment/api'
 import {logger} from '@wepublish/utils/api'
 import {ONE_DAY_IN_MILLISECONDS, ONE_MONTH_IN_MILLISECONDS} from './utility'
-import {SubscriptionEventDictionary, Action, LookupActionInput} from '@wepublish/membership/api'
+import {Action, LookupActionInput, SubscriptionEventDictionary} from '@wepublish/membership/api'
 import {add, format} from 'date-fns'
 
 export interface HandleSubscriptionChangeProps {
@@ -645,7 +643,8 @@ export class MemberContext implements MemberContextInterface {
     properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[],
     autoRenew: boolean,
     extendable: boolean,
-    startsAt?: Date | string
+    startsAt?: Date | string,
+    needsConfirmation?: boolean
   ): Promise<{subscription: SubscriptionWithRelations; invoice: InvoiceWithItems}> {
     if (!extendable && autoRenew) {
       throw new Error("You can't create a non extendable subscription that is autoRenew!")
@@ -684,7 +683,8 @@ export class MemberContext implements MemberContextInterface {
         },
         autoRenew,
         extendable,
-        currency: memberPlan.currency
+        currency: memberPlan.currency,
+        confirmed: !needsConfirmation
       },
       include: {
         deactivation: true,
@@ -701,7 +701,11 @@ export class MemberContext implements MemberContextInterface {
     const invoice = await this.renewSubscriptionForUser({subscription})
 
     // Send subscribe mail
-    await this.sendMailForSubscriptionEvent(SubscriptionEvent.SUBSCRIBE, subscription, {})
+
+    const subscriptionEvent = needsConfirmation
+      ? SubscriptionEvent.RESUBSCRIBE
+      : SubscriptionEvent.SUBSCRIBE
+    await this.sendMailForSubscriptionEvent(subscriptionEvent, subscription, {})
 
     return {
       subscription,

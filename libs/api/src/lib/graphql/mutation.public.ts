@@ -1,9 +1,9 @@
 import {
+  MemberPlan,
   PaymentState,
-  SubscriptionDeactivationReason,
-  UserEvent,
   Subscription,
-  MemberPlan
+  SubscriptionDeactivationReason,
+  UserEvent
 } from '@prisma/client'
 import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
@@ -32,10 +32,11 @@ import {
   SubscriptionNotExtendable,
   SubscriptionNotFound,
   SubscriptionToDeactivateDoesNotExist,
+  UserIdNotFound,
   UserInputError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
-import {logger} from '@wepublish/utils/api'
+import {GraphQLSlug, logger} from '@wepublish/utils/api'
 import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
 import {Validator} from '../validator'
 import {rateComment} from './comment-rating/comment-rating.public-mutation'
@@ -60,7 +61,6 @@ import {
   createUserSession,
   revokeSessionByToken
 } from './session/session.mutation'
-import {GraphQLSlug} from '@wepublish/utils/api'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription-public'
 import {updatePublicSubscription} from './subscription/subscription.public-mutation'
 import {
@@ -438,7 +438,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     createSubscription: {
       type: new GraphQLNonNull(GraphQLPublicPayment),
       args: {
-        userId: {type: GraphQLID},
         memberPlanID: {type: GraphQLID},
         memberPlanSlug: {type: GraphQLSlug},
         autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
@@ -457,7 +456,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(
         root,
         {
-          userId,
           memberPlanID,
           memberPlanSlug,
           autoRenew,
@@ -473,11 +471,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {prisma, loaders, memberContext, createPaymentWithProvider, authenticateUser}
       ) {
         // authenticate user
-        const getUserByUserId = async (userId: string) => ({
-          user: await prisma.user.findFirst({where: {id: userId}})
-        })
-        const {user} = userId ? await getUserByUserId(userId) : authenticateUser()
-
+        const {user} = authenticateUser()
         await memberContext.validateInputParamsCreateSubscription(
           memberPlanID,
           memberPlanSlug,
@@ -507,7 +501,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         // Check if subscription which should be deactivated exists
         let subscriptionToDeactivate: null | Subscription = null
-        if (deactivateSubscriptionId && !userId) {
+        if (deactivateSubscriptionId) {
           subscriptionToDeactivate = await prisma.subscription.findUnique({
             where: {
               id: deactivateSubscriptionId,
@@ -563,6 +557,122 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           failureURL,
           user
         })
+      }
+    },
+
+    createSubscriptionWithConfirmation: {
+      type: new GraphQLNonNull(GraphQLBoolean),
+      args: {
+        userId: {type: GraphQLID},
+        memberPlanID: {type: GraphQLID},
+        memberPlanSlug: {type: GraphQLSlug},
+        autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
+        paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
+        monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
+        paymentMethodID: {type: GraphQLID},
+        paymentMethodSlug: {type: GraphQLSlug},
+        subscriptionProperties: {
+          type: new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
+        }
+      },
+      description: 'Allows authenticated users to create additional subscriptions',
+      async resolve(
+        root,
+        {
+          userId,
+          memberPlanID,
+          memberPlanSlug,
+          autoRenew,
+          paymentPeriodicity,
+          monthlyAmount,
+          paymentMethodID,
+          paymentMethodSlug,
+          subscriptionProperties
+        },
+        {prisma, loaders, memberContext, createPaymentWithProvider, authenticateUser}
+      ) {
+        console.log({
+          memberPlanID,
+          memberPlanSlug,
+          autoRenew,
+          paymentPeriodicity,
+          monthlyAmount,
+          paymentMethodID,
+          paymentMethodSlug,
+          subscriptionProperties
+        })
+
+        try {
+          // authenticate user
+          const getUserByUserId = async (userId: string) => ({
+            user: await prisma.user.findFirst({where: {id: userId}})
+          })
+          const {user} = userId ? await getUserByUserId(userId) : authenticateUser()
+
+          if (!user) {
+            throw new UserIdNotFound()
+          }
+
+          await memberContext.validateInputParamsCreateSubscription(
+            memberPlanID,
+            memberPlanSlug,
+            paymentMethodID,
+            paymentMethodSlug
+          )
+
+          const memberPlan = await memberContext.getMemberPlanByIDOrSlug(
+            loaders,
+            memberPlanSlug,
+            memberPlanID
+          )
+          const paymentMethod = await memberContext.getPaymentMethodByIDOrSlug(
+            loaders,
+            paymentMethodSlug,
+            paymentMethodID
+          )
+
+          if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+
+          await memberContext.validateSubscriptionPaymentConfiguration(
+            memberPlan,
+            autoRenew,
+            paymentPeriodicity,
+            paymentMethod
+          )
+
+          const properties = await memberContext.processSubscriptionProperties(
+            subscriptionProperties
+          )
+
+          const {subscription, invoice} = await memberContext.createSubscription(
+            prisma,
+            user.id,
+            paymentMethod.id,
+            paymentPeriodicity,
+            monthlyAmount,
+            memberPlan.id,
+            properties,
+            autoRenew,
+            memberPlan.extendable,
+            undefined,
+            true
+          )
+
+          if (!invoice) {
+            logger('mutation.public').error(
+              'Could not create new invoice for subscription with ID "%s"',
+              subscription.id
+            )
+            throw new InternalError()
+          }
+
+          // send email with confirmation
+
+          return true
+        } catch (e: any) {
+          console.log(e.stack)
+          throw e
+        }
       }
     },
 

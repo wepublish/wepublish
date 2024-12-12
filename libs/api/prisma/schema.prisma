@@ -799,6 +799,7 @@ model Subscription {
   deactivation       SubscriptionDeactivation?
   extendable         Boolean                   @default(true)
   currency           Currency
+  confirmed          Boolean                   @default(true)
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
@@ -1137,6 +1138,7 @@ model UserFlowMail {
 
 enum SubscriptionEvent {
   SUBSCRIBE
+  RESUBSCRIBE
   INVOICE_CREATION
   RENEWAL_SUCCESS
   RENEWAL_FAILED

@@ -5,6 +5,7 @@ import {
   useInvoicesLazyQuery,
   useMemberPlanListQuery,
   useRegisterMutation,
+  useResubscribeMutation,
   useSubscribeMutation,
   useSubscriptionsLazyQuery
 } from '@wepublish/website/api'
@@ -59,6 +60,12 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
   const memberPlanList = useMemberPlanListQuery({
     variables: {
       take: 50
+    }
+  })
+
+  const [resubscribe] = useResubscribeMutation({
+    onCompleted() {
+      window.location.href = '/thank-you'
     }
   })
 
@@ -169,6 +176,11 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
               successURL: selectedMemberplan?.successPage?.url,
               failureURL: selectedMemberplan?.failPage?.url
             }
+          })
+        }}
+        onResubscribe={async formData => {
+          await resubscribe({
+            variables: formData
           })
         }}
         deactivateSubscriptionId={deactivateSubscriptionId}
