@@ -52,7 +52,10 @@ export default function Login({sessionToken}: LoginProps) {
 
           {!router.query?.mail ? (
             <Typography sx={{marginTop: 2}}>
-              Falls du noch keinen Account hast, <Link href={'/mitmachen'}>klicke hier.</Link>
+              Falls du noch keinen Account hast,{' '}
+              <Link href={'/mitmachen?memberPlanBySlug=bajour-member&additionalMemberPlans=upsell'}>
+                klicke hier.
+              </Link>
             </Typography>
           ) : (
             <Typography sx={{marginTop: 2}}>
