@@ -102,39 +102,43 @@ export class BaseImporter {
     image: ImageInfo,
     statusCallback: (status: DirectusSyncStatus) => void
   ) {
-    console.log(`    Checking if image exists on Wepublish...`)
+    try {
+      console.log(`    Checking if image exists on Wepublish...`)
 
-    const existingImageId = await this.checkImageExists(title, filename)
-    if (existingImageId) {
-      console.log(`    Image exists, skipping (${existingImageId})`)
-      statusCallback(DirectusSyncStatus.ImageUploaded)
-      return existingImageId
-    }
+      const existingImageId = await this.checkImageExists(title, filename)
+      if (existingImageId) {
+        console.log(`    Image exists, skipping (${existingImageId})`)
+        statusCallback(DirectusSyncStatus.ImageUploaded)
+        return existingImageId
+      }
 
-    console.log(`    Downloading Directus image`)
-    const file = await this.downloader.downloadImage(image)
+      console.log(`    Downloading Directus image`)
+      const file = await this.downloader.downloadImage(image)
 
-    console.log(`    Image download complete`)
-    statusCallback(DirectusSyncStatus.ImageDownloaded)
+      console.log(`    Image download complete`)
+      statusCallback(DirectusSyncStatus.ImageDownloaded)
 
-    console.log(`    Uploading image to wepublish`)
-    const result = await this.requests.uploadImage({
-      variables: {
-        input: {
-          file,
-          filename: filename,
-          title: title,
-          focalPoint: {
-            x: 0.5,
-            y: 0.5
+      console.log(`    Uploading image to wepublish`)
+      const result = await this.requests.uploadImage({
+        variables: {
+          input: {
+            file,
+            filename: filename,
+            title: title,
+            focalPoint: {
+              x: 0.5,
+              y: 0.5
+            }
           }
         }
-      }
-    })
+      })
 
-    console.log(`    Image upload complete.`)
-    statusCallback(DirectusSyncStatus.ImageUploaded)
+      console.log(`    Image upload complete.`)
+      statusCallback(DirectusSyncStatus.ImageUploaded)
 
-    return result.data?.uploadImage?.id
+      return result.data?.uploadImage?.id
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
