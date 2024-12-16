@@ -19,7 +19,6 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
-import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
 import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
 import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
 import {Container} from '../../src/components/layout/container'
@@ -99,7 +98,9 @@ export default function ArticleBySlugIdOrToken() {
           </ArticleWrapper>
         ) */}
 
-        {!isSearchSlider && <BriefingNewsletter />}
+        {!isSearchSlider && data?.article && (
+          <SearchSlider article={data.article as SliderArticle} />
+        )}
 
         {data?.article && !isSearchSlider && (
           <>
