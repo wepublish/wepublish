@@ -119,17 +119,24 @@ export class UsefulAtTheEndImporter extends BaseImporter {
 
     console.log(`    Publishing article...`)
     const date = `${this.useful.publicationDate}Z`
-    await this.requests.publishArticle({
-      variables: {
-        id: id!,
-        publishAt: date,
-        updatedAt: date,
-        publishedAt: date
-      }
-    })
+    try {
+      await this.requests.publishArticle({
+        variables: {
+          id: id!,
+          publishAt: date,
+          updatedAt: date,
+          publishedAt: date
+        }
+      })
 
-    console.log(`    Article published`)
-    this.useful.syncStatus = DirectusSyncStatus.ArticlePublished
+      console.log(`    Article published`)
+      this.useful.syncStatus = DirectusSyncStatus.ArticlePublished
+    } catch (error) {
+      console.log(error)
+      console.log(
+        `    Not able to publish article with id ${id}. Instead leave the article unpublished.`
+      )
+    }
   }
 
   private titleBlock(): TitleBlockInput {
