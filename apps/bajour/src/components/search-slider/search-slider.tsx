@@ -246,6 +246,7 @@ export function SearchSlider({article}: SearchSliderProps) {
             order: goesBack ? ApiV1.SortOrder.Ascending : ApiV1.SortOrder.Descending,
             filter: {
               title: searchQuery,
+              body: searchQuery,
               tags: tag ? [tag.id] : []
             }
           },
@@ -292,6 +293,7 @@ export function SearchSlider({article}: SearchSliderProps) {
             order: ApiV1.SortOrder.Descending,
             filter: {
               title: query,
+              body: query,
               tags: tag ? [tag.id] : []
             }
           },

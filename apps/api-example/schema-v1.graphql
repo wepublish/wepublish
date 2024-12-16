@@ -769,6 +769,7 @@ input ArticleFilter {
   title: String
   preTitle: String
   lead: String
+  body: String
   publicationDateFrom: DateFilter
   publicationDateTo: DateFilter
   authors: [ID!]
