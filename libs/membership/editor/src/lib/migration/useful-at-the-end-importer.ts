@@ -105,8 +105,9 @@ export class UsefulAtTheEndImporter extends BaseImporter {
           shared: false,
           breaking: false,
           socialMediaAuthorIDs: [],
-          blocks: blocks,
-          imageID: this.useful.image ? this.imageID : null
+          blocks,
+          imageID: this.useful.image ? this.imageID : null,
+          likes: Math.floor(Math.random() * (100 - 10 + 1) + 10)
         }
       }
     })
@@ -142,7 +143,7 @@ export class UsefulAtTheEndImporter extends BaseImporter {
     const text = this.useful.description.replace(/\n/, '')
     const richText = this.deserializer.run(text)
     return {
-      richText: richText
+      richText
     }
   }
 

@@ -30,7 +30,7 @@ const SearchInput = styled('input')<{expanded: boolean}>`
   top: 0;
   width: ${({expanded}) => (expanded ? '200px' : '0')};
   opacity: ${({expanded}) => (expanded ? '1' : '0')};
-  padding: ${({expanded}) => (expanded ? '0.5em' : '0')};
+  padding: 0.5em;
   pointer-events: ${({expanded}) => (expanded ? 'initial' : 'none')};
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -62,14 +62,18 @@ export function SearchBar({onSearchChange}: SearchBarProps) {
         type="text"
         onChange={e => onSearchChange(e.target.value)}
         expanded={expanded}
-        placeholder="Search..."
+        placeholder="Suche..."
       />
 
       {expanded && (
         <CloseIcon
           onClick={() => {
             setExpanded(false)
-            onSearchChange(null)
+
+            if (searchRef.current?.value) {
+              searchRef.current.value = ''
+              onSearchChange(null)
+            }
           }}
         />
       )}

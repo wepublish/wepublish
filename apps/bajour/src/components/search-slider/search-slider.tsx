@@ -21,52 +21,40 @@ import {useLikeStatus} from './use-like-status'
 
 export const SEARCH_SLIDER_TAG = 'search-slider'
 
-const TAKE = 20
+const TAKE = 50
 
 const SLIDER_SPACING = 12
 
-const SLIDER_EXTRA_SPACING_MAIN = 0
-const SLIDER_EXTRA_SPACING_MAIN_MD = 20
-
 const SLIDER_RATIO = 1.2
 
-const SLIDER_WIDTH = 80
-const SLIDER_WIDTH_MD = 130
-
-const SLIDER_MAIN_WIDTH = 150
-const SLIDER_MAIN_WIDTH_MD = 320
+const SLIDER_WIDTH = 160
+const SLIDER_WIDTH_MD = 300
 
 const SLIDER_HEIGHT = SLIDER_WIDTH * SLIDER_RATIO
 const SLIDER_HEIGHT_MD = SLIDER_WIDTH_MD * SLIDER_RATIO
 
-const SLIDER_MAIN_HEIGHT = (SLIDER_MAIN_WIDTH - SLIDER_EXTRA_SPACING_MAIN) * SLIDER_RATIO
-const SLIDER_MAIN_HEIGHT_MD = (SLIDER_MAIN_WIDTH_MD - SLIDER_EXTRA_SPACING_MAIN_MD) * SLIDER_RATIO
-
-const SLIDER_DOWN_SHIFT = (SLIDER_MAIN_HEIGHT - SLIDER_HEIGHT) / 2
-const SLIDER_DOWN_SHIFT_MD = (SLIDER_MAIN_HEIGHT_MD - SLIDER_HEIGHT_MD) / 3
-
 const Container = styled('div')`
   display: grid;
-  grid-template-columns:
-    calc(${SLIDER_WIDTH}px + ${SLIDER_SPACING}px)
-    auto;
+  grid-template-columns: 1fr;
+  row-gap: ${({theme}) => theme.spacing(2)};
+  column-gap: ${SLIDER_SPACING}px;
 
-  ${({theme}) => theme.breakpoints.up('md')} {
-    grid-template-columns:
-      calc(${SLIDER_MAIN_WIDTH_MD}px + ${SLIDER_WIDTH_MD}px + (2 * ${SLIDER_SPACING}px))
-      auto;
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    row-gap: ${({theme}) => theme.spacing(4)};
+    column-gap: ${SLIDER_SPACING * 2}px;
+    grid-template-columns: 20% auto;
   }
 `
 
 const HeaderContainer = styled('div')`
   display: grid;
   grid-template-columns: auto auto;
-  grid-column-start: 2;
-  grid-column-end: 3;
+  grid-column: -1/1;
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    grid-column-start: 2;
+    grid-column-end: 3;
     grid-template-columns: 1fr 1fr;
-    margin-bottom: -${SLIDER_DOWN_SHIFT_MD}px;
   }
 `
 
@@ -74,6 +62,11 @@ const TitleContainer = styled('div')`
   grid-column-start: 1;
   grid-column-end: 2;
   font-weight: bold;
+  padding-left: ${({theme}) => theme.spacing(2)};
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    padding-left: 0;
+  }
 `
 
 const TitleUpperPart = styled(H1)`
@@ -100,7 +93,7 @@ const TitleLowerPart = styled(H4)`
 const SearchContainer = styled('div')`
   grid-column-start: 2;
   grid-column-end: 3;
-  padding-right: ${({theme}) => theme.spacing(2)};
+  padding-right: ${({theme}) => theme.spacing(4)};
 
   text-align: end;
   font-size: ${({theme}) => theme.typography.subtitle2};
@@ -123,31 +116,25 @@ const HeaderUnderline = styled('div')`
   height: ${({theme}) => theme.spacing(2)};
   grid-column-start: 1;
   grid-column-end: 3;
-  margin-bottom: ${({theme}) => theme.spacing(2)};
-  margin-top: ${({theme}) => theme.spacing(2)};
   background-color: ${({theme}) => theme.palette.secondary.main};
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    margin-bottom: ${({theme}) => theme.spacing(3)};
-    margin-top: ${({theme}) => theme.spacing(3)};
-  }
 `
 
 const SliderContainer = styled('div')`
-  grid-column-start: 1;
-  grid-column-end: 3;
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    grid-column: 2/3;
+  }
 `
 
 const TextContainer = styled('div')`
-  grid-column-start: 2;
-  grid-column-end: 3;
+  grid-column: -1/1;
   max-width: 500px;
+  padding-left: ${({theme}) => theme.spacing(2)};
+  padding-right: ${({theme}) => theme.spacing(2)};
 
-  margin-right: ${({theme}) => theme.spacing(2)};
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    margin-top: -${SLIDER_DOWN_SHIFT_MD * 2}px;
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    grid-column: 2/3;
     margin-right: 0;
+    padding: unset;
   }
 `
 
@@ -161,31 +148,25 @@ const BtnContainer = styled('div')`
 const SlideItem = styled('div')<{mainImage?: boolean}>`
   cursor: pointer;
   min-height: unset !important;
-  height: ${props => (props.mainImage ? SLIDER_MAIN_HEIGHT : SLIDER_HEIGHT)}px;
-  min-width: ${props => (props.mainImage ? SLIDER_MAIN_WIDTH : SLIDER_WIDTH)}px !important;
-
-  margin-top: ${props => (props.mainImage ? 0 : SLIDER_DOWN_SHIFT)}px;
-
-  padding-left: ${props => (props.mainImage ? SLIDER_EXTRA_SPACING_MAIN : 0)}px;
-  padding-right: ${props => (props.mainImage ? SLIDER_EXTRA_SPACING_MAIN : 0)}px;
+  height: ${SLIDER_HEIGHT}px;
+  min-width: ${SLIDER_WIDTH}px !important;
+  border: 2px solid
+    ${({theme, mainImage}) => (mainImage ? theme.palette.primary.main : 'transparent')};
+  border-radius: 8px;
 
   img {
     width: 100%;
     height: 100%;
-    border-radius: 15px;
     object-fit: cover;
   }
 
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: ${props => (props.mainImage ? SLIDER_MAIN_HEIGHT_MD : SLIDER_HEIGHT_MD)}px;
-    min-width: ${props => (props.mainImage ? SLIDER_MAIN_WIDTH_MD : SLIDER_WIDTH_MD)}px !important;
-
-    margin-top: ${props => (props.mainImage ? 0 : SLIDER_DOWN_SHIFT_MD)}px;
-
-    padding-left: ${props => (props.mainImage ? SLIDER_EXTRA_SPACING_MAIN_MD : 0)}px;
-    padding-right: ${props => (props.mainImage ? SLIDER_EXTRA_SPACING_MAIN_MD : 0)}px;
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    border-width: 3px;
+    height: ${SLIDER_HEIGHT_MD}px;
+    min-width: ${SLIDER_WIDTH_MD}px !important;
   }
 `
+
 const SlideTitle = styled('span')`
   position: absolute;
   font-weight: bold;
@@ -214,7 +195,7 @@ const uniqueById = uniqWith(eqBy<ApiV1.FullArticleFragment>(a => a.id))
 
 export function SearchSlider({article}: SearchSliderProps) {
   const {
-    elements: {Image}
+    elements: {Image, H5}
   } = useWebsiteBuilder()
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slidesDetails, setSlidesDetails] = useState<TrackDetails['slides']>()
@@ -252,8 +233,10 @@ export function SearchSlider({article}: SearchSliderProps) {
           return
         }
 
-        // @TODO: Optimize this with hasNextPage & hasPreviousPage
-        // After hasPreviousPage has been fixed for cursor based navigation
+        if (goesBack && searchQuery) {
+          // prevents accidental loading of data while typing in the search bar
+          return
+        }
 
         const prevArticle = sliderArticles[slideIndex]
 
@@ -358,9 +341,6 @@ export function SearchSlider({article}: SearchSliderProps) {
     },
     detailsChanged: s => {
       setSlidesDetails(s.track.details.slides)
-    },
-    updated: (...args) => {
-      console.log(args)
     }
   })
 
@@ -384,14 +364,6 @@ export function SearchSlider({article}: SearchSliderProps) {
   const publicationDay = mainArticle?.publishedAt
     ? format(new Date(mainArticle?.publishedAt), 'eeee')
     : ''
-
-  function clickSlideItem(index: number) {
-    if (currentSlide === index) {
-      return
-    }
-
-    keenSliderRef.current?.moveToIdx(index)
-  }
 
   if (!sliderArticles.length || !mainArticle) {
     return null
@@ -436,8 +408,8 @@ export function SearchSlider({article}: SearchSliderProps) {
             <SlideItem
               key={idx}
               className={`keen-slider__slide`}
-              mainImage={false}
-              onClick={() => clickSlideItem(idx)}>
+              mainImage={mainArticle.id === article?.id}
+              onClick={() => keenSliderRef.current?.moveToIdx(idx)}>
               {article?.image && (
                 <>
                   <Image image={article.image} />
@@ -455,13 +427,13 @@ export function SearchSlider({article}: SearchSliderProps) {
       <TextContainer>
         <div>
           {mainArticle.preTitle ? (
-            <h2>{mainArticle.preTitle} </h2>
+            <H5 gutterBottom>{mainArticle.preTitle} </H5>
           ) : (
-            <h2>
+            <H5 gutterBottom>
               {mainArticle?.title}
 
               <span style={{fontSize: '1rem'}}>, weil ...</span>
-            </h2>
+            </H5>
           )}
         </div>
 
