@@ -266,7 +266,8 @@ export function mapEnumToGraphQLEnumValues(enumObject: unknown) {
 }
 
 /**
- * Parse rich text blocks plain text
+ * Parse rich text blocks to plain text. It allows to search in articles and pages for the whole content.
+ * TODO: write migration for existing articles and pages. Implement function on all page mutations.
  * @param blocks
  * @returns
  */

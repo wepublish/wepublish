@@ -92,9 +92,6 @@ export const createArticle = async (
     ...data
   } = input
 
-  // implemented test wise to also make text searchable.
-  // used with search slider migration for Bajour.
-  // todo: implement it for other article and page mutations
   const searchPlainText = blocksToSearchText(input.blocks as any[])
 
   return article.create({
@@ -505,6 +502,8 @@ export const updateArticle = async (
     throw new NotFound('article', id)
   }
 
+  const searchPlainText = blocksToSearchText(input.blocks as any[])
+
   return articleClient.update({
     where: {id},
     data: {
@@ -515,6 +514,7 @@ export const updateArticle = async (
         upsert: {
           update: {
             ...input,
+            searchPlainText,
             revision: article.pending
               ? article.pending.revision + 1
               : article.published
@@ -553,6 +553,7 @@ export const updateArticle = async (
           },
           create: {
             ...input,
+            searchPlainText,
             revision: article.pending
               ? article.pending.revision + 1
               : article.published
