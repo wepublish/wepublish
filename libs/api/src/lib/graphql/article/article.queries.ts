@@ -3,7 +3,6 @@ import {SortOrder, graphQLSortOrderToPrisma, getMaxTake} from '@wepublish/utils/
 import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article'
 import {ConnectionResult} from '../../db/common'
 import {mapDateFilterToPrisma} from '../utils'
-import util from 'util'
 
 export const createArticleOrder = (
   field: ArticleSort,
@@ -71,6 +70,23 @@ const createPreTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhe
 
     return {
       OR: [{draft: containsPreTitle}, {pending: containsPreTitle}, {published: containsPreTitle}]
+    }
+  }
+
+  return {}
+}
+
+const createBodyFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.body) {
+    const containsBody: Prisma.ArticleRevisionWhereInput = {
+      searchPlainText: {
+        contains: filter.body,
+        mode: 'insensitive'
+      }
+    }
+
+    return {
+      OR: [{draft: containsBody}, {pending: containsBody}, {published: containsBody}]
     }
   }
 
@@ -244,7 +260,9 @@ const createHiddenFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhere
 
 export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => ({
   AND: [
-    createTitleFilter(filter),
+    {
+      OR: [createTitleFilter(filter), createBodyFilter(filter)]
+    },
     createPreTitleFilter(filter),
     createPublicationDateFromFilter(filter),
     createPublicationDateToFilter(filter),
@@ -270,8 +288,6 @@ export const getArticles = async (
 ): Promise<ConnectionResult<ArticleWithRevisions>> => {
   const orderBy = createArticleOrder(sortedField, order)
   const where = createArticleFilter(filter)
-
-  console.log(util.inspect(where, {depth: null}))
 
   const [totalCount, articles] = await Promise.all([
     article.count({

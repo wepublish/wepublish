@@ -83,6 +83,7 @@ export interface ArticleFilter {
   readonly publicationDateFrom?: DateFilter
   readonly publicationDateTo?: DateFilter
   readonly lead?: string
+  readonly body?: string
   readonly draft?: boolean
   readonly published?: boolean
   readonly pending?: boolean
