@@ -505,6 +505,7 @@ exports[`Article should render Default 1`] = `
         <img
           alt="DSC07717"
           class="emotion-28 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -519,6 +520,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <figcaption
           class="emotion-30 emotion-31"
@@ -541,6 +543,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -555,6 +558,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -569,6 +573,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -583,6 +588,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -597,6 +603,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -611,6 +618,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -639,6 +647,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -653,6 +662,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -696,6 +706,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -710,6 +721,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -753,6 +765,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -767,6 +780,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -822,6 +836,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-90 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -836,6 +851,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
       </div>
       <div
@@ -1085,6 +1101,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1099,6 +1116,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -1156,6 +1174,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1170,6 +1189,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -1221,6 +1241,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1235,6 +1256,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -1280,6 +1302,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1294,6 +1317,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -1328,6 +1352,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1342,6 +1367,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -1391,6 +1417,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1405,6 +1432,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -1462,6 +1490,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1476,6 +1505,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -1527,6 +1557,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1541,6 +1572,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -1586,6 +1618,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1600,6 +1633,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -1634,6 +1668,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1648,6 +1683,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -1697,6 +1733,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1711,6 +1748,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -1768,6 +1806,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1782,6 +1821,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -1833,6 +1873,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1847,6 +1888,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -1881,6 +1923,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1895,6 +1938,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -1940,6 +1984,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1954,6 +1999,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -2203,6 +2249,7 @@ https://unsplash.it/200/200 200w"
             <img
               alt="DSC07717"
               class="emotion-37 emotion-29"
+              height="6000"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -2217,6 +2264,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
+              width="4000"
             />
           </div>
           <div
@@ -3140,6 +3188,7 @@ exports[`Article should render WithChildren 1`] = `
         <img
           alt="DSC07717"
           class="emotion-28 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3154,6 +3203,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <figcaption
           class="emotion-30 emotion-31"
@@ -3176,6 +3226,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3190,6 +3241,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -3204,6 +3256,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3218,6 +3271,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -3232,6 +3286,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3246,6 +3301,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -3274,6 +3330,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3288,6 +3345,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -3331,6 +3389,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3345,6 +3404,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -3388,6 +3448,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3402,6 +3463,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -3457,6 +3519,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-90 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3471,6 +3534,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
       </div>
       <div
@@ -3747,6 +3811,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3761,6 +3826,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -3818,6 +3884,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3832,6 +3899,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -3883,6 +3951,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3897,6 +3966,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -3942,6 +4012,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3956,6 +4027,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -3990,6 +4062,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4004,6 +4077,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -4053,6 +4127,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4067,6 +4142,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -4124,6 +4200,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4138,6 +4215,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -4189,6 +4267,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4203,6 +4282,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -4248,6 +4328,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4262,6 +4343,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -4296,6 +4378,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4310,6 +4393,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -4359,6 +4443,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4373,6 +4458,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -4430,6 +4516,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4444,6 +4531,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -4495,6 +4583,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4509,6 +4598,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -4543,6 +4633,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4557,6 +4648,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -4602,6 +4694,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4616,6 +4709,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -4865,6 +4959,7 @@ https://unsplash.it/200/200 200w"
             <img
               alt="DSC07717"
               class="emotion-37 emotion-29"
+              height="6000"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -4879,6 +4974,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
+              width="4000"
             />
           </div>
           <div
@@ -5805,6 +5901,7 @@ exports[`Article should render WithClassName 1`] = `
         <img
           alt="DSC07717"
           class="emotion-28 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5819,6 +5916,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <figcaption
           class="emotion-30 emotion-31"
@@ -5841,6 +5939,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5855,6 +5954,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -5869,6 +5969,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5883,6 +5984,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -5897,6 +5999,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5911,6 +6014,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -5939,6 +6043,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -5953,6 +6058,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -5996,6 +6102,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6010,6 +6117,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -6053,6 +6161,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6067,6 +6176,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -6122,6 +6232,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-90 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6136,6 +6247,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
       </div>
       <div
@@ -6412,6 +6524,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6426,6 +6539,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -6483,6 +6597,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6497,6 +6612,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -6548,6 +6664,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6562,6 +6679,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -6607,6 +6725,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6621,6 +6740,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -6655,6 +6775,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6669,6 +6790,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -6718,6 +6840,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6732,6 +6855,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -6789,6 +6913,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6803,6 +6928,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -6854,6 +6980,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6868,6 +6995,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -6913,6 +7041,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6927,6 +7056,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -6961,6 +7091,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -6975,6 +7106,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -7024,6 +7156,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -7038,6 +7171,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -7095,6 +7229,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -7109,6 +7244,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -7160,6 +7296,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -7174,6 +7311,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -7208,6 +7346,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -7222,6 +7361,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -7267,6 +7407,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -7281,6 +7422,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -7530,6 +7672,7 @@ https://unsplash.it/200/200 200w"
             <img
               alt="DSC07717"
               class="emotion-37 emotion-29"
+              height="6000"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -7544,6 +7687,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
+              width="4000"
             />
           </div>
           <div
@@ -8467,6 +8611,7 @@ exports[`Article should render WithEmotion 1`] = `
         <img
           alt="DSC07717"
           class="emotion-28 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8481,6 +8626,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <figcaption
           class="emotion-30 emotion-31"
@@ -8503,6 +8649,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8517,6 +8664,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -8531,6 +8679,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8545,6 +8694,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -8559,6 +8709,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8573,6 +8724,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -8601,6 +8753,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8615,6 +8768,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -8658,6 +8812,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8672,6 +8827,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -8715,6 +8871,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8729,6 +8886,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -8784,6 +8942,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-90 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -8798,6 +8957,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
       </div>
       <div
@@ -9074,6 +9234,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9088,6 +9249,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -9145,6 +9307,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9159,6 +9322,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -9210,6 +9374,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9224,6 +9389,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -9269,6 +9435,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9283,6 +9450,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -9317,6 +9485,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9331,6 +9500,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -9380,6 +9550,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9394,6 +9565,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -9451,6 +9623,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9465,6 +9638,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -9516,6 +9690,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9530,6 +9705,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -9575,6 +9751,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9589,6 +9766,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -9623,6 +9801,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9637,6 +9816,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -9686,6 +9866,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9700,6 +9881,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -9757,6 +9939,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9771,6 +9954,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -9822,6 +10006,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9836,6 +10021,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -9870,6 +10056,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9884,6 +10071,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -9929,6 +10117,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -9943,6 +10132,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -10192,6 +10382,7 @@ https://unsplash.it/200/200 200w"
             <img
               alt="DSC07717"
               class="emotion-37 emotion-29"
+              height="6000"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -10206,6 +10397,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
+              width="4000"
             />
           </div>
           <div
@@ -11137,6 +11329,7 @@ exports[`Article should render WithoutAuthors 1`] = `
         <img
           alt="DSC07717"
           class="emotion-28 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -11151,6 +11344,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <figcaption
           class="emotion-30 emotion-31"
@@ -11173,6 +11367,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -11187,6 +11382,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -11201,6 +11397,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -11215,6 +11412,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -11229,6 +11427,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -11243,6 +11442,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -11271,6 +11471,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -11285,6 +11486,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -11328,6 +11530,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -11342,6 +11545,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -11385,6 +11589,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -11399,6 +11604,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -11454,6 +11660,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-90 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -11468,6 +11675,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
       </div>
       <div
@@ -11744,6 +11952,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -11758,6 +11967,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -11815,6 +12025,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -11829,6 +12040,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -11880,6 +12092,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -11894,6 +12107,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -11939,6 +12153,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -11953,6 +12168,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -11987,6 +12203,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12001,6 +12218,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -12050,6 +12268,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12064,6 +12283,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -12121,6 +12341,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12135,6 +12356,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -12186,6 +12408,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12200,6 +12423,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -12245,6 +12469,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12259,6 +12484,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -12293,6 +12519,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12307,6 +12534,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -12356,6 +12584,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12370,6 +12599,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -12427,6 +12657,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12441,6 +12672,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -12492,6 +12724,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12506,6 +12739,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -12540,6 +12774,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12554,6 +12789,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -12599,6 +12835,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12613,6 +12850,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -12862,6 +13100,7 @@ https://unsplash.it/200/200 200w"
             <img
               alt="DSC07717"
               class="emotion-37 emotion-29"
+              height="6000"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -12876,6 +13115,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
+              width="4000"
             />
           </div>
           <div
@@ -13567,6 +13807,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
         <img
           alt="DSC07717"
           class="emotion-28 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -13581,6 +13822,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <figcaption
           class="emotion-30 emotion-31"
@@ -13603,6 +13845,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -13617,6 +13860,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -13631,6 +13875,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -13645,6 +13890,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -13659,6 +13905,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -13673,6 +13920,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -13701,6 +13949,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -13715,6 +13964,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -13758,6 +14008,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -13772,6 +14023,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -13815,6 +14067,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -13829,6 +14082,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -13884,6 +14138,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-90 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -13898,6 +14153,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
       </div>
       <div
@@ -14174,6 +14430,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14188,6 +14445,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -14245,6 +14503,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14259,6 +14518,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -14310,6 +14570,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14324,6 +14585,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -14369,6 +14631,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14383,6 +14646,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -14417,6 +14681,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14431,6 +14696,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -14480,6 +14746,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14494,6 +14761,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -14551,6 +14819,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14565,6 +14834,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -14616,6 +14886,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14630,6 +14901,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -14675,6 +14947,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14689,6 +14962,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -14723,6 +14997,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14737,6 +15012,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -14786,6 +15062,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14800,6 +15077,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -14857,6 +15135,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14871,6 +15150,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -14922,6 +15202,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14936,6 +15217,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -14970,6 +15252,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -14984,6 +15267,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -15029,6 +15313,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -15043,6 +15328,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -15292,6 +15578,7 @@ https://unsplash.it/200/200 200w"
             <img
               alt="DSC07717"
               class="emotion-37 emotion-29"
+              height="6000"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -15306,6 +15593,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
+              width="4000"
             />
           </div>
           <div
@@ -16225,6 +16513,7 @@ exports[`Article should render WithoutLead 1`] = `
         <img
           alt="DSC07717"
           class="emotion-28 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -16239,6 +16528,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <figcaption
           class="emotion-30 emotion-31"
@@ -16261,6 +16551,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -16275,6 +16566,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -16289,6 +16581,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -16303,6 +16596,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -16317,6 +16611,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -16331,6 +16626,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -16359,6 +16655,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -16373,6 +16670,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -16416,6 +16714,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -16430,6 +16729,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -16473,6 +16773,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -16487,6 +16788,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -16542,6 +16844,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-90 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -16556,6 +16859,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
       </div>
       <div
@@ -16832,6 +17136,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -16846,6 +17151,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -16903,6 +17209,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -16917,6 +17224,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -16968,6 +17276,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -16982,6 +17291,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -17027,6 +17337,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -17041,6 +17352,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -17075,6 +17387,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -17089,6 +17402,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -17138,6 +17452,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -17152,6 +17467,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -17209,6 +17525,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -17223,6 +17540,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -17274,6 +17592,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -17288,6 +17607,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -17333,6 +17653,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -17347,6 +17668,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -17381,6 +17703,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -17395,6 +17718,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -17444,6 +17768,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -17458,6 +17783,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -17515,6 +17841,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -17529,6 +17856,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -17580,6 +17908,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -17594,6 +17923,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -17628,6 +17958,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -17642,6 +17973,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -17687,6 +18019,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -17701,6 +18034,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -17950,6 +18284,7 @@ https://unsplash.it/200/200 200w"
             <img
               alt="DSC07717"
               class="emotion-37 emotion-29"
+              height="6000"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -17964,6 +18299,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
+              width="4000"
             />
           </div>
           <div
@@ -18887,6 +19223,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
         <img
           alt="DSC07717"
           class="emotion-28 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -18901,6 +19238,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <figcaption
           class="emotion-30 emotion-31"
@@ -18923,6 +19261,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -18937,6 +19276,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -18951,6 +19291,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -18965,6 +19306,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -18979,6 +19321,7 @@ https://unsplash.it/200/100 200w"
           <img
             alt="DSC07717"
             class="emotion-37 emotion-29"
+            height="6000"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -18993,6 +19336,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
+            width="4000"
           />
           <p
             class="MuiTypography-root MuiTypography-body1 emotion-39"
@@ -19021,6 +19365,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -19035,6 +19380,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -19078,6 +19424,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -19092,6 +19439,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -19135,6 +19483,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-37 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -19149,6 +19498,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
         <div
           class="emotion-8 emotion-9"
@@ -19204,6 +19554,7 @@ https://unsplash.it/200/100 200w"
         <img
           alt="DSC07717"
           class="emotion-90 emotion-29"
+          height="6000"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -19218,6 +19569,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
+          width="4000"
         />
       </div>
       <div
@@ -19494,6 +19846,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -19508,6 +19861,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -19565,6 +19919,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -19579,6 +19934,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -19630,6 +19986,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -19644,6 +20001,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -19689,6 +20047,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -19703,6 +20062,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -19737,6 +20097,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -19751,6 +20112,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -19800,6 +20162,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -19814,6 +20177,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -19871,6 +20235,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -19885,6 +20250,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -19936,6 +20302,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -19950,6 +20317,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -19995,6 +20363,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -20009,6 +20378,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -20043,6 +20413,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -20057,6 +20428,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -20106,6 +20478,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -20120,6 +20493,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -20177,6 +20551,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -20191,6 +20566,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -20242,6 +20618,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="DSC07717"
                 class="emotion-145 emotion-29"
+                height="6000"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -20256,6 +20633,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title=""
+                width="4000"
               />
             </div>
             <div
@@ -20290,6 +20668,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -20304,6 +20683,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -20349,6 +20729,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="emotion-168 emotion-29"
+                height="2667"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -20363,6 +20744,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+                width="4000"
               />
             </div>
             <div
@@ -20612,6 +20994,7 @@ https://unsplash.it/200/200 200w"
             <img
               alt="DSC07717"
               class="emotion-37 emotion-29"
+              height="6000"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -20626,6 +21009,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
+              width="4000"
             />
           </div>
           <div

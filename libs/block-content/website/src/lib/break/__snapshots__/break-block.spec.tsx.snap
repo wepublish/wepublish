@@ -11,6 +11,7 @@ exports[`Break Block should render Default 1`] = `
       <img
         alt="DSC07717"
         class="emotion-4 emotion-5"
+        height="6000"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -25,6 +26,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
+        width="4000"
       />
     </div>
     <div
@@ -158,6 +160,7 @@ exports[`Break Block should render ImageRight 1`] = `
       <img
         alt="DSC07717"
         class="emotion-4 emotion-5"
+        height="6000"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -172,6 +175,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
+        width="4000"
       />
     </div>
     <div
@@ -305,6 +309,7 @@ exports[`Break Block should render WithButton 1`] = `
       <img
         alt="DSC07717"
         class="emotion-4 emotion-5"
+        height="6000"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -319,6 +324,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
+        width="4000"
       />
     </div>
     <div
@@ -463,6 +469,7 @@ exports[`Break Block should render WithClassName 1`] = `
       <img
         alt="DSC07717"
         class="emotion-4 emotion-5"
+        height="6000"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -477,6 +484,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
+        width="4000"
       />
     </div>
     <div
@@ -610,6 +618,7 @@ exports[`Break Block should render WithEmotion 1`] = `
       <img
         alt="DSC07717"
         class="emotion-4 emotion-5"
+        height="6000"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -624,6 +633,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
+        width="4000"
       />
     </div>
     <div

@@ -23,6 +23,7 @@ exports[`Image Slider should render Default 1`] = `
               <img
                 alt="An image description"
                 class="emotion-10 emotion-11"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -37,6 +38,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
               <figcaption
                 class="emotion-12 emotion-13"
@@ -58,6 +60,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-10 emotion-11"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -72,6 +75,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
           </figure>
@@ -88,6 +92,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-10 emotion-11"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -102,6 +107,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
               <figcaption
                 class="emotion-12 emotion-13"
@@ -160,6 +166,7 @@ exports[`Image Slider should render WithClassName 1`] = `
               <img
                 alt="An image description"
                 class="emotion-10 emotion-11"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -174,6 +181,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
               <figcaption
                 class="emotion-12 emotion-13"
@@ -195,6 +203,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-10 emotion-11"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -209,6 +218,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
           </figure>
@@ -225,6 +235,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-10 emotion-11"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -239,6 +250,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
               <figcaption
                 class="emotion-12 emotion-13"
@@ -297,6 +309,7 @@ exports[`Image Slider should render WithEmotion 1`] = `
               <img
                 alt="An image description"
                 class="emotion-10 emotion-11"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -311,6 +324,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
               <figcaption
                 class="emotion-12 emotion-13"
@@ -332,6 +346,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-10 emotion-11"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -346,6 +361,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
           </figure>
@@ -362,6 +378,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-10 emotion-11"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -376,6 +393,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
               <figcaption
                 class="emotion-12 emotion-13"

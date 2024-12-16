@@ -10,6 +10,7 @@ exports[`Banner should render Default 1`] = `
     <img
       alt="An image description"
       class="emotion-2 emotion-3"
+      height="500"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -24,6 +25,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title="An image title"
+      width="500"
     />
   </a>
 </DocumentFragment>
@@ -39,6 +41,7 @@ exports[`Banner should render WithClassName 1`] = `
     <img
       alt="An image description"
       class="emotion-2 emotion-3"
+      height="500"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -53,6 +56,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title="An image title"
+      width="500"
     />
   </a>
 </DocumentFragment>
@@ -68,6 +72,7 @@ exports[`Banner should render WithEmotion 1`] = `
     <img
       alt="An image description"
       class="emotion-2 emotion-3"
+      height="500"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -82,6 +87,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title="An image title"
+      width="500"
     />
   </a>
 </DocumentFragment>

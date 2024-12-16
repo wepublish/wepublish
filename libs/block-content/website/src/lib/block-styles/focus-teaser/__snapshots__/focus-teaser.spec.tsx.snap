@@ -38,6 +38,7 @@ exports[`Focus Teaser should render Article 1`] = `
                 <img
                   alt="An image description"
                   class="emotion-16 emotion-17"
+                  height="500"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -52,6 +53,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                   title="An image title"
+                  width="500"
                 />
               </div>
               <div
@@ -122,6 +124,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -136,6 +139,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -201,6 +205,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -215,6 +220,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -280,6 +286,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -294,6 +301,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -359,6 +367,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -373,6 +382,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -463,6 +473,7 @@ exports[`Focus Teaser should render Event 1`] = `
                 <img
                   alt="An image description"
                   class="emotion-16 emotion-17"
+                  height="500"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -477,6 +488,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                   title="An image title"
+                  width="500"
                 />
               </div>
               <div
@@ -534,6 +546,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -548,6 +561,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -600,6 +614,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -614,6 +629,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -666,6 +682,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -680,6 +697,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -732,6 +750,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -746,6 +765,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -823,6 +843,7 @@ exports[`Focus Teaser should render Page 1`] = `
                 <img
                   alt="An image description"
                   class="emotion-16 emotion-17"
+                  height="500"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -837,6 +858,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                   title="An image title"
+                  width="500"
                 />
               </div>
               <div
@@ -894,6 +916,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -908,6 +931,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -960,6 +984,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -974,6 +999,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -1026,6 +1052,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1040,6 +1067,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -1092,6 +1120,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1106,6 +1135,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -1183,6 +1213,7 @@ exports[`Focus Teaser should render WithClassName 1`] = `
                 <img
                   alt="An image description"
                   class="emotion-16 emotion-17"
+                  height="500"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1197,6 +1228,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                   title="An image title"
+                  width="500"
                 />
               </div>
               <div
@@ -1267,6 +1299,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1281,6 +1314,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -1346,6 +1380,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1360,6 +1395,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -1425,6 +1461,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1439,6 +1476,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -1504,6 +1542,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1518,6 +1557,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -1608,6 +1648,7 @@ exports[`Focus Teaser should render WithEmotion 1`] = `
                 <img
                   alt="An image description"
                   class="emotion-16 emotion-17"
+                  height="500"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1622,6 +1663,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                   title="An image title"
+                  width="500"
                 />
               </div>
               <div
@@ -1692,6 +1734,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1706,6 +1749,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -1771,6 +1815,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1785,6 +1830,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -1850,6 +1896,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1864,6 +1911,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -1929,6 +1977,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-16 emotion-17"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1943,6 +1992,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -2038,6 +2088,7 @@ exports[`Focus Teaser should render WithLink 1`] = `
                 <img
                   alt="An image description"
                   class="emotion-17 emotion-18"
+                  height="500"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -2052,6 +2103,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                   title="An image title"
+                  width="500"
                 />
               </div>
               <div
@@ -2122,6 +2174,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-17 emotion-18"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -2136,6 +2189,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -2201,6 +2255,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-17 emotion-18"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -2215,6 +2270,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -2280,6 +2336,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-17 emotion-18"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -2294,6 +2351,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div
@@ -2359,6 +2417,7 @@ https://unsplash.it/200/100 200w"
               <img
                 alt="An image description"
                 class="emotion-17 emotion-18"
+                height="500"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -2373,6 +2432,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
                 title="An image title"
+                width="500"
               />
             </div>
             <div

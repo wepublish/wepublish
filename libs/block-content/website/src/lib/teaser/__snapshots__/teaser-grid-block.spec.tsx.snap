@@ -23,6 +23,7 @@ exports[`Teaser Grid Block should render OneColumn 1`] = `
             <img
               alt="An image description"
               class="emotion-9 emotion-10"
+              height="500"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -37,6 +38,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title="An image title"
+              width="500"
             />
           </div>
           <div
@@ -89,6 +91,7 @@ https://unsplash.it/200/100 200w"
             <img
               alt="An image description"
               class="emotion-9 emotion-10"
+              height="500"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -103,6 +106,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title="An image title"
+              width="500"
             />
           </div>
           <div
@@ -148,6 +152,7 @@ https://unsplash.it/200/100 200w"
             <img
               alt="An image description"
               class="emotion-9 emotion-10"
+              height="500"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -162,6 +167,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title="An image title"
+              width="500"
             />
           </div>
           <div
@@ -210,6 +216,7 @@ exports[`Teaser Grid Block should render ThreeColumns 1`] = `
             <img
               alt="An image description"
               class="emotion-9 emotion-10"
+              height="500"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -224,6 +231,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title="An image title"
+              width="500"
             />
           </div>
           <div
@@ -276,6 +284,7 @@ https://unsplash.it/200/100 200w"
             <img
               alt="An image description"
               class="emotion-9 emotion-10"
+              height="500"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -290,6 +299,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title="An image title"
+              width="500"
             />
           </div>
           <div
@@ -335,6 +345,7 @@ https://unsplash.it/200/100 200w"
             <img
               alt="An image description"
               class="emotion-9 emotion-10"
+              height="500"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -349,6 +360,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title="An image title"
+              width="500"
             />
           </div>
           <div
@@ -397,6 +409,7 @@ exports[`Teaser Grid Block should render WithClassName 1`] = `
             <img
               alt="An image description"
               class="emotion-9 emotion-10"
+              height="500"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -411,6 +424,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title="An image title"
+              width="500"
             />
           </div>
           <div
@@ -463,6 +477,7 @@ https://unsplash.it/200/100 200w"
             <img
               alt="An image description"
               class="emotion-9 emotion-10"
+              height="500"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -477,6 +492,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title="An image title"
+              width="500"
             />
           </div>
           <div
@@ -522,6 +538,7 @@ https://unsplash.it/200/100 200w"
             <img
               alt="An image description"
               class="emotion-9 emotion-10"
+              height="500"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -536,6 +553,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title="An image title"
+              width="500"
             />
           </div>
           <div
@@ -584,6 +602,7 @@ exports[`Teaser Grid Block should render WithEmotion 1`] = `
             <img
               alt="An image description"
               class="emotion-9 emotion-10"
+              height="500"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -598,6 +617,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title="An image title"
+              width="500"
             />
           </div>
           <div
@@ -650,6 +670,7 @@ https://unsplash.it/200/100 200w"
             <img
               alt="An image description"
               class="emotion-9 emotion-10"
+              height="500"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -664,6 +685,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title="An image title"
+              width="500"
             />
           </div>
           <div
@@ -709,6 +731,7 @@ https://unsplash.it/200/100 200w"
             <img
               alt="An image description"
               class="emotion-9 emotion-10"
+              height="500"
               loading="lazy"
               sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -723,6 +746,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title="An image title"
+              width="500"
             />
           </div>
           <div
