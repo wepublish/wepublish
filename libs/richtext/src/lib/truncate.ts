@@ -13,7 +13,7 @@ export const truncateParagraph =
       return
     }
 
-    const truncated = paragraph?.children.reduce(
+    const truncated = (paragraph?.children as Node[] | undefined)?.reduce(
       (acc: Element, curr) => {
         if (!isNodeText(curr)) {
           return acc

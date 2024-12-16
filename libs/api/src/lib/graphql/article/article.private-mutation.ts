@@ -4,6 +4,7 @@ import {ArticleWithRevisions} from '../../db/article'
 import {DuplicateArticleSlugError, NotFound} from '../../error'
 import {authorise} from '../permissions'
 import {CanCreateArticle, CanDeleteArticle, CanPublishArticle} from '@wepublish/permissions/api'
+import {blocksToSearchText} from '../../utility'
 
 const fullArticleInclude = {
   draft: {
@@ -91,6 +92,11 @@ export const createArticle = async (
     ...data
   } = input
 
+  // implemented test wise to also make text searchable.
+  // used with search slider migration for Bajour.
+  // todo: implement it for other article and page mutations
+  const searchPlainText = blocksToSearchText(input.blocks as any[])
+
   return article.create({
     data: {
       shared,
@@ -99,6 +105,7 @@ export const createArticle = async (
       draft: {
         create: {
           ...data,
+          searchPlainText,
           properties: {
             createMany: {
               data: properties
