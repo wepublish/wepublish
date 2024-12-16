@@ -348,7 +348,7 @@ export function SearchSlider({article}: SearchSliderProps) {
 
   // generate an upper and lower part of the title
   const title = useMemo(() => {
-    const splitTag = tag?.tag?.split('-') ?? []
+    const splitTag = tag?.tag?.split(' ') ?? []
     const firstWordLength = Math.floor(splitTag.length / 2)
     const upperTitlePart = splitTag.slice(0, firstWordLength).join(' ')
     const lowerTitlePart = splitTag.slice(firstWordLength).join(' ')
