@@ -76,10 +76,13 @@ export type ArticleConnection = {
 export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['ID']>>;
   includeHidden?: InputMaybe<Scalars['Boolean']>;
+  lead?: InputMaybe<Scalars['String']>;
+  preTitle?: InputMaybe<Scalars['String']>;
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
   shared?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type ArticleNavigationLink = BaseNavigationLink & {
@@ -1739,8 +1742,6 @@ export type Query = {
   periodicJobLog: Array<PeriodicJob>;
   /** This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones. */
   phrase?: Maybe<Phrase>;
-  /** This query performs a fulltext search on titles and blocks of articles with a specific tag and returns all matching ones. */
-  phraseWithTag?: Maybe<Phrase>;
   /** This query returns a poll with all the needed data */
   poll: FullPoll;
   /** Returns a paginated list of poll votes */
@@ -2004,16 +2005,6 @@ export type QueryPhraseArgs = {
   pageSort?: InputMaybe<PublishedPageSort>;
   query: Scalars['String'];
   skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryPhraseWithTagArgs = {
-  articleSort?: InputMaybe<ArticleSort>;
-  order?: InputMaybe<SortOrder>;
-  query: Scalars['String'];
-  skip?: InputMaybe<Scalars['Int']>;
-  tag: Scalars['String'];
   take?: InputMaybe<Scalars['Int']>;
 };
 

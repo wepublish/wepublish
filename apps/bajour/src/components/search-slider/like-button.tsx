@@ -1,4 +1,5 @@
-import {styled} from '@mui/material'
+import {css} from '@mui/material'
+import {useWebsiteBuilder} from '@wepublish/website'
 import {MdFavorite, MdFavoriteBorder} from 'react-icons/md'
 
 interface LikeButtonProps {
@@ -7,27 +8,30 @@ interface LikeButtonProps {
   onLike: () => void
 }
 
-const Button = styled('div')`
-  font-size: 1.3em;
+const iconButtonStyles = css`
+  gap: 0.125em;
+  padding: 0;
 
-  .icon {
-    margin-right: 0.15em;
-    cursor: pointer;
+  svg {
     font-size: 1.5em;
-    vertical-align: bottom;
-    display: inline;
   }
 `
 
 export const LikeButton = ({isLiked, likes, onLike}: LikeButtonProps) => {
+  const {
+    elements: {IconButton}
+  } = useWebsiteBuilder()
+
   return (
-    <Button>
-      {isLiked ? (
-        <MdFavorite className="icon" onClick={onLike} style={{color: 'red'}} />
-      ) : (
-        <MdFavoriteBorder className="icon" onClick={onLike} />
-      )}
+    <IconButton
+      aria-label="Like"
+      size={'small'}
+      onClick={onLike}
+      color={'inherit'}
+      css={iconButtonStyles}
+      disableRipple>
+      {isLiked ? <MdFavorite style={{color: 'red'}} /> : <MdFavoriteBorder />}
       {likes}
-    </Button>
+    </IconButton>
   )
 }

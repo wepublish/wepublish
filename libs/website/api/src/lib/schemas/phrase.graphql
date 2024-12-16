@@ -31,22 +31,3 @@ query Phrase($query: String!, $take: Int, $skip: Int) {
     }
   }
 }
-
-query PhraseWithTag($query: String!, $tag: String!, $take: Int, $skip: Int) {
-  phraseWithTag(query: $query, tag: $tag, take: $take, skip: $skip) {
-    articles {
-      nodes {
-        ...FullArticle
-      }
-
-      pageInfo {
-        startCursor
-        endCursor
-        hasNextPage
-        hasPreviousPage
-      }
-
-      totalCount
-    }
-  }
-}

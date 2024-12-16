@@ -93,6 +93,9 @@ export interface ArticleFilter {
 }
 
 export interface PublicArticleFilter {
+  readonly title?: string
+  readonly preTitle?: string
+  readonly lead?: string
   readonly authors?: string[]
   readonly tags?: string[]
   readonly includeHidden?: boolean

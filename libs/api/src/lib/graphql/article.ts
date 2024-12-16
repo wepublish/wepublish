@@ -56,6 +56,9 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
 export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
   fields: {
+    title: {type: GraphQLString},
+    preTitle: {type: GraphQLString},
+    lead: {type: GraphQLString},
     publicationDateFrom: {type: GraphQLDateFilter},
     publicationDateTo: {type: GraphQLDateFilter},
     authors: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},

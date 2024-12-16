@@ -10,10 +10,12 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website'
 import {format} from 'date-fns'
-import {useKeenSlider} from 'keen-slider/react'
-import {useRouter} from 'next/router'
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {KeenSliderInstance, TrackDetails, useKeenSlider} from 'keen-slider/react'
+import {descend, eqBy, sortWith, uniqWith} from 'ramda'
+import {useCallback, useMemo, useState} from 'react'
+import {useDebounceCallback} from 'usehooks-ts'
 
+import {LikeButton} from './like-button'
 import {SearchBar} from './search-bar'
 import {useLikeStatus} from './use-like-status'
 
@@ -134,7 +136,6 @@ const HeaderUnderline = styled('div')`
 const SliderContainer = styled('div')`
   grid-column-start: 1;
   grid-column-end: 3;
-  display: flex;
 `
 
 const TextContainer = styled('div')`
@@ -157,21 +158,11 @@ const BtnContainer = styled('div')`
   font-size: 2em;
 `
 
-const LikeButton = styled('div')`
-  display: flex;
-  align-items: center;
-  gap: 0.2em;
-  cursor: pointer;
-  span {
-    font-size: 0.7em;
-  }
-`
-
 const SlideItem = styled('div')<{mainImage?: boolean}>`
   cursor: pointer;
   min-height: unset !important;
   height: ${props => (props.mainImage ? SLIDER_MAIN_HEIGHT : SLIDER_HEIGHT)}px;
-  min-width: ${props => (props.mainImage ? SLIDER_MAIN_WIDTH : SLIDER_WIDTH)}px;
+  min-width: ${props => (props.mainImage ? SLIDER_MAIN_WIDTH : SLIDER_WIDTH)}px !important;
 
   margin-top: ${props => (props.mainImage ? 0 : SLIDER_DOWN_SHIFT)}px;
 
@@ -187,7 +178,7 @@ const SlideItem = styled('div')<{mainImage?: boolean}>`
 
   ${({theme}) => theme.breakpoints.up('md')} {
     height: ${props => (props.mainImage ? SLIDER_MAIN_HEIGHT_MD : SLIDER_HEIGHT_MD)}px;
-    min-width: ${props => (props.mainImage ? SLIDER_MAIN_WIDTH_MD : SLIDER_WIDTH_MD)}px;
+    min-width: ${props => (props.mainImage ? SLIDER_MAIN_WIDTH_MD : SLIDER_WIDTH_MD)}px !important;
 
     margin-top: ${props => (props.mainImage ? 0 : SLIDER_DOWN_SHIFT_MD)}px;
 
@@ -215,228 +206,167 @@ interface SearchSliderProps {
   article: SliderArticle
 }
 
+const sortArticlesByPublishedAt = sortWith<ApiV1.FullArticleFragment>([
+  descend(article => +new Date(article.publishedAt))
+])
+
+const uniqueById = uniqWith(eqBy<ApiV1.FullArticleFragment>(a => a.id))
+
 export function SearchSlider({article}: SearchSliderProps) {
   const {
     elements: {Image}
   } = useWebsiteBuilder()
-  const {replace} = useRouter()
-
-  const [mainIndex, setMainIndex] = useState<number>(1)
-  const [sliderArticles, setSliderArticles] = useState<SliderArticle[]>([])
-  const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined)
-  const [skipCount, setSkipCount] = useState(0)
-
-  const [phraseWithTagQuery] = ApiV1.usePhraseWithTagLazyQuery()
-  const [getMoreArticles] = ApiV1.useFullArticleListLazyQuery()
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [slidesDetails, setSlidesDetails] = useState<TrackDetails['slides']>()
+  const [searchQuery, setSearchQuery] = useState<string | null>()
 
   // getting the first tag from initial article which is not the technical search-slider tag.
-  const tag = useMemo<string>(
-    () => article?.tags.find(tag => tag.tag !== SEARCH_SLIDER_TAG)?.tag || '',
-    [article]
+  const tag = useMemo(() => article?.tags.find(tag => tag.tag !== SEARCH_SLIDER_TAG), [article])
+
+  const {data, fetchMore, refetch} = ApiV1.useFullArticleListQuery({
+    variables: {
+      take: TAKE,
+      cursor: article.id,
+      order: ApiV1.SortOrder.Descending,
+      sort: ApiV1.ArticleSort.PublishedAt,
+      filter: {
+        tags: tag ? [tag.id] : []
+      }
+    }
+  })
+
+  const sliderArticles = useMemo(() => data?.articles.nodes ?? [], [data])
+  const mainArticle = sliderArticles[currentSlide]
+  const {likes, isLiked, handleLike} = useLikeStatus(mainArticle?.id ?? '', mainArticle?.likes)
+
+  const paginateArticles = useDebounceCallback(
+    useCallback(
+      async (slideIndex: number, slider: KeenSliderInstance) => {
+        const goesBack = slideIndex === 0
+
+        if (!sliderArticles[slideIndex]) {
+          return
+        }
+
+        if (!goesBack && slideIndex + 10 < sliderArticles.length) {
+          return
+        }
+
+        // @TODO: Optimize this with hasNextPage & hasPreviousPage
+        // After hasPreviousPage has been fixed for cursor based navigation
+
+        const prevArticle = sliderArticles[slideIndex]
+
+        return fetchMore({
+          variables: {
+            cursor: sliderArticles[slideIndex].id,
+            order: goesBack ? ApiV1.SortOrder.Ascending : ApiV1.SortOrder.Descending,
+            filter: {
+              title: searchQuery,
+              tags: tag ? [tag.id] : []
+            }
+          },
+          updateQuery: (prev, {fetchMoreResult}) => {
+            if (!fetchMoreResult) {
+              return prev
+            }
+
+            const nodes = uniqueById(
+              sortArticlesByPublishedAt([...prev.articles.nodes, ...fetchMoreResult.articles.nodes])
+            )
+
+            if (nodes.length === prev.articles.nodes.length) {
+              return prev
+            }
+
+            if (goesBack) {
+              const index = nodes.findIndex(article => article.id === prevArticle.id)
+              // When going back, we also have to move the index back
+              setTimeout(() => slider.moveToIdx(index), 10)
+            }
+
+            return {
+              ...prev,
+              articles: {
+                ...prev.articles,
+                nodes
+              }
+            }
+          }
+        })
+      },
+      [fetchMore, searchQuery, sliderArticles, tag]
+    ),
+    100
   )
 
-  /**
-   * Instanciate Keen Slider
-   */
-  const [sliderRef, keenSlider] = useKeenSlider({
-    mode: 'free-snap',
+  const searchArticles = useDebounceCallback(
+    useCallback(
+      async (query: string, slider: KeenSliderInstance) => {
+        await fetchMore({
+          variables: {
+            cursor: null,
+            order: ApiV1.SortOrder.Descending,
+            filter: {
+              title: query,
+              tags: tag ? [tag.id] : []
+            }
+          },
+          updateQuery: (prev, {fetchMoreResult}) => {
+            if (!fetchMoreResult?.articles?.nodes?.length) {
+              return prev
+            }
+
+            slider.moveToIdx(0)
+
+            return {
+              ...fetchMoreResult,
+              articles: {
+                ...fetchMoreResult.articles,
+                nodes: [...fetchMoreResult.articles.nodes]
+              }
+            }
+          }
+        })
+      },
+      [fetchMore, tag]
+    ),
+    100
+  )
+
+  const [sliderRef, keenSliderRef] = useKeenSlider({
+    initial: 0,
+    loop: {
+      min: 0,
+      max: (data?.articles?.nodes.length ?? 1) - 1
+    },
+    range: {
+      align: true,
+      min: 0,
+      max: (data?.articles?.nodes.length ?? 1) - 1
+    },
     slides: {
+      number: TAKE,
       perView: 'auto',
       spacing: SLIDER_SPACING
     },
-    loop: false,
+    mode: 'snap',
     slideChanged: async slider => {
-      // update main image
-      const activeIndex = slider.track.details.rel
-      setMainIndex(activeIndex + 1)
-    }
-  })
-
-  const loadMoreArticles = useCallback(async () => {
-    // only load more, if at least 10 articles before end
-    if (mainIndex + 10 < sliderArticles.length) {
-      return
-    }
-
-    const endOfQueueArticle = sliderArticles[sliderArticles.length - 1]
-
-    if (searchQuery) {
-      // Load more search results
-      setSkipCount(prev => prev + TAKE)
-
-      const {data} = await phraseWithTagQuery({
-        variables: {
-          take: TAKE,
-          tag,
-          query: searchQuery,
-          skip: skipCount
-        }
-      })
-      const articles = (data?.phraseWithTag?.articles?.nodes as SliderArticle[]) ?? []
-      setSliderArticles([...sliderArticles, ...articles])
-    } else {
-      // Load more articles from regular list
-      const {data} = await getMoreArticles({
-        variables: {
-          take: TAKE,
-          skip: 0,
-          order: ApiV1.SortOrder.Descending,
-          filter: {
-            tags: [tagData?.tags?.nodes.at(0)?.id ?? ''],
-            publicationDateFrom: {
-              comparison: ApiV1.DateFilterComparison.Lt,
-              date: endOfQueueArticle.publishedAt
-            }
-          }
-        }
-      })
-      const articles = (data?.articles?.nodes as SliderArticle[]) ?? []
-      setSliderArticles([...sliderArticles, ...articles])
-    }
-  }, [mainIndex, sliderArticles, searchQuery, skipCount])
-
-  // handle loading more articles in the background and updating the slider
-  useEffect(() => {
-    const animationEnded = async () => {
-      keenSlider.current?.update()
-      // goToArticle(mainArticle)
-      await loadMoreArticles()
-    }
-
-    // initiate loading more articles in the background
-    keenSlider.current?.on('animationEnded', animationEnded)
-
-    // remove event listener
-    return () => {
-      keenSlider.current?.on('animationEnded', animationEnded, true)
-    }
-  }, [keenSlider, loadMoreArticles])
-
-  // update slider after changes have been made to the articles array
-  useEffect(() => {
-    keenSlider.current?.update()
-  }, [sliderArticles])
-
-  const {data: tagData, loading: tagLoading} = ApiV1.useTagQuery({
-    variables: {
-      tag,
-      type: ApiV1.TagType.Article
-    }
-  })
-
-  /**
-   * Initial articles load
-   */
-  ApiV1.useFullArticleListQuery({
-    skip: tagLoading || !!searchQuery,
-    variables: {
-      take: TAKE,
-      skip: 0,
-      order: ApiV1.SortOrder.Descending,
-      filter: {
-        tags: [tagData?.tags?.nodes.at(0)?.id ?? ''],
-        publicationDateFrom: {
-          comparison: ApiV1.DateFilterComparison.Lt,
-          date: article?.publishedAt
-        }
-      }
+      const slideIndex = slider.track.details.slides?.[slider.track.details.rel].abs
+      setCurrentSlide(slideIndex)
+      await paginateArticles(slideIndex, slider)
     },
-    onCompleted: data => {
-      const articles = data.articles.nodes as SliderArticle[]
-      // insert main article in second position
-      setSliderArticles([...articles.slice(0, 1), article, ...articles.slice(1, articles.length)])
+    detailsChanged: s => {
+      setSlidesDetails(s.track.details.slides)
+    },
+    updated: (...args) => {
+      console.log(args)
     }
   })
-
-  // render main article
-  const mainArticle = useMemo(() => {
-    if (sliderArticles?.length < mainIndex) {
-      return
-    }
-    return sliderArticles[mainIndex]
-  }, [mainIndex, sliderArticles])
-
-  /**
-   * Search functionality
-   */
-  const handleSearch = async (query: string | undefined) => {
-    setSearchQuery(query)
-    if (!query) {
-      return
-    }
-    keenSlider.current?.moveToIdx(0)
-    const {data} = await phraseWithTagQuery({
-      variables: {take: TAKE, tag, query}
-    })
-    const articles = data?.phraseWithTag?.articles?.nodes as SliderArticle[]
-    if (articles.length > 0) {
-      setSliderArticles(articles)
-      setMainIndex(1)
-    }
-  }
-
-  async function goToArticle(article: SliderArticle) {
-    const newUrl = article?.url
-    if (!newUrl) return
-    await replace(newUrl)
-  }
-
-  function clickSlideItem(index: number) {
-    if (mainIndex === index || index < 1) {
-      return
-    }
-    setMainIndex(index - 1)
-    keenSlider.current?.moveToIdx(index - 1)
-  }
-
-  /**
-   * Like Btn
-   */
-  const [likes, setLikes] = useState(mainArticle?.likes || 0)
-  const {isLiked, updateLikeStatus} = useLikeStatus(mainArticle?.id ?? '')
-
-  useEffect(() => {
-    setLikes(mainArticle?.likes || 0)
-  }, [mainArticle])
-
-  const handleLike = async () => {
-    if (isLiked) {
-      await removeLikeMutation()
-      setLikes(prev => prev - 1)
-      updateLikeStatus(false)
-    } else {
-      await addLikeMutation()
-      setLikes(prev => prev + 1)
-      updateLikeStatus(true)
-    }
-  }
-
-  const [removeLikeMutation] = ApiV1.useRemoveLikeMutation({
-    variables: {
-      input: {
-        articleId: mainArticle?.id ?? ''
-      }
-    }
-  })
-
-  const [addLikeMutation] = ApiV1.useAddLikeMutation({
-    variables: {
-      input: {
-        articleId: mainArticle?.id ?? ''
-      }
-    }
-  })
-
-  function getUrl(article: SliderArticle): string {
-    if (typeof window !== 'undefined') {
-      return `${window.location.host}${article.url}`
-    }
-    return ''
-  }
 
   // generate an upper and lower part of the title
   const title = useMemo(() => {
-    const splitTag = tag.split(' ')
+    const splitTag = tag?.tag?.split('-') ?? []
     const firstWordLength = Math.floor(splitTag.length / 2)
     const upperTitlePart = splitTag.slice(0, firstWordLength).join(' ')
     const lowerTitlePart = splitTag.slice(firstWordLength).join(' ')
@@ -448,13 +378,23 @@ export function SearchSlider({article}: SearchSliderProps) {
   }, [tag])
 
   const textBlock = (mainArticle?.blocks as ApiV1.Block[])?.find(isRichTextBlock)
+  const publicationDate = mainArticle?.publishedAt
+    ? format(new Date(mainArticle?.publishedAt), 'd. MMM yyyy')
+    : ''
+  const publicationDay = mainArticle?.publishedAt
+    ? format(new Date(mainArticle?.publishedAt), 'eeee')
+    : ''
 
-  const publishedAt = mainArticle?.publishedAt
-  const publicationDate = publishedAt ? format(new Date(publishedAt), 'd. MMM yyyy') : ''
-  const publicationDay = publishedAt ? format(new Date(publishedAt), 'eeee') : ''
+  function clickSlideItem(index: number) {
+    if (currentSlide === index) {
+      return
+    }
+
+    keenSliderRef.current?.moveToIdx(index)
+  }
 
   if (!sliderArticles.length || !mainArticle) {
-    return <div>loading</div>
+    return null
   }
 
   return (
@@ -464,52 +404,73 @@ export function SearchSlider({article}: SearchSliderProps) {
           <TitleUpperPart>{title.upperTitlePart}</TitleUpperPart>
           <TitleLowerPart>{title.lowerTitlePart}</TitleLowerPart>
         </TitleContainer>
+
         <SearchContainer>
-          <SearchBar onSearchChange={handleSearch} />
+          <SearchBar
+            onSearchChange={async query => {
+              setSearchQuery(query)
+
+              if (!query) {
+                await refetch()
+                return
+              }
+
+              await searchArticles(query, keenSliderRef.current!)
+            }}
+          />
+
           <DateContainer>
             <u>{publicationDate}</u>
           </DateContainer>
+
           <div>{publicationDay}</div>
         </SearchContainer>
         <HeaderUnderline />
       </HeaderContainer>
 
       <SliderContainer ref={sliderRef} className="keen-slider">
-        {sliderArticles.map((article, index) => (
-          <SlideItem
-            key={article.id}
-            className={`keen-slider__slide number-slide${index}`}
-            mainImage={mainIndex === index}
-            onClick={() => clickSlideItem(index)}>
-            {article.image && (
-              <>
-                <Image image={article.image} />
-                {mainIndex !== index && <SlideTitle>{article.title}</SlideTitle>}
-              </>
-            )}
-          </SlideItem>
-        ))}
+        {[...Array(TAKE).keys()].map(idx => {
+          const article = slidesDetails && sliderArticles[slidesDetails[idx].abs]
+
+          return (
+            <SlideItem
+              key={idx}
+              className={`keen-slider__slide`}
+              mainImage={false}
+              onClick={() => clickSlideItem(idx)}>
+              {article?.image && (
+                <>
+                  <Image image={article.image} />
+
+                  {slidesDetails?.[idx].abs !== currentSlide && (
+                    <SlideTitle>{article.title}</SlideTitle>
+                  )}
+                </>
+              )}
+            </SlideItem>
+          )
+        })}
       </SliderContainer>
 
       <TextContainer>
         <div>
-          {mainArticle.lead ? (
-            <h2>{mainArticle.lead} </h2>
+          {mainArticle.preTitle ? (
+            <h2>{mainArticle.preTitle} </h2>
           ) : (
             <h2>
               {mainArticle?.title}
+
               <span style={{fontSize: '1rem'}}>, weil ...</span>
             </h2>
           )}
         </div>
+
         {textBlock?.richText && <RichTextBlock richText={textBlock.richText} />}
 
         <BtnContainer>
-          <LikeButton onClick={handleLike}>
-            {isLiked ? '❤️' : '🤍'} <span>{likes}</span>
-          </LikeButton>
+          <LikeButton onLike={handleLike} isLiked={isLiked} likes={likes} />
 
-          <CommentListItemShare url={getUrl(mainArticle)} title="Share" />
+          <CommentListItemShare url={mainArticle.url} title="Share" />
         </BtnContainer>
       </TextContainer>
     </Container>

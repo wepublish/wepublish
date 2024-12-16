@@ -101,11 +101,6 @@ type Query {
   This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones.
   """
   phrase(query: String!, take: Int = 10, skip: Int = 0, pageSort: PublishedPageSort = publishedAt, articleSort: ArticleSort = publishedAt, order: SortOrder = Descending): Phrase
-
-  """
-  This query performs a fulltext search on titles and blocks of articles with a specific tag and returns all matching ones.
-  """
-  phraseWithTag(query: String!, tag: String!, take: Int = 10, skip: Int = 0, articleSort: ArticleSort = publishedAt, order: SortOrder = Descending): Phrase
   _entities(representations: [_Any!]!): [_Entity]!
   _service: _Service!
 }
@@ -771,6 +766,9 @@ type ArticleConnection {
 }
 
 input ArticleFilter {
+  title: String
+  preTitle: String
+  lead: String
   publicationDateFrom: DateFilter
   publicationDateTo: DateFilter
   authors: [ID!]

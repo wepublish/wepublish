@@ -1,6 +1,6 @@
 import {styled} from '@mui/material'
-import {useState} from 'react'
-import {MdSearch, MdClose} from 'react-icons/md'
+import {useRef, useState} from 'react'
+import {MdClose, MdSearch} from 'react-icons/md'
 
 const SearchWrapper = styled('div')`
   position: relative;
@@ -28,54 +28,51 @@ const SearchInput = styled('input')<{expanded: boolean}>`
   position: absolute;
   right: 0;
   top: 0;
-  width: ${props => (props.expanded ? '200px' : '0')};
-  opacity: ${props => (props.expanded ? '1' : '0')};
-  transition: width 0.3s, opacity 0.3s;
-  padding: ${props => (props.expanded ? '0.5em' : '0')};
+  width: ${({expanded}) => (expanded ? '200px' : '0')};
+  opacity: ${({expanded}) => (expanded ? '1' : '0')};
+  padding: ${({expanded}) => (expanded ? '0.5em' : '0')};
+  pointer-events: ${({expanded}) => (expanded ? 'initial' : 'none')};
   border: 1px solid #ccc;
   border-radius: 4px;
+  transition: width 0.3s, opacity 0.3s;
 `
 
 interface SearchBarProps {
-  onSearchChange: (query: string | undefined) => void
+  onSearchChange: (query: string | null) => void
 }
 
 export function SearchBar({onSearchChange}: SearchBarProps) {
+  const searchRef = useRef<HTMLInputElement>(null)
   const [expanded, setExpanded] = useState(false)
-  const [query, setQuery] = useState('')
-
-  const handleSearchClick = () => {
-    setExpanded(prev => !prev)
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value)
-  }
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onSearchChange(query)
-    }
-  }
-
-  const handleClearClick = () => {
-    setQuery('')
-    setExpanded(false)
-    onSearchChange(undefined)
-  }
 
   return (
     <SearchWrapper>
-      <SearchIcon onClick={handleSearchClick} />
+      <SearchIcon
+        onClick={() => {
+          setExpanded(prev => !prev)
+
+          if (!expanded) {
+            searchRef.current?.focus()
+          }
+        }}
+      />
+
       <SearchInput
+        ref={searchRef}
         type="text"
-        value={query}
-        onChange={handleInputChange}
-        onKeyPress={handleKeyPress}
+        onChange={e => onSearchChange(e.target.value)}
         expanded={expanded}
         placeholder="Search..."
       />
-      {expanded && <CloseIcon onClick={handleClearClick} />}
+
+      {expanded && (
+        <CloseIcon
+          onClick={() => {
+            setExpanded(false)
+            onSearchChange(null)
+          }}
+        />
+      )}
     </SearchWrapper>
   )
 }

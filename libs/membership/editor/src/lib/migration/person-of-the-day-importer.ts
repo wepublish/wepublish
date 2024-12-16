@@ -98,7 +98,7 @@ export class PersonOfTheDayImporter extends BaseImporter {
         input: {
           slug: this.slug,
           title: this.person.name,
-          lead: this.person.title || '',
+          preTitle: this.person.title || '',
           authorIDs: [],
           tags: [tagId, searchSliderTagId],
           properties: [],
@@ -144,7 +144,7 @@ export class PersonOfTheDayImporter extends BaseImporter {
     const text = this.person.description.replace(/\n/, '')
     const richText = this.deserializer.run(text)
     return {
-      richText: richText
+      richText
     }
   }
 
@@ -159,7 +159,7 @@ export class PersonOfTheDayImporter extends BaseImporter {
 
     const linkNode = {
       type: ElementNodeType.Link,
-      url: url,
+      url,
       children: [{text: url}]
     }
     return {
