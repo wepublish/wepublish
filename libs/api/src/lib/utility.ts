@@ -1,4 +1,4 @@
-import {MemberPlan, PaymentMethod, Prisma} from '@prisma/client'
+import {MemberPlan, PaymentMethod} from '@prisma/client'
 import formatISO from 'date-fns/formatISO'
 import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphql'
 import {delegateToSchema, IDelegateToSchemaOptions, Transform} from '@graphql-tools/delegate'

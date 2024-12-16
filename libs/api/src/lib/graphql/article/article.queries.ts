@@ -3,7 +3,6 @@ import {SortOrder, graphQLSortOrderToPrisma, getMaxTake} from '@wepublish/utils/
 import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article'
 import {ConnectionResult} from '../../db/common'
 import {mapDateFilterToPrisma} from '../utils'
-import util from 'util'
 
 export const createArticleOrder = (
   field: ArticleSort,
