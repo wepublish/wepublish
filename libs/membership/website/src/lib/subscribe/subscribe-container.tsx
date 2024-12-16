@@ -29,7 +29,7 @@ export type SubscribeContainerProps<
 > = BuilderContainerProps &
   Pick<
     BuilderSubscribeProps<T>,
-    'fields' | 'schema' | 'defaults' | 'termsOfServiceUrl' | 'donate'
+    'fields' | 'schema' | 'defaults' | 'termsOfServiceUrl' | 'donate' | 'returningUserId'
   > & {
     filter?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
     deactivateSubscriptionId?: string
@@ -43,7 +43,8 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
   filter,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate
+  donate,
+  returningUserId
 }: SubscribeContainerProps<T>) => {
   const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
@@ -132,6 +133,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
         memberPlans={filteredMemberPlans}
         termsOfServiceUrl={termsOfServiceUrl}
         donate={donate}
+        returningUserId={returningUserId}
         onSubscribe={async formData => {
           const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
             mb => mb.id === formData.memberPlanId
