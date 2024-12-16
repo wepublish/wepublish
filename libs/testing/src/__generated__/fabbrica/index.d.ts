@@ -157,6 +157,7 @@ type ArticleRevisionFactoryDefineInput = {
     canonicalUrl?: string | null;
     breaking?: boolean;
     blocks?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
+    searchPlainText?: string | null;
     hideAuthor?: boolean;
     socialMediaTitle?: string | null;
     socialMediaDescription?: string | null;
@@ -1304,6 +1305,7 @@ type PageRevisionFactoryDefineInput = {
     socialMediaTitle?: string | null;
     socialMediaDescription?: string | null;
     blocks?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
+    searchPlainText?: string | null;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutPageRevisionInput;
     image?: PageRevisionimageFactory | Prisma.ImageCreateNestedOneWithoutPageRevisionImagesInput;
     socialMediaImage?: PageRevisionsocialMediaImageFactory | Prisma.ImageCreateNestedOneWithoutPageRevisionSocialMediaImagesInput;
