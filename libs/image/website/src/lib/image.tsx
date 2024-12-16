@@ -107,8 +107,6 @@ export function Image({image, ...props}: BuilderImageProps) {
       sizes={imageSizes.join(',\n')}
       loading={loading}
       fetchPriority={fetchPriority}
-      width={square ? undefined : image.width}
-      height={square ? undefined : image.height}
     />
   )
 }
