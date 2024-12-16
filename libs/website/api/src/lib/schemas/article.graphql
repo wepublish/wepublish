@@ -32,6 +32,8 @@ fragment ArticleWithoutBlocks on Article {
     ...FullImage
   }
 
+  likes
+
   properties {
     ...FullProperty
   }
@@ -68,6 +70,30 @@ query ArticleList(
   articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...ArticleWithoutBlocks
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query FullArticleList(
+  $filter: ArticleFilter
+  $cursor: ID
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...FullArticle
     }
 
     pageInfo {

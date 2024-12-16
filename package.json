@@ -349,6 +349,7 @@
     "slate-serializers": "^0.0.32",
     "stripe": "^8.126.0",
     "tslib": "^2.3.0",
+    "usehooks-ts": "^3.1.0",
     "zod": "^3.23.8",
     "zod-i18n-map": "^2.13.1"
   },

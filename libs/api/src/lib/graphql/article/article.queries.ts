@@ -3,6 +3,7 @@ import {SortOrder, graphQLSortOrderToPrisma, getMaxTake} from '@wepublish/utils/
 import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article'
 import {ConnectionResult} from '../../db/common'
 import {mapDateFilterToPrisma} from '../utils'
+import util from 'util'
 
 export const createArticleOrder = (
   field: ArticleSort,
@@ -269,6 +270,8 @@ export const getArticles = async (
 ): Promise<ConnectionResult<ArticleWithRevisions>> => {
   const orderBy = createArticleOrder(sortedField, order)
   const where = createArticleFilter(filter)
+
+  console.log(util.inspect(where, {depth: null}))
 
   const [totalCount, articles] = await Promise.all([
     article.count({

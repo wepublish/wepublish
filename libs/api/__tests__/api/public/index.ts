@@ -49,6 +49,7 @@ export type Article = {
   id: Scalars['ID'];
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
+  likes: Scalars['Int'];
   peeredArticleURL?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
   properties: Array<PublicProperties>;
@@ -75,8 +76,13 @@ export type ArticleConnection = {
 export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['ID']>>;
   includeHidden?: InputMaybe<Scalars['Boolean']>;
+  lead?: InputMaybe<Scalars['String']>;
+  preTitle?: InputMaybe<Scalars['String']>;
+  publicationDateFrom?: InputMaybe<DateFilter>;
+  publicationDateTo?: InputMaybe<DateFilter>;
   shared?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type ArticleNavigationLink = BaseNavigationLink & {
@@ -424,6 +430,19 @@ export type DashboardSubscription = {
   startsAt: Scalars['DateTime'];
 };
 
+export type DateFilter = {
+  comparison: DateFilterComparison;
+  date?: InputMaybe<Scalars['DateTime']>;
+};
+
+export enum DateFilterComparison {
+  Eq = 'eq',
+  Gt = 'gt',
+  Gte = 'gte',
+  Lt = 'lt',
+  Lte = 'lte'
+}
+
 export type DeletePollVotesResult = {
   __typename?: 'DeletePollVotesResult';
   count: Scalars['Int'];
@@ -741,6 +760,14 @@ export type InvoiceItem = {
   total: Scalars['Int'];
 };
 
+export type LikeCreateInput = {
+  articleId: Scalars['ID'];
+};
+
+export type LikeDeleteInput = {
+  articleId: Scalars['ID'];
+};
+
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -836,6 +863,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** This mutation allows to add a comment. The input is of type CommentInput. */
   addComment: Comment;
+  /** Add a like to an existing article. */
+  addLike: Scalars['Int'];
   /** This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now */
   cancelUserSubscription?: Maybe<Subscription>;
   createBanner: Banner;
@@ -908,6 +937,8 @@ export type Mutation = {
   registerMember: Registration;
   /** This mutation allows to register a new member, select a member plan, payment method and create an invoice.  */
   registerMemberAndReceivePayment: RegistrationAndPayment;
+  /** Remove a like from an existing article. */
+  removeLike: Scalars['Int'];
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
@@ -960,6 +991,11 @@ export type Mutation = {
 
 export type MutationAddCommentArgs = {
   input: CommentInput;
+};
+
+
+export type MutationAddLikeArgs = {
+  input: LikeCreateInput;
 };
 
 
@@ -1155,6 +1191,11 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>;
   successURL?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationRemoveLikeArgs = {
+  input: LikeDeleteInput;
 };
 
 

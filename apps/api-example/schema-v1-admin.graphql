@@ -683,6 +683,7 @@ type ArticleRevision {
   socialMediaDescription: String
   socialMediaAuthors: [Author!]!
   socialMediaImage: Image
+  likes: Int
   blocks: [Block!]!
 }
 
@@ -1625,6 +1626,7 @@ input ArticleInput {
   socialMediaAuthorIDs: [ID!]!
   socialMediaImageID: ID
   blocks: [BlockInput!]!
+  likes: Int
 }
 
 input BlockInput {

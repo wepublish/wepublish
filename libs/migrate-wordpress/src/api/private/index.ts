@@ -97,6 +97,7 @@ export type ArticleInput = {
   hideAuthor: Scalars['Boolean']
   imageID?: InputMaybe<Scalars['ID']>
   lead?: InputMaybe<Scalars['String']>
+  likes?: InputMaybe<Scalars['Int']>
   preTitle?: InputMaybe<Scalars['String']>
   properties: Array<PropertiesInput>
   seoTitle?: InputMaybe<Scalars['String']>
@@ -131,6 +132,7 @@ export type ArticleRevision = {
   hideAuthor: Scalars['Boolean']
   image?: Maybe<Image>
   lead?: Maybe<Scalars['String']>
+  likes?: Maybe<Scalars['Int']>
   preTitle?: Maybe<Scalars['String']>
   properties: Array<Properties>
   publishAt?: Maybe<Scalars['DateTime']>

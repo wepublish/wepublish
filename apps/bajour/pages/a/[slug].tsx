@@ -19,10 +19,11 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
-import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
 import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
 import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
 import {Container} from '../../src/components/layout/container'
+import {SEARCH_SLIDER_TAG, SliderArticle} from '../../src/components/search-slider/search-slider'
+import {SearchSlider} from '../../src/components/search-slider/search-slider'
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
@@ -70,6 +71,7 @@ export default function ArticleBySlugIdOrToken() {
   } as ComponentProps<typeof ArticleContainer>
 
   const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
+  const isSearchSlider = data?.article?.tags.some(({tag}) => tag === SEARCH_SLIDER_TAG)
 
   return (
     <WebsiteBuilderProvider
@@ -80,7 +82,10 @@ export default function ArticleBySlugIdOrToken() {
       Article={isFDT ? FdTArticle : Article}
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
-        <ArticleContainer {...containerProps} />
+        {isSearchSlider && data?.article && (
+          <SearchSlider key={data.article.id} article={data.article as SliderArticle} />
+        )}
+        {!isSearchSlider && <ArticleContainer {...containerProps} />}
 
         {/* Waiting for Samuel H. from Bajour to confirm - 2024-11-20
          !isFDT && (
@@ -93,9 +98,11 @@ export default function ArticleBySlugIdOrToken() {
           </ArticleWrapper>
         ) */}
 
-        <BriefingNewsletter />
+        {!isSearchSlider && data?.article && (
+          <SearchSlider article={data.article as SliderArticle} />
+        )}
 
-        {data?.article && (
+        {data?.article && !isSearchSlider && (
           <>
             <ArticleWrapper>
               <H5 component={'h2'} css={uppercase}>

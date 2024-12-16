@@ -57,6 +57,7 @@ model ArticleRevision {
   socialMediaAuthors     ArticleRevisionSocialMediaAuthor[]
   socialMediaImage       Image?                             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   socialMediaImageID     String?
+  likes                  Int                                @default(0)
 
   revision    Int       @default(0)
   createdAt   DateTime  @default(now())

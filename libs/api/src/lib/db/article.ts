@@ -32,6 +32,8 @@ export interface ArticleData {
   readonly socialMediaDescription?: string | null
   readonly socialMediaAuthors: ArticleRevisionSocialMediaAuthor[]
   readonly socialMediaImageID?: string | null
+
+  readonly likes: number
 }
 
 // Article State Flow:
@@ -91,6 +93,9 @@ export interface ArticleFilter {
 }
 
 export interface PublicArticleFilter {
+  readonly title?: string
+  readonly preTitle?: string
+  readonly lead?: string
   readonly authors?: string[]
   readonly tags?: string[]
   readonly includeHidden?: boolean
