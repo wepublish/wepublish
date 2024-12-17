@@ -34,27 +34,32 @@ export class BaseImporter {
   ) {}
 
   protected async getOrCreateTagId(tag: string): Promise<string | undefined> {
-    const {data: existingData} = await this.requests.getTags({
-      variables: {
-        filter: {
-          tag
-        }
-      },
-      fetchPolicy: 'no-cache'
-    })
+    try {
+      const {data: existingData} = await this.requests.getTags({
+        variables: {
+          filter: {
+            tag
+          }
+        },
+        fetchPolicy: 'no-cache'
+      })
 
-    if (existingData?.tags?.totalCount === 1) {
-      return existingData?.tags?.nodes.find(t => t.tag === tag)?.id
-    }
-
-    const {data: newData} = await this.requests.createTag({
-      variables: {
-        tag,
-        type: TagType.Article
+      const tagCount = existingData?.tags?.totalCount || 0
+      if (tagCount > 0) {
+        return existingData?.tags?.nodes.find(t => t.tag === tag)?.id
       }
-    })
 
-    return newData?.createTag?.id
+      const {data: newData} = await this.requests.createTag({
+        variables: {
+          tag,
+          type: TagType.Article
+        }
+      })
+
+      return newData?.createTag?.id
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   protected async checkImageExists(title: string, filename: string): Promise<string | null> {

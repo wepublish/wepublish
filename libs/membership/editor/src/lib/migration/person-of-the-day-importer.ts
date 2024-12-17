@@ -51,12 +51,16 @@ export class PersonOfTheDayImporter extends BaseImporter {
 
     const tagId = await this.getOrCreateTagId(this.person.categories)
     if (!tagId) {
-      throw new Error(`Tag ${this.person.categories} not found`)
+      console.log(
+        `Tag ${this.person.categories} not found. CANCEL IMPORT FOR person with id ${this.person.id}`
+      )
+      return
     }
 
     const searchSliderTagId = await this.getOrCreateTagId('search-slider')
     if (!searchSliderTagId) {
-      throw new Error(`Tag search-slider not found`)
+      console.log(`Tag search-slider not found. CANCEL IMPORT FOR person with id ${this.person.id}`)
+      return
     }
 
     if (this.person.image) {
