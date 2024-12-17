@@ -356,7 +356,6 @@ export function SearchSlider({article}: SearchSliderProps) {
     mode: 'snap',
     slideChanged: async slider => {
       const slideIndex = slider.track.details.slides?.[slider.track.details.rel].abs
-      console.log('slide index', slideIndex)
       setCurrentSlide(slideIndex)
       await paginateArticles(slideIndex, slider)
     },
