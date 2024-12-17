@@ -104,9 +104,14 @@ const SearchContainer = styled('div')`
   }
 `
 
-const DateContainer = styled('div')`
-  margin-top: -${({theme}) => theme.spacing(1)};
+const SearchHits = styled('div')`
+  padding-top: ${({theme}) => theme.spacing(0.5)};
+  padding-bottom: ${({theme}) => theme.spacing(0.5)};
+  font-size: ${({theme}) => theme.typography.subtitle1};
+  font-weight: 700;
+`
 
+const DateContainer = styled('div')`
   ${({theme}) => theme.breakpoints.up('md')} {
     margin-top: 0;
   }
@@ -147,6 +152,7 @@ const BtnContainer = styled('div')`
 
 const SlideItem = styled('div')<{mainImage?: boolean}>`
   cursor: pointer;
+  position: relative;
   min-height: unset !important;
   height: ${SLIDER_HEIGHT}px;
   min-width: ${SLIDER_WIDTH}px !important;
@@ -165,6 +171,15 @@ const SlideItem = styled('div')<{mainImage?: boolean}>`
     height: ${SLIDER_HEIGHT_MD}px;
     min-width: ${SLIDER_WIDTH_MD}px !important;
   }
+`
+
+const SlideItemOverlay = styled('div')<{mainImage?: boolean}>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.45);
 `
 
 const SlideTitle = styled('span')`
@@ -200,6 +215,7 @@ export function SearchSlider({article}: SearchSliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slidesDetails, setSlidesDetails] = useState<TrackDetails['slides']>()
   const [searchQuery, setSearchQuery] = useState<string | null>()
+  const [searchHits, setSearchHits] = useState<number | undefined>(undefined)
 
   // getting the first tag from initial article which is not the technical search-slider tag.
   const tag = useMemo(() => article?.tags.find(tag => tag.tag !== SEARCH_SLIDER_TAG), [article])
@@ -298,7 +314,9 @@ export function SearchSlider({article}: SearchSliderProps) {
             }
           },
           updateQuery: (prev, {fetchMoreResult}) => {
-            if (!fetchMoreResult?.articles?.nodes?.length) {
+            const foundArticles = fetchMoreResult?.articles?.nodes?.length
+            setSearchHits(foundArticles)
+            if (!foundArticles) {
               return prev
             }
 
@@ -392,7 +410,15 @@ export function SearchSlider({article}: SearchSliderProps) {
               await searchArticles(query, keenSliderRef.current!)
             }}
           />
-
+          <SearchHits>
+            <b>
+              {!!searchQuery && (
+                <div>
+                  {searchHits} Resultat{searchHits !== 1 && <>e</>}
+                </div>
+              )}
+            </b>
+          </SearchHits>
           <DateContainer>
             <u>{publicationDate}</u>
           </DateContainer>
@@ -411,13 +437,19 @@ export function SearchSlider({article}: SearchSliderProps) {
               key={idx}
               className={`keen-slider__slide`}
               mainImage={mainArticle.id === article?.id}
-              onClick={() => keenSliderRef.current?.moveToIdx(idx)}>
+              onClick={() => {
+                keenSliderRef.current?.moveToIdx(idx)
+                // used for the stuck slider elements on the very right side, if slider can't be moved further to the right.
+                setCurrentSlide(idx)
+              }}>
               {article?.image && (
                 <>
                   <Image image={article.image} />
 
                   {slidesDetails?.[idx].abs !== currentSlide && (
-                    <SlideTitle>{article.title}</SlideTitle>
+                    <SlideItemOverlay>
+                      <SlideTitle>{article?.title}</SlideTitle>
+                    </SlideItemOverlay>
                   )}
                 </>
               )}
@@ -427,17 +459,7 @@ export function SearchSlider({article}: SearchSliderProps) {
       </SliderContainer>
 
       <TextContainer>
-        <div>
-          {mainArticle.preTitle ? (
-            <H5 gutterBottom>{mainArticle.preTitle} </H5>
-          ) : (
-            <H5 gutterBottom>
-              {mainArticle?.title}
-
-              <span style={{fontSize: '1rem'}}>, weil ...</span>
-            </H5>
-          )}
-        </div>
+        <div>{mainArticle.preTitle && <H5 gutterBottom>{mainArticle.preTitle} </H5>}</div>
 
         {textBlock?.richText && <RichTextBlock richText={textBlock.richText} />}
 
