@@ -338,6 +338,7 @@ export function SearchSlider({article}: SearchSliderProps) {
     mode: 'snap',
     slideChanged: async slider => {
       const slideIndex = slider.track.details.slides?.[slider.track.details.rel].abs
+      console.log('slide index', slideIndex)
       setCurrentSlide(slideIndex)
       await paginateArticles(slideIndex, slider)
     },
@@ -411,7 +412,11 @@ export function SearchSlider({article}: SearchSliderProps) {
               key={idx}
               className={`keen-slider__slide`}
               mainImage={mainArticle.id === article?.id}
-              onClick={() => keenSliderRef.current?.moveToIdx(idx)}>
+              onClick={() => {
+                keenSliderRef.current?.moveToIdx(idx)
+                // used for the stuck slider elements on the very right side, if slider can't be moved further to the right.
+                setCurrentSlide(idx)
+              }}>
               {article?.image && (
                 <>
                   <Image image={article.image} />
@@ -427,17 +432,7 @@ export function SearchSlider({article}: SearchSliderProps) {
       </SliderContainer>
 
       <TextContainer>
-        <div>
-          {mainArticle.preTitle ? (
-            <H5 gutterBottom>{mainArticle.preTitle} </H5>
-          ) : (
-            <H5 gutterBottom>
-              {mainArticle?.title}
-
-              <span style={{fontSize: '1rem'}}>, weil ...</span>
-            </H5>
-          )}
-        </div>
+        <div>{mainArticle.preTitle && <H5 gutterBottom>{mainArticle.preTitle} </H5>}</div>
 
         {textBlock?.richText && <RichTextBlock richText={textBlock.richText} />}
 
