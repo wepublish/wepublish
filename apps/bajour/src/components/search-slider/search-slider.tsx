@@ -152,6 +152,7 @@ const BtnContainer = styled('div')`
 
 const SlideItem = styled('div')<{mainImage?: boolean}>`
   cursor: pointer;
+  position: relative;
   min-height: unset !important;
   height: ${SLIDER_HEIGHT}px;
   min-width: ${SLIDER_WIDTH}px !important;
@@ -170,6 +171,15 @@ const SlideItem = styled('div')<{mainImage?: boolean}>`
     height: ${SLIDER_HEIGHT_MD}px;
     min-width: ${SLIDER_WIDTH_MD}px !important;
   }
+`
+
+const SlideItemOverlay = styled('div')<{mainImage?: boolean}>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.45);
 `
 
 const SlideTitle = styled('span')`
@@ -438,7 +448,9 @@ export function SearchSlider({article}: SearchSliderProps) {
                   <Image image={article.image} />
 
                   {slidesDetails?.[idx].abs !== currentSlide && (
-                    <SlideTitle>{article.title}</SlideTitle>
+                    <SlideItemOverlay>
+                      <SlideTitle>{article?.title}</SlideTitle>
+                    </SlideItemOverlay>
                   )}
                 </>
               )}
