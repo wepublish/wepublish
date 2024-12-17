@@ -97,12 +97,18 @@ export class PersonOfTheDayImporter extends BaseImporter {
       return
     }
 
+    const preTitle = this.getPreTitle({
+      name: this.person.name,
+      tag: this.person.categories,
+      title: this.person.title
+    })
+
     const articleResult = await this.requests.createArticle({
       variables: {
         input: {
           slug: this.slug,
           title: this.person.name,
-          preTitle: this.person.title || '',
+          preTitle,
           authorIDs: [],
           tags: [tagId, searchSliderTagId],
           properties: [],
@@ -173,6 +179,17 @@ export class PersonOfTheDayImporter extends BaseImporter {
           children: [linkNode]
         }
       ]
+    }
+  }
+
+  private getPreTitle({name, tag, title}: {name: string; tag: string; title?: string}): string {
+    switch (tag) {
+      case 'basler-in-des-tages':
+        return title || `Basler*in des Tages ist ${name} weil...`
+      case 'fan-der-woche':
+        return title || `Fan der Woche ist ${name} weil...`
+      default:
+        return title || name || ''
     }
   }
 }

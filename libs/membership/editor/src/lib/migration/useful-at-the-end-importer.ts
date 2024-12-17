@@ -97,6 +97,7 @@ export class UsefulAtTheEndImporter extends BaseImporter {
         input: {
           slug: this.slug,
           title: this.useful.title,
+          preTitle: this.useful.title || '',
           lead: '',
           authorIDs: [],
           tags: [tagId, searchSliderTagId],
