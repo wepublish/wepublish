@@ -11,7 +11,14 @@ const hankenGrotesk = Hanken_Grotesk({
   preload: true
 })
 
+const {
+  palette: {augmentColor}
+} = WePTheme
+
 const theme = createTheme(WePTheme, {
+  palette: {
+    primary: augmentColor({color: {main: '#89B9DC', light: '#89B9DC', contrastText: '#fff'}})
+  },
   typography: {
     h1: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
