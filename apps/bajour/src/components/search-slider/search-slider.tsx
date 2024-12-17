@@ -104,9 +104,14 @@ const SearchContainer = styled('div')`
   }
 `
 
-const DateContainer = styled('div')`
-  margin-top: -${({theme}) => theme.spacing(1)};
+const SearchHits = styled('div')`
+  padding-top: ${({theme}) => theme.spacing(0.5)};
+  padding-bottom: ${({theme}) => theme.spacing(0.5)};
+  font-size: ${({theme}) => theme.typography.subtitle1};
+  font-weight: 700;
+`
 
+const DateContainer = styled('div')`
   ${({theme}) => theme.breakpoints.up('md')} {
     margin-top: 0;
   }
@@ -200,6 +205,7 @@ export function SearchSlider({article}: SearchSliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slidesDetails, setSlidesDetails] = useState<TrackDetails['slides']>()
   const [searchQuery, setSearchQuery] = useState<string | null>()
+  const [searchHits, setSearchHits] = useState<number | undefined>(undefined)
 
   // getting the first tag from initial article which is not the technical search-slider tag.
   const tag = useMemo(() => article?.tags.find(tag => tag.tag !== SEARCH_SLIDER_TAG), [article])
@@ -298,7 +304,9 @@ export function SearchSlider({article}: SearchSliderProps) {
             }
           },
           updateQuery: (prev, {fetchMoreResult}) => {
-            if (!fetchMoreResult?.articles?.nodes?.length) {
+            const foundArticles = fetchMoreResult?.articles?.nodes?.length
+            setSearchHits(foundArticles)
+            if (!foundArticles) {
               return prev
             }
 
@@ -393,7 +401,15 @@ export function SearchSlider({article}: SearchSliderProps) {
               await searchArticles(query, keenSliderRef.current!)
             }}
           />
-
+          <SearchHits>
+            <b>
+              {!!searchQuery && (
+                <div>
+                  {searchHits} Resultat{searchHits !== 1 && <>e</>}
+                </div>
+              )}
+            </b>
+          </SearchHits>
           <DateContainer>
             <u>{publicationDate}</u>
           </DateContainer>

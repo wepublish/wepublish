@@ -7,7 +7,6 @@ const SearchWrapper = styled('div')`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-bottom: 1em;
 `
 
 const SearchIcon = styled(MdSearch)`
