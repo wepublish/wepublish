@@ -415,7 +415,7 @@ describe('SubscriptionPaymentsService', () => {
 
   it('get subscriptions for invoice creation', async () => {
     // Ensure that none deactivated subscriptions are returned
-    let subscriptionsToExtend = await subscriptionService.getSubscriptionsForInvoiceCreation(
+    let subscriptionsToExtend = await subscriptionService.getActiveSubscriptionsWithoutInvoice(
       new Date(),
       add(new Date(), {days: 200})
     )
@@ -472,7 +472,7 @@ describe('SubscriptionPaymentsService', () => {
       }
     })
 
-    subscriptionsToExtend = await subscriptionService.getSubscriptionsForInvoiceCreation(
+    subscriptionsToExtend = await subscriptionService.getActiveSubscriptionsWithoutInvoice(
       new Date(),
       add(new Date(), {days: 200})
     )
@@ -502,7 +502,7 @@ describe('SubscriptionPaymentsService', () => {
       }
     })
 
-    subscriptionsToExtend = await subscriptionService.getSubscriptionsForInvoiceCreation(
+    subscriptionsToExtend = await subscriptionService.getActiveSubscriptionsWithoutInvoice(
       new Date(),
       add(new Date(), {days: 200})
     )
@@ -518,7 +518,7 @@ describe('SubscriptionPaymentsService', () => {
     const subscription3 = await SubscriptionFactory.create({
       paidUntil: add(new Date(), {days: 5, seconds: 10})
     })
-    subscriptionsToExtend = await subscriptionService.getSubscriptionsForInvoiceCreation(
+    subscriptionsToExtend = await subscriptionService.getActiveSubscriptionsWithoutInvoice(
       new Date(),
       add(new Date(), {days: 5})
     )
@@ -530,7 +530,7 @@ describe('SubscriptionPaymentsService', () => {
 
   it('invoices to charge', async () => {
     // Ensure that none deactivated subscriptions are returned
-    let invoicesToCharge = await subscriptionService.getInvoicesToCharge(new Date())
+    let invoicesToCharge = await subscriptionService.findUnpaidDueInvoices(new Date())
     expect(invoicesToCharge.length).toEqual(0)
     await InvoiceFactory.create({
       dueAt: sub(new Date(), {days: 1})
@@ -541,7 +541,7 @@ describe('SubscriptionPaymentsService', () => {
     await InvoiceFactory.create({
       dueAt: add(new Date(), {days: 1})
     })
-    invoicesToCharge = await subscriptionService.getInvoicesToCharge(new Date())
+    invoicesToCharge = await subscriptionService.findUnpaidDueInvoices(new Date())
     expect(invoicesToCharge.length).toEqual(2)
   })
 
@@ -550,7 +550,7 @@ describe('SubscriptionPaymentsService', () => {
       dueAt: sub(new Date(), {days: 1})
     })
     expect(inv1.subscriptionID).not.toEqual(null)
-    let invoicesToCharge = await subscriptionService.getInvoicesToCharge(new Date())
+    let invoicesToCharge = await subscriptionService.findUnpaidDueInvoices(new Date())
     expect(invoicesToCharge.length).toEqual(1)
     expect(invoicesToCharge[0].id).toEqual(inv1.id)
 
@@ -559,14 +559,16 @@ describe('SubscriptionPaymentsService', () => {
       subscription: undefined
     })
     expect(inv2.subscriptionID).toEqual(null)
-    invoicesToCharge = await subscriptionService.getInvoicesToCharge(new Date())
+    invoicesToCharge = await subscriptionService.findUnpaidDueInvoices(new Date())
     expect(invoicesToCharge.length).toEqual(1)
     expect(invoicesToCharge[0].id).toEqual(inv1.id)
   })
 
   it('invoices of subscriptions to deactivate', async () => {
     // Ensure that none deactivated subscriptions are returned
-    let invoicesToDeactivate = await subscriptionService.getSubscriptionsToDeactivate(new Date())
+    let invoicesToDeactivate = await subscriptionService.findUnpaidScheduledForDeactivationInvoices(
+      new Date()
+    )
     expect(invoicesToDeactivate.length).toEqual(0)
     await InvoiceFactory.create({
       scheduledDeactivationAt: sub(new Date(), {days: 1})
@@ -577,21 +579,19 @@ describe('SubscriptionPaymentsService', () => {
     await InvoiceFactory.create({
       scheduledDeactivationAt: add(new Date(), {days: 1})
     })
-    invoicesToDeactivate = await subscriptionService.getSubscriptionsToDeactivate(new Date())
+    invoicesToDeactivate = await subscriptionService.findUnpaidScheduledForDeactivationInvoices(
+      new Date()
+    )
     expect(invoicesToDeactivate.length).toEqual(1)
   })
   it('invoice creation yearly', async () => {
-    const action: Action = {
-      type: SubscriptionEvent.DEACTIVATION_UNPAID,
-      daysAwayFromEnding: 10,
-      externalMailTemplate: 'test'
-    }
     const paidUntil = add(new Date(), {days: 14})
+    const deactivationDate = add(paidUntil, {days: 10})
     const subscription = await createSubscriptionForInvoiceCreation(
       paidUntil,
       PaymentPeriodicity.yearly
     )
-    await subscriptionService.createInvoice(subscription!, action)
+    await subscriptionService.createInvoice({...subscription!, deactivationDate})
     const updatedSubscription = await getUpdatedSubscriptionAfterInvoiceCreation(subscription!)
     const addedPeriod = updatedSubscription!.periods.find(
       period =>
@@ -615,17 +615,13 @@ describe('SubscriptionPaymentsService', () => {
   })
 
   it('invoice creation monthly', async () => {
-    const action: Action = {
-      type: SubscriptionEvent.DEACTIVATION_UNPAID,
-      daysAwayFromEnding: 3,
-      externalMailTemplate: 'test'
-    }
     const paidUntil = add(new Date(), {days: 7})
+    const deactivationDate = add(paidUntil, {days: 3})
     const subscription = await createSubscriptionForInvoiceCreation(
       paidUntil,
       PaymentPeriodicity.monthly
     )
-    await subscriptionService.createInvoice(subscription!, action)
+    await subscriptionService.createInvoice({...subscription!, deactivationDate})
     const updatedSubscription = await getUpdatedSubscriptionAfterInvoiceCreation(subscription!)
     const addedPeriod = updatedSubscription!.periods.find(
       period =>
@@ -649,17 +645,13 @@ describe('SubscriptionPaymentsService', () => {
   })
 
   it('invoice creation quarterly', async () => {
-    const action: Action = {
-      type: SubscriptionEvent.DEACTIVATION_UNPAID,
-      daysAwayFromEnding: 30,
-      externalMailTemplate: 'test'
-    }
     const paidUntil = add(new Date(), {days: 30})
+    const deactivationDate = add(paidUntil, {days: 30})
     const subscription = await createSubscriptionForInvoiceCreation(
       paidUntil,
       PaymentPeriodicity.quarterly
     )
-    await subscriptionService.createInvoice(subscription!, action)
+    await subscriptionService.createInvoice({...subscription!, deactivationDate})
     const updatedSubscription = await getUpdatedSubscriptionAfterInvoiceCreation(subscription!)
     const addedPeriod = updatedSubscription!.periods.find(
       period =>
@@ -679,17 +671,13 @@ describe('SubscriptionPaymentsService', () => {
   })
 
   it('invoice creation biannual', async () => {
-    const action: Action = {
-      type: SubscriptionEvent.DEACTIVATION_UNPAID,
-      daysAwayFromEnding: 1,
-      externalMailTemplate: 'test'
-    }
     const paidUntil = add(new Date(), {days: 5})
+    const deactivationDate = add(paidUntil, {days: 1})
     const subscription = await createSubscriptionForInvoiceCreation(
       paidUntil,
       PaymentPeriodicity.biannual
     )
-    await subscriptionService.createInvoice(subscription!, action)
+    await subscriptionService.createInvoice({...subscription!, deactivationDate})
     const updatedSubscription = await getUpdatedSubscriptionAfterInvoiceCreation(subscription!)
     const addedPeriod = updatedSubscription!.periods.find(
       period =>
@@ -996,22 +984,6 @@ describe('SubscriptionPaymentsService', () => {
       add(new Date(), {minutes: -2, months: 1}).getTime()
     )
     expect(res.endsAt.getTime()).toBeLessThanOrEqual(add(new Date(), {months: 1}).getTime())
-  })
-
-  it('Pass wrong SubscriptionEvent when creating invoice', async () => {
-    try {
-      const event: Action = {
-        type: SubscriptionEvent.RENEWAL_SUCCESS,
-        daysAwayFromEnding: 1,
-        externalMailTemplate: null
-      }
-      await subscriptionService['createInvoice']({} as any, event)
-      throw Error('This execution should fail!')
-    } catch (e) {
-      expect((e as Error).toString()).toEqual(
-        'BadRequestException: Given action has not right type! RENEWAL_SUCCESS should never happen!'
-      )
-    }
   })
 
   it('Offsession payment with canceled or already paid invoice', async () => {

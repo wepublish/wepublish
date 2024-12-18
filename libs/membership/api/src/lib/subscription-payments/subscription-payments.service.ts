@@ -41,7 +41,7 @@ export class SubscriptionPaymentsService {
     private readonly payments: PaymentsService
   ) {}
 
-  public async getSubscriptionsForInvoiceCreation(
+  public async getActiveSubscriptionsWithoutInvoice(
     runDate: Date,
     closestRenewalDate: Date
   ): Promise<
@@ -92,7 +92,7 @@ export class SubscriptionPaymentsService {
    * @param runDate The current date.
    * @returns All invoices that are due.
    */
-  public async getInvoicesToCharge(runDate: Date) {
+  public async findUnpaidDueInvoices(runDate: Date) {
     return this.prismaService.invoice.findMany({
       where: {
         dueAt: {
@@ -128,7 +128,7 @@ export class SubscriptionPaymentsService {
    * @param runDate the date to check for.
    * @returns a list of invoices.
    */
-  public async getSubscriptionsToDeactivate(runDate: Date) {
+  public async findUnpaidScheduledForDeactivationInvoices(runDate: Date) {
     return this.prismaService.invoice.findMany({
       where: {
         scheduledDeactivationAt: {
@@ -157,7 +157,7 @@ export class SubscriptionPaymentsService {
    * @returns a list of subscriptions.
    */
 
-  public async getExpiredNotAutoRenewSubscriptionsToDeactivate(runDate: Date) {
+  public async findActiveExpiredNotAutoRenewSubscriptions(runDate: Date) {
     return this.prismaService.subscription.findMany({
       where: {
         paidUntil: {
@@ -211,21 +211,12 @@ export class SubscriptionPaymentsService {
       periods: SubscriptionPeriod[]
       user: User
       memberPlan: MemberPlan
-    },
-    scheduledDeactivation: Action
-  ) {
-    if (scheduledDeactivation.type !== SubscriptionEvent.DEACTIVATION_UNPAID) {
-      throw new BadRequestException(
-        `Given action has not right type! ${scheduledDeactivation.type} should never happen!`
-      )
+      deactivationDate: Date
     }
-
+  ) {
     const amount =
       subscription.monthlyAmount * mapPaymentPeriodToMonths(subscription.paymentPeriodicity)
     const description = `${subscription.paymentPeriodicity} renewal of subscription ${subscription.memberPlan.name}`
-    const deactivationDate = add(subscription.paidUntil || new Date(), {
-      days: scheduledDeactivation.daysAwayFromEnding || undefined
-    })
 
     return this.prismaService.invoice.create({
       data: {
@@ -241,7 +232,7 @@ export class SubscriptionPaymentsService {
             amount
           }
         },
-        scheduledDeactivationAt: deactivationDate,
+        scheduledDeactivationAt: subscription.deactivationDate,
         subscriptionPeriods: {
           create: {
             paymentPeriodicity: subscription.paymentPeriodicity,
