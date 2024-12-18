@@ -11,8 +11,9 @@ import {
 } from '@wepublish/website'
 import {format} from 'date-fns'
 import {KeenSliderInstance, TrackDetails, useKeenSlider} from 'keen-slider/react'
+import {useRouter} from 'next/router'
 import {descend, eqBy, sortWith, uniqWith} from 'ramda'
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useDebounceCallback} from 'usehooks-ts'
 
 import {LikeButton} from './like-button'
@@ -179,7 +180,7 @@ const SlideItemOverlay = styled('div')<{mainImage?: boolean}>`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.45);
+  background-color: rgba(255, 255, 255, 0.45);
 `
 
 const SlideTitle = styled('span')`
@@ -212,6 +213,9 @@ export function SearchSlider({article}: SearchSliderProps) {
   const {
     elements: {Image, H5}
   } = useWebsiteBuilder()
+
+  const router = useRouter()
+
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slidesDetails, setSlidesDetails] = useState<TrackDetails['slides']>()
   const [searchQuery, setSearchQuery] = useState<string | null>()
@@ -234,7 +238,10 @@ export function SearchSlider({article}: SearchSliderProps) {
 
   const sliderArticles = useMemo(() => data?.articles.nodes ?? [], [data])
   const mainArticle = sliderArticles[currentSlide]
-  const {likes, isLiked, handleLike} = useLikeStatus(mainArticle?.id ?? '', mainArticle?.likes)
+  const {likes, isLiked, isReady, handleLike} = useLikeStatus(
+    mainArticle?.id ?? '',
+    mainArticle?.likes
+  )
 
   const paginateArticles = useDebounceCallback(
     useCallback(
@@ -364,6 +371,35 @@ export function SearchSlider({article}: SearchSliderProps) {
     }
   })
 
+  // like main article via query param userAction
+  useEffect(() => {
+    // useLikeStatus hook must be ready (local store must be read)
+    if (!isReady) {
+      return
+    }
+    // main article must be ready
+    if (!mainArticle) {
+      return
+    }
+    // router query must contain a slug
+    if (!router.query?.slug) {
+      return
+    }
+    // only vote on the designated main article
+    if (router.query.slug !== mainArticle.slug) {
+      return
+    }
+    // router must be ready
+    if (!router.isReady) {
+      return
+    }
+
+    // add like, if userAction in query is set to like
+    if (router.query?.userAction === 'like') {
+      handleLike(true)
+    }
+  }, [router.isReady, router.query, mainArticle, isReady])
+
   // generate an upper and lower part of the title
   const title = useMemo(() => {
     const splitTag = tag?.tag?.split(' ') ?? []
@@ -464,7 +500,7 @@ export function SearchSlider({article}: SearchSliderProps) {
         {textBlock?.richText && <RichTextBlock richText={textBlock.richText} />}
 
         <BtnContainer>
-          <LikeButton onLike={handleLike} isLiked={isLiked} likes={likes} />
+          <LikeButton onLike={() => handleLike()} isLiked={isLiked} likes={likes} />
 
           <CommentListItemShare url={mainArticle.url} title="Share" />
         </BtnContainer>

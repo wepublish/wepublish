@@ -185,9 +185,9 @@ export class PersonOfTheDayImporter extends BaseImporter {
   private getPreTitle({name, tag, title}: {name: string; tag: string; title?: string}): string {
     switch (tag) {
       case 'basler-in-des-tages':
-        return title || `Basler*in des Tages ist ${name} weil...`
+        return title || `Basler*in des Tages ist ${name}, weil ...`
       case 'fan-der-woche':
-        return title || `Fan der Woche ist ${name} weil...`
+        return title || `Fan der Woche ist ${name}, weil ...`
       default:
         return title || name || ''
     }
