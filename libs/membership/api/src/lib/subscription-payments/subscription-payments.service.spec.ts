@@ -7,6 +7,8 @@ import {
   SubscriptionEvent
 } from '@prisma/client'
 import {
+  clearDatabase,
+  clearFullDatabase,
   defineInvoiceFactory,
   defineInvoiceItemFactory,
   defineMemberPlanFactory,
@@ -22,15 +24,14 @@ import {forwardRef} from '@nestjs/common'
 import {Test, TestingModule} from '@nestjs/testing'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {PaymentsService} from '@wepublish/payment/api'
-import {clearDatabase, clearFullDatabase} from '@wepublish/testing'
 import {add, sub} from 'date-fns'
 import {PeriodicJobService} from '../periodic-job/periodic-job.service'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {SubscriptionFlowService} from '../subscription-flow/subscription-flow.service'
 import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
-import {SubscriptionService} from './subscription.service'
+import {SubscriptionPaymentsService} from './subscription-payments.service'
 
-describe('SubscriptionController', () => {
+describe('SubscriptionPaymentsService', () => {
   const prismaClient = new PrismaClient()
   initialize({prisma: prismaClient})
 
@@ -305,7 +306,7 @@ describe('SubscriptionController', () => {
     await clearFullDatabase(prismaClient)
   })
 
-  let subscriptionService: SubscriptionService
+  let subscriptionService: SubscriptionPaymentsService
 
   beforeEach(async () => {
     await nock.disableNetConnect()
@@ -316,7 +317,7 @@ describe('SubscriptionController', () => {
         registerPaymentsModule()
       ],
 
-      providers: [SubscriptionFlowService, PeriodicJobService, SubscriptionService]
+      providers: [SubscriptionFlowService, PeriodicJobService, SubscriptionPaymentsService]
     }).compile()
     const paymentsService = module.get<PaymentsService>(PaymentsService)
 
@@ -334,7 +335,7 @@ describe('SubscriptionController', () => {
       'users'
     ])
 
-    subscriptionService = new SubscriptionService(prismaClient, paymentsService)
+    subscriptionService = new SubscriptionPaymentsService(prismaClient, paymentsService)
 
     // Create deactivated subscription
     await SubscriptionFactory.create({
