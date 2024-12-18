@@ -10,7 +10,7 @@ import {
   initialize
 } from '@wepublish/testing'
 import {PeriodicJobService} from '../periodic-job/periodic-job.service'
-import {SubscriptionService} from '../subscription/subscription.service'
+import {SubscriptionPaymentsService} from '../subscription-payments/subscription-payments.service'
 import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
 import {SubscriptionFlowService} from './subscription-flow.service'
 import {BadRequestException} from '@nestjs/common'
@@ -37,7 +37,7 @@ describe('SubscriptionFlowService', () => {
         registerMailsModule(),
         registerPaymentsModule()
       ],
-      providers: [SubscriptionFlowService, PeriodicJobService, SubscriptionService]
+      providers: [SubscriptionFlowService, PeriodicJobService, SubscriptionPaymentsService]
     }).compile()
 
     service = module.get<SubscriptionFlowService>(SubscriptionFlowService)
