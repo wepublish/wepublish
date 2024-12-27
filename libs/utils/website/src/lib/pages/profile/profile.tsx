@@ -1,19 +1,25 @@
 import {css, styled} from '@mui/material'
-import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
 import {
   ApiV1,
   AuthTokenStorageKey,
+  ContentWrapper,
   InvoiceListContainer,
+  PersonalDataFormContainer,
   SubscriptionListContainer,
   useWebsiteBuilder
 } from '@wepublish/website'
 import {setCookie} from 'cookies-next'
-import {NextPageContext} from 'next'
+import {NextPage, NextPageContext} from 'next'
 import getConfig from 'next/config'
+import {withAuthGuard} from '../../auth-guard'
+import {ssrAuthLink} from '../../auth-link'
+import {getSessionTokenProps} from '../../get-session-token-props'
+import {ComponentProps} from 'react'
 
 const SubscriptionsWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
+  justify-content: center;
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
@@ -34,7 +40,13 @@ const DeactivatedSubscriptions = styled('div')`
   justify-content: center;
 `
 
-function Subscriptions() {
+const ProfileWrapper = styled(ContentWrapper)`
+  gap: ${({theme}) => theme.spacing(2)};
+`
+
+type ProfilePageProps = Omit<ComponentProps<typeof PersonalDataFormContainer>, ''>
+
+function ProfilePage(props: ProfilePageProps) {
   const {
     elements: {Link, H4}
   } = useWebsiteBuilder()
@@ -48,40 +60,48 @@ function Subscriptions() {
   )
 
   return (
-    <SubscriptionsWrapper>
-      <SubscriptionListWrapper>
-        <H4 component={'h1'}>Aktive Abos</H4>
+    <>
+      <SubscriptionsWrapper>
+        <SubscriptionListWrapper>
+          <H4 component={'h1'}>Aktive Abos</H4>
 
-        <SubscriptionListContainer
-          filter={subscriptions => subscriptions.filter(subscription => !subscription.deactivation)}
-        />
+          <SubscriptionListContainer
+            filter={subscriptions =>
+              subscriptions.filter(subscription => !subscription.deactivation)
+            }
+          />
 
-        {hasDeactivatedSubscriptions && (
-          <DeactivatedSubscriptions>
-            <Link href="/profile/subscription/deactivated">Gekündigte Abos anzeigen</Link>
-          </DeactivatedSubscriptions>
-        )}
-      </SubscriptionListWrapper>
+          {hasDeactivatedSubscriptions && (
+            <DeactivatedSubscriptions>
+              <Link href="/profile/subscription/deactivated">Gekündete Abos anzeigen</Link>
+            </DeactivatedSubscriptions>
+          )}
+        </SubscriptionListWrapper>
 
-      <SubscriptionListWrapper>
-        <H4 component={'h1'}>Offene Rechnungen</H4>
+        <SubscriptionListWrapper>
+          <H4 component={'h1'}>Offene Rechnungen</H4>
 
-        <InvoiceListContainer
-          filter={invoices =>
-            invoices.filter(
-              invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt
-            )
-          }
-        />
-      </SubscriptionListWrapper>
-    </SubscriptionsWrapper>
+          <InvoiceListContainer
+            filter={invoices =>
+              invoices.filter(
+                invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt
+              )
+            }
+          />
+        </SubscriptionListWrapper>
+      </SubscriptionsWrapper>
+
+      <ProfileWrapper>
+        <H4 component={'h1'}>Profil</H4>
+
+        <PersonalDataFormContainer {...props} />
+      </ProfileWrapper>
+    </>
   )
 }
 
-const GuardedSubscriptions = withAuthGuard(Subscriptions)
-
-export {GuardedSubscriptions as default}
-;(GuardedSubscriptions as any).getInitialProps = async (ctx: NextPageContext) => {
+const GuardedProfile = withAuthGuard(ProfilePage) as NextPage<ComponentProps<typeof ProfilePage>>
+GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}
   }
@@ -119,12 +139,6 @@ export {GuardedSubscriptions as default}
         query: ApiV1.MeDocument
       }),
       client.query({
-        query: ApiV1.SubscriptionsDocument
-      }),
-      client.query({
-        query: ApiV1.InvoicesDocument
-      }),
-      client.query({
         query: ApiV1.NavigationListDocument
       })
     ])
@@ -134,3 +148,5 @@ export {GuardedSubscriptions as default}
 
   return props
 }
+
+export {GuardedProfile as ProfilePage}
