@@ -4,6 +4,7 @@ import {ArticleWithRevisions} from '../../db/article'
 import {DuplicateArticleSlugError, NotFound} from '../../error'
 import {authorise} from '../permissions'
 import {CanCreateArticle, CanDeleteArticle, CanPublishArticle} from '@wepublish/permissions/api'
+import {blocksToSearchText} from '../../utility'
 
 const fullArticleInclude = {
   draft: {
@@ -91,6 +92,8 @@ export const createArticle = async (
     ...data
   } = input
 
+  const searchPlainText = blocksToSearchText(input.blocks as any[])
+
   return article.create({
     data: {
       shared,
@@ -99,6 +102,7 @@ export const createArticle = async (
       draft: {
         create: {
           ...data,
+          searchPlainText,
           properties: {
             createMany: {
               data: properties
@@ -498,6 +502,8 @@ export const updateArticle = async (
     throw new NotFound('article', id)
   }
 
+  const searchPlainText = blocksToSearchText(input.blocks as any[])
+
   return articleClient.update({
     where: {id},
     data: {
@@ -508,6 +514,7 @@ export const updateArticle = async (
         upsert: {
           update: {
             ...input,
+            searchPlainText,
             revision: article.pending
               ? article.pending.revision + 1
               : article.published
@@ -546,6 +553,7 @@ export const updateArticle = async (
           },
           create: {
             ...input,
+            searchPlainText,
             revision: article.pending
               ? article.pending.revision + 1
               : article.published

@@ -40,6 +40,7 @@ import {MannschaftRichtextBlock} from '../src/mannschaft-richtext-block'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
 import theme from '../src/theme'
+import {MannschaftGlobalStyles} from '../src/mannschaft-global-styles'
 
 setDefaultOptions({
   locale: de
@@ -129,6 +130,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             meta={{siteTitle}}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
+              <MannschaftGlobalStyles />
 
               <Head>
                 <title key="title">{siteTitle}</title>

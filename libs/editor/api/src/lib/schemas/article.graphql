@@ -253,6 +253,8 @@ query Article($id: ID!) {
       blocks {
         ...FullBlock
       }
+
+      likes
     }
   }
 }

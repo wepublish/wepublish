@@ -19,7 +19,7 @@ import {matches} from 'lodash'
 import nock from 'nock'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {SubscriptionFlowService} from '../subscription-flow/subscription-flow.service'
-import {SubscriptionService} from '../subscription/subscription.service'
+import {SubscriptionPaymentsService} from '../subscription-payments/subscription-payments.service'
 import {
   registerMailsModule,
   registerPaymentsModule,
@@ -62,7 +62,7 @@ describe('PeriodicJobService', () => {
         registerMailsModule(),
         registerPaymentsModule()
       ],
-      providers: [SubscriptionFlowService, PeriodicJobService, SubscriptionService]
+      providers: [SubscriptionFlowService, PeriodicJobService, SubscriptionPaymentsService]
     }).compile()
 
     service = module.get<PeriodicJobService>(PeriodicJobService)

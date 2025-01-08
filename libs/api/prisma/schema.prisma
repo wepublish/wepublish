@@ -51,12 +51,14 @@ model ArticleRevision {
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json
+  searchPlainText        String?
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
   socialMediaAuthors     ArticleRevisionSocialMediaAuthor[]
   socialMediaImage       Image?                             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   socialMediaImageID     String?
+  likes                  Int                                @default(0)
 
   revision    Int       @default(0)
   createdAt   DateTime  @default(now())
@@ -589,6 +591,7 @@ model PageRevision {
   socialMediaImageID     String?
   socialMediaImage       Image?             @relation("pageRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   blocks                 Json
+  searchPlainText        String?
   PublishedPage          Page[]             @relation("publishedPageRevision")
   PendingPage            Page[]             @relation("pendingPageRevision")
   DraftPage              Page[]             @relation("draftPageRevision")

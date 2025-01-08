@@ -897,18 +897,15 @@ async function seed() {
     console.log('Seeding navigations')
     const navigations = await seedNavigations(prisma, tags)
     console.log('Seeding images')
-    const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
+    // const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
     console.log('Seeding authors')
-    const authors = await seedAuthors(prisma, [womanProfilePhoto.id, manProfilePhoto.id])
+    const authors = await seedAuthors(prisma, [])
     console.log('Seeding events')
-    const events = await seedEvents(
-      prisma,
-      teaserImages.map(({id}) => id)
-    )
+    const events = await seedEvents(prisma, [])
     console.log('Seeding articles')
     const articles = await seedArticles(
       prisma,
-      teaserImages.map(({id}) => id),
+      [],
       authors.map(({id}) => id),
       tags,
       polls.map(({id}) => id),
@@ -918,12 +915,12 @@ async function seed() {
     const comments = await seedComments(
       prisma,
       articles.map(({id}) => id),
-      [womanProfilePhoto.id, manProfilePhoto.id]
+      []
     )
     console.log('Seeding pages')
     const pages = await seedPages(
       prisma,
-      teaserImages.map(({id}) => id),
+      [],
       articles.map(({id}) => id)
     )
 

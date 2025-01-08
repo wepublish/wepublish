@@ -15,7 +15,7 @@ import {
 } from '@wepublish/testing'
 import request from 'supertest'
 import {PeriodicJobService} from '../periodic-job/periodic-job.service'
-import {SubscriptionService} from '../subscription/subscription.service'
+import {SubscriptionPaymentsService} from '../subscription-payments/subscription-payments.service'
 import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
 import {SubscriptionFlowResolver} from './subscription-flow.resolver'
 import {SubscriptionFlowService} from './subscription-flow.service'
@@ -139,7 +139,7 @@ const paymentMethodsQuery = `
     SubscriptionFlowResolver,
     SubscriptionFlowService,
     PeriodicJobService,
-    SubscriptionService,
+    SubscriptionPaymentsService,
     {
       provide: APP_GUARD,
       useClass: PermissionsGuard
@@ -163,7 +163,7 @@ export class AppUnauthenticatedModule {}
     SubscriptionFlowResolver,
     SubscriptionFlowService,
     PeriodicJobService,
-    SubscriptionService,
+    SubscriptionPaymentsService,
     {
       provide: APP_GUARD,
       useClass: TestPermissionsGuard
@@ -364,7 +364,7 @@ describe('Subscription Flow Resolver', () => {
         ],
         providers: [
           PeriodicJobService,
-          SubscriptionService,
+          SubscriptionPaymentsService,
           SubscriptionFlowService,
           SubscriptionFlowResolver
         ]
