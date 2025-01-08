@@ -23,6 +23,7 @@ const image = (index: number) =>
     description: 'An image description',
     title: 'An image title',
     filename: 'An image filename',
+    source: index % 2 === 0 ? 'Foobar' : undefined,
     url: `https://unsplash.it/500/500?${index}`,
     xl: `https://unsplash.it/1200/400?${index}`,
     l: `https://unsplash.it/1000/400?${index}`,
