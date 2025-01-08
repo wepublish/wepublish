@@ -44,7 +44,8 @@ const subscribeSchema = z.object({
     PaymentPeriodicity.Quarterly,
     PaymentPeriodicity.Biannual,
     PaymentPeriodicity.Yearly
-  ])
+  ]),
+  payTransactionFee: z.boolean()
 })
 
 export const SubscribeWrapper = styled('form')`
@@ -154,11 +155,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   onSubscribeWithRegister,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate
+  donate,
+  transactionFee = amount => amount * 0.02,
+  transactionFeeText
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale, siteTitle},
     elements: {Alert, Button, TextField, H5, Link, Paragraph},
+    TransactionFee,
     MemberPlanPicker,
     PaymentMethodPicker,
     PeriodicityPicker
@@ -205,6 +209,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       ...defaults,
       monthlyAmount: 0,
       autoRenew: true,
+      payTransactionFee: false,
       memberPlanId: defaults?.memberPlanSlug
         ? memberPlans.data?.memberPlans.nodes.find(
             memberPlan => memberPlan.slug === defaults?.memberPlanSlug
@@ -222,7 +227,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const selectedPaymentMethodId = watch<'paymentMethodId'>('paymentMethodId')
   const selectedPaymentPeriodicity = watch<'paymentPeriodicity'>('paymentPeriodicity')
   const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId')
-  const monthlyAmount = watch<'monthlyAmount'>('monthlyAmount')
+  const payTransactionFee = watch<'payTransactionFee'>('payTransactionFee')
+  const monthlyAmount =
+    watch<'monthlyAmount'>('monthlyAmount') +
+    (payTransactionFee ? transactionFee(watch<'monthlyAmount'>('monthlyAmount')) : 0)
   const autoRenew = watch<'autoRenew'>('autoRenew')
 
   const sortedMemberPlans = useMemo(
@@ -269,7 +277,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     true,
     selectedMemberPlan?.extendable ?? true,
     PaymentPeriodicity.Monthly,
-    monthlyAmount,
+    watch<'monthlyAmount'>('monthlyAmount'),
     selectedMemberPlan?.currency ?? Currency.Chf,
     locale
   )
@@ -537,7 +545,16 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
         </SubscribeSection>
       )}
+
       {error && <ApiAlert error={error as ApolloError} severity="error" />}
+
+      <SubscribeSection>
+        <Controller
+          name={'payTransactionFee'}
+          control={control}
+          render={({field: feeField}) => <TransactionFee text={transactionFeeText} {...feeField} />}
+        />
+      </SubscribeSection>
 
       <SubscribeNarrowSection>
         <Button

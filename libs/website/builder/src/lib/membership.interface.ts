@@ -78,6 +78,14 @@ export type BuilderPaymentMethodPickerProps = {
   value?: string
 }
 
+export type BuilderTransactionFeeProps = {
+  text?: string
+  className?: string
+  onChange: (value: boolean) => void
+  name?: string
+  value?: boolean
+}
+
 export type BuilderSubscribeProps<
   T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<BuilderUserFormFields, 'flair'>
 > = {
@@ -102,4 +110,7 @@ export type BuilderSubscribeProps<
   deactivateSubscriptionId?: string
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean
   termsOfServiceUrl?: string
+
+  transactionFee?: (monthlyAmount: number) => number
+  transactionFeeText?: string
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>
