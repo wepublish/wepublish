@@ -1074,14 +1074,13 @@ export async function contextFromRequest(
         }
       })
 
-      if (!updatedPayment) throw new Error('Error during updating payment') // TODO: this check needs to be removed
-
       // Mark invoice as paid
       if (intent.state === PaymentState.paid) {
         const intentState = await paymentProvider.checkIntentStatus({
           intentID: updatedPayment.intentID,
           paymentID: updatedPayment.id
         })
+
         await paymentProvider.updatePaymentWithIntentState({
           intentState,
           paymentClient: prisma.payment,
@@ -1094,6 +1093,11 @@ export async function contextFromRequest(
           invoiceItemClient: prisma.invoiceItem
         })
       }
+
+      if (intent.errorCode) {
+        throw new GraphQLError(intent.errorCode)
+      }
+
       return updatedPayment as Payment
     },
     challenge

@@ -95,7 +95,8 @@ const subscription = {
   },
   properties: [],
   deactivation: null,
-  extendable: true
+  extendable: true,
+  canExtend: true
 } as Exact<FullSubscriptionFragment>
 
 const deactivation = {

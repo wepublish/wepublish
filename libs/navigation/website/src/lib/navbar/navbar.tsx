@@ -308,11 +308,11 @@ export function Navbar({
                 color="warning"
                 startIcon={<MdWarning />}
                 sx={buttonStyles}>
-                Offene Rechnung
+                Rechnung
               </Button>
             )}
 
-            {!hasRunningSubscription && subscribeUrl && (
+            {!hasRunningSubscription && !hasUnpaidInvoices && subscribeUrl && (
               <Button LinkComponent={Link} href={subscribeUrl} sx={buttonStyles}>
                 Member werden
               </Button>
@@ -320,7 +320,7 @@ export function Navbar({
 
             {hasRunningSubscription && !hasUnpaidInvoices && profileUrl && (
               <Button LinkComponent={Link} href={profileUrl} sx={buttonStyles}>
-                Mein Account
+                Mein Konto
               </Button>
             )}
           </NavbarActions>
@@ -450,9 +450,8 @@ export const NavPaperChildrenWrapper = styled('div')`
 `
 
 export const NavPaperActions = styled('div')`
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
+  display: flex;
+  flex-flow: row wrap;
   gap: ${({theme}) => theme.spacing(2)};
   margin-top: ${({theme}) => theme.spacing(5)};
 `

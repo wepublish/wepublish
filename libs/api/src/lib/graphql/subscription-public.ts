@@ -63,7 +63,10 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
               subscription: {
                 userID: subscription.userID
               },
-              OR: [{canceledAt: null}, {paidAt: null}]
+              paidAt: null,
+              canceledAt: {
+                not: null
+              }
             }
           })
         ])

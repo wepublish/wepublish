@@ -21,10 +21,10 @@ const SubscriptionsWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
   justify-content: center;
+  grid-auto-columns: 1fr;
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
-      grid-auto-columns: 1fr;
       grid-auto-flow: column;
       gap: ${theme.spacing(10)};
     }
