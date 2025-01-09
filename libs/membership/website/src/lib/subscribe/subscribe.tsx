@@ -382,6 +382,11 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500
 
+  const scrollToElement = (id: string) => {
+    const element = document.getElementById(id)
+    element?.scrollIntoView({behavior: 'smooth', block: 'center'})
+  }
+
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
       <SubscribeSection>
@@ -468,12 +473,37 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         {!hasUser && <UserForm control={control} fields={fields} />}
       </SubscribeSection>
 
+      {!hasUser && (
+        <SubscribeSection>
+          <H5 component="h2">Spam-Schutz</H5>
+
+          {challenge.data?.challenge && (
+            <Controller
+              name={'challengeAnswer.challengeSolution'}
+              control={control}
+              render={({field, fieldState: {error}}) => (
+                <Challenge
+                  {...field}
+                  onChange={field.onChange}
+                  challenge={challenge.data!.challenge}
+                  label={'Captcha'}
+                  error={!!error}
+                  helperText={error?.message}
+                />
+              )}
+            />
+          )}
+
+          {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
+        </SubscribeSection>
+      )}
+
       <SubscribeSection>
         {allPaymentMethods && allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
         )}
 
-        <SubscribePayment>
+        <SubscribePayment onClick={() => scrollToElement('pay-btn')}>
           <Controller
             name={'paymentMethodId'}
             control={control}
@@ -518,35 +548,11 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           )}
         </SubscribePayment>
       </SubscribeSection>
-
-      {!hasUser && (
-        <SubscribeSection>
-          <H5 component="h2">Spam-Schutz</H5>
-
-          {challenge.data?.challenge && (
-            <Controller
-              name={'challengeAnswer.challengeSolution'}
-              control={control}
-              render={({field, fieldState: {error}}) => (
-                <Challenge
-                  {...field}
-                  onChange={field.onChange}
-                  challenge={challenge.data!.challenge}
-                  label={'Captcha'}
-                  error={!!error}
-                  helperText={error?.message}
-                />
-              )}
-            />
-          )}
-
-          {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
-        </SubscribeSection>
-      )}
       {error && <ApiAlert error={error as ApolloError} severity="error" />}
 
       <SubscribeNarrowSection>
         <Button
+          id={'pay-btn'}
           size={'large'}
           disabled={
             challenge.loading || userInvoices.loading || userSubscriptions.loading || loading

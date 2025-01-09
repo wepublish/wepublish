@@ -14,10 +14,17 @@ export const PaymentMethodPickerWrapper = styled(FormControl)`
   display: grid;
 `
 
+const RadioGroupStyled = styled(RadioGroup)`
+  gap: ${({theme}) => theme.spacing(2)};
+`
+
+const FormControlLabelStyled = styled(FormControlLabel)`
+  margin-right: 0;
+`
+
 export const PaymentRadioWrapper = styled('div')<{active?: boolean}>`
   display: grid;
   grid-auto-flow: column;
-  gap: ${({theme}) => theme.spacing(1)};
   align-items: center;
   padding: ${({theme}) => theme.spacing(2)};
   border: 1px solid ${({theme}) => theme.palette.divider};
@@ -70,7 +77,7 @@ export const PaymentMethodPicker = forwardRef<HTMLButtonElement, BuilderPaymentM
 
     return (
       <PaymentMethodPickerWrapper className={className}>
-        <RadioGroup
+        <RadioGroupStyled
           id={id}
           ref={ref}
           name={name}
@@ -78,7 +85,7 @@ export const PaymentMethodPicker = forwardRef<HTMLButtonElement, BuilderPaymentM
           onChange={event => onChange(event.target.value as string)}
           row>
           {paymentMethods?.map(method => (
-            <FormControlLabel
+            <FormControlLabelStyled
               key={method.id}
               value={method.id}
               label=""
@@ -86,9 +93,9 @@ export const PaymentMethodPicker = forwardRef<HTMLButtonElement, BuilderPaymentM
                 <PaymentRadio aria-label={`${method.description} ${method.name}`}>
                   {method.image && <Image image={method.image} css={icon} />}
                 </PaymentRadio>
-              }></FormControlLabel>
+              }></FormControlLabelStyled>
           ))}
-        </RadioGroup>
+        </RadioGroupStyled>
       </PaymentMethodPickerWrapper>
     )
   }

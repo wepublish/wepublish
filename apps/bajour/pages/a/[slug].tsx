@@ -19,7 +19,6 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
-import {ArticleCharts} from '../../src/components/article-charts/article-charts'
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
 import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
 import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
@@ -83,7 +82,8 @@ export default function ArticleBySlugIdOrToken() {
       <Container>
         <ArticleContainer {...containerProps} />
 
-        {!isFDT && (
+        {/* Waiting for Samuel H. from Bajour to confirm - 2024-11-20
+         !isFDT && (
           <ArticleWrapper>
             <H5 component={'h2'} css={uppercase}>
               Artikel Charts
@@ -91,7 +91,7 @@ export default function ArticleBySlugIdOrToken() {
 
             <ArticleCharts />
           </ArticleWrapper>
-        )}
+        ) */}
 
         <BriefingNewsletter />
 
