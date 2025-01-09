@@ -26,7 +26,9 @@ export default function ArticleBySlugIdOrToken() {
   const {data} = ApiV1.useArticleQuery({
     fetchPolicy: 'cache-only',
     variables: {
-      slug: slug as string
+      slug: slug as string,
+      id: id as string,
+      token: token as string
     }
   })
 
