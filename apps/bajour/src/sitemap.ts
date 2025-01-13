@@ -16,15 +16,27 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     typePolicies: {}
   })
 
-  const [{data: articleData}, {data: pageData}] = await Promise.all([
-    client.query({
-      query: ApiV1.ArticleListDocument,
-      variables: {
-        take: 50,
-        sort: ApiV1.ArticleSort.PublishedAt,
-        order: ApiV1.SortOrder.Descending
-      } as ApiV1.ArticleListQueryVariables
-    }),
+  const articleAmount = 2100
+  const articleAPICalls = []
+  let articleIndex = 0
+
+  while (articleAmount > articleIndex) {
+    articleAPICalls.push(
+      client.query({
+        query: ApiV1.ArticleListDocument,
+        variables: {
+          skip: articleIndex,
+          take: 100,
+          sort: ApiV1.ArticleSort.PublishedAt,
+          order: ApiV1.SortOrder.Descending
+        } as ApiV1.ArticleListQueryVariables
+      })
+    )
+
+    articleIndex += 100
+  }
+
+  const [{data: pageData}, ...articleData] = await Promise.all([
     client.query({
       query: ApiV1.SitemapPageListDocument,
       variables: {
@@ -32,10 +44,11 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
         sort: ApiV1.PublishedPageSort.PublishedAt,
         order: ApiV1.SortOrder.Descending
       } as ApiV1.PageListQueryVariables
-    })
+    }),
+    ...articleAPICalls
   ])
 
-  return generate(articleData.articles.nodes ?? [], [
+  return generate(articleData.flatMap(({data}) => data.articles.nodes) ?? [], [
     `${siteUrl}/author`,
     `${siteUrl}/event`,
     `${siteUrl}/login`,
