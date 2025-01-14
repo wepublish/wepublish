@@ -94,6 +94,12 @@ type Query {
   """
   userPollVote(pollId: ID!): ID
 
+  """This query returns a list of events"""
+  events(cursor: ID, take: Int = 10, skip: Int = 0, filter: EventFilter, sort: EventSort = StartsAt, order: SortOrder = Descending): EventConnection
+
+  """This query returns an event"""
+  event(id: ID!): Event!
+
   """This query returns a list of tags"""
   tags(cursor: ID, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
 
@@ -956,6 +962,28 @@ type FullCommentRatingSystem {
   id: ID!
   name: String
   answers: [CommentRatingSystemAnswer!]!
+}
+
+type EventConnection {
+  nodes: [Event!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input EventFilter {
+  upcomingOnly: Boolean
+  from: DateTime
+  to: DateTime
+  tags: [ID!]
+  name: String
+  location: String
+}
+
+enum EventSort {
+  StartsAt
+  EndsAt
+  CreatedAt
+  ModifiedAt
 }
 
 type TagConnection {
