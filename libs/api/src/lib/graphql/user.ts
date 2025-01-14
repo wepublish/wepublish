@@ -1,19 +1,19 @@
 import {
+  GraphQLBoolean,
   GraphQLEnumType,
+  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString,
-  GraphQLBoolean,
-  GraphQLID
+  GraphQLString
 } from 'graphql'
 import {UserSort, UserWithRelations} from '../db/user'
 import {
   GraphQLMetadataProperty,
-  GraphQLMetadataPropertyPublic,
   GraphQLMetadataPropertyInput,
+  GraphQLMetadataPropertyPublic,
   GraphQLPageInfo
 } from './common'
 import {Context} from '../context'
@@ -68,6 +68,7 @@ const GraphQLUserSubscription = new GraphQLObjectType<Subscription, Context>({
     monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
     currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
     autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
+    confirmed: {type: new GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     paidUntil: {type: GraphQLDateTime},
     properties: {
