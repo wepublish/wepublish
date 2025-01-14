@@ -36,7 +36,7 @@ export default function Mitmachen({donate}: MitmachenProps) {
   const {data: newSubscribers} = ApiV1.useNewSubscribersQuery({
     variables: {
       start: '2024-01-11T00:00:00.000Z',
-      end: '2025-01-11T00:00:00.000Z'
+      end: '2026-01-11T00:00:00.000Z'
     }
   })
 
