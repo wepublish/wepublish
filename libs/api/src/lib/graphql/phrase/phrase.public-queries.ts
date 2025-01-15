@@ -24,7 +24,11 @@ export const queryPhrase = async (
     prisma.$queryRaw<{id: string}[]>`
       SELECT a.id FROM articles a
       JOIN public."articles.revisions" ar on a."publishedId" = ar.id
-      WHERE to_tsvector('english', ar.title) ||  to_tsvector('english', ar.lead)@@ to_tsquery('english', ${query});
+      WHERE to_tsvector('english', ar.title) ||  jsonb_to_tsvector(
+         'english',
+         jsonb_path_query_array(ar.blocks, 'strict $.**.text'),
+         '["string"]'
+         )@@ to_tsquery('english', ${query});
     `,
     prisma.$queryRaw<{id: string}[]>`
       SELECT p.id FROM pages p
