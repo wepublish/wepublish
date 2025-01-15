@@ -1417,8 +1417,6 @@
       "invoiceNr": "Invoice No. {{invoiceId}}",
       "invoicePaid": "paid",
       "invoiceUnpaid": "unpaid",
-      "confirmed": "confirmed",
-      "unconfirmed": "unconfirmed",
       "monthlyAmount": "Monthly amount: {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "Subscription expires, no automatic renewal",
       "noDeactivation": "No deactivation.",

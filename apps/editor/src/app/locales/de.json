@@ -1284,8 +1284,6 @@
       "invoiceNr": "Rechnung Nr. {{invoiceId}}",
       "invoicePaid": "bezahlt",
       "invoiceUnpaid": "unbezahlt",
-      "confirmed": "bestätigt",
-      "unconfirmed": "unbestätigt",
       "monthlyAmount": "Monatlicher Betrag: {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "Subscription läuft aus, keine automatische Erneuerung",
       "noDeactivation": "Keine Deaktivierung.",

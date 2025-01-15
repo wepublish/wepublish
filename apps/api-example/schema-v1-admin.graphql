@@ -213,7 +213,6 @@ type UserSubscription {
   monthlyAmount: Int!
   currency: Currency!
   autoRenew: Boolean!
-  confirmed: Boolean!
   startsAt: DateTime!
   paidUntil: DateTime
   properties: [Properties!]!
