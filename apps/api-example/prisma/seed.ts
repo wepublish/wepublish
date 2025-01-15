@@ -644,130 +644,123 @@ async function seedArticles(
   pollIds: string[] = [],
   eventIds: string[] = []
 ) {
-  let articles = []
-
-  for (let i = 0; i < 100; i++) {
-    console.log(i)
-    const newArticles = await Promise.all(
-      Array.from({length: faker.number.int({min: 100, max: 100})}, () =>
-        prisma.article.create({
-          data: {
-            shared: false,
-            published: {
-              create: {
-                title: capitalize(faker.lorem.words({min: 3, max: 8})),
-                lead: faker.lorem.paragraph(),
-                socialMediaTitle: capitalize(faker.lorem.words({min: 3, max: 8})),
-                socialMediaDescription: faker.lorem.paragraph(),
-                slug: faker.lorem.slug(),
-                revision: 0,
-                blocks: [
-                  {
-                    type: BlockType.Title,
-                    title: capitalize(faker.lorem.words({min: 3, max: 8})),
-                    lead: faker.lorem.sentences({min: 3, max: 8})
-                  } as TitleBlock,
-                  {
-                    type: BlockType.Image,
-                    imageID: shuffle(imageIds).at(0),
-                    caption: capitalize(faker.lorem.words({min: 3, max: 8}))
-                  } as ImageBlock,
-                  ...shuffle([
-                    ...pickRandom(
-                      {
-                        type: BlockType.RichText,
-                        richText: getText(100, 100) as any
-                      } as RichTextBlock,
-                      0.7
-                    ),
-                    ...pickRandom(
-                      {
-                        type: BlockType.Quote,
-                        author: faker.person.fullName(),
-                        quote: faker.lorem.sentences({min: 1, max: 2})
-                      } as QuoteBlock,
-                      0.8
-                    ),
-                    ...pickRandom(
-                      {
-                        type: BlockType.RichText,
-                        richText: getText(3, 10) as any
-                      } as RichTextBlock,
-                      0.5
-                    ),
-                    ...pickRandom(
-                      {
-                        type: BlockType.Image,
-                        imageID: shuffle(imageIds).at(0),
-                        caption: capitalize(faker.lorem.words({min: 3, max: 8}))
-                      } as ImageBlock,
-                      0.5
-                    ),
-                    ...pickRandom(
-                      {
-                        type: BlockType.RichText,
-                        richText: getText(3, 10) as any
-                      } as RichTextBlock,
-                      0.3
-                    ),
-                    ...pickRandom(
-                      {
-                        type: BlockType.Poll,
-                        pollId: shuffle(pollIds).at(0)
-                      } as PollBlock,
-                      0.2
-                    ),
-                    ...pickRandom(
-                      {
-                        type: BlockType.Event,
-                        filter: {
-                          events: [
-                            shuffle(eventIds).at(0),
-                            ...pickRandom(shuffle(eventIds).at(0)),
-                            ...pickRandom(shuffle(eventIds).at(0)),
-                            ...pickRandom(shuffle(eventIds).at(0)),
-                            ...pickRandom(shuffle(eventIds).at(0)),
-                            ...pickRandom(shuffle(eventIds).at(0))
-                          ]
-                        }
-                      } as EventBlock,
-                      0.3
-                    ),
-                    ...pickRandom(
-                      {
-                        type: BlockType.LinkPageBreak,
-                        imageID: null,
-                        hideButton: false,
-                        linkTarget: '',
-                        linkText: capitalize(faker.lorem.words({min: 2, max: 4})),
-                        linkURL: faker.internet.url(),
-                        richText: getText(1, 1) as any,
-                        text: capitalize(faker.lorem.words({min: 8, max: 12})),
-                        layoutOption: 'image-left'
-                      } as LinkPageBreakBlock,
-                      0.7
-                    )
-                  ])
-                ] as any,
-                breaking: false,
-                hideAuthor: false,
-                publishedAt: new Date(),
-                updatedAt: new Date(),
-                createdAt: new Date(),
-                tags: [
-                  shuffle(tags).at(0),
-                  ...pickRandom(shuffle(tags).at(0), 0.2),
-                  ...pickRandom(shuffle(tags).at(0), 0.1)
-                ]
-              }
+  const articles = await Promise.all(
+    Array.from({length: faker.number.int({min: 10, max: 20})}, () =>
+      prisma.article.create({
+        data: {
+          shared: false,
+          published: {
+            create: {
+              title: capitalize(faker.lorem.words({min: 3, max: 8})),
+              lead: faker.lorem.paragraph(),
+              socialMediaTitle: capitalize(faker.lorem.words({min: 3, max: 8})),
+              socialMediaDescription: faker.lorem.paragraph(),
+              slug: faker.lorem.slug(),
+              revision: 0,
+              blocks: [
+                {
+                  type: BlockType.Title,
+                  title: capitalize(faker.lorem.words({min: 3, max: 8})),
+                  lead: faker.lorem.sentences({min: 3, max: 8})
+                } as TitleBlock,
+                {
+                  type: BlockType.Image,
+                  imageID: shuffle(imageIds).at(0),
+                  caption: capitalize(faker.lorem.words({min: 3, max: 8}))
+                } as ImageBlock,
+                ...shuffle([
+                  ...pickRandom(
+                    {
+                      type: BlockType.RichText,
+                      richText: getText(3, 10) as any
+                    } as RichTextBlock,
+                    0.7
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.Quote,
+                      author: faker.person.fullName(),
+                      quote: faker.lorem.sentences({min: 1, max: 2})
+                    } as QuoteBlock,
+                    0.8
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.RichText,
+                      richText: getText(3, 10) as any
+                    } as RichTextBlock,
+                    0.5
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.Image,
+                      imageID: shuffle(imageIds).at(0),
+                      caption: capitalize(faker.lorem.words({min: 3, max: 8}))
+                    } as ImageBlock,
+                    0.5
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.RichText,
+                      richText: getText(3, 10) as any
+                    } as RichTextBlock,
+                    0.3
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.Poll,
+                      pollId: shuffle(pollIds).at(0)
+                    } as PollBlock,
+                    0.2
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.Event,
+                      filter: {
+                        events: [
+                          shuffle(eventIds).at(0),
+                          ...pickRandom(shuffle(eventIds).at(0)),
+                          ...pickRandom(shuffle(eventIds).at(0)),
+                          ...pickRandom(shuffle(eventIds).at(0)),
+                          ...pickRandom(shuffle(eventIds).at(0)),
+                          ...pickRandom(shuffle(eventIds).at(0))
+                        ]
+                      }
+                    } as EventBlock,
+                    0.3
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.LinkPageBreak,
+                      imageID: null,
+                      hideButton: false,
+                      linkTarget: '',
+                      linkText: capitalize(faker.lorem.words({min: 2, max: 4})),
+                      linkURL: faker.internet.url(),
+                      richText: getText(1, 1) as any,
+                      text: capitalize(faker.lorem.words({min: 8, max: 12})),
+                      layoutOption: 'image-left'
+                    } as LinkPageBreakBlock,
+                    0.7
+                  )
+                ])
+              ] as any,
+              breaking: false,
+              hideAuthor: false,
+              publishedAt: new Date(),
+              updatedAt: new Date(),
+              createdAt: new Date(),
+              tags: [
+                shuffle(tags).at(0),
+                ...pickRandom(shuffle(tags).at(0), 0.2),
+                ...pickRandom(shuffle(tags).at(0), 0.1)
+              ]
             }
           }
-        })
-      )
+        }
+      })
     )
-
-    articles = articles.concat(newArticles)
-  }
+  )
 
   await Promise.all(
     articles.map(({publishedId}) =>
@@ -892,7 +885,7 @@ async function seed() {
       throw new Error('@wepublish/api seeding has not been done')
     }
 
-    const hasUsers = false //await prisma.user.count()
+    const hasUsers = await prisma.user.count()
 
     if (hasUsers) {
       throw 'Website Example seeding has already been done. Skipping'
@@ -919,11 +912,11 @@ async function seed() {
       events.map(({id}) => id)
     )
     console.log('Seeding comments')
-    /*const comments = await seedComments(
+    const comments = await seedComments(
       prisma,
       articles.map(({id}) => id),
       []
-    )*/
+    )
     console.log('Seeding pages')
     const pages = await seedPages(
       prisma,
