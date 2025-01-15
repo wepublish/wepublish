@@ -175,7 +175,6 @@ type EventFromSource {
   name: String!
   startsAt: DateTime!
   status: EventStatus!
-  url: String!
 }
 
 enum EventStatus {
@@ -200,8 +199,6 @@ type EventV2 {
   name: String!
   startsAt: DateTime!
   status: EventStatus!
-  tags: [Tag!]
-  url: String!
 }
 
 type FocalPoint {
@@ -304,9 +301,6 @@ type Mutation {
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
-  """Creates a new event."""
-  createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): EventV2!
-
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
@@ -322,9 +316,6 @@ type Mutation {
 
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
-
-  """Deletes an existing event."""
-  deleteEvent(id: String!): EventV2!
 
   """Delete poll votes"""
   deletePollVotes(ids: [ID!]!): DeletePollVotesResult!
@@ -351,9 +342,6 @@ type Mutation {
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
-
-  """Updates an existing event."""
-  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): EventV2!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -631,10 +619,6 @@ type SubscriptionInterval {
 type SystemMailModel {
   event: UserEvent!
   mailTemplate: MailTemplateRef
-}
-
-type Tag {
-  id: ID!
 }
 
 input UpdateBannerInput {

@@ -521,7 +521,6 @@ export type EventFromSource = {
   name: Scalars['String'];
   startsAt: Scalars['DateTime'];
   status: EventStatus;
-  url: Scalars['String'];
 };
 
 export enum EventSort {
@@ -565,8 +564,6 @@ export type EventV2 = {
   name: Scalars['String'];
   startsAt: Scalars['DateTime'];
   status: EventStatus;
-  tags?: Maybe<Array<Tag>>;
-  url: Scalars['String'];
 };
 
 export type ExternalNavigationLink = BaseNavigationLink & {
@@ -900,8 +897,6 @@ export type Mutation = {
    *
    */
   createConsent: Consent;
-  /** Creates a new event. */
-  createEvent: EventV2;
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
   createPaymentFromInvoice?: Maybe<Payment>;
   /** This mutation allows to create payment by referencing a subscription. */
@@ -931,8 +926,6 @@ export type Mutation = {
    *
    */
   deleteConsent: Consent;
-  /** Deletes an existing event. */
-  deleteEvent: EventV2;
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
   /** Delete an existing subscription flow */
@@ -981,8 +974,6 @@ export type Mutation = {
    *
    */
   updateConsent: Consent;
-  /** Updates an existing event. */
-  updateEvent: EventV2;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
   updatePassword?: Maybe<User>;
   /** This mutation allows to update the Payment Provider Customers */
@@ -1043,18 +1034,6 @@ export type MutationCreateConsentArgs = {
   defaultValue: Scalars['Boolean'];
   name: Scalars['String'];
   slug: Scalars['String'];
-};
-
-
-export type MutationCreateEventArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  imageId?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  startsAt: Scalars['DateTime'];
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -1137,11 +1116,6 @@ export type MutationDeleteBlockStyleArgs = {
 
 
 export type MutationDeleteConsentArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteEventArgs = {
   id: Scalars['String'];
 };
 
@@ -1255,19 +1229,6 @@ export type MutationUpdateConsentArgs = {
   id: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationUpdateEventArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  id: Scalars['String'];
-  imageId?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  startsAt?: InputMaybe<Scalars['DateTime']>;
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
