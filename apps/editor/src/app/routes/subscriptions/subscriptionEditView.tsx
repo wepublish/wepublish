@@ -515,6 +515,10 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     return !!(id && paymentMethod && memberPlan)
   }
 
+  function capitalizeFirstLetter(text: string): string {
+    return text.charAt(0).toUpperCase() + text.slice(1)
+  }
+
   return (
     <TableWrapper>
       <Form
@@ -576,7 +580,14 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                       new Date(deactivation.date) < new Date()
                         ? 'userSubscriptionEdit.deactivation.isDeactivated'
                         : 'userSubscriptionEdit.deactivation.willBeDeactivated',
-                      {date: new Date(deactivation.date)}
+                      {
+                        date: new Date(deactivation.date),
+                        reason: t(
+                          `userSubscriptionEdit.deactivation.reason${capitalizeFirstLetter(
+                            deactivation.reason
+                          )}`
+                        )
+                      }
                     )}
                   </Message>
                 )}
