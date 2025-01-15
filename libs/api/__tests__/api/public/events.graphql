@@ -1,47 +1,47 @@
 fragment EventRef on Event {
+  id
+  name
+  lead
+  description
+  status
+  location
+  image {
+    ...ImageRef
+  }
+  tags {
     id
-    name
-    lead
-    description
-    status
-    location
-    image {
-        ...ImageRef
-    }
-    tags {
-        id
-        tag
-    }
-    startsAt
-    endsAt
+    tag
+  }
+  startsAt
+  endsAt
 }
 
 query EventList(
-    $filter: EventFilter
-    $cursor: ID
-    $take: Int
-    $skip: Int
-    $order: SortOrder
-    $sort: EventSort
+  $filter: EventFilter
+  $cursor: ID
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: EventSort
 ) {
-    events(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
-        nodes {
-            ...EventRef
-        }
-
-        pageInfo {
-            startCursor
-            endCursor
-            hasNextPage
-            hasPreviousPage
-        }
-
-        totalCount
+  events(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...EventRef
     }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
 }
 
 query Event($id: ID!) {
-    event(id: $id) {
-        ...EventRef
-    }
+  event(id: $id) {
+    ...EventRef
+  }
 }
