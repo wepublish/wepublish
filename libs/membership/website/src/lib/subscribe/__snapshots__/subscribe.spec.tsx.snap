@@ -11978,7 +11978,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -               >
 -                 <img
 -                   alt="DSC07717"
--                   class="css-1vkd3i9-ImageWrapper e1shv2yg0"
+-                   class="css-gefdjv-ImageWrapper-PaymentMethodPicker e1shv2yg0"
 -                   loading="lazy"
 -                   sizes="(max-width: 400px) 200w,
 - (max-width: 600px) 300w,
@@ -12047,7 +12047,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -               >
 -                 <img
 -                   alt="DSC07717"
--                   class="css-1vkd3i9-ImageWrapper e1shv2yg0"
+-                   class="css-gefdjv-ImageWrapper-PaymentMethodPicker e1shv2yg0"
 -                   loading="lazy"
 -                   sizes="(max-width: 400px) 200w,
 - (max-width: 600px) 300w,
@@ -12116,7 +12116,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -               >
 -                 <img
 -                   alt="DSC07717"
--                   class="css-1vkd3i9-ImageWrapper e1shv2yg0"
+-                   class="css-gefdjv-ImageWrapper-PaymentMethodPicker e1shv2yg0"
 -                   loading="lazy"
 -                   sizes="(max-width: 400px) 200w,
 - (max-width: 600px) 300w,
@@ -12300,7 +12300,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnPaymentMethodChange 1`] = 
                 >
                   <img
                     alt="DSC07717"
-                    class="css-1vkd3i9-ImageWrapper e1shv2yg0"
+                    class="css-gefdjv-ImageWrapper-PaymentMethodPicker e1shv2yg0"
                     loading="lazy"
 @@ -654,11 +654,11 @@
               <label
@@ -12339,7 +12339,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnPaymentMethodChange 1`] = 
                 >
                   <img
                     alt="DSC07717"
-                    class="css-1vkd3i9-ImageWrapper e1shv2yg0"
+                    class="css-gefdjv-ImageWrapper-PaymentMethodPicker e1shv2yg0"
                     loading="lazy"
 @@ -717,113 +717,13 @@
                   />
@@ -16496,7 +16496,7 @@ exports[`Subscribe should render WithCurrency 1`] = `
 -               >
 -                 <img
 -                   alt="DSC07717"
--                   class="css-1vkd3i9-ImageWrapper e1shv2yg0"
+-                   class="css-gefdjv-ImageWrapper-PaymentMethodPicker e1shv2yg0"
 -                   loading="lazy"
 -                   sizes="(max-width: 400px) 200w,
 - (max-width: 600px) 300w,
@@ -16565,7 +16565,7 @@ exports[`Subscribe should render WithCurrency 1`] = `
 -               >
 -                 <img
 -                   alt="DSC07717"
--                   class="css-1vkd3i9-ImageWrapper e1shv2yg0"
+-                   class="css-gefdjv-ImageWrapper-PaymentMethodPicker e1shv2yg0"
 -                   loading="lazy"
 -                   sizes="(max-width: 400px) 200w,
 - (max-width: 600px) 300w,
@@ -16634,7 +16634,7 @@ exports[`Subscribe should render WithCurrency 1`] = `
 -               >
 -                 <img
 -                   alt="DSC07717"
--                   class="css-1vkd3i9-ImageWrapper e1shv2yg0"
+-                   class="css-gefdjv-ImageWrapper-PaymentMethodPicker e1shv2yg0"
 -                   loading="lazy"
 -                   sizes="(max-width: 400px) 200w,
 - (max-width: 600px) 300w,
@@ -16703,7 +16703,7 @@ exports[`Subscribe should render WithCurrency 1`] = `
 -               >
                   <img
                     alt="DSC07717"
-                    class="css-1vkd3i9-ImageWrapper e1shv2yg0"
+                    class="css-gefdjv-ImageWrapper-PaymentMethodPicker e1shv2yg0"
                     loading="lazy"
                     sizes="(max-width: 400px) 200w,
 @@ -717,76 +472,11 @@
