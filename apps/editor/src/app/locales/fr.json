@@ -1232,8 +1232,6 @@
       "invoiceNr": "N° de facture {{invoiceId}}",
       "invoicePaid": "payée",
       "invoiceUnpaid": "non payée",
-      "confirmed": "confirmé",
-      "unconfirmed": "non confirmé",
       "monthlyAmount": "Montant mensuel : {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "L'abonnement expire, pas de renouvellement automatique",
       "noDeactivation": "Pas de désactivation.",

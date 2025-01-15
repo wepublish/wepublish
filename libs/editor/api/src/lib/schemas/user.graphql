@@ -1,135 +1,134 @@
 fragment FullUser on User {
-    id
-    createdAt
-    modifiedAt
-    name
-    firstName
-    address {
-        company
-        streetAddress
-        streetAddress2
-        zipCode
-        city
-        country
-    }
-    flair
-    birthday
-    userImage {
-        ...ImageRef
-    }
-    active
-    lastLogin
-    properties {
-        key
-        value
-        public
-    }
-    email
-    emailVerifiedAt
-    roles {
-        ...FullUserRole
-    }
-    subscriptions {
-        ...UserSubscription
-    }
+  id
+  createdAt
+  modifiedAt
+  name
+  firstName
+  address {
+    company
+    streetAddress
+    streetAddress2
+    zipCode
+    city
+    country
+  }
+  flair
+  birthday
+  userImage {
+    ...ImageRef
+  }
+  active
+  lastLogin
+  properties {
+    key
+    value
+    public
+  }
+  email
+  emailVerifiedAt
+  roles {
+    ...FullUserRole
+  }
+  subscriptions {
+    ...UserSubscription
+  }
 }
 
 fragment UserSubscription on UserSubscription {
+  id
+  createdAt
+  modifiedAt
+  paymentPeriodicity
+  monthlyAmount
+  currency
+  autoRenew
+  startsAt
+  paidUntil
+  periods {
     id
+    amount
     createdAt
-    modifiedAt
+    endsAt
+    invoiceID
     paymentPeriodicity
-    monthlyAmount
-    currency
-    autoRenew
-    confirmed
     startsAt
-    paidUntil
-    periods {
-        id
-        amount
-        createdAt
-        endsAt
-        invoiceID
-        paymentPeriodicity
-        startsAt
-    }
-    properties {
-        key
-        value
-        public
-    }
-    deactivation {
-        ...Deactivation
-    }
-    memberPlan {
-        ...MemberPlanRef
-    }
-    invoices {
-        ...Invoice
-    }
+  }
+  properties {
+    key
+    value
+    public
+  }
+  deactivation {
+    ...Deactivation
+  }
+  memberPlan {
+    ...MemberPlanRef
+  }
+  invoices {
+    ...Invoice
+  }
 }
 
 query UserList(
-    $filter: UserFilter
-    $cursor: ID
-    $take: Int
-    $skip: Int
-    $order: SortOrder
-    $sort: UserSort
+  $filter: UserFilter
+  $cursor: ID
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: UserSort
 ) {
-    users(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
-        nodes {
-            ...FullUser
-        }
-
-        pageInfo {
-            startCursor
-            endCursor
-            hasNextPage
-            hasPreviousPage
-        }
-
-        totalCount
+  users(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...FullUser
     }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
 }
 
 query User($id: ID!) {
-    user(id: $id) {
-        ...FullUser
-    }
+  user(id: $id) {
+    ...FullUser
+  }
 }
 
 query Me {
-    me {
-        ...FullUser
-    }
+  me {
+    ...FullUser
+  }
 }
 
 mutation CreateUser($input: UserInput!, $password: String!) {
-    createUser(input: $input, password: $password) {
-        ...FullUser
-    }
+  createUser(input: $input, password: $password) {
+    ...FullUser
+  }
 }
 
 mutation UpdateUser($id: ID!, $input: UserInput!) {
-    updateUser(id: $id, input: $input) {
-        ...FullUser
-    }
+  updateUser(id: $id, input: $input) {
+    ...FullUser
+  }
 }
 
 mutation ResetUserPassword($id: ID!, $password: String!, $sendMail: Boolean) {
-    resetUserPassword(id: $id, password: $password, sendMail: $sendMail) {
-        ...FullUser
-    }
+  resetUserPassword(id: $id, password: $password, sendMail: $sendMail) {
+    ...FullUser
+  }
 }
 
 mutation DeleteUser($id: ID!) {
-    deleteUser(id: $id) {
-        ...FullUser
-    }
+  deleteUser(id: $id) {
+    ...FullUser
+  }
 }
 
 mutation SendWebsiteLogin($email: String!) {
-    sendWebsiteLogin(email: $email)
+  sendWebsiteLogin(email: $email)
 }
