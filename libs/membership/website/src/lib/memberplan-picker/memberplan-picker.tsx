@@ -59,7 +59,6 @@ export const MemberPlanPicker = forwardRef<HTMLButtonElement, BuilderMemberPlanP
               ref={ref}>
               {memberPlans.map(memberPlan => (
                 <FormControlLabel
-                  key={memberPlan.id}
                   value={memberPlan.id}
                   control={
                     <MemberPlanItem
