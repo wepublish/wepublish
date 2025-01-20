@@ -164,7 +164,6 @@ export function createProxyingIsTypeOf<TSource, TContext>(
 }
 
 export function mapEnumsBack(result: any) {
-  console.log('mapEnumsBack')
   if (!result) return null
 
   for (const key in result) {
