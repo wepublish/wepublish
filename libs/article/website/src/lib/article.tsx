@@ -1,4 +1,4 @@
-import {Chip, styled} from '@mui/material'
+import {styled} from '@mui/material'
 import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Article as ArticleType, Block} from '@wepublish/website/api'
 import {ArticleListWrapper} from './article-list/article-list'
@@ -19,12 +19,6 @@ export const ArticleInfoWrapper = styled('aside')`
   grid-row-start: 2;
 `
 
-export const ArticleTags = styled('div')`
-  display: flex;
-  flex-flow: row wrap;
-  gap: ${({theme}) => theme.spacing(1)};
-`
-
 export const ArticleAuthors = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
@@ -35,16 +29,16 @@ export function Article({className, data, children, loading, error}: BuilderArti
     AuthorChip,
     ArticleSEO,
     ArticleDate,
-    elements: {Link},
+    ArticleMeta,
     blocks: {Blocks}
   } = useWebsiteBuilder()
 
-  const article = data?.article
+  const article = data?.article as ArticleType
   const authors = article?.authors.filter(author => !author.hideOnArticle) || []
 
   return (
     <ArticleWrapper className={className}>
-      {article && <ArticleSEO article={data.article as ArticleType} />}
+      {article && <ArticleSEO article={article} />}
 
       <Blocks blocks={(article?.blocks as Block[]) ?? []} type="Article" />
 
@@ -55,25 +49,11 @@ export function Article({className, data, children, loading, error}: BuilderArti
               <AuthorChip key={author.id} author={author} />
             ))}
 
-            <ArticleDate article={article as ArticleType} />
+            <ArticleDate article={article} />
           </ArticleAuthors>
         )}
 
-        {!!article?.tags.length && (
-          <ArticleTags>
-            {article.tags.map(tag => (
-              <Chip
-                key={tag.id}
-                label={tag.tag}
-                component={Link}
-                href={tag.url}
-                color="primary"
-                variant="outlined"
-                clickable
-              />
-            ))}
-          </ArticleTags>
-        )}
+        {article && <ArticleMeta article={article} />}
       </ArticleInfoWrapper>
 
       {children}

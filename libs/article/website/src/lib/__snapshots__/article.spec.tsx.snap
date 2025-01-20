@@ -9,7 +9,7 @@ exports[`Article should render Default 1`] = `
       data-testid="fake-head"
     >
       <title>
-        socialMediaTitle — Newsroom Name
+        title — Newsroom Name
       </title>
       <meta
         content="article"
@@ -2644,7 +2644,7 @@ exports[`Article should render WithChildren 1`] = `
       data-testid="fake-head"
     >
       <title>
-        socialMediaTitle — Newsroom Name
+        title — Newsroom Name
       </title>
       <meta
         content="article"
@@ -5309,7 +5309,7 @@ exports[`Article should render WithClassName 1`] = `
       data-testid="fake-head"
     >
       <title>
-        socialMediaTitle — Newsroom Name
+        title — Newsroom Name
       </title>
       <meta
         content="article"
@@ -7971,7 +7971,7 @@ exports[`Article should render WithEmotion 1`] = `
       data-testid="fake-head"
     >
       <title>
-        socialMediaTitle — Newsroom Name
+        title — Newsroom Name
       </title>
       <meta
         content="article"
@@ -10657,7 +10657,7 @@ exports[`Article should render WithoutAuthors 1`] = `
       data-testid="fake-head"
     >
       <title>
-        socialMediaTitle — Newsroom Name
+        title — Newsroom Name
       </title>
       <meta
         content="article"
@@ -13071,7 +13071,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
       data-testid="fake-head"
     >
       <title>
-        socialMediaTitle — Newsroom Name
+        title — Newsroom Name
       </title>
       <meta
         content="article"
@@ -15733,7 +15733,7 @@ exports[`Article should render WithoutLead 1`] = `
       data-testid="fake-head"
     >
       <title>
-        socialMediaTitle — Newsroom Name
+        title — Newsroom Name
       </title>
       <meta
         content="article"

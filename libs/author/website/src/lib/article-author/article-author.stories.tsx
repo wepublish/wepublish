@@ -1,8 +1,6 @@
-import {ApolloError} from '@apollo/client'
 import {Meta} from '@storybook/react'
 import {AuthorQuery} from '@wepublish/website/api'
-import {Author} from './author'
-import {css} from '@emotion/react'
+import {ArticleAuthor as ArticleAuthorCmp} from './article-author'
 
 const author = {
   __typename: 'Author',
@@ -264,93 +262,12 @@ const author = {
 } as NonNullable<AuthorQuery['author']>
 
 export default {
-  component: Author,
-  title: 'Components/Author'
+  component: ArticleAuthorCmp,
+  title: 'Components/ArticleAuthor'
 } as Meta
 
-export const Default = {
+export const ArticleAuthor = {
   args: {
-    data: {author}
-  }
-}
-
-export const WithLoading = {
-  args: {
-    data: {
-      author: null
-    },
-    loading: true
-  }
-}
-
-export const WithError = {
-  args: {
-    data: {
-      author: null
-    },
-    loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar'
-    })
-  }
-}
-
-export const WithClassName = {
-  args: {
-    data: {author},
-    className: 'extra-classname'
-  }
-}
-
-export const WithEmotion = {
-  args: {
-    data: {author},
-    css: css`
-      background-color: #eee;
-    `
-  }
-}
-
-export const WithoutJobTitle = {
-  args: {
-    data: {
-      author: {
-        ...author,
-        jobTitle: null
-      }
-    }
-  }
-}
-
-export const WithoutImage = {
-  args: {
-    data: {
-      author: {
-        ...author,
-        image: null
-      }
-    }
-  }
-}
-
-export const WithoutBio = {
-  args: {
-    data: {
-      author: {
-        ...author,
-        bio: null
-      }
-    }
-  }
-}
-
-export const WithoutLinks = {
-  args: {
-    data: {
-      author: {
-        ...author,
-        links: null
-      }
-    }
+    author
   }
 }

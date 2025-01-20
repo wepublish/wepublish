@@ -17,94 +17,98 @@ exports[`Author should render Default 1`] = `
         Editor
       </aside>
     </header>
-    <img
-      alt="DSC07717"
+    <div
       class="emotion-4 emotion-5"
-      loading="lazy"
-      sizes="(max-width: 400px) 200w,
+    >
+      <img
+        alt="DSC07717"
+        class="emotion-6 emotion-7"
+        loading="lazy"
+        sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-      srcset="https://unsplash.it/1200/400 1200w,
+        srcset="https://unsplash.it/1200/400 1200w,
 https://unsplash.it/1000/400 1000w,
 https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-      title=""
-    />
-    <aside
-      class="emotion-6 emotion-7"
-    >
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
-        href="https://twitter.com"
-        target="__blank"
-        title="Twitter"
+        title=""
+      />
+      <aside
+        class="emotion-8 emotion-9"
       >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 512 512"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-10"
+          href="https://twitter.com"
+          target="__blank"
+          title="Twitter"
         >
-          <path
-            d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
-          />
-        </svg>
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
-        href="https://facebook.com"
-        target="__blank"
-        title="Facebook"
-      >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 24 24"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
+            />
+          </svg>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-10"
+          href="https://facebook.com"
+          target="__blank"
+          title="Facebook"
         >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-          />
-        </svg>
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
-        href="https://instagram.com"
-        target="__blank"
-        title="Instagram"
-      >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 448 512"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+            />
+          </svg>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-10"
+          href="https://instagram.com"
+          target="__blank"
+          title="Instagram"
         >
-          <path
-            d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-          />
-        </svg>
-      </a>
-    </aside>
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 448 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+            />
+          </svg>
+        </a>
+      </aside>
+    </div>
     <div
-      class="emotion-11 emotion-12"
+      class="emotion-13 emotion-14"
     >
       <div
         data-gramm="false"
@@ -113,7 +117,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-13"
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-15"
           data-slate-node="element"
         >
           <span
@@ -127,7 +131,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h2>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-16"
           data-slate-node="element"
         >
           <span
@@ -141,7 +145,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
           data-slate-node="element"
         >
           <span
@@ -189,7 +193,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="emotion-16"
+          class="emotion-18"
         >
           <tbody
             data-slate-node="element"
@@ -198,11 +202,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -217,11 +221,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -240,11 +244,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -259,11 +263,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -281,7 +285,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
           data-slate-node="element"
         >
           <span
@@ -426,7 +430,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-26"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-28"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -476,94 +480,98 @@ exports[`Author should render WithClassName 1`] = `
         Editor
       </aside>
     </header>
-    <img
-      alt="DSC07717"
+    <div
       class="emotion-4 emotion-5"
-      loading="lazy"
-      sizes="(max-width: 400px) 200w,
+    >
+      <img
+        alt="DSC07717"
+        class="emotion-6 emotion-7"
+        loading="lazy"
+        sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-      srcset="https://unsplash.it/1200/400 1200w,
+        srcset="https://unsplash.it/1200/400 1200w,
 https://unsplash.it/1000/400 1000w,
 https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-      title=""
-    />
-    <aside
-      class="emotion-6 emotion-7"
-    >
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
-        href="https://twitter.com"
-        target="__blank"
-        title="Twitter"
+        title=""
+      />
+      <aside
+        class="emotion-8 emotion-9"
       >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 512 512"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-10"
+          href="https://twitter.com"
+          target="__blank"
+          title="Twitter"
         >
-          <path
-            d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
-          />
-        </svg>
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
-        href="https://facebook.com"
-        target="__blank"
-        title="Facebook"
-      >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 24 24"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
+            />
+          </svg>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-10"
+          href="https://facebook.com"
+          target="__blank"
+          title="Facebook"
         >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-          />
-        </svg>
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
-        href="https://instagram.com"
-        target="__blank"
-        title="Instagram"
-      >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 448 512"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+            />
+          </svg>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-10"
+          href="https://instagram.com"
+          target="__blank"
+          title="Instagram"
         >
-          <path
-            d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-          />
-        </svg>
-      </a>
-    </aside>
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 448 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+            />
+          </svg>
+        </a>
+      </aside>
+    </div>
     <div
-      class="emotion-11 emotion-12"
+      class="emotion-13 emotion-14"
     >
       <div
         data-gramm="false"
@@ -572,7 +580,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-13"
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-15"
           data-slate-node="element"
         >
           <span
@@ -586,7 +594,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h2>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-16"
           data-slate-node="element"
         >
           <span
@@ -600,7 +608,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
           data-slate-node="element"
         >
           <span
@@ -648,7 +656,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="emotion-16"
+          class="emotion-18"
         >
           <tbody
             data-slate-node="element"
@@ -657,11 +665,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -676,11 +684,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -699,11 +707,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -718,11 +726,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -740,7 +748,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
           data-slate-node="element"
         >
           <span
@@ -885,7 +893,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-26"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-28"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -935,94 +943,98 @@ exports[`Author should render WithEmotion 1`] = `
         Editor
       </aside>
     </header>
-    <img
-      alt="DSC07717"
+    <div
       class="emotion-4 emotion-5"
-      loading="lazy"
-      sizes="(max-width: 400px) 200w,
+    >
+      <img
+        alt="DSC07717"
+        class="emotion-6 emotion-7"
+        loading="lazy"
+        sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-      srcset="https://unsplash.it/1200/400 1200w,
+        srcset="https://unsplash.it/1200/400 1200w,
 https://unsplash.it/1000/400 1000w,
 https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-      title=""
-    />
-    <aside
-      class="emotion-6 emotion-7"
-    >
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
-        href="https://twitter.com"
-        target="__blank"
-        title="Twitter"
+        title=""
+      />
+      <aside
+        class="emotion-8 emotion-9"
       >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 512 512"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-10"
+          href="https://twitter.com"
+          target="__blank"
+          title="Twitter"
         >
-          <path
-            d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
-          />
-        </svg>
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
-        href="https://facebook.com"
-        target="__blank"
-        title="Facebook"
-      >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 24 24"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
+            />
+          </svg>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-10"
+          href="https://facebook.com"
+          target="__blank"
+          title="Facebook"
         >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-          />
-        </svg>
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
-        href="https://instagram.com"
-        target="__blank"
-        title="Instagram"
-      >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 448 512"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+            />
+          </svg>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-10"
+          href="https://instagram.com"
+          target="__blank"
+          title="Instagram"
         >
-          <path
-            d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-          />
-        </svg>
-      </a>
-    </aside>
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 448 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+            />
+          </svg>
+        </a>
+      </aside>
+    </div>
     <div
-      class="emotion-11 emotion-12"
+      class="emotion-13 emotion-14"
     >
       <div
         data-gramm="false"
@@ -1031,7 +1043,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-13"
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-15"
           data-slate-node="element"
         >
           <span
@@ -1045,7 +1057,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h2>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-14"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-16"
           data-slate-node="element"
         >
           <span
@@ -1059,7 +1071,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-17"
           data-slate-node="element"
         >
           <span
@@ -1107,7 +1119,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="emotion-16"
+          class="emotion-18"
         >
           <tbody
             data-slate-node="element"
@@ -1116,11 +1128,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -1135,11 +1147,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -1158,11 +1170,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -1177,11 +1189,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -1199,7 +1211,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
           data-slate-node="element"
         >
           <span
@@ -1344,7 +1356,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-26"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-28"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -1398,94 +1410,98 @@ exports[`Author should render WithoutBio 1`] = `
         Editor
       </aside>
     </header>
-    <img
-      alt="DSC07717"
+    <div
       class="emotion-4 emotion-5"
-      loading="lazy"
-      sizes="(max-width: 400px) 200w,
+    >
+      <img
+        alt="DSC07717"
+        class="emotion-6 emotion-7"
+        loading="lazy"
+        sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-      srcset="https://unsplash.it/1200/400 1200w,
+        srcset="https://unsplash.it/1200/400 1200w,
 https://unsplash.it/1000/400 1000w,
 https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-      title=""
-    />
-    <aside
-      class="emotion-6 emotion-7"
-    >
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
-        href="https://twitter.com"
-        target="__blank"
-        title="Twitter"
+        title=""
+      />
+      <aside
+        class="emotion-8 emotion-9"
       >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 512 512"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-10"
+          href="https://twitter.com"
+          target="__blank"
+          title="Twitter"
         >
-          <path
-            d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
-          />
-        </svg>
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
-        href="https://facebook.com"
-        target="__blank"
-        title="Facebook"
-      >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 24 24"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
+            />
+          </svg>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-10"
+          href="https://facebook.com"
+          target="__blank"
+          title="Facebook"
         >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-          />
-        </svg>
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
-        href="https://instagram.com"
-        target="__blank"
-        title="Instagram"
-      >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 448 512"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+            />
+          </svg>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-10"
+          href="https://instagram.com"
+          target="__blank"
+          title="Instagram"
         >
-          <path
-            d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-          />
-        </svg>
-      </a>
-    </aside>
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 448 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+            />
+          </svg>
+        </a>
+      </aside>
+    </div>
     <div
-      class="emotion-11 emotion-12"
+      class="emotion-13 emotion-14"
     >
       <div
         data-gramm="false"
@@ -1515,76 +1531,80 @@ exports[`Author should render WithoutImage 1`] = `
         Editor
       </aside>
     </header>
-    <aside
+    <div
       class="emotion-4 emotion-5"
     >
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-6"
-        href="https://twitter.com"
-        target="__blank"
-        title="Twitter"
+      <aside
+        class="emotion-6 emotion-7"
       >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 512 512"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
+          href="https://twitter.com"
+          target="__blank"
+          title="Twitter"
         >
-          <path
-            d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
-          />
-        </svg>
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-6"
-        href="https://facebook.com"
-        target="__blank"
-        title="Facebook"
-      >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 24 24"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
+            />
+          </svg>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
+          href="https://facebook.com"
+          target="__blank"
+          title="Facebook"
         >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-          />
-        </svg>
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-6"
-        href="https://instagram.com"
-        target="__blank"
-        title="Instagram"
-      >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 448 512"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+            />
+          </svg>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
+          href="https://instagram.com"
+          target="__blank"
+          title="Instagram"
         >
-          <path
-            d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-          />
-        </svg>
-      </a>
-    </aside>
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 448 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+            />
+          </svg>
+        </a>
+      </aside>
+    </div>
     <div
-      class="emotion-9 emotion-10"
+      class="emotion-11 emotion-12"
     >
       <div
         data-gramm="false"
@@ -1593,7 +1613,7 @@ exports[`Author should render WithoutImage 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-11"
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-13"
           data-slate-node="element"
         >
           <span
@@ -1607,7 +1627,7 @@ exports[`Author should render WithoutImage 1`] = `
           </span>
         </h2>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-12"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-14"
           data-slate-node="element"
         >
           <span
@@ -1621,7 +1641,7 @@ exports[`Author should render WithoutImage 1`] = `
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-13"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-15"
           data-slate-node="element"
         >
           <span
@@ -1669,7 +1689,7 @@ exports[`Author should render WithoutImage 1`] = `
           </li>
         </ol>
         <table
-          class="emotion-14"
+          class="emotion-16"
         >
           <tbody
             data-slate-node="element"
@@ -1678,11 +1698,11 @@ exports[`Author should render WithoutImage 1`] = `
               data-slate-node="element"
             >
               <td
-                class="emotion-15"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -1697,11 +1717,11 @@ exports[`Author should render WithoutImage 1`] = `
                 </p>
               </td>
               <td
-                class="emotion-15"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -1720,11 +1740,11 @@ exports[`Author should render WithoutImage 1`] = `
               data-slate-node="element"
             >
               <td
-                class="emotion-15"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -1739,11 +1759,11 @@ exports[`Author should render WithoutImage 1`] = `
                 </p>
               </td>
               <td
-                class="emotion-15"
+                class="emotion-17"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                   data-slate-node="element"
                 >
                   <span
@@ -1761,7 +1781,7 @@ exports[`Author should render WithoutImage 1`] = `
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
           data-slate-node="element"
         >
           <span
@@ -1906,7 +1926,7 @@ exports[`Author should render WithoutImage 1`] = `
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-24"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-26"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -1951,94 +1971,98 @@ exports[`Author should render WithoutJobTitle 1`] = `
         Foobar
       </h1>
     </header>
-    <img
-      alt="DSC07717"
+    <div
       class="emotion-3 emotion-4"
-      loading="lazy"
-      sizes="(max-width: 400px) 200w,
+    >
+      <img
+        alt="DSC07717"
+        class="emotion-5 emotion-6"
+        loading="lazy"
+        sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-      srcset="https://unsplash.it/1200/400 1200w,
+        srcset="https://unsplash.it/1200/400 1200w,
 https://unsplash.it/1000/400 1000w,
 https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-      title=""
-    />
-    <aside
-      class="emotion-5 emotion-6"
-    >
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-7"
-        href="https://twitter.com"
-        target="__blank"
-        title="Twitter"
+        title=""
+      />
+      <aside
+        class="emotion-7 emotion-8"
       >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 512 512"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-9"
+          href="https://twitter.com"
+          target="__blank"
+          title="Twitter"
         >
-          <path
-            d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
-          />
-        </svg>
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-7"
-        href="https://facebook.com"
-        target="__blank"
-        title="Facebook"
-      >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 24 24"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
+            />
+          </svg>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-9"
+          href="https://facebook.com"
+          target="__blank"
+          title="Facebook"
         >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-          />
-        </svg>
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-7"
-        href="https://instagram.com"
-        target="__blank"
-        title="Instagram"
-      >
-        <svg
-          fill="currentColor"
-          height="22"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 448 512"
-          width="22"
-          xmlns="http://www.w3.org/2000/svg"
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+            />
+          </svg>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-9"
+          href="https://instagram.com"
+          target="__blank"
+          title="Instagram"
         >
-          <path
-            d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-          />
-        </svg>
-      </a>
-    </aside>
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 448 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+            />
+          </svg>
+        </a>
+      </aside>
+    </div>
     <div
-      class="emotion-10 emotion-11"
+      class="emotion-12 emotion-13"
     >
       <div
         data-gramm="false"
@@ -2047,7 +2071,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-12"
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-14"
           data-slate-node="element"
         >
           <span
@@ -2061,7 +2085,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h2>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-13"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-15"
           data-slate-node="element"
         >
           <span
@@ -2075,7 +2099,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-14"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-16"
           data-slate-node="element"
         >
           <span
@@ -2123,7 +2147,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="emotion-15"
+          class="emotion-17"
         >
           <tbody
             data-slate-node="element"
@@ -2132,11 +2156,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-16"
+                class="emotion-18"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
                   data-slate-node="element"
                 >
                   <span
@@ -2151,11 +2175,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-16"
+                class="emotion-18"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
                   data-slate-node="element"
                 >
                   <span
@@ -2174,11 +2198,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-16"
+                class="emotion-18"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
                   data-slate-node="element"
                 >
                   <span
@@ -2193,11 +2217,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-16"
+                class="emotion-18"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
                   data-slate-node="element"
                 >
                   <span
@@ -2215,7 +2239,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
           data-slate-node="element"
         >
           <span
@@ -2360,7 +2384,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-25"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-27"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -2410,26 +2434,30 @@ exports[`Author should render WithoutLinks 1`] = `
         Editor
       </aside>
     </header>
-    <img
-      alt="DSC07717"
+    <div
       class="emotion-4 emotion-5"
-      loading="lazy"
-      sizes="(max-width: 400px) 200w,
+    >
+      <img
+        alt="DSC07717"
+        class="emotion-6 emotion-7"
+        loading="lazy"
+        sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
 (max-width: 1000px) 500w,
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-      srcset="https://unsplash.it/1200/400 1200w,
+        srcset="https://unsplash.it/1200/400 1200w,
 https://unsplash.it/1000/400 1000w,
 https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-      title=""
-    />
+        title=""
+      />
+    </div>
     <div
-      class="emotion-6 emotion-7"
+      class="emotion-8 emotion-9"
     >
       <div
         data-gramm="false"
@@ -2438,7 +2466,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-8"
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-10"
           data-slate-node="element"
         >
           <span
@@ -2452,7 +2480,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h2>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-9"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-11"
           data-slate-node="element"
         >
           <span
@@ -2466,7 +2494,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-10"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-12"
           data-slate-node="element"
         >
           <span
@@ -2514,7 +2542,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="emotion-11"
+          class="emotion-13"
         >
           <tbody
             data-slate-node="element"
@@ -2523,11 +2551,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-12"
+                class="emotion-14"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-13"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-15"
                   data-slate-node="element"
                 >
                   <span
@@ -2542,11 +2570,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-12"
+                class="emotion-14"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-13"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-15"
                   data-slate-node="element"
                 >
                   <span
@@ -2565,11 +2593,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-12"
+                class="emotion-14"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-13"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-15"
                   data-slate-node="element"
                 >
                   <span
@@ -2584,11 +2612,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-12"
+                class="emotion-14"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-13"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-15"
                   data-slate-node="element"
                 >
                   <span
@@ -2606,7 +2634,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-13"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-15"
           data-slate-node="element"
         >
           <span
@@ -2751,7 +2779,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-21"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-23"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
