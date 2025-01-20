@@ -161,34 +161,6 @@ type DeletePollVotesResult {
   count: Int!
 }
 
-type Event {
-  createdAt: DateTime!
-  description: RichText
-  endsAt: DateTime
-  externalSourceId: String
-  externalSourceName: String
-  id: ID!
-  image: Image
-  imageId: String
-  lead: String
-  location: String
-  modifiedAt: DateTime!
-  name: String!
-  page: Page
-  startsAt: DateTime!
-  status: EventStatus!
-  tags: [Tag!]
-}
-
-input EventFilter {
-  from: DateTime
-  location: String
-  name: String
-  tags: [String!]
-  to: DateTime
-  upcomingOnly: Boolean
-}
-
 type EventFromSource {
   createdAt: DateTime!
   description: RichText
@@ -201,16 +173,8 @@ type EventFromSource {
   location: String
   modifiedAt: DateTime!
   name: String!
-  page: Page
   startsAt: DateTime!
   status: EventStatus!
-}
-
-enum EventSort {
-  CreatedAt
-  EndsAt
-  ModifiedAt
-  StartsAt
 }
 
 enum EventStatus {
@@ -218,6 +182,23 @@ enum EventStatus {
   Postponed
   Rescheduled
   Scheduled
+}
+
+type EventV2 {
+  createdAt: DateTime!
+  description: RichText
+  endsAt: DateTime
+  externalSourceId: String
+  externalSourceName: String
+  id: ID!
+  image: Image
+  imageId: String
+  lead: String
+  location: String
+  modifiedAt: DateTime!
+  name: String!
+  startsAt: DateTime!
+  status: EventStatus!
 }
 
 type FocalPoint {
@@ -320,9 +301,6 @@ type Mutation {
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
-  """Creates a new event."""
-  createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
-
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
@@ -338,9 +316,6 @@ type Mutation {
 
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
-
-  """Deletes an existing event."""
-  deleteEvent(id: String!): Event!
 
   """Delete poll votes"""
   deletePollVotes(ids: [ID!]!): DeletePollVotesResult!
@@ -367,9 +342,6 @@ type Mutation {
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
-
-  """Updates an existing event."""
-  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -404,12 +376,6 @@ type PageModel {
 
 input PageModelInput {
   id: ID!
-}
-
-type PaginatedEvents {
-  nodes: [Event!]!
-  pageInfo: PageInfo!
-  totalCount: Float!
 }
 
 type PaginatedPollVotes {
@@ -491,14 +457,8 @@ type Query {
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
 
-  """Returns a event by id."""
-  event(id: ID!): Event!
-
   "\n      Returns a list of Importable Event Providers\n    "
   eventProviders: [String!]!
-
-  """Returns a paginated list of events based on the filters given."""
-  events(cursorId: ID, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
@@ -635,7 +595,6 @@ enum SubscriptionEvent {
   INVOICE_CREATION
   RENEWAL_FAILED
   RENEWAL_SUCCESS
-  RESUBSCRIBE
   SUBSCRIBE
 }
 
@@ -660,10 +619,6 @@ type SubscriptionInterval {
 type SystemMailModel {
   event: UserEvent!
   mailTemplate: MailTemplateRef
-}
-
-type Tag {
-  id: ID!
 }
 
 input UpdateBannerInput {

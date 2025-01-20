@@ -2802,7 +2802,6 @@ export enum UserSort {
 export type UserSubscription = {
   __typename?: 'UserSubscription'
   autoRenew: Scalars['Boolean']
-  confirmed: Scalars['Boolean']
   createdAt: Scalars['DateTime']
   currency: Currency
   deactivation?: Maybe<SubscriptionDeactivation>
