@@ -6,9 +6,9 @@ export type ReturnTrackingPixels = {
 }
 
 export class GatewayClient {
-  constructor(private memberNr: string, private userName: string, private password: string) {}
+  constructor(private memberNr: string, private username: string, private password: string) {}
   getAuthorizationHeader() {
-    return Buffer.from(`${this.memberNr}:${this.userName}:${this.password}`).toString('base64')
+    return Buffer.from(`${this.memberNr}:${this.username}:${this.password}`).toString('base64')
   }
 
   async httpPostRequest(url: string, body: any) {
@@ -21,6 +21,11 @@ export class GatewayClient {
   }
 
   async getTrackingPixels(amount: number): Promise<ReturnTrackingPixels> {
+    return {
+      domain: 'pl01.owen.prolitteris.ch',
+      pixelUid: ['plzm.79c9e1ac-96f1-11e5-85a6-000c29f1f6c4']
+    }
+    /**
     try {
       const response = await this.httpPostRequest('https://owen.prolitteris.ch/rest/api/1/pixel', {
         amount
@@ -30,6 +35,6 @@ export class GatewayClient {
     } catch (error) {
       console.error('Request failed:', error.response?.data || error.message)
       throw error
-    }
+    }**/
   }
 }

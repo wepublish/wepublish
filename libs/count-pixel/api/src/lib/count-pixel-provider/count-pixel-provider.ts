@@ -2,10 +2,12 @@ export type CreatePixelProps = {
   count: number
 }
 
+export type CountPixelProps = {}
+
 export interface CountPixelProvider {
-  createPixel(props: CreatePixelProps)
+  createPixelUris(props: CreatePixelProps): Promise<string[]>
 }
 
 export abstract class BasePixelProvider implements CountPixelProvider {
-  abstract createPixel(props: CreatePixelProps)
+  abstract createPixelUris(props: CreatePixelProps): Promise<string[]>
 }

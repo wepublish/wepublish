@@ -1,5 +1,31 @@
-import {BasePixelProvider, CreatePixelProps} from '../count-pixel-provider'
+import {BasePixelProvider, CountPixelProps, CreatePixelProps} from '../count-pixel-provider'
+import {GatewayClient} from './client-gateway'
+export interface ProLitterisCountPixelProps extends CountPixelProps {
+  username: string
+  memberNr: string
+  password: string
+  onlyPaidContentAccess: boolean
+}
 
 export class ProlitterisCountPixelProvider extends BasePixelProvider {
-  createPixel(props: CreatePixelProps) {}
+  private gateway: GatewayClient
+  private uriPaidContentIndicator: string = 'na'
+  constructor(props: ProLitterisCountPixelProps) {
+    super()
+    this.gateway = new GatewayClient(props.memberNr, props.username, props.password)
+    if (props.onlyPaidContentAccess) {
+      this.uriPaidContentIndicator = 'pw'
+    }
+  }
+
+  async createPixelUris(props: CreatePixelProps): Promise<string[]> {
+    let tackingPixelUris: string[] = []
+    const trackingPixels = await this.gateway.getTrackingPixels(props.count)
+    for (const trackingPixel of trackingPixels.pixelUid) {
+      tackingPixelUris.push(
+        `https://${trackingPixels.domain}/${this.uriPaidContentIndicator}/${trackingPixel}`
+      )
+    }
+    return tackingPixelUris
+  }
 }
