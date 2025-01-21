@@ -51,12 +51,14 @@ model ArticleRevision {
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json
+  searchPlainText        String?
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
   socialMediaAuthors     ArticleRevisionSocialMediaAuthor[]
   socialMediaImage       Image?                             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   socialMediaImageID     String?
+  likes                  Int                                @default(0)
 
   revision    Int       @default(0)
   createdAt   DateTime  @default(now())
@@ -237,6 +239,8 @@ model Image {
   users          User[]
   events         Event[]
   paymentMethods PaymentMethod[]
+
+  banners Banner[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -508,6 +512,7 @@ model MemberPlan {
   active                         Boolean
   currency                       Currency
   amountPerMonthMin              Float
+  amountPerMonthTarget           Float?
   availablePaymentMethods        AvailablePaymentMethod[]
   migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?
@@ -517,8 +522,13 @@ model MemberPlan {
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
 
-  Subscription Subscription[]
+  successPageId String?
+  successPage   Page?   @relation("successPage", fields: [successPageId], references: [id])
 
+  failPageId String?
+  failPage   Page?   @relation("failPage", fields: [failPageId], references: [id])
+
+  subscription      Subscription[]
   subscriptionFlows SubscriptionFlow[]
 
   crowdfundings Crowdfunding[]
@@ -583,6 +593,7 @@ model PageRevision {
   socialMediaImageID     String?
   socialMediaImage       Image?             @relation("pageRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   blocks                 Json
+  searchPlainText        String?
   PublishedPage          Page[]             @relation("publishedPageRevision")
   PendingPage            Page[]             @relation("pendingPageRevision")
   DraftPage              Page[]             @relation("draftPageRevision")
@@ -608,8 +619,12 @@ model Page {
   draftId String?       @unique
   draft   PageRevision? @relation("draftPageRevision", fields: [draftId], references: [id], onDelete: SetNull)
 
-  navigations NavigationLink[]
-  tags        TaggedPages[]
+  navigations        NavigationLink[]
+  tags               TaggedPages[]
+  memberPlansSuccess MemberPlan[]     @relation("successPage")
+  memberPlansFail    MemberPlan[]     @relation("failPage")
+
+  banners Banner[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -1233,6 +1248,7 @@ model BlockStyle {
   @@map("block-content.styles")
 }
 
+
 model Crowdfunding {
   id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt   DateTime           @default(now())
@@ -1251,4 +1267,49 @@ model CrowdfundingGoal {
   goal           Int
   Crowdfunding   Crowdfunding? @relation(fields: [crowdfundingId], references: [id])
   crowdfundingId String?       @db.Uuid
+}
+
+model Banner {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  title String
+  text  String
+  cta   String?
+
+  imageId String?
+  image   Image?  @relation(fields: [imageId], references: [id])
+
+  active Boolean @default(true)
+
+  showOnArticles Boolean @default(true)
+  showOnPages    Page[]
+
+  actions BannerAction[]
+
+  @@map("banners")
+}
+
+model BannerAction {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  banner   Banner @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+  bannerId String @db.Uuid
+
+  label String
+  url   String
+
+  style String           @default("")
+  role  BannerActionRole @default(OTHER)
+
+  @@map("banner_actions")
+}
+
+enum BannerActionRole {
+  PRIMARY @map("primary")
+  CANCEL  @map("cancel")
+  OTHER   @map("other")
 }

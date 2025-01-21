@@ -5,8 +5,8 @@ import {
   BuilderCommentProps,
   BuilderTeaserListBlockProps,
   Comment,
-  isPollBlock,
-  Image
+  Image,
+  isPollBlock
 } from '@wepublish/website'
 import Link from 'next/link'
 import {useMemo} from 'react'

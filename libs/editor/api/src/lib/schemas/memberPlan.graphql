@@ -8,11 +8,22 @@ fragment MemberPlanRef on MemberPlan {
   image {
     ...ImageRef
   }
+
+  successPageId
+  successPage {
+    ...PageRef
+  }
+
+  failPageId
+  failPage {
+    ...PageRef
+  }
 }
 
 fragment FullMemberPlan on MemberPlan {
   tags
   amountPerMonthMin
+  amountPerMonthTarget
   currency
   availablePaymentMethods {
     paymentMethods {

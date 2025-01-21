@@ -54,11 +54,12 @@ export class PollVoteService {
     }
   }
 
-  async deletePollVote({id}: PoleVoteByIdArgs) {
-    return this.prisma.pollVote.delete({
-      where: {id},
-      include: {
-        answer: true
+  async deletePollVotes({ids}: PoleVoteByIdArgs) {
+    return this.prisma.pollVote.deleteMany({
+      where: {
+        id: {
+          in: ids
+        }
       }
     })
   }

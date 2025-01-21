@@ -25,7 +25,9 @@ export class SlackMailProvider extends BaseMailProvider {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: `*From*: ${props.replyToAddress}\n*To*: ${props.recipient}\n*Subject*: ${props.subject}\n\`\`\`${props.message}\`\`\``
+            text: `*From*: ${props.replyToAddress}\n*To*: ${props.recipient}\n*Template*: ${
+              props.template
+            }\n\`\`\`${JSON.stringify(props.templateData)}\`\`\``
           }
         }
       ]
@@ -41,14 +43,12 @@ export class SlackMailProvider extends BaseMailProvider {
   }
 
   async getTemplates() {
-    return [
-      {
-        name: 'SlackEmptyTemplate',
-        uniqueIdentifier: 'slack-empty',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ]
+    return [...Array(10).keys()].map(key => ({
+      name: `Slack Template ${key + 1}`,
+      uniqueIdentifier: `slack-template-${key + 1}`,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }))
   }
 
   getTemplateUrl() {

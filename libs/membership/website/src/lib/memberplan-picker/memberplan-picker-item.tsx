@@ -46,9 +46,11 @@ export const MemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberPlanIte
         <MemberPlanItemContent>
           <MemberPlanItemName>{name}</MemberPlanItemName>
 
-          <MemberPlanItemPrice>
-            Ab {formatCurrency(amountPerMonthMin / 100, currency, locale)} pro Monat
-          </MemberPlanItemPrice>
+          {!!amountPerMonthMin && (
+            <MemberPlanItemPrice>
+              Ab {formatCurrency(amountPerMonthMin / 100, currency, locale)} pro Monat
+            </MemberPlanItemPrice>
+          )}
         </MemberPlanItemContent>
 
         <Radio ref={ref} name={name} disableRipple={true} {...props} />

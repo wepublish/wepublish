@@ -209,6 +209,10 @@ const modelFieldDefinitions = [{
                 name: "paymentMethods",
                 type: "PaymentMethod",
                 relationName: "ImageToPaymentMethod"
+            }, {
+                name: "banners",
+                type: "Banner",
+                relationName: "BannerToImage"
             }]
     }, {
         name: "CommentsRevisions",
@@ -362,7 +366,15 @@ const modelFieldDefinitions = [{
                 type: "Image",
                 relationName: "ImageToMemberPlan"
             }, {
-                name: "Subscription",
+                name: "successPage",
+                type: "Page",
+                relationName: "successPage"
+            }, {
+                name: "failPage",
+                type: "Page",
+                relationName: "failPage"
+            }, {
+                name: "subscription",
                 type: "Subscription",
                 relationName: "MemberPlanToSubscription"
             }, {
@@ -445,6 +457,18 @@ const modelFieldDefinitions = [{
                 name: "tags",
                 type: "TaggedPages",
                 relationName: "PageToTaggedPages"
+            }, {
+                name: "memberPlansSuccess",
+                type: "MemberPlan",
+                relationName: "successPage"
+            }, {
+                name: "memberPlansFail",
+                type: "MemberPlan",
+                relationName: "failPage"
+            }, {
+                name: "banners",
+                type: "Banner",
+                relationName: "BannerToPage"
             }]
     }, {
         name: "TaggedPages",
@@ -839,6 +863,28 @@ const modelFieldDefinitions = [{
                 name: "Crowdfunding",
                 type: "Crowdfunding",
                 relationName: "CrowdfundingToCrowdfundingGoal"
+            }]
+    }, {
+        name: "Banner",
+        fields: [{
+                name: "image",
+                type: "Image",
+                relationName: "BannerToImage"
+            }, {
+                name: "showOnPages",
+                type: "Page",
+                relationName: "BannerToPage"
+            }, {
+                name: "actions",
+                type: "BannerAction",
+                relationName: "BannerToBannerAction"
+            }]
+    }, {
+        name: "BannerAction",
+        fields: [{
+                name: "banner",
+                type: "Banner",
+                relationName: "BannerToBannerAction"
             }]
     }];
 function isMetadataPropertyArticleRevisionFactory(x) {
@@ -2449,6 +2495,12 @@ function isMemberPlanmigrateToTargetPaymentMethodFactory(x) {
 function isMemberPlanimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
+function isMemberPlansuccessPageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
+function isMemberPlanfailPageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
 function autoGenerateMemberPlanScalarsOrEnums({ seq }) {
     return {
         name: getScalarFieldValueGenerator().String({ modelName: "MemberPlan", fieldName: "name", isId: false, isUnique: false, seq }),
@@ -2481,7 +2533,13 @@ function defineMemberPlanFactoryInternal({ defaultData: defaultDataResolver, tra
                 } : defaultData.migrateToTargetPaymentMethod,
                 image: isMemberPlanimageFactory(defaultData.image) ? {
                     create: yield defaultData.image.build()
-                } : defaultData.image
+                } : defaultData.image,
+                successPage: isMemberPlansuccessPageFactory(defaultData.successPage) ? {
+                    create: yield defaultData.successPage.build()
+                } : defaultData.successPage,
+                failPage: isMemberPlanfailPageFactory(defaultData.failPage) ? {
+                    create: yield defaultData.failPage.build()
+                } : defaultData.failPage
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -5149,4 +5207,142 @@ function defineCrowdfundingGoalFactoryInternal({ defaultData: defaultDataResolve
  */
 export function defineCrowdfundingGoalFactory(options) {
     return defineCrowdfundingGoalFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
+function isBannerimageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
+}
+function autoGenerateBannerScalarsOrEnums({ seq }) {
+    return {
+        title: getScalarFieldValueGenerator().String({ modelName: "Banner", fieldName: "title", isId: false, isUnique: false, seq }),
+        text: getScalarFieldValueGenerator().String({ modelName: "Banner", fieldName: "text", isId: false, isUnique: false, seq })
+    };
+}
+function defineBannerFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Banner", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateBannerScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                image: isBannerimageFactory(defaultData.image) ? {
+                    create: yield defaultData.image.build()
+                } : defaultData.image
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().banner.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "Banner",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link Banner} model.
+ *
+ * @param options
+ * @returns factory {@link BannerFactoryInterface}
+ */
+export function defineBannerFactory(options) {
+    return defineBannerFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
+function isBannerActionbannerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Banner";
+}
+function autoGenerateBannerActionScalarsOrEnums({ seq }) {
+    return {
+        label: getScalarFieldValueGenerator().String({ modelName: "BannerAction", fieldName: "label", isId: false, isUnique: false, seq }),
+        url: getScalarFieldValueGenerator().String({ modelName: "BannerAction", fieldName: "url", isId: false, isUnique: false, seq })
+    };
+}
+function defineBannerActionFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("BannerAction", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateBannerActionScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                banner: isBannerActionbannerFactory(defaultData.banner) ? {
+                    create: yield defaultData.banner.build()
+                } : defaultData.banner
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().bannerAction.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "BannerAction",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link BannerAction} model.
+ *
+ * @param options
+ * @returns factory {@link BannerActionFactoryInterface}
+ */
+export function defineBannerActionFactory(options) {
+    return defineBannerActionFactoryInternal(options);
 }

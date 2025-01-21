@@ -20,14 +20,10 @@ const SubscriptionsWrapper = styled(ContentWrapper)`
 `
 
 function DeactivatedSubscriptions() {
-  const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
-
   return (
     <Container>
       <SubscriptionsWrapper>
         <SubscriptionListContainer
-          successURL={`${locationOrigin}/profile/subscription`}
-          failureURL={`${locationOrigin}/fail`}
           filter={subscriptions => subscriptions.filter(subscription => subscription.deactivation)}
         />
       </SubscriptionsWrapper>

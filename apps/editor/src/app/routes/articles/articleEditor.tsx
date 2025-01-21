@@ -166,7 +166,8 @@ function ArticleEditor() {
     socialMediaTitle: undefined,
     socialMediaDescription: undefined,
     socialMediaAuthors: [],
-    socialMediaImage: undefined
+    socialMediaImage: undefined,
+    likes: 0
   })
 
   const isNew = id === undefined
@@ -224,7 +225,8 @@ function ArticleEditor() {
         socialMediaTitle,
         socialMediaDescription,
         socialMediaAuthors,
-        socialMediaImage
+        socialMediaImage,
+        likes
       } = latest
 
       const {publishedAt} = latest ?? {}
@@ -263,7 +265,8 @@ function ArticleEditor() {
         socialMediaAuthors: socialMediaAuthors?.filter(
           socialMediaAuthor => socialMediaAuthor != null
         ) as AuthorRefFragment[],
-        socialMediaImage: socialMediaImage || undefined
+        socialMediaImage: socialMediaImage || undefined,
+        likes: likes ?? 0
       })
 
       setBlocks(blocks.map(blockForQueryBlock))

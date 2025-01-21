@@ -30,7 +30,7 @@ export class MannschaftURLAdapter extends DefaultURLAdapter {
     })
 
     if (tag) {
-      return `${this.websiteURL}/a/${tag.tag.toLowerCase()}/${article.slug}`
+      return `${this.websiteURL}/a/${encodeURIComponent(tag.tag.toLowerCase())}/${article.slug}`
     }
 
     return `${this.websiteURL}/a/${article.slug}`

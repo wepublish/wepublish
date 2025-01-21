@@ -2,7 +2,7 @@ import {Context} from '../../context'
 import {authorise} from '../permissions'
 import {CanCreateMemberPlan, CanDeleteMemberPlan} from '@wepublish/permissions/api'
 import {PrismaClient, Prisma} from '@prisma/client'
-import {InvalidMemberPlanSettings} from '../../error'
+import {InvalidMemberPlanSettings, MonthlyTargetAmountNotEnough} from '../../error'
 
 export const deleteMemberPlanById = async (
   id: string,
@@ -37,7 +37,7 @@ export const createMemberPlan = (
   const {roles} = authenticate()
   authorise(CanCreateMemberPlan, roles)
 
-  checkMemberPlanIntegrity(availablePaymentMethods, input.extendable)
+  checkMemberPlanIntegrity({availablePaymentMethods, ...input})
 
   return memberPlan.create({
     data: {
@@ -70,7 +70,7 @@ export const updateMemberPlan = async (
   const {roles} = authenticate()
   authorise(CanCreateMemberPlan, roles)
 
-  checkMemberPlanIntegrity(availablePaymentMethods, input.extendable as boolean)
+  checkMemberPlanIntegrity({availablePaymentMethods, ...input})
 
   return memberPlan.update({
     where: {id},
@@ -93,13 +93,15 @@ export const updateMemberPlan = async (
   })
 }
 
-function checkMemberPlanIntegrity(
-  availablePaymentMethods: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput[],
-  extendable: boolean
-): void {
+function checkMemberPlanIntegrity(input: UpdateMemberPlanInput): void {
+  const {extendable, amountPerMonthMin, amountPerMonthTarget, availablePaymentMethods} = input
   const hasForceAutoRenew = !!availablePaymentMethods.find(apm => apm.forceAutoRenewal)
 
   if (!extendable && hasForceAutoRenew) {
     throw new InvalidMemberPlanSettings()
+  }
+
+  if (amountPerMonthTarget != null && amountPerMonthTarget <= amountPerMonthMin) {
+    throw new MonthlyTargetAmountNotEnough()
   }
 }

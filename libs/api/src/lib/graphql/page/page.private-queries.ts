@@ -8,7 +8,7 @@ import {CanGetPage, CanGetPagePreviewLink, CanGetPages} from '@wepublish/permiss
 import {getPages} from './page.queries'
 import {SortOrder} from '@wepublish/utils/api'
 
-export const getPageById = (
+export const getPageById = async (
   id: string,
   authenticate: Context['authenticate'],
   pages: Context['loaders']['pages']

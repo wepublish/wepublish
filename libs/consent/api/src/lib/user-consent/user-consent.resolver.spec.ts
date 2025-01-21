@@ -1,14 +1,23 @@
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
-import {INestApplication, Module} from '@nestjs/common'
-import {GraphQLModule} from '@nestjs/graphql'
+import {CanActivate, ExecutionContext, INestApplication, Module} from '@nestjs/common'
+import {GqlExecutionContext, GraphQLModule} from '@nestjs/graphql'
 import {Test, TestingModule} from '@nestjs/testing'
 import {Prisma, PrismaClient, UserConsent} from '@prisma/client'
-import {AuthenticationGuard, AuthenticationModule} from '@wepublish/authentication/api'
 import {PrismaModule} from '@wepublish/nest-modules'
 import request from 'supertest'
 import {generateRandomString} from '../consent/consent.resolver.spec'
 import {UserConsentResolver} from './user-consent.resolver'
 import {UserConsentService} from './user-consent.service'
+import {APP_GUARD} from '@nestjs/core'
+
+class MockAuthenticationGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
+    const ctx = GqlExecutionContext.create(context)
+    const req = ctx.getContext().req
+    req.user = user
+    return true
+  }
+}
 
 @Module({
   imports: [
@@ -18,10 +27,16 @@ import {UserConsentService} from './user-consent.service'
       path: '/',
       cache: 'bounded'
     }),
-    PrismaModule,
-    AuthenticationModule
+    PrismaModule
   ],
-  providers: [UserConsentResolver, UserConsentService]
+  providers: [
+    UserConsentResolver,
+    UserConsentService,
+    {
+      provide: APP_GUARD,
+      useClass: MockAuthenticationGuard
+    }
+  ]
 })
 export class AppModule {}
 
@@ -111,18 +126,12 @@ export const mockUserConsents: Prisma.UserConsentCreateInput[] = [
   }
 ]
 
-const mockUser = {
+const user = {
   type: 'user',
   id: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
   token: 'some-token',
   user: {roleIDs: [{}], id: 'clf870cla0719q1rx6vg0y2rj'},
   roles: [{}]
-}
-
-class MockAuthenticationGuard extends AuthenticationGuard {
-  public override handleRequest(): any {
-    return mockUser
-  }
 }
 
 describe('UserConsentResolver', () => {
@@ -133,10 +142,7 @@ describe('UserConsentResolver', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule]
-    })
-      .overrideGuard(AuthenticationGuard)
-      .useClass(MockAuthenticationGuard)
-      .compile()
+    }).compile()
 
     prisma = module.get<PrismaClient>(PrismaClient)
     app = module.createNestApplication()
@@ -192,7 +198,7 @@ describe('UserConsentResolver', () => {
       }
     })
 
-    mockUser.user.id = createdUser.id
+    user.user.id = createdUser.id
 
     await request(app.getHttpServer())
       .post('/')
@@ -215,7 +221,7 @@ describe('UserConsentResolver', () => {
 
   test('update user consent mutation', async () => {
     const idToUpdate = userConsents[0].id
-    mockUser.user.id = userConsents[0].userId
+    user.user.id = userConsents[0].userId
 
     await request(app.getHttpServer())
       .post('/')
@@ -236,7 +242,7 @@ describe('UserConsentResolver', () => {
 
   test('delete user consent mutation', async () => {
     const idToDelete = userConsents[0].id
-    mockUser.user.id = userConsents[0].userId
+    user.user.id = userConsents[0].userId
 
     await request(app.getHttpServer())
       .post('/')

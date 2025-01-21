@@ -1,6 +1,8 @@
 import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
+  ChallengeProvider,
+  CfTurnstile,
   HotAndTrendingDataSource,
   MailProvider,
   MediaAdapter,
@@ -122,10 +124,11 @@ export async function runServer({
   /**
    * Challenge
    */
-  const challenge = new AlgebraicCaptchaChallenge(
-    config.challenge.secret,
-    config.challenge.validTime,
-    {
+  let challenge: ChallengeProvider
+  if (config.challenge.type === 'turnstile') {
+    challenge = new CfTurnstile(config.challenge.secret, config.challenge.siteKey)
+  } else {
+    challenge = new AlgebraicCaptchaChallenge(config.challenge.secret, config.challenge.validTime, {
       width: config.challenge.width,
       height: config.challenge.height,
       background: config.challenge.background,
@@ -136,8 +139,8 @@ export async function runServer({
       operandTypes: config.challenge.operandTypes,
       mode: config.challenge.mode,
       targetSymbol: config.challenge.targetSymbol
-    }
-  )
+    })
+  }
 
   /**
    * Load session time to live (TTL)

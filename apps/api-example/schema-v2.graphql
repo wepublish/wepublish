@@ -31,6 +31,44 @@ type Article {
   id: ID!
 }
 
+type AvailablePaymentMethod {
+  forceAutoRenewal: Boolean!
+  paymentMethods: [PaymentMethod!]!
+  paymentPeriodicities: [PaymentPeriodicity!]!
+}
+
+type Banner {
+  actions: [BannerAction!]
+  active: Boolean!
+  cta: String
+  id: ID!
+  image: Image
+  imageId: String
+  showOnArticles: Boolean!
+  showOnPages: [PageModel!]
+  text: String!
+  title: String!
+}
+
+type BannerAction {
+  id: ID!
+  label: String!
+  role: BannerActionRole!
+  style: String!
+  url: String!
+}
+
+enum BannerActionRole {
+  CANCEL
+  OTHER
+  PRIMARY
+}
+
+enum BannerDocumentType {
+  ARTICLE
+  PAGE
+}
+
 type BlockStyle {
   blocks: [BlockType!]!
   createdAt: DateTime!
@@ -73,6 +111,24 @@ input ConsentFilter {
   slug: String
 }
 
+input CreateBannerActionInput {
+  label: String!
+  role: BannerActionRole!
+  style: String!
+  url: String!
+}
+
+input CreateBannerInput {
+  actions: [CreateBannerActionInput!]
+  active: Boolean!
+  cta: String
+  imageId: String
+  showOnArticles: Boolean!
+  showOnPages: [PageModelInput!]
+  text: String!
+  title: String!
+}
+
 input CreateCrowdfundingGoalInput {
   description: String!
   goal: Float!
@@ -112,6 +168,11 @@ type CrowdfundingMemberPlan {
   name: String!
 }
 
+enum Currency {
+  CHF
+  EUR
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -135,32 +196,8 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Event {
-  createdAt: DateTime!
-  description: RichText
-  endsAt: DateTime
-  externalSourceId: String
-  externalSourceName: String
-  id: ID!
-  image: Image
-  imageId: String
-  lead: String
-  location: String
-  modifiedAt: DateTime!
-  name: String!
-  page: Page
-  startsAt: DateTime!
-  status: EventStatus!
-  tags: [Tag!]
-}
-
-input EventFilter {
-  from: DateTime
-  location: String
-  name: String
-  tags: [String!]
-  to: DateTime
-  upcomingOnly: Boolean
+type DeletePollVotesResult {
+  count: Int!
 }
 
 type EventFromSource {
@@ -175,16 +212,8 @@ type EventFromSource {
   location: String
   modifiedAt: DateTime!
   name: String!
-  page: Page
   startsAt: DateTime!
   status: EventStatus!
-}
-
-enum EventSort {
-  CreatedAt
-  EndsAt
-  ModifiedAt
-  StartsAt
 }
 
 enum EventStatus {
@@ -192,6 +221,23 @@ enum EventStatus {
   Postponed
   Rescheduled
   Scheduled
+}
+
+type EventV2 {
+  createdAt: DateTime!
+  description: RichText
+  endsAt: DateTime
+  externalSourceId: String
+  externalSourceName: String
+  id: ID!
+  image: Image
+  imageId: String
+  lead: String
+  location: String
+  modifiedAt: DateTime!
+  name: String!
+  startsAt: DateTime!
+  status: EventStatus!
 }
 
 type FocalPoint {
@@ -267,11 +313,27 @@ type MailTemplateWithUrlAndStatusModel {
 }
 
 type MemberPlan {
+  amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
+  availablePaymentMethods: [AvailablePaymentMethod!]!
+  currency: Currency!
+  description: RichText
+  extendable: Boolean!
+  failPage: Page
+  failPageId: ID
   id: ID!
+  image: Image
+  maxCount: Int
   name: String!
+  slug: String!
+  successPage: Page
+  successPageId: ID
+  tags: [String!]
 }
 
 type Mutation {
+  createBanner(input: CreateBannerInput!): Banner!
+
   """Creates a new block style."""
   createBlockStyle(blocks: [BlockType!]!, name: String!): BlockStyle!
 
@@ -281,9 +343,6 @@ type Mutation {
   """Create a new Crowdfunding"""
   createCrowdfunding(input: CreateCrowdfundingInput!): Crowdfunding!
 
-  """Creates a new event."""
-  createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
-
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
@@ -292,6 +351,7 @@ type Mutation {
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
+  deleteBanner(id: String!): Boolean
 
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
@@ -299,11 +359,8 @@ type Mutation {
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
 
-  """Deletes an existing event."""
-  deleteEvent(id: String!): Event!
-
-  """Delete poll vote"""
-  deletePollVote(id: ID!): PollVote!
+  """Delete poll votes"""
+  deletePollVotes(ids: [ID!]!): DeletePollVotesResult!
 
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
@@ -320,6 +377,7 @@ type Mutation {
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
+  updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
   updateBlockStyle(blocks: [BlockType!], id: String!, name: String): BlockStyle!
@@ -329,9 +387,6 @@ type Mutation {
 
   """Update a sinle crowdfunding"""
   updateCrowdunding(input: UpdateCrowdfundingInput!): Crowdfunding!
-
-  """Updates an existing event."""
-  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -360,10 +415,12 @@ type PageInfo {
   startCursor: String
 }
 
-type PaginatedEvents {
-  nodes: [Event!]!
-  pageInfo: PageInfo!
-  totalCount: Float!
+type PageModel {
+  id: ID!
+}
+
+input PageModelInput {
+  id: ID!
 }
 
 type PaginatedPollVotes {
@@ -373,8 +430,13 @@ type PaginatedPollVotes {
 }
 
 type PaymentMethod {
+  description: String!
   id: ID!
+  image: Image
+  imageId: String
   name: String!
+  paymentProviderID: String!
+  slug: Slug!
 }
 
 enum PaymentPeriodicity {
@@ -428,6 +490,8 @@ enum PollVoteSort {
 type Query {
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
+  banner(id: String!): Banner!
+  banners(skip: Int!, take: Int!): [Banner!]!
 
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
@@ -444,14 +508,8 @@ type Query {
   """Returns a paginated list of crowdfundings."""
   crowdfundings: [Crowdfunding!]!
 
-  """Returns a event by id."""
-  event(id: ID!): Event!
-
   "\n      Returns a list of Importable Event Providers\n    "
   eventProviders: [String!]!
-
-  """Returns a paginated list of events based on the filters given."""
-  events(cursorId: ID, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
@@ -486,6 +544,7 @@ type Query {
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: ID, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
+  primaryBanner(documentId: ID!, documentType: BannerDocumentType!): Banner!
   provider: MailProviderModel!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
@@ -536,9 +595,7 @@ enum SettingName {
   ALLOW_GUEST_COMMENTING
   ALLOW_GUEST_COMMENT_RATING
   ALLOW_GUEST_POLL_VOTING
-  BODY_SCRIPT
   COMMENT_CHAR_LIMIT
-  HEAD_SCRIPT
   MAIL_PROVIDER_NAME
   MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC
   MAKE_EXPECTED_REVENUE_API_PUBLIC
@@ -562,6 +619,8 @@ input SingleEventFilter {
   id: String!
   source: String!
 }
+
+scalar Slug
 
 enum SortOrder {
   Ascending
@@ -613,8 +672,16 @@ type SystemMailModel {
   mailTemplate: MailTemplateRef
 }
 
-type Tag {
+input UpdateBannerInput {
+  actions: [CreateBannerActionInput!]
+  active: Boolean!
+  cta: String
   id: ID!
+  imageId: String
+  showOnArticles: Boolean!
+  showOnPages: [PageModelInput!]
+  text: String!
+  title: String!
 }
 
 input UpdateCrowdfundingInput {

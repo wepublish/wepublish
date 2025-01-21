@@ -12,6 +12,7 @@ import bodyParser from 'body-parser'
 import {NextHandleFunction} from 'connect'
 import express from 'express'
 import DataLoader from 'dataloader'
+import {timingSafeEqual} from 'crypto'
 
 export type InvoiceWithItems = Invoice & {
   items: InvoiceItem[]
@@ -289,5 +290,13 @@ export abstract class BasePaymentProvider implements PaymentProvider {
         }
       }
     })
+  }
+
+  protected timeConstantCompare(a: string, b: string): boolean {
+    try {
+      return timingSafeEqual(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'))
+    } catch {
+      return false
+    }
   }
 }

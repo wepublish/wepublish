@@ -111,6 +111,7 @@
         "title": "Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
         "totalCharCount": "Total characters count is {{totalCharCount}}",
+        "likeCount": "Like count is {{likeCount}}",
         "type": "Type",
         "untitled": "Untitled",
         "updateDate": "Update Date",
@@ -206,6 +207,51 @@
         "name": "Name",
         "title": "Title",
         "tags": "Tags"
+      }
+    },
+    "banner": {
+      "edit": {
+        "title": "Edit banner"
+      },
+      "create": {
+        "title": "Create banner"
+      },
+      "delete": {
+        "title": "Delete banner",
+        "body": "Do you really want to delete the banner?",
+        "delete": "Delete banner"
+      },
+      "form": {
+        "title": "Title (maximized only)",
+        "text": "Text (maximized only)",
+        "cta": "Call to action (minimized only)",
+        "active": "Active",
+        "showOnArticles": "Display on articles",
+        "showOnPages": "Display on those pages",
+        "actions": "Actions",
+        "image": "Image",
+        "action": {
+          "add": "Add new action",
+          "label": "Label",
+          "url": "URL",
+          "style": "Style"
+        }
+      },
+      "list": {
+        "title": "Banners",
+        "text": "Text",
+        "createNew": "Create new",
+        "active": "Active",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "actions": {
+        "add": "Add action",
+        "role": {
+          "PRIMARY": "Primary",
+          "CANCEL": "Cancel",
+          "OTHER": "Other"
+        }
       }
     },
     "blocks": {
@@ -709,7 +755,9 @@
       "slug": "Slug",
       "slugRequired": "Slug required",
       "tags": "Tags",
-      "savedChanges": "Saved"
+      "savedChanges": "Saved",
+      "successPage": "Redirect to page on payment success",
+      "failPage": "Redirect to page on payment error"
     },
     "memberPlanList": {
       "action": "Actions",
@@ -731,6 +779,7 @@
     "navbar": {
       "articles": "Articles",
       "authors": "Authors",
+      "banners": "Banners",
       "blocks": {
         "polls": "Polls",
         "blockStyles": "Block Styling",
@@ -1069,7 +1118,6 @@
       "activeSubscriptionsApiPublic": "Make the active subscriptions API accessible by the public",
       "allowCommentEditing": "Allow comment editing",
       "allowGuestCommentRating": "Allow guest ratings on comments",
-      "bodyScript": "Scripts for execution after the content is loaded",
       "commentCharLimit": "Comment character limit",
       "comments": "Comments",
       "days": "days",
@@ -1079,7 +1127,6 @@
       "expectedRevenueApiPublic": "Make the expected revenue API accessible by the public",
       "guestCommenting": "Allow guest commenting",
       "guestPollVote": "Allow guest votes on polls",
-      "headScript": "Scripts for execution before the content is loaded",
       "login": "Login",
       "loginMinutes": "Email-Login token validity period",
       "memberships": "Memberships",
@@ -1092,7 +1139,6 @@
       "peering": "Peering",
       "peerToken": "Peering timeout",
       "polls": "Polls",
-      "scripts": "Custom JavaScript code",
       "renewingSubscriptionsApiPublic": "Make the renewing subscriptions API accessible by the public",
       "revenueApiPublic": "Make the revenue API accessible by the public",
       "settings": "Settings",
@@ -1115,8 +1161,7 @@
         "passwordToken": "How long (in minutes) the link sent via email to reset password will be valid. Defaults to one day (1440 / 60 / 24).",
         "peerToken": "Timeout in milliseconds after which we will no longer try to pull peer articles. Defaults to 3 seconds.",
         "renewingSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
-        "revenueApiPublic": "Exposes invoices anonymized to the public.",
-        "scripts": "Scripts from dubious sources can cause serious security problems and significantly impair the layout and design of the website."
+        "revenueApiPublic": "Exposes invoices anonymized to the public."
       }
     },
     "subscriptionFlow": {
@@ -1331,7 +1376,7 @@
         },
         "date": "Deactivation Date",
         "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true. Once deactivated, the subscription cannot be reactivated.",
-        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Probably, a new subscription can be created.",
+        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Reason: {{reason}}. Probably, a new subscription can be created.",
         "modalMessage": {
           "activated": "Do you want to deactivate the subscription of \"{{userName}}\" with the email address \"{{userEmail}}\"?"
         },
@@ -1409,7 +1454,10 @@
       "forceAutoRenewNotPossible": "Automatic renewal is not possible because the subscription plan is not extendable.",
       "trialSubscriptionNotPossible": "The subscription plan must remain renewable because an automatic renewal is forced in a payment setting. You can of course change this.",
       "migratePMTitle": "Migration of subscriptions to target payment method",
-      "migratePMHelptext": "Migrate the subscriptions of this plan to a new Payment Method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early."
+      "migratePMHelptext": "Migrate the subscriptions of this plan to a new Payment Method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early.",
+      "amountPerMonthTarget": "Target amount / month",
+      "amountPerMonthTargetHelpText": "The monthly target amount defines the desired member plan price that users should pay. It must be higher than the minimum amount and typically defines the default setting in the payment form.",
+      "amountPerMonthMinHelpText": "The minimum monthly amount is the actual member plan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Advanced settings",

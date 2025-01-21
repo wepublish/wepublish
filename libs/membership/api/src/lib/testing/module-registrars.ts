@@ -9,7 +9,8 @@ import {
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   StripeCheckoutPaymentProvider,
-  StripePaymentProvider
+  StripePaymentProvider,
+  MolliePaymentProvider
 } from '@wepublish/payment/api'
 import bodyParser from 'body-parser'
 import {ConfigModule, ConfigService} from '@nestjs/config'
@@ -50,7 +51,8 @@ export function registerPaymentsModule(): DynamicModule {
             offSessionPayments: false,
             secretKey: config.getOrThrow('STRIPE_SECRET_KEY'),
             webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
-            incomingRequestHandler: bodyParser.raw({type: 'application/json'})
+            incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
+            methods: ['card']
           }),
           new StripePaymentProvider({
             id: 'stripe',
@@ -58,7 +60,8 @@ export function registerPaymentsModule(): DynamicModule {
             offSessionPayments: true,
             secretKey: config.getOrThrow('STRIPE_SECRET_KEY'),
             webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
-            incomingRequestHandler: bodyParser.raw({type: 'application/json'})
+            incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
+            methods: ['card']
           })
         )
       }
@@ -97,6 +100,19 @@ export function registerPaymentsModule(): DynamicModule {
             incomingRequestHandler: bodyParser.json(),
             webhookSecret: config.getOrThrow('PAYREXX_WEBHOOK_SECRET'),
             prisma
+          })
+        )
+      }
+      if (config.get('MOLLIE_API_SECRET')) {
+        paymentProviders.push(
+          new MolliePaymentProvider({
+            id: 'mollie',
+            name: 'Mollie',
+            offSessionPayments: true,
+            incomingRequestHandler: bodyParser.urlencoded({extended: true}),
+            apiKey: config.getOrThrow('MOLLIE_API_SECRET'),
+            webhookEndpointSecret: 'secret',
+            apiBaseUrl: 'https://wepublish.ch'
           })
         )
       }

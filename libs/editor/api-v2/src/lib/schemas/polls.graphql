@@ -40,8 +40,8 @@ query PollVoteList (
 }
 
 
-mutation DeletePollVote($id: ID!) {
-    deletePollVote(id: $id) {
-        ...FullPollVoteWithAnswer
+mutation DeletePollVotes($ids: [ID!]!) {
+    deletePollVotes(ids: $ids) {
+        count
     }
 }

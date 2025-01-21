@@ -4,7 +4,7 @@ import {Form, InputGroup} from 'rsuite'
 export interface CurrencyInputProps {
   currency: string
   centAmount: number
-  onChange(centAmount: number): void
+  onChange(centAmount: number | null): void
   disabled?: boolean
   name: string
 }
@@ -42,6 +42,8 @@ export function CurrencyInput({
           onBlur={() => {
             if (amount) {
               onChange(parseFloat(amount as string) * 100)
+            } else {
+              onChange(null)
             }
           }}
         />

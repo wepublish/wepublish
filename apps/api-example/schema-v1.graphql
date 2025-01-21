@@ -94,6 +94,12 @@ type Query {
   """
   userPollVote(pollId: ID!): ID
 
+  """This query returns a list of events"""
+  events(cursor: ID, take: Int = 10, skip: Int = 0, filter: EventFilter, sort: EventSort = StartsAt, order: SortOrder = Descending): EventConnection
+
+  """This query returns an event"""
+  event(id: ID!): Event!
+
   """This query returns a list of tags"""
   tags(cursor: ID, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
 
@@ -613,6 +619,7 @@ type Article {
   socialMediaDescription: String
   socialMediaAuthors: [Author!]!
   socialMediaImage: Image
+  likes: Int!
   blocks: [Block!]!
   comments: [Comment!]!
 }
@@ -765,10 +772,29 @@ type ArticleConnection {
 }
 
 input ArticleFilter {
+  title: String
+  preTitle: String
+  lead: String
+  body: String
+  publicationDateFrom: DateFilter
+  publicationDateTo: DateFilter
   authors: [ID!]
   tags: [String!]
   includeHidden: Boolean
   shared: Boolean
+}
+
+input DateFilter {
+  date: DateTime = null
+  comparison: DateFilterComparison!
+}
+
+enum DateFilterComparison {
+  gt
+  gte
+  eq
+  lt
+  lte
 }
 
 enum ArticleSort {
@@ -849,9 +875,14 @@ type MemberPlan {
   tags: [String!]
   currency: Currency!
   amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
   maxCount: Int
   extendable: Boolean!
   availablePaymentMethods: [AvailablePaymentMethod!]!
+  successPageId: ID
+  successPage: Page
+  failPageId: ID
+  failPage: Page
 }
 
 enum Currency {
@@ -911,9 +942,15 @@ enum MemberPlanSort {
 }
 
 type Challenge {
+  type: CaptchaType
   challenge: String
   challengeID: String
   validUntil: Date
+}
+
+enum CaptchaType {
+  Algebraic
+  CfTurnstile
 }
 
 """
@@ -925,6 +962,28 @@ type FullCommentRatingSystem {
   id: ID!
   name: String
   answers: [CommentRatingSystemAnswer!]!
+}
+
+type EventConnection {
+  nodes: [Event!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input EventFilter {
+  upcomingOnly: Boolean
+  from: DateTime
+  to: DateTime
+  tags: [ID!]
+  name: String
+  location: String
+}
+
+enum EventSort {
+  StartsAt
+  EndsAt
+  CreatedAt
+  ModifiedAt
 }
 
 type TagConnection {
@@ -968,6 +1027,12 @@ type Mutation {
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
+
+  """Add a like to an existing article."""
+  addLike(input: LikeCreateInput!): Int!
+
+  """Remove a like from an existing article."""
+  removeLike(input: LikeDeleteInput!): Int!
 
   """
   This mutation allows to add a comment. The input is of type CommentInput.
@@ -1050,6 +1115,14 @@ type SessionWithToken {
   expiresAt: DateTime!
 }
 
+input LikeCreateInput {
+  articleId: ID!
+}
+
+input LikeDeleteInput {
+  articleId: ID!
+}
+
 input CommentInput {
   parentID: ID
   guestUsername: String
@@ -1062,7 +1135,7 @@ input CommentInput {
 }
 
 input ChallengeInput {
-  challengeID: String!
+  challengeID: String
   challengeSolution: String!
 }
 

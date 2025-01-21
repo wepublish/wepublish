@@ -26,7 +26,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title="An image title"
       />
-      <figcaption>
+      <figcaption
+        class="emotion-6 emotion-7"
+      >
         Image caption (Bild: Reddit.com)
       </figcaption>
     </div>
@@ -60,7 +62,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title="An image title"
       />
-      <figcaption>
+      <figcaption
+        class="emotion-6 emotion-7"
+      >
         Image caption (Bild: Reddit.com)
       </figcaption>
     </div>
@@ -94,7 +98,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title="An image title"
       />
-      <figcaption>
+      <figcaption
+        class="emotion-6 emotion-7"
+      >
         Image caption (Bild: Reddit.com)
       </figcaption>
     </div>
@@ -134,7 +140,9 @@ https://unsplash.it/200/100 200w"
           title="An image title"
         />
       </a>
-      <figcaption>
+      <figcaption
+        class="emotion-7 emotion-8"
+      >
         Image caption (Bild: Reddit.com)
       </figcaption>
     </div>
@@ -168,7 +176,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title="An image title"
       />
-      <figcaption>
+      <figcaption
+        class="emotion-6 emotion-7"
+      >
          (Bild: Reddit.com)
       </figcaption>
     </div>
@@ -202,7 +212,9 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title="An image title"
       />
-      <figcaption>
+      <figcaption
+        class="emotion-6 emotion-7"
+      >
         Image caption 
       </figcaption>
     </div>

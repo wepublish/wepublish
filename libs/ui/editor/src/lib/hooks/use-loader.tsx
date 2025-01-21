@@ -5,8 +5,11 @@ export function useLoader() {
 
   const wrapLoading = async (promise: Promise<any>) => {
     setLoading(true)
-    await promise
-    setLoading(false)
+    try {
+      await promise
+    } finally {
+      setLoading(false)
+    }
   }
 
   return {

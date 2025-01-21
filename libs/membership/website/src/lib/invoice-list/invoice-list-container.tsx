@@ -1,6 +1,7 @@
 import {StripeElement, StripePayment} from '@wepublish/payment/website'
 import {
-  Invoice,
+  FullInvoiceFragment,
+  FullMemberPlanFragment,
   useCheckInvoiceStatusLazyQuery,
   useInvoicesQuery,
   usePayInvoiceMutation
@@ -10,18 +11,12 @@ import {produce} from 'immer'
 import {useMemo, useState} from 'react'
 
 export type InvoiceListContainerProps = {
-  successURL: string
-  failureURL: string
-  filter?: (invoices: Invoice[]) => Invoice[]
+  filter?: (invoices: FullInvoiceFragment[]) => FullInvoiceFragment[]
 } & BuilderContainerProps
 
-export function InvoiceListContainer({
-  filter,
-  successURL,
-  failureURL,
-  className
-}: InvoiceListContainerProps) {
+export function InvoiceListContainer({filter, className}: InvoiceListContainerProps) {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>()
+  const [stripeMemberPlan, setStripeMemberPlan] = useState<FullMemberPlanFragment>()
   const {InvoiceList} = useWebsiteBuilder()
   const [checkInvoice, {loading: loadingCheckInvoice}] = useCheckInvoiceStatusLazyQuery()
   const {
@@ -81,7 +76,11 @@ export function InvoiceListContainer({
         <StripeElement clientSecret={stripeClientSecret}>
           <StripePayment
             onClose={success => {
-              window.location.href = success ? successURL : failureURL
+              if (stripeMemberPlan) {
+                window.location.href = success
+                  ? stripeMemberPlan.successPage?.url ?? ''
+                  : stripeMemberPlan.failPage?.url ?? ''
+              }
             }}
           />
         </StripeElement>
@@ -93,12 +92,16 @@ export function InvoiceListContainer({
         error={error}
         className={className}
         onPay={async (invoiceId, paymentMethodId) => {
+          const memberPlan = filteredInvoices?.invoices?.find(invoice => invoice.id === invoiceId)
+            ?.subscription?.memberPlan
+          setStripeMemberPlan(memberPlan)
+
           await pay({
             variables: {
               invoiceId,
               paymentMethodId,
-              failureURL,
-              successURL
+              failureURL: memberPlan?.failPage?.url,
+              successURL: memberPlan?.successPage?.url
             }
           })
         }}

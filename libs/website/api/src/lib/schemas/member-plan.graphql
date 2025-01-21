@@ -1,7 +1,0 @@
-query Revenue($start: DateTime!, $end: DateTime) {
-  revenue(start: $start, end: $end) {
-    amount
-    paidAt
-    memberPlan
-  }
-}

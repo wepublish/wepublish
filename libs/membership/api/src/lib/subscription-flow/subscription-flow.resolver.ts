@@ -79,7 +79,11 @@ export class SubscriptionFlowResolver {
   @Permissions(CanGetPaymentMethods)
   @Query(() => [PaymentMethod], {description: `Returns all payment methods`})
   async paymentMethods() {
-    return await this.prismaService.paymentMethod.findMany({})
+    return this.prismaService.paymentMethod.findMany({
+      include: {
+        image: true
+      }
+    })
   }
 
   @ResolveField('numberOfSubscriptions', () => Int, {

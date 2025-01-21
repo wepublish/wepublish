@@ -40,14 +40,18 @@ export class SubscriptionFlowService {
       }
     }
 
-    return await this.prismaService.subscriptionFlow.findMany({
+    const flows = await this.prismaService.subscriptionFlow.findMany({
       where,
       orderBy: {
         default: 'desc'
       },
       include: {
-        memberPlan: true,
         paymentMethods: true,
+        memberPlan: {
+          include: {
+            availablePaymentMethods: true
+          }
+        },
         intervals: {
           include: {
             mailTemplate: true
@@ -55,6 +59,24 @@ export class SubscriptionFlowService {
         }
       }
     })
+
+    for (const flow of flows) {
+      if (flow.memberPlan?.availablePaymentMethods?.length) {
+        flow.memberPlan.availablePaymentMethods = await Promise.all(
+          flow.memberPlan.availablePaymentMethods.map(async method => ({
+            ...method,
+            paymentMethods: await this.prismaService.paymentMethod.findMany({
+              where: {
+                id: {
+                  in: method.paymentMethodIDs
+                }
+              }
+            })
+          }))
+        )
+      }
+    }
+    return flows
   }
 
   async createFlow(flow: SubscriptionFlowModelCreateInput) {

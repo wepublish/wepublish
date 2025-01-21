@@ -50,7 +50,12 @@ export default function Login({sessionToken}: LoginProps) {
         (Falls du noch keinen Account hast, <Link href={'/mitmachen'}>klicke hier.</Link>)
       </Typography>
 
-      <LoginFormContainer />
+      <LoginFormContainer
+        defaults={{
+          email: router.query?.mail as string | undefined,
+          requirePassword: !!router.query?.requirePassword
+        }}
+      />
     </LoginWrapper>
   )
 }

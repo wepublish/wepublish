@@ -2,6 +2,7 @@ import 'rsuite/styles/index.less'
 
 import {gql, useMutation} from '@apollo/client'
 import {css, Global} from '@emotion/react'
+import {BannerList, CreateBannerForm, EditBannerForm} from '@wepublish/banner/editor'
 import {
   ConsentCreateView,
   ConsentEditView,
@@ -15,6 +16,7 @@ import {ImportableEventListView} from '@wepublish/event/import/editor'
 import {
   MailTemplateList,
   MemberPlanEdit,
+  MigrationList,
   PlaceholderList,
   SubscriptionFlowList,
   SystemMailList
@@ -453,6 +455,30 @@ export function App() {
                 </Base>
               }
             />
+            <Route
+              path="banners"
+              element={
+                <Base>
+                  <BannerList />
+                </Base>
+              }
+            />
+            <Route
+              path="banners/create"
+              element={
+                <Base>
+                  <CreateBannerForm />
+                </Base>
+              }
+            />
+            <Route
+              path="banners/edit/:id"
+              element={
+                <Base>
+                  <EditBannerForm />
+                </Base>
+              }
+            />
             {/* Authors Routes */}
             <Route
               path="authors"
@@ -751,6 +777,14 @@ export function App() {
               element={
                 <Base>
                   <SettingList />
+                </Base>
+              }
+            />
+            <Route
+              path="migration"
+              element={
+                <Base>
+                  <MigrationList />
                 </Base>
               }
             />

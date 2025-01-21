@@ -1,9 +1,10 @@
 import {ApiV1, generateFeed} from '@wepublish/website/server'
 import {NextApiRequest} from 'next'
 import getConfig from 'next/config'
+import process from 'node:process'
 
 export const getFeed = async (req: NextApiRequest) => {
-  const siteUrl = `https://${req.headers['host']}`
+  const siteUrl = process.env.WEBSITE_URL || ''
 
   const generate = await generateFeed({
     id: `${siteUrl + req.url}`,

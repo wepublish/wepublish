@@ -2,14 +2,16 @@ import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/gra
 import {UserConsent, UserConsentInput, UserConsentFilter} from './user-consent.model'
 import {UserConsentService} from './user-consent.service'
 
-import {ForbiddenException, UseGuards} from '@nestjs/common'
-import {UserSession, AuthenticationGuard, CurrentUser} from '@wepublish/authentication/api'
+import {ForbiddenException} from '@nestjs/common'
+import {UserSession, CurrentUser} from '@wepublish/authentication/api'
 import {User} from '@wepublish/user/api'
+import {Authenticated, Public} from '@wepublish/permissions/api'
 
 @Resolver(() => UserConsent)
 export class UserConsentResolver {
   constructor(private userConsents: UserConsentService) {}
 
+  @Public()
   @Query(returns => [UserConsent], {
     name: 'userConsents',
     description: `
@@ -20,6 +22,7 @@ export class UserConsentResolver {
     return this.userConsents.userConsentList(filter)
   }
 
+  @Public()
   @Query(returns => UserConsent, {
     name: 'userConsent',
     description: `
@@ -30,6 +33,7 @@ export class UserConsentResolver {
     return this.userConsents.userConsent(id)
   }
 
+  @Authenticated()
   @Mutation(returns => UserConsent, {
     name: 'createUserConsent',
     description: `
@@ -37,9 +41,9 @@ export class UserConsentResolver {
       Returns created userConsent.
     `
   })
-  @UseGuards(AuthenticationGuard)
   createUserConsent(@CurrentUser() user: UserSession, @Args() userConsent: UserConsentInput) {
     // only allow creating for admin or affected user
+    console.log({user})
     if (!user.user.roleIDs.includes('admin') && user.user.id !== userConsent.userId) {
       throw new ForbiddenException(`Unauthorized`)
     }
@@ -47,6 +51,7 @@ export class UserConsentResolver {
     return this.userConsents.createUserConsent(userConsent)
   }
 
+  @Authenticated()
   @Mutation(returns => UserConsent, {
     name: 'updateUserConsent',
     description: `
@@ -54,7 +59,6 @@ export class UserConsentResolver {
       Returns updated userConsent.
     `
   })
-  @UseGuards(AuthenticationGuard)
   updateUserConsent(
     @CurrentUser() user: UserSession,
     @Args('id') id: string,
@@ -63,6 +67,7 @@ export class UserConsentResolver {
     return this.userConsents.updateUserConsent(id, value, user)
   }
 
+  @Authenticated()
   @Mutation(returns => UserConsent, {
     name: 'deleteUserConsent',
     description: `
@@ -70,7 +75,6 @@ export class UserConsentResolver {
       Returns deleted userConsent.
     `
   })
-  @UseGuards(AuthenticationGuard)
   deleteUserConsent(@Args('id') id: string, @CurrentUser() user: UserSession) {
     return this.userConsents.deleteUserConsent(id, user)
   }

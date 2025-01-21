@@ -59,7 +59,12 @@ export default function Login({sessionToken}: LoginProps) {
         <Link href={'/mitmachen'}> Hier kannst du dein Abo wählen.</Link>
       </Typography>
 
-      <LoginFormContainer />
+      <LoginFormContainer
+        defaults={{
+          email: router.query?.mail as string | undefined,
+          requirePassword: !!router.query?.requirePassword
+        }}
+      />
     </LoginWrapper>
   )
 }

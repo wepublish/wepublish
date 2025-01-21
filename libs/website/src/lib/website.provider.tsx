@@ -1,5 +1,5 @@
-import {GlobalStyles, TextField, Theme, ThemeProvider, css} from '@mui/material'
-import {Article, ArticleList, ArticleSEO, ArticleDate} from '@wepublish/article/website'
+import {css, GlobalStyles, TextField, Theme, ThemeProvider} from '@mui/material'
+import {Article, ArticleDate, ArticleList, ArticleSEO} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {
   Author,
@@ -9,18 +9,22 @@ import {
   AuthorListItem
 } from '@wepublish/author/website'
 import {
+  Banner,
   BildwurfAdBlock,
   BlockRenderer,
   Blocks,
   BreakBlock,
   CommentBlock,
+  ContextBox,
   EmbedBlock,
   EventBlock,
   FacebookPostBlock,
   FacebookVideoBlock,
+  FocusTeaser,
   HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
+  ImageSlider,
   InstagramPostBlock,
   ListicleBlock,
   PolisConversationBlock,
@@ -30,18 +34,14 @@ import {
   SoundCloudTrackBlock,
   Teaser,
   TeaserGridBlock,
-  TeaserListBlock,
   TeaserGridFlexBlock,
+  TeaserListBlock,
+  TeaserSlider,
   TikTokVideoBlock,
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
-  YouTubeVideoBlock,
-  TeaserSlider,
-  ImageSlider,
-  ContextBox,
-  FocusTeaser,
-  Banner
+  YouTubeVideoBlock
 } from '@wepublish/block-content/website'
 import {
   Comment,
@@ -53,6 +53,7 @@ import {
   CommentRatings
 } from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
+import {Banner as PageBanner} from '@wepublish/banner/website'
 import {Image} from '@wepublish/image/website'
 import {
   InvoiceList,
@@ -72,7 +73,6 @@ import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
   Alert,
   Button,
-  Pagination,
   H1,
   H2,
   H3,
@@ -83,15 +83,16 @@ import {
   Link,
   ListItem,
   OrderedList,
+  Pagination,
   Paragraph,
   Rating,
-  UnorderedList,
-  theme
+  theme,
+  UnorderedList
 } from '@wepublish/ui'
 import {ImageUpload, PersonalDataForm} from '@wepublish/user/website'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {format, getDefaultOptions} from 'date-fns'
-import {PropsWithChildren, memo} from 'react'
+import {memo, PropsWithChildren} from 'react'
 import {IconContext} from 'react-icons'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {LocalizationProvider} from '@mui/x-date-pickers'
@@ -149,6 +150,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Article={Article}
           ArticleDate={ArticleDate}
           ArticleSEO={ArticleSEO}
+          Banner={PageBanner}
           PeerInformation={PeerInformation}
           Navbar={Navbar}
           Footer={Footer}

@@ -36,7 +36,8 @@ import {
   ListInput,
   ListValue,
   RichTextBlock,
-  RichTextBlockValue
+  RichTextBlockValue,
+  SelectPage
 } from '@wepublish/ui/editor'
 import {MdAutoFixHigh, MdCheck} from 'react-icons/md'
 import {Alert} from '@mui/material'
@@ -275,7 +276,7 @@ export function MemberPlanForm({
             </Col>
 
             {/* Currency */}
-            <Col xs={12}>
+            <Col xs={24}>
               <Form.ControlLabel>{t('memberPlanEdit.currency')}</Form.ControlLabel>
               <SelectPicker
                 name="currency"
@@ -309,9 +310,28 @@ export function MemberPlanForm({
                   if (!memberPlan) {
                     return
                   }
-                  setMemberPlan({...memberPlan, amountPerMonthMin: centAmount})
+                  setMemberPlan({...memberPlan, amountPerMonthMin: centAmount || 0})
                 }}
               />
+              <HelpText>{t('memberplanForm.amountPerMonthMinHelpText')}</HelpText>
+            </Col>
+
+            {/* target monthly amount */}
+            <Col xs={12}>
+              <Form.ControlLabel>{t('memberplanForm.amountPerMonthTarget')}</Form.ControlLabel>
+              <CurrencyInput
+                name="amountPerMonthTarget"
+                currency={memberPlan?.currency ?? 'CHF'}
+                centAmount={memberPlan?.amountPerMonthTarget || 0}
+                disabled={loading}
+                onChange={centAmount => {
+                  if (!memberPlan) {
+                    return
+                  }
+                  setMemberPlan({...memberPlan, amountPerMonthTarget: centAmount || null})
+                }}
+              />
+              <HelpText>{t('memberplanForm.amountPerMonthTargetHelpText')}</HelpText>
             </Col>
           </Row>
         </Panel>
@@ -405,6 +425,38 @@ export function MemberPlanForm({
               </ListInput>
             </Col>
 
+            <Col xs={24}>
+              <Row>
+                <Form.ControlLabel>{t('memberPlanEdit.successPage')}</Form.ControlLabel>
+                <SelectPage
+                  setSelectedPage={successPageId => {
+                    if (!memberPlan) {
+                      return
+                    }
+
+                    setMemberPlan({...memberPlan, successPageId})
+                  }}
+                  selectedPage={memberPlan?.successPageId}
+                  name="successPageId"
+                />
+              </Row>
+
+              <Row>
+                <Form.ControlLabel>{t('memberPlanEdit.failPage')}</Form.ControlLabel>
+                <SelectPage
+                  setSelectedPage={failPageId => {
+                    if (!memberPlan) {
+                      return
+                    }
+
+                    setMemberPlan({...memberPlan, failPageId})
+                  }}
+                  selectedPage={memberPlan?.failPageId}
+                  name="failPageId"
+                />
+              </Row>
+            </Col>
+
             <Col xs={12}>
               <ControlLabel>{t('memberplanForm.migratePMTitle')}</ControlLabel>
               <Control
@@ -479,6 +531,28 @@ export function MemberPlanForm({
                 }}
               />
               <HelpText>{t('memberplanForm.maxCountHelpText')}</HelpText>
+            </Col>
+          </RowPaddingTop>
+          <RowPaddingTop>
+            <Col xs={12}>
+              <ControlLabel>{t('memberplanForm.migratePMTitle')}</ControlLabel>
+              <Control
+                name="migrateToTargetPaymentMethodID"
+                block
+                virtualized
+                disabled={loading}
+                data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+                value={memberPlan?.migrateToTargetPaymentMethodID}
+                accepter={SelectPicker}
+                placement="auto"
+                onChange={migrateToTargetPaymentMethodID =>
+                  setMemberPlan({
+                    ...(memberPlan as FullMemberPlanFragment),
+                    migrateToTargetPaymentMethodID: migrateToTargetPaymentMethodID || null
+                  })
+                }
+              />
+              <HelpText>{t('memberplanForm.migratePMHelptext')}</HelpText>
             </Col>
           </RowPaddingTop>
         </Panel>

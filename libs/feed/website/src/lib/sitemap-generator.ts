@@ -1,5 +1,6 @@
 import {getArticleSEO} from '@wepublish/article/website'
 import {Article} from '@wepublish/website/api'
+import {escape} from 'lodash'
 
 const SITEMAP_MAX_ENTRIES = 49999
 
@@ -47,12 +48,12 @@ export const generateSitemap =
 
                 <news:news>
                     <news:publication>
-                        <news:name>${title}</news:name>
+                        <news:name>${escape(title)}</news:name>
                         <news:language>${lang}</news:language>
                     </news:publication>
 
                     <news:publication_date>${article.publishedAt}</news:publication_date>
-                    <news:title>${seo.socialMediaTitle}</news:title>
+                    <news:title>${escape(seo.socialMediaTitle ?? '')}</news:title>
                 </news:news>
             </url>
         `

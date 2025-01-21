@@ -47,23 +47,18 @@ function Subscriptions() {
     subscription => subscription.deactivation
   )
 
-  const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
-  const thisLocation = typeof window !== 'undefined' ? location.href : ''
-
   return (
     <SubscriptionsWrapper>
       <SubscriptionListWrapper>
         <H4 component={'h1'}>Aktive Abos</H4>
 
         <SubscriptionListContainer
-          successURL={`${locationOrigin}/profile/subscription`}
-          failureURL={thisLocation}
           filter={subscriptions => subscriptions.filter(subscription => !subscription.deactivation)}
         />
 
         {hasDeactivatedSubscriptions && (
           <DeactivatedSubscriptions>
-            <Link href="/profile/subscription/deactivated">Gekündete Abos anzeigen</Link>
+            <Link href="/profile/subscription/deactivated">Gekündigte Abos anzeigen</Link>
           </DeactivatedSubscriptions>
         )}
       </SubscriptionListWrapper>
@@ -72,8 +67,6 @@ function Subscriptions() {
         <H4 component={'h1'}>Offene Rechnungen</H4>
 
         <InvoiceListContainer
-          successURL={`${locationOrigin}/profile/subscription`}
-          failureURL={thisLocation}
           filter={invoices =>
             invoices.filter(
               invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt

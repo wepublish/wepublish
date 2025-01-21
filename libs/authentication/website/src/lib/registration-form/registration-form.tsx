@@ -12,27 +12,11 @@ import {z} from 'zod'
 import {UserForm} from './user-form'
 import {ApiAlert} from '@wepublish/errors/website'
 import {userCountryNames} from '@wepublish/user'
+import {Challenge} from '../challenge/challenge'
 
 export const RegistrationFormWrapper = styled('form')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
-`
-
-export const RegistrationChallengeWrapper = styled('div')`
-  display: grid;
-  grid-template-columns: minmax(max-content, 200px) 200px;
-  align-items: center;
-  gap: ${({theme}) => theme.spacing(3)};
-  justify-content: flex-start;
-`
-
-export const RegistrationChallenge = styled('div')`
-  height: 100%;
-  display: grid;
-
-  svg {
-    height: 100%;
-  }
 `
 
 const buttonStyles = css`
@@ -123,7 +107,7 @@ export function RegistrationForm<T extends Exclude<BuilderUserFormFields, 'flair
   })
 
   const {
-    elements: {TextField, Button}
+    elements: {Button}
   } = useWebsiteBuilder()
 
   const onSubmit = handleSubmit(data => onRegister?.(data))
@@ -136,26 +120,21 @@ export function RegistrationForm<T extends Exclude<BuilderUserFormFields, 'flair
     <RegistrationFormWrapper className={className} onSubmit={onSubmit}>
       <UserForm control={control} fields={fields} />
 
-      {challenge.data && (
-        <RegistrationChallengeWrapper>
-          <RegistrationChallenge
-            dangerouslySetInnerHTML={{
-              __html:
-                challenge.data.challenge.challenge
-                  ?.replace('#ffffff', 'transparent')
-                  .replace('width="200"', '')
-                  .replace('height="200"', '') ?? ''
-            }}
-          />
-
-          <Controller
-            name={'challengeAnswer.challengeSolution'}
-            control={control}
-            render={({field, fieldState: {error}}) => (
-              <TextField {...field} label={'Captcha'} error={!!error} helperText={error?.message} />
-            )}
-          />
-        </RegistrationChallengeWrapper>
+      {challenge.data?.challenge && (
+        <Controller
+          name={'challengeAnswer.challengeSolution'}
+          control={control}
+          render={({field, fieldState: {error}}) => (
+            <Challenge
+              {...field}
+              onChange={field.onChange}
+              challenge={challenge.data!.challenge}
+              label={'Captcha'}
+              error={!!error}
+              helperText={error?.message}
+            />
+          )}
+        />
       )}
 
       {challenge.error && <ApiAlert error={challenge.error} severity="error" />}

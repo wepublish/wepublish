@@ -59,6 +59,8 @@ import type { PeriodicJob } from "@prisma/client";
 import type { BlockStyle } from "@prisma/client";
 import type { Crowdfunding } from "@prisma/client";
 import type { CrowdfundingGoal } from "@prisma/client";
+import type { Banner } from "@prisma/client";
+import type { BannerAction } from "@prisma/client";
 import type { CommentItemType } from "@prisma/client";
 import type { CommentRejectionReason } from "@prisma/client";
 import type { CommentState } from "@prisma/client";
@@ -74,6 +76,7 @@ import type { EventStatus } from "@prisma/client";
 import type { UserEvent } from "@prisma/client";
 import type { SubscriptionEvent } from "@prisma/client";
 import type { BlockType } from "@prisma/client";
+import type { BannerActionRole } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { Resolver } from "@quramy/prisma-fabbrica/lib/internal";
 export { initialize, resetSequence, registerScalarFieldValueGenerator, resetScalarFieldValueGenerator } from "@quramy/prisma-fabbrica/lib/internal";
@@ -156,9 +159,11 @@ type ArticleRevisionFactoryDefineInput = {
     canonicalUrl?: string | null;
     breaking?: boolean;
     blocks?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
+    searchPlainText?: string | null;
     hideAuthor?: boolean;
     socialMediaTitle?: string | null;
     socialMediaDescription?: string | null;
+    likes?: number;
     revision?: number;
     createdAt?: Date;
     modifiedAt?: Date | null;
@@ -587,6 +592,7 @@ type ImageFactoryDefineInput = {
     users?: Prisma.UserCreateNestedManyWithoutUserImageInput;
     events?: Prisma.EventCreateNestedManyWithoutImageInput;
     paymentMethods?: Prisma.PaymentMethodCreateNestedManyWithoutImageInput;
+    banners?: Prisma.BannerCreateNestedManyWithoutImageInput;
 };
 type ImageFactoryDefineOptions = {
     defaultData?: Resolver<ImageFactoryDefineInput, BuildDataOptions>;
@@ -1130,6 +1136,14 @@ type MemberPlanimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutMemberPlanInput["create"]>;
 };
+type MemberPlansuccessPageFactory = {
+    _factoryFor: "Page";
+    build: () => PromiseLike<Prisma.PageCreateNestedOneWithoutMemberPlansSuccessInput["create"]>;
+};
+type MemberPlanfailPageFactory = {
+    _factoryFor: "Page";
+    build: () => PromiseLike<Prisma.PageCreateNestedOneWithoutMemberPlansFailInput["create"]>;
+};
 type MemberPlanFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -1141,12 +1155,15 @@ type MemberPlanFactoryDefineInput = {
     active?: boolean;
     currency?: Currency;
     amountPerMonthMin?: number;
+    amountPerMonthTarget?: number | null;
     extendable?: boolean;
     maxCount?: number | null;
     availablePaymentMethods?: Prisma.AvailablePaymentMethodCreateNestedManyWithoutMemberPlanInput;
     migrateToTargetPaymentMethod?: MemberPlanmigrateToTargetPaymentMethodFactory | Prisma.PaymentMethodCreateNestedOneWithoutMigrateFromPlansInput;
     image?: MemberPlanimageFactory | Prisma.ImageCreateNestedOneWithoutMemberPlanInput;
-    Subscription?: Prisma.SubscriptionCreateNestedManyWithoutMemberPlanInput;
+    successPage?: MemberPlansuccessPageFactory | Prisma.PageCreateNestedOneWithoutMemberPlansSuccessInput;
+    failPage?: MemberPlanfailPageFactory | Prisma.PageCreateNestedOneWithoutMemberPlansFailInput;
+    subscription?: Prisma.SubscriptionCreateNestedManyWithoutMemberPlanInput;
     subscriptionFlows?: Prisma.SubscriptionFlowCreateNestedManyWithoutMemberPlanInput;
     crowdfundings?: Prisma.CrowdfundingCreateNestedManyWithoutMemberPlansInput;
 };
@@ -1291,6 +1308,7 @@ type PageRevisionFactoryDefineInput = {
     socialMediaTitle?: string | null;
     socialMediaDescription?: string | null;
     blocks?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
+    searchPlainText?: string | null;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutPageRevisionInput;
     image?: PageRevisionimageFactory | Prisma.ImageCreateNestedOneWithoutPageRevisionImagesInput;
     socialMediaImage?: PageRevisionsocialMediaImageFactory | Prisma.ImageCreateNestedOneWithoutPageRevisionSocialMediaImagesInput;
@@ -1348,6 +1366,9 @@ type PageFactoryDefineInput = {
     draft?: PagedraftFactory | Prisma.PageRevisionCreateNestedOneWithoutDraftPageInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutPageInput;
     tags?: Prisma.TaggedPagesCreateNestedManyWithoutPageInput;
+    memberPlansSuccess?: Prisma.MemberPlanCreateNestedManyWithoutSuccessPageInput;
+    memberPlansFail?: Prisma.MemberPlanCreateNestedManyWithoutFailPageInput;
+    banners?: Prisma.BannerCreateNestedManyWithoutShowOnPagesInput;
 };
 type PageFactoryDefineOptions = {
     defaultData?: Resolver<PageFactoryDefineInput, BuildDataOptions>;
@@ -2866,3 +2887,92 @@ export interface CrowdfundingGoalFactoryInterface<TOptions extends CrowdfundingG
  * @returns factory {@link CrowdfundingGoalFactoryInterface}
  */
 export declare function defineCrowdfundingGoalFactory<TOptions extends CrowdfundingGoalFactoryDefineOptions>(options?: TOptions): CrowdfundingGoalFactoryInterface<TOptions>;
+type BannerimageFactory = {
+    _factoryFor: "Image";
+    build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutBannersInput["create"]>;
+};
+type BannerFactoryDefineInput = {
+    id?: string;
+    createdAt?: Date;
+    modifiedAt?: Date;
+    title?: string;
+    text?: string;
+    cta?: string | null;
+    active?: boolean;
+    showOnArticles?: boolean;
+    image?: BannerimageFactory | Prisma.ImageCreateNestedOneWithoutBannersInput;
+    showOnPages?: Prisma.PageCreateNestedManyWithoutBannersInput;
+    actions?: Prisma.BannerActionCreateNestedManyWithoutBannerInput;
+};
+type BannerFactoryDefineOptions = {
+    defaultData?: Resolver<BannerFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<BannerFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type BannerTraitKeys<TOptions extends BannerFactoryDefineOptions> = keyof TOptions["traits"];
+export interface BannerFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "Banner";
+    build(inputData?: Partial<Prisma.BannerCreateInput>): PromiseLike<Prisma.BannerCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.BannerCreateInput>): PromiseLike<Prisma.BannerCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.BannerCreateInput>[]): PromiseLike<Prisma.BannerCreateInput[]>;
+    pickForConnect(inputData: Banner): Pick<Banner, "id">;
+    create(inputData?: Partial<Prisma.BannerCreateInput>): PromiseLike<Banner>;
+    createList(inputData: number | readonly Partial<Prisma.BannerCreateInput>[]): PromiseLike<Banner[]>;
+    createForConnect(inputData?: Partial<Prisma.BannerCreateInput>): PromiseLike<Pick<Banner, "id">>;
+}
+export interface BannerFactoryInterface<TOptions extends BannerFactoryDefineOptions = BannerFactoryDefineOptions> extends BannerFactoryInterfaceWithoutTraits {
+    use(name: BannerTraitKeys<TOptions>, ...names: readonly BannerTraitKeys<TOptions>[]): BannerFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link Banner} model.
+ *
+ * @param options
+ * @returns factory {@link BannerFactoryInterface}
+ */
+export declare function defineBannerFactory<TOptions extends BannerFactoryDefineOptions>(options?: TOptions): BannerFactoryInterface<TOptions>;
+type BannerActionbannerFactory = {
+    _factoryFor: "Banner";
+    build: () => PromiseLike<Prisma.BannerCreateNestedOneWithoutActionsInput["create"]>;
+};
+type BannerActionFactoryDefineInput = {
+    id?: string;
+    createdAt?: Date;
+    modifiedAt?: Date;
+    label?: string;
+    url?: string;
+    style?: string;
+    role?: BannerActionRole;
+    banner: BannerActionbannerFactory | Prisma.BannerCreateNestedOneWithoutActionsInput;
+};
+type BannerActionFactoryDefineOptions = {
+    defaultData: Resolver<BannerActionFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<BannerActionFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type BannerActionTraitKeys<TOptions extends BannerActionFactoryDefineOptions> = keyof TOptions["traits"];
+export interface BannerActionFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "BannerAction";
+    build(inputData?: Partial<Prisma.BannerActionCreateInput>): PromiseLike<Prisma.BannerActionCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.BannerActionCreateInput>): PromiseLike<Prisma.BannerActionCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.BannerActionCreateInput>[]): PromiseLike<Prisma.BannerActionCreateInput[]>;
+    pickForConnect(inputData: BannerAction): Pick<BannerAction, "id">;
+    create(inputData?: Partial<Prisma.BannerActionCreateInput>): PromiseLike<BannerAction>;
+    createList(inputData: number | readonly Partial<Prisma.BannerActionCreateInput>[]): PromiseLike<BannerAction[]>;
+    createForConnect(inputData?: Partial<Prisma.BannerActionCreateInput>): PromiseLike<Pick<BannerAction, "id">>;
+}
+export interface BannerActionFactoryInterface<TOptions extends BannerActionFactoryDefineOptions = BannerActionFactoryDefineOptions> extends BannerActionFactoryInterfaceWithoutTraits {
+    use(name: BannerActionTraitKeys<TOptions>, ...names: readonly BannerActionTraitKeys<TOptions>[]): BannerActionFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link BannerAction} model.
+ *
+ * @param options
+ * @returns factory {@link BannerActionFactoryInterface}
+ */
+export declare function defineBannerActionFactory<TOptions extends BannerActionFactoryDefineOptions>(options: TOptions): BannerActionFactoryInterface<TOptions>;

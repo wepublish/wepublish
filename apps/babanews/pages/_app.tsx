@@ -128,16 +128,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               </ContentSpacer>
 
               <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-                strategy="afterInteractive"
-              />
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-                strategy="lazyOnload"
-              />
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>

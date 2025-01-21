@@ -16,7 +16,7 @@ import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
 import {GraphQLInvoice} from './invoice'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
-import {GraphQLSlug} from './slug'
+import {GraphQLSlug} from '@wepublish/utils/api'
 
 export const GraphQLPaymentState = new GraphQLEnumType({
   name: 'PaymentState',

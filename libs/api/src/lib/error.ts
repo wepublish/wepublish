@@ -67,6 +67,15 @@ export class MonthlyAmountNotEnough extends ApolloError {
   }
 }
 
+export class MonthlyTargetAmountNotEnough extends ApolloError {
+  constructor() {
+    super(
+      `Monthly target amount mus be greater than minimal monthly amount`,
+      ErrorCode.MonthlyTargetAmountNotEnough
+    )
+  }
+}
+
 export class SubscriptionToDeactivateDoesNotExist extends ApolloError {
   constructor(id: string) {
     super(

@@ -7,36 +7,37 @@ import {
   AgendaBaselService,
   AuthenticationModule,
   BexioPaymentProvider,
+  BannerApiModule,
   ConsentModule,
-  StatsModule,
   DashboardModule,
+  EventModule,
   EventsImportModule,
+  GoogleAnalyticsModule,
+  GoogleAnalyticsService,
   GraphQLRichText,
+  HealthModule,
+  HotAndTrendingModule,
+  KarmaMediaAdapter,
   KulturZueriService,
   MailchimpMailProvider,
   MailgunMailProvider,
   MailsModule,
   MediaAdapterService,
   MembershipModule,
+  MolliePaymentProvider,
+  NeverChargePaymentProvider,
   NovaMediaAdapter,
   PaymentProvider,
   PaymentsModule,
+  PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   PermissionModule,
   SettingModule,
+  StatsModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  PayrexxFactory,
-  HealthModule,
-  NeverChargePaymentProvider,
-  KarmaMediaAdapter,
-  ScriptsModule,
-  SystemInfoModule,
-  HotAndTrendingModule,
-  GoogleAnalyticsService,
-  GoogleAnalyticsModule,
-  EventModule
+  SystemInfoModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -148,7 +149,8 @@ import {CrowdfundingModule} from 'crowdfunding'
                   offSessionPayments: paymentProvider.offSessionPayments,
                   secretKey: paymentProvider.secretKey,
                   webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
-                  incomingRequestHandler: bodyParser.raw({type: 'application/json'})
+                  incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
+                  methods: paymentProvider.methods
                 })
               )
             } else if (paymentProvider.type === 'stripe') {
@@ -159,7 +161,8 @@ import {CrowdfundingModule} from 'crowdfunding'
                   offSessionPayments: paymentProvider.offSessionPayments,
                   secretKey: paymentProvider.secretKey,
                   webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
-                  incomingRequestHandler: bodyParser.raw({type: 'application/json'})
+                  incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
+                  methods: paymentProvider.methods
                 })
               )
             } else if (paymentProvider.type === 'payrexx') {
@@ -222,6 +225,19 @@ import {CrowdfundingModule} from 'crowdfunding'
                   prisma
                 })
               )
+            } else if (paymentProvider.type === 'mollie') {
+              paymentProviders.push(
+                new MolliePaymentProvider({
+                  id: paymentProvider.id,
+                  name: paymentProvider.name,
+                  offSessionPayments: paymentProvider.offSessionPayments,
+                  apiKey: paymentProvider.apiKey,
+                  webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
+                  apiBaseUrl: paymentProvider.apiBaseUrl,
+                  incomingRequestHandler: bodyParser.urlencoded({extended: true}),
+                  methods: paymentProvider.methods
+                })
+              )
             } else if (paymentProvider.type === 'no-charge') {
               paymentProviders.push(
                 new NeverChargePaymentProvider({
@@ -250,7 +266,6 @@ import {CrowdfundingModule} from 'crowdfunding'
     ConsentModule,
     StatsModule,
     SettingModule,
-    ScriptsModule,
     EventModule,
     BlockStylesModule,
     EventsImportModule.registerAsync({
@@ -284,7 +299,8 @@ import {CrowdfundingModule} from 'crowdfunding'
       useFactory: (datasource: GoogleAnalyticsService) => datasource,
       inject: [GoogleAnalyticsService]
     }),
-    CrowdfundingModule
+    CrowdfundingModule,
+    BannerApiModule
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [

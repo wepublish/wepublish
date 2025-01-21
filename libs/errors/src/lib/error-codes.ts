@@ -10,6 +10,7 @@ export enum ErrorCode {
   NotFound = 'NOT_FOUND',
   EmailAlreadyInUse = 'EMAIL_ALREADY_IN_USE',
   MonthlyAmountNotEnough = 'MONTHLY_AMOUNT_NOT_ENOUGH',
+  MonthlyTargetAmountNotEnough = 'MonthlyTargetAmountNotEnough',
   PaymentConfigurationNotAllowed = 'PAYMENT_CONFIGURATION_NOT_ALLOWED',
   UserInputError = 'USER_INPUT_ERROR',
   DuplicatePageSlug = 'DUPLICATE_PAGE_SLUG',

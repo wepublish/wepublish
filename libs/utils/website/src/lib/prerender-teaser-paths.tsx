@@ -4,7 +4,7 @@ import {GetStaticPaths} from 'next'
 import getConfig from 'next/config'
 
 export const getPagePathsBasedOnPage =
-  (pageSlug: string, maxPathCount = 20): GetStaticPaths =>
+  (pageSlug: string, maxPathCount = 20, excludedSlugs?: string[]): GetStaticPaths =>
   async () => {
     const {publicRuntimeConfig} = getConfig()
     const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
@@ -20,8 +20,11 @@ export const getPagePathsBasedOnPage =
     const pageSlugs = []
 
     for (const storeObj of cache) {
-      if (storeObj?.__typename === 'Page' && (storeObj as ApiV1.Page).slug !== pageSlug) {
-        pageSlugs.push((storeObj as ApiV1.Page).slug)
+      if (storeObj?.__typename === 'Page') {
+        const slug = (storeObj as ApiV1.Page).slug
+        if (slug !== pageSlug && !excludedSlugs?.includes(slug)) {
+          pageSlugs.push(slug)
+        }
       }
 
       if (pageSlugs.length >= maxPathCount) {

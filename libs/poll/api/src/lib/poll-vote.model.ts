@@ -102,6 +102,12 @@ export class PoleVoteListArgs {
 
 @ArgsType()
 export class PoleVoteByIdArgs {
-  @Field(() => ID)
-  id!: string
+  @Field(() => [ID])
+  ids!: string[]
+}
+
+@ObjectType()
+export class DeletePollVotesResult {
+  @Field(() => Int)
+  count!: number
 }

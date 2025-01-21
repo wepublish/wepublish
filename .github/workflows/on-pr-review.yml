@@ -238,6 +238,14 @@ jobs:
                   invoiceMailSubjectRenewalMembership: "Invoice for :memberPlan.name:"
                   invoiceMailBodyRenewalMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
                   markInvoiceAsOpen: False
+          
+                - type: mollie
+                  id: mollie
+                  name: Mollie
+                  offSessionPayments: true
+                  apiKey: ${{ secrets.MOLLIE_API_KEY }}
+                  webhookEndpointSecret: secret
+                  apiBaseUrl: ${{ env.API_URL }}
 
               challenge:
                 secret: 'secret'

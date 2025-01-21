@@ -80,7 +80,7 @@ mutation DeleteSubscriptionInterval($id: String!) {
 
 query ListPaymentMethods {
   paymentMethods {
-    ...PaymentMethodRef
+    ...FullPaymentMethod
   }
 }
 
@@ -92,7 +92,7 @@ fragment SubscriptionFlow on SubscriptionFlowModel {
   }
   autoRenewal
   paymentMethods {
-    ...PaymentMethodRef
+    ...FullPaymentMethod
   }
   periodicities
   intervals {
@@ -118,9 +118,27 @@ fragment MailTemplateRef on MailTemplateRef {
 fragment MemberPlanRef on MemberPlan {
   id
   name
+  amountPerMonthMin
+  availablePaymentMethods {
+    ...FullAvailablePaymentMethod
+  }
+  currency
+  extendable
+  slug
 }
 
-fragment PaymentMethodRef on PaymentMethod {
+fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
+  paymentMethods {
+    ...FullPaymentMethod
+  }
+  paymentPeriodicities
+  forceAutoRenewal
+}
+
+fragment FullPaymentMethod on PaymentMethod {
   id
+  paymentProviderID
   name
+  slug
+  description
 }

@@ -28,6 +28,36 @@ export const CanDeleteNavigation: Permission = {
   deprecated: false
 }
 
+export const CanGetBanner: Permission = {
+  id: 'CAN_GET_BANNER',
+  description: 'Allows to get banner',
+  deprecated: false
+}
+
+export const CanGetBanners: Permission = {
+  id: 'CAN_GET_BANNERS',
+  description: 'Allows to get all banners',
+  deprecated: false
+}
+
+export const CanCreateBanner: Permission = {
+  id: 'CAN_CREATE_BANNER',
+  description: 'Allows to create banner',
+  deprecated: false
+}
+
+export const CanUpdateBanner: Permission = {
+  id: 'CAN_UPDATE_BANNER',
+  description: 'Allows to update banner',
+  deprecated: false
+}
+
+export const CanDeleteBanner: Permission = {
+  id: 'CAN_DELETE_BANNER',
+  description: 'Allows to delete banners',
+  deprecated: false
+}
+
 export const CanCreateAuthor: Permission = {
   id: 'CAN_CREATE_AUTHOR',
   description: 'Allows to create authors',
@@ -550,6 +580,18 @@ export const CanDeletePoll: Permission = {
   deprecated: false
 }
 
+export const CanGetPollVote: Permission = {
+  id: 'CAN_GET_POLL_VOTE',
+  description: 'Allows to get a poll vote',
+  deprecated: false
+}
+
+export const CanDeletePollVote: Permission = {
+  id: 'CAN_DELETE_POLL_VOTE',
+  description: 'Allows to delete a poll vote',
+  deprecated: false
+}
+
 export const CanGetEvent: Permission = {
   id: 'CAN_GET_EVENT',
   description: 'Allows to get an event',
@@ -571,6 +613,12 @@ export const CanUpdateEvent: Permission = {
 export const CanDeleteEvent: Permission = {
   id: 'CAN_DELETE_EVENT',
   description: 'Allows to delete an event',
+  deprecated: false
+}
+
+export const CanGetImportedEvents: Permission = {
+  id: 'CAN_GET_IMPORTED_EVENTS',
+  description: 'Allows to get imported events',
   deprecated: false
 }
 
@@ -721,6 +769,11 @@ export const AllPermissions: Permission[] = [
   CanGetNavigation,
   CanGetNavigations,
   CanDeleteNavigation,
+  CanGetBanner,
+  CanGetBanners,
+  CanCreateBanner,
+  CanUpdateBanner,
+  CanDeleteBanner,
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,
@@ -802,10 +855,13 @@ export const AllPermissions: Permission[] = [
   CanGetPoll,
   CanUpdatePoll,
   CanDeletePoll,
+  CanGetPollVote,
+  CanDeletePollVote,
   CanCreatePoll,
   CanGetEvent,
   CanUpdateEvent,
   CanDeleteEvent,
+  CanGetImportedEvents,
   CanCreateConsent,
   CanUpdateConsent,
   CanDeleteConsent,
@@ -833,6 +889,11 @@ export const EditorPermissions: Permission[] = [
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,
+  CanGetBanner,
+  CanGetBanners,
+  CanCreateBanner,
+  CanUpdateBanner,
+  CanDeleteBanner,
   CanCreateImage,
   CanGetImage,
   CanGetImages,

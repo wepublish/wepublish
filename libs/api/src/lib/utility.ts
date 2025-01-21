@@ -4,10 +4,11 @@ import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphq
 import {delegateToSchema, IDelegateToSchemaOptions, Transform} from '@graphql-tools/delegate'
 import {ExecutionResult} from '@graphql-tools/utils'
 import {Context} from './context'
-import {TeaserStyle} from './db/block'
+import {Block, BlockType, TeaserStyle} from './db/block'
 import {SubscriptionWithRelations} from './db/subscription'
 import {UserWithRelations} from './db/user'
 import {format} from 'date-fns'
+import {toPlaintext} from '@wepublish/richtext'
 
 export const MAX_PAYLOAD_SIZE = '1MB'
 
@@ -163,7 +164,6 @@ export function createProxyingIsTypeOf<TSource, TContext>(
 }
 
 export function mapEnumsBack(result: any) {
-  console.log('mapEnumsBack')
   if (!result) return null
 
   for (const key in result) {
@@ -262,4 +262,24 @@ export function mapEnumToGraphQLEnumValues(enumObject: unknown) {
   return Object.fromEntries(
     Object.keys(enumObject).map(key => [enumObject[key], {values: enumObject[key]}])
   )
+}
+
+/**
+ * Parse rich text blocks to plain text. It allows to search in articles and pages for the whole content.
+ * TODO: write migration for existing articles and pages. Implement function on all page mutations.
+ * @param blocks
+ * @returns
+ */
+export function blocksToSearchText(blocks?: (Block | any)[]): string | undefined {
+  if (!blocks) {
+    return
+  }
+
+  try {
+    const richTextBlocks = blocks.filter(block => block.type === BlockType.RichText)
+
+    return richTextBlocks.map(richTextBlock => toPlaintext(richTextBlock.richText)).join(' ')
+  } catch (error) {
+    console.log(error)
+  }
 }

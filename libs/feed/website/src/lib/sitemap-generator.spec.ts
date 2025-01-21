@@ -89,7 +89,7 @@ const article = {
   publishedAt: new Date('2023-01-01').toISOString(),
   image,
   socialMediaImage: image,
-  socialMediaTitle: 'socialMediaTitle',
+  socialMediaTitle: 'socialMediaTitle & socialMediaTitle2',
   socialMediaDescription: 'socialMediaDescription',
   lead: 'lead',
   blocks: [

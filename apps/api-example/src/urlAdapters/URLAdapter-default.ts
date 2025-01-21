@@ -62,7 +62,7 @@ export class DefaultURLAdapter implements URLAdapter {
 
   async getTagURL(tag: Tag) {
     if (tag.tag && tag.type === TagType.Article) {
-      return `${this.websiteURL}/a/tag/${tag.tag}`
+      return `${this.websiteURL}/a/tag/${encodeURIComponent(tag.tag)}`
     }
 
     return ``

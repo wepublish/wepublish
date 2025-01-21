@@ -2,30 +2,25 @@ import {StripeElement, StripePayment} from '@wepublish/payment/website'
 import {
   InvoicesDocument,
   InvoicesQuery,
-  Subscription,
   useCancelSubscriptionMutation,
   useExtendSubscriptionMutation,
   useInvoicesQuery,
   useSubscriptionsQuery,
-  ExtendSubscriptionMutation
+  ExtendSubscriptionMutation,
+  FullMemberPlanFragment,
+  FullSubscriptionFragment
 } from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {produce} from 'immer'
 import {useMemo, useState} from 'react'
 
 export type SubscriptionListContainerProps = {
-  successURL: string
-  failureURL: string
-  filter?: (subscriptions: Subscription[]) => Subscription[]
+  filter?: (subscriptions: FullSubscriptionFragment[]) => FullSubscriptionFragment[]
 } & BuilderContainerProps
 
-export function SubscriptionListContainer({
-  filter,
-  successURL,
-  failureURL,
-  className
-}: SubscriptionListContainerProps) {
+export function SubscriptionListContainer({filter, className}: SubscriptionListContainerProps) {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>()
+  const [stripeMemberPlan, setStripeMemberPlan] = useState<FullMemberPlanFragment>()
   const {SubscriptionList} = useWebsiteBuilder()
   const {data, loading, error} = useSubscriptionsQuery()
   const invoices = useInvoicesQuery()
@@ -64,7 +59,11 @@ export function SubscriptionListContainer({
         <StripeElement clientSecret={stripeClientSecret}>
           <StripePayment
             onClose={success => {
-              window.location.href = success ? successURL : failureURL
+              if (stripeMemberPlan) {
+                window.location.href = success
+                  ? stripeMemberPlan.successPage?.url ?? ''
+                  : stripeMemberPlan.failPage?.url ?? ''
+              }
             }}
           />
         </StripeElement>
@@ -84,11 +83,16 @@ export function SubscriptionListContainer({
           })
         }}
         onExtend={async subscriptionId => {
+          const memberPlan = filteredSubscriptions?.subscriptions?.find(
+            subscription => subscription.id === subscriptionId
+          )?.memberPlan
+          setStripeMemberPlan(memberPlan)
+
           await extend({
             variables: {
               subscriptionId,
-              failureURL,
-              successURL
+              failureURL: memberPlan?.failPage?.url,
+              successURL: memberPlan?.successPage?.url
             }
           })
         }}

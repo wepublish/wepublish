@@ -36,7 +36,7 @@ FROM ${BUILD_IMAGE} AS  build-website
 
 COPY . .
 RUN npx prisma generate && \
-    npx nx build ${NEXT_PROJECT}  && \
+    npx nx build ${NEXT_PROJECT} --skip-nx-cache && \
     bash /wepublish/deployment/map-secrets.sh clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website
@@ -154,7 +154,7 @@ RUN groupadd -r wepublish && \
     npm install prisma bcrypt && \
     perl -i -0777 -pe 's/generator fabbrica \{\n  provider = "prisma-fabbrica"\n  output   = "\.\.\/\.\.\/testing\/src\/__generated__\/fabbrica"\n\}//gs' prisma/schema.prisma && \
     npx prisma generate \
-USER wepublish
+    USER wepublish
 CMD ["bash", "./start.sh"]
 
 
@@ -180,11 +180,11 @@ LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 RUN groupadd -r wepublish && \
-        useradd -r -g wepublish -d /wepublish wepublish && \
-        apt-get update && \
-        apt-get install -y libjemalloc-dev && \
-        apt-get clean && \
-        rm -rf /var/lib/apt/lists/*
+    useradd -r -g wepublish -d /wepublish wepublish && \
+    apt-get update && \
+    apt-get install -y libjemalloc-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 COPY --from=build-media /app/dist/apps/media/ .
 COPY --from=build-media --chown=wepublish:wepublish /app/node_modules ./node_modules
 USER wepublish
