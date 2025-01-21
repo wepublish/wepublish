@@ -19,8 +19,7 @@ import {Application} from 'express'
 import {DefaultURLAdapter} from '../urlAdapters'
 import {readConfig} from '../readConfig'
 import {MannschaftURLAdapter} from '../urlAdapters/URLAdapter-mannschaft'
-import {TrackingPixelProvider} from '../../../../libs/tracking-pixel/api/src/lib/tracking-pixel-provider/tracking-pixel-provider'
-import {ProlitterisTrackingPixelProvider} from '../../../../libs/tracking-pixel/api/src/lib/tracking-pixel-provider/prolitteris/prolitteris-tracking-pixel-provider'
+import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
