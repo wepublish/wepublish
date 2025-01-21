@@ -731,7 +731,8 @@
       "blocks": {
         "polls": "Umfrage",
         "blockStyles": "Block Styling",
-        "topMenu": "Inhalts-Blöcke"
+        "topMenu": "Inhalts-Blöcke",
+        "crowdfundings": "Crowdfundings"
       },
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",

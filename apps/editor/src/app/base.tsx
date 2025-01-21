@@ -8,6 +8,7 @@ import {
   MdApproval,
   MdAutorenew,
   MdBadge,
+  MdBarChart,
   MdBookOnline,
   MdChat,
   MdChevronLeft,
@@ -24,6 +25,7 @@ import {
   MdLocationPin,
   MdLogout,
   MdMail,
+  MdMoney,
   MdOutgoingMail,
   MdOutlineGridView,
   MdPersonAddAlt1,
@@ -304,6 +306,22 @@ export function Base({children}: BaseProps) {
                         active={path === 'polls'}
                         icon={<MdQueryStats />}>
                         {t('navbar.blocks.polls')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_CROWDFUNDINGS',
+                        'CAN_GET_CROWDFUNDING',
+                        'CAN_CREATE_CROWDFUNDING',
+                        'CAN_UPDATE_CROWDFUNDING'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/crowdfundings"
+                        active={path === 'crowdfundings'}
+                        icon={<MdMoney />}>
+                        {t('navbar.blocks.crowdfundings')}
                       </Nav.Item>
                     </PermissionControl>
 

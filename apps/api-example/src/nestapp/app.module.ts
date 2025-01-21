@@ -8,6 +8,7 @@ import {
   AuthenticationModule,
   BexioPaymentProvider,
   BannerApiModule,
+  CrowdfundingModule,
   ConsentModule,
   DashboardModule,
   EventModule,
@@ -52,7 +53,7 @@ import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
 import {ProlitterisTrackingPixelProvider, TrackingPixelModule} from '@wepublish/tracking-pixel/api'
 import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
-import {CrowdfundingModule} from '@wepublish/crowdfunding'
+import {CrowdfundingModule} from '@wepublish/crowdfunding/api'
 
 @Global()
 @Module({

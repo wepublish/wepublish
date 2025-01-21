@@ -45,6 +45,7 @@ export * from './lib/challenges/cfTurnstile'
 export {getUserForCredentials} from './lib/graphql/user/user.queries'
 
 export * from '@wepublish/banner/api'
+export * from '@wepublish/crowdfunding/api'
 export * from '@wepublish/settings/api'
 export * from '@wepublish/membership/api'
 export * from '@wepublish/authentication/api'

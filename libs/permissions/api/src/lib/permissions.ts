@@ -4,6 +4,30 @@ export type Permission = {
   deprecated: boolean
 }
 
+export const CanGetCrowdfunding: Permission = {
+  id: 'CAN_GET_CROWDFUNDING',
+  description: 'Allows to get crowdfunding',
+  deprecated: false
+}
+
+export const CanGetCrowdfundings: Permission = {
+  id: 'CAN_GET_CROWDFUNDINGS',
+  description: 'Allows to get crowdfundings',
+  deprecated: false
+}
+
+export const CanCreateCrowdfunding: Permission = {
+  id: 'CAN_CREATE_CROWDFUNDING',
+  description: 'Allows to create crowdfunding',
+  deprecated: false
+}
+
+export const CanUpdateCrowdfunding: Permission = {
+  id: 'CAN_UPDATE_CROWDFUNDING',
+  description: 'Allows to update crowdfunding',
+  deprecated: false
+}
+
 export const CanGetNavigation: Permission = {
   id: 'CAN_GET_NAVIGATION',
   description: 'Allows to get navigation',
@@ -764,6 +788,10 @@ export const CanDeleteBlockStyle: Permission = {
 }
 
 export const AllPermissions: Permission[] = [
+  CanGetCrowdfunding,
+  CanGetCrowdfundings,
+  CanCreateCrowdfunding,
+  CanUpdateCrowdfunding,
   CanTakeActionOnComment,
   CanCreateNavigation,
   CanGetNavigation,
@@ -883,6 +911,10 @@ export const AllPermissions: Permission[] = [
 ]
 
 export const EditorPermissions: Permission[] = [
+  CanGetCrowdfunding,
+  CanGetCrowdfundings,
+  CanCreateCrowdfunding,
+  CanUpdateCrowdfunding,
   CanGetComments,
   CanUpdateComments,
   CanTakeActionOnComment,
