@@ -8,6 +8,7 @@ import {MailContext} from '@wepublish/mail/api'
 import helmet from 'helmet'
 import {GatewayModule} from './nestapp/gateway.module'
 import {HOT_AND_TRENDING_DATA_SOURCE, HotAndTrendingDataSource} from '@wepublish/api'
+import {TrackingPixelService} from '../../../libs/tracking-pixel/api/src'
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000
@@ -21,6 +22,7 @@ async function bootstrap() {
   nestApp.use(helmet())
   const mediaAdapter = nestApp.get(MediaAdapterService)
   const paymentProviders = nestApp.get(PaymentsService).paymentProviders
+  const trackingPixelProviders = nestApp.get(TrackingPixelService).trackingPixelProviders
   const mailProvider = nestApp.get(MailContext).mailProvider
   const privateExpressApp = nestApp.getHttpAdapter().getInstance()
   const hotAndTrendingDataSource = nestApp.get<HotAndTrendingDataSource>(
@@ -40,6 +42,7 @@ async function bootstrap() {
     mediaAdapter,
     paymentProviders,
     mailProvider,
+    trackingPixelProviders,
     hotAndTrendingDataSource
   }).catch(err => {
     console.error(err)

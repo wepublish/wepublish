@@ -19,6 +19,8 @@ import {Application} from 'express'
 import {DefaultURLAdapter} from '../urlAdapters'
 import {readConfig} from '../readConfig'
 import {MannschaftURLAdapter} from '../urlAdapters/URLAdapter-mannschaft'
+import {TrackingPixelProvider} from '../../../../libs/tracking-pixel/api/src/lib/tracking-pixel-provider/tracking-pixel-provider'
+import {ProlitterisTrackingPixelProvider} from '../../../../libs/tracking-pixel/api/src/lib/tracking-pixel-provider/prolitteris/prolitteris-tracking-pixel-provider'
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
@@ -27,6 +29,7 @@ type RunServerProps = {
   publicExpressApp?: Application
   mediaAdapter: MediaAdapter
   paymentProviders: PaymentProvider[]
+  trackingPixelProviders: TrackingPixelProvider[]
   mailProvider: MailProvider
   hotAndTrendingDataSource: HotAndTrendingDataSource
 }
@@ -37,6 +40,7 @@ export async function runServer({
   mediaAdapter,
   mailProvider,
   paymentProviders,
+  trackingPixelProviders,
   hotAndTrendingDataSource
 }: RunServerProps) {
   /*
@@ -157,6 +161,7 @@ export async function runServer({
       prisma,
       oauth2Providers,
       mailProvider,
+      trackingPixelProviders,
       mailContextOptions: {
         defaultFromAddress: config.mailProvider.fromAddress || 'dev@wepublish.ch',
         defaultReplyToAddress: config.mailProvider.replyToAddress || 'reply-to@wepublish.ch'

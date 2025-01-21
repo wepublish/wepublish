@@ -3,6 +3,7 @@ import YAML from 'yaml'
 import {MappedReplacer} from 'mapped-replacer'
 import {GoogleAnalyticsConfig} from '@wepublish/api'
 import StipeType from 'stripe'
+import {ProLitterisCountPixelProps} from '../../../libs/tracking-pixel/api/src/lib/tracking-pixel-provider/prolitteris/prolitteris-tracking-pixel-provider'
 
 type General = {
   apolloPlayground: boolean
@@ -153,6 +154,12 @@ type Turnstile = {
   siteKey: string
 }
 
+interface ProLitteris extends ProLitterisCountPixelProps {
+  type: 'prolitteris'
+}
+
+type TackingPixels = ProLitteris
+
 type Config = {
   general: General
   mailProvider: MailProvider
@@ -160,6 +167,7 @@ type Config = {
   paymentProviders: PaymentProvider[]
   mediaServer: karmaMediaServer | novaMediaServer
   challenge: AlgebraicCaptcha | Turnstile
+  trackingPixelProviders: TackingPixels[]
   ga?: GoogleAnalyticsConfig
 }
 

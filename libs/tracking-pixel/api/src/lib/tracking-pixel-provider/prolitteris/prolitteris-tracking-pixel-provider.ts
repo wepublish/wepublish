@@ -1,15 +1,20 @@
-import {BasePixelProvider, CountPixelProps, CreatePixelProps} from '../count-pixel-provider'
+import {
+  BaseTrackingPixelProvider,
+  CreateTrackingPixelProps,
+  TrackingPixelProps
+} from '../tracking-pixel-provider'
 import {GatewayClient} from './client-gateway'
-export interface ProLitterisCountPixelProps extends CountPixelProps {
+export interface ProLitterisCountPixelProps extends TrackingPixelProps {
   username: string
   memberNr: string
   password: string
   onlyPaidContentAccess: boolean
 }
 
-export class ProlitterisCountPixelProvider extends BasePixelProvider {
+export class ProlitterisTrackingPixelProvider extends BaseTrackingPixelProvider {
   private gateway: GatewayClient
   private uriPaidContentIndicator: string = 'na'
+
   constructor(props: ProLitterisCountPixelProps) {
     super()
     this.gateway = new GatewayClient(props.memberNr, props.username, props.password)
@@ -18,7 +23,7 @@ export class ProlitterisCountPixelProvider extends BasePixelProvider {
     }
   }
 
-  async createPixelUris(props: CreatePixelProps): Promise<string[]> {
+  async createPixelUris(props: CreateTrackingPixelProps): Promise<string[]> {
     let tackingPixelUris: string[] = []
     const trackingPixels = await this.gateway.getTrackingPixels(props.count)
     for (const trackingPixel of trackingPixels.pixelUid) {

@@ -59,6 +59,7 @@ import {MemberContext} from './memberContext'
 import {URLAdapter} from './urlAdapter'
 import {BlockStylesDataloaderService} from '@wepublish/block-content/api'
 import {HotAndTrendingDataSource} from '@wepublish/article/api'
+import {TrackingPixelProvider} from '../../../tracking-pixel/api/src/lib/tracking-pixel-provider/tracking-pixel-provider'
 
 /**
  * Peered article cache configuration and setup
@@ -206,6 +207,7 @@ export interface ContextOptions {
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
   readonly challenge: ChallengeProvider
+  readonly trackingPixelProviders: TrackingPixelProvider[]
   readonly hotAndTrendingDataSource: HotAndTrendingDataSource
 }
 
@@ -244,7 +246,8 @@ export async function contextFromRequest(
     challenge,
     sessionTTL,
     hashCostFactor,
-    hotAndTrendingDataSource
+    hotAndTrendingDataSource,
+    trackingPixelProviders
   }: ContextOptions
 ): Promise<Context> {
   const authService = new AuthenticationService(prisma)

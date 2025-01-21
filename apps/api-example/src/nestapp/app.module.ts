@@ -49,6 +49,12 @@ import {readConfig} from '../readConfig'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
+import {
+  ProlitterisTrackingPixelProvider,
+  TrackingPixelModule,
+  TrackingPixelService
+} from '../../../../libs/tracking-pixel/api/src'
+import {TrackingPixelProvider} from '../../../../libs/tracking-pixel/api/src/lib/tracking-pixel-provider/tracking-pixel-provider'
 
 @Global()
 @Module({
@@ -128,6 +134,34 @@ import {PollModule} from '@wepublish/poll/api'
           defaultReplyToAddress: configFile.mailProvider.replyToAddress,
           mailProvider
         }
+      },
+      inject: [ConfigService],
+      global: true
+    }),
+    TrackingPixelModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => {
+        const trackingPixelProviders: TrackingPixelProvider[] = []
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+
+        const trackingPixelProvidersRaw = configFile.trackingPixelProviders
+        if (trackingPixelProvidersRaw) {
+          for (const trackingPixelProvider of trackingPixelProvidersRaw) {
+            if (trackingPixelProvider.type === 'prolitteris') {
+              trackingPixelProviders.push(
+                new ProlitterisTrackingPixelProvider({
+                  id: trackingPixelProvider.id,
+                  name: trackingPixelProvider.name,
+                  memberNr: trackingPixelProvider.memberNr,
+                  username: trackingPixelProvider.username,
+                  password: trackingPixelProvider.password,
+                  onlyPaidContentAccess: Boolean(trackingPixelProvider.onlyPaidContentAccess)
+                })
+              )
+            }
+          }
+        }
+        return {trackingPixelProviders}
       },
       inject: [ConfigService],
       global: true
