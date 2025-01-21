@@ -104,13 +104,6 @@ trackingPixelProviders:
     memberNr: 'test'
     password: 'test'
     onlyPaidContentAccess: false
-  - type: prolitteris
-    id: prolitteris-2
-    name: "Pro Litteris 2"
-    username: 'test'
-    memberNr: 'test'
-    password: 'test'
-    onlyPaidContentAccess: false
 mediaServer:
   type: 'nova'
 ga:
