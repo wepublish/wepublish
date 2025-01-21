@@ -1,4 +1,5 @@
 import {createTheme, Theme, ThemeOptions} from '@mui/material'
+import styled from '@emotion/styled'
 import {theme as WePTheme} from '@wepublish/ui'
 import {Hanken_Grotesk, Merriweather} from 'next/font/google'
 import {PartialDeep} from 'type-fest'

@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {useWebsiteBuilder} from '@wepublish/website'
 import {lighten} from 'polished'
 
@@ -43,7 +43,7 @@ export const CrowdfundingGoal = ({current, goal, until, name}: CrowdfundingGoalP
 
   return (
     <CrowdfundingGoalWrapper>
-      <CrowdfundingGoalCurrent sx={{width: `${(current / goal) * 100}%`}} />
+      <CrowdfundingGoalCurrent css={{width: `${(current / goal) * 100}%`}} />
 
       <CrowdfundingGoalText>
         <CrowdfundingGoalAmount>

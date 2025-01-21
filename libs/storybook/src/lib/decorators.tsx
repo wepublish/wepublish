@@ -1,6 +1,7 @@
 import {Global} from '@emotion/react'
 import NextScript from 'next/script'
 import {CssBaseline, css} from '@mui/material'
+import styled from '@emotion/styled'
 import {Preview} from '@storybook/react'
 import {
   ApiV1,

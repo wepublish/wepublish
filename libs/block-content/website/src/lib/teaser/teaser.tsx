@@ -1,4 +1,5 @@
-import {Chip, css, styled, useTheme} from '@mui/material'
+import {Chip, css, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
 import {firstParagraphToPlaintext} from '@wepublish/richtext'
 import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'

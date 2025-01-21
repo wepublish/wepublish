@@ -1,4 +1,5 @@
-import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
+import styled from '@emotion/styled'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,

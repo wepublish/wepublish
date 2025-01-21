@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {useUser} from '@wepublish/authentication/website'
 import {
   Block,

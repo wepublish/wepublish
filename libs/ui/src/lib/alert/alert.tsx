@@ -1,4 +1,5 @@
 import {Alert as MuiAlert} from '@mui/material'
+import styled from '@emotion/styled'
 import {ComponentProps, PropsWithChildren} from 'react'
 
 export type AlertProps = PropsWithChildren<ComponentProps<typeof MuiAlert>>

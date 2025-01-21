@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {Block, InstagramPostBlock as InstagramPostBlockType} from '@wepublish/website/api'
 import {BuilderInstagramPostBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useCallback, useEffect} from 'react'

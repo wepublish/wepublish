@@ -1,4 +1,5 @@
-import {css, Pagination, styled, TextField} from '@mui/material'
+import {css, Pagination, TextField} from '@mui/material'
+import styled from '@emotion/styled'
 import {Button} from '@wepublish/ui'
 import {alignmentForTeaserBlock, ApiV1, articleToTeaser, Teaser} from '@wepublish/website'
 import {useRouter} from 'next/router'

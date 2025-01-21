@@ -1,4 +1,5 @@
-import {styled, SxProps, Theme} from '@mui/material'
+import {SxProps, Theme} from '@mui/material'
+import styled from '@emotion/styled'
 import {
   ApiV1,
   Navbar,

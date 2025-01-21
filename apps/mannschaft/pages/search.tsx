@@ -1,4 +1,5 @@
-import {Box, css, Skeleton, styled} from '@mui/material'
+import {Box, css, Skeleton} from '@mui/material'
+import styled from '@emotion/styled'
 import {
   alignmentForTeaserBlock,
   ApiV1,

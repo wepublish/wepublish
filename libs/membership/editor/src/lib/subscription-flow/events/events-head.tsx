@@ -1,4 +1,5 @@
-import {TableCell, styled} from '@mui/material'
+import {TableCell} from '@mui/material'
+import styled from '@emotion/styled'
 import {PermissionControl} from '@wepublish/ui/editor'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'

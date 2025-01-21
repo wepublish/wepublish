@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {ApiV1, ContentWidthProvider, PageContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'

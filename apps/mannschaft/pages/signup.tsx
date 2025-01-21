@@ -1,4 +1,5 @@
-import {styled, Typography} from '@mui/material'
+import {Typography} from '@mui/material'
+import styled from '@emotion/styled'
 import {ApiV1, RegistrationFormContainer, useUser, useWebsiteBuilder} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'

@@ -1,4 +1,5 @@
-import {FormControl, InputLabel, Select, styled} from '@mui/material'
+import {FormControl, InputLabel, Select} from '@mui/material'
+import styled from '@emotion/styled'
 import {PaymentPeriodicity} from '@wepublish/website/api'
 import {BuilderPeriodicityPickerProps} from '@wepublish/website/builder'
 import {forwardRef, useEffect, useId} from 'react'

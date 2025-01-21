@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BlockFormat} from '@wepublish/richtext'
 import {BuilderRichTextBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block, RichTextBlock as RichTextBlockType} from '@wepublish/website/api'

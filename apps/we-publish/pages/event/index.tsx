@@ -1,4 +1,5 @@
-import {Checkbox, FormControlLabel, FormGroup, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, FormGroup} from '@mui/material'
+import styled from '@emotion/styled'
 import {DateTimePicker, LocalizationProvider} from '@mui/x-date-pickers'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {ApiV1, EventListContainer, useWebsiteBuilder} from '@wepublish/website'

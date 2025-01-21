@@ -1,4 +1,5 @@
-import {css, styled} from '@mui/material'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
 import {Button} from '@wepublish/ui'
 import {RichTextBlock} from '@wepublish/website'
 import {memo, useState} from 'react'

@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {Article, ArticleTeaser, TeaserStyle} from '@wepublish/website/api'
 import {BuilderArticleListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useMemo} from 'react'

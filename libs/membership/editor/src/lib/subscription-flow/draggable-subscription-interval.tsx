@@ -11,6 +11,7 @@ import {MailTemplateSelect} from './mail-template-select'
 import {DecoratedSubscriptionInterval} from './subscription-flow-list'
 
 import {Tooltip} from '@mui/material'
+import styled from '@emotion/styled'
 import {useAuthorisation} from '@wepublish/ui/editor'
 import {useTranslation} from 'react-i18next'
 

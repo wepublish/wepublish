@@ -1,4 +1,5 @@
 import {css, GlobalStyles, Theme, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderTeaserProps} from '@wepublish/website'
 import {allPass, anyPass} from 'ramda'
 import {useId, useMemo} from 'react'

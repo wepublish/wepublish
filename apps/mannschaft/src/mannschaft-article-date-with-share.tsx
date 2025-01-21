@@ -1,4 +1,5 @@
-import {css, NoSsr, styled} from '@mui/material'
+import {css, NoSsr} from '@mui/material'
+import styled from '@emotion/styled'
 import {
   ArticleDate,
   ArticleDateWrapper,

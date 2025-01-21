@@ -1,4 +1,5 @@
-import {Container, css, styled} from '@mui/material'
+import {Container, css} from '@mui/material'
+import styled from '@emotion/styled'
 
 export const MainSpacer = styled(Container)`
   display: grid;

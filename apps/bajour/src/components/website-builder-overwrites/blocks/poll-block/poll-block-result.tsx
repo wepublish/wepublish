@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {PollBlockResult, PollBlockVoteBar, PollBlockVoteBarFill} from '@wepublish/website'
 
 export const PollBlockResultOverwrite = styled(PollBlockResult)`

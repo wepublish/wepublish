@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderTikTokVideoBlockProps} from '@wepublish/website/builder'
 import {Block, TikTokVideoBlock as TikTokVideoBlockType} from '@wepublish/website/api'
 

@@ -1,6 +1,7 @@
 import {Meta, StoryObj} from '@storybook/react'
 import {SubscriptionListContainer} from './subscription-list-container'
 import {css} from '@mui/material'
+import styled from '@emotion/styled'
 import {
   CancelSubscriptionDocument,
   Currency,

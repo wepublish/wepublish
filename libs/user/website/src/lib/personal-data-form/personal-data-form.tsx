@@ -1,5 +1,6 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {InputAdornment, Theme, css, styled, useTheme} from '@mui/material'
+import {InputAdornment, Theme, css, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
 import {requiredRegisterSchema, UserForm, zodAlwaysRefine} from '@wepublish/authentication/website'
 import {userCountryNames} from '@wepublish/user'
 import {

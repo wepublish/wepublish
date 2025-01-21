@@ -1,4 +1,5 @@
-import {CircularProgress, styled, Typography} from '@mui/material'
+import {CircularProgress, Typography} from '@mui/material'
+import styled from '@emotion/styled'
 import {ApiV1, useUser} from '@wepublish/website'
 import {GetServerSideProps} from 'next'
 import Link from 'next/link'

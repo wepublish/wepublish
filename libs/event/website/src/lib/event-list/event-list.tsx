@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {truncateFirstParagraph} from '@wepublish/richtext'
 import {BuilderEventListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useMemo} from 'react'

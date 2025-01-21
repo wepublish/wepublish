@@ -1,4 +1,5 @@
-import {css, styled} from '@mui/material'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
 import {NextWepublishLink} from '@wepublish/utils/website'
 import {
   ApiV1,

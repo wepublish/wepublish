@@ -1,4 +1,5 @@
 import {css, GlobalStyles, Theme} from '@mui/material'
+import styled from '@emotion/styled'
 
 const globalCSS = (theme: Theme) => css`
   button,

@@ -1,4 +1,5 @@
 import {TableCell} from '@mui/material'
+import styled from '@emotion/styled'
 import {useTranslation} from 'react-i18next'
 
 export function FilterHead() {

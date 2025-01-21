@@ -1,6 +1,7 @@
 import {ApolloClient, ApolloLink, ApolloProvider, InMemoryCache} from '@apollo/client'
 import {onError} from '@apollo/client/link/error'
 import {CssBaseline, ThemeProvider} from '@mui/material'
+import styled from '@emotion/styled'
 import * as Sentry from '@sentry/react'
 import {theme} from '@wepublish/ui'
 import {

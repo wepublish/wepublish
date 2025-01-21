@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderSubscriptionListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {SubscriptionListItemContent, SubscriptionListItemWrapper} from './subscription-list-item'
 import {FullInvoiceFragment, FullSubscriptionFragment} from '@wepublish/website/api'

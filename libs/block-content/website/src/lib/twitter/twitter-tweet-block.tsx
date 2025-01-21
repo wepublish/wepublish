@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {Block, TwitterTweetBlock as TwitterTweetBlockType} from '@wepublish/website/api'
 import {BuilderTwitterTweetBlockProps} from '@wepublish/website/builder'
 import {Tweet} from 'react-tweet'

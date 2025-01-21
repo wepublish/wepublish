@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {Teaser, TeaserMetadata, TeaserTags} from '@wepublish/website'
 
 export const MannschaftBaseTeaser = styled(Teaser)`

@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderHTMLBlockProps} from '@wepublish/website/builder'
 import {Block, HtmlBlock as HtmlBlockType} from '@wepublish/website/api'
 import InnerHTML from 'dangerously-set-html-content'

@@ -1,10 +1,10 @@
 import {EmotionCache} from '@emotion/cache'
+import styled from '@emotion/styled'
 import {
   Container,
   createTheme,
   css,
   CssBaseline,
-  styled,
   Theme,
   ThemeOptions,
   ThemeProvider

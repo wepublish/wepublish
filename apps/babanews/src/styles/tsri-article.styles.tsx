@@ -1,5 +1,6 @@
 import {css} from '@emotion/react'
 import {Theme} from '@mui/material'
+import styled from '@emotion/styled'
 import {ArticleInfoWrapper, ArticleWrapper, TitleBlockWrapper} from '@wepublish/website'
 
 import {ArticleTagList} from '../../pages/a/[slug]'

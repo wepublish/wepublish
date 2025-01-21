@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {Block, CommentBlock as CommentBlockType} from '@wepublish/website/api'
 import {BuilderCommentBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
