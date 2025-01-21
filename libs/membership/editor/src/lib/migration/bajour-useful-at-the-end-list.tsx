@@ -7,7 +7,6 @@ import {RequestCollection} from './base-importer'
 import {syncStatusToColor} from './migration-list'
 import {UsefulAtTheEnd, UsefulAtTheEndImporter} from './useful-at-the-end-importer'
 import {TextField} from '@mui/material'
-import styled from '@emotion/styled'
 
 export function BajourUsefulAtTheEndList(requestCollection: RequestCollection) {
   const [usefulAtTheEnds, setUsefulAtTheEnds] = useState<UsefulAtTheEnd[]>([])

@@ -1,5 +1,4 @@
 import {Accordion, AccordionDetails, AccordionSummary} from '@mui/material'
-import styled from '@emotion/styled'
 import {createCheckedPermissionComponent} from '@wepublish/ui/editor'
 import {Container} from 'rsuite'
 import {BajourPersonOfTheDayList} from './bajour-person-of-the-day-list'

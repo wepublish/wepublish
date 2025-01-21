@@ -83,7 +83,7 @@ export class BaseImporter {
     const {data} = await this.requests.getExistingArticles({
       variables: {
         filter: {
-          title: title
+          title
         }
       }
     })
@@ -128,8 +128,8 @@ export class BaseImporter {
         variables: {
           input: {
             file,
-            filename: filename,
-            title: title,
+            filename,
+            title,
             focalPoint: {
               x: 0.5,
               y: 0.5

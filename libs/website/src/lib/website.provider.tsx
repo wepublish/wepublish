@@ -1,5 +1,4 @@
 import {css, GlobalStyles, TextField, Theme, ThemeProvider} from '@mui/material'
-import styled from '@emotion/styled'
 import {Article, ArticleDate, ArticleList, ArticleSEO} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {

@@ -1,5 +1,4 @@
 import {Button as MuiButton} from '@mui/material'
-import styled from '@emotion/styled'
 import {ComponentProps, PropsWithChildren} from 'react'
 
 type MuiButtonProps = ComponentProps<typeof MuiButton>

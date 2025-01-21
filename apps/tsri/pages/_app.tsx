@@ -1,6 +1,6 @@
 import {EmotionCache} from '@emotion/cache'
-import {Container, css, CssBaseline, NoSsr, ThemeProvider} from '@mui/material'
 import styled from '@emotion/styled'
+import {Container, css, CssBaseline, NoSsr, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'

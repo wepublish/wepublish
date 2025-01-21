@@ -1,5 +1,4 @@
 import {css, Link as MuiLink, LinkTypeMap, Typography, useTheme} from '@mui/material'
-import styled from '@emotion/styled'
 import {AnchorHTMLAttributes, forwardRef, HTMLAttributes, useMemo} from 'react'
 
 export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {

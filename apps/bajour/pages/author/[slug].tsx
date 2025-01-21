@@ -1,5 +1,4 @@
 import {css} from '@mui/material'
-import styled from '@emotion/styled'
 import {
   ApiV1,
   ArticleListContainer,

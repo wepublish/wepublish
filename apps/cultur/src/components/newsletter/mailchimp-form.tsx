@@ -1,5 +1,4 @@
 import {Box, Button, TextField} from '@mui/material'
-import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 
 type MailchimpSubscribeFormProps = {

@@ -1,7 +1,7 @@
 import 'keen-slider/keen-slider.min.css'
 
-import {css} from '@mui/material'
 import styled from '@emotion/styled'
+import {css} from '@mui/material'
 import {
   ApiV1,
   BuilderTeaserGridBlockProps,

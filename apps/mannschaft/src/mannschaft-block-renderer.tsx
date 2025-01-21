@@ -1,5 +1,4 @@
 import {css, Theme, useTheme} from '@mui/material'
-import styled from '@emotion/styled'
 import {
   ApiV1,
   BlockRenderer,

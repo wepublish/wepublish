@@ -1,5 +1,5 @@
-import {Button} from '@mui/material'
 import styled from '@emotion/styled'
+import {Button} from '@mui/material'
 import {H1, Paragraph} from '@wepublish/ui'
 import {NextWepublishLink} from '@wepublish/utils/website'
 import {Image, TeaserInnerWrapper, TeaserLead} from '@wepublish/website'

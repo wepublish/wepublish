@@ -1,5 +1,4 @@
 import {useTheme} from '@mui/material'
-import styled from '@emotion/styled'
 import {
   alignmentForTeaserBlock,
   BlockRenderer,

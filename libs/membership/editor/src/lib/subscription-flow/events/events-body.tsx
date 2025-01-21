@@ -1,5 +1,4 @@
 import {TableCell} from '@mui/material'
-import styled from '@emotion/styled'
 import {SubscriptionFlowModel} from '@wepublish/editor/api-v2'
 import {useCallback, useContext, useMemo} from 'react'
 import {useTranslation} from 'react-i18next'

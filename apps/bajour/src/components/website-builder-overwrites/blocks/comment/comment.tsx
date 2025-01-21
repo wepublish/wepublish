@@ -1,6 +1,5 @@
 import {css} from '@emotion/react'
 import {Theme, useTheme} from '@mui/material'
-import styled from '@emotion/styled'
 import {
   ApiV1,
   BuilderCommentProps,

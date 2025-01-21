@@ -1,5 +1,4 @@
 import {css, Pagination as MuiPagination} from '@mui/material'
-import styled from '@emotion/styled'
 import {ComponentProps} from 'react'
 
 export type PaginationProps = ComponentProps<typeof MuiPagination>

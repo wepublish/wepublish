@@ -1,5 +1,4 @@
 import {createTheme, CSSObject, ThemeOptions} from '@mui/material'
-import styled from '@emotion/styled'
 import {theme as WePTheme} from '@wepublish/ui'
 import {PT_Serif, Schibsted_Grotesk} from 'next/font/google'
 import {lighten} from 'polished'

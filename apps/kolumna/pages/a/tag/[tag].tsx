@@ -1,5 +1,4 @@
 import {capitalize} from '@mui/material'
-import styled from '@emotion/styled'
 import {ApiV1, ArticleListContainer, useWebsiteBuilder} from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'

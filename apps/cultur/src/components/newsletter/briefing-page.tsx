@@ -1,5 +1,4 @@
 import {Box} from '@mui/material'
-import styled from '@emotion/styled'
 import Head from 'next/head'
 import {JSX} from 'react'
 

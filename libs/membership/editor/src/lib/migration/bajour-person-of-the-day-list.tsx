@@ -7,7 +7,6 @@ import {PersonOfTheDay, PersonOfTheDayImporter} from './person-of-the-day-import
 import {RequestCollection} from './base-importer'
 import {syncStatusToColor} from './migration-list'
 import {TextField} from '@mui/material'
-import styled from '@emotion/styled'
 
 export function BajourPersonOfTheDayList(requestCollection: RequestCollection) {
   const [peopleOfTheDay, setPeopleOfTheDay] = useState<PersonOfTheDay[]>([])

@@ -1,5 +1,5 @@
-import {css, Theme, useTheme} from '@mui/material'
 import styled from '@emotion/styled'
+import {css, Theme, useTheme} from '@mui/material'
 import {
   BuilderTeaserProps,
   selectTeaserAuthors,

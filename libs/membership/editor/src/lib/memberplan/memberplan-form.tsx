@@ -25,7 +25,6 @@ import {
   SelectPicker
 } from 'rsuite'
 import {useTranslation} from 'react-i18next'
-import styled from '@emotion/styled'
 import {slugify} from '@wepublish/utils'
 import {
   ALL_PAYMENT_PERIODICITIES,

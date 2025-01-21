@@ -1,5 +1,4 @@
 import {ThemeProvider} from '@mui/material'
-import styled from '@emotion/styled'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,

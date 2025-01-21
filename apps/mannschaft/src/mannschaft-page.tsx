@@ -1,5 +1,5 @@
-import {css, GlobalStyles, Theme} from '@mui/material'
 import styled from '@emotion/styled'
+import {css, GlobalStyles, Theme} from '@mui/material'
 import {ContentWidthProvider, Page} from '@wepublish/website'
 import {BuilderPageProps} from '@wepublish/website'
 

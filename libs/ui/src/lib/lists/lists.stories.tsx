@@ -1,5 +1,4 @@
 import {Stack} from '@mui/material'
-import styled from '@emotion/styled'
 import {Meta} from '@storybook/react'
 
 import {ListItem, OrderedList, UnorderedList} from './lists'

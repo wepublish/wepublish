@@ -1,5 +1,4 @@
 import {Link, Stack} from '@mui/material'
-import styled from '@emotion/styled'
 import {Meta, StoryObj} from '@storybook/react'
 import {MdFavorite, MdHeartBroken} from 'react-icons/md'
 

@@ -9,7 +9,6 @@ import {
   css,
   keyframes
 } from '@mui/material'
-import styled from '@emotion/styled'
 import {useMailTemplateQuery, useSynchronizeMailTemplatesMutation} from '@wepublish/editor/api-v2'
 import {
   ListViewContainer,

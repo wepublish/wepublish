@@ -1,5 +1,5 @@
-import {capitalize, Chip} from '@mui/material'
 import styled from '@emotion/styled'
+import {capitalize, Chip} from '@mui/material'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,

@@ -22,7 +22,6 @@ import {
   TableRow,
   Typography
 } from '@mui/material'
-import styled from '@emotion/styled'
 import {TypeAttributes} from 'rsuite/esm/@types/common'
 
 interface DecoratedEvent {

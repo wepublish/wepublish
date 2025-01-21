@@ -1,5 +1,5 @@
-import {css} from '@mui/material'
 import styled from '@emotion/styled'
+import {css} from '@mui/material'
 import {
   TeaserImageWrapper,
   TeaserListBlockTeasers,

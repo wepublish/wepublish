@@ -1,5 +1,4 @@
 import {createTheme, CSSObject, Theme, ThemeOptions} from '@mui/material'
-import styled from '@emotion/styled'
 import {theme as WePTheme} from '@wepublish/ui'
 import localFont from 'next/font/local'
 import {PartialDeep} from 'type-fest'

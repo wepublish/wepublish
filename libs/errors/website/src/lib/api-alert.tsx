@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {Alert} from '@mui/material'
-import styled from '@emotion/styled'
 import {ErrorCode} from '@wepublish/errors'
 import {BuilderApiAlertProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
