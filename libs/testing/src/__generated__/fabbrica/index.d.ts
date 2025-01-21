@@ -3,6 +3,7 @@ import type { ArticleRevision } from "@prisma/client";
 import type { ArticleRevisionAuthor } from "@prisma/client";
 import type { ArticleRevisionSocialMediaAuthor } from "@prisma/client";
 import type { Article } from "@prisma/client";
+import type { ArticleTrackingPixel } from "@prisma/client";
 import type { TaggedArticles } from "@prisma/client";
 import type { AuthorsLinks } from "@prisma/client";
 import type { Author } from "@prisma/client";
@@ -312,6 +313,7 @@ type ArticleFactoryDefineInput = {
     draft?: ArticledraftFactory | Prisma.ArticleRevisionCreateNestedOneWithoutDraftArticleInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutArticleInput;
     tags?: Prisma.TaggedArticlesCreateNestedManyWithoutArticleInput;
+    trackingPixel?: Prisma.ArticleTrackingPixelCreateNestedManyWithoutArticleInput;
 };
 type ArticleFactoryDefineOptions = {
     defaultData?: Resolver<ArticleFactoryDefineInput, BuildDataOptions>;
@@ -342,6 +344,47 @@ export interface ArticleFactoryInterface<TOptions extends ArticleFactoryDefineOp
  * @returns factory {@link ArticleFactoryInterface}
  */
 export declare function defineArticleFactory<TOptions extends ArticleFactoryDefineOptions>(options?: TOptions): ArticleFactoryInterface<TOptions>;
+type ArticleTrackingPixelarticleFactory = {
+    _factoryFor: "Article";
+    build: () => PromiseLike<Prisma.ArticleCreateNestedOneWithoutTrackingPixelInput["create"]>;
+};
+type ArticleTrackingPixelFactoryDefineInput = {
+    id?: string;
+    createdAt?: Date;
+    modifiedAt?: Date;
+    paymentProviderID?: string;
+    uri?: string;
+    article: ArticleTrackingPixelarticleFactory | Prisma.ArticleCreateNestedOneWithoutTrackingPixelInput;
+};
+type ArticleTrackingPixelFactoryDefineOptions = {
+    defaultData: Resolver<ArticleTrackingPixelFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<ArticleTrackingPixelFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type ArticleTrackingPixelTraitKeys<TOptions extends ArticleTrackingPixelFactoryDefineOptions> = keyof TOptions["traits"];
+export interface ArticleTrackingPixelFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "ArticleTrackingPixel";
+    build(inputData?: Partial<Prisma.ArticleTrackingPixelCreateInput>): PromiseLike<Prisma.ArticleTrackingPixelCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.ArticleTrackingPixelCreateInput>): PromiseLike<Prisma.ArticleTrackingPixelCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.ArticleTrackingPixelCreateInput>[]): PromiseLike<Prisma.ArticleTrackingPixelCreateInput[]>;
+    pickForConnect(inputData: ArticleTrackingPixel): Pick<ArticleTrackingPixel, "id">;
+    create(inputData?: Partial<Prisma.ArticleTrackingPixelCreateInput>): PromiseLike<ArticleTrackingPixel>;
+    createList(inputData: number | readonly Partial<Prisma.ArticleTrackingPixelCreateInput>[]): PromiseLike<ArticleTrackingPixel[]>;
+    createForConnect(inputData?: Partial<Prisma.ArticleTrackingPixelCreateInput>): PromiseLike<Pick<ArticleTrackingPixel, "id">>;
+}
+export interface ArticleTrackingPixelFactoryInterface<TOptions extends ArticleTrackingPixelFactoryDefineOptions = ArticleTrackingPixelFactoryDefineOptions> extends ArticleTrackingPixelFactoryInterfaceWithoutTraits {
+    use(name: ArticleTrackingPixelTraitKeys<TOptions>, ...names: readonly ArticleTrackingPixelTraitKeys<TOptions>[]): ArticleTrackingPixelFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link ArticleTrackingPixel} model.
+ *
+ * @param options
+ * @returns factory {@link ArticleTrackingPixelFactoryInterface}
+ */
+export declare function defineArticleTrackingPixelFactory<TOptions extends ArticleTrackingPixelFactoryDefineOptions>(options: TOptions): ArticleTrackingPixelFactoryInterface<TOptions>;
 type TaggedArticlesarticleFactory = {
     _factoryFor: "Article";
     build: () => PromiseLike<Prisma.ArticleCreateNestedOneWithoutTagsInput["create"]>;

@@ -99,6 +99,17 @@ const modelFieldDefinitions = [{
                 name: "tags",
                 type: "TaggedArticles",
                 relationName: "ArticleToTaggedArticles"
+            }, {
+                name: "trackingPixel",
+                type: "ArticleTrackingPixel",
+                relationName: "ArticleToArticleTrackingPixel"
+            }]
+    }, {
+        name: "ArticleTrackingPixel",
+        fields: [{
+                name: "article",
+                type: "Article",
+                relationName: "ArticleToArticleTrackingPixel"
             }]
     }, {
         name: "TaggedArticles",
@@ -1254,6 +1265,75 @@ function defineArticleFactoryInternal({ defaultData: defaultDataResolver, traits
  */
 export function defineArticleFactory(options) {
     return defineArticleFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
+function isArticleTrackingPixelarticleFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Article";
+}
+function autoGenerateArticleTrackingPixelScalarsOrEnums({ seq }) {
+    return {
+        paymentProviderID: getScalarFieldValueGenerator().String({ modelName: "ArticleTrackingPixel", fieldName: "paymentProviderID", isId: false, isUnique: false, seq }),
+        uri: getScalarFieldValueGenerator().String({ modelName: "ArticleTrackingPixel", fieldName: "uri", isId: false, isUnique: false, seq })
+    };
+}
+function defineArticleTrackingPixelFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("ArticleTrackingPixel", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateArticleTrackingPixelScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                article: isArticleTrackingPixelarticleFactory(defaultData.article) ? {
+                    create: yield defaultData.article.build()
+                } : defaultData.article
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().articleTrackingPixel.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "ArticleTrackingPixel",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link ArticleTrackingPixel} model.
+ *
+ * @param options
+ * @returns factory {@link ArticleTrackingPixelFactoryInterface}
+ */
+export function defineArticleTrackingPixelFactory(options) {
+    return defineArticleTrackingPixelFactoryInternal(options);
 }
 function isTaggedArticlesarticleFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Article";
