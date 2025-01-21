@@ -15,7 +15,6 @@ import {Image} from '@wepublish/image/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {PaginatedType, SortOrder} from '@wepublish/utils/api'
 import {Node} from 'slate'
-import {Page} from './page.model'
 
 export enum EventSort {
   CreatedAt = 'CreatedAt',
@@ -37,8 +36,7 @@ registerEnumType(EventStatus, {
 })
 
 @ObjectType()
-@Directive('@key(fields: "id")')
-export class Event {
+export class EventV2 {
   @Field(() => ID)
   id!: string
 
@@ -80,13 +78,10 @@ export class Event {
 
   @Field({nullable: true})
   externalSourceName?: string
-
-  @Field({nullable: true})
-  page?: Page
 }
 
 @ObjectType()
-export class PaginatedEvents extends PaginatedType(Event) {}
+export class PaginatedEvents extends PaginatedType(EventV2) {}
 
 @ArgsType()
 export class EventId {
@@ -138,7 +133,7 @@ export class EventListArgs {
 
 @ArgsType()
 export class CreateEventInput extends PickType(
-  Event,
+  EventV2,
   ['name', 'lead', 'description', 'location', 'imageId', 'startsAt', 'endsAt'] as const,
   ArgsType
 ) {

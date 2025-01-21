@@ -1,49 +1,49 @@
 fragment FullEvent on Event {
-    id
-    name
-    lead
-    description
-    status
-    location
-    image {
-        ...FullImage
-    }
-    tags {
-        ...FullTag
-    }
-    startsAt
-    endsAt
-    createdAt
-    modifiedAt
-    url
+  id
+  name
+  lead
+  description
+  status
+  location
+  image {
+    ...FullImage
+  }
+  tags {
+    ...FullTag
+  }
+  startsAt
+  endsAt
+  # createdAt
+  # modifiedAt
+  url
 }
 
 query EventList(
-    $filter: EventFilter
-    $cursor: ID
-    $take: Int
-    $skip: Int
-    $order: SortOrder
-    $sort: EventSort
+  $filter: EventFilter
+  $cursor: ID
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: EventSort
 ) {
-    events(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
-        nodes {
-            ...FullEvent
-        }
-
-        pageInfo {
-            startCursor
-            endCursor
-            hasNextPage
-            hasPreviousPage
-        }
-
-        totalCount
+  events(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...FullEvent
     }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
 }
 
 query Event($id: ID!) {
-    event(id: $id) {
-        ...FullEvent
-    }
+  event(id: $id) {
+    ...FullEvent
+  }
 }

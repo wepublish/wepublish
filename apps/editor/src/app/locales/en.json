@@ -1376,7 +1376,7 @@
         },
         "date": "Deactivation Date",
         "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true. Once deactivated, the subscription cannot be reactivated.",
-        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Probably, a new subscription can be created.",
+        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Reason: {{reason}}. Probably, a new subscription can be created.",
         "modalMessage": {
           "activated": "Do you want to deactivate the subscription of \"{{userName}}\" with the email address \"{{userEmail}}\"?"
         },
