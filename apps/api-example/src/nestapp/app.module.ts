@@ -8,6 +8,7 @@ import {
   AuthenticationModule,
   BexioPaymentProvider,
   BannerApiModule,
+  CrowdfundingModule,
   ConsentModule,
   DashboardModule,
   EventModule,
@@ -49,7 +50,6 @@ import {readConfig} from '../readConfig'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
-import {CrowdfundingModule} from 'crowdfunding'
 
 @Global()
 @Module({
