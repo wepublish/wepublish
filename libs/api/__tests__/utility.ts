@@ -32,6 +32,7 @@ import {createUserSession} from '../src/lib/graphql/session/session.mutation'
 import {PartialDeep} from 'type-fest'
 import Mock = jest.Mock
 import {CreateGatewayRequestData, Gateway} from '@wepublish/payment/api'
+import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
 
 export interface TestClient {
   testServerPublic: ApolloServer
@@ -195,6 +196,8 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
     pm: ['foo']
   })
 
+  const trackingPixelProviders: TrackingPixelProvider[] = []
+
   const testServerPublic = new ApolloServer({
     schema: GraphQLWepublishPublicSchema,
     introspection: false,
@@ -202,6 +205,7 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
       await contextFromRequest(overwriteRequest ? overwriteRequest : req, {
         hostURL: 'https://fakeURL',
         websiteURL: 'https://fakeurl',
+        trackingPixelProviders,
         prisma,
         mediaAdapter,
         mailProvider,
@@ -229,6 +233,7 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
         prisma,
         mediaAdapter,
         mailProvider,
+        trackingPixelProviders,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
           defaultReplyToAddress: 'reply-to@fake.org'

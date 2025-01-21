@@ -13,18 +13,19 @@ export interface ProLitterisCountPixelProps extends TrackingPixelProps {
 
 export class ProlitterisTrackingPixelProvider extends BaseTrackingPixelProvider {
   private gateway: GatewayClient
-  private uriPaidContentIndicator: string = 'na'
+  private uriPaidContentIndicator: string
 
   constructor(props: ProLitterisCountPixelProps) {
     super(props)
     this.gateway = new GatewayClient(props.memberNr, props.username, props.password, this.id)
+    this.uriPaidContentIndicator = 'na'
     if (props.onlyPaidContentAccess) {
       this.uriPaidContentIndicator = 'pw'
     }
   }
 
   async createPixelUris(props: CreateTrackingPixelProps): Promise<string[]> {
-    let tackingPixelUris: string[] = []
+    const tackingPixelUris: string[] = []
     const trackingPixels = await this.gateway.getTrackingPixels(props.count)
     for (const trackingPixel of trackingPixels.pixelUids) {
       tackingPixelUris.push(

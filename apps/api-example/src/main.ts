@@ -8,7 +8,7 @@ import {MailContext} from '@wepublish/mail/api'
 import helmet from 'helmet'
 import {GatewayModule} from './nestapp/gateway.module'
 import {HOT_AND_TRENDING_DATA_SOURCE, HotAndTrendingDataSource} from '@wepublish/api'
-import {TrackingPixelService} from '../../../libs/tracking-pixel/api/src'
+import {TrackingPixelService} from '@wepublish/tracking-pixel/api'
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000

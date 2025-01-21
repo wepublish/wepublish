@@ -49,12 +49,8 @@ import {readConfig} from '../readConfig'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
-import {
-  ProlitterisTrackingPixelProvider,
-  TrackingPixelModule,
-  TrackingPixelService
-} from '../../../../libs/tracking-pixel/api/src'
-import {TrackingPixelProvider} from '../../../../libs/tracking-pixel/api/src/lib/tracking-pixel-provider/tracking-pixel-provider'
+import {ProlitterisTrackingPixelProvider, TrackingPixelModule} from '@wepublish/tracking-pixel/api'
+import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
 
 @Global()
 @Module({

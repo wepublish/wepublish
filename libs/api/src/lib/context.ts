@@ -59,7 +59,7 @@ import {MemberContext} from './memberContext'
 import {URLAdapter} from './urlAdapter'
 import {BlockStylesDataloaderService} from '@wepublish/block-content/api'
 import {HotAndTrendingDataSource} from '@wepublish/article/api'
-import {TrackingPixelProvider} from '../../../tracking-pixel/api/src/lib/tracking-pixel-provider/tracking-pixel-provider'
+import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
 import {TrackingPixelContext} from './trackingPixelContext'
 
 /**
