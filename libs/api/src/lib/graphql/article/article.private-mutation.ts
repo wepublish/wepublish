@@ -95,7 +95,6 @@ export const createArticle = async (
 
   const searchPlainText = blocksToSearchText(input.blocks as any[])
   const tackingPixels = await trackingPixelContext.getPixels()
-  console.log(tackingPixels)
 
   return article.create({
     data: {

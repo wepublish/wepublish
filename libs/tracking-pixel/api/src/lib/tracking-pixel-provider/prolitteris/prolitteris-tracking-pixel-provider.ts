@@ -26,7 +26,7 @@ export class ProlitterisTrackingPixelProvider extends BaseTrackingPixelProvider 
   async createPixelUris(props: CreateTrackingPixelProps): Promise<string[]> {
     let tackingPixelUris: string[] = []
     const trackingPixels = await this.gateway.getTrackingPixels(props.count)
-    for (const trackingPixel of trackingPixels.pixelUid) {
+    for (const trackingPixel of trackingPixels.pixelUids) {
       tackingPixelUris.push(
         `https://${trackingPixels.domain}/${this.uriPaidContentIndicator}/${trackingPixel}`
       )
