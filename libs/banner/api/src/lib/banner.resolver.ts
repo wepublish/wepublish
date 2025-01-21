@@ -17,7 +17,8 @@ import {
   CanUpdateBanner,
   CanDeleteBanner,
   CanGetBanner,
-  Permissions
+  Permissions,
+  Public
 } from '@wepublish/permissions/api'
 
 @Resolver(() => Banner)
@@ -43,6 +44,7 @@ export class BannerResolver {
     return banner
   }
 
+  @Public()
   @Query(() => Banner)
   async primaryBanner(@Args() args: PrimaryBannerArgs): Promise<Banner> {
     const banner = await this.bannerService.findFirst(args)
