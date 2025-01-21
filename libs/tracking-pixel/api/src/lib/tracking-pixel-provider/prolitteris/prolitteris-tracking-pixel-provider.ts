@@ -17,7 +17,7 @@ export class ProlitterisTrackingPixelProvider extends BaseTrackingPixelProvider 
 
   constructor(props: ProLitterisCountPixelProps) {
     super(props)
-    this.gateway = new GatewayClient(props.memberNr, props.username, props.password)
+    this.gateway = new GatewayClient(props.memberNr, props.username, props.password, this.id)
     if (props.onlyPaidContentAccess) {
       this.uriPaidContentIndicator = 'pw'
     }

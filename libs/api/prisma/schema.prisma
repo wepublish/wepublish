@@ -133,13 +133,14 @@ model Article {
 }
 
 model ArticleTrackingPixels {
-  id                      String   @id @default(cuid())
-  article                 Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  articleId               String
-  createdAt               DateTime @default(now())
-  modifiedAt              DateTime @updatedAt
-  trackingPixelProviderID String
-  uri                     String
+  id                        String   @id @default(cuid())
+  article                   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId                 String
+  createdAt                 DateTime @default(now())
+  modifiedAt                DateTime @updatedAt
+  trackingPixelProviderID   String
+  trackingPixelProviderType String
+  uri                       String
 
   @@map("articles.tracking-pixels ")
 }

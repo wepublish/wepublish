@@ -8,6 +8,7 @@ export class TrackingPixelContext {
     for (const trackingPixelProvider of this.trackingPixelProviders) {
       trackingPixels.push({
         trackingPixelProviderID: trackingPixelProvider.id,
+        trackingPixelProviderType: trackingPixelProvider.type,
         uri: (await trackingPixelProvider.createPixelUris({count: 1}))[0]
       })
     }

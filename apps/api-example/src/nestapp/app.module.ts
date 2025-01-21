@@ -151,6 +151,7 @@ import {TrackingPixelProvider} from '../../../../libs/tracking-pixel/api/src/lib
               trackingPixelProviders.push(
                 new ProlitterisTrackingPixelProvider({
                   id: trackingPixelProvider.id,
+                  type: trackingPixelProvider.type,
                   name: trackingPixelProvider.name,
                   memberNr: trackingPixelProvider.memberNr,
                   username: trackingPixelProvider.username,

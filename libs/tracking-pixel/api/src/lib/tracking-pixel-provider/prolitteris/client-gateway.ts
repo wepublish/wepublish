@@ -6,7 +6,12 @@ export type ReturnTrackingPixels = {
 }
 
 export class GatewayClient {
-  constructor(private memberNr: string, private username: string, private password: string) {}
+  constructor(
+    private memberNr: string,
+    private username: string,
+    private password: string,
+    private id: string
+  ) {}
   getAuthorizationHeader() {
     return Buffer.from(`${this.memberNr}:${this.username}:${this.password}`).toString('base64')
   }
@@ -33,8 +38,7 @@ export class GatewayClient {
       console.log('Server responded with:', response.data)
       return response.data
     } catch (error) {
-      console.error('Request failed:', error.response?.data || error.message)
-      throw error
+      throw new Error(`Getting tracking pixel from ${this.id} faild with error ${JSON.stringify(error.response?.data || error.message)}`)
     }**/
   }
 }
