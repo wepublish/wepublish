@@ -77,7 +77,8 @@ type CreateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared' | 'hidden' | 
 export const createArticle = async (
   input: CreateArticleInput,
   authenticate: Context['authenticate'],
-  article: PrismaClient['article']
+  article: PrismaClient['article'],
+  trackingPixelContext: Context['trackingPixelContext']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateArticle, roles)
@@ -93,6 +94,8 @@ export const createArticle = async (
   } = input
 
   const searchPlainText = blocksToSearchText(input.blocks as any[])
+  const tackingPixels = await trackingPixelContext.getPixels()
+  console.log(tackingPixels)
 
   return article.create({
     data: {
@@ -127,6 +130,11 @@ export const createArticle = async (
             tagId
           })),
           skipDuplicates: true
+        }
+      },
+      trackingPixels: {
+        createMany: {
+          data: tackingPixels
         }
       }
     },

@@ -96,6 +96,21 @@ challenge:
   type: 'turnstile'
   secret: ${TURNSTILE_SECRET}
   siteKey: ${TURNSTILE_SITE_KEY}
+trackingPixelProviders:
+  - type: prolitteris
+    id: prolitteris-1
+    name: "Pro Litteris 1"
+    username: 'test'
+    memberNr: 'test'
+    password: 'test'
+    onlyPaidContentAccess: false
+  - type: prolitteris
+    id: prolitteris-2
+    name: "Pro Litteris 2"
+    username: 'test'
+    memberNr: 'test'
+    password: 'test'
+    onlyPaidContentAccess: false
 mediaServer:
   type: 'nova'
 ga:

@@ -60,6 +60,7 @@ import {URLAdapter} from './urlAdapter'
 import {BlockStylesDataloaderService} from '@wepublish/block-content/api'
 import {HotAndTrendingDataSource} from '@wepublish/article/api'
 import {TrackingPixelProvider} from '../../../tracking-pixel/api/src/lib/tracking-pixel-provider/tracking-pixel-provider'
+import {TrackingPixelContext} from './trackingPixelContext'
 
 /**
  * Peered article cache configuration and setup
@@ -150,6 +151,7 @@ export interface Context {
   readonly challenge: ChallengeProvider
   readonly requestIP: string
   readonly fingerprint: string
+  readonly trackingPixelContext: TrackingPixelContext
 
   getOauth2Clients(): Promise<OAuth2Clients[]>
 
@@ -921,6 +923,8 @@ export async function contextFromRequest(
     }
   })
 
+  const trackingPixelContext = new TrackingPixelContext(trackingPixelProviders)
+
   return {
     hostURL,
     websiteURL,
@@ -929,6 +933,7 @@ export async function contextFromRequest(
     prisma,
     memberContext,
     mailContext,
+    trackingPixelContext,
     mediaAdapter,
     urlAdapter,
     oauth2Providers,

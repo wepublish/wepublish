@@ -123,23 +123,25 @@ model Article {
   hidden          Boolean @default(false)
   disableComments Boolean @default(false)
 
-  navigations   NavigationLink[]
-  tags          TaggedArticles[]
-  trackingPixel ArticleTrackingPixel[]
+  navigations    NavigationLink[]
+  tags           TaggedArticles[]
+  trackingPixels ArticleTrackingPixels[]
 
   @@index([createdAt])
   @@index([modifiedAt])
   @@map("articles")
 }
 
-model ArticleTrackingPixel {
-  id                String   @id @default(cuid())
-  article           Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  articleId         String
-  createdAt         DateTime @default(now())
-  modifiedAt        DateTime @updatedAt
-  paymentProviderID String
-  uri               String
+model ArticleTrackingPixels {
+  id                      String   @id @default(cuid())
+  article                 Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId               String
+  createdAt               DateTime @default(now())
+  modifiedAt              DateTime @updatedAt
+  trackingPixelProviderID String
+  uri                     String
+
+  @@map("articles.tracking-pixels ")
 }
 
 model TaggedArticles {
