@@ -1,7 +1,7 @@
 import {styled} from '@mui/material'
-import {BuilderBannerProps, PageBanner} from '@wepublish/website'
+import {PageBanner} from '@wepublish/website'
 
-const TsriBannerInner = styled(PageBanner.Banner)(
+const TsriBanner = styled(PageBanner.Banner)(
   ({theme}) => `
 
   box-sizing: border-box;
@@ -43,6 +43,4 @@ ${PageBanner.BannerCloseButton} {
 `
 )
 
-export function TsriBanner(props: BuilderBannerProps) {
-  return <TsriBannerInner {...props} />
-}
+export {TsriBanner}
