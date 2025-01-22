@@ -1,5 +1,6 @@
 import {css} from '@emotion/react'
-import {Rating as MuiRating, styled, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
+import {Rating as MuiRating, useTheme} from '@mui/material'
 import {ComponentProps} from 'react'
 import {useHover} from 'react-aria'
 import {MdStar, MdStarBorder} from 'react-icons/md'
@@ -12,7 +13,7 @@ export type RatingProps = ComponentProps<typeof MuiRating> & {
 }
 
 export const RatingWrapper = styled('div')<RatingProps>`
-  ${({filledColor}) =>
+  ${({filledColor, theme}) =>
     filledColor &&
     css`
       & .MuiRating-iconFilled {

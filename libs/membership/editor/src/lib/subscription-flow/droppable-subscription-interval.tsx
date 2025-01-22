@@ -1,5 +1,6 @@
 import {useDroppable} from '@dnd-kit/core'
-import {css, styled} from '@mui/material'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
 import {PropsWithChildren} from 'react'
 import {useTranslation} from 'react-i18next'
 

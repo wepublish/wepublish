@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 import {alignmentForTeaserBlock} from '../../teaser/teaser-grid-block'

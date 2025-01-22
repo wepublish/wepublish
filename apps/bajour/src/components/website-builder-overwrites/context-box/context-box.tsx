@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {ContextBox, ContextBoxAllAbout, ContextBoxIcon, ContextBoxLine} from '@wepublish/website'
 
 export const BajourContextBox = styled(ContextBox)`

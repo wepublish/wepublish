@@ -1,5 +1,6 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, InputAdornment, Slider, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, InputAdornment, Slider} from '@mui/material'
+import styled from '@emotion/styled'
 import {
   Challenge,
   UserForm,

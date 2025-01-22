@@ -41,7 +41,7 @@ import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageEditPanel} from './imageEditPanel'
 import FormControl from 'rsuite/FormControl'
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 
 const {ControlLabel: RControlLabel, Group, Control} = RForm
 

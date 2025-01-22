@@ -1,7 +1,8 @@
 import {PaymentElement, useElements, useStripe} from '@stripe/react-stripe-js'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {SyntheticEvent, useCallback, useState} from 'react'
-import {Modal, styled} from '@mui/material'
+import {Modal} from '@mui/material'
+import styled from '@emotion/styled'
 
 export type StripePaymentProps = {
   onClose(success: boolean): void

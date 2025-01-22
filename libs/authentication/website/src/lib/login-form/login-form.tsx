@@ -1,5 +1,6 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, css, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, css} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderLoginFormProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'

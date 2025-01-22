@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {H2} from '@wepublish/ui'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {

@@ -1,4 +1,5 @@
-import {css, lighten, styled, useTheme} from '@mui/material'
+import {css, lighten, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
 import {useUser} from '@wepublish/authentication/website'
 import {CommentState} from '@wepublish/website/api'
 import {BuilderCommentListItemProps, useWebsiteBuilder} from '@wepublish/website/builder'

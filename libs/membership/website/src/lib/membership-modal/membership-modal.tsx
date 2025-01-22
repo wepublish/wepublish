@@ -1,4 +1,5 @@
-import {Modal, styled} from '@mui/material'
+import {Modal} from '@mui/material'
+import styled from '@emotion/styled'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren} from 'react'
 

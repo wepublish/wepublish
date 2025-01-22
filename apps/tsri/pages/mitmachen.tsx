@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
 import {SubscribePage} from '@wepublish/utils/website'
 import {

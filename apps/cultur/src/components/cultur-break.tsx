@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BreakBlock} from '@wepublish/website'
 
 export const CulturBreakBlock = styled(BreakBlock)`

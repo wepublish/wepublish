@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {TeaserGridBlock} from '@wepublish/website'
 
 export const MannschaftTeaserGrid = styled(TeaserGridBlock)`

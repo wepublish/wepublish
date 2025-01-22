@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {ContentWrapper} from '@wepublish/content/website'
 import {Block, Page as PageType} from '@wepublish/website/api'
 import {BuilderPageProps, useWebsiteBuilder} from '@wepublish/website/builder'

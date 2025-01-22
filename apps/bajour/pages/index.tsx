@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {ContentWidthProvider, SliderWrapper} from '@wepublish/website'
 import {ApiV1, PageContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'

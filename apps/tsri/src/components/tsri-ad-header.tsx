@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {Link} from '@wepublish/ui'
 import {ArticleWrapper, BuilderAuthor, Image} from '@wepublish/website'
 import {useMemo} from 'react'

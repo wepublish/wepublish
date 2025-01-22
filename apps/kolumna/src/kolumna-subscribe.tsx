@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {Subscribe} from '@wepublish/website'
 
 export const KolumnaSubscribe = styled(Subscribe)`

@@ -1,4 +1,5 @@
-import {TableCell, styled} from '@mui/material'
+import {TableCell} from '@mui/material'
+import styled from '@emotion/styled'
 import {SubscriptionEvent, SubscriptionFlowFragment} from '@wepublish/editor/api-v2'
 import {useContext} from 'react'
 import {useTranslation} from 'react-i18next'

@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {Block, PolisConversationBlock as PolisConversationBlockType} from '@wepublish/website/api'
 import {BuilderPolisConversationBlockProps} from '@wepublish/website/builder'
 

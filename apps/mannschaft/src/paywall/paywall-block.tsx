@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {useWebsiteBuilder} from '@wepublish/website'
 
 export const PaywallBlockWrapper = styled('div')`

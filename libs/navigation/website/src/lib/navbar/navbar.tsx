@@ -1,4 +1,5 @@
-import {AppBar, GlobalStyles, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
+import {AppBar, GlobalStyles, Theme, Toolbar, css, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
 import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -375,7 +376,7 @@ export const NavPaperCategory = styled('div')`
 export const NavPaperName = styled('span')`
   text-transform: uppercase;
   font-weight: 300;
-  font-size: ${({theme}) => theme.typography.body2};
+  font-size: ${({theme}) => theme.typography.body2.fontSize};
 `
 
 export const NavPaperSeparator = styled('hr')`

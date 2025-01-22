@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {ApiV1, hasBlockStyle, isTeaserGridBlock, isTeaserListBlock} from '@wepublish/website'
 import {allPass, anyPass} from 'ramda'
 

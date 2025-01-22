@@ -1,4 +1,5 @@
-import {Chip, styled} from '@mui/material'
+import {Chip} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Article as ArticleType, Block} from '@wepublish/website/api'
 import {ArticleListWrapper} from './article-list/article-list'

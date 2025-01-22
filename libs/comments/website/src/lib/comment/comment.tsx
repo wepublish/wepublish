@@ -1,5 +1,5 @@
 import {css} from '@emotion/react'
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdPerson} from 'react-icons/md'
 import {isValidUrl} from '@wepublish/utils'
@@ -41,7 +41,7 @@ export const CommentName = styled('div')`
 `
 
 export const CommentAuthor = styled('div')`
-  font-size: ${({theme}) => theme.typography.body1};
+  font-size: ${({theme}) => theme.typography.body1.fontSize};
   font-weight: ${({theme}) => theme.typography.fontWeightBold};
 `
 

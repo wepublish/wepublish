@@ -1,5 +1,5 @@
 import {css} from '@emotion/react'
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {ApiV1, useWebsiteBuilder} from '@wepublish/website'
 import {memo} from 'react'
 import {MdPerson} from 'react-icons/md'

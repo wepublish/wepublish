@@ -1,6 +1,7 @@
 import 'keen-slider/keen-slider.min.css'
 
-import {styled, useMediaQuery, useTheme} from '@mui/material'
+import {useMediaQuery, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
 import {useKeenSlider} from 'keen-slider/react'
 import {allPass, anyPass} from 'ramda'
 import {useState} from 'react'

@@ -1,4 +1,5 @@
-import {Link, css, styled} from '@mui/material'
+import {Link, css} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderImageBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block, ImageBlock as ImageBlockType} from '@wepublish/website/api'
 

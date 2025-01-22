@@ -1,4 +1,5 @@
-import {css, styled} from '@mui/material'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderEventProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdDateRange, MdLocationCity} from 'react-icons/md'
 import {EventSEO} from './event-seo'

@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {Footer as WepFooter, FooterInnerWrapper} from '@wepublish/website'
 
 export const Footer = styled(WepFooter)`

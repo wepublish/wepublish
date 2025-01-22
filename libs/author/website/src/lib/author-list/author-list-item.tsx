@@ -1,5 +1,6 @@
 import {Author} from '@wepublish/website/api'
-import {Theme, styled, css, useTheme} from '@mui/material'
+import {Theme, css, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const AuthorListItemImageWrapper = styled('div')`

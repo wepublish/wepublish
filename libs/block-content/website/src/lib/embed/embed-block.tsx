@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {Block, EmbedBlock as EmbedBlockType} from '@wepublish/website/api'
 import {BuilderEmbedBlockProps} from '@wepublish/website/builder'
 import {css} from '@emotion/react'

@@ -1,6 +1,6 @@
 import 'keen-slider/keen-slider.min.css'
 
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {H1, H4} from '@wepublish/ui'
 import {
   ApiV1,

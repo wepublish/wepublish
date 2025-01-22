@@ -1,4 +1,5 @@
-import {Skeleton, styled} from '@mui/material'
+import {Skeleton} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderInvoiceListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {InvoiceListItemContent, InvoiceListItemWrapper} from './invoice-list-item'
 import {FullInvoiceFragment} from '@wepublish/website/api'

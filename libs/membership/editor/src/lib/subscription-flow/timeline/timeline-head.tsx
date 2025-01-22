@@ -1,4 +1,5 @@
-import {TableCell, styled} from '@mui/material'
+import {TableCell} from '@mui/material'
+import styled from '@emotion/styled'
 import {SubscriptionInterval} from '@wepublish/editor/api-v2'
 import {useAuthorisation} from '@wepublish/ui/editor'
 import {useContext, useRef} from 'react'

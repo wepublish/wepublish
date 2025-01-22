@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {useRef, useState} from 'react'
 import {MdClose, MdSearch} from 'react-icons/md'
 
