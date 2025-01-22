@@ -11,10 +11,12 @@ import {
   RegisterMutationVariables,
   SubscribeMutationVariables,
   SubscriptionsQuery,
-  FullMemberPlanFragment
+  FullMemberPlanFragment,
+  Currency
 } from '@wepublish/website/api'
 import {BuilderRegistrationFormProps} from './authentication.interface'
 import {BuilderUserFormFields} from './user.interface'
+import {FieldError} from 'react-hook-form'
 
 export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
   className?: string
@@ -76,6 +78,18 @@ export type BuilderPaymentMethodPickerProps = {
   onChange: (paymentMethodId: string) => void
   name?: string
   value?: string
+}
+
+export type BuilderPaymentAmountProps = {
+  amountPerMonthMin: number
+  amountPerMonthTarget: number | undefined
+  currency: Currency
+  donate: boolean
+  onChange: (amount: number) => void
+  name?: string
+  value: number
+  error: FieldError | undefined
+  className?: string
 }
 
 export type BuilderSubscribeProps<

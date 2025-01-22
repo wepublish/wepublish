@@ -7,6 +7,7 @@ import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
+  PaymentAmountPicker,
   TitleBlock,
   TitleBlockTitle,
   WebsiteBuilderProvider,
@@ -118,6 +119,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Script={Script}
             Navbar={TsriNavbar}
             ArticleMeta={TsriArticleMeta}
+            PaymentAmount={PaymentAmountPicker}
             elements={{Link: NextWepublishLink}}
             blocks={{
               Teaser: TsriTeaser,
