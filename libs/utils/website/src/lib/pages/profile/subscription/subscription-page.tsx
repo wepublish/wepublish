@@ -1,4 +1,4 @@
-import {css, styled} from '@mui/material'
+import {styled} from '@mui/material'
 import {
   ApiV1,
   AuthTokenStorageKey,
@@ -20,12 +20,14 @@ const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
 
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      grid-template-columns: 1fr 1fr;
-      gap: ${theme.spacing(10)};
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-template-columns: 1fr 1fr;
+    gap: ${({theme}) => theme.spacing(10)};
+
+    & > * {
+      grid-column: unset;
     }
-  `}
+  }
 `
 
 const SubscriptionListWrapper = styled('div')`

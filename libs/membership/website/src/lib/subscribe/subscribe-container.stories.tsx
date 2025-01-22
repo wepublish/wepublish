@@ -184,7 +184,8 @@ const subscription = {
   properties: [],
   startsAt: new Date('2024-01-01').toISOString(),
   url: 'https://example.com',
-  extendable: true
+  extendable: true,
+  canExtend: true
 } as Exact<FullSubscriptionFragment>
 
 const invoice = {

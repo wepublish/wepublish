@@ -6,6 +6,7 @@ import {
   InvoiceListContainer,
   PersonalDataFormContainer,
   SubscriptionListContainer,
+  useHasUnpaidInvoices,
   useWebsiteBuilder
 } from '@wepublish/website'
 import {setCookie} from 'cookies-next'
@@ -20,10 +21,11 @@ const SubscriptionsWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
   justify-content: center;
+  grid-auto-columns: 1fr;
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
-      grid-template-columns: 1fr 1fr;
+      grid-auto-flow: column;
       gap: ${theme.spacing(10)};
     }
   `}
@@ -51,17 +53,33 @@ function ProfilePage(props: ProfilePageProps) {
     elements: {Link, H4}
   } = useWebsiteBuilder()
 
-  const {data} = ApiV1.useSubscriptionsQuery({
+  const {data: subscriptonData} = ApiV1.useSubscriptionsQuery({
     fetchPolicy: 'cache-only'
   })
 
-  const hasDeactivatedSubscriptions = data?.subscriptions.some(
+  const hasDeactivatedSubscriptions = subscriptonData?.subscriptions.some(
     subscription => subscription.deactivation
   )
+
+  const hasUnpaidInvoices = useHasUnpaidInvoices()
 
   return (
     <>
       <SubscriptionsWrapper>
+        {hasUnpaidInvoices && (
+          <SubscriptionListWrapper>
+            <H4 component={'h1'}>Offene Rechnungen</H4>
+
+            <InvoiceListContainer
+              filter={invoices =>
+                invoices.filter(
+                  invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt
+                )
+              }
+            />
+          </SubscriptionListWrapper>
+        )}
+
         <SubscriptionListWrapper>
           <H4 component={'h1'}>Aktive Abos</H4>
 
@@ -76,18 +94,6 @@ function ProfilePage(props: ProfilePageProps) {
               <Link href="/profile/subscription/deactivated">Gekündete Abos anzeigen</Link>
             </DeactivatedSubscriptions>
           )}
-        </SubscriptionListWrapper>
-
-        <SubscriptionListWrapper>
-          <H4 component={'h1'}>Offene Rechnungen</H4>
-
-          <InvoiceListContainer
-            filter={invoices =>
-              invoices.filter(
-                invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt
-              )
-            }
-          />
         </SubscriptionListWrapper>
       </SubscriptionsWrapper>
 

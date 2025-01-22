@@ -1,3 +1,4 @@
+import {useHasRunningSubscription, useHasUnpaidInvoices} from '@wepublish/membership/website'
 import {useNavigationListQuery, usePeerProfileQuery} from '@wepublish/website/api'
 import {
   BuilderContainerProps,
@@ -9,7 +10,13 @@ import {PropsWithChildren} from 'react'
 export type NavbarContainerProps = PropsWithChildren<
   Pick<
     BuilderNavbarProps,
-    'categorySlugs' | 'slug' | 'headerSlug' | 'iconSlug' | 'loginUrl' | 'profileUrl' | 'actions'
+    | 'categorySlugs'
+    | 'slug'
+    | 'headerSlug'
+    | 'iconSlug'
+    | 'loginUrl'
+    | 'profileUrl'
+    | 'subscribeUrl'
   > &
     BuilderContainerProps
 >
@@ -22,12 +29,15 @@ export function NavbarContainer({
   iconSlug,
   loginUrl,
   profileUrl,
-  children,
-  actions
+  subscribeUrl,
+  children
 }: NavbarContainerProps) {
   const {Navbar} = useWebsiteBuilder()
   const {data, loading, error} = useNavigationListQuery()
   const {data: peerInfoData} = usePeerProfileQuery()
+  const hasUnpaidInvoices = useHasUnpaidInvoices()
+  const hasRunningSubscription = useHasRunningSubscription()
+
   const logo = peerInfoData?.peerProfile.logo
 
   return (
@@ -38,12 +48,14 @@ export function NavbarContainer({
       slug={slug}
       loginUrl={loginUrl}
       profileUrl={profileUrl}
+      subscribeUrl={subscribeUrl}
       data={data}
       loading={loading}
       error={error}
       className={className}
       logo={logo}
-      actions={actions}>
+      hasUnpaidInvoices={!!hasUnpaidInvoices}
+      hasRunningSubscription={!!hasRunningSubscription}>
       {children}
     </Navbar>
   )

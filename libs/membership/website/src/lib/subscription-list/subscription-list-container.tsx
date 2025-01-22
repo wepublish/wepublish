@@ -10,15 +10,24 @@ import {
   FullMemberPlanFragment,
   FullSubscriptionFragment
 } from '@wepublish/website/api'
-import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {
+  BuilderContainerProps,
+  BuilderSubscriptionListProps,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
 import {produce} from 'immer'
 import {useMemo, useState} from 'react'
 
 export type SubscriptionListContainerProps = {
   filter?: (subscriptions: FullSubscriptionFragment[]) => FullSubscriptionFragment[]
-} & BuilderContainerProps
+} & BuilderContainerProps &
+  Partial<Pick<BuilderSubscriptionListProps, 'subscribeUrl'>>
 
-export function SubscriptionListContainer({filter, className}: SubscriptionListContainerProps) {
+export function SubscriptionListContainer({
+  filter,
+  subscribeUrl = '/mitmachen',
+  className
+}: SubscriptionListContainerProps) {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>()
   const [stripeMemberPlan, setStripeMemberPlan] = useState<FullMemberPlanFragment>()
   const {SubscriptionList} = useWebsiteBuilder()
@@ -74,6 +83,7 @@ export function SubscriptionListContainer({filter, className}: SubscriptionListC
         loading={loading}
         error={error}
         invoices={invoices}
+        subscribeUrl={subscribeUrl}
         className={className}
         onCancel={async subscriptionId => {
           await cancel({
