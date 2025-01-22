@@ -703,7 +703,7 @@ export class MemberContext implements MemberContextInterface {
     // Send subscribe mail
 
     const subscriptionEvent = needsConfirmation
-      ? SubscriptionEvent.RESUBSCRIBE
+      ? SubscriptionEvent.CONFIRM_SUBSCRIPTION
       : SubscriptionEvent.SUBSCRIBE
     await this.sendMailForSubscriptionEvent(subscriptionEvent, subscription, {})
 
