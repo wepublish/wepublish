@@ -1,11 +1,20 @@
-import {AppBar, GlobalStyles, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
+import {
+  AppBar,
+  css,
+  GlobalStyles,
+  IconButton,
+  styled,
+  Theme,
+  Toolbar,
+  useTheme
+} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
+import {PropsWithChildren, useMemo} from 'react'
 import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
-import {TextToIcon} from '@wepublish/ui'
+import {TextToIcon, useToggle, UseToggle} from '@wepublish/ui'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -17,9 +26,11 @@ declare module 'react' {
 const cssVariables = (theme: Theme) => css`
   :root {
     --navbar-height: ${theme.spacing(6.5)};
+
     ${theme.breakpoints.up('md')} {
       --navbar-height: ${theme.spacing(7.5)};
     }
+
     ${theme.breakpoints.up('lg')} {
       --navbar-height: ${theme.spacing(12.5)};
     }
@@ -84,9 +95,8 @@ export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
     isMenuOpen &&
     css`
       z-index: -1;
-    `}
-
-  @media (min-width: 740px) {
+    `} @media (
+  min-width: 740px) {
     // custom for maximum space usage
     display: flex;
   }
@@ -137,7 +147,6 @@ export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
     css`
       z-index: -1;
     `}
-
   ${({theme}) => theme.breakpoints.up('md')} {
     gap: ${({theme}) => theme.spacing(2)};
   }
@@ -230,12 +239,11 @@ export function Navbar({
   actions
 }: BuilderNavbarProps) {
   const {hasUser} = useUser()
-  const [isMenuOpen, setMenuOpen] = useState(false)
-  const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
+  const menuToggle = useToggle()
 
   const imageStyles = useImageStyles()
-  const appBarStyles = useAppBarStyles(isMenuOpen)
-  const logoLinkStyles = useLogoLinkStyles(isMenuOpen)
+  const appBarStyles = useAppBarStyles(menuToggle.value)
+  const logoLinkStyles = useLogoLinkStyles(menuToggle.value)
   const navbarLinkStyles = useNavbarLinkStyles()
 
   const mainItems = data?.navigations?.find(({key}) => key === slug)
@@ -268,15 +276,10 @@ export function Navbar({
       <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
         <NavbarInnerWrapper>
           <NavbarMain>
-            <NavbarIconButtonWrapper>
-              <IconButton size="large" aria-label="Menu" onClick={toggleMenu} color={'inherit'}>
-                {!isMenuOpen && <MdMenu />}
-                {isMenuOpen && <MdClose />}
-              </IconButton>
-            </NavbarIconButtonWrapper>
+            <NavbarOpenCloseButton toggle={menuToggle} />
 
             {!!headerItems?.links.length && (
-              <NavbarLinks isMenuOpen={isMenuOpen}>
+              <NavbarLinks isMenuOpen={menuToggle.value}>
                 {headerItems.links.map((link, index) => (
                   <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
                     {link.label}
@@ -294,21 +297,31 @@ export function Navbar({
             </NavbarLogoWrapper>
           </Link>
 
-          <NavbarActions isMenuOpen={isMenuOpen}>
+          <NavbarActions isMenuOpen={menuToggle.value}>
             {actions}
 
-            {hasUser && subscriptionsUrl && (
-              <Link href={subscriptionsUrl}>
-                <IconButton css={{fontSize: '2em', color: 'black'}}>
-                  <MdOutlinePayments aria-label={'Subscriptions'} />
-                </IconButton>
-              </Link>
+            {hasUser && (
+              <>
+                {subscriptionsUrl && (
+                  <Link href={subscriptionsUrl}>
+                    <IconButton css={{fontSize: '2em', color: 'black'}}>
+                      <MdOutlinePayments aria-label={'Subscriptions'} />
+                    </IconButton>
+                  </Link>
+                )}
+
+                <Link href={profileUrl}>
+                  <IconButton className="login-button" css={{fontSize: '2em', color: 'black'}}>
+                    <MdAccountCircle aria-label="Profil" />
+                  </IconButton>
+                </Link>
+              </>
             )}
 
-            {(hasUser ? profileUrl : loginUrl) && (
-              <Link href={hasUser ? profileUrl : loginUrl}>
+            {!hasUser && (
+              <Link href={loginUrl}>
                 <IconButton className="login-button" css={{fontSize: '2em', color: 'black'}}>
-                  <MdAccountCircle aria-label={hasUser ? 'Profil' : 'Login'} />
+                  <MdAccountCircle aria-label="Login" />
                 </IconButton>
               </Link>
             )}
@@ -316,14 +329,14 @@ export function Navbar({
         </NavbarInnerWrapper>
       </AppBar>
 
-      {isMenuOpen && Boolean(mainItems || categories?.length) && (
+      {menuToggle.value && Boolean(mainItems || categories?.length) && (
         <NavPaper
           profileUrl={profileUrl}
           subscriptionsUrl={subscriptionsUrl}
           loginUrl={loginUrl}
           main={mainItems}
           categories={categories}
-          closeMenu={toggleMenu}>
+          closeMenu={menuToggle.toggle}>
           {iconItems?.links.map(link => {
             const url = navigationLinkToUrl(link)
 
@@ -340,6 +353,19 @@ export function Navbar({
     </NavbarWrapper>
   )
 }
+
+type NavbarOpenCloseButtonProps = {
+  toggle: UseToggle
+}
+
+export const NavbarOpenCloseButton = ({toggle}: NavbarOpenCloseButtonProps) => (
+  <NavbarIconButtonWrapper>
+    <IconButton size="large" aria-label="Menu" onClick={toggle.toggle} color={'inherit'}>
+      {!toggle.value && <MdMenu />}
+      {toggle.value && <MdClose />}
+    </IconButton>
+  </NavbarIconButtonWrapper>
+)
 
 export const NavPaperWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};

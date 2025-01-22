@@ -24,6 +24,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {OnlineReportsNavbar} from '../src/components/onlinereports-navbar'
 
 setDefaultOptions({
   locale: de
@@ -101,6 +102,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           <WebsiteBuilderProvider
             Head={Head}
             Script={Script}
+            Navbar={OnlineReportsNavbar}
             elements={{Link: NextWepublishLink}}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>
