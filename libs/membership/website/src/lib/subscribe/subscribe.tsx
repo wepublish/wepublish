@@ -292,6 +292,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         ...subscribeData,
         userId: returningUserId
       }
+      
       return callAction(onResubscribe)(resubscribeData)
     }
 
