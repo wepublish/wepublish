@@ -224,19 +224,43 @@ const useImageStyles = () => {
   )
 }
 
+export const getMenuItems = (
+  props: Pick<BuilderNavbarProps, 'data' | 'slug' | 'headerSlug' | 'iconSlug' | 'categorySlugs'>
+) => {
+  const {data, slug, headerSlug, iconSlug, categorySlugs} = props
+  const mainItems = data?.navigations?.find(({key}) => key === slug)
+  const headerItems = data?.navigations?.find(({key}) => key === headerSlug)
+  const iconItems = data?.navigations?.find(({key}) => key === iconSlug)
+
+  const categories = categorySlugs.map(categorySlugArray =>
+    categorySlugArray.reduce((navigations, categorySlug) => {
+      const navItem = data?.navigations?.find(({key}) => key === categorySlug)
+
+      if (navItem) {
+        navigations.push(navItem)
+      }
+
+      return navigations
+    }, [] as FullNavigationFragment[])
+  )
+
+  return {
+    mainItems,
+    headerItems,
+    iconItems,
+    categories
+  }
+}
+
 export function Navbar({
   className,
   children,
-  categorySlugs,
-  slug,
-  headerSlug,
-  iconSlug,
-  data,
   logo,
   loginUrl = '/login',
   profileUrl = '/profile',
   subscriptionsUrl = '/profile/subscription',
-  actions
+  actions,
+  ...menuProps
 }: BuilderNavbarProps) {
   const {hasUser} = useUser()
   const menuToggle = useToggle()
@@ -246,25 +270,7 @@ export function Navbar({
   const logoLinkStyles = useLogoLinkStyles(menuToggle.value)
   const navbarLinkStyles = useNavbarLinkStyles()
 
-  const mainItems = data?.navigations?.find(({key}) => key === slug)
-  const headerItems = data?.navigations?.find(({key}) => key === headerSlug)
-  const iconItems = data?.navigations?.find(({key}) => key === iconSlug)
-
-  const categories = useMemo(
-    () =>
-      categorySlugs.map(categorySlugArray =>
-        categorySlugArray.reduce((navigations, categorySlug) => {
-          const navItem = data?.navigations?.find(({key}) => key === categorySlug)
-
-          if (navItem) {
-            navigations.push(navItem)
-          }
-
-          return navigations
-        }, [] as FullNavigationFragment[])
-      ),
-    [categorySlugs, data?.navigations]
-  )
+  const {mainItems, headerItems, iconItems, categories} = getMenuItems(menuProps)
 
   const {
     elements: {IconButton, Image, Link}
