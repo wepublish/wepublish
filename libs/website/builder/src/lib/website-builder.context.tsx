@@ -102,7 +102,7 @@ import {
 } from './ui.interface'
 import {BuilderImageUploadProps, BuilderPersonalDataFormProps} from './user.interface'
 import {BuilderBlockStyleProps} from './block-styles.interface'
-import {BuilderNavPaperProps} from './navbar-paper.interface'
+import {BuilderNavPaperProps} from './nav-paper.interface'
 
 const NoComponent = () => null
 

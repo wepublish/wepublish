@@ -1,9 +1,8 @@
 import {css, styled, Theme, useTheme} from '@mui/material'
-import {PropsWithChildren} from 'react'
-import {FullNavigationFragment} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderNavPaperProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useUser} from '@wepublish/authentication/website'
 import {navigationLinkToUrl} from '../link-to-url'
+import {TextToIcon} from '@wepublish/ui'
 
 export const NavPaperWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};
@@ -119,15 +118,9 @@ export const NavPaper = ({
   profileUrl,
   subscriptionsUrl,
   closeMenu,
-  children
-}: PropsWithChildren<{
-  loginUrl?: string | null
-  profileUrl?: string | null
-  subscriptionsUrl?: string | null
-  main: FullNavigationFragment | null | undefined
-  categories: FullNavigationFragment[][]
-  closeMenu: () => void
-}>) => {
+  children,
+  iconItems
+}: BuilderNavPaperProps) => {
   const {
     elements: {Link, Button, H4, H6}
   } = useWebsiteBuilder()
@@ -136,7 +129,20 @@ export const NavPaper = ({
 
   return (
     <NavPaperWrapper>
-      {children && <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>}
+      {children && (
+        <NavPaperChildrenWrapper>
+          {iconItems?.links.map(link => {
+            const url = navigationLinkToUrl(link)
+
+            return (
+              <Link href={url} color="inherit">
+                <TextToIcon title={link.label} size={32} />
+              </Link>
+            )
+          })}
+          {children}
+        </NavPaperChildrenWrapper>
+      )}
 
       <NavPaperMainLinks>
         {main?.links.map((link, index) => {

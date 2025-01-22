@@ -14,7 +14,7 @@ import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useMemo} from 'react'
 import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
-import {TextToIcon, useToggle, UseToggle} from '@wepublish/ui'
+import {useToggle, UseToggle} from '@wepublish/ui'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -343,17 +343,8 @@ export function Navbar({
           loginUrl={loginUrl}
           main={mainItems}
           categories={categories}
-          closeMenu={menuToggle.toggle}>
-          {iconItems?.links.map(link => {
-            const url = navigationLinkToUrl(link)
-
-            return (
-              <Link href={url} color="inherit">
-                <TextToIcon title={link.label} size={32} />
-              </Link>
-            )
-          })}
-
+          iconItems={iconItems}
+          closeMenu={menuToggle.off}>
           {children}
         </NavPaper>
       )}

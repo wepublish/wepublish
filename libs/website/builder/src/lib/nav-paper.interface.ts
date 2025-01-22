@@ -7,5 +7,6 @@ export type BuilderNavPaperProps = PropsWithChildren<{
   subscriptionsUrl?: string | null
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
+  iconItems: FullNavigationFragment | null | undefined
   closeMenu: () => void
 }>
