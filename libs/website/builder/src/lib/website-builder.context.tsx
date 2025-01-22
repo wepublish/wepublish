@@ -14,7 +14,8 @@ import {
   BuilderArticleDateProps,
   BuilderArticleListProps,
   BuilderArticleProps,
-  BuilderArticleSEOProps
+  BuilderArticleSEOProps,
+  BuilderArticleMetaProps
 } from './article.interface'
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
@@ -115,6 +116,7 @@ export type WebsiteBuilderProps = {
   PageSEO: ComponentType<BuilderPageSEOProps>
   Article: ComponentType<BuilderArticleProps>
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
+  ArticleMeta: ComponentType<BuilderArticleMetaProps>
   ArticleDate: ComponentType<BuilderArticleDateProps>
   PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
@@ -244,6 +246,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   PageSEO: NoComponent,
   Article: NoComponent,
   ArticleSEO: NoComponent,
+  ArticleMeta: NoComponent,
   ArticleDate: NoComponent,
   PeerInformation: NoComponent,
   Author: NoComponent,

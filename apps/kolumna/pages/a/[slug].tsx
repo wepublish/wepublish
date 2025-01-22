@@ -102,9 +102,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       client.query({
         query: ApiV1.CommentListDocument,
         variables: {
-          filter: {
-            itemId: article.data.article.id
-          }
+          itemId: article.data.article.id
         }
       })
     ])

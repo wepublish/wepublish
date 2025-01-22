@@ -3,6 +3,7 @@ import {H2} from '@wepublish/ui'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
+  ArticleAuthor,
   ArticleContainer,
   ArticleListContainer,
   ArticleWrapper,
@@ -45,7 +46,11 @@ export default function ArticleBySlugIdOrToken() {
     <>
       <TsriAdHeader authors={data?.article?.authors} />
 
-      <ArticleContainer {...containerProps} />
+      <ArticleContainer {...containerProps}>
+        {data?.article?.authors.map(author => (
+          <ArticleAuthor key={author.id} author={author} />
+        ))}
+      </ArticleContainer>
 
       {data?.article && (
         <>
@@ -62,7 +67,9 @@ export default function ArticleBySlugIdOrToken() {
 
           {!data.article.disableComments && (
             <ArticleWrapper>
-              <AfterArticleTitle component={'h2'}>Kommentare</AfterArticleTitle>
+              <AfterArticleTitle component={'h2'} id="comments">
+                Kommentare
+              </AfterArticleTitle>
 
               <CommentListContainer
                 id={data.article.id}
@@ -114,9 +121,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       client.query({
         query: ApiV1.CommentListDocument,
         variables: {
-          filter: {
-            itemId: article.data.article.id
-          }
+          itemId: article.data.article.id
         }
       })
     ])
