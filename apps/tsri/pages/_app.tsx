@@ -28,6 +28,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {Paywall} from '../src/components/paywall'
 import {TsriArticleMeta} from '../src/components/tsri-article-meta'
+import {TsriBanner} from '../src/components/website-builder-overwrites/banner/tsri-banner'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
 import {TsriContextBox} from '../src/components/tsri-context-box'
 import {MitmachenButton, TsriNavbar} from '../src/components/tsri-navbar'
@@ -135,7 +136,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             meta={{siteTitle}}
             thirdParty={{
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
-            }}>
+            }}
+            Banner={TsriBanner}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
 
