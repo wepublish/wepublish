@@ -369,6 +369,7 @@ export async function contextFromRequest(
           },
           include: {
             tags: true,
+            trackingPixels: true,
             draft: {
               include: {
                 properties: true,
@@ -431,7 +432,8 @@ export async function contextFromRequest(
                   authors: true,
                   socialMediaAuthors: true
                 }
-              }
+              },
+              trackingPixels: true
             }
           })
         ).map(articleWithRevisionsToPublicArticle),

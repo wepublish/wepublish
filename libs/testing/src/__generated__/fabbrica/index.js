@@ -1272,8 +1272,7 @@ function isArticleTrackingPixelsarticleFactory(x) {
 function autoGenerateArticleTrackingPixelsScalarsOrEnums({ seq }) {
     return {
         trackingPixelProviderID: getScalarFieldValueGenerator().String({ modelName: "ArticleTrackingPixels", fieldName: "trackingPixelProviderID", isId: false, isUnique: false, seq }),
-        trackingPixelProviderType: getScalarFieldValueGenerator().String({ modelName: "ArticleTrackingPixels", fieldName: "trackingPixelProviderType", isId: false, isUnique: false, seq }),
-        uri: getScalarFieldValueGenerator().String({ modelName: "ArticleTrackingPixels", fieldName: "uri", isId: false, isUnique: false, seq })
+        trackingPixelProviderType: "prolitteris"
     };
 }
 function defineArticleTrackingPixelsFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {

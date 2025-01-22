@@ -3,7 +3,8 @@ import {
   Article as PrismaArticle,
   ArticleRevision as PrismaArticleRevision,
   ArticleRevisionAuthor,
-  ArticleRevisionSocialMediaAuthor
+  ArticleRevisionSocialMediaAuthor,
+  ArticleTrackingPixels
 } from '@prisma/client'
 import {ArticleBlock} from './block'
 import {DateFilter} from './common'
@@ -75,6 +76,7 @@ export interface PublicArticle extends ArticleData {
   readonly blocks: ArticleBlock[]
   readonly peeredArticleURL?: string
   readonly disableComments?: boolean | null
+  readonly trackingPixels?: ArticleTrackingPixels[]
 }
 
 export interface ArticleFilter {
@@ -120,6 +122,7 @@ export type ArticleWithRevisions = PrismaArticle & {
   draft: ArticleRevisionWithRelations | null
   pending: ArticleRevisionWithRelations | null
   published: ArticleRevisionWithRelations | null
+  trackingPixels: ArticleTrackingPixels[]
 }
 
 export const articleWithRevisionsToPublicArticle = ({
@@ -127,9 +130,10 @@ export const articleWithRevisionsToPublicArticle = ({
   shared,
   disableComments,
   published,
-  pending
+  pending,
+  trackingPixels
 }: Omit<ArticleWithRevisions, 'draft'>): PublicArticle => {
-  const returnValue = {shared, disableComments, ...(published || pending!), id}
+  const returnValue = {shared, disableComments, ...(published || pending!), id, trackingPixels}
 
   return {
     ...returnValue,

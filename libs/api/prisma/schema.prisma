@@ -132,15 +132,20 @@ model Article {
   @@map("articles")
 }
 
+enum TrackingPixelProviderType {
+  prolitteris @map("prolitteris")
+}
+
 model ArticleTrackingPixels {
-  id                        String   @id @default(cuid())
-  article                   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  id                        String                    @id @default(cuid())
+  article                   Article                   @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId                 String
-  createdAt                 DateTime @default(now())
-  modifiedAt                DateTime @updatedAt
+  createdAt                 DateTime                  @default(now())
+  modifiedAt                DateTime                  @updatedAt
   trackingPixelProviderID   String
-  trackingPixelProviderType String
-  uri                       String
+  trackingPixelProviderType TrackingPixelProviderType
+  uri                       String?                   @unique
+  error                     String?
 
   @@map("articles.tracking-pixels ")
 }

@@ -1,3 +1,5 @@
+import {TrackingPixelProviderType} from '@prisma/client'
+
 export type CreateTrackingPixelProps = {
   count: number
 }
@@ -5,19 +7,19 @@ export type CreateTrackingPixelProps = {
 export type TrackingPixelProps = {
   id: string
   name: string
-  type: string
+  type: TrackingPixelProviderType
 }
 
 export interface TrackingPixelProvider {
   id: string
-  type: string
+  type: TrackingPixelProviderType
   createPixelUris(props: CreateTrackingPixelProps): Promise<string[]>
 }
 
 export abstract class BaseTrackingPixelProvider implements TrackingPixelProvider {
   id: string
   name: string
-  type: string
+  type: TrackingPixelProviderType
   constructor(props: TrackingPixelProps) {
     this.id = props.id
     this.name = props.name

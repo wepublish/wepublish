@@ -60,6 +60,7 @@ import type { PeriodicJob } from "@prisma/client";
 import type { BlockStyle } from "@prisma/client";
 import type { Banner } from "@prisma/client";
 import type { BannerAction } from "@prisma/client";
+import type { TrackingPixelProviderType } from "@prisma/client";
 import type { CommentItemType } from "@prisma/client";
 import type { CommentRejectionReason } from "@prisma/client";
 import type { CommentState } from "@prisma/client";
@@ -353,8 +354,9 @@ type ArticleTrackingPixelsFactoryDefineInput = {
     createdAt?: Date;
     modifiedAt?: Date;
     trackingPixelProviderID?: string;
-    trackingPixelProviderType?: string;
-    uri?: string;
+    trackingPixelProviderType?: TrackingPixelProviderType;
+    uri?: string | null;
+    error?: string | null;
     article: ArticleTrackingPixelsarticleFactory | Prisma.ArticleCreateNestedOneWithoutTrackingPixelsInput;
 };
 type ArticleTrackingPixelsFactoryDefineOptions = {

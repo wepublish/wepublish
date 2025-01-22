@@ -34,6 +34,7 @@ import {AuthSessionType} from '@wepublish/authentication/api'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 import {SortOrder} from '@wepublish/utils/api'
 import {GraphQLTag} from './tag/tag'
+import {GraphQLTrackingPixel, GraphQLTrackingPixelPublic} from './tracking-pixel/tracking-pixel'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -253,7 +254,8 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
 
         return tags
       })
-    }
+    },
+    trackingPixels: {type: new GraphQLList(GraphQLTrackingPixel)}
   })
 })
 
@@ -340,6 +342,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
           return tags
         })
       },
+      trackingPixels: {type: new GraphQLList(GraphQLTrackingPixelPublic)},
 
       canonicalUrl: {type: GraphQLString},
 

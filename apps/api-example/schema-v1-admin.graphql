@@ -658,6 +658,7 @@ type Article {
   pending: ArticleRevision
   latest: ArticleRevision!
   tags: [Tag!]!
+  trackingPixels: [TrackingPixel]
 }
 
 type ArticleRevision {
@@ -707,6 +708,18 @@ type Author {
 type AuthorLink {
   title: String!
   url: String!
+}
+
+type TrackingPixel {
+  id: ID!
+  trackingPixelProviderID: String!
+  trackingPixelProviderType: TrackingPixelProviderType!
+  uri: String
+  error: String
+}
+
+enum TrackingPixelProviderType {
+  prolitteris
 }
 
 type PeerArticleTeaser {

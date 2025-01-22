@@ -27,7 +27,8 @@ const fullArticleInclude = {
       authors: true,
       socialMediaAuthors: true
     }
-  }
+  },
+  trackingPixels: true
 } as const
 
 export const deleteArticleById = async (
