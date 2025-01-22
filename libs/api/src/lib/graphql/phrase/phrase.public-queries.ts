@@ -20,6 +20,8 @@ export const queryPhrase = async (
   // Default add & if no specific query is given to prevent search to fail!
   query = query.replace(/\s+/g, '&')
 
+  const startTime = Date.now()
+
   const [foundArticleIds, foundPageIds] = await Promise.all([
     prisma.$queryRaw<{id: string}[]>`
       SELECT a.id FROM articles a
@@ -40,6 +42,9 @@ export const queryPhrase = async (
          )@@ to_tsquery('english', ${query});
     `
   ])
+
+  const endTime = Date.now()
+  console.log(`Query execution time: ${endTime - startTime} ms`)
 
   const articleIds = foundArticleIds.map(({id}) => id)
   const pageIds = foundPageIds.map(({id}) => id)
