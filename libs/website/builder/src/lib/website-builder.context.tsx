@@ -103,6 +103,7 @@ import {
 import {BuilderImageUploadProps, BuilderPersonalDataFormProps} from './user.interface'
 import {BuilderBlockStyleProps} from './block-styles.interface'
 import {BuilderNavPaperProps} from './nav-paper.interface'
+import {BuilderNavAppBarProps} from './nav-app-bar.interface'
 
 const NoComponent = () => null
 
@@ -110,6 +111,7 @@ export type WebsiteBuilderProps = {
   Head: ComponentType<{children: ReactNode}>
   Script: ComponentType<{children?: ReactNode} & ScriptHTMLAttributes<HTMLScriptElement>>
   Navbar: ComponentType<BuilderNavbarProps>
+  NavAppBar: ComponentType<BuilderNavAppBarProps>
   NavPaper: ComponentType<BuilderNavPaperProps>
   Footer: ComponentType<BuilderFooterProps>
   Page: ComponentType<BuilderPageProps>
@@ -229,6 +231,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   Head: NoComponent,
   Script: NoComponent,
   Navbar: NoComponent,
+  NavAppBar: NoComponent,
   NavPaper: NoComponent,
   Footer: NoComponent,
   SubscriptionList: NoComponent,

@@ -12,7 +12,7 @@ export type BuilderNavbarProps = PropsWithChildren<
     logo?: FullImageFragment | null
     loginUrl?: string
     profileUrl?: string
-    subscriptionsUrl?: string | null
+    subscriptionsUrl?: string
     actions?: ReactNode
   }
 >
