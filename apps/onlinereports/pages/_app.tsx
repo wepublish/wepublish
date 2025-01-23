@@ -23,6 +23,8 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {ReactComponent as Logo} from '../src/logo.svg'
+import {OnlineReportsNavAppBar} from '../src/components/onlinereports-nav-app-bar'
+import {OnlineReportsNavPaper} from '../src/components/onlinereports-nav-paper'
 import theme from '../src/theme'
 import {OnlineReportsNavbar} from '../src/components/onlinereports-navbar'
 
@@ -102,7 +104,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           <WebsiteBuilderProvider
             Head={Head}
             Script={Script}
-            Navbar={OnlineReportsNavbar}
+            NavPaper={OnlineReportsNavPaper}
+            NavAppBar={OnlineReportsNavAppBar}
             elements={{Link: NextWepublishLink}}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>
