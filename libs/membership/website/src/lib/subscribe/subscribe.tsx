@@ -1,5 +1,5 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, InputAdornment, Slider, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, styled} from '@mui/material'
 import {
   Challenge,
   defaultRegisterSchema,
@@ -64,6 +64,20 @@ export const SubscribeSection = styled('div')`
   }
 `
 
+export const SubscribeAmount = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(1)};
+  grid-template-columns: 1fr;
+  align-items: center;
+  padding: ${({theme}) => theme.spacing(3)};
+  border: 1px solid ${({theme}) => theme.palette.divider};
+  border-radius: ${({theme}) => theme.shape.borderRadius}px;
+`
+
+export const SubscribeAmountText = styled('p')`
+  text-align: center;
+`
+
 export const SubscribePayment = styled('div')`
   display: flex;
   flex-flow: row wrap;
@@ -79,32 +93,6 @@ export const SubscribePayment = styled('div')`
 
 const buttonStyles = css`
   justify-self: center;
-`
-
-export const SubscribeAmount = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
-  grid-template-columns: 1fr;
-  align-items: center;
-  padding: ${({theme}) => theme.spacing(3)};
-  border: 1px solid ${({theme}) => theme.palette.divider};
-  border-radius: ${({theme}) => theme.shape.borderRadius}px;
-`
-
-export const SubscribeAmountSlider = styled('div')`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: ${({theme}) => theme.spacing(3)};
-  align-items: center;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    grid-auto-flow: column;
-    grid-auto-columns: 300px;
-  }
-`
-
-export const SubscribeAmountText = styled('p')`
-  text-align: center;
 `
 
 export const SubscribeCancelable = styled('div')`
@@ -161,10 +149,11 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale, siteTitle},
-    elements: {Alert, Button, TextField, H5, Link, Paragraph},
+    elements: {Alert, Button, H5, Link, Paragraph},
     MemberPlanPicker,
     PaymentMethodPicker,
-    PeriodicityPicker
+    PeriodicityPicker,
+    PaymentAmount
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
   const [openConfirm, setOpenConfirm] = useState(false)
@@ -292,7 +281,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         ...subscribeData,
         userId: returningUserId
       }
-      
+
       return callAction(onResubscribe)(resubscribeData)
     }
 
@@ -399,7 +388,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           </H5>
         </SubscribeSection>
       )}
-      
+
       <SubscribeSection>
         {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
           <H5 component="h2">Abo wählen</H5>
@@ -444,39 +433,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                 Ich unterstütze {siteTitle} {replace(/^./, toLower)(monthlyPaymentText)}
               </Paragraph>
 
-              <SubscribeAmountSlider>
-                <Slider
-                  {...field}
-                  min={amountPerMonthMin}
-                  max={amountPerMonthMin * 5}
-                  valueLabelFormat={val =>
-                    formatCurrency(val / 100, selectedMemberPlan?.currency ?? Currency.Chf, locale)
-                  }
-                  step={100}
-                  color="secondary"
-                />
-
-                {donate?.(selectedMemberPlan) && (
-                  <TextField
-                    {...field}
-                    value={field.value / 100}
-                    onChange={event => field.onChange(+event.target.value * 100)}
-                    type={'number'}
-                    fullWidth
-                    inputProps={{
-                      step: 'any',
-                      min: amountPerMonthMin / 100
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          {selectedMemberPlan?.currency ?? Currency.Chf}
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                )}
-              </SubscribeAmountSlider>
+              <PaymentAmount
+                {...field}
+                error={error}
+                donate={!!donate?.(selectedMemberPlan)}
+                amountPerMonthMin={amountPerMonthMin}
+                amountPerMonthTarget={selectedMemberPlan?.amountPerMonthTarget ?? undefined}
+                currency={selectedMemberPlan?.currency ?? Currency.Chf}
+              />
             </SubscribeAmount>
           )}
         />

@@ -18,10 +18,12 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
+import {useEffect} from 'react'
 import {AdConfig} from 'react-ad-manager'
 import {initReactI18next} from 'react-i18next'
 import {FaBluesky, FaInstagram, FaTiktok} from 'react-icons/fa6'
 import {MdFacebook, MdSearch} from 'react-icons/md'
+import OneSignal from 'react-onesignal'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
@@ -101,8 +103,24 @@ type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
 }> & {emotionCache?: EmotionCache}
 
+let oneSignalInitialized = false
+
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'Mannschaft'
+
+  useEffect(() => {
+    // Ensure this code runs only on the client side
+    if (typeof window !== 'undefined' && !oneSignalInitialized) {
+      OneSignal.init({
+        appId: '71c06630-2d7c-487d-b261-e718bb8ef25f',
+        notifyButton: {
+          enable: true
+        },
+        allowLocalhostAsSecureOrigin: true
+      })
+      oneSignalInitialized = true
+    }
+  }, [])
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>

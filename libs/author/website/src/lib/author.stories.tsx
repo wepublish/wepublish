@@ -259,7 +259,8 @@ const author = {
     xxsSquare: 'https://unsplash.it/200/200'
   },
   createdAt: '2023-01-01',
-  modifiedAt: '2023-01-01'
+  modifiedAt: '2023-01-01',
+  tags: []
 } as NonNullable<AuthorQuery['author']>
 
 export default {

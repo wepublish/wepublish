@@ -1,7 +1,15 @@
 import {Currency} from '@wepublish/website/api'
 
-export const formatCurrency = (value: number, currency: Currency, locale = 'de-CH') => {
-  const formatter = new Intl.NumberFormat(locale, {style: 'currency', currency})
+export const formatCurrency = (
+  value: number,
+  currency: Currency,
+  locale = 'de-CH',
+  includeCurrency = true
+) => {
+  const formatter = new Intl.NumberFormat(locale, {
+    style: includeCurrency ? 'currency' : 'decimal',
+    currency
+  })
   let result = formatter.format(value)
 
   if (currency === Currency.Chf && result.endsWith('.00')) {
