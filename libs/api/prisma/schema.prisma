@@ -51,7 +51,6 @@ model ArticleRevision {
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json
-  searchPlainText        String?
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
@@ -591,7 +590,6 @@ model PageRevision {
   socialMediaImageID     String?
   socialMediaImage       Image?             @relation("pageRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   blocks                 Json
-  searchPlainText        String?
   PublishedPage          Page[]             @relation("publishedPageRevision")
   PendingPage            Page[]             @relation("pendingPageRevision")
   DraftPage              Page[]             @relation("draftPageRevision")
