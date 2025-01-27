@@ -236,7 +236,19 @@ export class ArticleService {
       throw new NotFoundException(`Article with id ${id} not found`)
     }
 
-    // @TODO: Unpublish future (based on input publishedAt) revisions
+    // Unpublish existing pending revisions
+    await this.prisma.articleRevision.updateMany({
+      data: {
+        publishedAt: null
+      },
+      where: {
+        articleId: id,
+        publishedAt: {
+          gte: new Date()
+        }
+      }
+    })
+
     return this.prisma.article.update({
       where: {
         id

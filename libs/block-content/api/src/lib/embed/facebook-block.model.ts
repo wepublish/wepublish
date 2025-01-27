@@ -14,7 +14,11 @@ export class FacebookPostBlock extends BaseBlock<typeof BlockType.FacebookPost> 
 }
 
 @InputType()
-export class FacebookPostBlockInput extends OmitType(FacebookPostBlock, [] as const, InputType) {}
+export class FacebookPostBlockInput extends OmitType(
+  FacebookPostBlock,
+  ['type'] as const,
+  InputType
+) {}
 
 @ObjectType({
   implements: BaseBlock
@@ -28,4 +32,8 @@ export class FacebookVideoBlock extends BaseBlock<typeof BlockType.FacebookVideo
 }
 
 @InputType()
-export class FacebookVideoBlockInput extends OmitType(FacebookVideoBlock, [] as const, InputType) {}
+export class FacebookVideoBlockInput extends OmitType(
+  FacebookVideoBlock,
+  ['type'] as const,
+  InputType
+) {}

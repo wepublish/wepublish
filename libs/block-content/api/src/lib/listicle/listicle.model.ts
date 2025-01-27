@@ -31,7 +31,11 @@ export class ListicleBlock extends BaseBlock<typeof BlockType.Listicle> {
 }
 
 @InputType()
-export class ListicleBlockInput extends BaseBlock<typeof BlockType.Listicle> {
+export class ListicleBlockInput extends OmitType(
+  ListicleBlock,
+  ['items', 'type'] as const,
+  InputType
+) {
   @Field(() => [ListicleItemInput])
   items!: ListicleItemInput[]
 }

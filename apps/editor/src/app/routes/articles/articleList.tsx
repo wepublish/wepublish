@@ -1,18 +1,16 @@
+import {CommentItemType, useCreateCommentMutation} from '@wepublish/editor/api'
 import {
   ArticleFilter,
   ArticleListDocument,
   ArticleListQuery,
-  ArticleRefFragment,
   ArticleSort,
-  CommentItemType,
+  FullArticleFragment,
   useArticleListQuery,
-  useCreateCommentMutation,
   useDeleteArticleMutation,
   useDuplicateArticleMutation,
   useUnpublishArticleMutation
-} from '@wepublish/editor/api'
+} from '@wepublish/editor/api-v2'
 import {
-  ArticlePreviewLinkPanel,
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
@@ -57,8 +55,6 @@ function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
       return ArticleSort.CreatedAt
     case 'modifiedAt':
       return ArticleSort.ModifiedAt
-    case 'publishAt':
-      return ArticleSort.PublishAt
     case 'publishedAt':
       return ArticleSort.PublishedAt
     default:
@@ -78,7 +74,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [isArticlePreviewLinkOpen, setArticlePreviewLinkOpen] = useState(false)
-  const [currentArticle, setCurrentArticle] = useState<ArticleRefFragment>()
+  const [currentArticle, setCurrentArticle] = useState<FullArticleFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
   const [page, setPage] = useState(1)
@@ -172,7 +168,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           <Column width={125} align="left" resizable>
             <HeaderCell>{t('articles.overview.states')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<ArticleRefFragment>) => {
+              {(rowData: RowDataType<FullArticleFragment>) => {
                 const states: State[] = []
 
                 if (rowData.draft) states.push({state: 'draft', text: t('articles.overview.draft')})
@@ -193,7 +189,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           <Column width={400} align="left" resizable>
             <HeaderCell>{t('articles.overview.title')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<ArticleRefFragment>) => (
+              {(rowData: RowDataType<FullArticleFragment>) => (
                 <Link to={`/articles/edit/${rowData.id}`}>
                   {rowData.latest.title || t('articles.overview.untitled')}
                 </Link>
@@ -204,8 +200,8 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('articles.overview.authors')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<ArticleRefFragment>) => {
-                return (rowData as ArticleRefFragment).latest.authors.reduce(
+              {(rowData: RowDataType<FullArticleFragment>) => {
+                return (rowData as FullArticleFragment).latest.authors.reduce(
                   (allAuthors, author, index) => {
                     return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
                   },
@@ -218,7 +214,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('articles.overview.publicationDate')}</HeaderCell>
             <Cell dataKey="publishedAt">
-              {(articleRef: RowDataType<ArticleRefFragment>) =>
+              {(articleRef: RowDataType<FullArticleFragment>) =>
                 articleRef.published?.publishedAt
                   ? t('articleEditor.overview.publishedAt', {
                       publicationDate: new Date(articleRef.published.publishedAt)
@@ -235,7 +231,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: RowDataType<ArticleRefFragment>) =>
+              {({modifiedAt}: RowDataType<FullArticleFragment>) =>
                 t('articleEditor.overview.modifiedAt', {
                   modificationDate: new Date(modifiedAt)
                 })
@@ -246,7 +242,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           <Column width={220} align="center" fixed="right">
             <HeaderCell>{t('articles.overview.action')}</HeaderCell>
             <IconButtonCell>
-              {(rowData: RowDataType<ArticleRefFragment>) => (
+              {(rowData: RowDataType<FullArticleFragment>) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.unpublish')}>
@@ -256,7 +252,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
                         disabled={!(rowData.published || rowData.pending)}
                         size="sm"
                         onClick={e => {
-                          setCurrentArticle(rowData as ArticleRefFragment)
+                          setCurrentArticle(rowData as FullArticleFragment)
                           setConfirmAction(ConfirmAction.Unpublish)
                           setConfirmationDialogOpen(true)
                         }}
@@ -271,7 +267,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
                         circle
                         size="sm"
                         onClick={() => {
-                          setCurrentArticle(rowData as ArticleRefFragment)
+                          setCurrentArticle(rowData as FullArticleFragment)
                           setConfirmAction(ConfirmAction.Duplicate)
                           setConfirmationDialogOpen(true)
                         }}
@@ -287,7 +283,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
                         disabled={!rowData.draft}
                         size="sm"
                         onClick={() => {
-                          setCurrentArticle(rowData as ArticleRefFragment)
+                          setCurrentArticle(rowData as FullArticleFragment)
                           setArticlePreviewLinkOpen(true)
                         }}
                       />
@@ -324,7 +320,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
                         appearance="ghost"
                         color="red"
                         onClick={() => {
-                          setCurrentArticle(rowData as ArticleRefFragment)
+                          setCurrentArticle(rowData as FullArticleFragment)
                           setConfirmAction(ConfirmAction.Delete)
                           setConfirmationDialogOpen(true)
                         }}
@@ -354,18 +350,6 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           onChangeLimit={limit => setLimit(limit)}
         />
       </TableWrapper>
-
-      <Modal
-        open={isArticlePreviewLinkOpen}
-        size="sm"
-        onClose={() => setArticlePreviewLinkOpen(false)}>
-        {currentArticle && (
-          <ArticlePreviewLinkPanel
-            props={{id: currentArticle.id}}
-            onClose={() => setArticlePreviewLinkOpen(false)}
-          />
-        )}
-      </Modal>
 
       <Modal
         open={isConfirmationDialogOpen}
@@ -401,9 +385,9 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
             </DescriptionListItem>
 
             <DescriptionListItem label={t('articles.panels.updatedAt')}>
-              {currentArticle?.latest.updatedAt &&
+              {currentArticle?.latest.createdAt &&
                 t('articles.panels.updatedAtDate', {
-                  updatedAtDate: new Date(currentArticle.latest.updatedAt)
+                  updatedAtDate: new Date(currentArticle.latest.createdAt)
                 })}
             </DescriptionListItem>
 

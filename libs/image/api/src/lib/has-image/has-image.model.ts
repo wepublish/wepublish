@@ -1,4 +1,4 @@
-import {Field, ID, InterfaceType} from '@nestjs/graphql'
+import {Field, InterfaceType} from '@nestjs/graphql'
 import {Image} from '../image.model'
 
 @InterfaceType()

@@ -54,7 +54,7 @@ mutation CreateEvent(
   $startsAt: DateTime!
   $endsAt: DateTime
   $imageId: String
-  $tagIds: [ID!]
+  $tagIds: [String]
 ) {
   createEvent(
     name: $name
@@ -80,7 +80,7 @@ mutation UpdateEvent(
   $startsAt: DateTime
   $endsAt: DateTime
   $imageId: String
-  $tagIds: [ID!]
+  $tagIds: [String]
 ) {
   updateEvent(
     id: $id

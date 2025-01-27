@@ -10,16 +10,16 @@ export class TeaserGridBlock extends BaseBlock<BlockType.TeaserGrid> {
   @Field(() => Int)
   numColumns!: number
 
-  @Field(() => [Teaser])
-  teasers!: Array<typeof Teaser>
+  @Field(() => [Teaser], {nullable: 'items'})
+  teasers!: Array<typeof Teaser | null>
 }
 
 @InputType()
 export class TeaserGridBlockInput extends OmitType(
   TeaserGridBlock,
-  ['teasers'] as const,
+  ['teasers', 'type'] as const,
   InputType
 ) {
-  @Field(() => [TeaserInput])
-  teasers!: TeaserInput[]
+  @Field(() => [TeaserInput], {nullable: 'items'})
+  teasers!: Array<TeaserInput | null>
 }

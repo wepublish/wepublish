@@ -13,4 +13,4 @@ export class RichTextBlock extends BaseBlock<typeof BlockType.RichText> {
 }
 
 @InputType()
-export class RichTextBlockInput extends OmitType(RichTextBlock, [] as const, InputType) {}
+export class RichTextBlockInput extends OmitType(RichTextBlock, ['type'] as const, InputType) {}

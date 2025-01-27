@@ -2,7 +2,6 @@ import {
   ArgsType,
   Field,
   InputType,
-  ID,
   Int,
   ObjectType,
   registerEnumType,
@@ -102,7 +101,7 @@ export class PoleVoteListArgs {
 
 @ArgsType()
 export class PoleVoteByIdArgs {
-  @Field(() => [ID])
+  @Field(() => [String])
   ids!: string[]
 }
 

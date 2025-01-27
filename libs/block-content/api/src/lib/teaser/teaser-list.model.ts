@@ -1,4 +1,4 @@
-import {Field, ID, InputType, Int, ObjectType, OmitType, registerEnumType} from '@nestjs/graphql'
+import {Field, InputType, Int, ObjectType, OmitType, registerEnumType} from '@nestjs/graphql'
 import {BaseBlock} from '../base-block.model'
 import {BlockType} from '../block-type.model'
 import {Teaser, TeaserType} from './teaser.model'
@@ -15,7 +15,7 @@ registerEnumType(TeaserListBlockSort, {
 
 @ObjectType()
 export class TeaserListBlockFilter {
-  @Field(() => [ID])
+  @Field(() => [String])
   tags!: string[]
 
   @Field(() => [Tag])
@@ -47,14 +47,18 @@ export class TeaserListBlock extends BaseBlock<BlockType.TeaserList> {
   @Field(() => TeaserListBlockFilter)
   filter!: TeaserListBlockFilter
 
-  @Field(() => [Teaser])
+  @Field(() => [Teaser], {
+    // not nullable but teaser grid/flex can be and it uses the same property,
+    // so they have to be the same
+    nullable: 'items'
+  })
   teasers!: Array<typeof Teaser>
 }
 
 @InputType()
 export class TeaserListBlockInput extends OmitType(
   TeaserListBlock,
-  ['teasers', 'filter'] as const,
+  ['teasers', 'filter', 'type'] as const,
   InputType
 ) {
   @Field(() => TeaserListBlockFilterInput)

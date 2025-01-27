@@ -1,9 +1,6 @@
 import {ApolloError} from '@apollo/client'
-import {
-  ImageRefFragment,
-  MutationCreateEventArgs,
-  useCreateEventMutation
-} from '@wepublish/editor/api'
+import {ImageRefFragment} from '@wepublish/editor/api'
+import {useCreateEventMutation} from '@wepublish/editor/api-v2'
 import {SingleViewTitle} from '@wepublish/ui/editor'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'

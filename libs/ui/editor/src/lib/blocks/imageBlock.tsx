@@ -11,6 +11,7 @@ import {TypographicTextArea} from '../atoms/typographicTextArea'
 import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImageBlockValue} from './types'
+import {FullImageFragment} from '@wepublish/editor/api-v2'
 
 export const Panel = styled(RPanel)`
   display: grid;
@@ -45,7 +46,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
     }
   }, [])
 
-  function handleImageChange(image: ImageRefFragment | null) {
+  function handleImageChange(image: FullImageFragment | null) {
     onChange({...value, image})
   }
 

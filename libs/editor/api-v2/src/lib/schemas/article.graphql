@@ -1,4 +1,4 @@
-fragment FullArticleRevision on ArticleRevision {
+fragment FullArticleRevisionWithoutBlocks on ArticleRevision {
   id
   createdAt
   publishedAt
@@ -28,10 +28,6 @@ fragment FullArticleRevision on ArticleRevision {
     ...FullImage
   }
 
-  blocks {
-    ...FullBlock
-  }
-
   properties {
     key
     value
@@ -39,30 +35,79 @@ fragment FullArticleRevision on ArticleRevision {
   }
 }
 
+fragment FullArticleRevision on ArticleRevision {
+  ...FullArticleRevisionWithoutBlocks
+
+  blocks {
+    ...FullBlock
+  }
+}
+
 fragment FullArticle on Article {
   id
+  publishedAt
+  createdAt
+  modifiedAt
   shared
   hidden
   disableComments
-  createdAt
-  modifiedAt
   slug
   url
 
-  draft {
+  latest {
     ...FullArticleRevision
+  }
+
+  draft {
+    id
   }
 
   pending {
-    ...FullArticleRevision
+    id
+    publishedAt
   }
 
   published {
-    ...FullArticleRevision
+    id
+    publishedAt
   }
 
   tags {
     ...FullTag
+  }
+}
+
+fragment ArticleWithoutBlocks on Article {
+  id
+  publishedAt
+  createdAt
+  modifiedAt
+  shared
+  hidden
+  disableComments
+  slug
+  url
+
+  tags {
+    ...FullTag
+  }
+
+  latest {
+    ...FullArticleRevisionWithoutBlocks
+  }
+
+  draft {
+    id
+  }
+
+  pending {
+    id
+    publishedAt
+  }
+
+  published {
+    id
+    publishedAt
   }
 }
 
@@ -83,7 +128,7 @@ query ArticleList(
     sort: $sort
   ) {
     nodes {
-      ...FullArticle
+      ...ArticleWithoutBlocks
     }
 
     pageInfo {

@@ -11,4 +11,4 @@ export class VimeoVideoBlock extends BaseBlock<typeof BlockType.VimeoVideo> {
 }
 
 @InputType()
-export class VimeoVideoBlockInput extends OmitType(VimeoVideoBlock, [] as const, InputType) {}
+export class VimeoVideoBlockInput extends OmitType(VimeoVideoBlock, ['type'] as const, InputType) {}

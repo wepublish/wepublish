@@ -1,14 +1,14 @@
-import {Field, ID, InputType, ObjectType, OmitType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {BaseBlock} from '../base-block.model'
 import {BlockType} from '../block-type.model'
 import {Event} from '@wepublish/event/api'
 
 @ObjectType()
 export class EventBlockFilter {
-  @Field(() => [ID])
+  @Field(() => [String])
   tags!: string[]
 
-  @Field(() => [ID])
+  @Field(() => [String])
   events!: string[]
 }
 
@@ -27,7 +27,11 @@ export class EventBlock extends BaseBlock<typeof BlockType.Event> {
 }
 
 @InputType()
-export class EventBlockInput {
+export class EventBlockInput extends OmitType(
+  EventBlock,
+  ['events', 'filter', 'type'] as const,
+  InputType
+) {
   @Field(() => EventBlockFilterInput)
   filter!: EventBlockFilterInput
 }

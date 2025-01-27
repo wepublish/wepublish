@@ -1,5 +1,5 @@
 import {GraphQLRichText} from '@wepublish/richtext/api'
-import {Field, Float, ObjectType, ID, Directive, Int} from '@nestjs/graphql'
+import {Field, Float, ObjectType, Directive, Int} from '@nestjs/graphql'
 
 @ObjectType()
 export class FocalPoint {

@@ -11,4 +11,8 @@ export class YouTubeVideoBlock extends BaseBlock<typeof BlockType.YouTubeVideo> 
 }
 
 @InputType()
-export class YouTubeVideoBlockInput extends OmitType(YouTubeVideoBlock, [] as const, InputType) {}
+export class YouTubeVideoBlockInput extends OmitType(
+  YouTubeVideoBlock,
+  ['type'] as const,
+  InputType
+) {}

@@ -89,6 +89,14 @@ export class ArticleResolver {
     return this.articleService.unpublishArticle(id)
   }
 
+  @ResolveField(() => ArticleRevision)
+  async latest(@Parent() parent: PArticle) {
+    const {id: articleId} = parent
+    const {draft, pending, published} = await this.articleRevisionsDataloader.load(articleId)
+
+    return draft ?? pending ?? published
+  }
+
   @ResolveField(() => ArticleRevision, {nullable: true})
   async draft(@Parent() parent: PArticle) {
     const {id: articleId} = parent

@@ -14,4 +14,8 @@ export class TikTokVideoBlock extends BaseBlock<typeof BlockType.TikTokVideo> {
 }
 
 @InputType()
-export class TikTokVideoBlockInput extends OmitType(TikTokVideoBlock, [] as const, InputType) {}
+export class TikTokVideoBlockInput extends OmitType(
+  TikTokVideoBlock,
+  ['type'] as const,
+  InputType
+) {}

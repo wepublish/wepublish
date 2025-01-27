@@ -47,8 +47,27 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on EventBlock {
     blockStyle
+
+    filter {
+      tags
+      events
+    }
+
     events {
       ...FullEvent
+    }
+  }
+
+  ... on CommentBlock {
+    blockStyle
+
+    filter {
+      tags
+      comments
+    }
+
+    comments {
+      ...CommentBlockComment
     }
   }
 
@@ -178,26 +197,6 @@ fragment FullTeaser on Teaser {
     }
   }
 
-  ... on PeerArticleTeaser {
-    style
-
-    image {
-      ...FullImage
-    }
-
-    preTitle
-    title
-    lead
-
-    peer {
-      ...FullPeer
-    }
-
-    article {
-      ...ArticleWithoutBlocks
-    }
-  }
-
   ... on PageTeaser {
     style
 
@@ -242,8 +241,10 @@ fragment FullTeaser on Teaser {
     lead
     contentUrl
     properties {
+      id
       key
       value
+      public
     }
   }
 }
@@ -255,10 +256,12 @@ fragment FullBlock on BlockContent {
     blockStyle
     flexTeasers {
       alignment {
+        i
         x
         y
         w
         h
+        static
       }
 
       teaser {
@@ -278,8 +281,16 @@ fragment FullBlock on BlockContent {
   ... on TeaserListBlock {
     title
     blockStyle
+    skip
+    take
+    sort
+    teaserType
     filter {
       tags
+      tagObjects {
+        id
+        tag
+      }
     }
     teasers {
       ...FullTeaser

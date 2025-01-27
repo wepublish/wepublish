@@ -21,25 +21,30 @@ fragment FullNavigation on Navigation {
 }
 
 query NavigationList {
-  getNavigations {
+  navigations {
     ...FullNavigation
   }
 }
 
 query Navigation($id: String!) {
-  getNavigationById(id: $id) {
+  navigation(id: $id) {
     ...FullNavigation
   }
 }
 
-mutation CreateNavigation($navigation: CreateNavigationInput!) {
-  createNavigation(navigation: $navigation) {
+mutation CreateNavigation($key: String!, $name: String!, $links: [NavigationLinkInput!]!) {
+  createNavigation(key: $key, name: $name, links: $links) {
     ...FullNavigation
   }
 }
 
-mutation UpdateNavigation($navigation: UpdateNavigationInput!) {
-  updateNavigation(navigation: $navigation) {
+mutation UpdateNavigation(
+  $id: String!
+  $key: String!
+  $name: String!
+  $links: [NavigationLinkInput!]!
+) {
+  updateNavigation(id: $id, key: $key, name: $name, links: $links) {
     ...FullNavigation
   }
 }

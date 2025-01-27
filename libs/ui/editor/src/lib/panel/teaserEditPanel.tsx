@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {TeaserType} from '@wepublish/editor/api'
+import {TeaserType} from '@wepublish/editor/api-v2'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {TFunction} from 'i18next'
@@ -58,6 +58,7 @@ const FormGroup = styled(Group)`
 `
 
 export interface TeaserMetadataProperty {
+  readonly id?: string | null
   readonly key: string
   readonly value: string
   readonly public: boolean
@@ -236,23 +237,15 @@ export function TeaserEditPanel({
 
 export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
   let type: string
-  let imageURL: string | undefined
-  let contentUrl: string | undefined
-  let preTitle: string | undefined
-  let title: string | undefined
-  let lead: string | undefined
+  let imageURL: string | undefined | null
+  let contentUrl: string | undefined | null
+  let preTitle: string | undefined | null
+  let title: string | undefined | null
+  let lead: string | undefined | null
 
   switch (teaser.type) {
     case TeaserType.Article:
       type = 'Article'
-      imageURL = teaser.article.latest.image?.previewURL ?? undefined
-      preTitle = teaser.article.latest.preTitle ?? undefined
-      title = teaser.article.latest.title ?? undefined
-      lead = teaser.article.latest.lead ?? undefined
-      break
-
-    case TeaserType.PeerArticle:
-      type = 'Peer Article'
       imageURL = teaser.article?.latest.image?.previewURL ?? undefined
       preTitle = teaser.article?.latest.preTitle ?? undefined
       title = teaser.article?.latest.title ?? undefined
@@ -261,16 +254,16 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
 
     case TeaserType.Page:
       type = 'Page'
-      imageURL = teaser.page.latest.image?.previewURL ?? undefined
-      title = teaser.page.latest.title ?? undefined
-      lead = teaser.page.latest.description ?? undefined
+      imageURL = teaser.page?.latest.image?.previewURL ?? undefined
+      title = teaser.page?.latest.title ?? undefined
+      lead = teaser.page?.latest.description ?? undefined
       break
 
     case TeaserType.Event:
       type = 'Event'
-      imageURL = teaser.event.image?.previewURL ?? undefined
-      title = teaser.event.name ?? undefined
-      lead = teaser.event.lead || teaser.event.location || undefined
+      imageURL = teaser.event?.image?.previewURL ?? undefined
+      title = teaser.event?.name ?? undefined
+      lead = teaser.event?.lead || teaser.event?.location || undefined
       break
 
     case TeaserType.Custom:

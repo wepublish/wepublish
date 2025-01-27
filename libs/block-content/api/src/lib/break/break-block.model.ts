@@ -29,4 +29,7 @@ export class BreakBlock extends BaseBlock<typeof BlockType.LinkPageBreak> implem
 }
 
 @InputType()
-export class BreakBlockInput extends OmitType(BreakBlock, ['image'] as const, InputType) {}
+export class BreakBlockInput extends OmitType(BreakBlock, ['image', 'type'] as const, InputType) {
+  @Field({nullable: true})
+  override imageID?: string
+}

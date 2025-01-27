@@ -1,10 +1,5 @@
 import styled from '@emotion/styled'
-import {
-  ArticleFilter,
-  ArticleSort,
-  PeerArticle,
-  usePeerArticleListQuery
-} from '@wepublish/editor/api'
+import {ArticleFilter, ArticleSort} from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -76,8 +71,6 @@ function PeerArticleList() {
         return ArticleSort.PublishedAt
       case 'modifiedAt':
         return ArticleSort.ModifiedAt
-      case 'publishAt':
-        return ArticleSort.PublishAt
       default:
         return null
     }

@@ -14,4 +14,8 @@ export class TwitterTweetBlock extends BaseBlock<typeof BlockType.TwitterTweet> 
 }
 
 @InputType()
-export class TwitterTweetBlockInput extends OmitType(TwitterTweetBlock, [] as const, InputType) {}
+export class TwitterTweetBlockInput extends OmitType(
+  TwitterTweetBlock,
+  ['type'] as const,
+  InputType
+) {}

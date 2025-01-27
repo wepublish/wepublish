@@ -1,16 +1,5 @@
 import styled from '@emotion/styled'
-import {
-  ArticleRefFragment,
-  FullNavigationFragment,
-  NavigationLinkInput,
-  NavigationListDocument,
-  PageRefFragment,
-  useArticleListQuery,
-  useCreateNavigationMutation,
-  useNavigationQuery,
-  usePageListQuery,
-  useUpdateNavigationMutation
-} from '@wepublish/editor/api'
+
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -31,6 +20,19 @@ import {
   useAuthorisation
 } from '../atoms'
 import {generateID, getOperationNameFromDocument} from '../utility'
+import {
+  ArticleWithoutBlocksFragment,
+  FullNavigationFragment,
+  NavigationLinkInput,
+  NavigationLinkType,
+  NavigationListDocument,
+  PageWithoutBlocksFragment,
+  useArticleListQuery,
+  useCreateNavigationMutation,
+  useNavigationQuery,
+  usePageListQuery,
+  useUpdateNavigationMutation
+} from '@wepublish/editor/api-v2'
 
 const SelectPicker = styled(RSelectPicker)`
   margin-bottom: 4px;
@@ -50,9 +52,9 @@ export interface NavigationEditPanelProps {
 export interface NavigationLink {
   label: string
   type: string
-  articleID?: string
-  pageID?: string
-  url?: string
+  articleID?: string | null
+  pageID?: string | null
+  url?: string | null
 }
 
 function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
@@ -60,8 +62,8 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
   const [name, setName] = useState('')
   const [key, setKey] = useState('')
   const [navigationLinks, setNavigationLinks] = useState<ListValue<NavigationLink>[]>([])
-  const [pages, setPages] = useState<PageRefFragment[]>([])
-  const [articles, setArticles] = useState<ArticleRefFragment[]>([])
+  const [pages, setPages] = useState<PageWithoutBlocksFragment[]>([])
+  const [articles, setArticles] = useState<ArticleWithoutBlocksFragment[]>([])
 
   const linkTypes = [
     {label: 'Article', value: 'ArticleNavigationLink'},
@@ -85,7 +87,7 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
     error: pageLoadError
   } = usePageListQuery({
     variables: {take: 50},
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'cache-and-network'
   })
 
   const {
@@ -94,7 +96,7 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
     error: articleLoadError
   } = useArticleListQuery({
     variables: {take: 50},
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'cache-and-network'
   })
 
   const [createNavigation, {loading: isCreating, error: createError}] = useCreateNavigationMutation(
@@ -132,8 +134,8 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
                   label: link.label,
                   type: link.__typename,
                   articleID:
-                    link.__typename === 'ArticleNavigationLink' ? link.article?.id : undefined,
-                  pageID: link.__typename === 'PageNavigationLink' ? link.page?.id : undefined,
+                    link.__typename === 'ArticleNavigationLink' ? link.articleID : undefined,
+                  pageID: link.__typename === 'PageNavigationLink' ? link.pageID : undefined,
                   url: link.__typename === 'ExternalNavigationLink' ? link.url : undefined
                 }
               }
@@ -175,24 +177,21 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
     switch (link.type) {
       case 'ArticleNavigationLink':
         return {
-          article: {
-            label: link.label,
-            articleID: link.articleID!
-          }
+          type: NavigationLinkType.Article,
+          label: link.label,
+          articleID: link.articleID!
         }
       case 'PageNavigationLink':
         return {
-          page: {
-            label: link.label,
-            pageID: link.pageID!
-          }
+          type: NavigationLinkType.Page,
+          label: link.label,
+          pageID: link.pageID!
         }
       case 'ExternalNavigationLink':
         return {
-          external: {
-            label: link.label,
-            url: link.url!
-          }
+          type: NavigationLinkType.External,
+          label: link.label,
+          url: link.url!
         }
       default:
         throw new Error('Type does not exist')
@@ -204,11 +203,9 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
       const {data} = await updateNavigation({
         variables: {
           id,
-          input: {
-            name,
-            key,
-            links: navigationLinks.map(unionForNavigationLink)
-          }
+          name,
+          key,
+          links: navigationLinks.map(unionForNavigationLink)
         }
       })
 
@@ -216,11 +213,9 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
     } else {
       const {data} = await createNavigation({
         variables: {
-          input: {
-            name,
-            key,
-            links: navigationLinks.map(unionForNavigationLink)
-          }
+          name,
+          key,
+          links: navigationLinks.map(unionForNavigationLink)
         }
       })
 
@@ -331,7 +326,7 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
                 ) : (
                   <Input
                     placeholder={t('navigation.panels.url')}
-                    value={value.url}
+                    value={value.url!}
                     onChange={url =>
                       onChange({
                         ...value,

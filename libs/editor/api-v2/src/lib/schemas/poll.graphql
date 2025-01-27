@@ -1,3 +1,28 @@
+fragment FullPoll on FullPoll {
+  id
+  question
+  opensAt
+  closedAt
+  infoText
+
+  answers {
+    id
+    pollId
+    answer
+    votes
+  }
+
+  externalVoteSources {
+    id
+
+    voteAmounts {
+      id
+      answerId
+      amount
+    }
+  }
+}
+
 fragment FullPollVote on PollVote {
   id
   createdAt
@@ -46,7 +71,7 @@ query PollVoteList(
   }
 }
 
-mutation DeletePollVotes($ids: [ID!]!) {
+mutation DeletePollVotes($ids: [String!]!) {
   deletePollVotes(ids: $ids) {
     count
   }

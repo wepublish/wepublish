@@ -69,8 +69,8 @@ abstract class BaseNavigationLink {
   @Field()
   label!: string
 
-  @Field()
-  type!: string
+  @Field(() => NavigationLinkType)
+  type!: NavigationLinkType
 }
 
 @ObjectType({implements: () => [BaseNavigationLink, HasArticle]})
@@ -109,17 +109,14 @@ export class NavigationLinkInput {
   articleID?: string
 }
 
-@InputType()
-class BaseNavigationLinkInput extends NavigationLinkInput {}
-
 @ArgsType()
 export class UpdateNavigationInput extends OmitType(
   Navigation,
   ['createdAt', 'modifiedAt', 'links'],
   ArgsType
 ) {
-  @Field(() => [BaseNavigationLinkInput])
-  links!: BaseNavigationLinkInput[]
+  @Field(() => [NavigationLinkInput])
+  links!: NavigationLinkInput[]
 }
 
 @ArgsType()

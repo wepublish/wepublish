@@ -1,6 +1,6 @@
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Checkbox, Message, Modal} from 'rsuite'
+import {Button, Modal} from 'rsuite'
 
 import {ArticleMetadata} from './articleMetadataPanel'
 import {
@@ -14,20 +14,14 @@ import {
 
 export interface PublishArticlePanelProps {
   publishedAtDate?: Date
-  updatedAtDate?: Date
-  publishAtDate?: Date
-  pendingPublishDate?: Date
   metadata: ArticleMetadata
 
   onClose(): void
-  onConfirm(publishedAt: Date, publishAt: Date, updatedAt?: Date): void
+  onConfirm(publishedAt: Date): void
 }
 
 function PublishArticlePanel({
   publishedAtDate,
-  updatedAtDate,
-  publishAtDate,
-  pendingPublishDate,
   metadata,
   onClose,
   onConfirm
@@ -36,22 +30,7 @@ function PublishArticlePanel({
 
   const [publishedAt, setPublishedAt] = useState<Date | undefined>(publishedAtDate ?? now)
 
-  const [publishAt, setPublishAt] = useState<Date | undefined>(publishAtDate ?? undefined)
-
-  const [updatedAt, setUpdatedAt] = useState<Date | undefined>(
-    updatedAtDate?.getTime() === publishedAtDate?.getTime() ? undefined : updatedAtDate
-  )
-
-  const [isPublishDateActive, setIsPublishDateActive] = useState<boolean>(
-    !(publishedAt?.getTime() === publishAt?.getTime() || !publishAt) ?? false
-  )
   const {t} = useTranslation()
-
-  useEffect(() => {
-    if (!publishAt || !isPublishDateActive) {
-      setPublishAt(publishedAt)
-    }
-  }, [isPublishDateActive, publishedAt])
 
   return (
     <>
@@ -60,14 +39,6 @@ function PublishArticlePanel({
       </Modal.Header>
 
       <Modal.Body>
-        {pendingPublishDate && (
-          <Message type="warning">
-            {t('articleEditor.panels.articlePending', {
-              pendingPublishDate
-            })}
-          </Message>
-        )}
-
         <div style={{maxWidth: '200px'}}>
           <DateTimePicker
             dateTime={publishedAt}
@@ -75,41 +46,6 @@ function PublishArticlePanel({
             changeDate={date => setPublishedAt(date)}
           />
         </div>
-
-        <div style={{maxWidth: '200px'}}>
-          <DateTimePicker
-            dateTime={updatedAt}
-            label={t('articleEditor.panels.updateDate')}
-            changeDate={date => setUpdatedAt(date)}
-          />
-        </div>
-
-        {updatedAt && publishedAt && updatedAt < publishedAt ? (
-          <Message type="warning">{t('articleEditor.panels.updateDateWarning')}</Message>
-        ) : (
-          ''
-        )}
-
-        <Checkbox
-          checked={isPublishDateActive}
-          onChange={(_, checked) => {
-            setIsPublishDateActive(checked)
-          }}>
-          {t('articleEditor.panels.publishAtDateCheckbox')}
-        </Checkbox>
-
-        {isPublishDateActive ? (
-          <div style={{maxWidth: '200px'}}>
-            <DateTimePicker
-              dateTime={publishAt}
-              label={t('articleEditor.panels.publishAt')}
-              changeDate={date => setPublishAt(date)}
-              helpInfo={t('articleEditor.panels.dateExplanationPopOver')}
-            />
-          </div>
-        ) : (
-          ''
-        )}
 
         <DescriptionList>
           <DescriptionListItem label={t('articleEditor.panels.url')}>
@@ -215,8 +151,8 @@ function PublishArticlePanel({
       <Modal.Footer>
         <Button
           appearance="primary"
-          disabled={!publishedAt || !metadata.slug || (updatedAt && updatedAt < publishedAt)}
-          onClick={() => onConfirm(publishedAt!, publishAt!, updatedAt)}>
+          disabled={!publishedAt || !metadata.slug}
+          onClick={() => onConfirm(publishedAt!)}>
           {t('articleEditor.panels.confirm')}
         </Button>
         <Button appearance="subtle" onClick={() => onClose()}>

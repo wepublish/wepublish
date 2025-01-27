@@ -14,4 +14,4 @@ export class TitleBlock extends BaseBlock<typeof BlockType.Title> {
 }
 
 @InputType()
-export class TitleBlockInput extends OmitType(TitleBlock, [] as const, InputType) {}
+export class TitleBlockInput extends OmitType(TitleBlock, ['type'] as const, InputType) {}

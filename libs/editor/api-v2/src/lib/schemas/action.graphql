@@ -6,10 +6,12 @@ query RecentActions {
 
 fragment ArticleCreatedActionRevision on ArticleRevision {
   title
+  socialMediaTitle
 }
 
 fragment PageCreatedActionRevision on PageRevision {
   title
+  socialMediaTitle
 }
 
 fragment FullAction on Action {
@@ -22,15 +24,7 @@ fragment FullAction on Action {
       createdAt
       url
 
-      draft {
-        ...ArticleCreatedActionRevision
-      }
-
-      pending {
-        ...ArticleCreatedActionRevision
-      }
-
-      published {
+      latest {
         ...ArticleCreatedActionRevision
       }
     }
@@ -43,15 +37,7 @@ fragment FullAction on Action {
       createdAt
       url
 
-      draft {
-        ...PageCreatedActionRevision
-      }
-
-      pending {
-        ...PageCreatedActionRevision
-      }
-
-      published {
+      latest {
         ...PageCreatedActionRevision
       }
     }

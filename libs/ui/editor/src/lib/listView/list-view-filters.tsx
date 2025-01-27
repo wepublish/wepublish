@@ -1,11 +1,8 @@
 import styled from '@emotion/styled'
 import {
-  ArticleFilter,
   AuthorRefFragment,
-  DateFilterComparison,
   EventFilter,
   FullUserRoleFragment,
-  PageFilter,
   PollAnswerWithVoteCount,
   usePeerListLazyQuery,
   usePollLazyQuery,
@@ -27,10 +24,13 @@ import {
 
 import {AuthorCheckPicker} from '../panel/authorCheckPicker'
 import {
+  ArticleFilter,
   InputMaybe,
+  PageFilter,
   PollVoteFilter,
   Scalars,
-  useEventProvidersLazyQuery
+  useEventProvidersLazyQuery,
+  DateFilterComparison
 } from '@wepublish/editor/api-v2'
 import {getApiClientV2} from '@wepublish/editor/api-v2'
 
@@ -248,12 +248,15 @@ export function ListViewFilters({
     if (value.authors && !value.authors.length) {
       value = {authors: null}
     }
+
     if (value.userRole && !value.userRole.length) {
       value = {userRole: null}
     }
+
     if (value.answerIds && !value.answerIds.length) {
       value = {answerIds: null}
     }
+
     const newFilter = {
       ...filter,
       ...value
@@ -497,11 +500,11 @@ export function ListViewFilters({
                   updateFilter({
                     publicationDateFrom: {
                       date: value[0]?.toISOString(),
-                      comparison: DateFilterComparison.Gt
+                      comparison: DateFilterComparison.GreaterThan
                     },
                     publicationDateTo: {
                       date: value[1]?.toISOString(),
-                      comparison: DateFilterComparison.Lte
+                      comparison: DateFilterComparison.LowerThanOrEqual
                     }
                   })
                 }

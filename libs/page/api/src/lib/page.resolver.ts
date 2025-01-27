@@ -89,6 +89,14 @@ export class PageResolver {
     return this.pageService.unpublishPage(id)
   }
 
+  @ResolveField(() => PageRevision)
+  async latest(@Parent() parent: PPage) {
+    const {id: pageId} = parent
+    const {draft, pending, published} = await this.pageRevisionsDataloader.load(pageId)
+
+    return draft ?? pending ?? published
+  }
+
   @ResolveField(() => PageRevision, {nullable: true})
   async draft(@Parent() parent: PPage) {
     const {id: pageId} = parent

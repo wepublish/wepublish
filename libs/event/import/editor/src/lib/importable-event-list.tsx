@@ -90,7 +90,7 @@ function ImportableEventListView() {
 
   const {data, loading: queryLoading} = useImportedEventListQuery({
     client,
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     variables: importedEventListVariables,
     onError: onErrorToast
   })
@@ -109,7 +109,7 @@ function ImportableEventListView() {
   })
 
   const {data: ids} = useImportedEventsIdsQuery({
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'cache-and-network'
   })
   const alreadyImported = ids?.importedEventsIds
 

@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {getApiClientV2, ListViewContainer, ListViewHeader} from '@wepublish/ui/editor'
+import {ListViewContainer, ListViewHeader} from '@wepublish/ui/editor'
 import {useTranslation} from 'react-i18next'
 import {
   NON_USER_ACTION_EVENTS,
@@ -10,7 +10,8 @@ import {
   SubscriptionEvent,
   useSystemMailsQuery,
   useMailTemplateQuery,
-  UserEvent
+  UserEvent,
+  getApiClientV2
 } from '@wepublish/editor/api-v2'
 import {
   Grid,

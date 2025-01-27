@@ -11,4 +11,4 @@ export class BildwurfAdBlock extends BaseBlock<typeof BlockType.BildwurfAd> {
 }
 
 @InputType()
-export class BildwurfAdBlockInput extends OmitType(BildwurfAdBlock, [] as const, InputType) {}
+export class BildwurfAdBlockInput extends OmitType(BildwurfAdBlock, ['type'] as const, InputType) {}

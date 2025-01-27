@@ -43,7 +43,7 @@ function PublishPagePanel({
   )
 
   const [isPublishDateActive, setIsPublishDateActive] = useState<boolean>(
-    !(publishedAt?.getTime() === publishAt?.getTime() || !publishAt) ?? false
+    !(publishedAt?.getTime() === publishAt?.getTime() || !publishAt)
   )
 
   const {t} = useTranslation()
@@ -52,7 +52,7 @@ function PublishPagePanel({
     if (!publishAt || !isPublishDateActive) {
       setPublishAt(publishedAt)
     }
-  }, [isPublishDateActive, publishedAt])
+  }, [isPublishDateActive, publishAt, publishedAt])
 
   return (
     <>

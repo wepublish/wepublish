@@ -1,34 +1,41 @@
-fragment EventRef on Event {
+fragment FullEvent on Event {
   id
   name
   lead
   description
   status
   location
-  externalSourceId
-  externalSourceName
   image {
-    ...ImageRef
+    ...FullImage
   }
   tags {
-    id
-    tag
+    ...FullTag
   }
   startsAt
   endsAt
+  createdAt
+  modifiedAt
+  url
 }
 
 query EventList(
   $filter: EventFilter
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
   $sort: EventSort
 ) {
-  events(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  events(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
-      ...EventRef
+      ...FullEvent
     }
 
     pageInfo {
@@ -44,7 +51,7 @@ query EventList(
 
 query Event($id: String!) {
   event(id: $id) {
-    ...EventRef
+    ...FullEvent
   }
 }
 
@@ -60,9 +67,7 @@ mutation CreateEvent(
   $startsAt: DateTime!
   $endsAt: DateTime
   $imageId: String
-  $tagIds: [ID!]
-  $externalSourceId: String
-  $externalSourceName: String
+  $tagIds: [String!]
 ) {
   createEvent(
     name: $name
@@ -73,10 +78,8 @@ mutation CreateEvent(
     endsAt: $endsAt
     imageId: $imageId
     tagIds: $tagIds
-    externalSourceId: $externalSourceId
-    externalSourceName: $externalSourceName
   ) {
-    ...EventRef
+    ...FullEvent
   }
 }
 
@@ -90,9 +93,7 @@ mutation UpdateEvent(
   $startsAt: DateTime
   $endsAt: DateTime
   $imageId: String
-  $tagIds: [ID!]
-  $externalSourceId: String
-  $externalSourceName: String
+  $tagIds: [String!]
 ) {
   updateEvent(
     id: $id
@@ -105,15 +106,13 @@ mutation UpdateEvent(
     endsAt: $endsAt
     imageId: $imageId
     tagIds: $tagIds
-    externalSourceId: $externalSourceId
-    externalSourceName: $externalSourceName
   ) {
-    ...EventRef
+    ...FullEvent
   }
 }
 
 mutation DeleteEvent($id: String!) {
   deleteEvent(id: $id) {
-    ...EventRef
+    ...FullEvent
   }
 }

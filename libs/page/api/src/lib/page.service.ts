@@ -181,7 +181,19 @@ export class PageService {
       throw new NotFoundException(`Page with id ${id} not found`)
     }
 
-    // @TODO: Unpublish future (based on input publishedAt) revisions
+    // Unpublish existing pending revisions
+    await this.prisma.pageRevision.updateMany({
+      data: {
+        publishedAt: null
+      },
+      where: {
+        pageId: id,
+        publishedAt: {
+          gte: new Date()
+        }
+      }
+    })
+
     return this.prisma.page.update({
       where: {
         id

@@ -4,17 +4,19 @@ fragment FullPeerProfile on PeerProfile {
   themeColor
   themeFontColor
   logo {
-    ...ImageRef
+    ...FullImage
   }
+
   callToActionText
   callToActionURL
   callToActionImage {
-    ...ImageRef
+    ...FullImage
   }
+
   callToActionImageURL
 }
 
-fragment PeerRef on Peer {
+fragment FullPeer on Peer {
   id
   name
   slug
@@ -22,60 +24,5 @@ fragment PeerRef on Peer {
   hostURL
   profile {
     ...FullPeerProfile
-  }
-}
-
-fragment PeerWithProfile on Peer {
-  ...PeerRef
-  profile {
-    ...FullPeerProfile
-  }
-}
-
-query PeerProfile {
-  peerProfile {
-    ...FullPeerProfile
-  }
-}
-
-query RemotePeerProfile($hostURL: String!, $token: String!) {
-  remotePeerProfile(hostURL: $hostURL, token: $token) {
-    ...FullPeerProfile
-  }
-}
-
-mutation UpdatePeerProfile($input: PeerProfileInput!) {
-  updatePeerProfile(input: $input) {
-    ...FullPeerProfile
-  }
-}
-
-query PeerList {
-  peers {
-    ...PeerWithProfile
-  }
-}
-
-query Peer($id: String!) {
-  peer(id: $id) {
-    ...PeerRef
-  }
-}
-
-mutation CreatePeer($input: CreatePeerInput!) {
-  createPeer(input: $input) {
-    ...PeerRef
-  }
-}
-
-mutation UpdatePeer($id: String!, $input: UpdatePeerInput!) {
-  updatePeer(id: $id, input: $input) {
-    ...PeerRef
-  }
-}
-
-mutation DeletePeer($id: String!) {
-  deletePeer(id: $id) {
-    ...PeerRef
   }
 }

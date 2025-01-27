@@ -1,4 +1,10 @@
-import {ApolloClient, ApolloLink, createHttpLink, InMemoryCache} from '@apollo/client'
+import {
+  ApolloClient,
+  ApolloLink,
+  createHttpLink,
+  InMemoryCache,
+  NormalizedCacheObject
+} from '@apollo/client'
 
 export enum ElementID {
   Settings = 'settings',
@@ -12,7 +18,8 @@ export interface ClientSettings {
 }
 
 export enum LocalStorageKey {
-  SessionToken = 'sessionToken'
+  SessionToken = 'sessionToken',
+  ImageListLayout = 'imageListLayout'
 }
 
 const authLink = new ApolloLink((operation, forward) => {
@@ -31,25 +38,37 @@ const authLink = new ApolloLink((operation, forward) => {
   return forward(operation)
 })
 
+let settings: ClientSettings
+
 export function getSettings(): ClientSettings {
-  const defaultSettings = {
-    apiURL: 'http://localhost:4000',
-    peerByDefault: false,
-    imgMinSizeToCompress: 10
+  if (!settings) {
+    const defaultSettings = {
+      apiURL: 'http://localhost:4000',
+      peerByDefault: false,
+      imgMinSizeToCompress: 10
+    }
+
+    const settingsJson = document.getElementById(ElementID.Settings)
+
+    settings = settingsJson
+      ? JSON.parse(document.getElementById(ElementID.Settings)!.textContent!)
+      : defaultSettings
   }
 
-  const settingsJson = document.getElementById(ElementID.Settings)
-
-  return settingsJson
-    ? JSON.parse(document.getElementById(ElementID.Settings)!.textContent!)
-    : defaultSettings
+  return settings
 }
+
+let client: ApolloClient<NormalizedCacheObject>
 
 export function getApiClientV2() {
   const {apiURL} = getSettings()
 
-  return new ApolloClient({
-    link: authLink.concat(createHttpLink({uri: `${apiURL}/v1`, fetch})),
-    cache: new InMemoryCache()
-  })
+  if (!client) {
+    client = new ApolloClient({
+      link: authLink.concat(createHttpLink({uri: `${apiURL}/v1`, fetch})),
+      cache: new InMemoryCache()
+    })
+  }
+
+  return client
 }

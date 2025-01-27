@@ -1,4 +1,3 @@
-import {TeaserStyle, TeaserType} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Drawer} from 'rsuite'
@@ -6,6 +5,7 @@ import {Drawer} from 'rsuite'
 import {Teaser, TeaserLink} from '../blocks/types'
 import {TeaserEditPanel} from './teaserEditPanel'
 import {TeaserSelectPanel} from './teaserSelectPanel'
+import {TeaserStyle, TeaserType} from '@wepublish/editor/api-v2'
 
 export interface TeaserSelectAndEditPanelProps {
   onClose: () => void

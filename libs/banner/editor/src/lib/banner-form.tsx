@@ -2,16 +2,15 @@ import {
   CreateBannerActionInput,
   CreateBannerInput,
   ImageRefFragment,
-  UpdateBannerInput
+  PageWithoutBlocksFragment,
+  UpdateBannerInput,
+  usePageListQuery
 } from '@wepublish/editor/api-v2'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {useNavigate} from 'react-router-dom'
 import {CheckPicker, Drawer, Form, Input, Panel, Toggle} from 'rsuite'
 import {BannerActionList} from './banner-action-list'
 import {ChooseEditImage, ImageEditPanel, ImageSelectPanel} from '@wepublish/ui/editor'
-import {PageRefFragment, usePageListQuery} from '@wepublish/editor/api'
-import React from 'react'
 
 type BannerFormData = (CreateBannerInput | UpdateBannerInput) & {
   image?: ImageRefFragment | null
@@ -27,22 +26,17 @@ interface BannerFormProps {
 }
 
 export const BannerForm = (props: BannerFormProps) => {
-  const navigate = useNavigate()
   const {t} = useTranslation()
-  const [pages, setPages] = useState<PageRefFragment[]>([])
+  const [pages, setPages] = useState<PageWithoutBlocksFragment[]>([])
 
   const handleChange = (value: any, event: React.ChangeEvent<HTMLInputElement>) => {
     const {name} = event.target
     props.onChange({...props.banner, [name]: value})
   }
 
-  const {
-    data: pageData,
-    loading: isLoadingPageData,
-    error: pageLoadError
-  } = usePageListQuery({
+  const {data: pageData} = usePageListQuery({
     variables: {take: 50},
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'cache-and-network'
   })
 
   useEffect(() => {
@@ -62,6 +56,7 @@ export const BannerForm = (props: BannerFormProps) => {
           <Form.ControlLabel>{t('banner.form.title')}</Form.ControlLabel>
           <Form.Control name="title" value={props.banner.title} onChange={handleChange} />
         </Form.Group>
+
         <Form.Group controlId="text">
           <Form.ControlLabel>{t('banner.form.text')}</Form.ControlLabel>
           <Input
@@ -72,10 +67,12 @@ export const BannerForm = (props: BannerFormProps) => {
             onChange={handleChange}
           />
         </Form.Group>
+
         <Form.Group controlId="cta">
           <Form.ControlLabel>{t('banner.form.cta')}</Form.ControlLabel>
           <Form.Control name="cta" value={props.banner.cta} onChange={handleChange} />
         </Form.Group>
+
         <Form.Group controlId="images">
           <Form.ControlLabel>{t('banner.form.image')}</Form.ControlLabel>
           <Form.Control
@@ -93,6 +90,7 @@ export const BannerForm = (props: BannerFormProps) => {
             minHeight={200}
           />
         </Form.Group>
+
         <Form.Group controlId="active">
           <Form.ControlLabel>{t('banner.form.active')}</Form.ControlLabel>
           <Form.Control
@@ -102,6 +100,7 @@ export const BannerForm = (props: BannerFormProps) => {
             accepter={Toggle}
           />
         </Form.Group>
+
         <Form.Group controlId="showOnArticles">
           <Form.ControlLabel>{t('banner.form.showOnArticles')}</Form.ControlLabel>
           <Form.Control
@@ -111,6 +110,7 @@ export const BannerForm = (props: BannerFormProps) => {
             accepter={Toggle}
           />
         </Form.Group>
+
         <Form.Group controlId="showOnPages">
           <Form.ControlLabel>{t('banner.form.showOnPages')}</Form.ControlLabel>
           <CheckPicker
@@ -131,6 +131,7 @@ export const BannerForm = (props: BannerFormProps) => {
           />
         </Form.Group>
       </Panel>
+
       <Panel bordered style={{overflow: 'initial'}}>
         <Form.Group controlId="actions">
           <h3>{t('banner.form.actions')}</h3>

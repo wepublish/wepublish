@@ -13,6 +13,6 @@ export class PolisConversationBlock extends BaseBlock<typeof BlockType.PolisConv
 @InputType()
 export class PolisConversationBlockInput extends OmitType(
   PolisConversationBlock,
-  [] as const,
+  ['type'] as const,
   InputType
 ) {}

@@ -18,4 +18,7 @@ export class ImageBlock extends BaseBlock<typeof BlockType.Image> implements Has
 }
 
 @InputType()
-export class ImageBlockInput extends OmitType(ImageBlock, ['image'] as const, InputType) {}
+export class ImageBlockInput extends OmitType(ImageBlock, ['image', 'type'] as const, InputType) {
+  @Field({nullable: true})
+  override imageID?: string
+}

@@ -5,8 +5,8 @@ import {Teaser, TeaserInput} from './teaser.model'
 
 @ObjectType()
 export class FlexAlignment {
-  @Field(() => Int)
-  i!: number
+  @Field()
+  i!: string
 
   @Field(() => Int)
   x!: number
@@ -30,8 +30,8 @@ export class FlexTeaser {
   @Field(() => FlexAlignment)
   alignment!: FlexAlignment
 
-  @Field(() => Teaser)
-  teaser!: typeof Teaser
+  @Field(() => Teaser, {nullable: true})
+  teaser?: typeof Teaser
 }
 
 @InputType()
@@ -43,8 +43,8 @@ export class FlexTeaserInput extends OmitType(
   @Field(() => FlexAlignmentInput)
   alignment!: FlexAlignmentInput
 
-  @Field(() => TeaserInput)
-  teaser!: TeaserInput
+  @Field(() => TeaserInput, {nullable: true})
+  teaser?: TeaserInput
 }
 
 @ObjectType({
@@ -58,7 +58,7 @@ export class TeaserGridFlexBlock extends BaseBlock<BlockType.TeaserGridFlex> {
 @InputType()
 export class TeaserGridFlexBlockInput extends OmitType(
   TeaserGridFlexBlock,
-  ['flexTeasers'] as const,
+  ['flexTeasers', 'type'] as const,
   InputType
 ) {
   @Field(() => [FlexTeaserInput])

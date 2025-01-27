@@ -6,8 +6,7 @@ import {
   PartialType,
   OmitType,
   registerEnumType,
-  PickType,
-  ID
+  PickType
 } from '@nestjs/graphql'
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
 

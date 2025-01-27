@@ -11,4 +11,8 @@ export class InstagramPostBlock extends BaseBlock<typeof BlockType.InstagramPost
 }
 
 @InputType()
-export class InstagramPostBlockInput extends OmitType(InstagramPostBlock, [] as const, InputType) {}
+export class InstagramPostBlockInput extends OmitType(
+  InstagramPostBlock,
+  ['type'] as const,
+  InputType
+) {}

@@ -1,5 +1,6 @@
 import {ApolloError} from '@apollo/client'
-import {Event, EventFilter, useEventListQuery} from '@wepublish/editor/api'
+import {Event, EventFilter} from '@wepublish/editor/api'
+import {useEventListQuery} from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -68,7 +69,7 @@ function EventListView() {
     loading: isLoading,
     refetch
   } = useEventListQuery({
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     variables: eventListVariables,
     onError: onErrorToast
   })

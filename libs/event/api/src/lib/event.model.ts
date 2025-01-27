@@ -136,6 +136,11 @@ export class CreateEventInput extends PickType(
 ) {
   @Field(type => [String], {nullable: true})
   tagIds?: string[]
+
+  @Field(type => EventStatus, {
+    defaultValue: EventStatus.Scheduled
+  })
+  status!: EventStatus
 }
 
 @ArgsType()

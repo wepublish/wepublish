@@ -1,5 +1,5 @@
 import {ApolloError} from '@apollo/client'
-import {EventRefFragment, TagType, useEventListLazyQuery} from '@wepublish/editor/api'
+import {TagType} from '@wepublish/editor/api'
 import {useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
@@ -23,6 +23,7 @@ import {PermissionControl} from '../atoms/permissionControl'
 import {SelectTags} from '../atoms/tag/selectTags'
 import {EventBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
+import {FullEventFragment, useEventListLazyQuery} from '@wepublish/editor/api-v2'
 
 const onErrorToast = (error: ApolloError) => {
   if (error?.message) {
@@ -37,7 +38,7 @@ const onErrorToast = (error: ApolloError) => {
 export type SelectEventPanelProps = {
   selectedFilter: EventBlockValue['filter']
   onClose(): void
-  onSelect(filter: EventBlockValue['filter'], events: EventRefFragment[]): void
+  onSelect(filter: EventBlockValue['filter'], events: FullEventFragment[]): void
 }
 
 export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEventPanelProps) {
@@ -132,7 +133,7 @@ export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEven
             <Table.Column width={36}>
               <Table.HeaderCell>{''}</Table.HeaderCell>
               <Table.Cell style={{padding: 0}}>
-                {(rowData: RowDataType<EventRefFragment>) => (
+                {(rowData: RowDataType<FullEventFragment>) => (
                   <div
                     style={{
                       height: '46px',
@@ -159,13 +160,13 @@ export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEven
 
           <Table.Column width={250} resizable>
             <Table.HeaderCell>{t('event.list.name')}</Table.HeaderCell>
-            <Table.Cell>{(rowData: RowDataType<EventRefFragment>) => rowData.name}</Table.Cell>
+            <Table.Cell>{(rowData: RowDataType<FullEventFragment>) => rowData.name}</Table.Cell>
           </Table.Column>
 
           <Table.Column width={150} align="center" fixed="right">
             <Table.HeaderCell>{t('event.list.edit')}</Table.HeaderCell>
             <Table.Cell style={{padding: '6px 0'}}>
-              {(rowData: RowDataType<EventRefFragment>) => (
+              {(rowData: RowDataType<FullEventFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_EVENT']}>
                   <IconButtonTooltip caption={t('event.list.edit')}>
                     <Link target="_blank" to={`/events/edit/${rowData.id}`}>

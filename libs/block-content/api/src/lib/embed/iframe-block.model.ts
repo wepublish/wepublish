@@ -23,4 +23,4 @@ export class IFrameBlock extends BaseBlock<typeof BlockType.Embed> {
 }
 
 @InputType()
-export class IFrameBlockInput extends OmitType(IFrameBlock, [] as const, InputType) {}
+export class IFrameBlockInput extends OmitType(IFrameBlock, ['type'] as const, InputType) {}

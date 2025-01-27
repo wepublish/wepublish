@@ -1,7 +1,6 @@
 import {
   createUnionType,
   Field,
-  ID,
   InputType,
   InterfaceType,
   ObjectType,
@@ -10,14 +9,12 @@ import {
 } from '@nestjs/graphql'
 import {Article, HasOptionalArticle} from '@wepublish/article/api'
 import {HasOptionalPage, Page} from '@wepublish/page/api'
-import {HasPeer, Peer} from '@wepublish/peering/api'
 import {HasImage} from '@wepublish/image/api'
 import {Event, HasOptionalEvent} from '@wepublish/event/api'
 import {Property, PropertyInput} from '@wepublish/utils/api'
 
 export enum TeaserType {
   Article = 'article',
-  PeerArticle = 'peerArticle',
   Page = 'page',
   Event = 'event',
   Custom = 'custom'
@@ -66,27 +63,7 @@ export class ArticleTeaser extends BaseTeaser<TeaserType.Article> implements Has
 @InputType()
 export class ArticleTeaserInput extends OmitType(
   ArticleTeaser,
-  ['article', 'image'] as const,
-  InputType
-) {}
-
-@ObjectType({
-  implements: () => [BaseTeaser, HasPeer]
-})
-export class PeerArticleTeaser extends BaseTeaser<TeaserType.PeerArticle> implements HasPeer {
-  peerID?: string
-  peer?: Peer
-
-  @Field({nullable: true})
-  articleID?: string
-  @Field(() => Article, {nullable: true})
-  article?: Article
-}
-
-@InputType()
-export class PeerArticleTeaserInput extends OmitType(
-  PeerArticleTeaser,
-  ['article', 'image', 'peer'] as const,
+  ['article', 'image', 'type'] as const,
   InputType
 ) {}
 
@@ -99,7 +76,11 @@ export class PageTeaser extends BaseTeaser<TeaserType.Page> implements HasOption
 }
 
 @InputType()
-export class PageTeaserInput extends OmitType(PageTeaser, ['page', 'image'] as const, InputType) {}
+export class PageTeaserInput extends OmitType(
+  PageTeaser,
+  ['page', 'image', 'type'] as const,
+  InputType
+) {}
 
 @ObjectType({
   implements: () => [BaseTeaser, HasOptionalEvent]
@@ -112,7 +93,7 @@ export class EventTeaser extends BaseTeaser<TeaserType.Event> implements HasOpti
 @InputType()
 export class EventTeaserInput extends OmitType(
   EventTeaser,
-  ['event', 'image'] as const,
+  ['event', 'image', 'type'] as const,
   InputType
 ) {}
 
@@ -130,7 +111,7 @@ export class CustomTeaser extends BaseTeaser<TeaserType.Custom> {
 @InputType()
 export class CustomTeaserInput extends OmitType(
   CustomTeaser,
-  ['image', 'properties'] as const,
+  ['image', 'properties', 'type'] as const,
   InputType
 ) {
   @Field(() => [PropertyInput], {defaultValue: []})
@@ -139,13 +120,11 @@ export class CustomTeaserInput extends OmitType(
 
 export const Teaser = createUnionType({
   name: 'Teaser',
-  types: () => [ArticleTeaser, PeerArticleTeaser, PageTeaser, EventTeaser, CustomTeaser] as const,
+  types: () => [ArticleTeaser, PageTeaser, EventTeaser, CustomTeaser] as const,
   resolveType: (value: BaseTeaser<any>) => {
     switch (value.type) {
       case TeaserType.Article:
         return ArticleTeaser.name
-      case TeaserType.PeerArticle:
-        return PeerArticleTeaser.name
       case TeaserType.Page:
         return PageTeaser.name
       case TeaserType.Event:
@@ -164,8 +143,6 @@ export const Teaser = createUnionType({
 export class TeaserInput {
   @Field(() => ArticleTeaserInput, {nullable: true})
   [TeaserType.Article]?: ArticleTeaserInput;
-  @Field(() => PeerArticleTeaserInput, {nullable: true})
-  [TeaserType.PeerArticle]?: PeerArticleTeaserInput;
   @Field(() => PageTeaserInput, {nullable: true})
   [TeaserType.Page]?: PageTeaserInput;
   @Field(() => EventTeaserInput, {nullable: true})

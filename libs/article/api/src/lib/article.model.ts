@@ -123,6 +123,9 @@ export class Article {
   @Field(() => ArticleRevision, {nullable: true})
   published?: ArticleRevision
 
+  @Field(() => ArticleRevision)
+  latest!: ArticleRevision
+
   @Field(() => [Tag])
   tags!: Tag[]
 

@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import {RecentActionsQuery, useRecentActionsQuery} from '@wepublish/editor/api'
 import {formatDistanceToNow} from 'date-fns'
 import {ReactNode, useEffect} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
@@ -18,6 +17,7 @@ import {Avatar, Message, Timeline as RTimeline, toaster} from 'rsuite'
 
 import {AVAILABLE_LANG} from '../../utility'
 import {RichTextBlock} from '../../blocks/richTextBlock/rich-text-block'
+import {RecentActionsQuery, useRecentActionsQuery} from '@wepublish/editor/api-v2'
 
 const Timeline = styled(RTimeline)`
   margin-left: 10px;
@@ -59,7 +59,7 @@ const TimelineIcon = styled(Avatar)`
 type Action = NonNullable<RecentActionsQuery['actions']>[number]
 
 export function ActivityFeed() {
-  const {data, error} = useRecentActionsQuery({fetchPolicy: 'no-cache'})
+  const {data, error} = useRecentActionsQuery({fetchPolicy: 'cache-and-network'})
 
   const actions = data?.actions ?? []
 
@@ -112,7 +112,11 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
             />
           }
           date={action.date}
-          details={action.article.latest?.title ?? t('articles.overview.untitled')}
+          details={
+            action.article.latest.title ??
+            action.article.latest.socialMediaTitle ??
+            t('articles.overview.untitled')
+          }
         />
       )
     case 'PageCreatedAction':
@@ -136,9 +140,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
       )
     case 'CommentCreatedAction': {
       const userName = action.comment?.user?.name ?? action.comment?.guestUsername ?? ''
-      const commentTitle = action.comment?.revisions[action.comment.revisions.length - 1]?.title
-        ? ': ' + action.comment?.revisions[action.comment?.revisions?.length - 1]?.title
-        : ''
+      const commentTitle = action.comment.title ? ': ' + action.comment.title : ''
 
       return (
         <TimelineItem
@@ -162,7 +164,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
                   onChange={() => {
                     return undefined
                   }}
-                  value={action.comment.revisions[action.comment.revisions?.length - 1]?.text || []}
+                  value={action.comment.text || []}
                 />
               </TimelineRichTextWrapper>
             </>

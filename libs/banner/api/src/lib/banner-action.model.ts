@@ -1,12 +1,4 @@
-import {
-  ArgsType,
-  Field,
-  ID,
-  InputType,
-  ObjectType,
-  PickType,
-  registerEnumType
-} from '@nestjs/graphql'
+import {ArgsType, Field, InputType, ObjectType, PickType, registerEnumType} from '@nestjs/graphql'
 import {BannerActionRole} from '@prisma/client'
 
 @ArgsType()

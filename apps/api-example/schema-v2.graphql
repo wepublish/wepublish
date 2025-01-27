@@ -46,6 +46,7 @@ type Article {
   draft: ArticleRevision
   hidden: Boolean!
   id: String!
+  latest: ArticleRevision!
   modifiedAt: DateTime!
   peer: Peer
   peerArticleId: String
@@ -88,7 +89,7 @@ type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
   id: String!
   label: String!
   modifiedAt: DateTime!
-  type: String!
+  type: NavigationLinkType!
 }
 
 type ArticleRevision implements HasBlockContent {
@@ -138,7 +139,6 @@ input ArticleTeaserInput {
   preTitle: String
   style: TeaserStyle!
   title: String
-  type: String!
 }
 
 type Author {
@@ -191,7 +191,7 @@ interface BaseAction {
 
 interface BaseBlock {
   blockStyle: String
-  type: String!
+  type: BlockType!
 }
 
 interface BaseNavigationLink {
@@ -199,15 +199,7 @@ interface BaseNavigationLink {
   id: String!
   label: String!
   modifiedAt: DateTime!
-  type: String!
-}
-
-input BaseNavigationLinkInput {
-  articleID: String
-  label: String!
-  pageID: String
-  type: String!
-  url: String
+  type: NavigationLinkType!
 }
 
 interface BaseTeaser implements HasImage {
@@ -222,13 +214,12 @@ interface BaseTeaser implements HasImage {
 
 type BildwurfAdBlock implements BaseBlock {
   blockStyle: String
-  type: String!
+  type: BlockType!
   zoneID: String
 }
 
 input BildwurfAdBlockInput {
   blockStyle: String
-  type: String!
   zoneID: String
 }
 
@@ -263,7 +254,7 @@ input BlockContentInput {
 }
 
 type BlockStyle {
-  blocks: [BlockType!]!
+  blocks: [EditorBlockType!]!
   createdAt: DateTime!
   id: String!
   modifiedAt: DateTime!
@@ -271,22 +262,31 @@ type BlockStyle {
 }
 
 enum BlockType {
+  BildwurfAd
   Comment
   Embed
   Event
+  FacebookPost
+  FacebookVideo
   HTML
   Image
   ImageGallery
+  InstagramPost
   LinkPageBreak
   Listicle
+  PolisConversation
   Poll
   Quote
   RichText
-  TeaserGrid1
-  TeaserGrid6
+  SoundCloudTrack
+  TeaserGrid
   TeaserGridFlex
   TeaserList
+  TikTokVideo
   Title
+  TwitterTweet
+  VimeoVideo
+  YouTubeVideo
 }
 
 type BreakBlock implements BaseBlock & HasImage {
@@ -299,18 +299,18 @@ type BreakBlock implements BaseBlock & HasImage {
   linkURL: String
   richText: RichText!
   text: String
-  type: String!
+  type: BlockType!
 }
 
 input BreakBlockInput {
   blockStyle: String
   hideButton: Boolean
+  imageID: String
   linkTarget: String
   linkText: String
   linkURL: String
   richText: RichText!
   text: String
-  type: String!
 }
 
 type Comment {
@@ -321,22 +321,23 @@ type CommentBlock implements BaseBlock {
   blockStyle: String
   comments: [Comment!]!
   filter: CommentBlockFilter!
-  type: String!
+  type: BlockType!
 }
 
 type CommentBlockFilter {
-  comments: [ID!]!
-  item: String!
-  tags: [ID!]!
+  comments: [String!]!
+  item: String
+  tags: [String!]!
 }
 
 input CommentBlockFilterInput {
-  comments: [ID!]!
-  item: String!
-  tags: [ID!]!
+  comments: [String!]!
+  item: String
+  tags: [String!]!
 }
 
 input CommentBlockInput {
+  blockStyle: String
   filter: CommentBlockFilterInput!
 }
 
@@ -400,7 +401,6 @@ input CustomTeaserInput {
   properties: [PropertyInput!]! = []
   style: TeaserStyle!
   title: String
-  type: String!
 }
 
 type DashboardInvoice {
@@ -443,6 +443,25 @@ type DeletePollVotesResult {
   count: Int!
 }
 
+enum EditorBlockType {
+  Comment
+  Embed
+  Event
+  HTML
+  Image
+  ImageGallery
+  LinkPageBreak
+  Listicle
+  Poll
+  Quote
+  RichText
+  TeaserGrid1
+  TeaserGrid6
+  TeaserGridFlex
+  TeaserList
+  Title
+}
+
 type Event {
   createdAt: DateTime!
   description: RichText
@@ -466,20 +485,21 @@ type EventBlock implements BaseBlock {
   blockStyle: String
   events: [Event!]!
   filter: EventBlockFilter!
-  type: String!
+  type: BlockType!
 }
 
 type EventBlockFilter {
-  events: [ID!]!
-  tags: [ID!]!
+  events: [String!]!
+  tags: [String!]!
 }
 
 input EventBlockFilterInput {
-  events: [ID!]!
-  tags: [ID!]!
+  events: [String!]!
+  tags: [String!]!
 }
 
 input EventBlockInput {
+  blockStyle: String
   filter: EventBlockFilterInput!
 }
 
@@ -548,7 +568,6 @@ input EventTeaserInput {
   preTitle: String
   style: TeaserStyle!
   title: String
-  type: String!
 }
 
 type ExternalNavigationLink implements BaseNavigationLink {
@@ -556,41 +575,39 @@ type ExternalNavigationLink implements BaseNavigationLink {
   id: String!
   label: String!
   modifiedAt: DateTime!
-  type: String!
+  type: NavigationLinkType!
   url: String
 }
 
 type FacebookPostBlock implements BaseBlock {
   blockStyle: String
   postID: String
-  type: String!
+  type: BlockType!
   userID: String
 }
 
 input FacebookPostBlockInput {
   blockStyle: String
   postID: String
-  type: String!
   userID: String
 }
 
 type FacebookVideoBlock implements BaseBlock {
   blockStyle: String
-  type: String!
+  type: BlockType!
   userID: String
   videoID: String
 }
 
 input FacebookVideoBlockInput {
   blockStyle: String
-  type: String!
   userID: String
   videoID: String
 }
 
 type FlexAlignment {
   h: Int!
-  i: Int!
+  i: String!
   static: Boolean!
   w: Int!
   x: Int!
@@ -599,7 +616,7 @@ type FlexAlignment {
 
 input FlexAlignmentInput {
   h: Int!
-  i: Int!
+  i: String!
   static: Boolean!
   w: Int!
   x: Int!
@@ -608,12 +625,12 @@ input FlexAlignmentInput {
 
 type FlexTeaser {
   alignment: FlexAlignment!
-  teaser: Teaser!
+  teaser: Teaser
 }
 
 input FlexTeaserInput {
   alignment: FlexAlignmentInput!
-  teaser: TeaserInput!
+  teaser: TeaserInput
 }
 
 type FocalPoint {
@@ -631,13 +648,12 @@ scalar GraphQLSettingValueType
 type HTMLBlock implements BaseBlock {
   blockStyle: String
   html: String
-  type: String!
+  type: BlockType!
 }
 
 input HTMLBlockInput {
   blockStyle: String
   html: String
-  type: String!
 }
 
 interface HasArticle {
@@ -704,11 +720,6 @@ interface HasPageLc {
   pageId: String!
 }
 
-interface HasPeer {
-  peer: Peer
-  peerID: String
-}
-
 interface HasPoll {
   poll: FullPoll!
   pollId: String!
@@ -730,7 +741,7 @@ type IFrameBlock implements BaseBlock {
   sandbox: String
   styleCustom: String
   title: String
-  type: String!
+  type: BlockType!
   url: String
   width: Int
 }
@@ -741,7 +752,6 @@ input IFrameBlockInput {
   sandbox: String
   styleCustom: String
   title: String
-  type: String!
   url: String
   width: Int
 }
@@ -756,23 +766,24 @@ type ImageBlock implements BaseBlock & HasImage {
   image: Image
   imageID: String
   linkUrl: String
-  type: String!
+  type: BlockType!
 }
 
 input ImageBlockInput {
   blockStyle: String
   caption: String
+  imageID: String
   linkUrl: String
-  type: String!
 }
 
 type ImageGalleryBlock implements BaseBlock {
   blockStyle: String
   images: [ImageGalleryImage!]!
-  type: String!
+  type: BlockType!
 }
 
 input ImageGalleryBlockInput {
+  blockStyle: String
   images: [ImageGalleryImageInput!]!
 }
 
@@ -784,6 +795,7 @@ type ImageGalleryImage implements HasImage {
 
 input ImageGalleryImageInput {
   caption: String
+  imageID: String
 }
 
 type ImageV2 {
@@ -830,22 +842,22 @@ type ImportedEventsDocument {
 type InstagramPostBlock implements BaseBlock {
   blockStyle: String
   postID: String
-  type: String!
+  type: BlockType!
 }
 
 input InstagramPostBlockInput {
   blockStyle: String
   postID: String
-  type: String!
 }
 
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   items: [ListicleItem!]!
-  type: String!
+  type: BlockType!
 }
 
 input ListicleBlockInput {
+  blockStyle: String
   items: [ListicleItemInput!]!
 }
 
@@ -891,16 +903,16 @@ type Mutation {
   createBanner(input: CreateBannerInput!): Banner!
 
   """Creates a new block style."""
-  createBlockStyle(blocks: [BlockType!]!, name: String!): BlockStyle!
+  createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
 
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
   """Creates a new event."""
-  createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
+  createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
 
   """Creates a new navigation."""
-  createNavigation(key: String!, links: [BaseNavigationLinkInput!]!, name: String!): Navigation!
+  createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
   """Creates a page."""
   createPage(blocks: [BlockContentInput!]!, description: String, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
@@ -934,7 +946,7 @@ type Mutation {
   deletePage(id: String!): String!
 
   """Delete poll votes"""
-  deletePollVotes(ids: [ID!]!): DeletePollVotesResult!
+  deletePollVotes(ids: [String!]!): DeletePollVotesResult!
 
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
@@ -978,16 +990,16 @@ type Mutation {
   updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
-  updateBlockStyle(blocks: [BlockType!], id: String!, name: String): BlockStyle!
+  updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
 
   """Updates an existing event."""
-  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
+  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
 
   """Updates an existing navigation."""
-  updateNavigation(id: String!, key: String!, links: [BaseNavigationLinkInput!]!, name: String!): Navigation!
+  updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
   """Updates a page."""
   updatePage(blocks: [BlockContentInput!]!, description: String, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
@@ -1017,10 +1029,25 @@ type Navigation {
   name: String!
 }
 
+input NavigationLinkInput {
+  articleID: String
+  label: String!
+  pageID: String
+  type: String!
+  url: String
+}
+
+enum NavigationLinkType {
+  Article
+  External
+  Page
+}
+
 type Page {
   createdAt: DateTime!
   draft: PageRevision
   id: String!
+  latest: PageRevision!
   modifiedAt: DateTime!
   pending: PageRevision
   published: PageRevision
@@ -1070,7 +1097,7 @@ type PageNavigationLink implements BaseNavigationLink & HasPage {
   modifiedAt: DateTime!
   page: Page!
   pageID: String!
-  type: String!
+  type: NavigationLinkType!
 }
 
 type PageRevision implements HasBlockContent {
@@ -1113,7 +1140,6 @@ input PageTeaserInput {
   preTitle: String
   style: TeaserStyle!
   title: String
-  type: String!
 }
 
 type PaginatedArticles {
@@ -1156,30 +1182,6 @@ type Peer {
   id: String!
 }
 
-type PeerArticleTeaser implements BaseTeaser & HasImage & HasPeer {
-  article: Article
-  articleID: String
-  image: Image
-  imageID: String
-  lead: String
-  peer: Peer
-  peerID: String
-  preTitle: String
-  style: TeaserStyle!
-  title: String
-  type: String!
-}
-
-input PeerArticleTeaserInput {
-  articleID: String
-  imageID: String
-  lead: String
-  preTitle: String
-  style: TeaserStyle!
-  title: String
-  type: String!
-}
-
 type PeriodicJob {
   createdAt: DateTime!
   date: DateTime!
@@ -1200,13 +1202,12 @@ type Phrase {
 type PolisConversationBlock implements BaseBlock {
   blockStyle: String
   conversationID: String
-  type: String!
+  type: BlockType!
 }
 
 input PolisConversationBlockInput {
   blockStyle: String
   conversationID: String
-  type: String!
 }
 
 type PollAnswerInVote {
@@ -1219,12 +1220,12 @@ type PollBlock implements BaseBlock & HasOptionalPoll {
   image: Image
   poll: FullPoll
   pollId: String
-  type: String!
+  type: BlockType!
 }
 
 input PollBlockInput {
   blockStyle: String
-  type: String!
+  pollId: String
 }
 
 type PollStartedAction implements BaseAction & HasPoll {
@@ -1266,7 +1267,7 @@ type Property {
 }
 
 input PropertyInput {
-  id: String!
+  id: String
   key: String!
   public: Boolean!
   value: String!
@@ -1394,14 +1395,14 @@ type QuoteBlock implements BaseBlock & HasImage {
   image: Image
   imageID: String
   quote: String
-  type: String!
+  type: BlockType!
 }
 
 input QuoteBlockInput {
   author: String
   blockStyle: String
+  imageID: String
   quote: String
-  type: String!
 }
 
 scalar RichText
@@ -1409,17 +1410,16 @@ scalar RichText
 type RichTextBlock implements BaseBlock {
   blockStyle: String
   richText: RichText!
-  type: String!
+  type: BlockType!
 }
 
 input RichTextBlockInput {
   blockStyle: String
   richText: RichText!
-  type: String!
 }
 
 type Setting {
-  id: ID!
+  id: String!
   name: SettingName!
   settingRestriction: SettingRestriction
   value: GraphQLSettingValueType
@@ -1467,13 +1467,12 @@ enum SortOrder {
 type SoundCloudTrackBlock implements BaseBlock {
   blockStyle: String
   trackID: String
-  type: String!
+  type: BlockType!
 }
 
 input SoundCloudTrackBlockInput {
   blockStyle: String
   trackID: String
-  type: String!
 }
 
 type Stats {
@@ -1536,32 +1535,30 @@ type Tag {
   id: String!
 }
 
-union Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | PeerArticleTeaser
+union Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser
 
 type TeaserGridBlock implements BaseBlock {
   blockStyle: String
   numColumns: Int!
-  teasers: [Teaser!]!
-  type: String!
+  teasers: [Teaser]!
+  type: BlockType!
 }
 
 input TeaserGridBlockInput {
   blockStyle: String
   numColumns: Int!
-  teasers: [TeaserInput!]!
-  type: String!
+  teasers: [TeaserInput]!
 }
 
 type TeaserGridFlexBlock implements BaseBlock {
   blockStyle: String
   flexTeasers: [FlexTeaser!]!
-  type: String!
+  type: BlockType!
 }
 
 input TeaserGridFlexBlockInput {
   blockStyle: String
   flexTeasers: [FlexTeaserInput!]!
-  type: String!
 }
 
 input TeaserInput {
@@ -1569,7 +1566,6 @@ input TeaserInput {
   custom: CustomTeaserInput
   event: EventTeaserInput
   page: PageTeaserInput
-  peerArticle: PeerArticleTeaserInput
 }
 
 type TeaserListBlock implements BaseBlock {
@@ -1579,18 +1575,18 @@ type TeaserListBlock implements BaseBlock {
   sort: TeaserListBlockSort
   take: Int
   teaserType: TeaserType!
-  teasers: [Teaser!]!
+  teasers: [Teaser]!
   title: String
-  type: String!
+  type: BlockType!
 }
 
 type TeaserListBlockFilter {
   tagObjects: [Tag!]!
-  tags: [ID!]!
+  tags: [String!]!
 }
 
 input TeaserListBlockFilterInput {
-  tags: [ID!]!
+  tags: [String!]!
 }
 
 input TeaserListBlockInput {
@@ -1601,7 +1597,6 @@ input TeaserListBlockInput {
   take: Int
   teaserType: TeaserType!
   title: String
-  type: String!
 }
 
 enum TeaserListBlockSort {
@@ -1620,19 +1615,17 @@ enum TeaserType {
   Custom
   Event
   Page
-  PeerArticle
 }
 
 type TikTokVideoBlock implements BaseBlock {
   blockStyle: String
-  type: String!
+  type: BlockType!
   userID: String
   videoID: String
 }
 
 input TikTokVideoBlockInput {
   blockStyle: String
-  type: String!
   userID: String
   videoID: String
 }
@@ -1641,33 +1634,31 @@ type TitleBlock implements BaseBlock {
   blockStyle: String
   lead: String
   title: String
-  type: String!
+  type: BlockType!
 }
 
 input TitleBlockInput {
   blockStyle: String
   lead: String
   title: String
-  type: String!
 }
 
 type TwitterTweetBlock implements BaseBlock {
   blockStyle: String
   tweetID: String
-  type: String!
+  type: BlockType!
   userID: String
 }
 
 input TwitterTweetBlockInput {
   blockStyle: String
   tweetID: String
-  type: String!
   userID: String
 }
 
 type UnknownBlock {
   blockStyle: String
-  type: String!
+  type: BlockType!
 }
 
 input UpdateBannerInput {
@@ -1683,14 +1674,7 @@ input UpdateBannerInput {
 }
 
 type User {
-  email: String!
-  emailVerifiedAt: DateTime
-  firstName: String
   id: String!
-  lastLogin: DateTime
-  name: String!
-  roleIDs: [String!]
-  userImageID: String
 }
 
 type UserConsent {
@@ -1722,25 +1706,23 @@ type VersionInformation {
 
 type VimeoVideoBlock implements BaseBlock {
   blockStyle: String
-  type: String!
+  type: BlockType!
   videoID: String
 }
 
 input VimeoVideoBlockInput {
   blockStyle: String
-  type: String!
   videoID: String
 }
 
 type YouTubeVideoBlock implements BaseBlock {
   blockStyle: String
-  type: String!
+  type: BlockType!
   videoID: String
 }
 
 input YouTubeVideoBlockInput {
   blockStyle: String
-  type: String!
   videoID: String
 }
 

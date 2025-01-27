@@ -1,70 +1,94 @@
-fragment MutationPage on Page {
+fragment FullPageRevisionWithoutBlocks on PageRevision {
   id
-  tags {
-    id
-    tag
+  createdAt
+  publishedAt
+  title
+  description
+  socialMediaTitle
+  socialMediaDescription
+
+  image {
+    ...FullImage
   }
 
-  draft {
-    publishedAt
-    updatedAt
-    revision
+  socialMediaImage {
+    ...FullImage
   }
 
-  pending {
-    publishAt
-    revision
-  }
-
-  published {
-    publishedAt
-    updatedAt
-    publishAt
-    revision
-  }
-
-  latest {
-    publishedAt
-    updatedAt
-    publishAt
-    revision
+  properties {
+    key
+    value
+    public
   }
 }
 
-fragment PageRef on Page {
-  id
-  tags {
-    id
-    tag
-  }
+fragment FullPageRevision on PageRevision {
+  ...FullPageRevisionWithoutBlocks
 
+  blocks {
+    ...FullBlock
+  }
+}
+
+fragment FullPage on Page {
+  id
+  publishedAt
   createdAt
   modifiedAt
+  slug
+  url
+
+  latest {
+    ...FullPageRevision
+  }
 
   draft {
-    revision
+    id
   }
 
   pending {
-    publishAt
-    revision
+    id
+    publishedAt
   }
 
   published {
+    id
     publishedAt
-    updatedAt
-    revision
+  }
+
+  tags {
+    ...FullTag
+  }
+}
+
+fragment PageWithoutBlocks on Page {
+  id
+  publishedAt
+  createdAt
+  modifiedAt
+  slug
+  url
+
+  tags {
+    ...FullTag
   }
 
   latest {
+    ...FullPageRevisionWithoutBlocks
+  }
+
+  draft {
+    id
+  }
+
+  pending {
+    id
     publishedAt
-    updatedAt
-    revision
-    title
-    description
-    image {
-      ...ImageRef
-    }
+  }
+
+  published {
+    id
+    publishedAt
   }
 }
 
@@ -76,9 +100,9 @@ query PageList(
   $order: SortOrder
   $sort: PageSort
 ) {
-  pages(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  pages(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
-      ...PageRef
+      ...PageWithoutBlocks
     }
 
     pageInfo {
@@ -92,99 +116,92 @@ query PageList(
   }
 }
 
-mutation CreatePage($input: PageInput!) {
-  createPage(input: $input) {
-    ...MutationPage
-  }
-}
-
-mutation UpdatePage($id: String!, $input: PageInput!) {
-  updatePage(id: $id, input: $input) {
-    ...MutationPage
-  }
-}
-
-mutation PublishPage(
-  $id: String!
-  $publishAt: DateTime
-  $publishedAt: DateTime
-  $updatedAt: DateTime
+mutation CreatePage(
+  $blocks: [BlockContentInput!]!
+  $imageID: String
+  $description: String
+  $properties: [PropertyInput!]!
+  $slug: String
+  $socialMediaDescription: String
+  $socialMediaImageID: String
+  $socialMediaTitle: String
+  $tagIds: [String!]!
+  $title: String
 ) {
-  publishPage(id: $id, publishAt: $publishAt, publishedAt: $publishedAt, updatedAt: $updatedAt) {
-    ...MutationPage
+  createPage(
+    blocks: $blocks
+    imageID: $imageID
+    description: $description
+    properties: $properties
+    slug: $slug
+    socialMediaDescription: $socialMediaDescription
+    socialMediaImageID: $socialMediaImageID
+    socialMediaTitle: $socialMediaTitle
+    tagIds: $tagIds
+    title: $title
+  ) {
+    ...FullPage
+  }
+}
+
+mutation UpdatePage(
+  $id: String!
+  $blocks: [BlockContentInput!]!
+  $imageID: String
+  $description: String
+  $properties: [PropertyInput!]!
+  $slug: String
+  $socialMediaDescription: String
+  $socialMediaImageID: String
+  $socialMediaTitle: String
+  $tagIds: [String!]!
+  $title: String
+) {
+  updatePage(
+    id: $id
+    blocks: $blocks
+    imageID: $imageID
+    description: $description
+    properties: $properties
+    slug: $slug
+    socialMediaDescription: $socialMediaDescription
+    socialMediaImageID: $socialMediaImageID
+    socialMediaTitle: $socialMediaTitle
+    tagIds: $tagIds
+    title: $title
+  ) {
+    ...FullPage
+  }
+}
+
+mutation PublishPage($id: String!, $publishedAt: DateTime!) {
+  publishPage(id: $id, publishedAt: $publishedAt) {
+    ...FullPage
   }
 }
 
 mutation UnpublishPage($id: String!) {
   unpublishPage(id: $id) {
-    ...MutationPage
+    ...FullPage
   }
 }
 
 mutation DeletePage($id: String!) {
-  deletePage(id: $id) {
-    ...MutationPage
-  }
+  deletePage(id: $id)
 }
 
 mutation DuplicatePage($id: String!) {
   duplicatePage(id: $id) {
-    ...MutationPage
+    ...FullPage
   }
 }
 
-query PagePreviewLink($id: String!, $hours: Int!) {
-  pagePreviewLink(id: $id, hours: $hours)
-}
+# query PagePreviewLink($id: String!, $hours: Int!) {
+#   pagePreviewLink(id: $id, hours: $hours)
+# }
 
 query Page($id: String!) {
   page(id: $id) {
-    id
-
-    tags {
-      id
-      tag
-      type
-    }
-
-    draft {
-      publishAt
-    }
-
-    pending {
-      publishAt
-    }
-
-    published {
-      publishedAt
-      updatedAt
-      publishAt
-    }
-
-    latest {
-      publishedAt
-      updatedAt
-      publishAt
-      slug
-      title
-      description
-      image {
-        ...ImageRef
-      }
-      url
-      properties {
-        key
-        value
-        public
-      }
-      socialMediaTitle
-      socialMediaDescription
-      socialMediaImage {
-        ...ImageRef
-      }
-      blocks {
-        ...FullBlock
-      }
-    }
+    ...FullPage
   }
 }

@@ -11,4 +11,4 @@ export class HTMLBlock extends BaseBlock<typeof BlockType.HTML> {
 }
 
 @InputType()
-export class HTMLBlockInput extends OmitType(HTMLBlock, [] as const, InputType) {}
+export class HTMLBlockInput extends OmitType(HTMLBlock, ['type'] as const, InputType) {}

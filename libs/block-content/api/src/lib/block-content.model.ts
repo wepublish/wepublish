@@ -67,7 +67,7 @@ export const BlockContent = createUnionType({
       TeaserGridFlexBlock,
       TeaserListBlock
     ] as const,
-  resolveType: (value: BaseBlock<string>) => {
+  resolveType: (value: BaseBlock<BlockType>) => {
     switch (value.type) {
       case BlockType.RichText:
         return RichTextBlock.name

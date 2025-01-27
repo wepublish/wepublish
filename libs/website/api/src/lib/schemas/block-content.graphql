@@ -178,26 +178,6 @@ fragment FullTeaser on Teaser {
     }
   }
 
-  ... on PeerArticleTeaser {
-    style
-
-    image {
-      ...FullImage
-    }
-
-    preTitle
-    title
-    lead
-
-    peer {
-      ...FullPeer
-    }
-
-    article {
-      ...ArticleWithoutBlocks
-    }
-  }
-
   ... on PageTeaser {
     style
 

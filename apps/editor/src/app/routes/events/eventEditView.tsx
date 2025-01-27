@@ -1,12 +1,12 @@
 import {ApolloError} from '@apollo/client'
+import {ImageRefFragment, MutationUpdateEventArgs, stripTypename} from '@wepublish/editor/api'
 import {
-  EventRefFragment,
-  ImageRefFragment,
-  MutationUpdateEventArgs,
-  stripTypename,
+  FullEventFragment,
+  FullImageFragment,
+  getApiClientV2,
   useEventQuery,
   useUpdateEventMutation
-} from '@wepublish/editor/api'
+} from '@wepublish/editor/api-v2'
 import {SingleViewTitle} from '@wepublish/ui/editor'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -24,8 +24,8 @@ const onErrorToast = (error: ApolloError) => {
 }
 
 const mapApiDataToInput = (
-  event: EventRefFragment
-): MutationUpdateEventArgs & {image?: ImageRefFragment | null} => ({
+  event: FullEventFragment
+): MutationUpdateEventArgs & {image?: FullImageFragment | null} => ({
   ...stripTypename(event),
   imageId: event.image?.id,
   tagIds: event.tags?.map(tag => tag.id)
@@ -44,7 +44,9 @@ export const EventEditView = () => {
 
   const [shouldClose, setShouldClose] = useState(false)
 
+  const client = getApiClientV2()
   const {loading: dataLoading} = useEventQuery({
+    client,
     variables: {
       id: eventId
     },
@@ -57,6 +59,7 @@ export const EventEditView = () => {
   })
 
   const [updateEvent, {loading: updateLoading}] = useUpdateEventMutation({
+    client,
     onError: onErrorToast,
     onCompleted: data => {
       if (shouldClose) {
@@ -73,9 +76,11 @@ export const EventEditView = () => {
 
   const onSubmit = () => {
     const {image, ...eventWithoutImage} = event!
+
     if (!eventWithoutImage.endsAt) {
       eventWithoutImage.endsAt = null
     }
+
     updateEvent({variables: eventWithoutImage})
   }
 

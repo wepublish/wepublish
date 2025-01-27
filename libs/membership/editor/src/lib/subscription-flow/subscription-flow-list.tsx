@@ -13,6 +13,7 @@ import {
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
 import {
   FullMailTemplateFragment,
+  getApiClientV2,
   SubscriptionEvent,
   SubscriptionInterval,
   useCreateSubscriptionFlowMutation,
@@ -29,8 +30,7 @@ import {
   ListViewContainer,
   ListViewHeader,
   PermissionControl,
-  createCheckedPermissionComponent,
-  getApiClientV2
+  createCheckedPermissionComponent
 } from '@wepublish/ui/editor'
 import {createContext, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'

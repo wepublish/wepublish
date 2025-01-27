@@ -2,7 +2,6 @@ import {
   ArgsType,
   Directive,
   Field,
-  ID,
   InputType,
   Int,
   ObjectType,
@@ -95,6 +94,9 @@ export class Page {
 
   @Field(() => PageRevision, {nullable: true})
   published?: PageRevision
+
+  @Field(() => PageRevision)
+  latest!: PageRevision
 
   @Field(() => [Tag])
   tags!: Tag[]

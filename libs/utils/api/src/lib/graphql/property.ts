@@ -16,4 +16,7 @@ export class Property {
 }
 
 @InputType()
-export class PropertyInput extends OmitType(Property, [] as const, InputType) {}
+export class PropertyInput extends OmitType(Property, ['id'] as const, InputType) {
+  @Field({nullable: true})
+  id?: string
+}

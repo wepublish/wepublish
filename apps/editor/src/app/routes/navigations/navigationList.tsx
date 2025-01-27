@@ -2,7 +2,7 @@ import {
   FullNavigationFragment,
   useDeleteNavigationMutation,
   useNavigationListQuery
-} from '@wepublish/editor/api'
+} from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
   DescriptionList,
@@ -53,7 +53,7 @@ function NavigationList() {
     refetch,
     loading: isLoading
   } = useNavigationListQuery({
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'cache-and-network'
   })
 
   const [deleteNavigation, {loading: isDeleting}] = useDeleteNavigationMutation()

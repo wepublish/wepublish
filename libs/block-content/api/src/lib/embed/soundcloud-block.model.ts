@@ -13,6 +13,6 @@ export class SoundCloudTrackBlock extends BaseBlock<typeof BlockType.SoundCloudT
 @InputType()
 export class SoundCloudTrackBlockInput extends OmitType(
   SoundCloudTrackBlock,
-  [] as const,
+  ['type'] as const,
   InputType
 ) {}

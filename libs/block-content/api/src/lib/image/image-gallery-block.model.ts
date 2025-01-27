@@ -26,10 +26,17 @@ export class ImageGalleryImageInput extends OmitType(
   ImageGalleryImage,
   ['image'] as const,
   InputType
-) {}
+) {
+  @Field({nullable: true})
+  override imageID?: string
+}
 
 @InputType()
-export class ImageGalleryBlockInput extends BaseBlock<typeof BlockType.ImageGallery> {
+export class ImageGalleryBlockInput extends OmitType(
+  ImageGalleryBlock,
+  ['images', 'type'] as const,
+  InputType
+) {
   @Field(() => [ImageGalleryImageInput])
   images!: ImageGalleryImageInput[]
 }

@@ -7,6 +7,7 @@ import {
   useDeleteImageMutation,
   useImageListQuery
 } from '@wepublish/editor/api'
+import {LocalStorageKey} from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -19,7 +20,6 @@ import {
   ListViewContainer,
   ListViewFilterArea,
   ListViewHeader,
-  LocalStorageKey,
   PaddedCell,
   PermissionControl,
   Table,

@@ -19,4 +19,7 @@ export class QuoteBlock extends BaseBlock<typeof BlockType.Quote> implements Has
 }
 
 @InputType()
-export class QuoteBlockInput extends OmitType(QuoteBlock, ['image'] as const, InputType) {}
+export class QuoteBlockInput extends OmitType(QuoteBlock, ['image', 'type'] as const, InputType) {
+  @Field({nullable: true})
+  override imageID?: string
+}

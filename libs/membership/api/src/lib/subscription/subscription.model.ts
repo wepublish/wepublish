@@ -1,4 +1,4 @@
-import {Directive, Field, ID, ObjectType} from '@nestjs/graphql'
+import {Directive, Field, ObjectType} from '@nestjs/graphql'
 
 @ObjectType()
 @Directive('@extends')
