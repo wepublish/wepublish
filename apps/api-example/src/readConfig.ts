@@ -158,7 +158,7 @@ interface ProLitteris extends ProLitterisCountPixelProps {
   type: 'prolitteris'
 }
 
-type TackingPixels = ProLitteris
+type TrackingPixels = ProLitteris
 
 type Config = {
   general: General
@@ -167,7 +167,7 @@ type Config = {
   paymentProviders: PaymentProvider[]
   mediaServer: karmaMediaServer | novaMediaServer
   challenge: AlgebraicCaptcha | Turnstile
-  trackingPixelProviders: TackingPixels[]
+  trackingPixelProviders: TrackingPixels[]
   ga?: GoogleAnalyticsConfig
 }
 
