@@ -379,7 +379,8 @@ function ArticleEditor() {
       socialMediaTitle: metadata.socialMediaTitle || undefined,
       socialMediaDescription: metadata.socialMediaDescription || undefined,
       socialMediaAuthorIDs: metadata.socialMediaAuthors.map(({id}) => id),
-      socialMediaImageID: metadata.socialMediaImage?.id || undefined
+      socialMediaImageID: metadata.socialMediaImage?.id || undefined,
+      likes: metadata.likes ?? 0
     }
   }
 
@@ -640,6 +641,7 @@ function ArticleEditor() {
             setMetaDrawerOpen(false)
           }}
           onChange={value => {
+            console.log(value)
             setMetadata(value)
             setChanged(true)
           }}
