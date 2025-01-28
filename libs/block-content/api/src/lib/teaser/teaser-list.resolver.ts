@@ -1,13 +1,6 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {TeaserListBlock, TeaserListBlockSort} from './teaser-list.model'
-import {
-  ArticleTeaser,
-  EventTeaser,
-  PageTeaser,
-  Teaser,
-  TeaserStyle,
-  TeaserType
-} from './teaser.model'
+import {TeaserListBlock, TeaserListBlockFilter, TeaserListBlockSort} from './teaser-list.model'
+import {ArticleTeaser, EventTeaser, PageTeaser, Teaser, TeaserType} from './teaser.model'
 import {
   ArticleService,
   ArticleSort,
@@ -16,9 +9,10 @@ import {
 } from '@wepublish/article/api'
 import {Inject} from '@nestjs/common'
 import {PageService, PageSort} from '@wepublish/page/api'
-import {Article} from '@prisma/client'
+import {Article, PrismaClient} from '@prisma/client'
 import {SortOrder} from '@wepublish/utils/api'
 import {EventService, EventSort} from '@wepublish/event/api'
+import {Tag} from '@wepublish/tag/api'
 
 @Resolver(() => TeaserListBlock)
 export class TeaserListBlockResolver {
@@ -60,7 +54,6 @@ export class TeaserListBlockResolver {
         article =>
           ({
             articleID: article.id,
-            style: TeaserStyle.Default,
             type: TeaserType.Article,
             imageID: undefined,
             lead: undefined,
@@ -84,7 +77,6 @@ export class TeaserListBlockResolver {
         page =>
           ({
             pageID: page.id,
-            style: TeaserStyle.Default,
             type: TeaserType.Page,
             imageID: undefined,
             lead: undefined,
@@ -108,7 +100,6 @@ export class TeaserListBlockResolver {
         event =>
           ({
             eventID: event.id,
-            style: TeaserStyle.Default,
             type: TeaserType.Event,
             imageID: undefined,
             lead: undefined,
@@ -118,5 +109,21 @@ export class TeaserListBlockResolver {
     }
 
     return []
+  }
+}
+
+@Resolver(() => TeaserListBlockFilter)
+export class TeaserListBlockFilterResolver {
+  constructor(private prisma: PrismaClient) {}
+
+  @ResolveField(() => [Tag])
+  async tagObjects(@Parent() parent: TeaserListBlockFilter) {
+    return this.prisma.tag.findMany({
+      where: {
+        id: {
+          in: parent.tags
+        }
+      }
+    })
   }
 }

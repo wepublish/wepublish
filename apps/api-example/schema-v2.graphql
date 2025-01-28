@@ -53,7 +53,7 @@ type Article {
   peerId: String
   pending: ArticleRevision
   published: ArticleRevision
-  publishedAt: DateTime!
+  publishedAt: DateTime
   shared: Boolean!
   slug: String
   tags: [Tag!]!
@@ -96,7 +96,7 @@ type ArticleRevision implements HasBlockContent {
   authors: [Author!]!
   blocks: [BlockContent!]!
   breaking: Boolean!
-  canonicalUrl: String!
+  canonicalUrl: String
   createdAt: DateTime!
   hideAuthor: Boolean!
   id: String!
@@ -105,7 +105,7 @@ type ArticleRevision implements HasBlockContent {
   lead: String
   preTitle: String
   properties: [Property!]!
-  publishedAt: DateTime!
+  publishedAt: DateTime
   seoTitle: String
   socialMediaAuthors: [Author!]!
   socialMediaDescription: String
@@ -128,16 +128,15 @@ type ArticleTeaser implements BaseTeaser & HasImage & HasOptionalArticle {
   imageID: String
   lead: String
   preTitle: String
-  style: TeaserStyle!
   title: String
   type: String!
 }
 
 input ArticleTeaserInput {
+  articleID: String
   imageID: String
   lead: String
   preTitle: String
-  style: TeaserStyle!
   title: String
 }
 
@@ -207,7 +206,6 @@ interface BaseTeaser implements HasImage {
   imageID: String
   lead: String
   preTitle: String
-  style: TeaserStyle!
   title: String
   type: String!
 }
@@ -388,7 +386,6 @@ type CustomTeaser implements BaseTeaser & HasImage {
   lead: String
   preTitle: String
   properties: [Property!]!
-  style: TeaserStyle!
   title: String
   type: String!
 }
@@ -399,7 +396,6 @@ input CustomTeaserInput {
   lead: String
   preTitle: String
   properties: [PropertyInput!]! = []
-  style: TeaserStyle!
   title: String
 }
 
@@ -557,16 +553,15 @@ type EventTeaser implements BaseTeaser & HasImage & HasOptionalEvent {
   imageID: String
   lead: String
   preTitle: String
-  style: TeaserStyle!
   title: String
   type: String!
 }
 
 input EventTeaserInput {
+  eventID: String
   imageID: String
   lead: String
   preTitle: String
-  style: TeaserStyle!
   title: String
 }
 
@@ -899,7 +894,7 @@ type MemberPlan {
 
 type Mutation {
   """Creates an article."""
-  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String!, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   createBanner(input: CreateBannerInput!): Banner!
 
   """Creates a new block style."""
@@ -986,7 +981,7 @@ type Mutation {
   unpublishPage(id: String!): Page!
 
   """Updates an article."""
-  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String!, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
@@ -1051,7 +1046,7 @@ type Page {
   modifiedAt: DateTime!
   pending: PageRevision
   published: PageRevision
-  publishedAt: DateTime!
+  publishedAt: DateTime
   slug: String
   tags: [Tag!]!
   url: String!
@@ -1108,7 +1103,7 @@ type PageRevision implements HasBlockContent {
   image: Image
   imageID: String
   properties: [Property!]!
-  publishedAt: DateTime!
+  publishedAt: DateTime
   socialMediaDescription: String
   socialMediaImage: Image
   socialMediaImageID: String
@@ -1129,7 +1124,6 @@ type PageTeaser implements BaseTeaser & HasImage & HasOptionalPage {
   page: Page
   pageID: String
   preTitle: String
-  style: TeaserStyle!
   title: String
   type: String!
 }
@@ -1137,8 +1131,8 @@ type PageTeaser implements BaseTeaser & HasImage & HasOptionalPage {
 input PageTeaserInput {
   imageID: String
   lead: String
+  pageID: String
   preTitle: String
-  style: TeaserStyle!
   title: String
 }
 
@@ -1156,6 +1150,12 @@ type PaginatedEvents {
 
 type PaginatedPages {
   nodes: [Page!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
+}
+
+type PaginatedPeerArticle {
+  nodes: [PeerArticle!]!
   pageInfo: PageInfo!
   totalCount: Float!
 }
@@ -1180,6 +1180,35 @@ enum PaymentPeriodicity {
 
 type Peer {
   id: String!
+}
+
+type PeerArticle {
+  id: String!
+  latest: PeerArticleRevision!
+  peer: Peer
+  peerId: String
+  slug: String
+  url: String!
+}
+
+input PeerArticleFilter {
+  authors: [String!]
+  includeHidden: Boolean
+  lead: String
+  peerName: String
+  preTitle: String
+  publicationDateFrom: DateFilter
+  publicationDateTo: DateFilter
+  shared: Boolean
+  tags: [String!]
+  title: String
+}
+
+type PeerArticleRevision {
+  image: Image
+  lead: String
+  preTitle: String
+  title: String
 }
 
 type PeriodicJob {
@@ -1347,6 +1376,9 @@ type Query {
 
   """Returns all payment methods"""
   paymentMethods: [PaymentMethod!]!
+
+  """Returns a paginated list of peer articles based on the filters given."""
+  peerArticles(filter: PeerArticleFilter, order: SortOrder = Ascending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticle!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
 
   """
@@ -1602,12 +1634,6 @@ input TeaserListBlockInput {
 enum TeaserListBlockSort {
   HotAndTrending
   PublishedAt
-}
-
-enum TeaserStyle {
-  Default
-  Light
-  Text
 }
 
 enum TeaserType {

@@ -6,7 +6,7 @@ fragment MemberPlanRef on MemberPlan {
   active
   tags
   image {
-    ...ImageRef
+    ...FullImage
   }
 }
 

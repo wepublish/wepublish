@@ -10,7 +10,7 @@ import {EventModule} from '@wepublish/event/api'
 import {PeerModule} from '@wepublish/peering/api'
 import {ArticleModule} from '@wepublish/article/api'
 import {PageModule} from '@wepublish/page/api'
-import {TeaserListBlockResolver} from './teaser/teaser-list.resolver'
+import {TeaserListBlockFilterResolver, TeaserListBlockResolver} from './teaser/teaser-list.resolver'
 
 @Module({
   imports: [
@@ -24,6 +24,12 @@ import {TeaserListBlockResolver} from './teaser/teaser-list.resolver'
     PeerModule,
     CommentModule
   ],
-  providers: [PollBlockResolver, EventBlockResolver, CommentBlockResolver, TeaserListBlockResolver]
+  providers: [
+    PollBlockResolver,
+    EventBlockResolver,
+    CommentBlockResolver,
+    TeaserListBlockResolver,
+    TeaserListBlockFilterResolver
+  ]
 })
 export class BlockContentModule {}

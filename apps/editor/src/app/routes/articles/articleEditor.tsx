@@ -3,6 +3,7 @@ import {AuthorRefFragment} from '@wepublish/editor/api'
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
+  getApiClientV2,
   getSettings,
   useArticleQuery,
   useCreateArticleMutation,
@@ -112,10 +113,15 @@ function ArticleEditor() {
 
   const {peerByDefault}: ClientSettings = getSettings()
 
+  const client = getApiClientV2()
   const [createArticle, {data: createData, loading: isCreating, error: createError}] =
-    useCreateArticleMutation()
-  const [updateArticle, {loading: isUpdating, error: updateError}] = useUpdateArticleMutation()
-  const [publishArticle, {loading: isPublishing, error: publishError}] = usePublishArticleMutation()
+    useCreateArticleMutation({client})
+  const [updateArticle, {loading: isUpdating, error: updateError}] = useUpdateArticleMutation({
+    client
+  })
+  const [publishArticle, {loading: isPublishing, error: publishError}] = usePublishArticleMutation({
+    client
+  })
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -156,6 +162,7 @@ function ArticleEditor() {
     refetch,
     loading: isLoading
   } = useArticleQuery({
+    client,
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
     variables: {id: articleID!}
@@ -178,6 +185,7 @@ function ArticleEditor() {
 
   useEffect(() => {
     if (articleData?.article) {
+      console.log(articleData?.article)
       const {latest, shared, hidden, disableComments, pending, tags, url, slug} =
         articleData.article
       const {
@@ -544,17 +552,7 @@ function ArticleEditor() {
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
-                  <Link
-                    to="#"
-                    className="actionButton"
-                    onClick={e => {
-                      previewLinkFetch({
-                        variables: {
-                          id: id!,
-                          hours: 1
-                        }
-                      })
-                    }}>
+                  <Link to={articleData?.article.url ?? ''} className="actionButton">
                     <IconButtonMarginTop
                       disabled={hasChanged || !id || !canPreview}
                       size="lg"
@@ -575,6 +573,7 @@ function ArticleEditor() {
           />
         </EditorTemplate>
       </FieldSet>
+
       <Drawer open={isMetaDrawerOpen} size="md" onClose={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
           articleID={articleID}
@@ -590,6 +589,7 @@ function ArticleEditor() {
           }}
         />
       </Drawer>
+
       <Modal open={isPublishDialogOpen} size="sm" onClose={() => setPublishDialogOpen(false)}>
         <PublishArticlePanel
           publishedAtDate={publishedAt}

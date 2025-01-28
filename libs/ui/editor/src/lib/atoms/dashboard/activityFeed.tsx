@@ -17,7 +17,7 @@ import {Avatar, Message, Timeline as RTimeline, toaster} from 'rsuite'
 
 import {AVAILABLE_LANG} from '../../utility'
 import {RichTextBlock} from '../../blocks/richTextBlock/rich-text-block'
-import {RecentActionsQuery, useRecentActionsQuery} from '@wepublish/editor/api-v2'
+import {getApiClientV2, RecentActionsQuery, useRecentActionsQuery} from '@wepublish/editor/api-v2'
 
 const Timeline = styled(RTimeline)`
   margin-left: 10px;
@@ -59,7 +59,8 @@ const TimelineIcon = styled(Avatar)`
 type Action = NonNullable<RecentActionsQuery['actions']>[number]
 
 export function ActivityFeed() {
-  const {data, error} = useRecentActionsQuery({fetchPolicy: 'cache-and-network'})
+  const client = getApiClientV2()
+  const {data, error} = useRecentActionsQuery({client, fetchPolicy: 'cache-and-network'})
 
   const actions = data?.actions ?? []
 
@@ -186,7 +187,8 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           date={action.date}
           details={
             <>
-              {action.subscription.memberPlan.name}: {action.subscription.user?.email}
+              {action.subscription.memberPlan.name}: {action.subscription.user?.firstName}{' '}
+              {action.subscription.user?.name}
             </>
           }
         />

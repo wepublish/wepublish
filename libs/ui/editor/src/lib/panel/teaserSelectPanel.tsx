@@ -30,7 +30,6 @@ import {
   ArticleFilter,
   EventFilter,
   PageFilter,
-  TeaserStyle,
   TeaserType,
   useArticleListQuery,
   useEventListQuery,
@@ -126,7 +125,6 @@ export interface TeaserSelectPanelProps {
 
 export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const initialTeaser = {
-    style: TeaserStyle.Default,
     title: '',
     preTitle: '',
     lead: '',
@@ -135,7 +133,6 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   } as Teaser
 
   const [type, setType] = useState<TeaserType>(TeaserType.Article)
-  const [style, setStyle] = useState(initialTeaser.style)
   const [image, setImage] = useState(initialTeaser.image)
   const [preTitle, setPreTitle] = useState(initialTeaser.preTitle)
   const [contentUrl, setContentUrl] = useState('')
@@ -423,7 +420,6 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                   onSelect({
                     ...initialTeaser,
                     type: TeaserType.Custom,
-                    style,
                     preTitle: preTitle || undefined,
                     title: title || undefined,
                     lead: lead || undefined,

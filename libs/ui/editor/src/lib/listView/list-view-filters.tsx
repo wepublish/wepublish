@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import {
   AuthorRefFragment,
-  EventFilter,
   FullUserRoleFragment,
   PollAnswerWithVoteCount,
   usePeerListLazyQuery,
@@ -30,7 +29,8 @@ import {
   PollVoteFilter,
   Scalars,
   useEventProvidersLazyQuery,
-  DateFilterComparison
+  DateFilterComparison,
+  EventFilter
 } from '@wepublish/editor/api-v2'
 import {getApiClientV2} from '@wepublish/editor/api-v2'
 

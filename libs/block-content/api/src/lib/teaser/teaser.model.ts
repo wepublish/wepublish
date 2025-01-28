@@ -24,25 +24,12 @@ registerEnumType(TeaserType, {
   name: 'TeaserType'
 })
 
-export enum TeaserStyle {
-  Default = 'default',
-  Light = 'light',
-  Text = 'text'
-}
-
-registerEnumType(TeaserStyle, {
-  name: 'TeaserStyle'
-})
-
 @InterfaceType({
   implements: [HasImage]
 })
 export abstract class BaseTeaser<Type extends TeaserType> extends HasImage {
   @Field(() => String)
   type!: Type
-
-  @Field(() => TeaserStyle)
-  style?: TeaserStyle
 
   @Field({nullable: true})
   preTitle?: string
@@ -65,7 +52,10 @@ export class ArticleTeaserInput extends OmitType(
   ArticleTeaser,
   ['article', 'image', 'type'] as const,
   InputType
-) {}
+) {
+  @Field({nullable: true})
+  override articleID?: string
+}
 
 @ObjectType({
   implements: () => [BaseTeaser, HasOptionalPage]
@@ -80,7 +70,10 @@ export class PageTeaserInput extends OmitType(
   PageTeaser,
   ['page', 'image', 'type'] as const,
   InputType
-) {}
+) {
+  @Field({nullable: true})
+  override pageID?: string
+}
 
 @ObjectType({
   implements: () => [BaseTeaser, HasOptionalEvent]
@@ -95,7 +88,10 @@ export class EventTeaserInput extends OmitType(
   EventTeaser,
   ['event', 'image', 'type'] as const,
   InputType
-) {}
+) {
+  @Field({nullable: true})
+  override eventID?: string
+}
 
 @ObjectType({
   implements: () => [BaseTeaser]

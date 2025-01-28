@@ -1,6 +1,9 @@
 import {ApolloError} from '@apollo/client'
-import {ImageRefFragment} from '@wepublish/editor/api'
-import {useCreateEventMutation} from '@wepublish/editor/api-v2'
+import {
+  FullImageFragment,
+  MutationCreateEventArgs,
+  useCreateEventMutation
+} from '@wepublish/editor/api-v2'
 import {SingleViewTitle} from '@wepublish/ui/editor'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -24,7 +27,7 @@ export const EventCreateView = () => {
   const closePath = '/events'
   const [event, setEvent] = useState({
     name: ''
-  } as MutationCreateEventArgs & {image?: ImageRefFragment | null})
+  } as MutationCreateEventArgs & {image?: FullImageFragment | null})
 
   const [shouldClose, setShouldClose] = useState(false)
 

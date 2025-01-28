@@ -6,8 +6,7 @@ import {
   EventTeaser,
   FullImageFragment,
   PageTeaser,
-  TagType,
-  TeaserStyle
+  TagType
 } from '@wepublish/website/api'
 import {TeaserSlider} from './teaser-slider'
 
@@ -47,7 +46,6 @@ const image = {
 
 const eventTeaser = {
   __typename: 'EventTeaser',
-  style: TeaserStyle.Default,
   image,
   preTitle: 'Pre Title',
   title: 'Title',
@@ -76,7 +74,6 @@ const eventTeaser = {
 
 const articleTeaser = {
   __typename: 'ArticleTeaser',
-  style: TeaserStyle.Default,
   image,
   preTitle: 'Pre Title',
   title: 'Title',
@@ -121,7 +118,6 @@ const articleTeaser = {
 
 const pageTeaser = {
   __typename: 'PageTeaser',
-  style: TeaserStyle.Default,
   image,
   preTitle: 'Pre Title',
   title: 'Title',

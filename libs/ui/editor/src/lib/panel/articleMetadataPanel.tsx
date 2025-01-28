@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import {
   AuthorRefFragment,
   CommentItemType,
-  ImageRefFragment,
+  FullImageFragment,
   Tag,
   TagType
 } from '@wepublish/editor/api'
@@ -112,7 +112,7 @@ export interface ArticleMetadata {
   readonly url: string
   readonly properties: ArticleMetadataProperty[]
   readonly canonicalUrl: string
-  readonly image?: ImageRefFragment
+  readonly image?: FullImageFragment
   readonly shared: boolean
   readonly hidden?: boolean | null
   readonly disableComments?: boolean | null
@@ -121,7 +121,7 @@ export interface ArticleMetadata {
   readonly socialMediaTitle?: string
   readonly socialMediaDescription?: string
   readonly socialMediaAuthors: AuthorRefFragment[]
-  readonly socialMediaImage?: ImageRefFragment
+  readonly socialMediaImage?: FullImageFragment
 }
 
 export interface InfoData {
@@ -193,7 +193,7 @@ function ArticleMetadataPanel({
     }
   }, [metaDataProperties])
 
-  function handleImageChange(currentImage: ImageRefFragment) {
+  function handleImageChange(currentImage: FullImageFragment) {
     switch (activeKey) {
       case MetaDataType.General: {
         const image = currentImage

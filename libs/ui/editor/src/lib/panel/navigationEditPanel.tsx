@@ -23,6 +23,7 @@ import {generateID, getOperationNameFromDocument} from '../utility'
 import {
   ArticleWithoutBlocksFragment,
   FullNavigationFragment,
+  getApiClientV2,
   NavigationLinkInput,
   NavigationLinkType,
   NavigationListDocument,
@@ -71,13 +72,15 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
     {label: 'External Link', value: 'ExternalNavigationLink'}
   ]
 
+  const client = getApiClientV2()
   const {
     data,
     loading: isLoading,
     error: loadError
   } = useNavigationQuery({
+    client,
     variables: {id: id!},
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     skip: id === undefined
   })
 
@@ -86,6 +89,7 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
     loading: isLoadingPageData,
     error: pageLoadError
   } = usePageListQuery({
+    client,
     variables: {take: 50},
     fetchPolicy: 'cache-and-network'
   })
@@ -95,18 +99,21 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
     loading: isLoadingArticleData,
     error: articleLoadError
   } = useArticleListQuery({
+    client,
     variables: {take: 50},
     fetchPolicy: 'cache-and-network'
   })
 
   const [createNavigation, {loading: isCreating, error: createError}] = useCreateNavigationMutation(
     {
+      client,
       refetchQueries: [getOperationNameFromDocument(NavigationListDocument)]
     }
   )
 
-  const [updateNavigation, {loading: isUpdating, error: updateError}] =
-    useUpdateNavigationMutation()
+  const [updateNavigation, {loading: isUpdating, error: updateError}] = useUpdateNavigationMutation(
+    {client}
+  )
 
   const isDisabled =
     isLoading ||

@@ -1,6 +1,7 @@
 import {CommentItemType, useCreateCommentMutation} from '@wepublish/editor/api'
 import {
   FullPageFragment,
+  getApiClientV2,
   PageFilter,
   PageListDocument,
   PageListQuery,
@@ -77,9 +78,10 @@ function PageList() {
   const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
 
-  const [deletePage, {loading: isDeleting}] = useDeletePageMutation()
-  const [unpublishPage, {loading: isUnpublishing}] = useUnpublishPageMutation()
-  const [duplicatePage, {loading: isDuplicating}] = useDuplicatePageMutation()
+  const client = getApiClientV2()
+  const [deletePage, {loading: isDeleting}] = useDeletePageMutation({client})
+  const [unpublishPage, {loading: isUnpublishing}] = useUnpublishPageMutation({client})
+  const [duplicatePage, {loading: isDuplicating}] = useDuplicatePageMutation({client})
 
   const pageListVariables = {
     filter: filter || undefined,
@@ -94,8 +96,9 @@ function PageList() {
     refetch,
     loading: isLoading
   } = usePageListQuery({
+    client,
     variables: pageListVariables,
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'cache-and-network'
   })
 
   const pages = useMemo(() => data?.pages?.nodes ?? [], [data])

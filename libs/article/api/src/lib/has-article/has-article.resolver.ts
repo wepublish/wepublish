@@ -8,10 +8,7 @@ import {
 import {Article} from '../article.model'
 import {ArticleDataloaderService} from '../article-dataloader.service'
 
-@Resolver(() => HasOptionalArticle)
 @Resolver(() => HasArticle)
-@Resolver(() => HasOptionalArticleLc)
-@Resolver(() => HasArticleLc)
 export class HasArticleResolver {
   constructor(private dataloader: ArticleDataloaderService) {}
 
@@ -29,3 +26,12 @@ export class HasArticleResolver {
     return this.dataloader.load(id)
   }
 }
+
+@Resolver(() => HasArticleLc)
+export class HasArticleLcResolver extends HasArticleResolver {}
+
+@Resolver(() => HasOptionalArticle)
+export class HasOptionalArticleResolver extends HasArticleResolver {}
+
+@Resolver(() => HasOptionalArticleLc)
+export class HasOptionalArticleLcResolver extends HasArticleResolver {}

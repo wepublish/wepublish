@@ -3,7 +3,7 @@ import {
   AvailablePaymentMethod,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
-  ImageRefFragment,
+  FullImageFragment,
   PaymentMethod,
   Currency
 } from '@wepublish/editor/api'
@@ -488,7 +488,7 @@ export function MemberPlanForm({
       <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={(image: ImageRefFragment) => {
+          onSelect={(image: FullImageFragment) => {
             setChooseModalOpen(false)
             if (!memberPlan) {
               return

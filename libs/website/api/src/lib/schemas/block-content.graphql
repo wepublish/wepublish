@@ -150,8 +150,6 @@ fragment BlockWithoutTeaser on BlockContent {
 
 fragment FullTeaser on Teaser {
   ... on ArticleTeaser {
-    style
-
     image {
       ...FullImage
     }
@@ -179,8 +177,6 @@ fragment FullTeaser on Teaser {
   }
 
   ... on PageTeaser {
-    style
-
     image {
       ...FullImage
     }
@@ -195,8 +191,6 @@ fragment FullTeaser on Teaser {
   }
 
   ... on EventTeaser {
-    style
-
     image {
       ...FullImage
     }
@@ -211,8 +205,6 @@ fragment FullTeaser on Teaser {
   }
 
   ... on CustomTeaser {
-    style
-
     image {
       ...FullImage
     }

@@ -5,7 +5,7 @@ import {Drawer} from 'rsuite'
 import {Teaser, TeaserLink} from '../blocks/types'
 import {TeaserEditPanel} from './teaserEditPanel'
 import {TeaserSelectPanel} from './teaserSelectPanel'
-import {TeaserStyle, TeaserType} from '@wepublish/editor/api-v2'
+import {TeaserType} from '@wepublish/editor/api-v2'
 
 export interface TeaserSelectAndEditPanelProps {
   onClose: () => void
@@ -32,7 +32,6 @@ export function TeaserSelectAndEditPanel({onClose, onSelect}: TeaserSelectAndEdi
           closeLabel={t('articleEditor.panels.back')}
           initialTeaser={{
             ...teaser!,
-            style: TeaserStyle.Default,
             preTitle: '',
             title: '',
             lead: ''

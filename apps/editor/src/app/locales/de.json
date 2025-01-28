@@ -107,7 +107,6 @@
         "statePublished": "Status: Publiziert",
         "status": "{{stateJoin}}",
         "tags": "Tags",
-        "teaserStyle": "Style: {{label}}",
         "title": "Titel",
         "titleHelpBlock": "Verwende einen SEO-optimierten Titel",
         "totalCharCount": "Anzahl Zeichen {{totalCharCount}}",

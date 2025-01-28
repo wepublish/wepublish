@@ -8,7 +8,12 @@ import {ArticleRevisionDataloaderService} from './article-revision-dataloader.se
 import {ArticleRevisionResolver} from './article-revision.resolver'
 import {ArticleRevisionService} from './article-revision.service'
 import {AuthorModule} from '@wepublish/author/api'
-import {HasArticleResolver} from './has-article/has-article.resolver'
+import {
+  HasArticleLcResolver,
+  HasArticleResolver,
+  HasOptionalArticleLcResolver,
+  HasOptionalArticleResolver
+} from './has-article/has-article.resolver'
 import {BlockContentModule} from '@wepublish/block-content/api'
 
 @Module({
@@ -20,14 +25,16 @@ import {BlockContentModule} from '@wepublish/block-content/api'
     ArticleResolver,
     ArticleRevisionResolver,
     ArticleRevisionService,
-    HasArticleResolver
+    HasArticleResolver,
+    HasArticleLcResolver,
+    HasOptionalArticleResolver,
+    HasOptionalArticleLcResolver
   ],
   exports: [
     ArticleDataloaderService,
     ArticleRevisionDataloaderService,
     ArticleService,
-    ArticleRevisionService,
-    HasArticleResolver
+    ArticleRevisionService
   ]
 })
 export class ArticleModule {}

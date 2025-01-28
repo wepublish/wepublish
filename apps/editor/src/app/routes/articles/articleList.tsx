@@ -5,6 +5,7 @@ import {
   ArticleListQuery,
   ArticleSort,
   FullArticleFragment,
+  getApiClientV2,
   useArticleListQuery,
   useDeleteArticleMutation,
   useDuplicateArticleMutation,
@@ -31,7 +32,7 @@ import {
 } from '@wepublish/ui/editor'
 import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
+import {MdAdd, MdComment, MdContentCopy, MdDelete, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
 import {Button, Message, Modal, Pagination, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
@@ -73,7 +74,6 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
   const [filter, setFilter] = useState(initialFilter)
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [isArticlePreviewLinkOpen, setArticlePreviewLinkOpen] = useState(false)
   const [currentArticle, setCurrentArticle] = useState<FullArticleFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
@@ -82,9 +82,10 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
   const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
 
-  const [deleteArticle, {loading: isDeleting}] = useDeleteArticleMutation()
-  const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
-  const [duplicateArticle, {loading: isDuplicating}] = useDuplicateArticleMutation()
+  const client = getApiClientV2()
+  const [deleteArticle, {loading: isDeleting}] = useDeleteArticleMutation({client})
+  const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation({client})
+  const [duplicateArticle, {loading: isDuplicating}] = useDuplicateArticleMutation({client})
 
   const articleListVariables = useMemo(
     () => ({
@@ -102,8 +103,9 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
     refetch,
     loading: isLoading
   } = useArticleListQuery({
+    client,
     variables: articleListVariables,
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'cache-and-network'
   })
   const [createComment] = useCreateCommentMutation()
 
@@ -270,21 +272,6 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
                           setCurrentArticle(rowData as FullArticleFragment)
                           setConfirmAction(ConfirmAction.Duplicate)
                           setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
-
-                  <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
-                    <IconButtonTooltip caption={t('articleEditor.overview.preview')}>
-                      <IconButton
-                        icon={<MdPreview />}
-                        circle
-                        disabled={!rowData.draft}
-                        size="sm"
-                        onClick={() => {
-                          setCurrentArticle(rowData as FullArticleFragment)
-                          setArticlePreviewLinkOpen(true)
                         }}
                       />
                     </IconButtonTooltip>

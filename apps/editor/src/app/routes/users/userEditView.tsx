@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import {
   FullUserFragment,
   FullUserRoleFragment,
-  ImageRefFragment,
+  FullImageFragment,
   useCreateUserMutation,
   UserAddress,
   useUpdateUserMutation,
@@ -118,7 +118,7 @@ function UserEditView() {
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
   const [address, setAddress] = useState<UserAddress | null>(null)
-  const [userImage, setUserImage] = useState<ImageRefFragment | undefined>()
+  const [userImage, setUserImage] = useState<FullImageFragment | undefined>()
   const [user, setUser] = useState<FullUserFragment | undefined | null>(null)
   const [metaDataProperties, setMetadataProperties] = useState<ListValue<UserProperty>[]>([])
 
@@ -684,7 +684,7 @@ function UserEditView() {
         }}>
         <ImageSelectPanel
           onClose={() => setImageSelectionOpen(false)}
-          onSelect={(image: ImageRefFragment) => {
+          onSelect={(image: FullImageFragment) => {
             setUserImage(image)
             setImageSelectionOpen(false)
           }}

@@ -1,5 +1,5 @@
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
-import {Event, EventListQuery, useDeleteEventMutation} from '@wepublish/editor/api'
+import {Event, EventListQuery, useDeleteEventMutation} from '@wepublish/editor/api-v2'
 import {TFunction} from 'i18next'
 import {useTranslation} from 'react-i18next'
 import {Button, Message, Modal, toaster} from 'rsuite'

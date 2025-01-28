@@ -1,6 +1,6 @@
 import {
   CreateBannerActionInput,
-  ImageRefFragment,
+  FullImageFragment,
   UpdateBannerInput,
   getApiClientV2,
   useBannerQuery,
@@ -21,7 +21,7 @@ export const EditBannerForm = () => {
 
   const closePath = '/banners'
 
-  const [banner, setBanner] = useState<UpdateBannerInput & {image?: ImageRefFragment | null}>({
+  const [banner, setBanner] = useState<UpdateBannerInput & {image?: FullImageFragment | null}>({
     id: bannerId,
     title: '',
     text: '',

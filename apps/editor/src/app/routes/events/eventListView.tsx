@@ -1,6 +1,5 @@
 import {ApolloError} from '@apollo/client'
-import {Event, EventFilter} from '@wepublish/editor/api'
-import {useEventListQuery} from '@wepublish/editor/api-v2'
+import {Event, EventFilter, useEventListQuery} from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,

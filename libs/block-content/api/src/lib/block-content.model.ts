@@ -185,7 +185,11 @@ export class BlockContentInput {
   [BlockType.TeaserList]?: TeaserListBlockInput
 }
 
-export function mapTeaserUnionMap(value: TeaserInput): typeof Teaser {
+export function mapTeaserUnionMap(value: TeaserInput | undefined): typeof Teaser | undefined {
+  if (!value) {
+    return undefined
+  }
+
   const valueKeys = Object.keys(value) as TeaserType[]
 
   if (valueKeys.length === 0) {

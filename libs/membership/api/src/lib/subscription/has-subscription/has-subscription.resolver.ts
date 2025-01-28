@@ -2,7 +2,6 @@ import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {HasSubscription, HasOptionalSubscription} from './has-subscription.model'
 import {Subscription} from '../subscription.model'
 
-@Resolver(() => HasOptionalSubscription)
 @Resolver(() => HasSubscription)
 export class HasSubscriptionResolver {
   @ResolveField(() => Subscription, {nullable: true})
@@ -17,3 +16,6 @@ export class HasSubscriptionResolver {
     }
   }
 }
+
+@Resolver(() => HasOptionalSubscription)
+export class HasOptionalSubscriptionResolver extends HasSubscriptionResolver {}

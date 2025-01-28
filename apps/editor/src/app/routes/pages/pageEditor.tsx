@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {
   CreatePageMutationVariables,
+  getApiClientV2,
   useCreatePageMutation,
   usePageQuery,
   usePublishPageMutation,
@@ -83,10 +84,13 @@ function PageEditor() {
   const params = useParams()
   const {id} = params
 
+  const client = getApiClientV2()
   const [createPage, {data: createData, loading: isCreating, error: createError}] =
-    useCreatePageMutation()
-  const [updatePage, {loading: isUpdating, error: updateError}] = useUpdatePageMutation()
-  const [publishPage, {loading: isPublishing, error: publishError}] = usePublishPageMutation()
+    useCreatePageMutation({client})
+  const [updatePage, {loading: isUpdating, error: updateError}] = useUpdatePageMutation({client})
+  const [publishPage, {loading: isPublishing, error: publishError}] = usePublishPageMutation({
+    client
+  })
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -116,6 +120,7 @@ function PageEditor() {
     refetch,
     loading: isLoading
   } = usePageQuery({
+    client,
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
     variables: {id: pageID!}
@@ -182,7 +187,7 @@ function PageEditor() {
       setStateColor(StateColor.pending)
       setTagTitle(
         t('pageEditor.overview.pending', {
-          date: new Date(pageData?.page?.pending?.publishAt ?? '')
+          date: new Date(pageData?.page?.pending?.publishedAt ?? '')
         })
       )
     } else if (pageData?.page?.published) {

@@ -2,11 +2,11 @@ import {Field, InputType, registerEnumType} from '@nestjs/graphql'
 import {Prisma} from '@prisma/client'
 
 export enum DateFilterComparison {
-  GreaterThan = 'gt',
-  GreaterThanOrEqual = 'gte',
-  Equal = 'eq',
-  LowerThan = 'lt',
-  LowerThanOrEqual = 'lte'
+  GreaterThan = 'GreaterThan',
+  GreaterThanOrEqual = 'GreaterThanOrEqual',
+  Equal = 'Equal',
+  LowerThan = 'LowerThan',
+  LowerThanOrEqual = 'LowerThanOrEqual'
 }
 
 registerEnumType(DateFilterComparison, {
@@ -24,5 +24,27 @@ export class DateFilter {
 export const mapDateFilterToPrisma = (
   comparison: DateFilterComparison
 ): keyof Prisma.DateTimeFilter => {
-  return comparison === DateFilterComparison.Equal ? 'equals' : comparison
+  switch (comparison) {
+    case DateFilterComparison.Equal: {
+      return 'equals'
+    }
+
+    case DateFilterComparison.GreaterThan: {
+      return 'gt'
+    }
+
+    case DateFilterComparison.GreaterThanOrEqual: {
+      return 'gte'
+    }
+
+    case DateFilterComparison.LowerThan: {
+      return 'lt'
+    }
+
+    case DateFilterComparison.LowerThanOrEqual: {
+      return 'lte'
+    }
+  }
+
+  throw new Error('Unimplemented comparison.')
 }

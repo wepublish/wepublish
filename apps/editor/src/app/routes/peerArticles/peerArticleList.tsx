@@ -1,5 +1,11 @@
 import styled from '@emotion/styled'
-import {ArticleFilter, ArticleSort} from '@wepublish/editor/api-v2'
+import {
+  ArticleFilter,
+  ArticleSort,
+  getApiClientV2,
+  PeerArticle,
+  usePeerArticleListQuery
+} from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -76,15 +82,16 @@ function PeerArticleList() {
     }
   }
 
-  // fetch peered articles
+  const client = getApiClientV2()
   const {
     data: peerArticleListData,
     refetch,
     error: peerArticleListError,
     loading: isLoading
   } = usePeerArticleListQuery({
+    client,
     variables: listVariables,
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'cache-and-network'
   })
 
   useEffect(() => {
@@ -185,20 +192,6 @@ function PeerArticleList() {
                 </>
               )}
             </FlexCell>
-          </Column>
-
-          <Column width={120} align="left" resizable>
-            <HeaderCell>{t('peerArticles.authors')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<PeerArticle>) => {
-                return (rowData as PeerArticle).article.latest.authors.reduce(
-                  (allAuthors, author, index) => {
-                    return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
-                  },
-                  ''
-                )
-              }}
-            </RCell>
           </Column>
 
           <Column width={120} align="left" resizable>

@@ -1,9 +1,9 @@
 import {ApolloError} from '@apollo/client'
-import {ImageRefFragment, MutationUpdateEventArgs, stripTypename} from '@wepublish/editor/api'
+import {FullImageFragment, stripTypename} from '@wepublish/editor/api'
 import {
   FullEventFragment,
-  FullImageFragment,
   getApiClientV2,
+  MutationUpdateEventArgs,
   useEventQuery,
   useUpdateEventMutation
 } from '@wepublish/editor/api-v2'
@@ -38,7 +38,7 @@ export const EventEditView = () => {
   const {t} = useTranslation()
 
   const closePath = '/events'
-  const [event, setEvent] = useState<MutationUpdateEventArgs & {image?: ImageRefFragment | null}>({
+  const [event, setEvent] = useState<MutationUpdateEventArgs & {image?: FullImageFragment | null}>({
     id: eventId
   })
 

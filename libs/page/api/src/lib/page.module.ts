@@ -7,7 +7,12 @@ import {PageService} from './page.service'
 import {PageRevisionDataloaderService} from './page-revision-dataloader.service'
 import {PageRevisionResolver} from './page-revision.resolver'
 import {PageRevisionService} from './page-revision.service'
-import {HasPageResolver} from './has-page/has-page.resolver'
+import {
+  HasOptionalPageLcResolver,
+  HasOptionalPageResolver,
+  HasPageLcResolver,
+  HasPageResolver
+} from './has-page/has-page.resolver'
 import {BlockContentModule} from '@wepublish/block-content/api'
 
 @Module({
@@ -19,14 +24,11 @@ import {BlockContentModule} from '@wepublish/block-content/api'
     PageResolver,
     PageRevisionResolver,
     PageRevisionService,
-    HasPageResolver
+    HasPageResolver,
+    HasPageLcResolver,
+    HasOptionalPageResolver,
+    HasOptionalPageLcResolver
   ],
-  exports: [
-    PageDataloaderService,
-    PageRevisionDataloaderService,
-    PageService,
-    PageRevisionService,
-    HasPageResolver
-  ]
+  exports: [PageDataloaderService, PageRevisionDataloaderService, PageService, PageRevisionService]
 })
 export class PageModule {}

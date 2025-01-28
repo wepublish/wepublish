@@ -1,7 +1,7 @@
 import {
   CreateBannerActionInput,
   CreateBannerInput,
-  ImageRefFragment,
+  FullImageFragment,
   PageWithoutBlocksFragment,
   UpdateBannerInput,
   usePageListQuery
@@ -13,7 +13,7 @@ import {BannerActionList} from './banner-action-list'
 import {ChooseEditImage, ImageEditPanel, ImageSelectPanel} from '@wepublish/ui/editor'
 
 type BannerFormData = (CreateBannerInput | UpdateBannerInput) & {
-  image?: ImageRefFragment | null
+  image?: FullImageFragment | null
   actions?: CreateBannerActionInput[] | null
 }
 

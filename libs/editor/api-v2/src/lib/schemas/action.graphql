@@ -48,6 +48,7 @@ fragment FullAction on Action {
     comment {
       id
       user {
+        firstName
         name
       }
       guestUsername
@@ -69,10 +70,10 @@ fragment FullAction on Action {
     subscription {
       id
 
-      # @TODO: Figure out a good way to go about this
-      #   user {
-      #     email
-      #   }
+      user {
+        firstName
+        name
+      }
 
       memberPlan {
         name

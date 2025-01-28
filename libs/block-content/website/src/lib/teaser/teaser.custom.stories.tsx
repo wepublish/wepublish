@@ -1,5 +1,5 @@
 import {Meta} from '@storybook/react'
-import {CustomTeaser, FullImageFragment, TeaserStyle} from '@wepublish/website/api'
+import {CustomTeaser, FullImageFragment} from '@wepublish/website/api'
 import {Teaser} from './teaser'
 
 export default {
@@ -57,22 +57,6 @@ export const Default = {
       __typename: 'FlexAlignment'
     },
     teaser: customTeaser
-  }
-}
-
-export const WithLightStyle = {
-  args: {
-    alignment: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 4,
-      __typename: 'FlexAlignment'
-    },
-    teaser: {
-      ...customTeaser,
-      style: TeaserStyle.Light
-    }
   }
 }
 

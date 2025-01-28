@@ -32,7 +32,6 @@ registerEnumType(ArticleSort, {
 @ObjectType({
   implements: () => [HasBlockContent]
 })
-@Directive('@key(fields: "id")')
 export class ArticleRevision implements HasBlockContent {
   blocks!: Array<typeof BlockContent>
 
@@ -41,8 +40,8 @@ export class ArticleRevision implements HasBlockContent {
   @Field()
   createdAt!: Date
 
-  @Field()
-  publishedAt!: Date
+  @Field({nullable: true})
+  publishedAt?: Date
 
   @Field({nullable: true})
   preTitle?: string
@@ -59,8 +58,8 @@ export class ArticleRevision implements HasBlockContent {
   @Field(() => [Author])
   authors!: Author[]
 
-  @Field()
-  canonicalUrl!: string
+  @Field({nullable: true})
+  canonicalUrl?: string
 
   @Field()
   hideAuthor!: boolean
@@ -102,8 +101,8 @@ export class Article {
   @Field()
   url!: string
 
-  @Field()
-  publishedAt!: Date
+  @Field({nullable: true})
+  publishedAt?: Date
 
   @Field()
   shared!: boolean

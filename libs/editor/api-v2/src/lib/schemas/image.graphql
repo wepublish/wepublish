@@ -16,15 +16,13 @@ fragment FullImage on Image {
   createdAt
   modifiedAt
 
+  title
   filename
-  format
-  mimeType
   extension
   width
   height
   fileSize
 
-  title
   description
   tags
 

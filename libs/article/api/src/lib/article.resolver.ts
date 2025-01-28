@@ -14,6 +14,12 @@ import {ArticleRevisionDataloaderService} from './article-revision-dataloader.se
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Article as PArticle} from '@prisma/client'
 import {BadRequestException} from '@nestjs/common'
+import {
+  Permissions,
+  CanCreateArticle,
+  CanDeleteArticle,
+  CanPublishArticle
+} from '@wepublish/permissions/api'
 
 @Resolver(() => Article)
 export class ArticleResolver {
@@ -47,6 +53,7 @@ export class ArticleResolver {
     return this.articleService.getArticles(filter)
   }
 
+  @Permissions(CanCreateArticle)
   @Mutation(() => Article, {
     description: `Creates an article.`
   })
@@ -54,6 +61,7 @@ export class ArticleResolver {
     return this.articleService.createArticle(input)
   }
 
+  @Permissions(CanCreateArticle)
   @Mutation(() => Article, {
     description: `Updates an article.`
   })
@@ -61,6 +69,7 @@ export class ArticleResolver {
     return this.articleService.updateArticle(input)
   }
 
+  @Permissions(CanCreateArticle)
   @Mutation(() => Article, {
     description: `Duplicates an article.`
   })
@@ -68,6 +77,7 @@ export class ArticleResolver {
     return this.articleService.duplicateArticle(id)
   }
 
+  @Permissions(CanDeleteArticle)
   @Mutation(() => String, {
     description: `Deletes an article.`
   })
@@ -75,6 +85,7 @@ export class ArticleResolver {
     return (await this.articleService.deleteArticle(id)).id
   }
 
+  @Permissions(CanPublishArticle)
   @Mutation(() => Article, {
     description: `Publishes an article at the given time.`
   })
@@ -82,6 +93,7 @@ export class ArticleResolver {
     return this.articleService.publishArticle(id, publishedAt)
   }
 
+  @Permissions(CanPublishArticle)
   @Mutation(() => Article, {
     description: `Unpublishes all revisions of an article.`
   })

@@ -5,6 +5,7 @@ import {
   InMemoryCache,
   NormalizedCacheObject
 } from '@apollo/client'
+import possibleTypes from './graphql'
 
 export enum ElementID {
   Settings = 'settings',
@@ -66,7 +67,9 @@ export function getApiClientV2() {
   if (!client) {
     client = new ApolloClient({
       link: authLink.concat(createHttpLink({uri: `${apiURL}/v1`, fetch})),
-      cache: new InMemoryCache()
+      cache: new InMemoryCache({
+        possibleTypes: possibleTypes.possibleTypes
+      })
     })
   }
 

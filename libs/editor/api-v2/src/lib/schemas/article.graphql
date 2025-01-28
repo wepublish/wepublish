@@ -142,44 +142,28 @@ query ArticleList(
   }
 }
 
-# query PeerArticleList(
-#   $filter: ArticleFilter
-#   $cursors: String
-#   $peerFilter: String
-#   $order: SortOrder
-#   $sort: ArticleSort
-#   $take: Int
-#   $skip: Int
-# ) {
-#   peerArticles(
-#     cursors: $cursors
-#     peerFilter: $peerFilter
-#     order: $order
-#     sort: $sort
-#     filter: $filter
-#     take: $take
-#     skip: $skip
-#   ) {
-#     nodes {
-#       peer {
-#         ...PeerWithProfile
-#       }
+query PeerArticleList(
+  $filter: PeerArticleFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  peerArticles(filter: $filter, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      id
+    }
 
-#       peeredArticleURL
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
 
-#       article {
-#         ...FullArticle
-#       }
-#     }
-
-#     pageInfo {
-#       endCursor
-#       hasNextPage
-#     }
-
-#     totalCount
-#   }
-# }
+    totalCount
+  }
+}
 
 mutation CreateArticle(
   $authorIds: [String!]!

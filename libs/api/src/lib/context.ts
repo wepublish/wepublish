@@ -4,7 +4,6 @@ import {
   Author,
   Comment,
   CommentRatingSystemAnswer,
-  Event,
   Image,
   MailLog,
   Payment,
@@ -42,7 +41,6 @@ import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {SubscriptionWithRelations} from './db/subscription'
 import {TokenExpiredError} from './error'
-import {getEvent} from './graphql/event/event.query'
 import {createSafeHostUrl} from './graphql/peer/create-safe-host-url'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
@@ -68,8 +66,6 @@ export interface DataLoaderContext {
 
   readonly images: DataLoader<string, Image | null>
 
-  readonly events: DataLoader<string, Event | null>
-
   readonly userRolesByID: DataLoader<string, UserRole | null>
 
   readonly mailLogsByID: DataLoader<string, MailLog | null>
@@ -91,7 +87,6 @@ export interface DataLoaderContext {
   readonly paymentsByID: DataLoader<string, Payment | null>
 
   readonly pollById: DataLoader<string, FullPoll | null>
-  readonly eventById: DataLoader<string, Event | null>
 
   readonly commentsById: DataLoader<string, Comment | null>
   readonly commentRatingSystemAnswers: DataLoader<1, CommentRatingSystemAnswer[]>
@@ -291,20 +286,6 @@ export async function contextFromRequest(
           },
           include: {
             focalPoint: true
-          }
-        }),
-        'id'
-      )
-    ),
-
-    events: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        await prisma.event.findMany({
-          where: {
-            id: {
-              in: ids as string[]
-            }
           }
         }),
         'id'
@@ -569,7 +550,6 @@ export async function contextFromRequest(
     ),
 
     pollById: new DataLoader(async ids => Promise.all(ids.map(id => getPoll(id, prisma.poll)))),
-    eventById: new DataLoader(async ids => Promise.all(ids.map(id => getEvent(id, prisma.event)))),
 
     commentsById: new DataLoader(async ids =>
       createOptionalsArray(

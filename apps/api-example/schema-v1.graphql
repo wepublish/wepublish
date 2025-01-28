@@ -395,6 +395,7 @@ type Subscription {
   properties: [PublicProperties!]!
   deactivation: SubscriptionDeactivation
   url: String!
+  user: User
 }
 
 type MemberPlan {

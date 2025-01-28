@@ -16,6 +16,8 @@ fragment FullEvent on Event {
   createdAt
   modifiedAt
   url
+  externalSourceName
+  externalSourceId
 }
 
 query EventList(

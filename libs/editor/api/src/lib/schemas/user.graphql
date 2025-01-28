@@ -15,7 +15,7 @@ fragment FullUser on User {
   flair
   birthday
   userImage {
-    ...ImageRef
+    ...FullImage
   }
   active
   lastLogin

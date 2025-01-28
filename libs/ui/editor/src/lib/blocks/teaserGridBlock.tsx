@@ -16,7 +16,7 @@ import {Typography} from '../atoms/typography'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {Teaser as TeaserTypeMixed, TeaserGridBlockValue} from './types'
-import {FullImageFragment, TeaserStyle, TeaserType} from '@wepublish/editor/api-v2'
+import {FullImageFragment, TeaserType} from '@wepublish/editor/api-v2'
 
 const IconButton = styled(RIconButton)`
   margin: 10px;
@@ -247,7 +247,6 @@ export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
 
       return (
         <TeaserContent
-          style={teaser.style}
           image={teaser.image ?? teaser.article.latest.image ?? undefined}
           preTitle={teaser.preTitle ?? teaser.article.latest.preTitle ?? undefined}
           title={teaser.title ?? teaser.article.latest.title ?? ''}
@@ -267,7 +266,6 @@ export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
 
       return (
         <TeaserContent
-          style={teaser.style}
           image={teaser.image ?? teaser.page.latest.image ?? undefined}
           title={teaser.title ?? teaser.page.latest.title ?? ''}
           lead={teaser.lead ?? teaser.page.latest.description ?? undefined}
@@ -280,7 +278,6 @@ export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
     case TeaserType.Event: {
       return (
         <TeaserContent
-          style={teaser.style}
           image={teaser.image ?? teaser.event.image ?? undefined}
           title={teaser.title ?? teaser.event.name ?? ''}
           lead={teaser.lead || teaser.event.lead || teaser.event.location || undefined}
@@ -292,7 +289,6 @@ export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
     case TeaserType.Custom: {
       return (
         <TeaserContent
-          style={teaser.style}
           contentUrl={teaser.contentUrl}
           image={teaser.image ?? undefined}
           title={teaser.title}
@@ -308,7 +304,6 @@ export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
 }
 
 export interface TeaserContentProps {
-  style: TeaserStyle
   preTitle?: string | null
   title?: string | null
   lead?: string | null
@@ -316,19 +311,6 @@ export interface TeaserContentProps {
   states?: string[]
   numColumns?: number
   contentUrl?: string | null
-}
-
-function labelForTeaserStyle(style: TeaserStyle) {
-  switch (style) {
-    case TeaserStyle.Default:
-      return 'Default'
-
-    case TeaserStyle.Light:
-      return 'Light'
-
-    case TeaserStyle.Text:
-      return 'Text'
-  }
 }
 
 const OverlayComponent = styled(Overlay)<{isDisabled?: boolean}>`
@@ -339,7 +321,6 @@ const OverlayComponent = styled(Overlay)<{isDisabled?: boolean}>`
 `
 
 export function TeaserContent({
-  style,
   preTitle,
   contentUrl,
   title,
@@ -348,7 +329,6 @@ export function TeaserContent({
   states,
   numColumns
 }: TeaserContentProps) {
-  const label = labelForTeaserStyle(style)
   const {t} = useTranslation()
   const stateJoin = states?.join(' / ')
   return (
@@ -382,12 +362,6 @@ export function TeaserContent({
         </Content>
 
         <TeaserInfoWrapper>
-          <TeaserStyleElement>
-            <Typography variant="subtitle1" color="gray">
-              {t('articleEditor.panels.teaserStyle', {label})}
-            </Typography>
-          </TeaserStyleElement>
-
           <Status>
             <Typography variant="subtitle1" color="gray">
               {t('articleEditor.panels.status', {stateJoin})}

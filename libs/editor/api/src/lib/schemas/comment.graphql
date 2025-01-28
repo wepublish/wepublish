@@ -26,7 +26,7 @@ fragment FullComment on Comment {
   rejectionReason
   guestUsername
   guestUserImage {
-    ...ImageRef
+    ...FullImage
   }
   user {
     ...FullUser

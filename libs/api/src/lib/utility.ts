@@ -4,7 +4,6 @@ import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphq
 import {delegateToSchema, IDelegateToSchemaOptions, Transform} from '@graphql-tools/delegate'
 import {ExecutionResult} from '@graphql-tools/utils'
 import {Context} from './context'
-import {TeaserStyle} from './db/block'
 import {SubscriptionWithRelations} from './db/subscription'
 import {UserWithRelations} from './db/user'
 import {format} from 'date-fns'
@@ -163,7 +162,6 @@ export function createProxyingIsTypeOf<TSource, TContext>(
 }
 
 export function mapEnumsBack(result: any) {
-  console.log('mapEnumsBack')
   if (!result) return null
 
   for (const key in result) {
@@ -173,22 +171,7 @@ export function mapEnumsBack(result: any) {
       mapEnumsBack(value)
     }
   }
-  if (
-    result.__typename === 'ArticleTeaser' ||
-    result.__typename === 'PeerArticleTeaser' ||
-    result.__typename === 'PageTeaser' ||
-    result.__typename === 'EventTeaser' ||
-    result.__typename === 'CustomTeaser'
-  ) {
-    switch (result.style) {
-      case 'DEFAULT':
-        return Object.assign(result, {style: TeaserStyle.Default})
-      case 'LIGHT':
-        return Object.assign(result, {style: TeaserStyle.Light})
-      case 'TEXT':
-        return Object.assign(result, {style: TeaserStyle.Text})
-    }
-  }
+
   return result
 }
 

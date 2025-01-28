@@ -1,5 +1,6 @@
 import {
   FullNavigationFragment,
+  getApiClientV2,
   useDeleteNavigationMutation,
   useNavigationListQuery
 } from '@wepublish/editor/api-v2'
@@ -48,15 +49,17 @@ function NavigationList() {
   const [navigations, setNavigations] = useState<FullNavigationFragment[]>([])
   const [currentNavigation, setCurrentNavigation] = useState<FullNavigationFragment>()
 
+  const client = getApiClientV2()
   const {
     data,
     refetch,
     loading: isLoading
   } = useNavigationListQuery({
+    client,
     fetchPolicy: 'cache-and-network'
   })
 
-  const [deleteNavigation, {loading: isDeleting}] = useDeleteNavigationMutation()
+  const [deleteNavigation, {loading: isDeleting}] = useDeleteNavigationMutation({client})
 
   useEffect(() => {
     if (isCreateRoute) {

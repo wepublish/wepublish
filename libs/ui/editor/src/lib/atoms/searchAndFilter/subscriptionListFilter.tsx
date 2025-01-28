@@ -213,11 +213,11 @@ export function SubscriptionListFilter({
                 updateFilter({
                   startsAtFrom: {
                     date: value[0]?.toISOString(),
-                    comparison: DateFilterComparison.Gt
+                    comparison: DateFilterComparison.GreaterThan
                   },
                   startsAtTo: {
                     date: value[1]?.toISOString(),
-                    comparison: DateFilterComparison.Lt
+                    comparison: DateFilterComparison.LowerThan
                   }
                 })
               }
@@ -281,11 +281,11 @@ export function SubscriptionListFilter({
                 updateFilter({
                   deactivationDateFrom: {
                     date: value[0]?.toISOString(),
-                    comparison: DateFilterComparison.Gt
+                    comparison: DateFilterComparison.GreaterThan
                   },
                   deactivationDateTo: {
                     date: value[1]?.toISOString(),
-                    comparison: DateFilterComparison.Lt
+                    comparison: DateFilterComparison.LowerThan
                   }
                 })
               }
@@ -306,11 +306,11 @@ export function SubscriptionListFilter({
                 updateFilter({
                   cancellationDateFrom: {
                     date: value[0]?.toISOString(),
-                    comparison: DateFilterComparison.Gt
+                    comparison: DateFilterComparison.GreaterThan
                   },
                   cancellationDateTo: {
                     date: value[1]?.toISOString(),
-                    comparison: DateFilterComparison.Lt
+                    comparison: DateFilterComparison.LowerThan
                   }
                 })
               }
@@ -331,11 +331,11 @@ export function SubscriptionListFilter({
                 updateFilter({
                   paidUntilFrom: {
                     date: value[0]?.toISOString(),
-                    comparison: DateFilterComparison.Gt
+                    comparison: DateFilterComparison.GreaterThan
                   },
                   paidUntilTo: {
                     date: value[1]?.toISOString(),
-                    comparison: DateFilterComparison.Lt
+                    comparison: DateFilterComparison.LowerThan
                   }
                 })
               }

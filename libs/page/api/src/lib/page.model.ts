@@ -39,8 +39,8 @@ export class PageRevision implements HasBlockContent {
   @Field()
   createdAt!: Date
 
-  @Field()
-  publishedAt!: Date
+  @Field({nullable: true})
+  publishedAt?: Date
 
   @Field({nullable: true})
   title?: string
@@ -80,8 +80,8 @@ export class Page {
   @Field({nullable: true})
   slug?: string
 
-  @Field()
-  publishedAt!: Date
+  @Field({nullable: true})
+  publishedAt?: Date
 
   @Field()
   url!: string

@@ -1,26 +1,38 @@
-fragment ImageRef on Image {
+fragment FullImage on Image {
   url
   license
   source
 }
 
-fragment ArticleRef on Article {
+fragment FullArticle on Article {
   id
 }
 
-fragment PageRef on Page {
+fragment FullPage on Page {
   id
 }
 
-fragment EventRef on Event {
+fragment FullEvent on Event {
   id
 }
 
-fragment FullComment on Comment {
+fragment FullPoll on FullPoll {
+  id
+}
+
+fragment CommentBlockComment on Comment {
   id
 }
 
 fragment PeerWithProfile on Peer {
+  id
+}
+
+fragment ArticleWithoutBlocks on Article {
+  id
+}
+
+fragment PageWithoutBlocks on Page {
   id
 }
 
@@ -60,6 +72,56 @@ fragment ImportBlock on BlockContent {
   ... on TeaserGridFlexBlock {
     __typename
     type
+  }
+}
+
+fragment SlimArticleRevision on ArticleRevision {
+  id
+  createdAt
+  preTitle
+  title
+  lead
+
+  image {
+    ...FullImage
+  }
+}
+
+fragment SlimArticle on Article {
+  id
+  publishedAt
+  createdAt
+  modifiedAt
+  shared
+  hidden
+  slug
+  url
+
+  latest {
+    ...SlimArticleRevision
+  }
+}
+
+query ArticleList(
+  $filter: ArticleFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  articles(filter: $filter, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...SlimArticle
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
   }
 }
 

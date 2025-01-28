@@ -3,10 +3,7 @@ import {HasPage, HasPageLc, HasOptionalPage, HasOptionalPageLc} from './has-page
 import {Page} from '../page.model'
 import {PageDataloaderService} from '../page-dataloader.service'
 
-@Resolver(() => HasOptionalPage)
 @Resolver(() => HasPage)
-@Resolver(() => HasOptionalPageLc)
-@Resolver(() => HasPageLc)
 export class HasPageResolver {
   constructor(private dataloader: PageDataloaderService) {}
 
@@ -21,3 +18,12 @@ export class HasPageResolver {
     return this.dataloader.load(id)
   }
 }
+
+@Resolver(() => HasPageLc)
+export class HasPageLcResolver extends HasPageResolver {}
+
+@Resolver(() => HasOptionalPage)
+export class HasOptionalPageResolver extends HasPageResolver {}
+
+@Resolver(() => HasOptionalPageLc)
+export class HasOptionalPageLcResolver extends HasPageResolver {}

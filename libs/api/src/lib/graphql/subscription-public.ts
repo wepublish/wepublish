@@ -15,10 +15,12 @@ import {GraphQLMetadataPropertyPublic} from './common'
 import {GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
 import {GraphQLPublicPaymentMethod} from './paymentMethod'
 import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
+import {GraphQLPublicUser} from './user'
+import {unselectPassword} from '@wepublish/user/api'
 
 export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithRelations, Context>({
   name: 'Subscription',
-  fields: {
+  fields: () => ({
     id: {type: new GraphQLNonNull(GraphQLString)},
     memberPlan: {
       type: new GraphQLNonNull(GraphQLPublicMemberPlan),
@@ -50,8 +52,19 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
       resolve: createProxyingResolver(async (subscription, _, {urlAdapter}) => {
         return await urlAdapter.getSubscriptionURL(subscription)
       })
+    },
+    user: {
+      type: GraphQLPublicUser,
+      async resolve({userID}, args, {prisma}) {
+        return prisma.user.findUnique({
+          where: {
+            id: userID
+          },
+          select: unselectPassword
+        })
+      }
     }
-  }
+  })
 })
 
 export const GraphQLPublicSubscriptionInput = new GraphQLInputObjectType({

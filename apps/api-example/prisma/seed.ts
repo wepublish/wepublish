@@ -460,7 +460,6 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      style: TeaserStyle.Default,
                       imageID: null,
                       title: null,
                       lead: null,
@@ -478,7 +477,6 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      style: TeaserStyle.Light,
                       imageID: null,
                       title: null,
                       lead: null,
@@ -496,7 +494,6 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      style: TeaserStyle.Light,
                       imageID: null,
                       title: null,
                       lead: null,
@@ -510,7 +507,6 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                 teasers: [
                   {
                     type: TeaserType.Article,
-                    style: TeaserStyle.Light,
                     imageID: null,
                     title: null,
                     lead: null,
@@ -518,7 +514,6 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                   },
                   {
                     type: TeaserType.Article,
-                    style: TeaserStyle.Light,
                     imageID: null,
                     title: null,
                     lead: null,
@@ -526,7 +521,6 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                   },
                   {
                     type: TeaserType.Article,
-                    style: TeaserStyle.Light,
                     imageID: null,
                     title: null,
                     lead: null,
@@ -560,7 +554,6 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      style: TeaserStyle.Light,
                       imageID: null,
                       title: null,
                       lead: null,
@@ -578,7 +571,6 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      style: TeaserStyle.Light,
                       imageID: null,
                       title: null,
                       lead: null,
@@ -596,7 +588,6 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      style: TeaserStyle.Light,
                       imageID: null,
                       title: null,
                       lead: null,
@@ -614,7 +605,6 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      style: TeaserStyle.Light,
                       imageID: null,
                       title: null,
                       lead: null,

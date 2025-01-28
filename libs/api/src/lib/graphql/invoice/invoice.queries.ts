@@ -2,10 +2,10 @@ import {Invoice, Prisma, PrismaClient} from '@prisma/client'
 import {ConnectionResult} from '../../db/common'
 import {InvoiceFilter, InvoiceSort} from '../../db/invoice'
 import {
-  DateFilterComparison,
   SortOrder,
   getMaxTake,
-  graphQLSortOrderToPrisma
+  graphQLSortOrderToPrisma,
+  mapDateFilterToPrisma
 } from '@wepublish/utils/api'
 
 export const createInvoiceOrder = (
@@ -58,8 +58,7 @@ const createMailFilter = (filter: Partial<InvoiceFilter>): Prisma.InvoiceWhereIn
 const createPaidAtFilter = (filter: Partial<InvoiceFilter>): Prisma.InvoiceWhereInput => {
   if (filter?.paidAt) {
     const {comparison, date} = filter.paidAt
-    const mappedComparison: keyof Prisma.DateTimeNullableFilter =
-      comparison === DateFilterComparison.Equal ? 'equals' : comparison
+    const mappedComparison = mapDateFilterToPrisma(comparison)
 
     return {
       paidAt: {
@@ -74,8 +73,7 @@ const createPaidAtFilter = (filter: Partial<InvoiceFilter>): Prisma.InvoiceWhere
 const createCancelledAtFilter = (filter: Partial<InvoiceFilter>): Prisma.InvoiceWhereInput => {
   if (filter?.canceledAt) {
     const {comparison, date} = filter.canceledAt
-    const mappedComparison: keyof Prisma.DateTimeNullableFilter =
-      comparison === DateFilterComparison.Equal ? 'equals' : comparison
+    const mappedComparison = mapDateFilterToPrisma(comparison)
 
     return {
       canceledAt: {

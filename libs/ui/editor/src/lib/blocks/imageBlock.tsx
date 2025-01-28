@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {ImageRefFragment} from '@wepublish/editor/api'
+import {FullImageFragment} from '@wepublish/editor/api'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdBuild, MdEdit, MdPhoto} from 'react-icons/md'
@@ -11,7 +11,6 @@ import {TypographicTextArea} from '../atoms/typographicTextArea'
 import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImageBlockValue} from './types'
-import {FullImageFragment} from '@wepublish/editor/api-v2'
 
 export const Panel = styled(RPanel)`
   display: grid;
@@ -20,7 +19,7 @@ export const Panel = styled(RPanel)`
   overflow: hidden;
 `
 
-export const ImagePanel = styled(RPanel)<{image: ImageRefFragment}>`
+export const ImagePanel = styled(RPanel)<{image: FullImageFragment}>`
   padding: 0;
   position: relative;
   height: 100%;

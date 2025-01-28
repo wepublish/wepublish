@@ -3,10 +3,7 @@ import {HasEvent, HasEventLc, HasOptionalEvent, HasOptionalEventLc} from './has-
 import {Event} from '../event.model'
 import {EventDataloaderService} from '../event-dataloader.service'
 
-@Resolver(() => HasOptionalEvent)
 @Resolver(() => HasEvent)
-@Resolver(() => HasOptionalEventLc)
-@Resolver(() => HasEventLc)
 export class HasEventResolver {
   constructor(private dataloader: EventDataloaderService) {}
 
@@ -21,3 +18,12 @@ export class HasEventResolver {
     return this.dataloader.load(id)
   }
 }
+
+@Resolver(() => HasEventLc)
+export class HasEventLcResolver extends HasEventResolver {}
+
+@Resolver(() => HasOptionalEvent)
+export class HasOptionalEventResolver extends HasEventResolver {}
+
+@Resolver(() => HasOptionalEventLc)
+export class HasOptionalEventLcResolver extends HasEventResolver {}

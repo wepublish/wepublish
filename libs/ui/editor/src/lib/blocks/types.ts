@@ -15,7 +15,6 @@ import {
   FullImageFragment,
   PageWithoutBlocksFragment,
   TeaserListBlockSort,
-  TeaserStyle,
   TeaserType
 } from '@wepublish/editor/api-v2'
 
@@ -220,7 +219,6 @@ export interface CustomTeaserLink extends BaseTeaser {
 export type TeaserLink = ArticleTeaserLink | PageTeaserLink | CustomTeaserLink | EventTeaserLink
 
 export interface BaseTeaser {
-  style: TeaserStyle
   image?: FullImageFragment | null
   preTitle?: string | null
   title?: string | null
@@ -572,7 +570,6 @@ export function unionMapForBlock(block: BlockValue): BlockContentInput {
                 return {
                   teaser: {
                     article: {
-                      style: flexTeaser.teaser.style,
                       imageID: flexTeaser.teaser.image?.id,
                       preTitle: flexTeaser.teaser.preTitle || undefined,
                       title: flexTeaser.teaser.title || undefined,
@@ -587,15 +584,13 @@ export function unionMapForBlock(block: BlockValue): BlockContentInput {
                     w: flexTeaser.alignment.w,
                     h: flexTeaser.alignment.h,
                     static: flexTeaser.alignment.static ?? false
-                  },
-                  blockStyle: block.value.blockStyle
+                  }
                 }
 
               case TeaserType.Page:
                 return {
                   teaser: {
                     page: {
-                      style: flexTeaser.teaser.style,
                       imageID: flexTeaser.teaser.image?.id,
                       preTitle: flexTeaser.teaser.preTitle || undefined,
                       title: flexTeaser.teaser.title || undefined,
@@ -610,15 +605,13 @@ export function unionMapForBlock(block: BlockValue): BlockContentInput {
                     w: flexTeaser.alignment.w,
                     h: flexTeaser.alignment.h,
                     static: flexTeaser.alignment.static ?? false
-                  },
-                  blockStyle: block.value.blockStyle
+                  }
                 }
 
               case TeaserType.Event:
                 return {
                   teaser: {
                     event: {
-                      style: flexTeaser.teaser.style,
                       imageID: flexTeaser.teaser.image?.id,
                       preTitle: flexTeaser.teaser.preTitle || undefined,
                       title: flexTeaser.teaser.title || undefined,
@@ -633,15 +626,13 @@ export function unionMapForBlock(block: BlockValue): BlockContentInput {
                     w: flexTeaser.alignment.w,
                     h: flexTeaser.alignment.h,
                     static: flexTeaser.alignment.static ?? false
-                  },
-                  blockStyle: block.value.blockStyle
+                  }
                 }
 
               case TeaserType.Custom:
                 return {
                   teaser: {
                     custom: {
-                      style: flexTeaser.teaser.style,
                       imageID: flexTeaser.teaser.image?.id,
                       preTitle: flexTeaser.teaser.preTitle || undefined,
                       title: flexTeaser.teaser.title || undefined,
@@ -657,8 +648,7 @@ export function unionMapForBlock(block: BlockValue): BlockContentInput {
                     w: flexTeaser.alignment.w,
                     h: flexTeaser.alignment.h,
                     static: flexTeaser.alignment.static ?? false
-                  },
-                  blockStyle: block.value.blockStyle
+                  }
                 }
 
               default:
@@ -671,8 +661,7 @@ export function unionMapForBlock(block: BlockValue): BlockContentInput {
                     w: flexTeaser.alignment.w,
                     h: flexTeaser.alignment.h,
                     static: flexTeaser.alignment.static ?? false
-                  },
-                  blockStyle: block.value.blockStyle
+                  }
                 }
             }
           }),
@@ -689,7 +678,6 @@ export function unionMapForBlock(block: BlockValue): BlockContentInput {
               case TeaserType.Article:
                 return {
                   article: {
-                    style: value.style,
                     imageID: value.image?.id,
                     preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
@@ -701,7 +689,6 @@ export function unionMapForBlock(block: BlockValue): BlockContentInput {
               case TeaserType.Page:
                 return {
                   page: {
-                    style: value.style,
                     imageID: value.image?.id,
                     preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
@@ -713,7 +700,6 @@ export function unionMapForBlock(block: BlockValue): BlockContentInput {
               case TeaserType.Event:
                 return {
                   event: {
-                    style: value.style,
                     imageID: value.image?.id,
                     preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
@@ -725,7 +711,6 @@ export function unionMapForBlock(block: BlockValue): BlockContentInput {
               case TeaserType.Custom:
                 return {
                   custom: {
-                    style: value.style,
                     imageID: value.image?.id,
                     preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
@@ -791,7 +776,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         }
       }
 
-    case 'TitleBlock':
+    case 'TitleBlock': {
       return {
         key,
         type: EditorBlockType.Title,
@@ -801,6 +786,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           lead: block.lead ?? ''
         }
       }
+    }
 
     case 'RichTextBlock':
       return {
@@ -990,7 +976,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                   teaser: flexTeaser?.teaser.article
                     ? {
                         type: TeaserType.Article,
-                        style: flexTeaser.teaser.style,
                         image: flexTeaser.teaser.image ?? undefined,
                         preTitle: flexTeaser.teaser.preTitle ?? undefined,
                         title: flexTeaser.teaser.title ?? undefined,
@@ -1013,7 +998,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                   teaser: flexTeaser?.teaser.page
                     ? {
                         type: TeaserType.Page,
-                        style: flexTeaser?.teaser.style,
                         image: flexTeaser?.teaser.image ?? undefined,
                         preTitle: flexTeaser?.teaser.preTitle ?? undefined,
                         title: flexTeaser?.teaser.title ?? undefined,
@@ -1036,7 +1020,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                   teaser: flexTeaser?.teaser.event
                     ? {
                         type: TeaserType.Event,
-                        style: flexTeaser?.teaser.style,
                         image: flexTeaser?.teaser.image ?? undefined,
                         preTitle: flexTeaser?.teaser.preTitle ?? undefined,
                         title: flexTeaser?.teaser.title ?? undefined,
@@ -1059,7 +1042,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                   teaser: flexTeaser?.teaser
                     ? {
                         type: TeaserType.Custom,
-                        style: flexTeaser?.teaser.style,
                         image: flexTeaser?.teaser.image ?? undefined,
                         preTitle: flexTeaser?.teaser.preTitle ?? undefined,
                         title: flexTeaser?.teaser.title ?? undefined,
@@ -1110,7 +1092,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                   teaser.article
                     ? {
                         type: TeaserType.Article,
-                        style: teaser.style,
                         image: teaser.image ?? undefined,
                         preTitle: teaser.preTitle ?? undefined,
                         title: teaser.title ?? undefined,
@@ -1126,7 +1107,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                   teaser.page
                     ? {
                         type: TeaserType.Page,
-                        style: teaser.style,
                         image: teaser.image ?? undefined,
                         preTitle: teaser.preTitle ?? undefined,
                         title: teaser.title ?? undefined,
@@ -1142,7 +1122,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                   teaser.event
                     ? {
                         type: TeaserType.Event,
-                        style: teaser.style,
                         image: teaser.image ?? undefined,
                         preTitle: teaser.preTitle ?? undefined,
                         title: teaser.title ?? undefined,
@@ -1158,7 +1137,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                   teaser
                     ? {
                         type: TeaserType.Custom,
-                        style: teaser.style,
                         image: teaser.image ?? undefined,
                         preTitle: teaser.preTitle ?? undefined,
                         title: teaser.title ?? undefined,

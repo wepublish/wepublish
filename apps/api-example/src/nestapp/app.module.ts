@@ -37,7 +37,8 @@ import {
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   SystemInfoModule,
-  MediaAdapterModule
+  MediaAdapterModule,
+  SubscriptionModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule, URLAdapter, URLAdapterModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -283,6 +284,7 @@ import {NavigationModule} from '@wepublish/navigation/api'
     PollModule,
     PhraseModule,
     ActionModule,
+    SubscriptionModule,
     NavigationModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [

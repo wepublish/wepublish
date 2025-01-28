@@ -31,14 +31,7 @@ import {
 } from './comment/comment'
 import {getAdminComments, getComment} from './comment/comment.private-queries'
 import {GraphQLSortOrder} from './common'
-import {
-  GraphQLEvent,
-  GraphQLEventConnection,
-  GraphQLEventFilter,
-  GraphQLEventSort
-} from './event/event'
-import {getAdminEvents} from './event/event.private-queries'
-import {EventSort, getEvent, getImportedEventsIds} from './event/event.query'
+import {getImportedEventsIds} from './event/event.query'
 import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
 import {getAdminImages, getImageById} from './image/image.private-queries'
 import {
@@ -590,28 +583,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     // Events
     // =======
-
-    events: {
-      type: GraphQLEventConnection,
-      args: {
-        cursor: {type: GraphQLString},
-        take: {type: GraphQLInt, defaultValue: 10},
-        skip: {type: GraphQLInt, defaultValue: 0},
-        filter: {type: GraphQLEventFilter},
-        sort: {type: GraphQLEventSort, defaultValue: EventSort.StartsAt},
-        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
-      },
-      resolve: (root, {cursor, take, skip, filter, sort, order}, {authenticate, prisma: {event}}) =>
-        getAdminEvents(filter, sort, order, cursor, skip, take, authenticate, event)
-    },
-
-    event: {
-      type: GraphQLEvent,
-      args: {
-        id: {type: GraphQLString}
-      },
-      resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
-    },
 
     importedEventsIds: {
       type: new GraphQLList(GraphQLString),

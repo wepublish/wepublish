@@ -1,21 +1,43 @@
 import {Injectable, NotFoundException} from '@nestjs/common'
 import {Prisma, PrismaClient, TagType} from '@prisma/client'
 import {GraphQLClient} from 'graphql-request'
-import {Article, ArticleQuery, ArticleQueryVariables} from './graphql'
+import {
+  Article,
+  ArticleList,
+  ArticleListQuery,
+  ArticleListQueryVariables,
+  ArticleQuery,
+  ArticleQueryVariables,
+  ArticleFilter as GqlArticleFilter,
+  DateFilter as GqlDateFilter
+} from './graphql'
 import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
-import {PrimeDataLoader} from '@wepublish/utils/api'
-import {ArticleDataloaderService} from '@wepublish/article/api'
+import {DateFilter, PrimeDataLoader, SortOrder} from '@wepublish/utils/api'
+import {ArticleDataloaderService, ArticleFilter, ArticleSort} from '@wepublish/article/api'
 import {
   BlockType,
   ImageBlockInput,
   ImageGalleryBlockInput,
   ImageGalleryImageInput
 } from '@wepublish/block-content/api'
+import {PeerArticle, PeerArticleListArgs} from './peer-article.model'
 
 type ImportArticleOptions = Partial<{
   importAuthors: boolean
   importTags: boolean
 }>
+
+const dateFilterToGqlDateFilter = (comparison: DateFilter): GqlDateFilter => ({
+  comparison: comparison.comparison,
+  date: comparison.date?.toDateString()
+})
+
+const articleFilterToGqlArticleFilter = (filter: Partial<ArticleFilter>): GqlArticleFilter => ({
+  ...filter,
+  publicationDateFrom:
+    filter.publicationDateFrom && dateFilterToGqlDateFilter(filter.publicationDateFrom),
+  publicationDateTo: filter.publicationDateTo && dateFilterToGqlDateFilter(filter.publicationDateTo)
+})
 
 @Injectable()
 export class ImportPeerArticleService {
@@ -25,8 +47,73 @@ export class ImportPeerArticleService {
     private mediaAdapter: MediaAdapter
   ) {}
 
-  getArticles() {
-    return []
+  async getArticles({filter, sort, order, take = 10, skip = 0}: PeerArticleListArgs) {
+    const peers = (
+      await this.prisma.peer.findMany({
+        orderBy: {
+          createdAt: 'desc'
+        }
+      })
+    )
+      .filter(({name}) => (filter?.peerName ? name === filter.peerName : true))
+      .filter(({isDisabled}) => !isDisabled)
+
+    const articleToTakeFromEachPeer = Math.ceil(take / peers.length)
+    const articleToSkipFromEachPeer = Math.ceil(skip / peers.length)
+
+    const articles = await Promise.all(
+      peers.map(async peer => {
+        const client = new GraphQLClient(peer.hostURL, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${peer.token}`
+          }
+        })
+
+        const data = await client.request<ArticleListQuery, ArticleListQueryVariables>(
+          ArticleList,
+          {
+            filter: {
+              ...articleFilterToGqlArticleFilter(filter ?? {}),
+              shared: true,
+              published: true
+            },
+            order,
+            sort,
+            take: articleToTakeFromEachPeer,
+            skip: articleToSkipFromEachPeer
+          }
+        )
+
+        return data.articles
+      })
+    )
+
+    const totalCount = articles.reduce((prev, result) => prev + (result?.totalCount ?? 0), 0)
+
+    const hasPreviousPage = articles.reduce(
+      (prev, result) => prev || (result?.pageInfo?.hasPreviousPage ?? false),
+      false
+    )
+    const hasNextPage = articles.reduce(
+      (prev, result) => prev || (result?.pageInfo?.hasNextPage ?? false),
+      false
+    )
+
+    const peerArticles = articles.flatMap((result, index) => {
+      const peer = peers[index]
+
+      return result?.nodes.map(article => ({...article, peerId: peer.id})) ?? []
+    })
+
+    return {
+      nodes: peerArticles,
+      totalCount,
+      pageInfo: {
+        hasNextPage,
+        hasPreviousPage
+      }
+    }
   }
 
   @PrimeDataLoader(ArticleDataloaderService)

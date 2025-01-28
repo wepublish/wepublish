@@ -4,12 +4,12 @@ fragment FullPeerProfile on PeerProfile {
   themeColor
   themeFontColor
   logo {
-    ...ImageRef
+    ...FullImage
   }
   callToActionText
   callToActionURL
   callToActionImage {
-    ...ImageRef
+    ...FullImage
   }
   callToActionImageURL
 }

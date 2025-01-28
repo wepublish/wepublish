@@ -37,8 +37,6 @@ type Query {
   tags(cursor: String, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
   poll(id: String): FullPoll
-  events(cursor: String, take: Int = 10, skip: Int = 0, filter: EventFilter, sort: EventSort = StartsAt, order: SortOrder = Descending): EventConnection
-  event(id: String): Event
 
   """This query returns a list of original ids of imported events"""
   importedEventsIds: [String]
@@ -406,11 +404,11 @@ input DateFilter {
 }
 
 enum DateFilterComparison {
-  gt
-  gte
-  eq
-  lt
-  lte
+  GreaterThan
+  GreaterThanOrEqual
+  Equal
+  LowerThan
+  LowerThanOrEqual
 }
 
 enum SubscriptionSort {
@@ -794,51 +792,6 @@ type PollExternalVote {
 """A valid vote value"""
 scalar VoteValue
 
-type EventConnection {
-  nodes: [Event!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type Event {
-  id: String!
-  name: String!
-  lead: String
-  status: EventStatus!
-  description: RichText
-  location: String
-  startsAt: DateTime!
-  endsAt: DateTime
-  externalSourceId: String
-  externalSourceName: String
-  tags: [Tag!]!
-  image: Image
-  url: String!
-}
-
-enum EventStatus {
-  Cancelled
-  Rescheduled
-  Postponed
-  Scheduled
-}
-
-input EventFilter {
-  upcomingOnly: Boolean
-  from: DateTime
-  to: DateTime
-  tags: [String!]
-  name: String
-  location: String
-}
-
-enum EventSort {
-  StartsAt
-  EndsAt
-  CreatedAt
-  ModifiedAt
-}
-
 type SubscribersPerMonth {
   month: String!
   subscriberCount: Int!
@@ -909,9 +862,6 @@ type Mutation {
   createTag(tag: String, type: TagType!, main: Boolean): Tag
   updateTag(id: String!, tag: String, main: Boolean): Tag
   deleteTag(id: String!): Tag
-  createEvent(name: String!, lead: String, description: RichText, location: String, startsAt: DateTime!, endsAt: DateTime, imageId: String, externalSourceId: String, externalSourceName: String, tagIds: [String!]): Event
-  updateEvent(id: String!, name: String, lead: String, description: RichText, status: EventStatus, location: String, startsAt: DateTime, endsAt: DateTime, imageId: String, externalSourceId: String, externalSourceName: String, tagIds: [String!]): Event
-  deleteEvent(id: String!): Event
 }
 
 input PeerProfileInput {

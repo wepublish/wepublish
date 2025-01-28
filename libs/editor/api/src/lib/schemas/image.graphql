@@ -9,23 +9,13 @@ fragment ImageURLs on Image {
   column6URL: transformURL(input: {width: 260, height: 300})
 }
 
-fragment ImageRef on Image {
-  id
-  filename
-  extension
-  title
-  description
-  width
-  height
-  ...ImageURLs
-}
-
 fragment FullImage on Image {
   id
 
   createdAt
   modifiedAt
 
+  title
   filename
   extension
   width
@@ -44,13 +34,13 @@ fragment FullImage on Image {
     y
   }
 
-  ...ImageRef
+  ...ImageURLs
 }
 
 query ImageList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
-      ...ImageRef
+      ...FullImage
     }
     pageInfo {
       startCursor
@@ -70,7 +60,7 @@ query Image($id: String!) {
 
 mutation UploadImage($input: UploadImageInput!) {
   uploadImage(input: $input) {
-    ...ImageRef
+    ...FullImage
   }
 }
 

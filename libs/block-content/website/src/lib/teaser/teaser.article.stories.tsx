@@ -1,10 +1,5 @@
 import {Meta} from '@storybook/react'
-import {
-  ArticleTeaser,
-  FullAuthorFragment,
-  FullImageFragment,
-  TeaserStyle
-} from '@wepublish/website/api'
+import {ArticleTeaser, FullAuthorFragment, FullImageFragment} from '@wepublish/website/api'
 import {Teaser} from './teaser'
 
 export default {
@@ -104,43 +99,6 @@ export const Default = {
       __typename: 'FlexAlignment'
     },
     teaser: articleTeaser
-  }
-}
-
-export const WithLightStyle = {
-  args: {
-    alignment: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 4,
-      __typename: 'FlexAlignment'
-    },
-    teaser: {
-      ...articleTeaser,
-      style: TeaserStyle.Light
-    }
-  }
-}
-
-export const WithoutBlockWithLightStyle = {
-  args: {
-    alignment: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 4,
-      __typename: 'FlexAlignment'
-    },
-    teaser: {
-      ...articleTeaser,
-      style: TeaserStyle.Light,
-      lead: null,
-      article: {
-        ...articleTeaser.article,
-        blocks: []
-      }
-    }
   }
 }
 
