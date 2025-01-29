@@ -1386,7 +1386,7 @@
         },
         "reason": "Deactivation Reason",
         "reasonInvoiceNotPaid": "User did not pay invoices",
-        "reasonUserReplacedSubscription": "Replaced by user",
+        "reasonUserReplacedSubscription": "Replaced by other subscription",
         "cancellation": "Cancellation Date",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "User wants to deactivate",
