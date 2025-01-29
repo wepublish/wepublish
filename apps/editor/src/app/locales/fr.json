@@ -1039,7 +1039,7 @@
       "filter": {
         "deactivationReason": "Motif de désactivation",
         "reasonInvoiceNotPaid": "Facture impayée",
-        "reasonUserReplacedSubscription": "Remplacé par l'utilisateur",
+        "reasonUserReplacedSubscription": "Remplacé par un autre abonnement",
         "reasonNone": "Aucun motif",
         "reasonUserSelfDeactivated": "Par l'utilisateur·trice",
         "reset": "Réinitialiser le filtre",
