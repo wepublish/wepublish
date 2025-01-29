@@ -1798,6 +1798,10 @@ type SubscriptionuserFactory = {
     _factoryFor: "User";
     build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutSubscriptionInput["create"]>;
 };
+type SubscriptionreplacesSubscriptionFactory = {
+    _factoryFor: "Subscription";
+    build: () => PromiseLike<Prisma.SubscriptionCreateNestedOneWithoutReplacedByInput["create"]>;
+};
 type SubscriptionFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -1815,6 +1819,8 @@ type SubscriptionFactoryDefineInput = {
     paymentMethod: SubscriptionpaymentMethodFactory | Prisma.PaymentMethodCreateNestedOneWithoutSubscriptionInput;
     memberPlan: SubscriptionmemberPlanFactory | Prisma.MemberPlanCreateNestedOneWithoutSubscriptionInput;
     user: SubscriptionuserFactory | Prisma.UserCreateNestedOneWithoutSubscriptionInput;
+    replacesSubscription?: SubscriptionreplacesSubscriptionFactory | Prisma.SubscriptionCreateNestedOneWithoutReplacedByInput;
+    replacedBy?: Prisma.SubscriptionCreateNestedManyWithoutReplacesSubscriptionInput;
     invoices?: Prisma.InvoiceCreateNestedManyWithoutSubscriptionInput;
 };
 type SubscriptionFactoryDefineOptions = {
