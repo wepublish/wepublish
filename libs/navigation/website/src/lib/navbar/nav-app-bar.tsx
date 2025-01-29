@@ -42,16 +42,16 @@ export const NavAppBar = ({
   )
 }
 
-type HomeLogoButton = Pick<BuilderNavAppBarProps, 'logo' | 'menuToggle'>
+type HomeLogoButton = Pick<BuilderNavAppBarProps, 'logo' | 'menuToggle'> & {className?: string}
 
-export const HomeLogoButton = ({logo, menuToggle}: HomeLogoButton) => {
+export const HomeLogoButton = ({logo, menuToggle, className}: HomeLogoButton) => {
   const logoLinkStyles = useLogoLinkStyles(menuToggle.value)
   const imageStyles = useImageStyles()
   const {
     elements: {Link, Image}
   } = useWebsiteBuilder()
   return (
-    <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
+    <Link href="/" aria-label="Startseite" css={logoLinkStyles} className={className}>
       <NavbarLogoWrapper>
         {!!logo && <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />}
       </NavbarLogoWrapper>
