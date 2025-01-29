@@ -576,6 +576,14 @@ const modelFieldDefinitions = [{
                 type: "User",
                 relationName: "SubscriptionToUser"
             }, {
+                name: "replacesSubscription",
+                type: "Subscription",
+                relationName: "ReplacementHistory"
+            }, {
+                name: "replacedBy",
+                type: "Subscription",
+                relationName: "ReplacementHistory"
+            }, {
                 name: "invoices",
                 type: "Invoice",
                 relationName: "InvoiceToSubscription"
@@ -3493,6 +3501,9 @@ function isSubscriptionmemberPlanFactory(x) {
 function isSubscriptionuserFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
 }
+function isSubscriptionreplacesSubscriptionFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Subscription";
+}
 function autoGenerateSubscriptionScalarsOrEnums({ seq }) {
     return {
         paymentPeriodicity: "monthly",
@@ -3530,7 +3541,10 @@ function defineSubscriptionFactoryInternal({ defaultData: defaultDataResolver, t
                 } : defaultData.memberPlan,
                 user: isSubscriptionuserFactory(defaultData.user) ? {
                     create: yield defaultData.user.build()
-                } : defaultData.user
+                } : defaultData.user,
+                replacesSubscription: isSubscriptionreplacesSubscriptionFactory(defaultData.replacesSubscription) ? {
+                    create: yield defaultData.replacesSubscription.build()
+                } : defaultData.replacesSubscription
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;

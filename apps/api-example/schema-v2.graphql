@@ -585,6 +585,7 @@ type Stats {
 enum SubscriptionDeactivationReason {
   invoiceNotPaid
   none
+  userReplacedSubscription
   userSelfDeactivated
 }
 
