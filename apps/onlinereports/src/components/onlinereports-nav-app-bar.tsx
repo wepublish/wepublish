@@ -8,7 +8,7 @@ import {
   NavbarMain,
   NavbarOpenCloseButton
 } from '@wepublish/website'
-import {AppBar, Box, css, styled} from '@mui/material'
+import {AppBar, Box, Container, css, styled} from '@mui/material'
 
 export const OnlineReportsNavAppBar = ({
   logo,
@@ -21,28 +21,32 @@ export const OnlineReportsNavAppBar = ({
 }: BuilderNavAppBarProps) => {
   return (
     <AppBar position="static" elevation={0} color={'transparent'}>
-      <NavbarInnerWrapper>
-        <Box my={-2}>
-          <HomeLogoButton logo={logo} menuToggle={menuToggle} />
-        </Box>
-        <NavbarMain>
-          {!!headerItems?.links.length && (
-            <NavbarLinks isMenuOpen={menuToggle.value}>
-              <MenuItems items={headerItems} />
-            </NavbarLinks>
-          )}
-        </NavbarMain>
+      <Container maxWidth="lg">
+        <NavbarInnerWrapper>
+          <OnlineReportsHomeLogoButton logo={logo} menuToggle={menuToggle} />
+          <NavbarMain>
+            {!!headerItems?.links.length && (
+              <NavbarLinks isMenuOpen={menuToggle.value}>
+                <MenuItems items={headerItems} />
+              </NavbarLinks>
+            )}
+          </NavbarMain>
 
-        <NavbarActions margin={-1.5}>
-          {actions}
-          <LoggedInButtons profileUrl={profileUrl} subscriptionsUrl={subscriptionsUrl} />
-          <LoggedOutButtons loginUrl={loginUrl} />
-          <NavbarOpenCloseButton toggle={menuToggle} />
-        </NavbarActions>
-      </NavbarInnerWrapper>
+          <NavbarActions>
+            {actions}
+            <LoggedInButtons profileUrl={profileUrl} subscriptionsUrl={subscriptionsUrl} />
+            <LoggedOutButtons loginUrl={loginUrl} />
+            <NavbarOpenCloseButton toggle={menuToggle} />
+          </NavbarActions>
+        </NavbarInnerWrapper>
+      </Container>
     </AppBar>
   )
 }
+
+const OnlineReportsHomeLogoButton = styled(HomeLogoButton)`
+  //margin: -${({theme}) => theme.spacing(2)} 0;
+`
 
 export const NavbarActions = styled(Box)`
   display: flex;
@@ -50,6 +54,7 @@ export const NavbarActions = styled(Box)`
   align-items: center;
   justify-self: end;
   gap: ${({theme}) => theme.spacing(1)};
+  margin: -${({theme}) => theme.spacing(1.5)};
 `
 
 export const NavbarInnerWrapper = styled('div')`
@@ -58,25 +63,26 @@ export const NavbarInnerWrapper = styled('div')`
   margin-left: auto;
   margin-right: auto;
   display: grid;
-  grid-template-columns: auto 1fr auto;
   gap: ${({theme}) => theme.spacing(5)};
   grid-auto-flow: column;
   justify-items: center;
-  min-height: unset;
-  padding-top: ${({theme}) => theme.spacing(5)};
-  padding-bottom: ${({theme}) => theme.spacing(5)};
-  padding-left: ${({theme}) => theme.spacing(10)};
-  padding-right: ${({theme}) => theme.spacing(10)};
-  align-items: start;
+  min-height: ${({theme}) => theme.spacing(10)};
+  align-items: center;
+  grid-template-columns: auto 1fr auto;
+
+  padding-top: ${({theme}) => theme.spacing(1.5)};
+  padding-bottom: ${({theme}) => theme.spacing(1.5)};
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
-      //grid-template-columns: 1fr auto 1fr;
-      min-height: unset;
+      min-height: 120px;
     }
 
     ${theme.breakpoints.up('md')} {
-      min-height: unset;
+      padding-left: ${theme.spacing(7)};
+      padding-right: ${theme.spacing(7)};
+      padding-top: ${({theme}) => theme.spacing(5)};
+      padding-bottom: ${({theme}) => theme.spacing(5)};
     }
   `}
 `

@@ -12,12 +12,22 @@ const inter = Inter({
 })
 
 const {
-  palette: {augmentColor}
+  palette: {augmentColor},
+  breakpoints
 } = WePTheme
 
 const theme = createTheme(WePTheme, {
   palette: {
-    primary: augmentColor({color: {main: '#89B9DC', light: '#89B9DC', contrastText: '#10243A'}})
+    text: {
+      primary: '#10243A'
+    },
+    primary: augmentColor({color: {main: '#89B9DC', light: '#89B9DC', contrastText: '#10243A'}}),
+    accent: augmentColor({
+      color: {
+        main: '#nnn',
+        contrastText: '#E1190F'
+      }
+    })
   },
   typography: {
     h1: {
@@ -27,7 +37,11 @@ const theme = createTheme(WePTheme, {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
     },
     h3: {
-      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      fontSize: '24px',
+      [breakpoints.up('md')]: {
+        fontSize: '36px'
+      }
     },
     h4: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')

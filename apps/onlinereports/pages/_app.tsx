@@ -1,11 +1,13 @@
 import {EmotionCache} from '@emotion/cache'
-import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {Box, Container, CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
+  FooterPaperWrapper,
   NavbarContainer,
+  TeaserGridBlockWrapper,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
@@ -26,7 +28,11 @@ import {ReactComponent as Logo} from '../src/logo.svg'
 import {OnlineReportsNavAppBar} from '../src/components/onlinereports-nav-app-bar'
 import {OnlineReportsNavPaper} from '../src/components/onlinereports-nav-paper'
 import theme from '../src/theme'
-import {OnlineReportsNavbar} from '../src/components/onlinereports-navbar'
+
+import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
+import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
+import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
+import {OnlineReportsAuthorChip} from '../src/components/author-chip'
 
 setDefaultOptions({
   locale: de
@@ -49,19 +55,41 @@ const Spacer = styled('div')`
   display: grid;
   align-items: flex-start;
   grid-template-rows: min-content 1fr min-content;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({theme}) => theme.spacing(0.5)};
   min-height: 100vh;
+
+  main {
+    overflow-x: hidden;
+  }
 `
 
-const MainSpacer = styled(Container)`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(5)};
+const Advertisement = styled(Box)`
+  background: repeating-linear-gradient(-45deg, #dde8ee, #dde8ee 15px, #eee 15px, #eee 40px);
+  border: 5px solid #eee;
+`
 
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
+const MainSpacer = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(2.5)};
+
+  > * {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: ${({theme}) => theme.spacing(2.5)} !important;
+    row-gap: ${({theme}) => theme.spacing(4.5)} !important;
+
+    > * {
+      grid-column: span 3;
     }
-  `}
+
+    ${TeaserGridBlockWrapper} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  ${theme.breakpoints.up('md')} {
+    gap: ${theme.spacing(2.5)};
+  }
 `
 
 const LogoLink = styled(NextWepublishLink)`
@@ -84,11 +112,51 @@ const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
 `
+const Footer = styled(FooterContainer)`
+  grid-column: -1/1;
+
+  ${FooterPaperWrapper} {
+    color: ${({theme}) => theme.palette.common.white};
+  }
+`
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
+
+const DesktopSidebarAd = styled(Container)`
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: ${({theme}) => theme.spacing(2.5)} !important;
+
+  margin-bottom: 40px;
+
+  @media (min-width: 1050px) {
+    grid-template-columns: 994px 300px;
+  }
+
+  ${Advertisement}:first-child {
+    width: 994px;
+    margin: auto;
+    @media (max-width: 1050px) {
+      width: 300px;
+    }
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  > ${Advertisement} {
+    display: none;
+
+    ${theme.breakpoints.up('md')} {
+      display: block;
+    }
+  }
+`
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
@@ -104,9 +172,15 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           <WebsiteBuilderProvider
             Head={Head}
             Script={Script}
+            AuthorChip={OnlineReportsAuthorChip}
             NavPaper={OnlineReportsNavPaper}
             NavAppBar={OnlineReportsNavAppBar}
             elements={{Link: NextWepublishLink}}
+            blocks={{
+              Teaser: OnlineReportsTeaser,
+              Renderer: OnlineReportsBlockRenderer,
+              TeaserList: OnlineReportsTeaserListBlock
+            }}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>
             <ThemeProvider theme={theme}>
@@ -143,16 +217,20 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 />
 
                 <main>
-                  <MainSpacer maxWidth="lg">
-                    <Component {...pageProps} />
-                  </MainSpacer>
+                  <DesktopSidebarAd maxWidth="lg">
+                    <MainSpacer>
+                      <Advertisement height={250} />
+                      <Component {...pageProps} />
+                    </MainSpacer>
+                    <Advertisement height={600} />
+                  </DesktopSidebarAd>
                 </main>
 
-                <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
+                <Footer slug="footer" categorySlugs={[['categories', 'about-us']]}>
                   <LogoLink href="/" aria-label="Startseite">
                     <LogoWrapper />
                   </LogoLink>
-                </FooterContainer>
+                </Footer>
               </Spacer>
             </ThemeProvider>
           </WebsiteBuilderProvider>

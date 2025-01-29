@@ -1,5 +1,5 @@
 import {css, styled} from '@mui/material'
-import {BuilderAuthorChipProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderAuthorChipProps, useWebsiteBuilder} from '@wepublish/website'
 
 export const AuthorChipWrapper = styled('div')`
   display: flex;
@@ -25,50 +25,35 @@ export const AuthorChipContent = styled('div')`
 
 export const AuthorChipName = styled('div')`
   font-weight: 500;
-  :after {
-    content: ', ';
-  }
-  &:last-of-type:after {
-    content: '';
-  }
-  a {
-    color: ${({theme}) => theme.palette.text.primary};
-    text-decoration: none;
-    font-weight: 500;
-  }
 `
 
 export const AuthorChipJob = styled('div')``
 
-const imageStyles = css`
+export const avatarImageStyles = css`
   border-radius: 50%;
 `
 
-export function AuthorChip({className, author}: BuilderAuthorChipProps) {
+export function OnlineReportsAuthorChip({className, author}: BuilderAuthorChipProps) {
   const {
     AuthorLinks,
     elements: {Image, Link}
   } = useWebsiteBuilder()
 
   return (
-    <AuthorChipWrapper className={className}>
+    <>
       {author.image && (
         <AuthorChipImageWrapper>
-          <Image image={author.image} square css={imageStyles} maxWidth={200} />
+          <Image image={author.image} square css={avatarImageStyles} maxWidth={200} />
         </AuthorChipImageWrapper>
       )}
 
-      <AuthorChipContent>
-        <div>
-          <AuthorChipName>
-            Von <Link href={author.url}>{author.name}</Link>
-          </AuthorChipName>
+      <div>
+        <AuthorChipName>
+          Von <Link href={author.url}>{author.name}</Link>
+        </AuthorChipName>
 
-          {author.jobTitle && <AuthorChipJob>{author.jobTitle}</AuthorChipJob>}
-        </div>
-
-        {!!author.links?.length && <AuthorLinks links={author.links} />}
-      </AuthorChipContent>
-    </AuthorChipWrapper>
+        {author.jobTitle && <AuthorChipJob>{author.jobTitle}</AuthorChipJob>}
+      </div>
+    </>
   )
 }

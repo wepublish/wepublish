@@ -10,8 +10,14 @@ const NavPaperOverlay = styled('div')`
   height: 100vh;
   width: 100vw;
   display: grid;
-  grid-template-columns: 1fr minmax(auto, ${({theme}) => theme.breakpoints.values.lg - 450}px) 450px 1fr;
   grid-auto-flow: column;
+  grid-template-areas: 'menu';
+  grid-template-columns: 1fr;
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    grid-template-areas: 'semiTransparentCover semiTransparentCover menu cover';
+    grid-template-columns: 1fr minmax(auto, ${({theme}) => theme.breakpoints.values.lg - 450}px) 450px 1fr;
+  }
 `
 
 const NavPaperWrapper = styled('div')`
@@ -27,8 +33,11 @@ const NavPaperWrapper = styled('div')`
   //max-width: 100%;
   padding-top: ${({theme}) => theme.spacing(5)};
   padding-bottom: ${({theme}) => theme.spacing(5)};
-  padding-left: ${({theme}) => theme.spacing(10)};
-  padding-right: ${({theme}) => theme.spacing(10)};
+  ${({theme}) => theme.breakpoints.up('md')} {
+    padding-left: ${({theme}) => theme.spacing(10)};
+    padding-right: ${({theme}) => theme.spacing(10)};
+  }
+  grid-area: menu;
 `
 
 export const NavPaperCategory = styled('div')`
@@ -78,11 +87,7 @@ export const OnlineReportsNavPaper = ({
       <SemiTransparentCover />
       <NavPaperWrapper>
         <Box display={'flex'} justifyContent={'space-between'} margin={-1.5}>
-          <IconButton
-            size="large"
-            aria-label="Menu"
-            onClick={() => alert('Search')}
-            color={'inherit'}>
+          <IconButton size="large" aria-label="Menu" color={'inherit'}>
             <MdSearch />
           </IconButton>
           <IconButton size="large" aria-label="Menu" onClick={closeMenu} color={'inherit'}>
@@ -211,10 +216,13 @@ export const OnlineReportsNavPaper = ({
 
 const Cover = styled('div')`
   background-color: ${({theme}) => theme.palette.primary.main};
+  grid-area: cover;
 `
 
 const SemiTransparentCover = styled(Cover)`
   opacity: 0.6;
+  background-color: #70787e;
+  grid-area: semiTransparentCover;
 `
 
 const Item = styled('span')`
