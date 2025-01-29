@@ -1092,7 +1092,7 @@
         "reasonInvoiceNotPaid": "Rechnung nicht bezahlt",
         "reasonNone": "Kein Grund",
         "reasonUserSelfDeactivated": "Durch Benutzer:in",
-        "reasonUserReplacedSubscription": "Ersetzt durch Benutzer:in",
+        "reasonUserReplacedSubscription": "Ersetzt durch anderes Abo",
         "reset": "Filter zurücksetzen",
         "searchPlaceholder": "Suche nach Vorname, Name, E-Mail, Adresse, PLZ, Ort"
       },
