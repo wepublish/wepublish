@@ -23,7 +23,9 @@ export default function ArticleBySlugIdOrToken() {
   const {data} = ApiV1.useArticleQuery({
     fetchPolicy: 'cache-only',
     variables: {
-      slug: slug as string
+      slug: slug as string,
+      id: id as string,
+      token: token as string
     }
   })
 
@@ -95,9 +97,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       client.query({
         query: ApiV1.CommentListDocument,
         variables: {
-          filter: {
-            itemId: article.data.article.id
-          }
+          itemId: article.data.article.id
         }
       })
     ])

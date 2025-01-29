@@ -3,6 +3,7 @@ import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
   Article,
+  ArticleAuthor,
   ArticleContainer,
   ArticleList,
   ArticleListContainer,
@@ -25,7 +26,6 @@ import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
 import {Container} from '../../src/components/layout/container'
 import {SEARCH_SLIDER_TAG, SliderArticle} from '../../src/components/search-slider/search-slider'
 import {SearchSlider} from '../../src/components/search-slider/search-slider'
-import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {BajourTeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
@@ -61,7 +61,9 @@ export default function ArticleBySlugIdOrToken() {
   const {data} = ApiV1.useArticleQuery({
     fetchPolicy: 'cache-only',
     variables: {
-      slug: slug as string
+      slug: slug as string,
+      id: id as string,
+      token: token as string
     }
   })
 
@@ -117,7 +119,7 @@ export default function ArticleBySlugIdOrToken() {
                 {!isFDT &&
                   data.article.authors.map(a => (
                     <AuthorWrapper key={a.id}>
-                      <BajourAuthorChip key={a.id} author={a} />
+                      <ArticleAuthor key={a.id} author={a} />
                     </AuthorWrapper>
                   ))}
 

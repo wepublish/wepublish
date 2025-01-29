@@ -28,6 +28,7 @@ export const getPageSEO = (page: Page) => {
 
   return {
     type: 'website',
+    title,
     socialMediaTitle,
     description,
     socialMediaDescription,
@@ -54,7 +55,7 @@ export const PageSEO = ({page}: BuilderPageSEOProps) => {
   const {meta, Head, Script} = useWebsiteBuilder()
   const seo = useMemo(() => getPageSEO(page), [page])
 
-  const title = `${seo.socialMediaTitle ? `${seo.socialMediaTitle} —` : ``} ${meta.siteTitle}`
+  const title = `${seo.title ? `${seo.title} —` : ``} ${meta.siteTitle}`
 
   return (
     <>

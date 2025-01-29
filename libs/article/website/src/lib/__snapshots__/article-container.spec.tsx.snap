@@ -9,7 +9,7 @@ exports[`Article Container should render ById 1`] = `
       data-testid="fake-head"
     >
       <title>
-        socialMediaTitle — Newsroom Name
+        title — Newsroom Name
       </title>
       <meta
         content="article"
@@ -2591,7 +2591,7 @@ exports[`Article Container should render BySlug 1`] = `
       data-testid="fake-head"
     >
       <title>
-        socialMediaTitle — Newsroom Name
+        title — Newsroom Name
       </title>
       <meta
         content="article"
@@ -5173,7 +5173,7 @@ exports[`Article Container should render ByToken 1`] = `
       data-testid="fake-head"
     >
       <title>
-        socialMediaTitle — Newsroom Name
+        title — Newsroom Name
       </title>
       <meta
         content="article"
@@ -7755,7 +7755,7 @@ exports[`Article Container should render WithChildren 1`] = `
       data-testid="fake-head"
     >
       <title>
-        socialMediaTitle — Newsroom Name
+        title — Newsroom Name
       </title>
       <meta
         content="article"
@@ -10340,7 +10340,7 @@ exports[`Article Container should render WithClassName 1`] = `
       data-testid="fake-head"
     >
       <title>
-        socialMediaTitle — Newsroom Name
+        title — Newsroom Name
       </title>
       <meta
         content="article"
@@ -12922,7 +12922,7 @@ exports[`Article Container should render WithEmotion 1`] = `
       data-testid="fake-head"
     >
       <title>
-        socialMediaTitle — Newsroom Name
+        title — Newsroom Name
       </title>
       <meta
         content="article"
