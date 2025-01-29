@@ -1204,6 +1204,7 @@
       "filter": {
         "deactivationReason": "Deactivation reason",
         "reasonInvoiceNotPaid": "Invoice not paid",
+        "reasonUserReplacedSubscription": "Replaced by user",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "By user",
         "reset": "Reset Filter",
@@ -1385,6 +1386,7 @@
         },
         "reason": "Deactivation Reason",
         "reasonInvoiceNotPaid": "User did not pay invoices",
+        "reasonUserReplacedSubscription": "Replaced by user",
         "cancellation": "Cancellation Date",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "User wants to deactivate",

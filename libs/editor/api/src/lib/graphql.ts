@@ -2488,6 +2488,7 @@ export type SubscriptionDeactivationInput = {
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
+  UserReplacedSubscription = 'userReplacedSubscription',
   UserSelfDeactivated = 'userSelfDeactivated'
 }
 

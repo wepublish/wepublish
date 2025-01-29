@@ -922,6 +922,7 @@ enum SubscriptionDeactivationReason {
   none
   userSelfDeactivated
   invoiceNotPaid
+  userReplacedSubscription
 }
 
 type MemberPlanConnection {
