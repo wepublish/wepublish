@@ -2,7 +2,6 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {BannerResolver} from './banner.resolver'
 import {BannerService} from './banner.service'
 import {BannerActionService} from './banner-action.service'
-import {NotFoundException} from '@nestjs/common'
 import {Banner, BannerDocumentType} from './banner.model'
 import {LoginStatus} from '@prisma/client'
 
@@ -76,7 +75,8 @@ describe('BannerResolver', () => {
 
     it('should throw NotFoundException when banner not found', async () => {
       mockBannerService.findOne.mockResolvedValue(null)
-      await expect(resolver.banner('1')).rejects.toThrow(NotFoundException)
+      const result = await resolver.banner('1')
+      expect(result).toEqual(null)
     })
   })
 
@@ -93,13 +93,12 @@ describe('BannerResolver', () => {
 
     it('should throw NotFoundException when no primary banner found', async () => {
       mockBannerService.findFirst.mockResolvedValue(null)
-      await expect(
-        resolver.primaryBanner({
-          documentType: BannerDocumentType.ARTICLE,
-          documentId: '1',
-          loggedIn: true
-        })
-      ).rejects.toThrow(NotFoundException)
+      const result = await resolver.primaryBanner({
+        documentType: BannerDocumentType.ARTICLE,
+        documentId: '1',
+        loggedIn: true
+      })
+      expect(result).toEqual(null)
     })
   })
 
