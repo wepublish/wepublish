@@ -1254,7 +1254,7 @@
         },
         "reason": "Deaktivierungs Grund",
         "reasonInvoiceNotPaid": "User hat Rechnung nicht bezahlt",
-        "reasonUserReplacedSubscription": "Ersetzt durch Benutzer:in",
+        "reasonUserReplacedSubscription": "Ersetzt durch anderes Abo",
         "reasonNone": "Keiner",
         "reasonUserSelfDeactivated": "User will deaktivieren",
         "title": {
