@@ -1202,7 +1202,7 @@
         },
         "reason": "Motif de désactivation",
         "reasonInvoiceNotPaid": "Facture impayée",
-        "reasonUserReplacedSubscription": "Remplacé par l'utilisateur",
+        "reasonUserReplacedSubscription": "Remplacé par un autre abonnement",
         "reasonNone": "Aucun motif",
         "reasonUserSelfDeactivated": "Désactivation par l'utilisateur·trice",
         "title": {
