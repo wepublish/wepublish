@@ -28,7 +28,7 @@ fragment PageWithoutBlocks on Page {
     ...FullTag
   }
 
-  published {
+  latest {
     ...PageRevisionsWithoutBlocks
   }
 }
@@ -36,7 +36,7 @@ fragment PageWithoutBlocks on Page {
 fragment FullPage on Page {
   ...PageWithoutBlocks
 
-  published {
+  latest {
     ...PageRevisionsWithoutBlocks
 
     blocks {

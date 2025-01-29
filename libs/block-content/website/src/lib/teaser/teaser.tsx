@@ -9,14 +9,13 @@ import {PropsWithChildren, useMemo} from 'react'
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      const titleBlock = teaser.page?.published?.blocks?.find(isTitleBlock)
-      return teaser.title || teaser.page?.published?.title || titleBlock?.title
+      const titleBlock = teaser.page?.latest.blocks?.find(isTitleBlock)
+      return teaser.title || teaser.page?.latest.title || titleBlock?.title
     }
 
-    case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
-      const titleBlock = teaser.article?.published?.blocks?.find(isTitleBlock)
-      return teaser.title || teaser.article?.published?.title || titleBlock?.title
+      const titleBlock = teaser.article?.latest.blocks?.find(isTitleBlock)
+      return teaser.title || teaser.article?.latest.title || titleBlock?.title
     }
 
     case 'EventTeaser':
@@ -29,11 +28,10 @@ export const selectTeaserTitle = (teaser: TeaserType) => {
 
 export const selectTeaserPreTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
-    case 'PeerArticleTeaser':
     case 'ArticleTeaser':
       return (
         teaser.preTitle ||
-        teaser.article?.published?.preTitle ||
+        teaser.article?.latest.preTitle ||
         teaser.article?.tags?.find(({main}) => !!main)?.tag
       )
     case 'PageTeaser':
@@ -47,14 +45,13 @@ export const selectTeaserPreTitle = (teaser: TeaserType) => {
 export const selectTeaserLead = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      const titleBlock = teaser.page?.published?.blocks?.find(isTitleBlock)
-      return teaser.lead || teaser.page?.published?.description || titleBlock?.lead
+      const titleBlock = teaser.page?.latest.blocks?.find(isTitleBlock)
+      return teaser.lead || teaser.page?.latest.description || titleBlock?.lead
     }
 
-    case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
-      const titleBlock = teaser.article?.published?.blocks?.find(isTitleBlock)
-      return teaser.lead || teaser.article?.published?.lead || titleBlock?.lead
+      const titleBlock = teaser.article?.latest.blocks?.find(isTitleBlock)
+      return teaser.lead || teaser.article?.latest.lead || titleBlock?.lead
     }
 
     case 'EventTeaser':
@@ -89,14 +86,13 @@ export const selectTeaserUrl = (teaser: TeaserType) => {
 export const selectTeaserImage = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      const imageBlock = teaser.page?.published?.blocks?.find(isImageBlock)
-      return teaser.image ?? teaser?.page?.published?.image ?? imageBlock?.image
+      const imageBlock = teaser.page?.latest.blocks?.find(isImageBlock)
+      return teaser.image ?? teaser?.page?.latest.image ?? imageBlock?.image
     }
 
-    case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
-      const imageBlock = teaser.article?.published?.blocks?.find(isImageBlock)
-      return teaser.image ?? teaser?.article?.published?.image ?? imageBlock?.image
+      const imageBlock = teaser.article?.latest.blocks?.find(isImageBlock)
+      return teaser.image ?? teaser?.article?.latest.image ?? imageBlock?.image
     }
 
     case 'EventTeaser':
@@ -113,8 +109,7 @@ export const selectTeaserDate = (teaser: TeaserType) => {
       return teaser.page?.publishedAt
     }
 
-    case 'ArticleTeaser':
-    case 'PeerArticleTeaser': {
+    case 'ArticleTeaser': {
       return teaser.article?.publishedAt
     }
 
@@ -133,9 +128,8 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
       return null
     }
 
-    case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
-      return teaser.article?.published?.authors
+      return teaser.article?.latest.authors
         .filter(author => !author.hideOnTeaser)
         .map(author => author.name)
     }
@@ -159,7 +153,6 @@ export const selectTeaserTags = (teaser: TeaserType) => {
     case 'EventTeaser':
       return teaser.event?.tags?.filter(({tag, main}) => !!tag && main) ?? []
 
-    case 'PeerArticleTeaser':
     case 'CustomTeaser':
       return []
   }

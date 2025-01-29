@@ -29,6 +29,7 @@ import {previewForTeaser, TeaserMetadataProperty} from './teaserEditPanel'
 import {
   ArticleFilter,
   EventFilter,
+  getApiClientV2,
   PageFilter,
   TeaserType,
   useArticleListQuery,
@@ -152,6 +153,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       : []
   )
 
+  const client = getApiClientV2()
   /**
    * EVENTS
    */
@@ -166,6 +168,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     error: eventListError,
     loading: isEventListLoading
   } = useEventListQuery({
+    client,
     fetchPolicy: 'network-only',
     variables: eventVariables
   })
@@ -184,6 +187,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     error: articleListError,
     loading: isArticleListLoading
   } = useArticleListQuery({
+    client,
     variables: listVariables,
     fetchPolicy: 'network-only'
   })
@@ -194,6 +198,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     error: pageListError,
     loading: isPageListLoading
   } = usePageListQuery({
+    client,
     variables: pageListVariables,
     fetchPolicy: 'cache-and-network'
   })

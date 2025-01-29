@@ -44,7 +44,7 @@ type Query {
   invoices: [Invoice!]!
 
   """This query returns the subscriptions of the authenticated user."""
-  subscriptions: [Subscription!]!
+  subscriptions: [PublicSubscription!]!
 
   """This query returns a member plan."""
   memberPlan(id: String, slug: Slug): MemberPlan
@@ -368,7 +368,7 @@ type Invoice {
   canceledAt: DateTime
   items: [InvoiceItem!]!
   subscriptionID: String!
-  subscription: Subscription
+  subscription: PublicSubscription
   total: Int!
 }
 
@@ -382,7 +382,7 @@ type InvoiceItem {
   total: Int!
 }
 
-type Subscription {
+type PublicSubscription {
   id: String!
   memberPlan: MemberPlan!
   paymentPeriodicity: PaymentPeriodicity!
@@ -598,12 +598,12 @@ type Mutation {
   """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
-  updateUserSubscription(id: String!, input: SubscriptionInput!): Subscription
+  updateUserSubscription(id: String!, input: SubscriptionInput!): PublicSubscription
 
   """
   This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now
   """
-  cancelUserSubscription(id: String!): Subscription
+  cancelUserSubscription(id: String!): PublicSubscription
 
   """This mutation allows to update the Payment Provider Customers"""
   updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
@@ -767,4 +767,4 @@ type _Service {
   sdl: String
 }
 
-union _Entity = Author | Comment | FullPoll | Image | MemberPlan | PaymentMethod | Peer | PollVote | Subscription | Tag | User
+union _Entity = Author | Comment | FullPoll | Image | MemberPlan | PaymentMethod | Peer | PollVote | PublicSubscription | Tag | User

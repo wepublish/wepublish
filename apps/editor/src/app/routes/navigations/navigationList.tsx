@@ -1,6 +1,7 @@
 import {
   FullNavigationFragment,
   getApiClientV2,
+  SlimNavigationFragment,
   useDeleteNavigationMutation,
   useNavigationListQuery
 } from '@wepublish/editor/api-v2'
@@ -46,7 +47,7 @@ function NavigationList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [navigations, setNavigations] = useState<FullNavigationFragment[]>([])
+  const [navigations, setNavigations] = useState<SlimNavigationFragment[]>([])
   const [currentNavigation, setCurrentNavigation] = useState<FullNavigationFragment>()
 
   const client = getApiClientV2()

@@ -1,7 +1,7 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {PrismaClient} from '@prisma/client'
 import {NavigationService} from './navigation.service'
-import {NavigationDataloader} from './navigation.dataloader'
+import {NavigationDataloader} from './navigation-dataloader.service'
 
 describe('NavigationService', () => {
   let service: NavigationService

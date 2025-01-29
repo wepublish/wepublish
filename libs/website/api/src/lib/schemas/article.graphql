@@ -40,7 +40,7 @@ fragment ArticleWithoutBlocks on Article {
     ...FullTag
   }
 
-  published {
+  latest {
     ...ArticleRevisionsWithoutBlocks
   }
 }
@@ -48,7 +48,7 @@ fragment ArticleWithoutBlocks on Article {
 fragment FullArticle on Article {
   ...ArticleWithoutBlocks
 
-  published {
+  latest {
     ...ArticleRevisionsWithoutBlocks
 
     blocks {

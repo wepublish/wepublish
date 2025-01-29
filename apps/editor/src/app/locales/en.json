@@ -112,8 +112,6 @@
         "totalCharCount": "Total characters count is {{totalCharCount}}",
         "type": "Type",
         "untitled": "Untitled",
-        "updateDate": "Update Date",
-        "updateDateWarning": "The update date cannot be older than the publication date.",
         "uploadImage": "Upload Image",
         "url": "URL",
         "urlPlaceholder": "https://canonical-url.com",
@@ -891,8 +889,6 @@
         "tags": "Tags",
         "title": "SEO Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
-        "updateDate": "Update Date",
-        "updateDateWarning": "The update date cannot be older than the publication date.",
         "url": "URL",
         "value": "Value"
       }

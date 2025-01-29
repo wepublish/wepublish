@@ -40,13 +40,13 @@ export function Article({className, data, children, loading, error}: BuilderArti
   } = useWebsiteBuilder()
 
   const article = data?.article
-  const authors = article?.published?.authors.filter(author => !author.hideOnArticle) || []
+  const authors = article?.latest.authors.filter(author => !author.hideOnArticle) || []
 
   return (
     <ArticleWrapper className={className}>
       {article && <ArticleSEO article={data.article as ArticleType} />}
 
-      <Blocks blocks={(article?.published?.blocks as BlockContent[]) ?? []} type="Article" />
+      <Blocks blocks={(article?.latest.blocks as BlockContent[]) ?? []} type="Article" />
 
       <ArticleInfoWrapper>
         {!!authors.length && (

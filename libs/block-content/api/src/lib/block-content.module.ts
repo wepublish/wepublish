@@ -11,6 +11,7 @@ import {PeerModule} from '@wepublish/peering/api'
 import {ArticleModule} from '@wepublish/article/api'
 import {PageModule} from '@wepublish/page/api'
 import {TeaserListBlockFilterResolver, TeaserListBlockResolver} from './teaser/teaser-list.resolver'
+import {BaseBlockResolver} from './base-block.resolver'
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import {TeaserListBlockFilterResolver, TeaserListBlockResolver} from './teaser/t
     CommentModule
   ],
   providers: [
+    BaseBlockResolver,
     PollBlockResolver,
     EventBlockResolver,
     CommentBlockResolver,

@@ -52,7 +52,7 @@ fragment FullSubscriptionDeactivation on SubscriptionDeactivation {
   reason
 }
 
-fragment FullSubscription on Subscription {
+fragment FullSubscription on PublicSubscription {
   id
   url
 

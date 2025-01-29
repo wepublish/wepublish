@@ -8,6 +8,9 @@ export abstract class BaseBlock<Type extends BlockType> {
 
   @Field({nullable: true})
   blockStyle?: string
+
+  @Field({nullable: true})
+  blockStyleName?: string
 }
 
 @ObjectType()

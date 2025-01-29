@@ -1,6 +1,5 @@
 import {
   ArgsType,
-  Directive,
   Field,
   InputType,
   Int,
@@ -35,7 +34,6 @@ registerEnumType(EventStatus, {
 })
 
 @ObjectType()
-@Directive('@key(fields: "id")')
 export class Event {
   @Field()
   id!: string

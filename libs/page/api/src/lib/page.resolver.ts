@@ -14,6 +14,8 @@ import {PageRevisionDataloaderService} from './page-revision-dataloader.service'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Page as PPage} from '@prisma/client'
 import {BadRequestException} from '@nestjs/common'
+import {CurrentUser, UserSession} from '@wepublish/authentication/api'
+import {CanGetPage, hasPermission, Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => Page)
 export class PageResolver {
@@ -43,8 +45,17 @@ export class PageResolver {
   @Query(() => PaginatedPages, {
     description: `Returns a paginated list of pages based on the filters given.`
   })
-  public pages(@Args() filter: PageListArgs) {
-    return this.pageService.getPages(filter)
+  public pages(@Args() args: PageListArgs, @CurrentUser() user: UserSession | undefined) {
+    if (!hasPermission(CanGetPage, user?.roles ?? [])) {
+      args.filter = {
+        ...args.filter,
+        draft: undefined,
+        pending: undefined,
+        published: true
+      }
+    }
+
+    return this.pageService.getPages(args)
   }
 
   @Mutation(() => Page, {
@@ -90,13 +101,19 @@ export class PageResolver {
   }
 
   @ResolveField(() => PageRevision)
-  async latest(@Parent() parent: PPage) {
+  async latest(@Parent() parent: PPage, @CurrentUser() user: UserSession | undefined) {
     const {id: pageId} = parent
     const {draft, pending, published} = await this.pageRevisionsDataloader.load(pageId)
 
+    if (!hasPermission(CanGetPage, user?.roles ?? [])) {
+      return published
+    }
+
+    // @TODO: Only show all when preview enabled
     return draft ?? pending ?? published
   }
 
+  @Permissions(CanGetPage)
   @ResolveField(() => PageRevision, {nullable: true})
   async draft(@Parent() parent: PPage) {
     const {id: pageId} = parent
@@ -105,6 +122,7 @@ export class PageResolver {
     return draft
   }
 
+  @Permissions(CanGetPage)
   @ResolveField(() => PageRevision, {nullable: true})
   async pending(@Parent() parent: PPage) {
     const {id: pageId} = parent

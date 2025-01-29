@@ -5,26 +5,25 @@ import {BuilderPageSEOProps, useWebsiteBuilder} from '@wepublish/website/builder
 import {useMemo} from 'react'
 
 export const getPageSEO = (page: Page) => {
-  const firstTitle = page.published?.blocks?.find(isTitleBlock)
-  const firstRichText = page.published?.blocks?.find(isRichTextBlock)
-  const firstImageBlock = page.published?.blocks?.find(isImageBlock)
+  const firstTitle = page.latest.blocks?.find(isTitleBlock)
+  const firstRichText = page.latest.blocks?.find(isRichTextBlock)
+  const firstImageBlock = page.latest.blocks?.find(isImageBlock)
 
   const socialMediaDescription =
-    page.published?.socialMediaDescription ||
-    page.published?.description ||
+    page.latest.socialMediaDescription ||
+    page.latest.description ||
     firstParagraphToPlaintext(firstRichText?.richText)
   const description =
-    page.published?.socialMediaDescription ||
-    page.published?.description ||
+    page.latest.socialMediaDescription ||
+    page.latest.description ||
     firstParagraphToPlaintext(firstRichText?.richText)
-  const image = (page.published?.socialMediaImage ??
-    page.published?.image ??
-    firstImageBlock?.image) as FullImageFragment | undefined
+  const image = (page.latest.socialMediaImage ?? page.latest.image ?? firstImageBlock?.image) as
+    | FullImageFragment
+    | undefined
 
-  const title = page.published?.title || firstTitle?.title || page.published?.socialMediaTitle
-  const socialMediaTitle =
-    page.published?.socialMediaTitle || page.published?.title || firstTitle?.title
-  const headline = firstTitle?.title || page.published?.title
+  const title = page.latest.title || firstTitle?.title || page.latest.socialMediaTitle
+  const socialMediaTitle = page.latest.socialMediaTitle || page.latest.title || firstTitle?.title
+  const headline = firstTitle?.title || page.latest.title
   const url = page.url
 
   return {
@@ -35,6 +34,7 @@ export const getPageSEO = (page: Page) => {
     url,
     image,
     tags: page.tags,
+    updatedAt: page.latest.publishedAt,
     publishedAt: page.publishedAt,
     schema: {
       '@context': 'http://schema.org',

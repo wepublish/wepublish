@@ -1,6 +1,5 @@
 import {
   ArgsType,
-  Directive,
   Field,
   InputType,
   Int,
@@ -30,7 +29,6 @@ registerEnumType(PageSort, {
 @ObjectType({
   implements: () => [HasBlockContent]
 })
-@Directive('@key(fields: "id")')
 export class PageRevision implements HasBlockContent {
   blocks!: Array<typeof BlockContent>
 
@@ -66,7 +64,6 @@ export class PageRevision implements HasBlockContent {
 }
 
 @ObjectType()
-@Directive('@key(fields: "id")')
 export class Page {
   @Field()
   id!: string

@@ -5,11 +5,11 @@ import {BuilderArticleSEOProps, useWebsiteBuilder} from '@wepublish/website/buil
 import {Fragment, useMemo} from 'react'
 
 export const getArticleSEO = (article: Article) => {
-  const firstTitle = article.published?.blocks?.find(isTitleBlock)
-  const firstRichText = article.published?.blocks?.find(isRichTextBlock)
-  const firstImageBlock = article.published?.blocks?.find(isImageBlock)
+  const firstTitle = article.latest.blocks?.find(isTitleBlock)
+  const firstRichText = article.latest.blocks?.find(isRichTextBlock)
+  const firstImageBlock = article.latest.blocks?.find(isImageBlock)
 
-  const articleBody = article.published?.blocks
+  const articleBody = article.latest.blocks
     ?.filter(isRichTextBlock)
     .reduce((body, richText) => {
       const text = toPlaintext(richText.richText)
@@ -23,28 +23,28 @@ export const getArticleSEO = (article: Article) => {
     .join('\n')
 
   const socialMediaDescription =
-    article.published?.socialMediaDescription ||
-    article.published?.lead ||
+    article.latest.socialMediaDescription ||
+    article.latest.lead ||
     firstParagraphToPlaintext(firstRichText?.richText)
-  const description = article.published?.lead || firstParagraphToPlaintext(firstRichText?.richText)
+  const description = article.latest.lead || firstParagraphToPlaintext(firstRichText?.richText)
 
-  const image = (article.published?.socialMediaImage ??
-    article.published?.image ??
+  const image = (article.latest.socialMediaImage ??
+    article.latest.image ??
     firstImageBlock?.image) as FullImageFragment | undefined
   const title =
-    article.published?.seoTitle ||
-    article.published?.title ||
+    article.latest.seoTitle ||
+    article.latest.title ||
     firstTitle?.title ||
-    article.published?.socialMediaTitle
+    article.latest.socialMediaTitle
   const socialMediaTitle =
-    article.published?.socialMediaTitle ||
-    article.published?.seoTitle ||
-    article.published?.title ||
+    article.latest.socialMediaTitle ||
+    article.latest.seoTitle ||
+    article.latest.title ||
     firstTitle?.title
-  const headline = firstTitle?.title || article.published?.title
-  const url = article.published?.canonicalUrl ?? article.url
+  const headline = firstTitle?.title || article.latest.title
+  const url = article.latest.canonicalUrl ?? article.url
 
-  const firstAuthor = article.published?.authors.at(0)
+  const firstAuthor = article.latest.authors.at(0)
 
   return {
     type: 'article',
@@ -54,8 +54,9 @@ export const getArticleSEO = (article: Article) => {
     url,
     image,
     tags: article.tags,
+    updatedAt: article.latest.publishedAt,
     publishedAt: article.publishedAt,
-    authors: article.published?.authors ?? [],
+    authors: article.latest.authors ?? [],
     schema: {
       '@context': 'http://schema.org',
       '@type': 'NewsArticle',
@@ -137,17 +138,21 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
         <meta key={'twitter:card'} name="twitter:card" content="summary_large_image" />
         <meta key={'max-image-preview'} name="robots" content="max-image-preview:large" />
 
-        <meta
-          key={`og:article:published_time`}
-          property="og:article:published_time"
-          content={seo.publishedAt}
-        />
+        {seo.publishedAt && (
+          <meta
+            key={`og:article:published_time`}
+            property="og:article:published_time"
+            content={seo.publishedAt}
+          />
+        )}
 
-        <meta
-          key={`og:article:modified_time`}
-          property="og:article:modified_time"
-          content={seo.publishedAt}
-        />
+        {seo.updatedAt && (
+          <meta
+            key={`og:article:modified_time`}
+            property="og:article:modified_time"
+            content={seo.updatedAt}
+          />
+        )}
 
         {seo.authors.map(author => (
           <Fragment key={author.id}>

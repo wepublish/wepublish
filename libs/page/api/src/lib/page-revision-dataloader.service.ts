@@ -17,7 +17,6 @@ export class PageRevisionDataloaderService implements Primeable<RevisionMap> {
     async (pageIds: readonly string[]) => {
       const revisionPromises = []
 
-      // @TODO: Maube some custom SQL?
       for (const pageId of pageIds) {
         revisionPromises.push(
           this.prisma.pageRevision.findFirst({

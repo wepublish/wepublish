@@ -20,7 +20,6 @@ export class Image {
 }
 
 @ObjectType()
-@Directive('@key(fields: "id")')
 export class ImageV2 {
   @Field()
   id!: string

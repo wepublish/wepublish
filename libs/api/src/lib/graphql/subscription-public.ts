@@ -19,7 +19,7 @@ import {GraphQLPublicUser} from './user'
 import {unselectPassword} from '@wepublish/user/api'
 
 export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithRelations, Context>({
-  name: 'Subscription',
+  name: 'PublicSubscription',
   fields: () => ({
     id: {type: new GraphQLNonNull(GraphQLString)},
     memberPlan: {
@@ -78,3 +78,17 @@ export const GraphQLPublicSubscriptionInput = new GraphQLInputObjectType({
     paymentMethodID: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
+
+export const GraphQLSubscriptionResolver = {
+  __resolveReference: async (reference, {loaders}: Context) => {
+    console.log('?????')
+    const {id} = reference
+    const subscription = await loaders.subscriptionsById.load(id)
+
+    if (!subscription) {
+      throw new Error('Subscription not found')
+    }
+
+    return subscription
+  }
+}

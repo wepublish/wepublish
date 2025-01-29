@@ -262,7 +262,7 @@ function PageEditor() {
     }
   }
 
-  async function handlePublish(publishedAt: Date, publishAt: Date, updatedAt?: Date) {
+  async function handlePublish(publishedAt: Date) {
     if (pageID) {
       const {data} = await updatePage({
         variables: {id: pageID, ...createInput()}
@@ -288,7 +288,7 @@ function PageEditor() {
       <Notification
         type="success"
         header={t(
-          publishAt <= new Date() || (!publishAt && publishedAt <= new Date())
+          publishedAt <= new Date()
             ? 'pageEditor.overview.pagePublished'
             : 'pageEditor.overview.pagePending'
         )}
@@ -431,8 +431,8 @@ function PageEditor() {
           publishedAtDate={publishedAt}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishedAt, publishAt, updatedAt) => {
-            handlePublish(publishedAt, publishAt, updatedAt)
+          onConfirm={publishedAt => {
+            handlePublish(publishedAt)
             setPublishDialogOpen(false)
           }}
         />

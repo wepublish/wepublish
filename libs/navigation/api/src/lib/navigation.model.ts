@@ -56,7 +56,7 @@ export class Navigation {
     }
   }
 })
-abstract class BaseNavigationLink {
+export abstract class BaseNavigationLink {
   @Field()
   id!: string
 

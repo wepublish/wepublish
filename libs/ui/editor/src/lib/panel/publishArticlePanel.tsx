@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Modal} from 'rsuite'
+import {Button, Message, Modal} from 'rsuite'
 
 import {ArticleMetadata} from './articleMetadataPanel'
 import {
@@ -27,9 +27,7 @@ function PublishArticlePanel({
   onConfirm
 }: PublishArticlePanelProps) {
   const now = new Date()
-
   const [publishedAt, setPublishedAt] = useState<Date | undefined>(publishedAtDate ?? now)
-
   const {t} = useTranslation()
 
   return (
@@ -39,6 +37,12 @@ function PublishArticlePanel({
       </Modal.Header>
 
       <Modal.Body>
+        {publishedAt && publishedAt > now && (
+          <Message type="warning">
+            {t('articleEditor.panels.articlePending', {pendingPublishDate: publishedAt})}
+          </Message>
+        )}
+
         <div style={{maxWidth: '200px'}}>
           <DateTimePicker
             dateTime={publishedAt}

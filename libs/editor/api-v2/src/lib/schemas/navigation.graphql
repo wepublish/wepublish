@@ -1,7 +1,12 @@
-fragment FullNavigation on Navigation {
+fragment SlimNavigation on Navigation {
   id
   key
   name
+}
+
+fragment FullNavigation on Navigation {
+  ...SlimNavigation
+
   links {
     __typename
 
@@ -22,7 +27,7 @@ fragment FullNavigation on Navigation {
 
 query NavigationList {
   navigations {
-    ...FullNavigation
+    ...SlimNavigation
   }
 }
 

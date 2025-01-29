@@ -1,5 +1,5 @@
 import {Field, ObjectType, registerEnumType, createUnionType, InterfaceType} from '@nestjs/graphql'
-import {HasSubscription, Subscription} from '@wepublish/api'
+import {HasSubscription, PublicSubscription} from '@wepublish/membership/api'
 import {Article, HasArticleLc} from '@wepublish/article/api'
 import {Author, HasAuthor} from '@wepublish/author/api'
 import {Comment, HasComment} from '@wepublish/comments/api'
@@ -66,7 +66,7 @@ export class SubscriptionCreatedAction
   implements HasSubscription
 {
   subscriptionId!: string
-  subscription!: Subscription
+  subscription!: PublicSubscription
 }
 
 @ObjectType({implements: [BaseAction, HasAuthor]})

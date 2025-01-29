@@ -1,6 +1,7 @@
 import {ApolloError} from '@apollo/client'
 import {
   FullImageFragment,
+  getApiClientV2,
   MutationCreateEventArgs,
   useCreateEventMutation
 } from '@wepublish/editor/api-v2'
@@ -31,7 +32,9 @@ export const EventCreateView = () => {
 
   const [shouldClose, setShouldClose] = useState(false)
 
+  const client = getApiClientV2()
   const [createEvent, {loading}] = useCreateEventMutation({
+    client,
     onError: onErrorToast,
     onCompleted: event => {
       if (shouldClose) {

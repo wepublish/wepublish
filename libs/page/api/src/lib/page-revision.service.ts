@@ -5,9 +5,10 @@ import {PrismaClient} from '@prisma/client'
 export class PageRevisionService {
   constructor(private prisma: PrismaClient) {}
 
-  async getProperties(revisionId: string) {
+  async getProperties(revisionId: string, includePrivate: boolean) {
     return this.prisma.metadataProperty.findMany({
       where: {
+        public: includePrivate ? undefined : true,
         pageRevisionId: revisionId
       }
     })

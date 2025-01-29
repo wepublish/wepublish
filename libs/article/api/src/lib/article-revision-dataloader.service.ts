@@ -17,7 +17,6 @@ export class ArticleRevisionDataloaderService implements Primeable<RevisionMap> 
     async (articleIds: readonly string[]) => {
       const revisionPromises = []
 
-      // @TODO: Maube some custom SQL?
       for (const articleId of articleIds) {
         revisionPromises.push(
           this.prisma.articleRevision.findFirst({

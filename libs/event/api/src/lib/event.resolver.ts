@@ -16,12 +16,15 @@ import {EventService} from './event.service'
 import {Image} from '@wepublish/image/api'
 import {EventDataloaderService} from './event-dataloader.service'
 import {Tag} from '@wepublish/tag/api'
+import {URLAdapter} from '@wepublish/nest-modules'
+import {Event as PEvent} from '@prisma/client'
 
 @Resolver(() => Event)
 export class EventResolver {
   constructor(
     private eventService: EventService,
-    private eventDataloader: EventDataloaderService
+    private eventDataloader: EventDataloaderService,
+    private urlAdapter: URLAdapter
   ) {}
 
   @Query(() => PaginatedEvents, {
@@ -70,5 +73,10 @@ export class EventResolver {
     const {id: eventId} = parent
     const tagIds = await this.eventService.getEventTagIds(eventId)
     return tagIds.map(({id}) => ({__typename: 'Tag', id}))
+  }
+
+  @ResolveField(() => String, {nullable: true})
+  async url(@Parent() parent: PEvent) {
+    return this.urlAdapter.getEventURL(parent)
   }
 }

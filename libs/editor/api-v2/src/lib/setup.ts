@@ -5,6 +5,8 @@ import {
   InMemoryCache,
   NormalizedCacheObject
 } from '@apollo/client'
+import {removeTypenameFromVariables} from '@apollo/client/link/remove-typename'
+
 import possibleTypes from './graphql'
 
 export enum ElementID {
@@ -66,7 +68,9 @@ export function getApiClientV2() {
 
   if (!client) {
     client = new ApolloClient({
-      link: authLink.concat(createHttpLink({uri: `${apiURL}/v1`, fetch})),
+      link: authLink
+        .concat(removeTypenameFromVariables({}))
+        .concat(createHttpLink({uri: `${apiURL}/v1`, fetch})),
       cache: new InMemoryCache({
         possibleTypes: possibleTypes.possibleTypes
       })

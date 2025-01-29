@@ -233,7 +233,6 @@ fragment FullTeaser on Teaser {
     lead
     contentUrl
     properties {
-      id
       key
       value
       public

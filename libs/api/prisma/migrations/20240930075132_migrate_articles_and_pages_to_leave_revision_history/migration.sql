@@ -30,7 +30,7 @@ ALTER TABLE "articles" ADD COLUMN     "publishedAt" TIMESTAMP(3);
 ALTER TABLE "articles" ADD COLUMN     "slug" TEXT;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "articles_slug_key" ON "articles"("slug");
+CREATE UNIQUE INDEX "articles_slug_key" ON "articles"("slug") WHERE ("publishedAt" is NOT null);
 
 -- Migrate publishedAt
 UPDATE "articles.revisions"
@@ -115,7 +115,7 @@ ALTER TABLE "pages" ADD COLUMN     "publishedAt" TIMESTAMP(3);
 ALTER TABLE "pages" ADD COLUMN     "slug" TEXT;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "pages_slug_key" ON "pages"("slug");
+CREATE UNIQUE INDEX "pages_slug_key" ON "pages"("slug") WHERE ("publishedAt" is NOT null);
 
 -- Migrate publishedAt
 UPDATE "pages.revisions"

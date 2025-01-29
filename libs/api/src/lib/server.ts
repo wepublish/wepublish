@@ -26,7 +26,7 @@ import {GraphQLPollResolver} from './graphql/poll/poll'
 import {GraphQLCommentResolver} from './graphql/comment/comment'
 import {GraphQLPeerResolver} from './graphql/peer'
 import {GraphQLUserResolver} from './graphql/user'
-import {GraphQLSubscriptionResolver} from './graphql/subscription'
+import {GraphQLSubscriptionResolver} from './graphql/subscription-public'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -75,27 +75,19 @@ export class WepublishServer {
 
     const federatedTypeDefs = gql`
       directive @extends on INTERFACE | OBJECT
-
       directive @external on FIELD_DEFINITION | OBJECT
-
       directive @inaccessible on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
-
       directive @key(fields: String!, resolvable: Boolean = true) repeatable on INTERFACE | OBJECT
-
       directive @override(from: String!) on FIELD_DEFINITION
-
       directive @provides(fields: String!) on FIELD_DEFINITION
-
       directive @requires(fields: String!) on FIELD_DEFINITION
-
       directive @shareable on FIELD_DEFINITION | OBJECT
-
       directive @tag(
         name: String!
       ) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
       extend type Author @key(fields: "id")
-      extend type Subscription @key(fields: "id")
+      extend type PublicSubscription @key(fields: "id")
       extend type Comment @key(fields: "id")
       extend type FullPoll @key(fields: "id")
       extend type Peer @key(fields: "id")
@@ -153,12 +145,16 @@ export class WepublishServer {
       Tag: GraphQLTagResolver,
       Image: GraphQLImageResolver,
       User: GraphQLUserResolver,
-      Subscription: GraphQLSubscriptionResolver
+      PublicSubscription: GraphQLSubscriptionResolver
     }
 
     for (const type in federatedResolvers) {
       resolvers[type] = {...resolvers[type], ...federatedResolvers[type]}
     }
+
+    delete resolvers['Query']
+    delete resolvers['Mutation']
+    console.log(resolvers)
 
     const publicSchema = buildSubgraphSchema({
       typeDefs,

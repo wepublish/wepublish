@@ -61,7 +61,7 @@ export const alignmentForTeaserBlock = (index: number, numColumns: number): Flex
   const rowIndex = Math.floor(index / numColumns)
 
   return {
-    i: index,
+    i: index.toString(),
     static: false,
     h: 1,
     w: 12 / numColumns,

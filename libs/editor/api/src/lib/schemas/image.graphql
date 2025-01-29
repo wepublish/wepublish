@@ -42,12 +42,14 @@ query ImageList($filter: String, $cursor: String, $take: Int, $skip: Int) {
     nodes {
       ...FullImage
     }
+
     pageInfo {
       startCursor
       endCursor
       hasNextPage
       hasPreviousPage
     }
+
     totalCount
   }
 }

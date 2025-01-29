@@ -9,7 +9,7 @@ import {
 } from '@wepublish/article/api'
 import {Inject} from '@nestjs/common'
 import {PageService, PageSort} from '@wepublish/page/api'
-import {Article, PrismaClient} from '@prisma/client'
+import {Article} from '@prisma/client'
 import {SortOrder} from '@wepublish/utils/api'
 import {EventService, EventSort} from '@wepublish/event/api'
 import {Tag} from '@wepublish/tag/api'
@@ -114,16 +114,8 @@ export class TeaserListBlockResolver {
 
 @Resolver(() => TeaserListBlockFilter)
 export class TeaserListBlockFilterResolver {
-  constructor(private prisma: PrismaClient) {}
-
   @ResolveField(() => [Tag])
   async tagObjects(@Parent() parent: TeaserListBlockFilter) {
-    return this.prisma.tag.findMany({
-      where: {
-        id: {
-          in: parent.tags
-        }
-      }
-    })
+    return parent.tags.map(id => ({__typename: 'Tag', id}))
   }
 }

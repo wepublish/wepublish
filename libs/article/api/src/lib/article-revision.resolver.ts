@@ -4,14 +4,22 @@ import {Author} from '@wepublish/author/api'
 import {Image} from '@wepublish/image/api'
 import {ArticleRevisionService} from './article-revision.service'
 import {Property} from '@wepublish/utils/api'
+import {CurrentUser, UserSession} from '@wepublish/authentication/api'
+import {hasPermission, CanGetArticle} from '@wepublish/permissions/api'
 
 @Resolver(() => ArticleRevision)
 export class ArticleRevisionResolver {
   constructor(private revisionService: ArticleRevisionService) {}
 
   @ResolveField(() => [Property])
-  public async properties(@Parent() revision: ArticleRevision) {
-    return this.revisionService.getProperties(revision.id)
+  public async properties(
+    @Parent() revision: ArticleRevision,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    return this.revisionService.getProperties(
+      revision.id,
+      hasPermission(CanGetArticle, user?.roles ?? [])
+    )
   }
 
   @ResolveField(() => [Author])

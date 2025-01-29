@@ -93,6 +93,9 @@ export class EventTeaserInput extends OmitType(
   override eventID?: string
 }
 
+@ObjectType()
+export class NonDbProperty extends OmitType(Property, ['id'] as const, ObjectType) {}
+
 @ObjectType({
   implements: () => [BaseTeaser]
 })
@@ -100,8 +103,8 @@ export class CustomTeaser extends BaseTeaser<TeaserType.Custom> {
   @Field({nullable: true})
   contentUrl?: string
 
-  @Field(() => [Property], {defaultValue: []})
-  properties!: Property[]
+  @Field(() => [NonDbProperty], {defaultValue: []})
+  properties!: NonDbProperty[]
 }
 
 @InputType()

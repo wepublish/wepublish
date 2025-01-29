@@ -3,14 +3,22 @@ import {PageRevision} from './page.model'
 import {Image} from '@wepublish/image/api'
 import {PageRevisionService} from './page-revision.service'
 import {Property} from '@wepublish/utils/api'
+import {CurrentUser, UserSession} from '@wepublish/authentication/api'
+import {hasPermission, CanGetPage} from '@wepublish/permissions/api'
 
 @Resolver(() => PageRevision)
 export class PageRevisionResolver {
   constructor(private revisionService: PageRevisionService) {}
 
   @ResolveField(() => [Property])
-  public async properties(@Parent() revision: PageRevision) {
-    return this.revisionService.getProperties(revision.id)
+  public async properties(
+    @Parent() revision: PageRevision,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    return this.revisionService.getProperties(
+      revision.id,
+      hasPermission(CanGetPage, user?.roles ?? [])
+    )
   }
 
   @ResolveField(() => Image, {nullable: true})

@@ -1,17 +1,17 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {HasSubscription, HasOptionalSubscription} from './has-subscription.model'
-import {Subscription} from '../subscription.model'
+import {PublicSubscription} from '../subscription.model'
 
 @Resolver(() => HasSubscription)
 export class HasSubscriptionResolver {
-  @ResolveField(() => Subscription, {nullable: true})
+  @ResolveField(() => PublicSubscription, {nullable: true})
   public subscription(@Parent() {subscriptionId}: HasOptionalSubscription | HasSubscription) {
     if (!subscriptionId) {
       return null
     }
 
     return {
-      __typename: 'Subscription',
+      __typename: 'PublicSubscription',
       id: subscriptionId
     }
   }

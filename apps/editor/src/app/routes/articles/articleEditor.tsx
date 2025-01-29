@@ -185,7 +185,6 @@ function ArticleEditor() {
 
   useEffect(() => {
     if (articleData?.article) {
-      console.log(articleData?.article)
       const {latest, shared, hidden, disableComments, pending, tags, url, slug} =
         articleData.article
       const {

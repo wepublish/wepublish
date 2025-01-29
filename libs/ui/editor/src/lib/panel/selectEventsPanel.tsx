@@ -23,7 +23,7 @@ import {PermissionControl} from '../atoms/permissionControl'
 import {SelectTags} from '../atoms/tag/selectTags'
 import {EventBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
-import {FullEventFragment, useEventListLazyQuery} from '@wepublish/editor/api-v2'
+import {FullEventFragment, getApiClientV2, useEventListLazyQuery} from '@wepublish/editor/api-v2'
 
 const onErrorToast = (error: ApolloError) => {
   if (error?.message) {
@@ -51,7 +51,9 @@ export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEven
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
   const {t} = useTranslation()
+  const client = getApiClientV2()
   const [fetchEvents, {data, loading}] = useEventListLazyQuery({
+    client,
     onError: onErrorToast,
     fetchPolicy: 'cache-and-network'
   })

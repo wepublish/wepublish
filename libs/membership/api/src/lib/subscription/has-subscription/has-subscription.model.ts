@@ -1,13 +1,13 @@
 import {Field, InterfaceType} from '@nestjs/graphql'
-import {Subscription} from '../subscription.model'
+import {PublicSubscription} from '../subscription.model'
 
 @InterfaceType()
 export abstract class HasOptionalSubscription {
   @Field({nullable: true})
   subscriptionId?: string
 
-  @Field(() => Subscription, {nullable: true})
-  subscription?: Subscription
+  @Field(() => PublicSubscription, {nullable: true})
+  subscription?: PublicSubscription
 }
 
 @InterfaceType()
@@ -15,6 +15,6 @@ export abstract class HasSubscription {
   @Field()
   subscriptionId!: string
 
-  @Field(() => Subscription)
-  subscription!: Subscription
+  @Field(() => PublicSubscription)
+  subscription!: PublicSubscription
 }

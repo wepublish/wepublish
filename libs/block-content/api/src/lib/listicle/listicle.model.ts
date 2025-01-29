@@ -20,7 +20,10 @@ export class ListicleItem implements HasImage {
 }
 
 @InputType()
-export class ListicleItemInput extends OmitType(ListicleItem, ['image'] as const, InputType) {}
+export class ListicleItemInput extends OmitType(ListicleItem, ['image'] as const, InputType) {
+  @Field({nullable: true})
+  override imageID?: string
+}
 
 @ObjectType({
   implements: BaseBlock

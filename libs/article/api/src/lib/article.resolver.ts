@@ -18,8 +18,11 @@ import {
   Permissions,
   CanCreateArticle,
   CanDeleteArticle,
-  CanPublishArticle
+  CanPublishArticle,
+  hasPermission,
+  CanGetArticle
 } from '@wepublish/permissions/api'
+import {CurrentUser, UserSession} from '@wepublish/authentication/api'
 
 @Resolver(() => Article)
 export class ArticleResolver {
@@ -49,8 +52,17 @@ export class ArticleResolver {
   @Query(() => PaginatedArticles, {
     description: `Returns a paginated list of articles based on the filters given.`
   })
-  public articles(@Args() filter: ArticleListArgs) {
-    return this.articleService.getArticles(filter)
+  public articles(@Args() args: ArticleListArgs, @CurrentUser() user: UserSession | undefined) {
+    if (!hasPermission(CanGetArticle, user?.roles ?? [])) {
+      args.filter = {
+        ...args.filter,
+        draft: undefined,
+        pending: undefined,
+        published: true
+      }
+    }
+
+    return this.articleService.getArticles(args)
   }
 
   @Permissions(CanCreateArticle)
@@ -102,13 +114,19 @@ export class ArticleResolver {
   }
 
   @ResolveField(() => ArticleRevision)
-  async latest(@Parent() parent: PArticle) {
+  async latest(@Parent() parent: PArticle, @CurrentUser() user: UserSession | undefined) {
     const {id: articleId} = parent
     const {draft, pending, published} = await this.articleRevisionsDataloader.load(articleId)
 
+    if (!hasPermission(CanGetArticle, user?.roles ?? [])) {
+      return published
+    }
+
+    // @TODO: Only show all when preview enabled
     return draft ?? pending ?? published
   }
 
+  @Permissions(CanGetArticle)
   @ResolveField(() => ArticleRevision, {nullable: true})
   async draft(@Parent() parent: PArticle) {
     const {id: articleId} = parent
@@ -117,6 +135,7 @@ export class ArticleResolver {
     return draft
   }
 
+  @Permissions(CanGetArticle)
   @ResolveField(() => ArticleRevision, {nullable: true})
   async pending(@Parent() parent: PArticle) {
     const {id: articleId} = parent

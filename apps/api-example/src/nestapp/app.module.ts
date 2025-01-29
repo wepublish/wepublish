@@ -79,7 +79,7 @@ import {NavigationModule} from '@wepublish/navigation/api'
           playground: configFile.general.apolloPlayground,
           allowBatchedHttpRequests: true,
           inheritResolversFromInterfaces: true
-        }
+        } as ApolloDriverConfig
       }
     }),
     PrismaModule,

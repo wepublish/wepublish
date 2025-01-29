@@ -14,7 +14,7 @@ export function Page({className, data, loading, error, children}: BuilderPagePro
   return (
     <PageWrapper className={className}>
       {data?.page && <PageSEO page={data.page as PageType} />}
-      <Blocks blocks={(data?.page?.published?.blocks as BlockContent[]) ?? []} type="Page" />
+      <Blocks blocks={(data?.page?.latest.blocks as BlockContent[]) ?? []} type="Page" />
       {children}
     </PageWrapper>
   )
