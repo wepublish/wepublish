@@ -4,12 +4,20 @@ import {
   CommentItemType,
   ImageRefFragment,
   Tag,
-  TagType
+  TagType,
+  TrackingPixelFragment
 } from '@wepublish/editor/api'
 import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
-import {MdAutoFixHigh, MdComment, MdListAlt, MdSettings, MdShare} from 'react-icons/md'
+import {
+  MdAutoFixHigh,
+  MdComment,
+  MdListAlt,
+  MdSettings,
+  MdShare,
+  MdTrackChanges
+} from 'react-icons/md'
 import {
   Button,
   Drawer,
@@ -23,7 +31,8 @@ import {
   Schema,
   Toggle as RToggle,
   Tooltip,
-  Whisper
+  Whisper,
+  Badge
 } from 'rsuite'
 import {
   ChooseEditImage,
@@ -41,6 +50,7 @@ import {generateID} from '../utility'
 import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageEditPanel} from './imageEditPanel'
+import TrackingPixels from '../atoms/tracking/tracking-pixels'
 
 const {Item} = RNav
 
@@ -123,6 +133,7 @@ export interface ArticleMetadata {
   readonly socialMediaAuthors: AuthorRefFragment[]
   readonly socialMediaImage?: ImageRefFragment
   readonly likes: number
+  readonly trackingPixels?: (TrackingPixelFragment | null)[]
 }
 
 export interface InfoData {
@@ -165,7 +176,8 @@ function ArticleMetadataPanel({
     socialMediaDescription,
     socialMediaAuthors,
     socialMediaImage,
-    properties
+    properties,
+    trackingPixels
   } = value
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General)
@@ -593,6 +605,12 @@ function ArticleMetadataPanel({
             )}
           </Panel>
         )
+      case MetaDataType.Tracking:
+        return (
+          <Panel>
+            <TrackingPixels trackingPixels={trackingPixels} />
+          </Panel>
+        )
       default:
         // eslint-disable-next-line react/jsx-no-useless-fragment
         return <></>
@@ -632,6 +650,11 @@ function ArticleMetadataPanel({
               {t('articleEditor.panels.comments')}
             </Item>
           )}
+          <Badge content={!!trackingPixels?.find(trackingPixel => !!trackingPixel?.error)}>
+            <Item eventKey={MetaDataType.Tracking} icon={<MdTrackChanges />}>
+              {t('articleEditor.panels.tracking')}
+            </Item>
+          </Badge>
         </Nav>
         {currentContent()}
       </Drawer.Body>

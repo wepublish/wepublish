@@ -80,6 +80,14 @@ fragment ArticleRef on Article {
   }
 }
 
+fragment TrackingPixel on TrackingPixel {
+  id
+  uri
+  error
+  trackingPixelProviderID
+  trackingPixelProviderType
+}
+
 query ArticleList(
   $filter: ArticleFilter
   $cursor: ID
@@ -199,6 +207,10 @@ query Article($id: ID!) {
       id
       tag
       type
+    }
+
+    trackingPixels {
+      ...TrackingPixel
     }
 
     draft {

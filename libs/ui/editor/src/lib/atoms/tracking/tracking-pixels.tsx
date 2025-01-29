@@ -1,0 +1,51 @@
+import styled from '@emotion/styled'
+import {TrackingPixelFragment} from '@wepublish/editor/api'
+import {useTranslation} from 'react-i18next'
+import {Message, Panel} from 'rsuite'
+
+export interface TrackingPixelsProps {
+  trackingPixels: (TrackingPixelFragment | null)[] | undefined
+}
+
+const MessageWithMarginBottom = styled(Message)`
+  margin-bottom: 20px;
+`
+
+export default function TrackingPixels({trackingPixels}: TrackingPixelsProps) {
+  const {t} = useTranslation()
+
+  if (!trackingPixels?.length) {
+    return (
+      <Message
+        type="info"
+        showIcon
+        header={<strong>{t('trackingPixels.noPixelInfoHeader')}</strong>}>
+        {t('trackingPixels.noPixelInfoDescription')}
+      </Message>
+    )
+  }
+
+  return (
+    <>
+      {trackingPixels.map(trackingPixel => {
+        if (trackingPixel) {
+          return (
+            <Panel header={<h6>{trackingPixel.trackingPixelProviderType}</h6>} bordered>
+              {!!trackingPixel.error && (
+                <MessageWithMarginBottom
+                  type="error"
+                  showIcon
+                  header={<strong>{t('trackingPixels.errorHeader')}</strong>}>
+                  {trackingPixel.error}
+                </MessageWithMarginBottom>
+              )}
+              <p>Provider ID: {trackingPixel.trackingPixelProviderID}</p>
+              <p>Tracking ID: {trackingPixel.id}</p>
+              <p>Tracking URI: {trackingPixel.uri}</p>
+            </Panel>
+          )
+        }
+      })}
+    </>
+  )
+}
