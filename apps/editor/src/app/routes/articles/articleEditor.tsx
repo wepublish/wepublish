@@ -641,7 +641,6 @@ function ArticleEditor() {
             setMetaDrawerOpen(false)
           }}
           onChange={value => {
-            console.log(value)
             setMetadata(value)
             setChanged(true)
           }}
