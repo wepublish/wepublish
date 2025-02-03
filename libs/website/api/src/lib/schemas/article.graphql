@@ -45,8 +45,11 @@ fragment ArticleWithoutBlocks on Article {
 
 fragment PublicTrackingPixel on TrackingPixel {
   id
-  trackingPixelProviderType
   uri
+}
+
+fragment PublicTrackingPixelMethod on TrackingPixelMethod {
+  trackingPixelProviderType
 }
 
 fragment FullArticle on Article {

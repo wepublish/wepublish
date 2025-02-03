@@ -14,7 +14,15 @@ export default function ArticleTrackingPixels({trackingPixels}: ArticleTrackingP
     <>
       {trackingPixels.map(trackingPixel => {
         if (trackingPixel?.uri) {
-          return <img src={trackingPixel.uri} width="1" height="1" alt="tracking-pixel" />
+          return (
+            <img
+              key={trackingPixel.uri}
+              src={trackingPixel.uri}
+              width="1"
+              height="1"
+              alt="tracking-pixel"
+            />
+          )
         }
       })}
     </>

@@ -2339,8 +2339,13 @@ export type TitleBlock = {
 export type TrackingPixel = {
   __typename?: 'TrackingPixel';
   id: Scalars['ID'];
-  trackingPixelProviderType: TrackingPixelProviderType;
+  trackingPixelMethod: TrackingPixelMethod;
   uri?: Maybe<Scalars['String']>;
+};
+
+export type TrackingPixelMethod = {
+  __typename?: 'TrackingPixelMethod';
+  trackingPixelProviderType: TrackingPixelProviderType;
 };
 
 export enum TrackingPixelProviderType {

@@ -2615,9 +2615,15 @@ export type TrackingPixel = {
   __typename?: 'TrackingPixel'
   error?: Maybe<Scalars['String']>
   id: Scalars['ID']
+  trackingPixelMethod: TrackingPixelMethod
+  uri?: Maybe<Scalars['String']>
+}
+
+export type TrackingPixelMethod = {
+  __typename?: 'TrackingPixelMethod'
+  id: Scalars['ID']
   trackingPixelProviderID: Scalars['String']
   trackingPixelProviderType: TrackingPixelProviderType
-  uri?: Maybe<Scalars['String']>
 }
 
 export enum TrackingPixelProviderType {

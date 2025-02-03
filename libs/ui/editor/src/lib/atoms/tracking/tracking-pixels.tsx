@@ -27,10 +27,13 @@ export default function TrackingPixels({trackingPixels}: TrackingPixelsProps) {
 
   return (
     <>
-      {trackingPixels.map(trackingPixel => {
+      {trackingPixels.map((trackingPixel, trackingPixelIndex) => {
         if (trackingPixel) {
           return (
-            <Panel header={<h6>{trackingPixel.trackingPixelProviderType}</h6>} bordered>
+            <Panel
+              key={`tracking-pixel-${trackingPixelIndex}`}
+              header={<h6>{trackingPixel.trackingPixelMethod.trackingPixelProviderType}</h6>}
+              bordered>
               {!!trackingPixel.error && (
                 <MessageWithMarginBottom
                   type="error"
@@ -39,7 +42,7 @@ export default function TrackingPixels({trackingPixels}: TrackingPixelsProps) {
                   {trackingPixel.error}
                 </MessageWithMarginBottom>
               )}
-              <p>Provider ID: {trackingPixel.trackingPixelProviderID}</p>
+              <p>Provider ID: {trackingPixel.trackingPixelMethod.trackingPixelProviderID}</p>
               <p>Tracking ID: {trackingPixel.id}</p>
               <p>Tracking URI: {trackingPixel.uri}</p>
             </Panel>

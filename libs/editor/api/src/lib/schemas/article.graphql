@@ -84,6 +84,13 @@ fragment TrackingPixel on TrackingPixel {
   id
   uri
   error
+  trackingPixelMethod {
+    ...TrackingPixelMethod
+  }
+}
+
+fragment TrackingPixelMethod on TrackingPixelMethod {
+  id
   trackingPixelProviderID
   trackingPixelProviderType
 }

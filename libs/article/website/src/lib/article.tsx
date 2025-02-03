@@ -58,7 +58,7 @@ export function Article({className, data, children, loading, error}: BuilderArti
 
       {children}
 
-      <ArticleTrackingPixels trackingPixels={article.trackingPixels} />
+      <ArticleTrackingPixels trackingPixels={article?.trackingPixels} />
     </ArticleWrapper>
   )
 }
