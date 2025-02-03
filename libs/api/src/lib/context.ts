@@ -369,7 +369,11 @@ export async function contextFromRequest(
           },
           include: {
             tags: true,
-            trackingPixels: true,
+            trackingPixels: {
+              include: {
+                trackingPixelMethod: true
+              }
+            },
             draft: {
               include: {
                 properties: true,
@@ -433,7 +437,11 @@ export async function contextFromRequest(
                   socialMediaAuthors: true
                 }
               },
-              trackingPixels: true
+              trackingPixels: {
+                include: {
+                  trackingPixelMethod: true
+                }
+              }
             }
           })
         ).map(articleWithRevisionsToPublicArticle),
@@ -925,7 +933,7 @@ export async function contextFromRequest(
     }
   })
 
-  const trackingPixelContext = new TrackingPixelContext(trackingPixelProviders)
+  const trackingPixelContext = new TrackingPixelContext(prisma, trackingPixelProviders)
 
   return {
     hostURL,

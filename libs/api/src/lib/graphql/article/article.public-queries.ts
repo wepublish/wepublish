@@ -89,7 +89,11 @@ export const getPublishedArticleByIdOrSlug = async (
             socialMediaAuthors: true
           }
         },
-        trackingPixels: true
+        trackingPixels: {
+          include: {
+            trackingPixelMethod: true
+          }
+        }
       }
     })
 

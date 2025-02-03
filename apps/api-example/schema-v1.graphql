@@ -627,8 +627,12 @@ type Article {
 
 type TrackingPixel {
   id: ID!
-  trackingPixelProviderType: TrackingPixelProviderType!
+  trackingPixelMethod: TrackingPixelMethod!
   uri: String
+}
+
+type TrackingPixelMethod {
+  trackingPixelProviderType: TrackingPixelProviderType!
 }
 
 enum TrackingPixelProviderType {

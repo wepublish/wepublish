@@ -712,10 +712,15 @@ type AuthorLink {
 
 type TrackingPixel {
   id: ID!
-  trackingPixelProviderID: String!
-  trackingPixelProviderType: TrackingPixelProviderType!
+  trackingPixelMethod: TrackingPixelMethod!
   uri: String
   error: String
+}
+
+type TrackingPixelMethod {
+  id: ID!
+  trackingPixelProviderID: String!
+  trackingPixelProviderType: TrackingPixelProviderType!
 }
 
 enum TrackingPixelProviderType {
