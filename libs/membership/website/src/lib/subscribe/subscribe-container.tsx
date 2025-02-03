@@ -181,7 +181,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
           await resubscribe({
             variables: formData,
             onCompleted() {
-              window.location.href = selectedMemberplan?.successPage?.url ?? ''
+              window.location.href = selectedMemberplan?.confirmationPage?.url ?? ''
             }
           })
         }}

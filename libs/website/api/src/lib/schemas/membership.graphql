@@ -42,6 +42,9 @@ fragment FullMemberPlan on MemberPlan {
     failPage {
         url
     }
+    confirmationPage {
+        url
+    }
 }
 
 fragment FullPayment on Payment {
