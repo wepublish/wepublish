@@ -1087,6 +1087,43 @@
         "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden."
       }
     },
+    "subscriptionFlow": {
+      "subscribe": "Abonnieren",
+      "renewal_success": "Verlängerung erfolgreich",
+      "renewal_failed": "Verlängerung fehlgeschlagen",
+      "deactivation_by_user": "Vom Benutzer deaktiviert",
+      "reactivation": "Reaktiviert",
+      "invoice_creation": "Rechnungserstellung",
+      "deactivation_unpaid": "Deaktivierung wegen unbezahlter Rechnung",
+      "custom": "Benutzerdefiniertes Ereignis",
+      "settings": "Abonnement-Ablauf Einstellungen",
+      "edit": "Abonnement-Ablauf bearbeiten",
+      "titleDefaultSettings": "Standard-Abonnement Einstellungen",
+      "settingsDescription": "Sie können diese Einstellungen für jeden Abonnementplan überschreiben.",
+      "addNew": "Neuen Ablauf erstellen",
+      "dayWithNumber": "Tag {{day}}",
+      "days": "Tage",
+      "savedChange": "Änderung erfolgreich gespeichert",
+      "add": "Hinzufügen",
+      "memberplan": "Mitgliedsplan",
+      "paymentMethod": "Zahlungsmethode",
+      "periodicity": "Periodizität",
+      "autoRenewal": "Automatische Verlängerung?",
+      "booleanFilter": {
+        "true": "Ja",
+        "false": "Nein"
+      },
+      "deleteFlowQuestion": "Das Löschen dieses Ablaufs ist permanent und kann nicht rückgängig gemacht werden. Möchten Sie trotzdem fortfahren?",
+      "deletePermanently": "Permanent löschen",
+      "dropHere": "Hier ablegen",
+      "filters": "Filter",
+      "subscriptionEvents": "Statische Abonnement-Ereignisse",
+      "timeline": "Zeitleiste",
+      "actions": "Aktionen",
+      "dayOfRenewal": "Tag der Verlängerung / Abonnement endet",
+      "subscriptionsAffected": "Filter gilt für {{numberOfSubscriptions}} Abonnements",
+      "confirm_subscription": "Abonnementbestätigung"
+    },
     "subscriptionList": {
       "filter": {
         "deactivationReason": "Grund Deaktivierung",

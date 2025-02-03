@@ -1199,7 +1199,8 @@
       "timeline": "Timeline",
       "actions": "Actions",
       "dayOfRenewal": "Day of renewal / subscription ends",
-      "subscriptionsAffected": "Filter applies to {{numberOfSubscriptions}} subscriptions"
+      "subscriptionsAffected": "Filter applies to {{numberOfSubscriptions}} subscriptions",
+      "confirm_subscription": "Subscription confirmation"
     },
     "subscriptionList": {
       "filter": {

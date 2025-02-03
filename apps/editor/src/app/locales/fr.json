@@ -1063,6 +1063,43 @@
         "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes"
       }
     },
+    "subscriptionFlow": {
+      "subscribe": "S'abonner",
+      "renewal_success": "Renouvellement réussi",
+      "renewal_failed": "Échec du renouvellement",
+      "deactivation_by_user": "Désactivé par l'utilisateur",
+      "reactivation": "Réactivé",
+      "invoice_creation": "Création de facture",
+      "deactivation_unpaid": "Désactivation pour facture impayée",
+      "custom": "Événement personnalisé",
+      "settings": "Paramètres du flux d'abonnement",
+      "edit": "Modifier le flux d'abonnement",
+      "titleDefaultSettings": "Paramètres d'abonnement par défaut",
+      "settingsDescription": "Vous pouvez remplacer ces paramètres pour chaque plan d'abonnement.",
+      "addNew": "Créer un nouveau flux",
+      "dayWithNumber": "jour {{day}}",
+      "days": "jours",
+      "savedChange": "Modification enregistrée avec succès",
+      "add": "Ajouter",
+      "memberplan": "Plan d'adhésion",
+      "paymentMethod": "Mode de paiement",
+      "periodicity": "Périodicité",
+      "autoRenewal": "Renouvellement automatique ?",
+      "booleanFilter": {
+        "true": "Oui",
+        "false": "Non"
+      },
+      "deleteFlowQuestion": "La suppression de ce flux est permanente et ne peut pas être annulée. Voulez-vous quand même continuer ?",
+      "deletePermanently": "Supprimer définitivement",
+      "dropHere": "Déposer ici",
+      "filters": "Filtres",
+      "subscriptionEvents": "Événements d'abonnement statiques",
+      "timeline": "Chronologie",
+      "actions": "Actions",
+      "dayOfRenewal": "Jour de renouvellement / fin d'abonnement",
+      "subscriptionsAffected": "Le filtre s'applique à {{numberOfSubscriptions}} abonnements",
+      "confirm_subscription": "Confirmation d'abonnement"
+    },
     "subscriptionList": {
       "filter": {
         "deactivationReason": "Motif de désactivation",
