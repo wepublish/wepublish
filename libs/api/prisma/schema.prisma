@@ -59,6 +59,8 @@ model ArticleRevision {
   socialMediaImageID     String?
   likes                  Int                                @default(0)
 
+  fullText               Unsupported("tsvector")            @default(dbgenerated())
+
   revision    Int       @default(0)
   createdAt   DateTime  @default(now())
   modifiedAt  DateTime? @updatedAt
@@ -593,6 +595,7 @@ model PageRevision {
   PublishedPage          Page[]             @relation("publishedPageRevision")
   PendingPage            Page[]             @relation("pendingPageRevision")
   DraftPage              Page[]             @relation("draftPageRevision")
+  fullText               Unsupported("tsvector") @default(dbgenerated())
 
   @@index([publishAt])
   @@index([publishedAt])

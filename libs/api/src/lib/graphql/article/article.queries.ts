@@ -271,11 +271,6 @@ export const getArticles = async (
   const orderBy = createArticleOrder(sortedField, order)
   const where = createArticleFilter(filter)
 
-  if (filter.body) {
-    const articleIds = await Search.searchArticles(client, filter.body)
-    where.id = {in: articleIds}
-  }
-
   const [totalCount, articles] = await Promise.all([
     article.count({
       where,
