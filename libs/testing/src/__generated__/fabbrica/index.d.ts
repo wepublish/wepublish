@@ -359,6 +359,7 @@ type ArticleTrackingPixelsFactoryDefineInput = {
     createdAt?: Date;
     modifiedAt?: Date;
     uri?: string | null;
+    pixelUid?: string | null;
     error?: string | null;
     article: ArticleTrackingPixelsarticleFactory | Prisma.ArticleCreateNestedOneWithoutTrackingPixelsInput;
     trackingPixelMethod: ArticleTrackingPixelstrackingPixelMethodFactory | Prisma.TrackingPixelMethodCreateNestedOneWithoutArticleTrackingPixelsInput;

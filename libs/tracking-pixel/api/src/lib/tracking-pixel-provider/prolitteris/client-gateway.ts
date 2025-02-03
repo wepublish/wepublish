@@ -1,11 +1,7 @@
 import axios from 'axios'
+import {ProLitterisGenerator, ReturnTrackingPixels} from './types'
 
-export type ReturnTrackingPixels = {
-  domain: string
-  pixelUids: string[]
-}
-
-export class GatewayClient {
+export class GatewayClient implements ProLitterisGenerator {
   constructor(private memberNr: string, private username: string, private password: string) {}
   getAuthorizationHeader() {
     return Buffer.from(`${this.memberNr}:${this.username}:${this.password}`).toString('base64')
@@ -20,10 +16,10 @@ export class GatewayClient {
     })
   }
 
-  async getTrackingPixels(amount: number): Promise<ReturnTrackingPixels> {
+  async getTrackingPixels(internalTrackingId: string): Promise<ReturnTrackingPixels> {
     try {
       const response = await this.httpPostRequest('https://owen.prolitteris.ch/rest/api/1/pixel', {
-        amount
+        amount: 1
       })
       return response.data
     } catch (error) {

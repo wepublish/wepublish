@@ -6,22 +6,31 @@ export class TrackingPixelContext {
     private prisma: PrismaClient,
     private trackingPixelProviders: TrackingPixelProvider[]
   ) {}
-  async getPixels(): Promise<Prisma.ArticleTrackingPixelsCreateManyArticleInput[]> {
-    const trackingPixels: Prisma.ArticleTrackingPixelsCreateManyArticleInput[] = []
+  async getArticlePixels(
+    articleId: string
+  ): Promise<Prisma.ArticleTrackingPixelsCreateManyInput[]> {
+    const trackingPixels: Prisma.ArticleTrackingPixelsCreateManyInput[] = []
     for (const trackingPixelProvider of this.trackingPixelProviders) {
       const tackingPixelMethode = await this.findOrCreateMethode(
         trackingPixelProvider.id,
         trackingPixelProvider.type
       )
       try {
+        const trackingPixel = await trackingPixelProvider.createPixelUri({
+          internalTrackingId: `A${articleId}`
+        })
         trackingPixels.push({
+          articleId,
           tackingPixelMethodID: tackingPixelMethode.id,
-          uri: (await trackingPixelProvider.createPixelUris({count: 1}))[0]
+          uri: trackingPixel.uri,
+          pixelUid: trackingPixel.pixelUid
         })
       } catch (error) {
         trackingPixels.push({
+          articleId,
           tackingPixelMethodID: tackingPixelMethode.id,
           uri: null,
+          pixelUid: null,
           error: JSON.stringify(error.message)
         })
       }

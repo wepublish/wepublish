@@ -156,7 +156,9 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
                 memberNr: trackingPixelProvider.memberNr,
                 username: trackingPixelProvider.username,
                 password: trackingPixelProvider.password,
-                onlyPaidContentAccess: Boolean(trackingPixelProvider.onlyPaidContentAccess)
+                onlyPaidContentAccess: Boolean(trackingPixelProvider.onlyPaidContentAccess),
+                publisherInternalKeyDomain: trackingPixelProvider.publisherInternalKeyDomain,
+                usePublisherInternalKey: Boolean(trackingPixelProvider.usePublisherInternalKey)
               })
             )
           } else {

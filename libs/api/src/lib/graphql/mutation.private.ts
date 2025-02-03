@@ -693,11 +693,16 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createArticle: {
       type: new GraphQLNonNull(GraphQLArticle),
       args: {input: {type: new GraphQLNonNull(GraphQLArticleInput)}},
-      resolve: (root, {input}, {authenticate, prisma: {article}, trackingPixelContext}) =>
+      resolve: (
+        root,
+        {input},
+        {authenticate, prisma: {article}, trackingPixelContext, prisma: {articleTrackingPixels}}
+      ) =>
         createArticle(
           {...input, blocks: input.blocks.map(mapBlockUnionMap)},
           authenticate,
           article,
+          articleTrackingPixels,
           trackingPixelContext
         )
     },

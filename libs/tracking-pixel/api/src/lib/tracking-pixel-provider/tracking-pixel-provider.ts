@@ -1,7 +1,7 @@
 import {TrackingPixelProviderType} from '@prisma/client'
 
 export type CreateTrackingPixelProps = {
-  count: number
+  internalTrackingId: string
 }
 
 export type TrackingPixelProps = {
@@ -13,7 +13,12 @@ export type TrackingPixelProps = {
 export interface TrackingPixelProvider {
   id: string
   type: TrackingPixelProviderType
-  createPixelUris(props: CreateTrackingPixelProps): Promise<string[]>
+  createPixelUri(props: CreateTrackingPixelProps): Promise<PixelUrl>
+}
+
+export type PixelUrl = {
+  pixelUid: string
+  uri: string
 }
 
 export abstract class BaseTrackingPixelProvider implements TrackingPixelProvider {
@@ -25,5 +30,5 @@ export abstract class BaseTrackingPixelProvider implements TrackingPixelProvider
     this.name = props.name
     this.type = props.type
   }
-  abstract createPixelUris(props: CreateTrackingPixelProps): Promise<string[]>
+  abstract createPixelUri(props: CreateTrackingPixelProps): Promise<PixelUrl>
 }

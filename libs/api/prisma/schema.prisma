@@ -145,8 +145,9 @@ model ArticleTrackingPixels {
   tackingPixelMethodID String
   trackingPixelMethod  TrackingPixelMethod @relation(fields: [tackingPixelMethodID], references: [id])
 
-  uri   String? @unique
-  error String?
+  uri      String? @unique
+  pixelUid String? @unique
+  error    String?
 
   @@map("articles.tracking-pixels")
 }

@@ -101,9 +101,11 @@ trackingPixelProviders:
     id: prolitteris-1
     name: "Pro Litteris 1"
     username: 'test'
-    memberNr: 'test'
+    memberNr: '1234567890'
     password: 'test'
     onlyPaidContentAccess: false
+    publisherInternalKeyDomain: 'pl01.owen.prolitteris.ch'
+    usePublisherInternalKey: true
 mediaServer:
   type: 'nova'
 ga:
