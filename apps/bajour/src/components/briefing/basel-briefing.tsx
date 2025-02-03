@@ -167,6 +167,7 @@ const TeaserContentWrapper = styled('div')`
 const ButtonRow = styled('div')`
   display: flex;
   gap: ${({theme}) => theme.spacing(1)};
+  justify-content: flex-end;
 `
 
 const ReadMoreButton = styled(Button)`
@@ -397,7 +398,7 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
               )}
 
               <ButtonRow>
-                {blockStyle == BriefingType.BaselBriefing && (
+                {(blockStyle as BriefingType) === BriefingType.BaselBriefing && (
                   <ReadMoreButton
                     onClick={e => {
                       e.preventDefault()
