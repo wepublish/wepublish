@@ -27,7 +27,7 @@ import {TypeAttributes} from 'rsuite/esm/@types/common'
 interface DecoratedEvent {
   event:
     | SubscriptionEvent.Subscribe
-    | SubscriptionEvent.Resubscribe
+    | SubscriptionEvent.ConfirmSubscription
     | SubscriptionEvent.RenewalSuccess
     | SubscriptionEvent.RenewalFailed
     | SubscriptionEvent.DeactivationByUser

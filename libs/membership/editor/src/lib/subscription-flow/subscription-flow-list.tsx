@@ -53,7 +53,7 @@ export const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([]
 
 export const USER_ACTION_EVENTS = [
   SubscriptionEvent.Subscribe,
-  SubscriptionEvent.Resubscribe,
+  SubscriptionEvent.ConfirmSubscription,
   SubscriptionEvent.RenewalSuccess,
   SubscriptionEvent.RenewalFailed,
   SubscriptionEvent.DeactivationByUser
