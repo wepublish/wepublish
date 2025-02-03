@@ -95,7 +95,7 @@ export const createArticle = async (
   } = input
 
   const searchPlainText = blocksToSearchText(input.blocks as any[])
-  const tackingPixels = await trackingPixelContext.getPixels()
+  const trackingPixels = await trackingPixelContext.getPixels()
 
   return article.create({
     data: {
@@ -134,7 +134,7 @@ export const createArticle = async (
       },
       trackingPixels: {
         createMany: {
-          data: tackingPixels
+          data: trackingPixels
         }
       }
     },
