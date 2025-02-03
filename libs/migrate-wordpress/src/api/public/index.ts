@@ -871,6 +871,8 @@ export type MemberPlan = {
   amountPerMonthMin: Scalars['Int']
   amountPerMonthTarget?: Maybe<Scalars['Int']>
   availablePaymentMethods: Array<AvailablePaymentMethod>
+  confirmationPage?: Maybe<Page>
+  confirmationPageId?: Maybe<Scalars['ID']>
   currency: Currency
   description?: Maybe<Scalars['RichText']>
   extendable: Scalars['Boolean']

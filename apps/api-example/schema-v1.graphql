@@ -883,6 +883,8 @@ type MemberPlan {
   successPage: Page
   failPageId: ID
   failPage: Page
+  confirmationPageId: ID
+  confirmationPage: Page
 }
 
 enum Currency {

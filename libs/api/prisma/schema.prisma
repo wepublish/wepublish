@@ -528,6 +528,9 @@ model MemberPlan {
   failPageId String?
   failPage   Page?   @relation("failPage", fields: [failPageId], references: [id])
 
+  confirmationPageId String?
+  confirmationPage   Page?   @relation("confirmationPage", fields: [confirmationPageId], references: [id])
+
   subscription      Subscription[]
   subscriptionFlows SubscriptionFlow[]
 
@@ -617,10 +620,11 @@ model Page {
   draftId String?       @unique
   draft   PageRevision? @relation("draftPageRevision", fields: [draftId], references: [id], onDelete: SetNull)
 
-  navigations        NavigationLink[]
-  tags               TaggedPages[]
-  memberPlansSuccess MemberPlan[]     @relation("successPage")
-  memberPlansFail    MemberPlan[]     @relation("failPage")
+  navigations             NavigationLink[]
+  tags                    TaggedPages[]
+  memberPlansSuccess      MemberPlan[]     @relation("successPage")
+  memberPlansFail         MemberPlan[]     @relation("failPage")
+  memberPlansConfirmation MemberPlan[]     @relation("confirmationPage")
 
   banners Banner[]
 

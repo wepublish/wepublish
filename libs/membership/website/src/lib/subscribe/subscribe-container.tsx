@@ -63,11 +63,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
     }
   })
 
-  const [resubscribe] = useResubscribeMutation({
-    onCompleted() {
-      window.location.href = '/thank-you'
-    }
-  })
+  const [resubscribe] = useResubscribeMutation({})
 
   const [subscribe] = useSubscribeMutation({
     onCompleted(data) {
@@ -179,8 +175,14 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
           })
         }}
         onResubscribe={async formData => {
+          const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
+            mb => mb.id === formData.memberPlanId
+          )
           await resubscribe({
-            variables: formData
+            variables: formData,
+            onCompleted() {
+              window.location.href = selectedMemberplan?.successPage?.url ?? ''
+            }
           })
         }}
         deactivateSubscriptionId={deactivateSubscriptionId}

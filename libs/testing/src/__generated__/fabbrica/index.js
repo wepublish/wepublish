@@ -374,6 +374,10 @@ const modelFieldDefinitions = [{
                 type: "Page",
                 relationName: "failPage"
             }, {
+                name: "confirmationPage",
+                type: "Page",
+                relationName: "confirmationPage"
+            }, {
                 name: "subscription",
                 type: "Subscription",
                 relationName: "MemberPlanToSubscription"
@@ -461,6 +465,10 @@ const modelFieldDefinitions = [{
                 name: "memberPlansFail",
                 type: "MemberPlan",
                 relationName: "failPage"
+            }, {
+                name: "memberPlansConfirmation",
+                type: "MemberPlan",
+                relationName: "confirmationPage"
             }, {
                 name: "banners",
                 type: "Banner",
@@ -2479,6 +2487,9 @@ function isMemberPlansuccessPageFactory(x) {
 function isMemberPlanfailPageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
 }
+function isMemberPlanconfirmationPageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
 function autoGenerateMemberPlanScalarsOrEnums({ seq }) {
     return {
         name: getScalarFieldValueGenerator().String({ modelName: "MemberPlan", fieldName: "name", isId: false, isUnique: false, seq }),
@@ -2517,7 +2528,10 @@ function defineMemberPlanFactoryInternal({ defaultData: defaultDataResolver, tra
                 } : defaultData.successPage,
                 failPage: isMemberPlanfailPageFactory(defaultData.failPage) ? {
                     create: yield defaultData.failPage.build()
-                } : defaultData.failPage
+                } : defaultData.failPage,
+                confirmationPage: isMemberPlanconfirmationPageFactory(defaultData.confirmationPage) ? {
+                    create: yield defaultData.confirmationPage.build()
+                } : defaultData.confirmationPage
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;

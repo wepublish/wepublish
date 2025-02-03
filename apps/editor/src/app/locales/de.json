@@ -700,7 +700,8 @@
       "tags": "Tags",
       "savedChanges": "Gespeichert",
       "successPage": "Weiterleitung zur Seite bei erfolgreicher Zahlung",
-      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler"
+      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler",
+      "confirmationPage": "Weiterleitung zur Seite vor Bestätigung"
     },
     "memberPlanList": {
       "action": "Aktionen",
