@@ -759,7 +759,8 @@
       "userRoles": "Userrollen",
       "users": "User",
       "usersAndMembers": "User & Abos",
-      "authorTags": "Tags"
+      "authorTags": "Tags",
+      "integrations": "Externe Integrationen"
     },
     "navigation": {
       "overview": {

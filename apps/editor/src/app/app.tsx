@@ -21,7 +21,7 @@ import {
   SubscriptionFlowList,
   SystemMailList
 } from '@wepublish/membership/editor'
-import {SettingList} from '@wepublish/settings/editor'
+import {IntegrationsView, SettingList} from '@wepublish/settings/editor'
 import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from '@wepublish/ui/editor'
 import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -777,6 +777,14 @@ export function App() {
               element={
                 <Base>
                   <SettingList />
+                </Base>
+              }
+            />
+            <Route
+              path="integrations"
+              element={
+                <Base>
+                  <IntegrationsView />
                 </Base>
               }
             />

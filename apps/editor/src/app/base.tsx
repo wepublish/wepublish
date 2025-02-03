@@ -17,6 +17,7 @@ import {
   MdDescription,
   MdEvent,
   MdEventAvailable,
+  MdExtension,
   MdFactCheck,
   MdFileCopy,
   MdGroup,
@@ -740,6 +741,17 @@ export function Base({children}: BaseProps) {
                         active={path === 'userroles'}
                         icon={<MdBadge />}>
                         {t('navbar.userRoles')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={['CAN_GET_SETTINGS', 'CAN_UPDATE_SETTINGS']}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/integrations"
+                        active={path === 'integrations'}
+                        icon={<MdExtension />}>
+                        {t('navbar.integrations')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

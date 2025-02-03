@@ -43,7 +43,7 @@ const FlexLink = styled(Link)`
   display: flex;
 `
 
-const Heading = styled.h1`
+export const Heading = styled.h1`
   font-size: 36px;
   line-height: 50px;
 `

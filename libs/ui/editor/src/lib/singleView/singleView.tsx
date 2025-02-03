@@ -6,7 +6,7 @@ interface SingleViewProps {
 }
 export function SingleView({children}: SingleViewProps) {
   return (
-    <Grid fluid>
+    <Grid fluid style={{width: '100%'}}>
       <Row>
         <Col xs={24}>{children}</Col>
       </Row>

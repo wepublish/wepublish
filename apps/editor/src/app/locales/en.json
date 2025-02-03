@@ -816,7 +816,8 @@
       "userRoles": "User Roles",
       "users": "Users",
       "usersAndMembers": "Users & Subscriptions",
-      "authorTags": "Tags"
+      "authorTags": "Tags",
+      "integrations": "External Integrations"
     },
     "navigation": {
       "overview": {
