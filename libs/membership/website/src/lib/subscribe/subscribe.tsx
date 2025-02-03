@@ -276,6 +276,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       autoRenew: data.autoRenew
     }
 
+    if (hasUser) {
+      return callAction(onSubscribe)(subscribeData)
+    }
+
     if (returningUserId) {
       const resubscribeData: ResubscribeMutationVariables = {
         ...subscribeData,
@@ -283,10 +287,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       }
 
       return callAction(onResubscribe)(resubscribeData)
-    }
-
-    if (hasUser) {
-      return callAction(onSubscribe)(subscribeData)
     }
 
     const {address, challengeAnswer, email, birthday, password, name, firstName} = data as z.infer<
@@ -498,7 +498,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           )}
         </SubscribePayment>
       </SubscribeSection>
-
       {!hasUserContext && (
         <SubscribeSection>
           <H5 component="h2">Spam-Schutz</H5>
