@@ -4,6 +4,7 @@ import {Article as ArticleType, Block} from '@wepublish/website/api'
 import {ArticleListWrapper} from './article-list/article-list'
 import {CommentListWrapper} from '@wepublish/comments/website'
 import {ContentWrapper} from '@wepublish/content/website'
+import ArticleTrackingPixels from './article-tracking-pixels'
 
 export const ArticleWrapper = styled(ContentWrapper)`
   ${({theme}) => theme.breakpoints.up('md')} {
@@ -39,7 +40,6 @@ export function Article({className, data, children, loading, error}: BuilderArti
   return (
     <ArticleWrapper className={className}>
       {article && <ArticleSEO article={article} />}
-
       <Blocks blocks={(article?.blocks as Block[]) ?? []} type="Article" />
 
       <ArticleInfoWrapper>
@@ -57,6 +57,8 @@ export function Article({className, data, children, loading, error}: BuilderArti
       </ArticleInfoWrapper>
 
       {children}
+
+      <ArticleTrackingPixels trackingPixels={article.trackingPixels} />
     </ArticleWrapper>
   )
 }
