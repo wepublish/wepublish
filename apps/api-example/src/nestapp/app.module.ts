@@ -141,21 +141,28 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
 
         const trackingPixelProvidersRaw = configFile.trackingPixelProviders
-        if (trackingPixelProvidersRaw) {
-          for (const trackingPixelProvider of trackingPixelProvidersRaw) {
-            if (trackingPixelProvider.type === 'prolitteris') {
-              trackingPixelProviders.push(
-                new ProlitterisTrackingPixelProvider({
-                  id: trackingPixelProvider.id,
-                  type: trackingPixelProvider.type,
-                  name: trackingPixelProvider.name,
-                  memberNr: trackingPixelProvider.memberNr,
-                  username: trackingPixelProvider.username,
-                  password: trackingPixelProvider.password,
-                  onlyPaidContentAccess: Boolean(trackingPixelProvider.onlyPaidContentAccess)
-                })
-              )
-            }
+
+        if (!trackingPixelProvidersRaw) {
+          return {trackingPixelProviders}
+        }
+
+        for (const trackingPixelProvider of trackingPixelProvidersRaw) {
+          if (trackingPixelProvider.type === 'prolitteris') {
+            trackingPixelProviders.push(
+              new ProlitterisTrackingPixelProvider({
+                id: trackingPixelProvider.id,
+                type: trackingPixelProvider.type,
+                name: trackingPixelProvider.name,
+                memberNr: trackingPixelProvider.memberNr,
+                username: trackingPixelProvider.username,
+                password: trackingPixelProvider.password,
+                onlyPaidContentAccess: Boolean(trackingPixelProvider.onlyPaidContentAccess)
+              })
+            )
+          } else {
+            throw new Error(
+              `Unknown tracking Pixel type defined: ${(trackingPixelProvider as any).type}`
+            )
           }
         }
         return {trackingPixelProviders}

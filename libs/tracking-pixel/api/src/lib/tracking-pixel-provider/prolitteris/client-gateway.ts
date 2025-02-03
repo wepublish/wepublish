@@ -25,8 +25,10 @@ export class GatewayClient {
       const response = await this.httpPostRequest('https://owen.prolitteris.ch/rest/api/1/pixel', {
         amount
       })
+      console.log(response)
       return response.data
     } catch (error) {
+      console.log(JSON.stringify(error))
       throw new Error(
         `Getting tracking pixel failed with error: ${JSON.stringify(
           error.response?.data || error.message
