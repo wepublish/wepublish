@@ -391,8 +391,17 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
                 </Author>
               )}
 
+              <ReadMoreButton
+                onClick={() => {
+                  window.open('https://open.spotify.com/show/18va0V1W0lCMVX6e1WeLei', '_blank')
+                }}
+                variant="outlined"
+                color="inherit"
+                size="small">
+                Briefing hören
+              </ReadMoreButton>
               <ReadMoreButton variant="outlined" color="inherit" size="small">
-                Ganzes Briefing
+                Briefing lesen
               </ReadMoreButton>
             </TeaserContentInterior>
           </TeaserContentStyled>
