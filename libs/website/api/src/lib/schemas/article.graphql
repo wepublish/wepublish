@@ -14,6 +14,10 @@ fragment ArticleWithoutBlocks on Article {
   peeredArticleURL
   disableComments
 
+  trackingPixels {
+    ...PublicTrackingPixel
+  }
+
   tags {
     ...FullTag
   }
@@ -37,6 +41,15 @@ fragment ArticleWithoutBlocks on Article {
   properties {
     ...FullProperty
   }
+}
+
+fragment PublicTrackingPixel on TrackingPixel {
+  id
+  uri
+}
+
+fragment PublicTrackingPixelMethod on TrackingPixelMethod {
+  trackingPixelProviderType
 }
 
 fragment FullArticle on Article {

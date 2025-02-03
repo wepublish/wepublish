@@ -27,7 +27,8 @@ const fullArticleInclude = {
       authors: true,
       socialMediaAuthors: true
     }
-  }
+  },
+  trackingPixels: true
 } as const
 
 export const deleteArticleById = async (
@@ -77,7 +78,9 @@ type CreateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared' | 'hidden' | 
 export const createArticle = async (
   input: CreateArticleInput,
   authenticate: Context['authenticate'],
-  article: PrismaClient['article']
+  article: PrismaClient['article'],
+  articleTrackingPixels: PrismaClient['articleTrackingPixels'],
+  trackingPixelContext: Context['trackingPixelContext']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateArticle, roles)
@@ -94,7 +97,7 @@ export const createArticle = async (
 
   const searchPlainText = blocksToSearchText(input.blocks as any[])
 
-  return article.create({
+  const newArticle = await article.create({
     data: {
       shared,
       hidden,
@@ -132,6 +135,13 @@ export const createArticle = async (
     },
     include: fullArticleInclude
   })
+
+  const trackingPixels = await trackingPixelContext.getArticlePixels(newArticle.id)
+  await articleTrackingPixels.createMany({
+    data: trackingPixels
+  })
+
+  return newArticle
 }
 
 export const duplicateArticle = async (

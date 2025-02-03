@@ -96,6 +96,16 @@ challenge:
   type: 'turnstile'
   secret: ${TURNSTILE_SECRET}
   siteKey: ${TURNSTILE_SITE_KEY}
+trackingPixelProviders:
+  - type: prolitteris
+    id: prolitteris-1
+    name: "Pro Litteris 1"
+    username: 'test'
+    memberNr: '1234567890'
+    password: 'test'
+    onlyPaidContentAccess: false
+    publisherInternalKeyDomain: 'pl01.owen.prolitteris.ch'
+    usePublisherInternalKey: true
 mediaServer:
   type: 'nova'
 ga:

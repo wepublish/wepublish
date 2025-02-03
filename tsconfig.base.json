@@ -57,6 +57,7 @@
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
       "@wepublish/page/website": ["libs/page/website/src/index.ts"],
       "@wepublish/payment/api": ["libs/payment/api/src/index.ts"],
+      "@wepublish/tracking-pixel/api": ["libs/tracking-pixel/api/src/index.ts"],
       "@wepublish/payment/website": ["libs/payment/website/src/index.ts"],
       "@wepublish/peering/website": ["libs/peering/website/src/index.ts"],
       "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],

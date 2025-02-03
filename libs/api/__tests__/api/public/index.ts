@@ -62,6 +62,7 @@ export type Article = {
   socialMediaTitle?: Maybe<Scalars['String']>;
   tags: Array<Tag>;
   title: Scalars['String'];
+  trackingPixels?: Maybe<Array<Maybe<TrackingPixel>>>;
   updatedAt: Scalars['DateTime'];
   url: Scalars['String'];
 };
@@ -2335,6 +2336,22 @@ export type TitleBlock = {
   lead?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
 };
+
+export type TrackingPixel = {
+  __typename?: 'TrackingPixel';
+  id: Scalars['ID'];
+  trackingPixelMethod: TrackingPixelMethod;
+  uri?: Maybe<Scalars['String']>;
+};
+
+export type TrackingPixelMethod = {
+  __typename?: 'TrackingPixelMethod';
+  trackingPixelProviderType: TrackingPixelProviderType;
+};
+
+export enum TrackingPixelProviderType {
+  Prolitteris = 'prolitteris'
+}
 
 export type TwitterTweetBlock = {
   __typename?: 'TwitterTweetBlock';

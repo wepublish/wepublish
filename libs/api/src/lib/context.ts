@@ -59,6 +59,8 @@ import {MemberContext} from './memberContext'
 import {URLAdapter} from './urlAdapter'
 import {BlockStylesDataloaderService} from '@wepublish/block-content/api'
 import {HotAndTrendingDataSource} from '@wepublish/article/api'
+import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
+import {TrackingPixelContext} from './trackingPixelContext'
 
 /**
  * Peered article cache configuration and setup
@@ -149,6 +151,7 @@ export interface Context {
   readonly challenge: ChallengeProvider
   readonly requestIP: string
   readonly fingerprint: string
+  readonly trackingPixelContext: TrackingPixelContext
 
   getOauth2Clients(): Promise<OAuth2Clients[]>
 
@@ -206,6 +209,7 @@ export interface ContextOptions {
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
   readonly challenge: ChallengeProvider
+  readonly trackingPixelProviders: TrackingPixelProvider[]
   readonly hotAndTrendingDataSource: HotAndTrendingDataSource
 }
 
@@ -244,7 +248,8 @@ export async function contextFromRequest(
     challenge,
     sessionTTL,
     hashCostFactor,
-    hotAndTrendingDataSource
+    hotAndTrendingDataSource,
+    trackingPixelProviders
   }: ContextOptions
 ): Promise<Context> {
   const authService = new AuthenticationService(prisma)
@@ -364,6 +369,11 @@ export async function contextFromRequest(
           },
           include: {
             tags: true,
+            trackingPixels: {
+              include: {
+                trackingPixelMethod: true
+              }
+            },
             draft: {
               include: {
                 properties: true,
@@ -425,6 +435,11 @@ export async function contextFromRequest(
                   properties: true,
                   authors: true,
                   socialMediaAuthors: true
+                }
+              },
+              trackingPixels: {
+                include: {
+                  trackingPixelMethod: true
                 }
               }
             }
@@ -918,6 +933,8 @@ export async function contextFromRequest(
     }
   })
 
+  const trackingPixelContext = new TrackingPixelContext(prisma, trackingPixelProviders)
+
   return {
     hostURL,
     websiteURL,
@@ -926,6 +943,7 @@ export async function contextFromRequest(
     prisma,
     memberContext,
     mailContext,
+    trackingPixelContext,
     mediaAdapter,
     urlAdapter,
     oauth2Providers,

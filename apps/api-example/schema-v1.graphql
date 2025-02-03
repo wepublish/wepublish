@@ -610,6 +610,7 @@ type Article {
   lead: String
   seoTitle: String
   tags: [Tag!]!
+  trackingPixels: [TrackingPixel]
   canonicalUrl: String
   properties: [PublicProperties!]!
   image: Image
@@ -622,6 +623,20 @@ type Article {
   likes: Int!
   blocks: [Block!]!
   comments: [Comment!]!
+}
+
+type TrackingPixel {
+  id: ID!
+  trackingPixelMethod: TrackingPixelMethod!
+  uri: String
+}
+
+type TrackingPixelMethod {
+  trackingPixelProviderType: TrackingPixelProviderType!
+}
+
+enum TrackingPixelProviderType {
+  prolitteris
 }
 
 type Author {
