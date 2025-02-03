@@ -201,8 +201,7 @@ export class PeriodicJobService {
         // Don't send custom mails for deactivated subscriptions
         deactivation: {
           is: null
-        },
-        confirmed: true
+        }
       },
       include: {
         user: true,
