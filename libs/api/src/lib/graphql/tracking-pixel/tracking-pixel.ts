@@ -48,6 +48,7 @@ export const GraphQLTrackingPixel = new GraphQLObjectType<ArticleTrackingPixels,
   fields: {
     id: {type: new GraphQLNonNull(GraphQLID)},
     trackingPixelMethod: {type: new GraphQLNonNull(GraphQLTrackingPixelMethod)},
+    pixelUid: {type: GraphQLString},
     uri: {type: GraphQLString},
     error: {type: GraphQLString}
   }

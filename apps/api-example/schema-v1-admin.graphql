@@ -713,6 +713,7 @@ type AuthorLink {
 type TrackingPixel {
   id: ID!
   trackingPixelMethod: TrackingPixelMethod!
+  pixelUid: String
   uri: String
   error: String
 }
