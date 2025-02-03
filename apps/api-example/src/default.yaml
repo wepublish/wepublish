@@ -100,9 +100,9 @@ trackingPixelProviders:
   - type: prolitteris
     id: prolitteris-1
     name: "Pro Litteris 1"
-    username: 'elias@wepublish.ch'
-    memberNr: '8927611'
-    password: 'nNCSnzQQXMApd6mXHzc48VQWPUwue5Krb5rnMVZtU25ce.'
+    username: 'test'
+    memberNr: 'test'
+    password: 'test'
     onlyPaidContentAccess: false
 mediaServer:
   type: 'nova'
