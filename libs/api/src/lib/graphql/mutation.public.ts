@@ -549,7 +549,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           memberPlan.id,
           properties,
           autoRenew,
-          memberPlan.extendable
+          memberPlan.extendable,
+          subscriptionToDeactivate
         )
 
         if (!invoice) {
@@ -563,7 +564,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (subscriptionToDeactivate) {
           await memberContext.deactivateSubscription({
             subscription: subscriptionToDeactivate,
-            deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
+            deactivationReason: SubscriptionDeactivationReason.userReplacedSubscription
           })
         }
 
@@ -672,6 +673,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             properties,
             autoRenew,
             memberPlan.extendable,
+            undefined,
             undefined,
             true
           )

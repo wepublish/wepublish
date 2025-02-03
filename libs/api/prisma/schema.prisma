@@ -773,9 +773,10 @@ model SubscriptionPeriod {
 }
 
 enum SubscriptionDeactivationReason {
-  none                @map("none")
-  userSelfDeactivated @map("userSelfDeactivated")
-  invoiceNotPaid      @map("invoiceNotPaid")
+  none                     @map("none")
+  userSelfDeactivated      @map("userSelfDeactivated")
+  invoiceNotPaid           @map("invoiceNotPaid")
+  userReplacedSubscription @map("userReplacedSubscription")
 }
 
 model SubscriptionDeactivation {
@@ -816,6 +817,10 @@ model Subscription {
 
   userID String
   user   User   @relation(fields: [userID], references: [id])
+
+  replacesSubscriptionID String?
+  replacesSubscription   Subscription?  @relation(name: "ReplacementHistory", fields: [replacesSubscriptionID], references: [id])
+  replacedBy             Subscription[] @relation("ReplacementHistory")
 
   invoices Invoice[]
 

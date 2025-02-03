@@ -643,6 +643,7 @@ export class MemberContext implements MemberContextInterface {
     properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[],
     autoRenew: boolean,
     extendable: boolean,
+    replacedSubscription?: Subscription | null,
     startsAt?: Date | string,
     needsConfirmation?: boolean
   ): Promise<{subscription: SubscriptionWithRelations; invoice: InvoiceWithItems}> {
@@ -681,6 +682,7 @@ export class MemberContext implements MemberContextInterface {
             data: properties
           }
         },
+        replacesSubscriptionID: replacedSubscription?.id,
         autoRenew,
         extendable,
         currency: memberPlan.currency,

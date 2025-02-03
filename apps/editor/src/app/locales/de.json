@@ -1130,6 +1130,7 @@
         "reasonInvoiceNotPaid": "Rechnung nicht bezahlt",
         "reasonNone": "Kein Grund",
         "reasonUserSelfDeactivated": "Durch Benutzer:in",
+        "reasonUserReplacedSubscription": "Ersetzt durch anderes Abo",
         "reset": "Filter zurücksetzen",
         "searchPlaceholder": "Suche nach Vorname, Name, E-Mail, Adresse, PLZ, Ort"
       },
@@ -1291,6 +1292,7 @@
         },
         "reason": "Deaktivierungs Grund",
         "reasonInvoiceNotPaid": "User hat Rechnung nicht bezahlt",
+        "reasonUserReplacedSubscription": "Ersetzt durch anderes Abo",
         "reasonNone": "Keiner",
         "reasonUserSelfDeactivated": "User will deaktivieren",
         "title": {
