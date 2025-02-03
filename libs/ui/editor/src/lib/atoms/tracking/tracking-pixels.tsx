@@ -43,7 +43,7 @@ export default function TrackingPixels({trackingPixels}: TrackingPixelsProps) {
                 </MessageWithMarginBottom>
               )}
               <p>Provider ID: {trackingPixel.trackingPixelMethod.trackingPixelProviderID}</p>
-              <p>Tracking ID: {trackingPixel.id}</p>
+              <p>Tracking ID: {trackingPixel.pixelUid}</p>
               <p>Tracking URI: {trackingPixel.uri}</p>
             </Panel>
           )

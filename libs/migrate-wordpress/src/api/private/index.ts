@@ -2615,6 +2615,7 @@ export type TrackingPixel = {
   __typename?: 'TrackingPixel'
   error?: Maybe<Scalars['String']>
   id: Scalars['ID']
+  pixelUid?: Maybe<Scalars['String']>
   trackingPixelMethod: TrackingPixelMethod
   uri?: Maybe<Scalars['String']>
 }
