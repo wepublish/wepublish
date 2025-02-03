@@ -51,7 +51,6 @@ model ArticleRevision {
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json
-  searchPlainText        String?
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
@@ -59,6 +58,8 @@ model ArticleRevision {
   socialMediaImage       Image?                             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   socialMediaImageID     String?
   likes                  Int                                @default(0)
+
+  fullText               Unsupported("tsvector")            @default(dbgenerated())
 
   revision    Int       @default(0)
   createdAt   DateTime  @default(now())
@@ -591,10 +592,10 @@ model PageRevision {
   socialMediaImageID     String?
   socialMediaImage       Image?             @relation("pageRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   blocks                 Json
-  searchPlainText        String?
   PublishedPage          Page[]             @relation("publishedPageRevision")
   PendingPage            Page[]             @relation("pendingPageRevision")
   DraftPage              Page[]             @relation("draftPageRevision")
+  fullText               Unsupported("tsvector") @default(dbgenerated())
 
   @@index([publishAt])
   @@index([publishedAt])

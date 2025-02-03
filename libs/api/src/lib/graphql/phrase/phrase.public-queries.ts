@@ -5,6 +5,7 @@ import {Context} from '../../context'
 import {createPageOrder} from '../page/page.queries'
 import {createArticleOrder} from '../article/article.queries'
 import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {Search} from '../search/search'
 
 export const queryPhrase = async (
   query: string,
@@ -17,28 +18,15 @@ export const queryPhrase = async (
   articleSort: ArticleSort,
   order: SortOrder
 ) => {
-  // Default add & if no specific query is given to prevent search to fail!
-  query = query.replace(/\s+/g, '&')
+  const startTime = Date.now()
 
-  const [foundArticleIds, foundPageIds] = await Promise.all([
-    prisma.$queryRaw<{id: string}[]>`
-      SELECT a.id FROM articles a
-      JOIN public."articles.revisions" ar on a."publishedId" = ar.id
-      WHERE to_tsvector('german', ar.title) ||  to_tsvector('german', ar.lead)@@ to_tsquery('german', ${query});
-    `,
-    prisma.$queryRaw<{id: string}[]>`
-      SELECT p.id FROM pages p
-      JOIN public."pages.revisions" pr on p."publishedId" = pr.id
-      WHERE to_tsvector('german', pr.title) ||  jsonb_to_tsvector(
-         'german',
-         jsonb_path_query_array(blocks, 'strict $.**.text'),
-         '["string"]'
-         )@@ to_tsquery('german', ${query});
-    `
+  const [articleIds, pageIds] = await Promise.all([
+    Search.searchArticles(prisma, query),
+    Search.searchPages(prisma, query)
   ])
 
-  const articleIds = foundArticleIds.map(({id}) => id)
-  const pageIds = foundPageIds.map(({id}) => id)
+  const endTime = Date.now()
+  console.log(`Query execution time: ${endTime - startTime} ms`)
 
   const [articles, pages] = await Promise.all([
     prisma.article.findMany({

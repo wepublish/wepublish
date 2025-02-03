@@ -263,23 +263,3 @@ export function mapEnumToGraphQLEnumValues(enumObject: unknown) {
     Object.keys(enumObject).map(key => [enumObject[key], {values: enumObject[key]}])
   )
 }
-
-/**
- * Parse rich text blocks to plain text. It allows to search in articles and pages for the whole content.
- * TODO: write migration for existing articles and pages. Implement function on all page mutations.
- * @param blocks
- * @returns
- */
-export function blocksToSearchText(blocks?: (Block | any)[]): string | undefined {
-  if (!blocks) {
-    return
-  }
-
-  try {
-    const richTextBlocks = blocks.filter(block => block.type === BlockType.RichText)
-
-    return richTextBlocks.map(richTextBlock => toPlaintext(richTextBlock.richText)).join(' ')
-  } catch (error) {
-    console.log(error)
-  }
-}

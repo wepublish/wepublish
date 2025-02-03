@@ -80,7 +80,7 @@ describe('Phrases', () => {
         input: {
           slug: generateRandomString(),
           title: 'The quick brown bunny jumps over the lazy hedgehog',
-          lead: 'The quick brown fox jumps over the lazy dog',
+          lead: '',
           seoTitle: '',
           authorIDs: [],
           breaking: false,
@@ -271,7 +271,7 @@ describe('Phrases', () => {
             input: {
               slug: generateRandomString(),
               title: 'The quick brown bunny jumps over the lazy hedgehog',
-              lead: 'The quick brown fox jumps over the lazy dog',
+              lead: '',
               seoTitle: '',
               authorIDs: [],
               breaking: false,
