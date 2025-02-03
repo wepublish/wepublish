@@ -397,16 +397,18 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
               )}
 
               <ButtonRow>
-                <ReadMoreButton
-                  onClick={e => {
-                    e.preventDefault()
-                    window.open('https://open.spotify.com/show/18va0V1W0lCMVX6e1WeLei', '_blank')
-                  }}
-                  variant="outlined"
-                  color="inherit"
-                  size="small">
-                  Briefing hören
-                </ReadMoreButton>
+                {blockStyle == BriefingType.BaselBriefing && (
+                  <ReadMoreButton
+                    onClick={e => {
+                      e.preventDefault()
+                      window.open('https://bajour.ch/basel-briefing-podcast', '_blank')
+                    }}
+                    variant="outlined"
+                    color="inherit"
+                    size="small">
+                    Briefing hören
+                  </ReadMoreButton>
+                )}
                 <ReadMoreButton variant="outlined" color="inherit" size="small">
                   Briefing lesen
                 </ReadMoreButton>
