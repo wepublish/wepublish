@@ -684,8 +684,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             throw new InternalError()
           }
 
-          // send email with confirmation
-
           return true
         } catch (e: any) {
           console.log(e.stack)
