@@ -57,6 +57,7 @@ export type Article = {
   published?: Maybe<ArticleRevision>
   shared: Scalars['Boolean']
   tags: Array<Tag>
+  trackingPixels?: Maybe<Array<Maybe<TrackingPixel>>>
 }
 
 export type ArticleConnection = {
@@ -2612,6 +2613,26 @@ export type Token = {
 
 export type TokenInput = {
   name: Scalars['String']
+}
+
+export type TrackingPixel = {
+  __typename?: 'TrackingPixel'
+  error?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  pixelUid?: Maybe<Scalars['String']>
+  trackingPixelMethod: TrackingPixelMethod
+  uri?: Maybe<Scalars['String']>
+}
+
+export type TrackingPixelMethod = {
+  __typename?: 'TrackingPixelMethod'
+  id: Scalars['ID']
+  trackingPixelProviderID: Scalars['String']
+  trackingPixelProviderType: TrackingPixelProviderType
+}
+
+export enum TrackingPixelProviderType {
+  Prolitteris = 'prolitteris'
 }
 
 export type TwitterTweetBlock = {

@@ -111,7 +111,7 @@
         "title": "Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
         "totalCharCount": "Total characters count is {{totalCharCount}}",
-        "likeCount": "Like count is {{likeCount}}",
+        "likeCount": "Likes {{likeCount}}",
         "type": "Type",
         "untitled": "Untitled",
         "updateDate": "Update Date",
@@ -127,7 +127,8 @@
         "light": "Light",
         "style": "Style",
         "text": "Text",
-        "default": "Default"
+        "default": "Default",
+        "tracking": "Tracking"
       }
     },
     "articleList": {
@@ -1499,6 +1500,11 @@
     },
     "selectableItemsActions": {
       "selectedItems": "Selected {{numberOfItems}} items"
+    },
+    "trackingPixels": {
+      "noPixelInfoHeader": "No tracking integration available",
+      "noPixelInfoDescription": "This is the case, for example, if no tracking is configured or for old articles.",
+      "errorHeader": "Error"
     }
   }
 }

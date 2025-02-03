@@ -123,12 +123,45 @@ model Article {
   hidden          Boolean @default(false)
   disableComments Boolean @default(false)
 
-  navigations NavigationLink[]
-  tags        TaggedArticles[]
+  navigations    NavigationLink[]
+  tags           TaggedArticles[]
+  trackingPixels ArticleTrackingPixels[]
 
   @@index([createdAt])
   @@index([modifiedAt])
   @@map("articles")
+}
+
+enum TrackingPixelProviderType {
+  prolitteris @map("prolitteris")
+}
+
+model ArticleTrackingPixels {
+  id                   String              @id @default(cuid())
+  article              Article             @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId            String
+  createdAt            DateTime            @default(now())
+  modifiedAt           DateTime            @updatedAt
+  tackingPixelMethodID String
+  trackingPixelMethod  TrackingPixelMethod @relation(fields: [tackingPixelMethodID], references: [id])
+
+  uri      String? @unique
+  pixelUid String? @unique
+  error    String?
+
+  @@map("articles.tracking-pixels")
+}
+
+model TrackingPixelMethod {
+  id                        String                    @id @default(cuid())
+  createdAt                 DateTime                  @default(now())
+  modifiedAt                DateTime                  @updatedAt
+  trackingPixelProviderID   String                    @unique
+  trackingPixelProviderType TrackingPixelProviderType
+
+  ArticleTrackingPixels ArticleTrackingPixels[]
+
+  @@map("tracking.pixels.methods")
 }
 
 model TaggedArticles {
