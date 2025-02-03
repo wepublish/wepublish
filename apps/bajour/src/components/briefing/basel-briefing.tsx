@@ -398,7 +398,8 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
 
               <ButtonRow>
                 <ReadMoreButton
-                  onClick={() => {
+                  onClick={e => {
+                    e.preventDefault()
                     window.open('https://open.spotify.com/show/18va0V1W0lCMVX6e1WeLei', '_blank')
                   }}
                   variant="outlined"
