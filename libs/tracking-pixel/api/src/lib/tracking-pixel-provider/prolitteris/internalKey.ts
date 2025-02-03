@@ -1,4 +1,4 @@
-import {ProLitterisGenerator, ReturnTrackingPixels} from '@wepublish/tracking-pixel/api'
+import {ProLitterisGenerator, ReturnTrackingPixels} from './types'
 
 export class InternalKey implements ProLitterisGenerator {
   constructor(private memberNr: string, private publisherInternalKeyDomain: string) {}
