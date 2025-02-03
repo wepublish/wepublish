@@ -164,6 +164,11 @@ const TeaserContentWrapper = styled('div')`
   width: 100%;
 `
 
+const ButtonRow = styled('div')`
+  display: flex;
+  gap: ${({theme}) => theme.spacing(1)};
+`
+
 const ReadMoreButton = styled(Button)`
   justify-self: end;
   color: ${({theme}) => theme.palette.error.main};
@@ -391,18 +396,20 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
                 </Author>
               )}
 
-              <ReadMoreButton
-                onClick={() => {
-                  window.open('https://open.spotify.com/show/18va0V1W0lCMVX6e1WeLei', '_blank')
-                }}
-                variant="outlined"
-                color="inherit"
-                size="small">
-                Briefing hören
-              </ReadMoreButton>
-              <ReadMoreButton variant="outlined" color="inherit" size="small">
-                Briefing lesen
-              </ReadMoreButton>
+              <ButtonRow>
+                <ReadMoreButton
+                  onClick={() => {
+                    window.open('https://open.spotify.com/show/18va0V1W0lCMVX6e1WeLei', '_blank')
+                  }}
+                  variant="outlined"
+                  color="inherit"
+                  size="small">
+                  Briefing hören
+                </ReadMoreButton>
+                <ReadMoreButton variant="outlined" color="inherit" size="small">
+                  Briefing lesen
+                </ReadMoreButton>
+              </ButtonRow>
             </TeaserContentInterior>
           </TeaserContentStyled>
         </TeaserContentWrapper>
