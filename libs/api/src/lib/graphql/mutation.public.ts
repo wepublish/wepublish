@@ -610,17 +610,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         },
         {prisma, loaders, memberContext, createPaymentWithProvider, authenticateUser}
       ) {
-        console.log({
-          memberPlanID,
-          memberPlanSlug,
-          autoRenew,
-          paymentPeriodicity,
-          monthlyAmount,
-          paymentMethodID,
-          paymentMethodSlug,
-          subscriptionProperties
-        })
-
         try {
           // authenticate user
           const getUserByUserId = async (userId: string) => ({
