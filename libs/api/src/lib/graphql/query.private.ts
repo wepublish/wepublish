@@ -466,8 +466,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     article: {
       type: GraphQLArticle,
       args: {id: {type: new GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, loaders}) =>
-        getArticleById(id, authenticate, loaders.articles)
+      resolve: (root, {id}, {authenticate, loaders, trackingPixelContext, prisma}) =>
+        getArticleById(id, authenticate, loaders.articles, trackingPixelContext, prisma)
     },
 
     articles: {

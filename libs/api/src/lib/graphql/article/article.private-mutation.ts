@@ -28,7 +28,11 @@ const fullArticleInclude = {
       socialMediaAuthors: true
     }
   },
-  trackingPixels: true
+  trackingPixels: {
+    include: {
+      trackingPixelMethod: true
+    }
+  }
 } as const
 
 export const deleteArticleById = async (
