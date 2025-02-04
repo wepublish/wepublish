@@ -441,7 +441,7 @@ export function MemberPlanForm({
                 />
               </Row>
 
-              <Row>
+              <RowPaddingTop>
                 <Form.ControlLabel>{t('memberPlanEdit.failPage')}</Form.ControlLabel>
                 <SelectPage
                   setSelectedPage={failPageId => {
@@ -454,10 +454,10 @@ export function MemberPlanForm({
                   selectedPage={memberPlan?.failPageId}
                   name="failPageId"
                 />
-              </Row>
+              </RowPaddingTop>
 
-              <Row>
-                <Form.ControlLabel>{t('memberPlanEdit.confirmationPage')}</Form.ControlLabel>
+              <RowPaddingTop>
+                <Form.ControlLabel>{t('memberplanForm.confirmationPage')}</Form.ControlLabel>
                 <SelectPage
                   setSelectedPage={confirmationPageId => {
                     if (!memberPlan) {
@@ -469,7 +469,8 @@ export function MemberPlanForm({
                   selectedPage={memberPlan?.confirmationPageId}
                   name="failPageId"
                 />
-              </Row>
+              </RowPaddingTop>
+              <HelpText>{t('memberplanForm.confirmationPageHelptext')}</HelpText>
             </Col>
           </Row>
         </Panel>

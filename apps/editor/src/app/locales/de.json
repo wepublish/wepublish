@@ -702,8 +702,7 @@
       "tags": "Tags",
       "savedChanges": "Gespeichert",
       "successPage": "Weiterleitung zur Seite bei erfolgreicher Zahlung",
-      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler",
-      "confirmationPage": "Weiterleitung zur Seite vor Bestätigung"
+      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler"
     },
     "memberPlanList": {
       "action": "Aktionen",
@@ -1359,7 +1358,9 @@
       "migratePMHelptext": "Migriere die Abos dieses Planes zu einer neuen Zahlungsmethode. Abos, die noch automatisch abgebucht werden, werden nicht migriert. Die Migration findet erst dann statt, wenn ein User selbst tätig wird und in seinem Profil etwa eine offene Rechnung bezahlen will oder ein Abo frühzeitig verlängert.",
       "amountPerMonthTarget": "Ziel-Betrag / Monat",
       "amountPerMonthTargetHelpText": "Der monatliche Zielbetrag legt den gewünschten Abopreis fest, den die Benutzer:innen bezahlen sollten. Er muss höher als der Minimalbetrag sein und definiert typischerweise die Voreinstellung im Zahlungsformular.",
-      "amountPerMonthMinHelpText": "Der minimale monatliche Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen."
+      "amountPerMonthMinHelpText": "Der minimale monatliche Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen.",
+      "confirmationPage": "Weiterleitung zur Seite bei bestehendem User (Retargeting)",
+      "confirmationPageHelptext": "Wenn beim Lösen eines Abos die User-ID bekannt ist, erhält die Person eine E-Mail, um das Abo zu bezahlen. Darauf könnte auf dieser Seite hingewiesen werden."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Erweiterte Einstellungen",
