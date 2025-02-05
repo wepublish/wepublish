@@ -295,10 +295,10 @@ export class PeriodicJobService {
       days: deactivationEvent.daysAwayFromEnding || undefined
     })
 
-    const invoice = await this.subscriptionController.createInvoice({
-      ...subscriptionToCreateInvoice,
+    const invoice = await this.subscriptionController.createInvoice(
+      subscriptionToCreateInvoice,
       deactivationDate
-    })
+    )
 
     const paymentProvider = await this.payments.findPaymentProviderByPaymentMethodeId(
       subscriptionToCreateInvoice.paymentMethodID

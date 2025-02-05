@@ -591,7 +591,7 @@ describe('SubscriptionPaymentsService', () => {
       paidUntil,
       PaymentPeriodicity.yearly
     )
-    await subscriptionService.createInvoice({...subscription!, deactivationDate})
+    await subscriptionService.createInvoice(subscription!, deactivationDate)
     const updatedSubscription = await getUpdatedSubscriptionAfterInvoiceCreation(subscription!)
     const addedPeriod = updatedSubscription!.periods.find(
       period =>
@@ -621,7 +621,7 @@ describe('SubscriptionPaymentsService', () => {
       paidUntil,
       PaymentPeriodicity.monthly
     )
-    await subscriptionService.createInvoice({...subscription!, deactivationDate})
+    await subscriptionService.createInvoice(subscription!, deactivationDate)
     const updatedSubscription = await getUpdatedSubscriptionAfterInvoiceCreation(subscription!)
     const addedPeriod = updatedSubscription!.periods.find(
       period =>
@@ -651,7 +651,7 @@ describe('SubscriptionPaymentsService', () => {
       paidUntil,
       PaymentPeriodicity.quarterly
     )
-    await subscriptionService.createInvoice({...subscription!, deactivationDate})
+    await subscriptionService.createInvoice(subscription!, deactivationDate)
     const updatedSubscription = await getUpdatedSubscriptionAfterInvoiceCreation(subscription!)
     const addedPeriod = updatedSubscription!.periods.find(
       period =>
@@ -677,7 +677,7 @@ describe('SubscriptionPaymentsService', () => {
       paidUntil,
       PaymentPeriodicity.biannual
     )
-    await subscriptionService.createInvoice({...subscription!, deactivationDate})
+    await subscriptionService.createInvoice(subscription!, deactivationDate)
     const updatedSubscription = await getUpdatedSubscriptionAfterInvoiceCreation(subscription!)
     const addedPeriod = updatedSubscription!.periods.find(
       period =>
