@@ -35,7 +35,7 @@ interface PeriodBounds {
 }
 
 @Injectable()
-export class SubscriptionPaymentsService {
+export class SubscriptionService {
   constructor(
     private readonly prismaService: PrismaClient,
     private readonly payments: PaymentsService
@@ -203,7 +203,7 @@ export class SubscriptionPaymentsService {
   /**
    * Create an invoice for the new runtime of a subscription.
    * @param subscription The subscription to create an invoice for.
-   * @param scheduledDeactivation The object containing the deactivation date at the end of the new period.
+   * @param deactivationDate The object containing the deactivation date at the end of the new period.
    * @returns The invoice.
    */
   public async createInvoice(
@@ -211,8 +211,8 @@ export class SubscriptionPaymentsService {
       periods: SubscriptionPeriod[]
       user: User
       memberPlan: MemberPlan
-      deactivationDate: Date
-    }
+    },
+    deactivationDate: Date
   ) {
     const amount =
       subscription.monthlyAmount * mapPaymentPeriodToMonths(subscription.paymentPeriodicity)
@@ -232,7 +232,7 @@ export class SubscriptionPaymentsService {
             amount
           }
         },
-        scheduledDeactivationAt: subscription.deactivationDate,
+        scheduledDeactivationAt: deactivationDate,
         subscriptionPeriods: {
           create: {
             paymentPeriodicity: subscription.paymentPeriodicity,

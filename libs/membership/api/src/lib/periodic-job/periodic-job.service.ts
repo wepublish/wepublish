@@ -19,7 +19,7 @@ import {add, addDays, differenceInDays, endOfDay, set, startOfDay, sub, subMinut
 import {inspect} from 'util'
 import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
-import {SubscriptionPaymentsService} from '../subscription-payments/subscription-payments.service'
+import {SubscriptionService} from '../subscription/subscription.service'
 import {PeriodicJobRunObject} from './periodic-job.type'
 import {getMaxTake} from '@wepublish/utils/api'
 
@@ -39,7 +39,7 @@ export class PeriodicJobService {
   constructor(
     private readonly prismaService: PrismaClient,
     private readonly mailContext: MailContext,
-    private readonly subscriptionController: SubscriptionPaymentsService,
+    private readonly subscriptionController: SubscriptionService,
     private readonly payments: PaymentsService
   ) {}
 
@@ -295,10 +295,10 @@ export class PeriodicJobService {
       days: deactivationEvent.daysAwayFromEnding || undefined
     })
 
-    const invoice = await this.subscriptionController.createInvoice({
-      ...subscriptionToCreateInvoice,
+    const invoice = await this.subscriptionController.createInvoice(
+      subscriptionToCreateInvoice,
       deactivationDate
-    })
+    )
 
     const paymentProvider = await this.payments.findPaymentProviderByPaymentMethodeId(
       subscriptionToCreateInvoice.paymentMethodID
