@@ -29,7 +29,7 @@ import {PeriodicJobService} from '../periodic-job/periodic-job.service'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {SubscriptionFlowService} from '../subscription-flow/subscription-flow.service'
 import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
-import {SubscriptionPaymentsService} from './subscription-payments.service'
+import {SubscriptionService} from './subscription.service'
 
 describe('SubscriptionPaymentsService', () => {
   const prismaClient = new PrismaClient()
@@ -306,7 +306,7 @@ describe('SubscriptionPaymentsService', () => {
     await clearFullDatabase(prismaClient)
   })
 
-  let subscriptionService: SubscriptionPaymentsService
+  let subscriptionService: SubscriptionService
 
   beforeEach(async () => {
     await nock.disableNetConnect()
@@ -317,7 +317,7 @@ describe('SubscriptionPaymentsService', () => {
         registerPaymentsModule()
       ],
 
-      providers: [SubscriptionFlowService, PeriodicJobService, SubscriptionPaymentsService]
+      providers: [SubscriptionFlowService, PeriodicJobService, SubscriptionService]
     }).compile()
     const paymentsService = module.get<PaymentsService>(PaymentsService)
 
@@ -335,7 +335,7 @@ describe('SubscriptionPaymentsService', () => {
       'users'
     ])
 
-    subscriptionService = new SubscriptionPaymentsService(prismaClient, paymentsService)
+    subscriptionService = new SubscriptionService(prismaClient, paymentsService)
 
     // Create deactivated subscription
     await SubscriptionFactory.create({

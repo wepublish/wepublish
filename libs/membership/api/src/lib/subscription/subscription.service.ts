@@ -35,7 +35,7 @@ interface PeriodBounds {
 }
 
 @Injectable()
-export class SubscriptionPaymentsService {
+export class SubscriptionService {
   constructor(
     private readonly prismaService: PrismaClient,
     private readonly payments: PaymentsService
