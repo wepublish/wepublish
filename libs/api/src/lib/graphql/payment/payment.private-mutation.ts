@@ -15,7 +15,8 @@ export const createPaymentFromInvoice = async (
   invoicesByID: Context['loaders']['invoicesByID'],
   paymentMethodsByID: Context['loaders']['paymentMethodsByID'],
   memberPlanClient: PrismaClient['memberPlan'],
-  paymentClient: PrismaClient['payment']
+  paymentClient: PrismaClient['payment'],
+  subscriptionClient: PrismaClient['subscription']
 ): Promise<Payment> => {
   const {roles} = authenticate()
   authorise(CanCreatePayment, roles)
@@ -38,6 +39,13 @@ export const createPaymentFromInvoice = async (
   if (!invoice || !paymentProvider || !memberPlan) {
     throw new Error('Invalid data') // TODO: better error handling
   }
+
+  await subscriptionClient.update({
+    where: {id: invoice.subscriptionID},
+    data: {
+      confirmed: true
+    }
+  })
 
   const payment = await paymentClient.create({
     data: {

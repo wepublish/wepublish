@@ -18,9 +18,9 @@ import {
   UserRole
 } from '@prisma/client'
 import {
+  AuthenticationService,
   AuthSession,
   AuthSessionType,
-  AuthenticationService,
   TokenSession,
   UserSession
 } from '@wepublish/authentication/api'
@@ -28,7 +28,7 @@ import {MediaAdapter} from '@wepublish/image/api'
 import {BaseMailProvider, MailContext, MailContextOptions} from '@wepublish/mail/api'
 import {InvoiceWithItems, PaymentProvider} from '@wepublish/payment/api'
 import {SettingName} from '@wepublish/settings/api'
-import {GenerateJWTProps, createOptionalsArray, generateJWT, logger} from '@wepublish/utils/api'
+import {createOptionalsArray, generateJWT, GenerateJWTProps, logger} from '@wepublish/utils/api'
 import AbortController from 'abort-controller'
 import {AuthenticationError} from 'apollo-server-express'
 import crypto from 'crypto'
@@ -42,13 +42,13 @@ import {Client, Issuer} from 'openid-client'
 import {ChallengeProvider} from './challenges/challengeProvider'
 import {
   ArticleWithRevisions,
-  PublicArticle,
-  articleWithRevisionsToPublicArticle
+  articleWithRevisionsToPublicArticle,
+  PublicArticle
 } from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
-import {PageWithRevisions, PublicPage, pageWithRevisionsToPublicPage} from './db/page'
+import {PageWithRevisions, pageWithRevisionsToPublicPage, PublicPage} from './db/page'
 import {SubscriptionWithRelations} from './db/subscription'
 import {TokenExpiredError} from './error'
 import {getEvent} from './graphql/event/event.query'
@@ -1051,6 +1051,14 @@ export async function contextFromRequest(
           }
         })
       }
+      await prisma.subscription.update({
+        data: {
+          confirmed: true
+        },
+        where: {
+          id: invoice.subscriptionID
+        }
+      })
 
       const payment = await prisma.payment.create({
         data: {
