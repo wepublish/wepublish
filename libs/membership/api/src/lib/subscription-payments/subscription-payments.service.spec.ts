@@ -545,6 +545,29 @@ describe('SubscriptionPaymentsService', () => {
     expect(invoicesToCharge.length).toEqual(2)
   })
 
+  it('skips unconfirmed invoices', async () => {
+    let invoicesToCharge = await subscriptionService.findUnpaidDueInvoices(new Date())
+    expect(invoicesToCharge.length).toEqual(0)
+    await InvoiceFactory.create({
+      dueAt: sub(new Date(), {days: 1}),
+      subscription: {
+        create: await SubscriptionFactory.buildCreateInput({
+          confirmed: true
+        })
+      }
+    })
+    await InvoiceFactory.create({
+      dueAt: sub(new Date(), {days: 1}),
+      subscription: {
+        create: await SubscriptionFactory.buildCreateInput({
+          confirmed: false
+        })
+      }
+    })
+    invoicesToCharge = await subscriptionService.findUnpaidDueInvoices(new Date())
+    expect(invoicesToCharge.length).toEqual(1)
+  })
+
   it('skips invoices without subscription', async () => {
     const inv1 = await InvoiceFactory.create({
       dueAt: sub(new Date(), {days: 1})
