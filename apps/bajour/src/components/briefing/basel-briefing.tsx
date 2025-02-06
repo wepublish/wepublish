@@ -398,7 +398,7 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
               )}
 
               <ButtonRow>
-                {(blockStyle as BriefingType) === BriefingType.BaselBriefing && (
+                {isBaselBriefing({blockStyle}) && (
                   <ReadMoreButton
                     onClick={e => {
                       e.preventDefault()
