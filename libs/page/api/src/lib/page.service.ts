@@ -17,9 +17,12 @@ export class PageService {
 
   @PrimeDataLoader(PageDataloaderService)
   async getPageBySlug(slug: string) {
-    return this.prisma.page.findUnique({
+    return this.prisma.page.findFirst({
       where: {
-        slug
+        slug,
+        publishedAt: {
+          not: null
+        }
       }
     })
   }
@@ -70,7 +73,10 @@ export class PageService {
   }
 
   @PrimeDataLoader(PageDataloaderService)
-  async createPage({slug, tagIds, properties, blocks, ...revision}: CreatePageInput) {
+  async createPage(
+    {slug, tagIds, properties, blocks, ...revision}: CreatePageInput,
+    userId: string | null | undefined
+  ) {
     return this.prisma.page.create({
       data: {
         slug,
@@ -85,6 +91,7 @@ export class PageService {
         revisions: {
           create: {
             ...revision,
+            userId,
             blocks: blocks.map(mapBlockUnionMap) as any[],
             properties: {
               createMany: {
@@ -98,7 +105,10 @@ export class PageService {
   }
 
   @PrimeDataLoader(PageDataloaderService)
-  async updatePage({id, slug, tagIds, properties, blocks, ...revision}: UpdatePageInput) {
+  async updatePage(
+    {id, slug, tagIds, properties, blocks, ...revision}: UpdatePageInput,
+    userId: string | null | undefined
+  ) {
     const page = await this.prisma.page.findUnique({
       where: {id},
       include: {
@@ -117,6 +127,7 @@ export class PageService {
         revisions: {
           create: {
             ...revision,
+            userId,
             blocks: blocks.map(mapBlockUnionMap) as any[],
             properties: {
               createMany: {
@@ -248,7 +259,7 @@ export class PageService {
   }
 
   @PrimeDataLoader(PageDataloaderService)
-  async duplicatePage(id: string) {
+  async duplicatePage(id: string, userId: string | null | undefined) {
     const page = await this.prisma.page.findUnique({
       where: {
         id
@@ -287,6 +298,7 @@ export class PageService {
         revisions: {
           create: {
             ...revision,
+            userId,
             blocks: revision.blocks || Prisma.JsonNull,
             properties: {
               createMany: {

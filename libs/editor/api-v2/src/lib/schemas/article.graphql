@@ -75,6 +75,10 @@ fragment FullArticle on Article {
   tags {
     ...FullTag
   }
+
+  peer {
+    ...FullPeer
+  }
 }
 
 fragment ArticleWithoutBlocks on Article {
@@ -87,10 +91,6 @@ fragment ArticleWithoutBlocks on Article {
   disableComments
   slug
   url
-
-  tags {
-    ...FullTag
-  }
 
   latest {
     ...FullArticleRevisionWithoutBlocks
@@ -108,6 +108,14 @@ fragment ArticleWithoutBlocks on Article {
   published {
     id
     publishedAt
+  }
+
+  tags {
+    ...FullTag
+  }
+
+  peer {
+    ...FullPeer
   }
 }
 
@@ -129,29 +137,6 @@ query ArticleList(
   ) {
     nodes {
       ...ArticleWithoutBlocks
-    }
-
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-
-    totalCount
-  }
-}
-
-query PeerArticleList(
-  $filter: PeerArticleFilter
-  $take: Int
-  $skip: Int
-  $order: SortOrder
-  $sort: ArticleSort
-) {
-  peerArticles(filter: $filter, take: $take, skip: $skip, order: $order, sort: $sort) {
-    nodes {
-      id
     }
 
     pageInfo {

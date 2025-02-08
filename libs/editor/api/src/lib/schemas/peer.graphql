@@ -25,13 +25,6 @@ fragment FullPeer on Peer {
   }
 }
 
-fragment PeerWithProfile on Peer {
-  ...FullPeer
-  profile {
-    ...FullPeerProfile
-  }
-}
-
 query PeerProfile {
   peerProfile {
     ...FullPeerProfile
@@ -52,7 +45,7 @@ mutation UpdatePeerProfile($input: PeerProfileInput!) {
 
 query PeerList {
   peers {
-    ...PeerWithProfile
+    ...FullPeer
   }
 }
 

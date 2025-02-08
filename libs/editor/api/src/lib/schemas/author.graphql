@@ -5,9 +5,14 @@ fragment AuthorRef on Author {
   image {
     ...FullImage
   }
+  peer {
+    ...FullPeer
+  }
 }
 
 fragment FullAuthor on Author {
+  ...AuthorRef
+
   slug
   links {
     title
@@ -22,7 +27,6 @@ fragment FullAuthor on Author {
   hideOnArticle
   hideOnTeaser
   hideOnTeam
-  ...AuthorRef
 }
 
 query AuthorList(

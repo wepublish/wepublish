@@ -41,12 +41,12 @@ import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {SubscriptionWithRelations} from './db/subscription'
 import {TokenExpiredError} from './error'
-import {createSafeHostUrl} from './graphql/peer/create-safe-host-url'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
 import {MemberContext} from './memberContext'
 import {BlockStylesDataloaderService} from '@wepublish/block-content/api'
 import {URLAdapter} from '@wepublish/nest-modules'
+import {createSafeHostUrl} from '@wepublish/peering/api'
 
 /**
  * Peered article cache configuration and setup

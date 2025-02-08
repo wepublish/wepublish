@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
 import {
-  ArticleFilter,
   ArticleSort,
   getApiClientV2,
+  ImportArticleOptions,
   PeerArticle,
+  PeerArticleFilter,
+  useImportPeerArticleMutation,
   usePeerArticleListQuery
 } from '@wepublish/editor/api-v2'
 import {
@@ -14,23 +16,27 @@ import {
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
+  PeerAvatar,
   Table,
   TableWrapper
 } from '@wepublish/ui/editor'
-import {useEffect, useState} from 'react'
+import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {useNavigate} from 'react-router-dom'
 import {
-  Avatar as RAvatar,
+  Button,
+  Checkbox,
+  Form,
   Message,
+  Modal,
   Pagination,
   Popover,
   Table as RTable,
   toaster,
   Whisper
 } from 'rsuite'
-import {RowDataType} from 'rsuite-table'
 
-const {Column, HeaderCell, Cell: RCell} = RTable
+const {Column, HeaderCell, Cell} = RTable
 
 const Img = styled.img`
   height: 25px;
@@ -42,79 +48,84 @@ const PopoverImg = styled.img`
   width: auto;
 `
 
-const Avatar = styled(RAvatar)`
-  margin-right: 5px;
-  min-width: 20px;
-`
+const CheckboxGroup = styled.div`
+  display: grid;
+  gap: 8px;
 
-const FlexCell = styled(RCell)`
-  .rs-table-cell-content {
-    display: flex;
+  .rs-checkbox {
+    margin-left: -10px;
   }
 `
 
+function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
+  switch (columnField) {
+    case 'publishedAt':
+      return ArticleSort.PublishedAt
+    case 'modifiedAt':
+      return ArticleSort.ModifiedAt
+    default:
+      return null
+  }
+}
+
 function PeerArticleList() {
+  const {t} = useTranslation()
+  const navigate = useNavigate()
+
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [sortField, setSortField] = useState('publishedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
-  const [filter, setFilter] = useState<ArticleFilter>({title: ''})
-  const [peerFilter, setPeerFilter] = useState<string>()
-  const [peerArticles, setPeerArticles] = useState<unknown[]>([])
-
-  const listVariables = {
-    filter: filter || undefined,
-    take: limit,
-    skip: (page - 1) * limit,
-    sort: mapColumFieldToGraphQLField(sortField),
-    order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
-    peerFilter
-  }
-
-  function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
-    switch (columnField) {
-      case 'publishedAt':
-        return ArticleSort.PublishedAt
-      case 'modifiedAt':
-        return ArticleSort.ModifiedAt
-      default:
-        return null
-    }
-  }
-
-  const client = getApiClientV2()
-  const {
-    data: peerArticleListData,
-    refetch,
-    error: peerArticleListError,
-    loading: isLoading
-  } = usePeerArticleListQuery({
-    client,
-    variables: listVariables,
-    fetchPolicy: 'cache-and-network'
+  const [filter, setFilter] = useState<PeerArticleFilter>({})
+  const [articleToImport, setArticleToImport] = useState<{peerId: string; articleId: string}>()
+  const [importArticleOptions, setImportArticleOptions] = useState<ImportArticleOptions>({
+    importAuthors: true,
+    importContentImages: true,
+    importTags: true
   })
 
-  useEffect(() => {
-    if (peerArticleListData?.peerArticles.nodes) {
-      setPeerArticles(peerArticleListData?.peerArticles.nodes)
-    }
-  }, [peerArticleListData?.peerArticles])
+  const listVariables = useMemo(
+    () => ({
+      filter,
+      take: limit,
+      skip: (page - 1) * limit,
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+    }),
+    [filter, limit, page, sortField, sortOrder]
+  )
 
-  const {t} = useTranslation()
+  const client = getApiClientV2()
+  const [importPeerArticle, {loading: importingInProgress, error, reset}] =
+    useImportPeerArticleMutation({
+      client,
+      onCompleted(data) {
+        toaster.push(
+          <Message type="success" showIcon closable>
+            {t('toast.createdSuccess')}
+          </Message>,
+          {duration: 3000}
+        )
 
-  useEffect(() => {
-    refetch(listVariables)
-  }, [filter, page, limit, sortOrder, sortField, peerFilter])
+        navigate(`/articles/edit/${data.importPeerArticle.id}`)
+      }
+    })
 
-  useEffect(() => {
-    if (peerArticleListError) {
+  const {data: peerArticleListData, loading: isLoading} = usePeerArticleListQuery({
+    client,
+    variables: listVariables,
+    fetchPolicy: 'cache-and-network',
+    onError(error) {
       toaster.push(
-        <Message type="error" showIcon closable duration={0}>
-          {peerArticleListError!.message}
-        </Message>
+        <Message type="error" showIcon closable>
+          {error.message}
+        </Message>,
+        {duration: 0}
       )
     }
-  }, [peerArticleListError])
+  })
+
+  const peerArticles = peerArticleListData?.peerArticles.nodes
 
   return (
     <>
@@ -124,11 +135,10 @@ function PeerArticleList() {
         </ListViewHeader>
 
         <ListFilters
-          fields={['title', 'preTitle', 'lead', 'peer', 'publicationDate']}
+          fields={['title', 'preTitle', 'lead', 'peerId', 'publicationDate']}
           filter={filter}
           isLoading={isLoading}
-          onSetFilter={filter => setFilter(filter)}
-          setPeerFilter={setPeerFilter}
+          onSetFilter={setFilter}
         />
       </ListViewContainer>
 
@@ -140,95 +150,93 @@ function PeerArticleList() {
           }}
           fillHeight
           loading={isLoading}
-          data={peerArticles as any[]}
+          data={peerArticles}
           sortColumn={sortField}
           sortType={sortOrder}>
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('peerArticles.title')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<PeerArticle>) => (
-                <a href={rowData.peeredArticleURL} target="_blank" rel="noreferrer">
-                  {rowData.article.latest.title || t('articles.overview.untitled')}
+            <Cell>
+              {(rowData: PeerArticle) => (
+                <a href={rowData.url} target="_blank" rel="noreferrer">
+                  {rowData.latest.title || t('articles.overview.untitled')}
                 </a>
               )}
-            </RCell>
+            </Cell>
           </Column>
 
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('peerArticles.lead')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<PeerArticle>) =>
-                rowData.article.latest.lead || t('articles.overview.untitled')
-              }
-            </RCell>
+            <Cell>
+              {(rowData: PeerArticle) => rowData.latest.lead || t('articles.overview.untitled')}
+            </Cell>
           </Column>
 
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('peerArticles.publishedAt')}</HeaderCell>
-            <RCell dataKey="publishedAt">
-              {(rowData: RowDataType<PeerArticle>) =>
-                rowData.article.latest.publishedAt
-                  ? t('peerArticles.publicationDate', {
-                      publicationDate: new Date(rowData.article.latest.publishedAt)
-                    })
-                  : t('peerArticles.notPublished')
+            <Cell dataKey="publishedAt">
+              {(rowData: PeerArticle) =>
+                t('peerArticles.publicationDate', {
+                  publicationDate: new Date(rowData.publishedAt)
+                })
               }
-            </RCell>
+            </Cell>
           </Column>
 
           <Column width={150} align="left" resizable>
             <HeaderCell>{t('peerArticles.peer')}</HeaderCell>
-            <FlexCell dataKey="peer">
-              {(rowData: RowDataType<PeerArticle>) => (
-                <>
-                  <Avatar
-                    src={rowData.peer.profile?.logo?.url || undefined}
-                    alt={rowData.peer.profile?.name}
-                    circle
-                    size="xs"
-                    className="peerArticleAvatar"
-                  />
-                  <div>{rowData.peer.profile?.name}</div>
-                </>
+            <Cell dataKey="peer">
+              {(rowData: PeerArticle) => (
+                <PeerAvatar peer={rowData.peer}>
+                  <div>{rowData.peer?.name}</div>
+                </PeerAvatar>
               )}
-            </FlexCell>
+            </Cell>
           </Column>
 
           <Column width={120} align="left" resizable>
             <HeaderCell>{t('peerArticles.articleImage')}</HeaderCell>
 
-            <RCell>
-              {(rowData: RowDataType<PeerArticle>) =>
-                rowData.article.latest.image?.url ? (
+            <Cell>
+              {(rowData: PeerArticle) =>
+                rowData.latest.image?.url ? (
                   <Whisper
                     placement="left"
                     trigger="hover"
                     controlId="control-id-hover"
                     speaker={
                       <Popover>
-                        <PopoverImg src={rowData.article.latest.image?.url || ''} alt="" />
+                        <PopoverImg src={rowData.latest.image?.url || ''} alt="" />
                       </Popover>
                     }>
-                    <Img src={rowData.article.latest.image?.url || ''} alt="" />
+                    <Img src={rowData.latest.image?.url || ''} alt="" />
                   </Whisper>
                 ) : (
                   ''
                 )
               }
-            </RCell>
+            </Cell>
           </Column>
 
-          {/* This section will be uncommented when the hostURL is available. See this issue: https://wepublish.atlassian.net/browse/WPC-663}
-          {/* <Column width={200} align="left" resizable>
-            <HeaderCell>{t('peerArticles.originalArticle')}</HeaderCell>
+          <Column width={120} align="right">
+            <HeaderCell></HeaderCell>
             <Cell>
-              {(rowData: RowDataType<PeerArticle>) => (
-                <Link href={rowData.article.latest?.url ?? rowData.peer.hostURL} target="blank">
-                  {t('peerArticles.toOriginalArticle')}
-                </Link>
+              {(rowData: PeerArticle) => (
+                <Button
+                  appearance="primary"
+                  size="xs"
+                  type="submit"
+                  disabled={!rowData.peer?.id}
+                  onClick={() => {
+                    setArticleToImport({
+                      articleId: rowData.id,
+                      peerId: rowData.peer!.id
+                    })
+                  }}>
+                  Import
+                </Button>
               )}
             </Cell>
-          </Column> */}
+          </Column>
         </Table>
 
         <Pagination
@@ -248,6 +256,103 @@ function PeerArticleList() {
           onChangeLimit={limit => setLimit(limit)}
         />
       </TableWrapper>
+
+      <Modal
+        open={!!articleToImport}
+        onClose={() => setArticleToImport(undefined)}
+        onExited={() => reset()}>
+        <Modal.Header>
+          <Modal.Title>Artikel importieren</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          {error && (
+            <Message type="error" showIcon closable>
+              {error.message}
+            </Message>
+          )}
+
+          <CheckboxGroup>
+            <Form.Group>
+              <Checkbox
+                checked={!!importArticleOptions.importAuthors}
+                onChange={(value, checked) => {
+                  setImportArticleOptions({
+                    ...importArticleOptions,
+                    importAuthors: checked
+                  })
+                }}>
+                Autoren des Artikels importieren
+              </Checkbox>
+
+              <Form.HelpText>
+                Importiert oder updated Autoren des Artikels. Falls eine andere Person bei euch den
+                gleichen Namen trägt, werden die unterschieden.
+              </Form.HelpText>
+            </Form.Group>
+
+            <Form.Group>
+              <Checkbox
+                checked={!!importArticleOptions.importTags}
+                onChange={(value, checked) => {
+                  setImportArticleOptions({
+                    ...importArticleOptions,
+                    importTags: checked
+                  })
+                }}>
+                Tags des Artikels importieren
+              </Checkbox>
+
+              <Form.HelpText>
+                Importiert die Tags des Artikels solange sie nicht schon existieren.
+              </Form.HelpText>
+            </Form.Group>
+
+            <Form.Group>
+              <Checkbox
+                checked={!!importArticleOptions.importContentImages}
+                onChange={(value, checked) => {
+                  setImportArticleOptions({
+                    ...importArticleOptions,
+                    importContentImages: checked
+                  })
+                }}>
+                Bilder des Artikels importieren
+              </Checkbox>
+
+              <Form.HelpText>
+                Bilder welche in den Metadaten oder Blöcken des Artikels vorkommen werden auch
+                importiert. Ist das gleiche Bild mehrmals vorhanden, wird dieses auch mehrmals
+                importiert.
+              </Form.HelpText>
+            </Form.Group>
+          </CheckboxGroup>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            onClick={() => {
+              importPeerArticle({
+                variables: {
+                  articleId: articleToImport!.articleId,
+                  peerId: articleToImport!.peerId,
+                  options: importArticleOptions
+                }
+              })
+            }}
+            disabled={importingInProgress}
+            appearance="primary">
+            Artikel importieren
+          </Button>
+
+          <Button
+            onClick={() => setArticleToImport(undefined)}
+            disabled={importingInProgress}
+            appearance="subtle">
+            Abbrechen
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

@@ -13,7 +13,7 @@ import {Author} from '@wepublish/author/api'
 import {Tag} from '@wepublish/tag/api'
 import {DateFilter, PaginatedType, Property, PropertyInput, SortOrder} from '@wepublish/utils/api'
 import {BlockContent, BlockContentInput, HasBlockContent} from '@wepublish/block-content/api'
-import {Peer} from '@wepublish/peering/api'
+import {HasOptionalPeerLc, Peer} from '@wepublish/peering/api'
 
 export enum ArticleSort {
   CreatedAt = 'CreatedAt',
@@ -83,9 +83,11 @@ export class ArticleRevision implements HasBlockContent {
   socialMediaImage?: Image
 }
 
-@ObjectType()
+@ObjectType({
+  implements: [HasOptionalPeerLc]
+})
 @Directive('@key(fields: "id")')
-export class Article {
+export class Article implements HasOptionalPeerLc {
   @Field()
   id!: string
 
@@ -129,11 +131,10 @@ export class Article {
   tags!: Tag[]
 
   @Field({nullable: true})
-  peerId?: string
-  @Field({nullable: true})
-  peer?: Peer
-  @Field({nullable: true})
   peerArticleId?: string
+
+  peerId?: string
+  peer?: Peer
 }
 
 @ObjectType()
@@ -216,6 +217,9 @@ export class ArticleFilter {
   authors?: string[]
   @Field(() => [String], {nullable: true})
   tags?: string[]
+
+  @Field({nullable: true})
+  peerId?: string
 }
 
 @ArgsType()

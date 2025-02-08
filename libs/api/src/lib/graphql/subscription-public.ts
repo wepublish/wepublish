@@ -81,7 +81,6 @@ export const GraphQLPublicSubscriptionInput = new GraphQLInputObjectType({
 
 export const GraphQLSubscriptionResolver = {
   __resolveReference: async (reference, {loaders}: Context) => {
-    console.log('?????')
     const {id} = reference
     const subscription = await loaders.subscriptionsById.load(id)
 

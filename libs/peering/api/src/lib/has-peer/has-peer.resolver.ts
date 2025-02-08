@@ -1,17 +1,29 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {HasPeer} from './has-peer.model'
+import {HasPeer, HasPeerLc, HasOptionalPeer, HasOptionalPeerLc} from './has-peer.model'
 import {Peer} from '../peer.model'
+import {PeerDataloaderService} from '../peer-dataloader.service'
 
 @Resolver(() => HasPeer)
 export class HasPeerResolver {
-  @ResolveField(() => Peer, {nullable: true})
-  public peer(@Parent() block: HasPeer) {
-    const {peerID} = block
+  constructor(private dataloader: PeerDataloaderService) {}
 
-    if (!peerID) {
+  @ResolveField(() => Peer, {nullable: true})
+  public peer(@Parent() block: HasOptionalPeer | HasPeer | HasOptionalPeerLc | HasPeerLc) {
+    const id = 'peerId' in block ? block.peerId : 'peerID' in block ? block.peerID : null
+
+    if (!id) {
       return null
     }
 
-    return {__typename: 'Peer', id: peerID}
+    return this.dataloader.load(id)
   }
 }
+
+@Resolver(() => HasPeerLc)
+export class HasPeerLcResolver extends HasPeerResolver {}
+
+@Resolver(() => HasOptionalPeer)
+export class HasOptionalPeerResolver extends HasPeerResolver {}
+
+@Resolver(() => HasOptionalPeerLc)
+export class HasOptionalPeerLcResolver extends HasPeerResolver {}

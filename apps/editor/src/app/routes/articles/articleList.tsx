@@ -25,6 +25,7 @@ import {
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
+  PeerAvatar,
   PermissionControl,
   StatusBadge,
   Table,
@@ -35,7 +36,6 @@ import {useTranslation} from 'react-i18next'
 import {MdAdd, MdComment, MdContentCopy, MdDelete, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
 import {Button, Message, Modal, Pagination, Table as RTable} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
 
 const {Column, HeaderCell, Cell} = RTable
 
@@ -147,7 +147,8 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
             'pending',
             'published',
             'publicationDate',
-            'includeHidden'
+            'includeHidden',
+            'peerId'
           ]}
           filter={filter}
           isLoading={isLoading}
@@ -170,7 +171,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           <Column width={125} align="left" resizable>
             <HeaderCell>{t('articles.overview.states')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<FullArticleFragment>) => {
+              {(rowData: FullArticleFragment) => {
                 const states: State[] = []
 
                 if (rowData.draft) states.push({state: 'draft', text: t('articles.overview.draft')})
@@ -191,10 +192,12 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           <Column width={400} align="left" resizable>
             <HeaderCell>{t('articles.overview.title')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<FullArticleFragment>) => (
-                <Link to={`/articles/edit/${rowData.id}`}>
-                  {rowData.latest.title || t('articles.overview.untitled')}
-                </Link>
+              {(rowData: FullArticleFragment) => (
+                <PeerAvatar peer={rowData.peer}>
+                  <Link to={`/articles/edit/${rowData.id}`}>
+                    {rowData.latest.title || t('articles.overview.untitled')}
+                  </Link>
+                </PeerAvatar>
               )}
             </Cell>
           </Column>
@@ -202,7 +205,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('articles.overview.authors')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<FullArticleFragment>) => {
+              {(rowData: FullArticleFragment) => {
                 return (rowData as FullArticleFragment).latest.authors.reduce(
                   (allAuthors, author, index) => {
                     return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
@@ -216,14 +219,14 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('articles.overview.publicationDate')}</HeaderCell>
             <Cell dataKey="publishedAt">
-              {(articleRef: RowDataType<FullArticleFragment>) =>
+              {(articleRef: FullArticleFragment) =>
                 articleRef.published?.publishedAt
                   ? t('articleEditor.overview.publishedAt', {
                       publicationDate: new Date(articleRef.published.publishedAt)
                     })
-                  : articleRef.pending?.publishAt
+                  : articleRef.pending?.publishedAt
                   ? t('articleEditor.overview.publishedAtIfPending', {
-                      publishedAtIfPending: new Date(articleRef.pending?.publishAt)
+                      publishedAtIfPending: new Date(articleRef.pending?.publishedAt)
                     })
                   : t('articles.overview.notPublished')
               }
@@ -233,7 +236,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: RowDataType<FullArticleFragment>) =>
+              {({modifiedAt}: FullArticleFragment) =>
                 t('articleEditor.overview.modifiedAt', {
                   modificationDate: new Date(modifiedAt)
                 })
@@ -244,7 +247,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           <Column width={220} align="center" fixed="right">
             <HeaderCell>{t('articles.overview.action')}</HeaderCell>
             <IconButtonCell>
-              {(rowData: RowDataType<FullArticleFragment>) => (
+              {(rowData: FullArticleFragment) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.unpublish')}>

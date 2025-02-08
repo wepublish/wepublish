@@ -15,22 +15,21 @@ import {seed as rootSeed} from '../../../libs/api/prisma/seed'
 import {hashPassword} from '../../../libs/api/src/lib/db/user'
 import {NovaMediaAdapter} from '../../../libs/api/src/lib/media/novaMediaAdapter'
 import {capitalize} from '@mui/material'
+import {bootstrap} from '../../media/src/bootstrap'
+import {NavigationLinkType} from 'libs/navigation/api/src/lib/navigation.model'
 import {
+  TeaserGridFlexBlock,
+  TeaserType,
   BlockType,
-  LinkPageBreakBlock,
+  TeaserGridBlock,
+  BreakBlock,
   TitleBlock,
   ImageBlock,
-  TeaserGridFlexBlock,
-  TeaserStyle,
-  TeaserType,
-  TeaserGridBlock,
   RichTextBlock,
   QuoteBlock,
   PollBlock,
   EventBlock
-} from '../../../libs/api/src/lib/db/block'
-import {bootstrap} from '../../media/src/bootstrap'
-import {NavigationLinkType} from 'libs/navigation/api/src/lib/navigation.model'
+} from '@wepublish/block-content/api'
 
 const shuffle = <T>(list: T[]): T[] => {
   let idx = -1
@@ -539,7 +538,7 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                 richText: getText(1, 2) as any,
                 text: capitalize(faker.lorem.words({min: 8, max: 12})),
                 layoutOption: 'image-left'
-              } as LinkPageBreakBlock,
+              } as BreakBlock,
               {
                 type: BlockType.TeaserGridFlex,
                 flexTeasers: [
@@ -727,7 +726,7 @@ async function seedArticles(
                       richText: getText(1, 1) as any,
                       text: capitalize(faker.lorem.words({min: 8, max: 12})),
                       layoutOption: 'image-left'
-                    } as LinkPageBreakBlock,
+                    } as BreakBlock,
                     0.7
                   )
                 ])

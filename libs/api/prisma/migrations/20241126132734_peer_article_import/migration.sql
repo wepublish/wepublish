@@ -22,3 +22,26 @@ ALTER TABLE "tags" ADD CONSTRAINT "tags_peerId_fkey" FOREIGN KEY ("peerId") REFE
 
 -- AddForeignKey
 ALTER TABLE "authors" ADD CONSTRAINT "authors_peerId_fkey" FOREIGN KEY ("peerId") REFERENCES "peers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- DropIndex
+DROP INDEX "authors_slug_key";
+
+-- CreateIndex
+CREATE UNIQUE INDEX "authors_slug_peerId_key" ON "authors"("slug", "peerId");
+/* Ensure's that when peerId is empty, slug is still unique */
+CREATE UNIQUE INDEX "authors_slug_no_peerId" ON "authors"("slug") where "authors"."peerId" is null;
+
+-- AlterEnum
+BEGIN;
+CREATE TYPE "CommentItemType_new" AS ENUM ('article', 'page');
+ALTER TABLE "comments" ALTER COLUMN "itemType" TYPE "CommentItemType_new" USING ("itemType"::text::"CommentItemType_new");
+ALTER TYPE "CommentItemType" RENAME TO "CommentItemType_old";
+ALTER TYPE "CommentItemType_new" RENAME TO "CommentItemType";
+DROP TYPE "CommentItemType_old";
+COMMIT;
+
+-- DropForeignKey
+ALTER TABLE "comments" DROP CONSTRAINT "comments_peerId_fkey";
+
+-- AlterTable
+ALTER TABLE "comments" DROP COLUMN "peerId";

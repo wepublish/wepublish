@@ -893,14 +893,11 @@
       "authors": "Autor:innen",
       "filterByPeer": "Nach Peer filtern",
       "lead": "Lead",
-      "notPublished": "Noch nicht publiziert",
-      "originalArticle": "Original Artikel",
       "peer": "Peer",
       "peerArticles": "Peerbare Artikel",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publikations Datum",
-      "title": "Titel",
-      "toOriginalArticle": "Zum Original Artikel"
+      "title": "Titel"
     },
     "peerList": {
       "overview": {

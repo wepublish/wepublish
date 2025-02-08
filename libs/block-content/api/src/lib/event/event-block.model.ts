@@ -5,10 +5,10 @@ import {Event} from '@wepublish/event/api'
 
 @ObjectType()
 export class EventBlockFilter {
-  @Field(() => [String])
+  @Field(() => [String], {defaultValue: []})
   tags!: string[]
 
-  @Field(() => [String])
+  @Field(() => [String], {defaultValue: []})
   events!: string[]
 }
 

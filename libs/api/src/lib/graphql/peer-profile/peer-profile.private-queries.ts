@@ -9,7 +9,7 @@ import {PeerTokenInvalidError} from '../../error'
 import {markResultAsProxied} from '../../utility'
 import {authorise} from '../permissions'
 import {getPeerProfile} from './peer-profile.queries'
-import {createSafeHostUrl} from '../peer/create-safe-host-url'
+import {createSafeHostUrl} from '@wepublish/peering/api'
 
 export const getAdminPeerProfile = async (
   hostURL: string,

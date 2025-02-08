@@ -35,7 +35,6 @@ import {useTranslation} from 'react-i18next'
 import {MdAdd, MdComment, MdContentCopy, MdDelete, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
 import {Button, Message, Modal, Pagination, Table as RTable} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
 
 interface State {
   state: string
@@ -70,7 +69,7 @@ function PageList() {
   const [filter, setFilter] = useState({} as PageFilter)
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentPage, setCurrentPage] = useState<RowDataType<FullPageFragment>>()
+  const [currentPage, setCurrentPage] = useState<FullPageFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
   const [page, setPage] = useState(1)
@@ -159,7 +158,7 @@ function PageList() {
           <Column width={125} align="left" resizable>
             <HeaderCell>{t('pages.overview.states')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<FullPageFragment>) => {
+              {(rowData: FullPageFragment) => {
                 const states: State[] = []
 
                 if (rowData.draft) states.push({state: 'draft', text: t('pages.overview.draft')})
@@ -180,7 +179,7 @@ function PageList() {
           <Column width={400} align="left" resizable>
             <HeaderCell>{t('pages.overview.title')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<FullPageFragment>) => (
+              {(rowData: FullPageFragment) => (
                 <Link to={`/pages/edit/${rowData.id}`}>
                   {rowData.latest.title || t('pages.overview.untitled')}
                 </Link>
@@ -191,14 +190,14 @@ function PageList() {
           <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
             <Cell dataKey="publishedAt">
-              {(pageRef: RowDataType<FullPageFragment>) =>
+              {(pageRef: FullPageFragment) =>
                 pageRef.published?.publishedAt
                   ? t('pageEditor.overview.publishedAt', {
                       publicationDate: new Date(pageRef.published.publishedAt)
                     })
-                  : pageRef.pending?.publishAt
+                  : pageRef.pending?.publishedAt
                   ? t('pageEditor.overview.publishedAtIfPending', {
-                      publishedAtIfPending: new Date(pageRef.pending?.publishAt)
+                      publishedAtIfPending: new Date(pageRef.pending?.publishedAt)
                     })
                   : t('pages.overview.notPublished')
               }
@@ -208,7 +207,7 @@ function PageList() {
           <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: RowDataType<FullPageFragment>) =>
+              {({modifiedAt}: FullPageFragment) =>
                 t('pageEditor.overview.modifiedAt', {
                   modificationDate: new Date(modifiedAt)
                 })
@@ -219,7 +218,7 @@ function PageList() {
           <Column width={220} align="center" fixed="right">
             <HeaderCell>{t('pages.overview.action')}</HeaderCell>
             <IconButtonCell>
-              {(rowData: RowDataType<FullPageFragment>) => (
+              {(rowData: FullPageFragment) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_PUBLISH_PAGE']}>
                     <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
@@ -345,9 +344,9 @@ function PageList() {
             </DescriptionListItem>
 
             <DescriptionListItem label={t('pages.panels.updatedAt')}>
-              {currentPage?.latest.updatedAt &&
+              {currentPage?.modifiedAt &&
                 t('pages.panels.updatedAtDate', {
-                  updatedAtDate: new Date(currentPage.latest.updatedAt)
+                  updatedAtDate: new Date(currentPage.modifiedAt)
                 })}
             </DescriptionListItem>
 

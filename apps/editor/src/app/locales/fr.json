@@ -864,14 +864,11 @@
       "authors": "Auteurs·trices",
       "filterByPeer": "Filtrer par peer",
       "lead": "Lead",
-      "notPublished": "Pas encore publié",
-      "originalArticle": "Article original",
       "peer": "Peer",
       "peerArticles": "Articles pairables",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Date de publication",
-      "title": "Titre",
-      "toOriginalArticle": "Vers l'article original"
+      "title": "Titre"
     },
     "peerList": {
       "overview": {

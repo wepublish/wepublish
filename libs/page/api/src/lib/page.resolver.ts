@@ -61,22 +61,22 @@ export class PageResolver {
   @Mutation(() => Page, {
     description: `Creates a page.`
   })
-  public createPage(@Args() input: CreatePageInput) {
-    return this.pageService.createPage(input)
+  public createPage(@Args() input: CreatePageInput, @CurrentUser() user: UserSession | undefined) {
+    return this.pageService.createPage(input, user?.user?.id)
   }
 
   @Mutation(() => Page, {
     description: `Updates a page.`
   })
-  public updatePage(@Args() input: UpdatePageInput) {
-    return this.pageService.updatePage(input)
+  public updatePage(@Args() input: UpdatePageInput, @CurrentUser() user: UserSession | undefined) {
+    return this.pageService.updatePage(input, user?.user?.id)
   }
 
   @Mutation(() => Page, {
     description: `Duplicates a page.`
   })
-  public duplicatePage(@Args('id') id: string) {
-    return this.pageService.duplicatePage(id)
+  public duplicatePage(@Args('id') id: string, @CurrentUser() user: UserSession | undefined) {
+    return this.pageService.duplicatePage(id, user?.user?.id)
   }
 
   @Mutation(() => String, {

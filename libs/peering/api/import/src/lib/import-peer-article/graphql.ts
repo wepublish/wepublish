@@ -59,7 +59,7 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>
 }
 
-export type Article = {
+export type Article = HasOptionalPeerLc & {
   __typename?: 'Article'
   createdAt: Scalars['DateTime']
   disableComments: Scalars['Boolean']
@@ -94,6 +94,7 @@ export type ArticleFilter = {
   draft?: InputMaybe<Scalars['Boolean']>
   includeHidden?: InputMaybe<Scalars['Boolean']>
   lead?: InputMaybe<Scalars['String']>
+  peerId?: InputMaybe<Scalars['String']>
   pending?: InputMaybe<Scalars['Boolean']>
   preTitle?: InputMaybe<Scalars['String']>
   publicationDateFrom?: InputMaybe<DateFilter>
@@ -187,6 +188,7 @@ export type Author = {
   links?: Maybe<Array<AuthorLink>>
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
+  peer?: Maybe<Peer>
   slug: Scalars['Slug']
   tags: Array<Tag>
   url: Scalars['String']
@@ -507,9 +509,9 @@ export type CommentBlockFilter = {
 }
 
 export type CommentBlockFilterInput = {
-  comments: Array<Scalars['String']>
+  comments?: Array<Scalars['String']>
   item?: InputMaybe<Scalars['String']>
-  tags: Array<Scalars['String']>
+  tags?: Array<Scalars['String']>
 }
 
 export type CommentBlockInput = {
@@ -734,8 +736,8 @@ export type EventBlockFilter = {
 }
 
 export type EventBlockFilterInput = {
-  events: Array<Scalars['String']>
-  tags: Array<Scalars['String']>
+  events?: Array<Scalars['String']>
+  tags?: Array<Scalars['String']>
 }
 
 export type EventBlockInput = {
@@ -975,6 +977,11 @@ export type HasOptionalPage = {
   pageID?: Maybe<Scalars['String']>
 }
 
+export type HasOptionalPeerLc = {
+  peer?: Maybe<Peer>
+  peerId?: Maybe<Scalars['String']>
+}
+
 export type HasOptionalPoll = {
   poll?: Maybe<FullPoll>
   pollId?: Maybe<Scalars['String']>
@@ -1143,6 +1150,12 @@ export type ImageV2 = {
   tags: Array<Scalars['String']>
   title?: Maybe<Scalars['String']>
   width: Scalars['Int']
+}
+
+export type ImportArticleOptions = {
+  importAuthors?: InputMaybe<Scalars['Boolean']>
+  importContentImages?: InputMaybe<Scalars['Boolean']>
+  importTags?: InputMaybe<Scalars['Boolean']>
 }
 
 export type ImportedEventFilter = {
@@ -1654,6 +1667,7 @@ export type MutationImportEventArgs = {
 
 export type MutationImportPeerArticleArgs = {
   articleId: Scalars['String']
+  options?: ImportArticleOptions
   peerId: Scalars['String']
 }
 
@@ -2101,34 +2115,39 @@ export type Peer = {
   slug: Scalars['String']
 }
 
-export type PeerArticle = {
+export type PeerArticle = HasOptionalPeerLc & {
   __typename?: 'PeerArticle'
+  createdAt: Scalars['DateTime']
   id: Scalars['String']
   latest: PeerArticleRevision
+  modifiedAt: Scalars['DateTime']
   peer?: Maybe<Peer>
   peerId?: Maybe<Scalars['String']>
+  publishedAt: Scalars['DateTime']
   slug?: Maybe<Scalars['String']>
+  tags: Array<Tag>
   url: Scalars['String']
 }
 
 export type PeerArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>
-  includeHidden?: InputMaybe<Scalars['Boolean']>
   lead?: InputMaybe<Scalars['String']>
-  peerName?: InputMaybe<Scalars['String']>
+  peerId?: InputMaybe<Scalars['String']>
   preTitle?: InputMaybe<Scalars['String']>
   publicationDateFrom?: InputMaybe<DateFilter>
   publicationDateTo?: InputMaybe<DateFilter>
-  shared?: InputMaybe<Scalars['Boolean']>
   tags?: InputMaybe<Array<Scalars['String']>>
   title?: InputMaybe<Scalars['String']>
 }
 
 export type PeerArticleRevision = {
   __typename?: 'PeerArticleRevision'
+  authors: Array<Author>
+  id: Scalars['String']
   image?: Maybe<Image>
   lead?: Maybe<Scalars['String']>
   preTitle?: Maybe<Scalars['String']>
+  seoTitle?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
 }
 
@@ -3266,12 +3285,14 @@ export type OverriddenRating = {
 type BlockWithoutTeaser_BildwurfAdBlock_Fragment = {
   __typename: 'BildwurfAdBlock'
   blockStyle?: string | null
+  type: BlockType
   zoneID?: string | null
 }
 
 type BlockWithoutTeaser_BreakBlock_Fragment = {
   __typename: 'BreakBlock'
   blockStyle?: string | null
+  type: BlockType
   text?: string | null
   richText: Node[]
   hideButton?: boolean | null
@@ -3280,6 +3301,7 @@ type BlockWithoutTeaser_BreakBlock_Fragment = {
   linkURL?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -3289,6 +3311,7 @@ type BlockWithoutTeaser_BreakBlock_Fragment = {
 type BlockWithoutTeaser_CommentBlock_Fragment = {
   __typename: 'CommentBlock'
   blockStyle?: string | null
+  type: BlockType
   filter: {__typename?: 'CommentBlockFilter'; tags: Array<string>; comments: Array<string>}
   comments: Array<{__typename?: 'Comment'; id: string}>
 }
@@ -3296,6 +3319,7 @@ type BlockWithoutTeaser_CommentBlock_Fragment = {
 type BlockWithoutTeaser_EventBlock_Fragment = {
   __typename: 'EventBlock'
   blockStyle?: string | null
+  type: BlockType
   filter: {__typename?: 'EventBlockFilter'; tags: Array<string>; events: Array<string>}
   events: Array<{__typename?: 'Event'; id: string}>
 }
@@ -3303,6 +3327,7 @@ type BlockWithoutTeaser_EventBlock_Fragment = {
 type BlockWithoutTeaser_FacebookPostBlock_Fragment = {
   __typename: 'FacebookPostBlock'
   blockStyle?: string | null
+  type: BlockType
   userID?: string | null
   postID?: string | null
 }
@@ -3310,6 +3335,7 @@ type BlockWithoutTeaser_FacebookPostBlock_Fragment = {
 type BlockWithoutTeaser_FacebookVideoBlock_Fragment = {
   __typename: 'FacebookVideoBlock'
   blockStyle?: string | null
+  type: BlockType
   userID?: string | null
   videoID?: string | null
 }
@@ -3317,12 +3343,14 @@ type BlockWithoutTeaser_FacebookVideoBlock_Fragment = {
 type BlockWithoutTeaser_HtmlBlock_Fragment = {
   __typename: 'HTMLBlock'
   blockStyle?: string | null
+  type: BlockType
   html?: string | null
 }
 
 type BlockWithoutTeaser_IFrameBlock_Fragment = {
   __typename: 'IFrameBlock'
   blockStyle?: string | null
+  type: BlockType
   url?: string | null
   title?: string | null
   width?: number | null
@@ -3334,10 +3362,12 @@ type BlockWithoutTeaser_IFrameBlock_Fragment = {
 type BlockWithoutTeaser_ImageBlock_Fragment = {
   __typename: 'ImageBlock'
   blockStyle?: string | null
+  type: BlockType
   caption?: string | null
   linkUrl?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -3347,11 +3377,13 @@ type BlockWithoutTeaser_ImageBlock_Fragment = {
 type BlockWithoutTeaser_ImageGalleryBlock_Fragment = {
   __typename: 'ImageGalleryBlock'
   blockStyle?: string | null
+  type: BlockType
   images: Array<{
     __typename?: 'ImageGalleryImage'
     caption?: string | null
     image?: {
       __typename?: 'Image'
+      id: string
       url?: string | null
       license?: string | null
       source?: string | null
@@ -3362,18 +3394,21 @@ type BlockWithoutTeaser_ImageGalleryBlock_Fragment = {
 type BlockWithoutTeaser_InstagramPostBlock_Fragment = {
   __typename: 'InstagramPostBlock'
   blockStyle?: string | null
+  type: BlockType
   postID?: string | null
 }
 
 type BlockWithoutTeaser_ListicleBlock_Fragment = {
   __typename: 'ListicleBlock'
   blockStyle?: string | null
+  type: BlockType
   items: Array<{
     __typename?: 'ListicleItem'
     title?: string | null
     richText: Node[]
     image?: {
       __typename?: 'Image'
+      id: string
       url?: string | null
       license?: string | null
       source?: string | null
@@ -3384,22 +3419,26 @@ type BlockWithoutTeaser_ListicleBlock_Fragment = {
 type BlockWithoutTeaser_PolisConversationBlock_Fragment = {
   __typename: 'PolisConversationBlock'
   blockStyle?: string | null
+  type: BlockType
   conversationID?: string | null
 }
 
 type BlockWithoutTeaser_PollBlock_Fragment = {
   __typename: 'PollBlock'
   blockStyle?: string | null
+  type: BlockType
   poll?: {__typename?: 'FullPoll'; id: string} | null
 }
 
 type BlockWithoutTeaser_QuoteBlock_Fragment = {
   __typename: 'QuoteBlock'
   blockStyle?: string | null
+  type: BlockType
   quote?: string | null
   author?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -3409,12 +3448,14 @@ type BlockWithoutTeaser_QuoteBlock_Fragment = {
 type BlockWithoutTeaser_RichTextBlock_Fragment = {
   __typename: 'RichTextBlock'
   blockStyle?: string | null
+  type: BlockType
   richText: Node[]
 }
 
 type BlockWithoutTeaser_SoundCloudTrackBlock_Fragment = {
   __typename: 'SoundCloudTrackBlock'
   blockStyle?: string | null
+  type: BlockType
   trackID?: string | null
 }
 
@@ -3427,6 +3468,7 @@ type BlockWithoutTeaser_TeaserListBlock_Fragment = {__typename: 'TeaserListBlock
 type BlockWithoutTeaser_TikTokVideoBlock_Fragment = {
   __typename: 'TikTokVideoBlock'
   blockStyle?: string | null
+  type: BlockType
   userID?: string | null
   videoID?: string | null
 }
@@ -3434,6 +3476,7 @@ type BlockWithoutTeaser_TikTokVideoBlock_Fragment = {
 type BlockWithoutTeaser_TitleBlock_Fragment = {
   __typename: 'TitleBlock'
   blockStyle?: string | null
+  type: BlockType
   title?: string | null
   lead?: string | null
 }
@@ -3441,6 +3484,7 @@ type BlockWithoutTeaser_TitleBlock_Fragment = {
 type BlockWithoutTeaser_TwitterTweetBlock_Fragment = {
   __typename: 'TwitterTweetBlock'
   blockStyle?: string | null
+  type: BlockType
   userID?: string | null
   tweetID?: string | null
 }
@@ -3450,12 +3494,14 @@ type BlockWithoutTeaser_UnknownBlock_Fragment = {__typename: 'UnknownBlock'}
 type BlockWithoutTeaser_VimeoVideoBlock_Fragment = {
   __typename: 'VimeoVideoBlock'
   blockStyle?: string | null
+  type: BlockType
   videoID?: string | null
 }
 
 type BlockWithoutTeaser_YouTubeVideoBlock_Fragment = {
   __typename: 'YouTubeVideoBlock'
   blockStyle?: string | null
+  type: BlockType
   videoID?: string | null
 }
 
@@ -3494,6 +3540,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
   lead?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -3520,6 +3567,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
         | {
             __typename: 'PollBlock'
             blockStyle?: string | null
+            type: BlockType
             poll?: {__typename?: 'FullPoll'; id: string} | null
           }
         | {__typename: 'QuoteBlock'}
@@ -3547,6 +3595,7 @@ type FullTeaser_CustomTeaser_Fragment = {
   contentUrl?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -3561,6 +3610,7 @@ type FullTeaser_EventTeaser_Fragment = {
   lead?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -3575,6 +3625,7 @@ type FullTeaser_PageTeaser_Fragment = {
   lead?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -3591,12 +3642,14 @@ export type FullTeaserFragment =
 type FullBlock_BildwurfAdBlock_Fragment = {
   __typename: 'BildwurfAdBlock'
   blockStyle?: string | null
+  type: BlockType
   zoneID?: string | null
 }
 
 type FullBlock_BreakBlock_Fragment = {
   __typename: 'BreakBlock'
   blockStyle?: string | null
+  type: BlockType
   text?: string | null
   richText: Node[]
   hideButton?: boolean | null
@@ -3605,6 +3658,7 @@ type FullBlock_BreakBlock_Fragment = {
   linkURL?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -3614,6 +3668,7 @@ type FullBlock_BreakBlock_Fragment = {
 type FullBlock_CommentBlock_Fragment = {
   __typename: 'CommentBlock'
   blockStyle?: string | null
+  type: BlockType
   filter: {__typename?: 'CommentBlockFilter'; tags: Array<string>; comments: Array<string>}
   comments: Array<{__typename?: 'Comment'; id: string}>
 }
@@ -3621,6 +3676,7 @@ type FullBlock_CommentBlock_Fragment = {
 type FullBlock_EventBlock_Fragment = {
   __typename: 'EventBlock'
   blockStyle?: string | null
+  type: BlockType
   filter: {__typename?: 'EventBlockFilter'; tags: Array<string>; events: Array<string>}
   events: Array<{__typename?: 'Event'; id: string}>
 }
@@ -3628,6 +3684,7 @@ type FullBlock_EventBlock_Fragment = {
 type FullBlock_FacebookPostBlock_Fragment = {
   __typename: 'FacebookPostBlock'
   blockStyle?: string | null
+  type: BlockType
   userID?: string | null
   postID?: string | null
 }
@@ -3635,6 +3692,7 @@ type FullBlock_FacebookPostBlock_Fragment = {
 type FullBlock_FacebookVideoBlock_Fragment = {
   __typename: 'FacebookVideoBlock'
   blockStyle?: string | null
+  type: BlockType
   userID?: string | null
   videoID?: string | null
 }
@@ -3642,12 +3700,14 @@ type FullBlock_FacebookVideoBlock_Fragment = {
 type FullBlock_HtmlBlock_Fragment = {
   __typename: 'HTMLBlock'
   blockStyle?: string | null
+  type: BlockType
   html?: string | null
 }
 
 type FullBlock_IFrameBlock_Fragment = {
   __typename: 'IFrameBlock'
   blockStyle?: string | null
+  type: BlockType
   url?: string | null
   title?: string | null
   width?: number | null
@@ -3659,10 +3719,12 @@ type FullBlock_IFrameBlock_Fragment = {
 type FullBlock_ImageBlock_Fragment = {
   __typename: 'ImageBlock'
   blockStyle?: string | null
+  type: BlockType
   caption?: string | null
   linkUrl?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -3672,11 +3734,13 @@ type FullBlock_ImageBlock_Fragment = {
 type FullBlock_ImageGalleryBlock_Fragment = {
   __typename: 'ImageGalleryBlock'
   blockStyle?: string | null
+  type: BlockType
   images: Array<{
     __typename?: 'ImageGalleryImage'
     caption?: string | null
     image?: {
       __typename?: 'Image'
+      id: string
       url?: string | null
       license?: string | null
       source?: string | null
@@ -3687,18 +3751,21 @@ type FullBlock_ImageGalleryBlock_Fragment = {
 type FullBlock_InstagramPostBlock_Fragment = {
   __typename: 'InstagramPostBlock'
   blockStyle?: string | null
+  type: BlockType
   postID?: string | null
 }
 
 type FullBlock_ListicleBlock_Fragment = {
   __typename: 'ListicleBlock'
   blockStyle?: string | null
+  type: BlockType
   items: Array<{
     __typename?: 'ListicleItem'
     title?: string | null
     richText: Node[]
     image?: {
       __typename?: 'Image'
+      id: string
       url?: string | null
       license?: string | null
       source?: string | null
@@ -3709,22 +3776,26 @@ type FullBlock_ListicleBlock_Fragment = {
 type FullBlock_PolisConversationBlock_Fragment = {
   __typename: 'PolisConversationBlock'
   blockStyle?: string | null
+  type: BlockType
   conversationID?: string | null
 }
 
 type FullBlock_PollBlock_Fragment = {
   __typename: 'PollBlock'
   blockStyle?: string | null
+  type: BlockType
   poll?: {__typename?: 'FullPoll'; id: string} | null
 }
 
 type FullBlock_QuoteBlock_Fragment = {
   __typename: 'QuoteBlock'
   blockStyle?: string | null
+  type: BlockType
   quote?: string | null
   author?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -3734,17 +3805,20 @@ type FullBlock_QuoteBlock_Fragment = {
 type FullBlock_RichTextBlock_Fragment = {
   __typename: 'RichTextBlock'
   blockStyle?: string | null
+  type: BlockType
   richText: Node[]
 }
 
 type FullBlock_SoundCloudTrackBlock_Fragment = {
   __typename: 'SoundCloudTrackBlock'
   blockStyle?: string | null
+  type: BlockType
   trackID?: string | null
 }
 
 type FullBlock_TeaserGridBlock_Fragment = {
   __typename: 'TeaserGridBlock'
+  type: BlockType
   blockStyle?: string | null
   numColumns: number
   teasers: Array<
@@ -3755,6 +3829,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
         lead?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -3781,6 +3856,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
               | {
                   __typename: 'PollBlock'
                   blockStyle?: string | null
+                  type: BlockType
                   poll?: {__typename?: 'FullPoll'; id: string} | null
                 }
               | {__typename: 'QuoteBlock'}
@@ -3807,6 +3883,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
         contentUrl?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -3825,6 +3902,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
         lead?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -3838,6 +3916,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
         lead?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -3850,6 +3929,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
 
 type FullBlock_TeaserGridFlexBlock_Fragment = {
   __typename: 'TeaserGridFlexBlock'
+  type: BlockType
   blockStyle?: string | null
   flexTeasers: Array<{
     __typename?: 'FlexTeaser'
@@ -3870,6 +3950,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           lead?: string | null
           image?: {
             __typename?: 'Image'
+            id: string
             url?: string | null
             license?: string | null
             source?: string | null
@@ -3896,6 +3977,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                 | {
                     __typename: 'PollBlock'
                     blockStyle?: string | null
+                    type: BlockType
                     poll?: {__typename?: 'FullPoll'; id: string} | null
                   }
                 | {__typename: 'QuoteBlock'}
@@ -3922,6 +4004,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           contentUrl?: string | null
           image?: {
             __typename?: 'Image'
+            id: string
             url?: string | null
             license?: string | null
             source?: string | null
@@ -3940,6 +4023,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           lead?: string | null
           image?: {
             __typename?: 'Image'
+            id: string
             url?: string | null
             license?: string | null
             source?: string | null
@@ -3953,6 +4037,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           lead?: string | null
           image?: {
             __typename?: 'Image'
+            id: string
             url?: string | null
             license?: string | null
             source?: string | null
@@ -3967,6 +4052,7 @@ type FullBlock_TeaserListBlock_Fragment = {
   __typename: 'TeaserListBlock'
   title?: string | null
   blockStyle?: string | null
+  type: BlockType
   skip?: number | null
   take?: number | null
   sort?: TeaserListBlockSort | null
@@ -3984,6 +4070,7 @@ type FullBlock_TeaserListBlock_Fragment = {
         lead?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -4010,6 +4097,7 @@ type FullBlock_TeaserListBlock_Fragment = {
               | {
                   __typename: 'PollBlock'
                   blockStyle?: string | null
+                  type: BlockType
                   poll?: {__typename?: 'FullPoll'; id: string} | null
                 }
               | {__typename: 'QuoteBlock'}
@@ -4036,6 +4124,7 @@ type FullBlock_TeaserListBlock_Fragment = {
         contentUrl?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -4054,6 +4143,7 @@ type FullBlock_TeaserListBlock_Fragment = {
         lead?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -4067,6 +4157,7 @@ type FullBlock_TeaserListBlock_Fragment = {
         lead?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -4080,6 +4171,7 @@ type FullBlock_TeaserListBlock_Fragment = {
 type FullBlock_TikTokVideoBlock_Fragment = {
   __typename: 'TikTokVideoBlock'
   blockStyle?: string | null
+  type: BlockType
   userID?: string | null
   videoID?: string | null
 }
@@ -4087,6 +4179,7 @@ type FullBlock_TikTokVideoBlock_Fragment = {
 type FullBlock_TitleBlock_Fragment = {
   __typename: 'TitleBlock'
   blockStyle?: string | null
+  type: BlockType
   title?: string | null
   lead?: string | null
 }
@@ -4094,6 +4187,7 @@ type FullBlock_TitleBlock_Fragment = {
 type FullBlock_TwitterTweetBlock_Fragment = {
   __typename: 'TwitterTweetBlock'
   blockStyle?: string | null
+  type: BlockType
   userID?: string | null
   tweetID?: string | null
 }
@@ -4103,12 +4197,14 @@ type FullBlock_UnknownBlock_Fragment = {__typename: 'UnknownBlock'}
 type FullBlock_VimeoVideoBlock_Fragment = {
   __typename: 'VimeoVideoBlock'
   blockStyle?: string | null
+  type: BlockType
   videoID?: string | null
 }
 
 type FullBlock_YouTubeVideoBlock_Fragment = {
   __typename: 'YouTubeVideoBlock'
   blockStyle?: string | null
+  type: BlockType
   videoID?: string | null
 }
 
@@ -4142,6 +4238,7 @@ export type FullBlockFragment =
 
 export type FullImageFragment = {
   __typename?: 'Image'
+  id: string
   url?: string | null
   license?: string | null
   source?: string | null
@@ -4166,12 +4263,14 @@ export type PageWithoutBlocksFragment = {__typename?: 'Page'; id: string}
 type ImportBlock_BildwurfAdBlock_Fragment = {
   __typename: 'BildwurfAdBlock'
   blockStyle?: string | null
+  type: BlockType
   zoneID?: string | null
 }
 
 type ImportBlock_BreakBlock_Fragment = {
   __typename: 'BreakBlock'
   blockStyle?: string | null
+  type: BlockType
   text?: string | null
   richText: Node[]
   hideButton?: boolean | null
@@ -4180,6 +4279,7 @@ type ImportBlock_BreakBlock_Fragment = {
   linkURL?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -4205,6 +4305,7 @@ type ImportBlock_EventBlock_Fragment = {
 type ImportBlock_FacebookPostBlock_Fragment = {
   __typename: 'FacebookPostBlock'
   blockStyle?: string | null
+  type: BlockType
   userID?: string | null
   postID?: string | null
 }
@@ -4212,6 +4313,7 @@ type ImportBlock_FacebookPostBlock_Fragment = {
 type ImportBlock_FacebookVideoBlock_Fragment = {
   __typename: 'FacebookVideoBlock'
   blockStyle?: string | null
+  type: BlockType
   userID?: string | null
   videoID?: string | null
 }
@@ -4226,6 +4328,7 @@ type ImportBlock_HtmlBlock_Fragment = {
 type ImportBlock_IFrameBlock_Fragment = {
   __typename: 'IFrameBlock'
   blockStyle?: string | null
+  type: BlockType
   url?: string | null
   title?: string | null
   width?: number | null
@@ -4237,10 +4340,12 @@ type ImportBlock_IFrameBlock_Fragment = {
 type ImportBlock_ImageBlock_Fragment = {
   __typename: 'ImageBlock'
   blockStyle?: string | null
+  type: BlockType
   caption?: string | null
   linkUrl?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -4250,11 +4355,13 @@ type ImportBlock_ImageBlock_Fragment = {
 type ImportBlock_ImageGalleryBlock_Fragment = {
   __typename: 'ImageGalleryBlock'
   blockStyle?: string | null
+  type: BlockType
   images: Array<{
     __typename?: 'ImageGalleryImage'
     caption?: string | null
     image?: {
       __typename?: 'Image'
+      id: string
       url?: string | null
       license?: string | null
       source?: string | null
@@ -4265,18 +4372,21 @@ type ImportBlock_ImageGalleryBlock_Fragment = {
 type ImportBlock_InstagramPostBlock_Fragment = {
   __typename: 'InstagramPostBlock'
   blockStyle?: string | null
+  type: BlockType
   postID?: string | null
 }
 
 type ImportBlock_ListicleBlock_Fragment = {
   __typename: 'ListicleBlock'
   blockStyle?: string | null
+  type: BlockType
   items: Array<{
     __typename?: 'ListicleItem'
     title?: string | null
     richText: Node[]
     image?: {
       __typename?: 'Image'
+      id: string
       url?: string | null
       license?: string | null
       source?: string | null
@@ -4287,6 +4397,7 @@ type ImportBlock_ListicleBlock_Fragment = {
 type ImportBlock_PolisConversationBlock_Fragment = {
   __typename: 'PolisConversationBlock'
   blockStyle?: string | null
+  type: BlockType
   conversationID?: string | null
 }
 
@@ -4300,10 +4411,12 @@ type ImportBlock_PollBlock_Fragment = {
 type ImportBlock_QuoteBlock_Fragment = {
   __typename: 'QuoteBlock'
   blockStyle?: string | null
+  type: BlockType
   quote?: string | null
   author?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -4313,12 +4426,14 @@ type ImportBlock_QuoteBlock_Fragment = {
 type ImportBlock_RichTextBlock_Fragment = {
   __typename: 'RichTextBlock'
   blockStyle?: string | null
+  type: BlockType
   richText: Node[]
 }
 
 type ImportBlock_SoundCloudTrackBlock_Fragment = {
   __typename: 'SoundCloudTrackBlock'
   blockStyle?: string | null
+  type: BlockType
   trackID?: string | null
 }
 
@@ -4335,6 +4450,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
         lead?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -4361,6 +4477,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
               | {
                   __typename: 'PollBlock'
                   blockStyle?: string | null
+                  type: BlockType
                   poll?: {__typename?: 'FullPoll'; id: string} | null
                 }
               | {__typename: 'QuoteBlock'}
@@ -4387,6 +4504,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
         contentUrl?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -4405,6 +4523,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
         lead?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -4418,6 +4537,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
         lead?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -4451,6 +4571,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
           lead?: string | null
           image?: {
             __typename?: 'Image'
+            id: string
             url?: string | null
             license?: string | null
             source?: string | null
@@ -4477,6 +4598,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
                 | {
                     __typename: 'PollBlock'
                     blockStyle?: string | null
+                    type: BlockType
                     poll?: {__typename?: 'FullPoll'; id: string} | null
                   }
                 | {__typename: 'QuoteBlock'}
@@ -4503,6 +4625,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
           contentUrl?: string | null
           image?: {
             __typename?: 'Image'
+            id: string
             url?: string | null
             license?: string | null
             source?: string | null
@@ -4521,6 +4644,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
           lead?: string | null
           image?: {
             __typename?: 'Image'
+            id: string
             url?: string | null
             license?: string | null
             source?: string | null
@@ -4534,6 +4658,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
           lead?: string | null
           image?: {
             __typename?: 'Image'
+            id: string
             url?: string | null
             license?: string | null
             source?: string | null
@@ -4547,12 +4672,12 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
 type ImportBlock_TeaserListBlock_Fragment = {
   __typename: 'TeaserListBlock'
   type: BlockType
+  teaserType: TeaserType
+  take?: number | null
+  skip?: number | null
+  sort?: TeaserListBlockSort | null
   title?: string | null
   blockStyle?: string | null
-  skip?: number | null
-  take?: number | null
-  sort?: TeaserListBlockSort | null
-  teaserType: TeaserType
   filter: {
     __typename?: 'TeaserListBlockFilter'
     tags: Array<string>
@@ -4566,6 +4691,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
         lead?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -4592,6 +4718,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
               | {
                   __typename: 'PollBlock'
                   blockStyle?: string | null
+                  type: BlockType
                   poll?: {__typename?: 'FullPoll'; id: string} | null
                 }
               | {__typename: 'QuoteBlock'}
@@ -4618,6 +4745,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
         contentUrl?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -4636,6 +4764,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
         lead?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -4649,6 +4778,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
         lead?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
@@ -4662,6 +4792,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
 type ImportBlock_TikTokVideoBlock_Fragment = {
   __typename: 'TikTokVideoBlock'
   blockStyle?: string | null
+  type: BlockType
   userID?: string | null
   videoID?: string | null
 }
@@ -4669,6 +4800,7 @@ type ImportBlock_TikTokVideoBlock_Fragment = {
 type ImportBlock_TitleBlock_Fragment = {
   __typename: 'TitleBlock'
   blockStyle?: string | null
+  type: BlockType
   title?: string | null
   lead?: string | null
 }
@@ -4676,21 +4808,24 @@ type ImportBlock_TitleBlock_Fragment = {
 type ImportBlock_TwitterTweetBlock_Fragment = {
   __typename: 'TwitterTweetBlock'
   blockStyle?: string | null
+  type: BlockType
   userID?: string | null
   tweetID?: string | null
 }
 
-type ImportBlock_UnknownBlock_Fragment = {__typename: 'UnknownBlock'}
+type ImportBlock_UnknownBlock_Fragment = {__typename: 'UnknownBlock'; type: BlockType}
 
 type ImportBlock_VimeoVideoBlock_Fragment = {
   __typename: 'VimeoVideoBlock'
   blockStyle?: string | null
+  type: BlockType
   videoID?: string | null
 }
 
 type ImportBlock_YouTubeVideoBlock_Fragment = {
   __typename: 'YouTubeVideoBlock'
   blockStyle?: string | null
+  type: BlockType
   videoID?: string | null
 }
 
@@ -4731,6 +4866,7 @@ export type SlimArticleRevisionFragment = {
   lead?: string | null
   image?: {
     __typename?: 'Image'
+    id: string
     url?: string | null
     license?: string | null
     source?: string | null
@@ -4743,8 +4879,6 @@ export type SlimArticleFragment = {
   publishedAt?: string | null
   createdAt: string
   modifiedAt: string
-  shared: boolean
-  hidden: boolean
   slug?: string | null
   url: string
   latest: {
@@ -4756,11 +4890,13 @@ export type SlimArticleFragment = {
     lead?: string | null
     image?: {
       __typename?: 'Image'
+      id: string
       url?: string | null
       license?: string | null
       source?: string | null
     } | null
   }
+  tags: Array<{__typename?: 'Tag'; id: string; tag?: string | null; main: boolean}>
 }
 
 export type ArticleListQueryVariables = Exact<{
@@ -4782,8 +4918,6 @@ export type ArticleListQuery = {
       publishedAt?: string | null
       createdAt: string
       modifiedAt: string
-      shared: boolean
-      hidden: boolean
       slug?: string | null
       url: string
       latest: {
@@ -4795,11 +4929,13 @@ export type ArticleListQuery = {
         lead?: string | null
         image?: {
           __typename?: 'Image'
+          id: string
           url?: string | null
           license?: string | null
           source?: string | null
         } | null
       }
+      tags: Array<{__typename?: 'Tag'; id: string; tag?: string | null; main: boolean}>
     }>
     pageInfo: {
       __typename?: 'PageInfo'
@@ -4821,14 +4957,30 @@ export type ArticleQuery = {
     __typename?: 'Article'
     id: string
     url: string
+    slug?: string | null
     tags: Array<{__typename?: 'Tag'; tag?: string | null}>
     published?: {
       __typename?: 'ArticleRevision'
+      title?: string | null
+      lead?: string | null
+      image?: {
+        __typename?: 'Image'
+        id: string
+        url?: string | null
+        license?: string | null
+        source?: string | null
+      } | null
       blocks: Array<
-        | {__typename: 'BildwurfAdBlock'; blockStyle?: string | null; zoneID?: string | null}
+        | {
+            __typename: 'BildwurfAdBlock'
+            blockStyle?: string | null
+            type: BlockType
+            zoneID?: string | null
+          }
         | {
             __typename: 'BreakBlock'
             blockStyle?: string | null
+            type: BlockType
             text?: string | null
             richText: Node[]
             hideButton?: boolean | null
@@ -4837,6 +4989,7 @@ export type ArticleQuery = {
             linkURL?: string | null
             image?: {
               __typename?: 'Image'
+              id: string
               url?: string | null
               license?: string | null
               source?: string | null
@@ -4863,12 +5016,14 @@ export type ArticleQuery = {
         | {
             __typename: 'FacebookPostBlock'
             blockStyle?: string | null
+            type: BlockType
             userID?: string | null
             postID?: string | null
           }
         | {
             __typename: 'FacebookVideoBlock'
             blockStyle?: string | null
+            type: BlockType
             userID?: string | null
             videoID?: string | null
           }
@@ -4881,6 +5036,7 @@ export type ArticleQuery = {
         | {
             __typename: 'IFrameBlock'
             blockStyle?: string | null
+            type: BlockType
             url?: string | null
             title?: string | null
             width?: number | null
@@ -4891,10 +5047,12 @@ export type ArticleQuery = {
         | {
             __typename: 'ImageBlock'
             blockStyle?: string | null
+            type: BlockType
             caption?: string | null
             linkUrl?: string | null
             image?: {
               __typename?: 'Image'
+              id: string
               url?: string | null
               license?: string | null
               source?: string | null
@@ -4903,27 +5061,36 @@ export type ArticleQuery = {
         | {
             __typename: 'ImageGalleryBlock'
             blockStyle?: string | null
+            type: BlockType
             images: Array<{
               __typename?: 'ImageGalleryImage'
               caption?: string | null
               image?: {
                 __typename?: 'Image'
+                id: string
                 url?: string | null
                 license?: string | null
                 source?: string | null
               } | null
             }>
           }
-        | {__typename: 'InstagramPostBlock'; blockStyle?: string | null; postID?: string | null}
+        | {
+            __typename: 'InstagramPostBlock'
+            blockStyle?: string | null
+            type: BlockType
+            postID?: string | null
+          }
         | {
             __typename: 'ListicleBlock'
             blockStyle?: string | null
+            type: BlockType
             items: Array<{
               __typename?: 'ListicleItem'
               title?: string | null
               richText: Node[]
               image?: {
                 __typename?: 'Image'
+                id: string
                 url?: string | null
                 license?: string | null
                 source?: string | null
@@ -4933,6 +5100,7 @@ export type ArticleQuery = {
         | {
             __typename: 'PolisConversationBlock'
             blockStyle?: string | null
+            type: BlockType
             conversationID?: string | null
           }
         | {
@@ -4944,17 +5112,29 @@ export type ArticleQuery = {
         | {
             __typename: 'QuoteBlock'
             blockStyle?: string | null
+            type: BlockType
             quote?: string | null
             author?: string | null
             image?: {
               __typename?: 'Image'
+              id: string
               url?: string | null
               license?: string | null
               source?: string | null
             } | null
           }
-        | {__typename: 'RichTextBlock'; blockStyle?: string | null; richText: Node[]}
-        | {__typename: 'SoundCloudTrackBlock'; blockStyle?: string | null; trackID?: string | null}
+        | {
+            __typename: 'RichTextBlock'
+            blockStyle?: string | null
+            type: BlockType
+            richText: Node[]
+          }
+        | {
+            __typename: 'SoundCloudTrackBlock'
+            blockStyle?: string | null
+            type: BlockType
+            trackID?: string | null
+          }
         | {
             __typename: 'TeaserGridBlock'
             type: BlockType
@@ -4968,6 +5148,7 @@ export type ArticleQuery = {
                   lead?: string | null
                   image?: {
                     __typename?: 'Image'
+                    id: string
                     url?: string | null
                     license?: string | null
                     source?: string | null
@@ -4994,6 +5175,7 @@ export type ArticleQuery = {
                         | {
                             __typename: 'PollBlock'
                             blockStyle?: string | null
+                            type: BlockType
                             poll?: {__typename?: 'FullPoll'; id: string} | null
                           }
                         | {__typename: 'QuoteBlock'}
@@ -5020,6 +5202,7 @@ export type ArticleQuery = {
                   contentUrl?: string | null
                   image?: {
                     __typename?: 'Image'
+                    id: string
                     url?: string | null
                     license?: string | null
                     source?: string | null
@@ -5038,6 +5221,7 @@ export type ArticleQuery = {
                   lead?: string | null
                   image?: {
                     __typename?: 'Image'
+                    id: string
                     url?: string | null
                     license?: string | null
                     source?: string | null
@@ -5051,6 +5235,7 @@ export type ArticleQuery = {
                   lead?: string | null
                   image?: {
                     __typename?: 'Image'
+                    id: string
                     url?: string | null
                     license?: string | null
                     source?: string | null
@@ -5083,6 +5268,7 @@ export type ArticleQuery = {
                     lead?: string | null
                     image?: {
                       __typename?: 'Image'
+                      id: string
                       url?: string | null
                       license?: string | null
                       source?: string | null
@@ -5109,6 +5295,7 @@ export type ArticleQuery = {
                           | {
                               __typename: 'PollBlock'
                               blockStyle?: string | null
+                              type: BlockType
                               poll?: {__typename?: 'FullPoll'; id: string} | null
                             }
                           | {__typename: 'QuoteBlock'}
@@ -5135,6 +5322,7 @@ export type ArticleQuery = {
                     contentUrl?: string | null
                     image?: {
                       __typename?: 'Image'
+                      id: string
                       url?: string | null
                       license?: string | null
                       source?: string | null
@@ -5153,6 +5341,7 @@ export type ArticleQuery = {
                     lead?: string | null
                     image?: {
                       __typename?: 'Image'
+                      id: string
                       url?: string | null
                       license?: string | null
                       source?: string | null
@@ -5166,6 +5355,7 @@ export type ArticleQuery = {
                     lead?: string | null
                     image?: {
                       __typename?: 'Image'
+                      id: string
                       url?: string | null
                       license?: string | null
                       source?: string | null
@@ -5178,12 +5368,12 @@ export type ArticleQuery = {
         | {
             __typename: 'TeaserListBlock'
             type: BlockType
+            teaserType: TeaserType
+            take?: number | null
+            skip?: number | null
+            sort?: TeaserListBlockSort | null
             title?: string | null
             blockStyle?: string | null
-            skip?: number | null
-            take?: number | null
-            sort?: TeaserListBlockSort | null
-            teaserType: TeaserType
             filter: {
               __typename?: 'TeaserListBlockFilter'
               tags: Array<string>
@@ -5197,6 +5387,7 @@ export type ArticleQuery = {
                   lead?: string | null
                   image?: {
                     __typename?: 'Image'
+                    id: string
                     url?: string | null
                     license?: string | null
                     source?: string | null
@@ -5223,6 +5414,7 @@ export type ArticleQuery = {
                         | {
                             __typename: 'PollBlock'
                             blockStyle?: string | null
+                            type: BlockType
                             poll?: {__typename?: 'FullPoll'; id: string} | null
                           }
                         | {__typename: 'QuoteBlock'}
@@ -5249,6 +5441,7 @@ export type ArticleQuery = {
                   contentUrl?: string | null
                   image?: {
                     __typename?: 'Image'
+                    id: string
                     url?: string | null
                     license?: string | null
                     source?: string | null
@@ -5267,6 +5460,7 @@ export type ArticleQuery = {
                   lead?: string | null
                   image?: {
                     __typename?: 'Image'
+                    id: string
                     url?: string | null
                     license?: string | null
                     source?: string | null
@@ -5280,6 +5474,7 @@ export type ArticleQuery = {
                   lead?: string | null
                   image?: {
                     __typename?: 'Image'
+                    id: string
                     url?: string | null
                     license?: string | null
                     source?: string | null
@@ -5292,24 +5487,37 @@ export type ArticleQuery = {
         | {
             __typename: 'TikTokVideoBlock'
             blockStyle?: string | null
+            type: BlockType
             userID?: string | null
             videoID?: string | null
           }
         | {
             __typename: 'TitleBlock'
             blockStyle?: string | null
+            type: BlockType
             title?: string | null
             lead?: string | null
           }
         | {
             __typename: 'TwitterTweetBlock'
             blockStyle?: string | null
+            type: BlockType
             userID?: string | null
             tweetID?: string | null
           }
-        | {__typename: 'UnknownBlock'}
-        | {__typename: 'VimeoVideoBlock'; blockStyle?: string | null; videoID?: string | null}
-        | {__typename: 'YouTubeVideoBlock'; blockStyle?: string | null; videoID?: string | null}
+        | {__typename: 'UnknownBlock'; type: BlockType}
+        | {
+            __typename: 'VimeoVideoBlock'
+            blockStyle?: string | null
+            type: BlockType
+            videoID?: string | null
+          }
+        | {
+            __typename: 'YouTubeVideoBlock'
+            blockStyle?: string | null
+            type: BlockType
+            videoID?: string | null
+          }
       >
       authors: Array<{
         __typename?: 'Author'
@@ -5318,7 +5526,13 @@ export type ArticleQuery = {
         bio?: Node[] | null
         jobTitle?: string | null
         hideOnArticle?: boolean | null
-        image?: {__typename?: 'Image'; url?: string | null} | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
       }>
     } | null
   }
@@ -5341,6 +5555,7 @@ export const PeerWithProfile = gql`
 `
 export const FullImage = gql`
   fragment FullImage on Image {
+    id
     url
     license
     source
@@ -5366,11 +5581,13 @@ export const BlockWithoutTeaser = gql`
     __typename
     ... on TitleBlock {
       blockStyle
+      type
       title
       lead
     }
     ... on ImageBlock {
       blockStyle
+      type
       caption
       linkUrl
       image {
@@ -5379,6 +5596,7 @@ export const BlockWithoutTeaser = gql`
     }
     ... on ImageGalleryBlock {
       blockStyle
+      type
       images {
         caption
         image {
@@ -5388,6 +5606,7 @@ export const BlockWithoutTeaser = gql`
     }
     ... on QuoteBlock {
       blockStyle
+      type
       quote
       author
       image {
@@ -5396,14 +5615,17 @@ export const BlockWithoutTeaser = gql`
     }
     ... on RichTextBlock {
       blockStyle
+      type
       richText
     }
     ... on HTMLBlock {
       blockStyle
+      type
       html
     }
     ... on EventBlock {
       blockStyle
+      type
       filter {
         tags
         events
@@ -5414,6 +5636,7 @@ export const BlockWithoutTeaser = gql`
     }
     ... on CommentBlock {
       blockStyle
+      type
       filter {
         tags
         comments
@@ -5424,12 +5647,14 @@ export const BlockWithoutTeaser = gql`
     }
     ... on PollBlock {
       blockStyle
+      type
       poll {
         ...FullPoll
       }
     }
     ... on ListicleBlock {
       blockStyle
+      type
       items {
         title
         richText
@@ -5440,6 +5665,7 @@ export const BlockWithoutTeaser = gql`
     }
     ... on BreakBlock {
       blockStyle
+      type
       text
       richText
       hideButton
@@ -5452,50 +5678,61 @@ export const BlockWithoutTeaser = gql`
     }
     ... on FacebookPostBlock {
       blockStyle
+      type
       userID
       postID
     }
     ... on FacebookVideoBlock {
       blockStyle
+      type
       userID
       videoID
     }
     ... on InstagramPostBlock {
       blockStyle
+      type
       postID
     }
     ... on TwitterTweetBlock {
       blockStyle
+      type
       userID
       tweetID
     }
     ... on VimeoVideoBlock {
       blockStyle
+      type
       videoID
     }
     ... on YouTubeVideoBlock {
       blockStyle
+      type
       videoID
     }
     ... on SoundCloudTrackBlock {
       blockStyle
+      type
       trackID
     }
     ... on PolisConversationBlock {
       blockStyle
+      type
       conversationID
     }
     ... on TikTokVideoBlock {
       blockStyle
+      type
       userID
       videoID
     }
     ... on BildwurfAdBlock {
       blockStyle
+      type
       zoneID
     }
     ... on IFrameBlock {
       blockStyle
+      type
       url
       title
       width
@@ -5535,6 +5772,7 @@ export const FullTeaser = gql`
             __typename
             ... on PollBlock {
               blockStyle
+              type
               poll {
                 ...FullPoll
               }
@@ -5590,7 +5828,9 @@ export const FullBlock = gql`
   fragment FullBlock on BlockContent {
     ...BlockWithoutTeaser
     ... on TeaserGridFlexBlock {
+      type
       blockStyle
+      type
       flexTeasers {
         alignment {
           i
@@ -5606,7 +5846,9 @@ export const FullBlock = gql`
       }
     }
     ... on TeaserGridBlock {
+      type
       blockStyle
+      type
       teasers {
         ...FullTeaser
       }
@@ -5615,6 +5857,7 @@ export const FullBlock = gql`
     ... on TeaserListBlock {
       title
       blockStyle
+      type
       skip
       take
       sort
@@ -5656,12 +5899,30 @@ export const ImportBlock = gql`
     ... on TeaserListBlock {
       __typename
       type
+      teaserType
+      take
+      skip
+      sort
     }
     ... on TeaserGridBlock {
       __typename
       type
     }
     ... on TeaserGridFlexBlock {
+      __typename
+      type
+      flexTeasers {
+        alignment {
+          i
+          x
+          y
+          w
+          h
+          static
+        }
+      }
+    }
+    ... on UnknownBlock {
       __typename
       type
     }
@@ -5687,12 +5948,15 @@ export const SlimArticle = gql`
     publishedAt
     createdAt
     modifiedAt
-    shared
-    hidden
     slug
     url
     latest {
       ...SlimArticleRevision
+    }
+    tags {
+      id
+      tag
+      main
     }
   }
   ${SlimArticleRevision}
@@ -5725,10 +5989,16 @@ export const Article = gql`
     article(id: $id) {
       id
       url
+      slug
       tags {
         tag
       }
       published {
+        title
+        lead
+        image {
+          ...FullImage
+        }
         blocks {
           ...ImportBlock
         }
@@ -5738,13 +6008,14 @@ export const Article = gql`
           bio
           jobTitle
           image {
-            url
+            ...FullImage
           }
           hideOnArticle
         }
       }
     }
   }
+  ${FullImage}
   ${ImportBlock}
 `
 
@@ -5852,6 +6123,7 @@ const result: PossibleTypesResultData = {
     HasOptionalArticle: ['ArticleTeaser'],
     HasOptionalEvent: ['EventTeaser'],
     HasOptionalPage: ['PageTeaser'],
+    HasOptionalPeerLc: ['Article', 'PeerArticle'],
     HasOptionalPoll: ['PollBlock'],
     HasPage: ['PageNavigationLink'],
     HasPageLc: ['PageCreatedAction'],

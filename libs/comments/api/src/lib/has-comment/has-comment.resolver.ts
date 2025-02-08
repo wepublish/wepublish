@@ -2,7 +2,6 @@ import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {HasComment, HasOptionalComment} from './has-comment.model'
 import {Comment} from '../comment.model'
 
-@Resolver(() => HasOptionalComment)
 @Resolver(() => HasComment)
 export class HasCommentResolver {
   @ResolveField(() => Comment, {nullable: true})
@@ -17,3 +16,6 @@ export class HasCommentResolver {
     }
   }
 }
+
+@Resolver(() => HasOptionalComment)
+export class HasOptionalCommentResolver extends HasCommentResolver {}

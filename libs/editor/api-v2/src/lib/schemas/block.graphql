@@ -3,12 +3,14 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on TitleBlock {
     blockStyle
+    type
     title
     lead
   }
 
   ... on ImageBlock {
     blockStyle
+    type
     caption
     linkUrl
     image {
@@ -18,6 +20,7 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on ImageGalleryBlock {
     blockStyle
+    type
     images {
       caption
       image {
@@ -28,6 +31,7 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on QuoteBlock {
     blockStyle
+    type
     quote
     author
     image {
@@ -37,16 +41,19 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on RichTextBlock {
     blockStyle
+    type
     richText
   }
 
   ... on HTMLBlock {
     blockStyle
+    type
     html
   }
 
   ... on EventBlock {
     blockStyle
+    type
 
     filter {
       tags
@@ -60,6 +67,7 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on CommentBlock {
     blockStyle
+    type
 
     filter {
       tags
@@ -73,6 +81,7 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on PollBlock {
     blockStyle
+    type
     poll {
       ...FullPoll
     }
@@ -80,6 +89,7 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on ListicleBlock {
     blockStyle
+    type
     items {
       title
       richText
@@ -91,6 +101,7 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on BreakBlock {
     blockStyle
+    type
     text
     richText
     hideButton
@@ -104,60 +115,71 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on FacebookPostBlock {
     blockStyle
+    type
     userID
     postID
   }
 
   ... on FacebookVideoBlock {
     blockStyle
+    type
     userID
     videoID
   }
 
   ... on InstagramPostBlock {
     blockStyle
+    type
     postID
   }
 
   ... on TwitterTweetBlock {
     blockStyle
+    type
     userID
     tweetID
   }
 
   ... on VimeoVideoBlock {
     blockStyle
+    type
     videoID
   }
 
   ... on YouTubeVideoBlock {
     blockStyle
+    type
     videoID
   }
 
   ... on SoundCloudTrackBlock {
     blockStyle
+    type
     trackID
   }
 
   ... on PolisConversationBlock {
     blockStyle
+    type
     conversationID
   }
 
   ... on TikTokVideoBlock {
     blockStyle
+    type
     userID
     videoID
   }
 
   ... on BildwurfAdBlock {
     blockStyle
+    type
     zoneID
   }
 
   ... on IFrameBlock {
     blockStyle
+    type
     url
     title
     width
@@ -186,6 +208,7 @@ fragment FullTeaser on Teaser {
 
           ... on PollBlock {
             blockStyle
+            type
             poll {
               ...FullPoll
             }
@@ -244,7 +267,9 @@ fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
 
   ... on TeaserGridFlexBlock {
+    type
     blockStyle
+    type
     flexTeasers {
       alignment {
         i
@@ -262,7 +287,9 @@ fragment FullBlock on BlockContent {
   }
 
   ... on TeaserGridBlock {
+    type
     blockStyle
+    type
     teasers {
       ...FullTeaser
     }
@@ -272,6 +299,7 @@ fragment FullBlock on BlockContent {
   ... on TeaserListBlock {
     title
     blockStyle
+    type
     skip
     take
     sort

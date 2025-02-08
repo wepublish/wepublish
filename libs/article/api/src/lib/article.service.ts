@@ -23,9 +23,12 @@ export class ArticleService {
 
   @PrimeDataLoader(ArticleDataloaderService)
   async getArticleBySlug(slug: string) {
-    return this.prisma.article.findUnique({
+    return this.prisma.article.findFirst({
       where: {
-        slug
+        slug,
+        publishedAt: {
+          not: null
+        }
       }
     })
   }
@@ -76,18 +79,21 @@ export class ArticleService {
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
-  async createArticle({
-    slug,
-    shared,
-    hidden,
-    disableComments,
-    authorIds,
-    socialMediaAuthorIds,
-    tagIds,
-    properties,
-    blocks,
-    ...revision
-  }: CreateArticleInput) {
+  async createArticle(
+    {
+      slug,
+      shared,
+      hidden,
+      disableComments,
+      authorIds,
+      socialMediaAuthorIds,
+      tagIds,
+      properties,
+      blocks,
+      ...revision
+    }: CreateArticleInput,
+    userId: string | null | undefined
+  ) {
     return this.prisma.article.create({
       data: {
         slug,
@@ -105,6 +111,7 @@ export class ArticleService {
         revisions: {
           create: {
             ...revision,
+            userId,
             blocks: blocks.map(mapBlockUnionMap) as any[],
             properties: {
               createMany: {
@@ -128,19 +135,22 @@ export class ArticleService {
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
-  async updateArticle({
-    id,
-    slug,
-    shared,
-    hidden,
-    disableComments,
-    authorIds,
-    socialMediaAuthorIds,
-    tagIds,
-    properties,
-    blocks,
-    ...revision
-  }: UpdateArticleInput) {
+  async updateArticle(
+    {
+      id,
+      slug,
+      shared,
+      hidden,
+      disableComments,
+      authorIds,
+      socialMediaAuthorIds,
+      tagIds,
+      properties,
+      blocks,
+      ...revision
+    }: UpdateArticleInput,
+    userId: string | null | undefined
+  ) {
     const article = await this.prisma.article.findUnique({
       where: {id},
       include: {
@@ -163,6 +173,7 @@ export class ArticleService {
           create: {
             ...revision,
             blocks: blocks.map(mapBlockUnionMap) as any[],
+            userId,
             properties: {
               createMany: {
                 data: properties.map(property => ({
@@ -303,7 +314,7 @@ export class ArticleService {
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
-  async duplicateArticle(id: string) {
+  async duplicateArticle(id: string, userId: string | null | undefined) {
     const article = await this.prisma.article.findUnique({
       where: {
         id
@@ -356,6 +367,7 @@ export class ArticleService {
         revisions: {
           create: {
             ...revision,
+            userId,
             blocks: revision.blocks || Prisma.JsonNull,
             properties: {
               createMany: {
@@ -607,6 +619,16 @@ const createHiddenFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhere
   }
 }
 
+const createPeerIdFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.peerId) {
+    return {
+      peerId: filter.peerId
+    }
+  }
+
+  return {}
+}
+
 export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => ({
   AND: [
     createTitleFilter(filter),
@@ -618,6 +640,7 @@ export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.Arti
     createTagsFilter(filter),
     createAuthorFilter(filter),
     createHiddenFilter(filter),
+    createPeerIdFilter(filter),
     {
       OR: [createPublishedFilter(filter), createDraftFilter(filter), createPendingFilter(filter)]
     }

@@ -26,15 +26,15 @@ import {TikTokVideoBlock, TikTokVideoBlockInput} from './embed/tiktok-block.mode
 import {TwitterTweetBlock, TwitterTweetBlockInput} from './embed/twitter-block.model'
 import {VimeoVideoBlock, VimeoVideoBlockInput} from './embed/vimeo-block.model'
 import {YouTubeVideoBlock, YouTubeVideoBlockInput} from './embed/youtube-block.model'
-import {ListicleBlock, ListicleBlockInput} from './listicle/listicle.model'
+import {ListicleBlock, ListicleBlockInput} from './listicle/listicle-block.model'
 import {TeaserGridBlock, TeaserGridBlockInput} from './teaser/teaser-grid.model'
 import {
   TeaserGridFlexBlock,
   FlexTeaserInput,
   TeaserGridFlexBlockInput
 } from './teaser/teaser-flex.model'
-import {Teaser, TeaserInput, TeaserType} from './teaser/teaser.model'
 import {TeaserListBlock, TeaserListBlockInput} from './teaser/teaser-list.model'
+import {mapTeaserUnionMap} from './teaser/teaser.model'
 
 export const BlockContent = createUnionType({
   name: 'BlockContent',
@@ -183,29 +183,6 @@ export class BlockContentInput {
   [BlockType.TeaserGridFlex]?: TeaserGridFlexBlockInput;
   @Field(() => TeaserListBlockInput, {nullable: true})
   [BlockType.TeaserList]?: TeaserListBlockInput
-}
-
-export function mapTeaserUnionMap(value: TeaserInput | undefined): typeof Teaser | undefined {
-  if (!value) {
-    return undefined
-  }
-
-  const valueKeys = Object.keys(value) as TeaserType[]
-
-  if (valueKeys.length === 0) {
-    throw new Error(`Received no teaser types.`)
-  }
-
-  if (valueKeys.length > 1) {
-    throw new Error(
-      `Received multiple teaser types (${JSON.stringify(valueKeys)}), they're mutually exclusive.`
-    )
-  }
-
-  const type = valueKeys[0]
-  const teaserValue = value[type]
-
-  return {type, ...teaserValue} as typeof Teaser
 }
 
 export function mapBlockUnionMap(value: BlockContentInput): typeof BlockContent {

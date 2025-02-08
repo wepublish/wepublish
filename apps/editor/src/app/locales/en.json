@@ -109,7 +109,7 @@
         "tags": "Tags",
         "title": "Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
-        "totalCharCount": "Total characters count is {{totalCharCount}}",
+        "totalCharCount": "Total character count is {{totalCharCount}}",
         "type": "Type",
         "untitled": "Untitled",
         "uploadImage": "Upload Image",
@@ -946,14 +946,11 @@
       "authors": "Authors",
       "filterByPeer": "Filter by peer",
       "lead": "Lead",
-      "notPublished": "Not yet published",
-      "originalArticle": "Original article",
       "peer": "Peer",
       "peerArticles": "Peerable Articles",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publication date",
-      "title": "Title",
-      "toOriginalArticle": "To original article"
+      "title": "Title"
     },
     "peerList": {
       "overview": {

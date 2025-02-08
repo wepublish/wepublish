@@ -575,6 +575,7 @@ function ArticleEditor() {
 
       <Drawer open={isMetaDrawerOpen} size="md" onClose={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
+          peerId={articleData?.article.peer?.id}
           articleID={articleID}
           value={metadata}
           infoData={infoData}

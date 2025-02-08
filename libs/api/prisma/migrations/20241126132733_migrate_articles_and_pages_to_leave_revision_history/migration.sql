@@ -63,6 +63,12 @@ ALTER TABLE "articles.revisions" ALTER COLUMN "articleId" SET NOT NULL;
 -- AddForeignKey
 ALTER TABLE "articles.revisions" ADD CONSTRAINT "articles.revisions_articleId_fkey" FOREIGN KEY ("articleId") REFERENCES "articles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
+-- AlterTable
+ALTER TABLE "articles.revisions" ADD COLUMN     "userId" TEXT;
+
+-- AddForeignKey
+ALTER TABLE "articles.revisions" ADD CONSTRAINT "articles.revisions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
 /* REMOVE NOT NEEDED COLUMNS */
 -- DropForeignKey
 ALTER TABLE "articles" DROP CONSTRAINT "articles_draftId_fkey";
@@ -107,7 +113,6 @@ DROP COLUMN "publishedId";
 /**
  * Page
 **/
-
 -- AlterTable
 ALTER TABLE "pages" ADD COLUMN     "publishedAt" TIMESTAMP(3);
 
@@ -148,6 +153,13 @@ ALTER TABLE "pages.revisions" ALTER COLUMN "pageId" SET NOT NULL;
 -- AddForeignKey
 ALTER TABLE "pages.revisions" ADD CONSTRAINT "pages.revisions_pageId_fkey" FOREIGN KEY ("pageId") REFERENCES "pages"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
+-- AlterTable
+ALTER TABLE "pages.revisions" ADD COLUMN     "userId" TEXT;
+
+-- AddForeignKey
+ALTER TABLE "pages.revisions" ADD CONSTRAINT "pages.revisions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+/* REMOVE NOT NEEDED COLUMNS */
 -- DropForeignKey
 ALTER TABLE "pages" DROP CONSTRAINT "pages_draftId_fkey";
 

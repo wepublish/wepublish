@@ -64,6 +64,9 @@ model ArticleRevision {
   articleId String
   article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
 
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([publishedAt])
   @@map("articles.revisions")
 }
@@ -96,7 +99,7 @@ model Article {
   modifiedAt  DateTime  @updatedAt
   publishedAt DateTime?
 
-  slug            String? @unique
+  slug            String?
   shared          Boolean
   hidden          Boolean @default(false)
   disableComments Boolean @default(false)
@@ -145,7 +148,7 @@ model Author {
   createdAt  DateTime       @default(now())
   modifiedAt DateTime       @updatedAt
   name       String
-  slug       String         @unique
+  slug       String
   jobTitle   String?
   links      AuthorsLinks[]
   bio        Json?
@@ -164,6 +167,7 @@ model Author {
   hideOnTeaser  Boolean @default(false)
   hideOnTeam    Boolean @default(false)
 
+  @@unique([slug, peerId])
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([name])
@@ -571,6 +575,9 @@ model PageRevision {
   pageId String
   page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
 
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([publishedAt])
   @@map("pages.revisions")
 }
@@ -581,7 +588,7 @@ model Page {
   modifiedAt  DateTime  @updatedAt
   publishedAt DateTime?
 
-  slug String? @unique
+  slug String?
 
   revisions   PageRevision[]
   navigations NavigationLink[]
@@ -862,13 +869,15 @@ model User {
   oauth2Accounts           UserOAuth2Account[]
   paymentProviderCustomers PaymentProviderCustomer[]
 
-  Comment       Comment[]
-  Session       Session[]
-  Subscription  Subscription[]
-  CommentRating CommentRating[]
-  PollVote      PollVote[]
-  mailSent      MailLog[]
-  UserConsent   UserConsent[]
+  comments         Comment[]
+  sessions         Session[]
+  subscriptions    Subscription[]
+  commentRatings   CommentRating[]
+  pollVotes        PollVote[]
+  mailSent         MailLog[]
+  consents         UserConsent[]
+  articleRevisions ArticleRevision[]
+  pageRevisions    PageRevision[]
 
   @@map("users")
 }

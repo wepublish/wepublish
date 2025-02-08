@@ -2,7 +2,6 @@ import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {HasAuthor, HasOptionalAuthor} from './has-author.model'
 import {Author} from '../author.model'
 
-@Resolver(() => HasOptionalAuthor)
 @Resolver(() => HasAuthor)
 export class HasAuthorResolver {
   @ResolveField(() => Author, {nullable: true})
@@ -17,3 +16,6 @@ export class HasAuthorResolver {
     }
   }
 }
+
+@Resolver(() => HasOptionalAuthor)
+export class HasOptionalAuthorResolver extends HasAuthorResolver {}

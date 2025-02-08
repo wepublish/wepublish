@@ -152,10 +152,6 @@ export class WepublishServer {
       resolvers[type] = {...resolvers[type], ...federatedResolvers[type]}
     }
 
-    delete resolvers['Query']
-    delete resolvers['Mutation']
-    console.log(resolvers)
-
     const publicSchema = buildSubgraphSchema({
       typeDefs,
       resolvers

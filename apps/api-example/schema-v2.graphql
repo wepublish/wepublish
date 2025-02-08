@@ -40,7 +40,7 @@ type AllowedSettingVals {
   stringChoice: [String!]
 }
 
-type Article {
+type Article implements HasOptionalPeerLc {
   createdAt: DateTime!
   disableComments: Boolean!
   draft: ArticleRevision
@@ -72,6 +72,7 @@ input ArticleFilter {
   draft: Boolean
   includeHidden: Boolean
   lead: String
+  peerId: String
   pending: Boolean
   preTitle: String
   publicationDateFrom: DateFilter
@@ -335,9 +336,9 @@ type CommentBlockFilter {
 }
 
 input CommentBlockFilterInput {
-  comments: [String!]!
+  comments: [String!]! = []
   item: String
-  tags: [String!]!
+  tags: [String!]! = []
 }
 
 input CommentBlockInput {
@@ -498,8 +499,8 @@ type EventBlockFilter {
 }
 
 input EventBlockFilterInput {
-  events: [String!]!
-  tags: [String!]!
+  events: [String!]! = []
+  tags: [String!]! = []
 }
 
 input EventBlockInput {
@@ -715,6 +716,11 @@ interface HasOptionalPage {
   pageID: String
 }
 
+interface HasOptionalPeerLc {
+  peer: Peer
+  peerId: String
+}
+
 interface HasOptionalPoll {
   poll: FullPoll
   pollId: String
@@ -832,6 +838,12 @@ type ImageV2 {
   tags: [String!]!
   title: String
   width: Int!
+}
+
+input ImportArticleOptions {
+  importAuthors: Boolean
+  importContentImages: Boolean
+  importTags: Boolean
 }
 
 input ImportedEventFilter {
@@ -988,7 +1000,7 @@ type Mutation {
   importEvent(id: String!, source: String!): String!
 
   """Imports an article from a peer as a draft."""
-  importPeerArticle(articleId: String!, peerId: String!): Article!
+  importPeerArticle(articleId: String!, options: ImportArticleOptions! = {importAuthors: true, importContentImages: true, importTags: true}, peerId: String!): Article!
 
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
@@ -1214,32 +1226,37 @@ type Peer {
   id: String!
 }
 
-type PeerArticle {
+type PeerArticle implements HasOptionalPeerLc {
+  createdAt: DateTime!
   id: String!
   latest: PeerArticleRevision!
+  modifiedAt: DateTime!
   peer: Peer
   peerId: String
+  publishedAt: DateTime!
   slug: String
+  tags: [Tag!]!
   url: String!
 }
 
 input PeerArticleFilter {
   authors: [String!]
-  includeHidden: Boolean
   lead: String
-  peerName: String
+  peerId: String
   preTitle: String
   publicationDateFrom: DateFilter
   publicationDateTo: DateFilter
-  shared: Boolean
   tags: [String!]
   title: String
 }
 
 type PeerArticleRevision {
+  authors: [Author!]!
+  id: String!
   image: Image
   lead: String
   preTitle: String
+  seoTitle: String
   title: String
 }
 

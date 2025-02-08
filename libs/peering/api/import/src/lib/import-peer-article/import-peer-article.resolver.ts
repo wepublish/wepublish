@@ -1,8 +1,12 @@
-import {Args, Mutation, Resolver} from '@nestjs/graphql'
+import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {Article} from '@wepublish/article/api'
 import {ImportPeerArticleService} from './import-peer-article.service'
-import {PaginatedPeerArticle, PeerArticle, PeerArticleListArgs} from './peer-article.model'
-import {Query} from '@nestjs/graphql'
+import {
+  ImportArticleOptions,
+  PaginatedPeerArticle,
+  PeerArticle,
+  PeerArticleListArgs
+} from './peer-article.model'
 
 @Resolver(() => PeerArticle)
 export class ImportPeerArticleResolver {
@@ -18,7 +22,18 @@ export class ImportPeerArticleResolver {
   @Mutation(() => Article, {
     description: `Imports an article from a peer as a draft.`
   })
-  public importPeerArticle(@Args('peerId') peerId: string, @Args('articleId') articleId: string) {
-    return this.importPeerArticleService.importArticle(peerId, articleId)
+  public importPeerArticle(
+    @Args('peerId') peerId: string,
+    @Args('articleId') articleId: string,
+    @Args('options', {
+      defaultValue: {
+        importContentImages: true,
+        importAuthors: true,
+        importTags: true
+      } as ImportArticleOptions
+    })
+    options: ImportArticleOptions
+  ) {
+    return this.importPeerArticleService.importArticle(peerId, articleId, options)
   }
 }

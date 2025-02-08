@@ -1,27 +1,33 @@
 fragment FullPeerProfile on PeerProfile {
   name
-  hostURL
-  themeColor
-  themeFontColor
   logo {
     ...FullImage
   }
 
+  themeColor
+  themeFontColor
+
+  hostURL
+  websiteURL
+
   callToActionText
   callToActionURL
+  callToActionImageURL
   callToActionImage {
     ...FullImage
   }
-
-  callToActionImageURL
 }
 
 fragment FullPeer on Peer {
   id
+  createdAt
+  modifiedAt
+
   name
   slug
   isDisabled
   hostURL
+
   profile {
     ...FullPeerProfile
   }

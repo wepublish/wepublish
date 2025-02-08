@@ -19,6 +19,7 @@ import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {createProxyingResolver} from '../utility'
 import {GraphQLTag} from './tag/tag'
+import {GraphQLPeer} from './peer'
 
 export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({
   name: 'AuthorLink',
@@ -71,7 +72,13 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
     },
     hideOnArticle: {type: GraphQLBoolean},
     hideOnTeaser: {type: GraphQLBoolean},
-    hideOnTeam: {type: GraphQLBoolean}
+    hideOnTeam: {type: GraphQLBoolean},
+    peer: {
+      type: GraphQLPeer,
+      resolve: createProxyingResolver(({peerId}, args, {loaders}) => {
+        return peerId ? loaders.peer.load(peerId) : null
+      })
+    }
   }
 })
 

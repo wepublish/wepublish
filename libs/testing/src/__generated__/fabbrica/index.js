@@ -46,6 +46,10 @@ const modelFieldDefinitions = [{
                 name: "article",
                 type: "Article",
                 relationName: "ArticleToArticleRevision"
+            }, {
+                name: "user",
+                type: "User",
+                relationName: "ArticleRevisionToUser"
             }]
     }, {
         name: "ArticleRevisionAuthor",
@@ -406,6 +410,10 @@ const modelFieldDefinitions = [{
                 name: "page",
                 type: "Page",
                 relationName: "PageToPageRevision"
+            }, {
+                name: "user",
+                type: "User",
+                relationName: "PageRevisionToUser"
             }]
     }, {
         name: "Page",
@@ -596,23 +604,23 @@ const modelFieldDefinitions = [{
                 type: "PaymentProviderCustomer",
                 relationName: "PaymentProviderCustomerToUser"
             }, {
-                name: "Comment",
+                name: "comments",
                 type: "Comment",
                 relationName: "CommentToUser"
             }, {
-                name: "Session",
+                name: "sessions",
                 type: "Session",
                 relationName: "SessionToUser"
             }, {
-                name: "Subscription",
+                name: "subscriptions",
                 type: "Subscription",
                 relationName: "SubscriptionToUser"
             }, {
-                name: "CommentRating",
+                name: "commentRatings",
                 type: "CommentRating",
                 relationName: "CommentRatingToUser"
             }, {
-                name: "PollVote",
+                name: "pollVotes",
                 type: "PollVote",
                 relationName: "PollVoteToUser"
             }, {
@@ -620,9 +628,17 @@ const modelFieldDefinitions = [{
                 type: "MailLog",
                 relationName: "MailLogToUser"
             }, {
-                name: "UserConsent",
+                name: "consents",
                 type: "UserConsent",
                 relationName: "UserToUserConsent"
+            }, {
+                name: "articleRevisions",
+                type: "ArticleRevision",
+                relationName: "ArticleRevisionToUser"
+            }, {
+                name: "pageRevisions",
+                type: "PageRevision",
+                relationName: "PageRevisionToUser"
             }]
     }, {
         name: "UserRole",
@@ -938,6 +954,9 @@ function isArticleRevisionsocialMediaImageFactory(x) {
 function isArticleRevisionarticleFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Article";
 }
+function isArticleRevisionuserFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
+}
 function autoGenerateArticleRevisionScalarsOrEnums({ seq }) {
     return {
         breaking: getScalarFieldValueGenerator().Boolean({ modelName: "ArticleRevision", fieldName: "breaking", isId: false, isUnique: false, seq }),
@@ -970,7 +989,10 @@ function defineArticleRevisionFactoryInternal({ defaultData: defaultDataResolver
                 } : defaultData.socialMediaImage,
                 article: isArticleRevisionarticleFactory(defaultData.article) ? {
                     create: yield defaultData.article.build()
-                } : defaultData.article
+                } : defaultData.article,
+                user: isArticleRevisionuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -2674,6 +2696,9 @@ function isPageRevisionsocialMediaImageFactory(x) {
 function isPageRevisionpageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
 }
+function isPageRevisionuserFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
+}
 function autoGeneratePageRevisionScalarsOrEnums({ seq }) {
     return {
         blocks: getScalarFieldValueGenerator().Json({ modelName: "PageRevision", fieldName: "blocks", isId: false, isUnique: false, seq })
@@ -2704,7 +2729,10 @@ function definePageRevisionFactoryInternal({ defaultData: defaultDataResolver, t
                 } : defaultData.socialMediaImage,
                 page: isPageRevisionpageFactory(defaultData.page) ? {
                     create: yield defaultData.page.build()
-                } : defaultData.page
+                } : defaultData.page,
+                user: isPageRevisionuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;

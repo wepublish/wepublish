@@ -149,3 +149,26 @@ export class TeaserInput {
   @Field(() => CustomTeaserInput, {nullable: true})
   [TeaserType.Custom]?: CustomTeaserInput
 }
+
+export function mapTeaserUnionMap(value: TeaserInput | undefined): typeof Teaser | undefined {
+  if (!value) {
+    return undefined
+  }
+
+  const valueKeys = Object.keys(value) as TeaserType[]
+
+  if (valueKeys.length === 0) {
+    throw new Error(`Received no teaser types.`)
+  }
+
+  if (valueKeys.length > 1) {
+    throw new Error(
+      `Received multiple teaser types (${JSON.stringify(valueKeys)}), they're mutually exclusive.`
+    )
+  }
+
+  const type = valueKeys[0]
+  const teaserValue = value[type]
+
+  return {type, ...teaserValue} as typeof Teaser
+}

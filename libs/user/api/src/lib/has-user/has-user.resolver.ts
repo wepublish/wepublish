@@ -1,12 +1,12 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {HasUser, HasUserLc, HasOptionalUser, HasOptionalUserLc} from './has-user.model'
 import {User} from '../user.model'
+import {UserDataloaderService} from '../user-dataloader.service'
 
-@Resolver(() => HasOptionalUser)
 @Resolver(() => HasUser)
-@Resolver(() => HasOptionalUserLc)
-@Resolver(() => HasUserLc)
 export class HasUserResolver {
+  constructor(private dataloader: UserDataloaderService) {}
+
   @ResolveField(() => User, {nullable: true})
   public user(@Parent() block: HasOptionalUser | HasUser | HasOptionalUserLc | HasUserLc) {
     const id = 'userId' in block ? block.userId : 'userID' in block ? block.userID : null
@@ -15,9 +15,15 @@ export class HasUserResolver {
       return null
     }
 
-    return {
-      __typename: 'User',
-      id
-    }
+    return this.dataloader.load(id)
   }
 }
+
+@Resolver(() => HasUserLc)
+export class HasUserLcResolver extends HasUserResolver {}
+
+@Resolver(() => HasOptionalUser)
+export class HasOptionalUserResolver extends HasUserResolver {}
+
+@Resolver(() => HasOptionalUserLc)
+export class HasOptionalUserLcResolver extends HasUserResolver {}

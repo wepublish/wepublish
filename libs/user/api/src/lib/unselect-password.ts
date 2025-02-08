@@ -4,16 +4,18 @@ export const unselectPassword: Record<
   keyof Omit<
     Prisma.UserSelect,
     | '_count'
-    | 'Comment'
-    | 'Session'
-    | 'Subscription'
-    | 'Invoice'
-    | 'CommentRating'
-    | 'PollVote'
+    | 'comments'
+    | 'sessions'
+    | 'subscriptions'
+    | 'invoices'
+    | 'commentRatings'
+    | 'pollVotes'
     | 'userImage'
     | 'mailSent'
-    | 'UserConsent'
+    | 'consents'
     | 'mailSent'
+    | 'articleRevisions'
+    | 'pageRevisions'
   >,
   boolean
 > = {

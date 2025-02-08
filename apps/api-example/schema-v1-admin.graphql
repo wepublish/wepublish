@@ -453,6 +453,7 @@ type Author {
   hideOnArticle: Boolean
   hideOnTeaser: Boolean
   hideOnTeam: Boolean
+  peer: Peer
 }
 
 type AuthorLink {

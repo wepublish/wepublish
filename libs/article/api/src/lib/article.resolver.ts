@@ -69,24 +69,30 @@ export class ArticleResolver {
   @Mutation(() => Article, {
     description: `Creates an article.`
   })
-  public createArticle(@Args() input: CreateArticleInput) {
-    return this.articleService.createArticle(input)
+  public createArticle(
+    @Args() input: CreateArticleInput,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    return this.articleService.createArticle(input, user?.user?.id)
   }
 
   @Permissions(CanCreateArticle)
   @Mutation(() => Article, {
     description: `Updates an article.`
   })
-  public updateArticle(@Args() input: UpdateArticleInput) {
-    return this.articleService.updateArticle(input)
+  public updateArticle(
+    @Args() input: UpdateArticleInput,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    return this.articleService.updateArticle(input, user?.user?.id)
   }
 
   @Permissions(CanCreateArticle)
   @Mutation(() => Article, {
     description: `Duplicates an article.`
   })
-  public duplicateArticle(@Args('id') id: string) {
-    return this.articleService.duplicateArticle(id)
+  public duplicateArticle(@Args('id') id: string, @CurrentUser() user: UserSession | undefined) {
+    return this.articleService.duplicateArticle(id, user?.user?.id)
   }
 
   @Permissions(CanDeleteArticle)

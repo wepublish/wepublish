@@ -53,7 +53,7 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
-export type Article = {
+export type Article = HasOptionalPeerLc & {
   __typename?: 'Article';
   createdAt: Scalars['DateTime'];
   disableComments: Scalars['Boolean'];
@@ -87,6 +87,7 @@ export type ArticleFilter = {
   draft?: InputMaybe<Scalars['Boolean']>;
   includeHidden?: InputMaybe<Scalars['Boolean']>;
   lead?: InputMaybe<Scalars['String']>;
+  peerId?: InputMaybe<Scalars['String']>;
   pending?: InputMaybe<Scalars['Boolean']>;
   preTitle?: InputMaybe<Scalars['String']>;
   publicationDateFrom?: InputMaybe<DateFilter>;
@@ -177,6 +178,7 @@ export type Author = {
   links?: Maybe<Array<AuthorLink>>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  peer?: Maybe<Peer>;
   slug: Scalars['Slug'];
   tags: Array<Tag>;
   url: Scalars['String'];
@@ -469,9 +471,9 @@ export type CommentBlockFilter = {
 };
 
 export type CommentBlockFilterInput = {
-  comments: Array<Scalars['String']>;
+  comments?: Array<Scalars['String']>;
   item?: InputMaybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
+  tags?: Array<Scalars['String']>;
 };
 
 export type CommentBlockInput = {
@@ -694,8 +696,8 @@ export type EventBlockFilter = {
 };
 
 export type EventBlockFilterInput = {
-  events: Array<Scalars['String']>;
-  tags: Array<Scalars['String']>;
+  events?: Array<Scalars['String']>;
+  tags?: Array<Scalars['String']>;
 };
 
 export type EventBlockInput = {
@@ -932,6 +934,11 @@ export type HasOptionalPage = {
   pageID?: Maybe<Scalars['String']>;
 };
 
+export type HasOptionalPeerLc = {
+  peer?: Maybe<Peer>;
+  peerId?: Maybe<Scalars['String']>;
+};
+
 export type HasOptionalPoll = {
   poll?: Maybe<FullPoll>;
   pollId?: Maybe<Scalars['String']>;
@@ -1100,6 +1107,12 @@ export type ImageV2 = {
   tags: Array<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   width: Scalars['Int'];
+};
+
+export type ImportArticleOptions = {
+  importAuthors?: InputMaybe<Scalars['Boolean']>;
+  importContentImages?: InputMaybe<Scalars['Boolean']>;
+  importTags?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ImportedEventFilter = {
@@ -1645,6 +1658,7 @@ export type MutationImportEventArgs = {
 
 export type MutationImportPeerArticleArgs = {
   articleId: Scalars['String'];
+  options?: ImportArticleOptions;
   peerId: Scalars['String'];
 };
 
@@ -2116,34 +2130,39 @@ export type Peer = {
   slug: Scalars['String'];
 };
 
-export type PeerArticle = {
+export type PeerArticle = HasOptionalPeerLc & {
   __typename?: 'PeerArticle';
+  createdAt: Scalars['DateTime'];
   id: Scalars['String'];
   latest: PeerArticleRevision;
+  modifiedAt: Scalars['DateTime'];
   peer?: Maybe<Peer>;
   peerId?: Maybe<Scalars['String']>;
+  publishedAt: Scalars['DateTime'];
   slug?: Maybe<Scalars['String']>;
+  tags: Array<Tag>;
   url: Scalars['String'];
 };
 
 export type PeerArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>;
-  includeHidden?: InputMaybe<Scalars['Boolean']>;
   lead?: InputMaybe<Scalars['String']>;
-  peerName?: InputMaybe<Scalars['String']>;
+  peerId?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
-  shared?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
 };
 
 export type PeerArticleRevision = {
   __typename?: 'PeerArticleRevision';
+  authors: Array<Author>;
+  id: Scalars['String'];
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
+  seoTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
 };
 
@@ -6706,6 +6725,10 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
     ],
     "HasOptionalPage": [
       "PageTeaser"
+    ],
+    "HasOptionalPeerLc": [
+      "Article",
+      "PeerArticle"
     ],
     "HasOptionalPoll": [
       "PollBlock"

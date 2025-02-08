@@ -58,6 +58,7 @@ import {ArticleModule} from '@wepublish/article/api'
 import {PhraseModule} from '@wepublish/phrase/api'
 import {ActionModule} from '@wepublish/action/api'
 import {NavigationModule} from '@wepublish/navigation/api'
+import {UserModule} from '@wepublish/user/api'
 
 @Global()
 @Module({
@@ -284,6 +285,7 @@ import {NavigationModule} from '@wepublish/navigation/api'
     PollModule,
     PhraseModule,
     ActionModule,
+    UserModule,
     SubscriptionModule,
     NavigationModule,
     EventsImportModule.registerAsync({

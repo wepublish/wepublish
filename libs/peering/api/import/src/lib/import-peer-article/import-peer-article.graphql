@@ -1,4 +1,5 @@
 fragment FullImage on Image {
+  id
   url
   license
   source
@@ -62,6 +63,10 @@ fragment ImportBlock on BlockContent {
   ... on TeaserListBlock {
     __typename
     type
+    teaserType
+    take
+    skip
+    sort
   }
 
   ... on TeaserGridBlock {
@@ -70,6 +75,22 @@ fragment ImportBlock on BlockContent {
   }
 
   ... on TeaserGridFlexBlock {
+    __typename
+    type
+
+    flexTeasers {
+      alignment {
+        i
+        x
+        y
+        w
+        h
+        static
+      }
+    }
+  }
+
+  ... on UnknownBlock {
     __typename
     type
   }
@@ -92,13 +113,17 @@ fragment SlimArticle on Article {
   publishedAt
   createdAt
   modifiedAt
-  shared
-  hidden
   slug
   url
 
   latest {
     ...SlimArticleRevision
+  }
+
+  tags {
+    id
+    tag
+    main
   }
 }
 
@@ -129,12 +154,20 @@ query Article($id: String!) {
   article(id: $id) {
     id
     url
+    slug
 
     tags {
       tag
     }
 
     published {
+      title
+      lead
+
+      image {
+        ...FullImage
+      }
+
       blocks {
         ...ImportBlock
       }
@@ -145,7 +178,7 @@ query Article($id: String!) {
         bio
         jobTitle
         image {
-          url
+          ...FullImage
         }
         hideOnArticle
       }

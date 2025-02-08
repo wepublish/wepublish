@@ -129,7 +129,8 @@ export interface InfoData {
 }
 
 export interface ArticleMetadataPanelProps {
-  readonly articleID?: string
+  readonly articleID: string | null | undefined
+  readonly peerId: string | null | undefined
   readonly value: ArticleMetadata
   readonly infoData: InfoData
 
@@ -139,6 +140,7 @@ export interface ArticleMetadataPanelProps {
 
 function ArticleMetadataPanel({
   articleID,
+  peerId,
   value,
   infoData,
   onClose,
@@ -314,6 +316,7 @@ function ArticleMetadataPanel({
             <PaddingBottom>
               {t('articleEditor.panels.totalCharCount', {totalCharCount: infoData.charCount})}
             </PaddingBottom>
+
             <Group>
               <ControlLabel>
                 {t('articleEditor.panels.preTitle')}
@@ -497,15 +500,18 @@ function ArticleMetadataPanel({
               </HelpText>
             </Group>
 
-            <Group controlId="articlePeering">
-              <ControlLabel>{t('articleEditor.panels.peering')}</ControlLabel>
-              <Toggle
-                checked={shared}
-                disabled={!isAuthorized}
-                onChange={shared => onChange?.({...value, shared})}
-              />
-              <HelpText>{t('articleEditor.panels.allowPeerPublishing')}</HelpText>
-            </Group>
+            {!peerId && (
+              <Group controlId="articlePeering">
+                <ControlLabel>{t('articleEditor.panels.peering')}</ControlLabel>
+
+                <Toggle
+                  checked={shared}
+                  disabled={!isAuthorized}
+                  onChange={shared => onChange?.({...value, shared})}
+                />
+                <HelpText>{t('articleEditor.panels.allowPeerPublishing')}</HelpText>
+              </Group>
+            )}
 
             <Group controlId="hidden">
               <ControlLabel>{t('articleEditor.panels.hidden')}</ControlLabel>
