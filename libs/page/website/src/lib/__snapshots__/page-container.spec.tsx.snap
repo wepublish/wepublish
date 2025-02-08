@@ -44,14 +44,6 @@ exports[`Page Container should render ById 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1000/400"
-        property="og:image"
-      />
-      <meta
-        content="1000"
-        property="og:image:width"
-      />
-      <meta
         content="https://unsplash.it/800/400"
         property="og:image"
       />
@@ -99,13 +91,12 @@ exports[`Page Container should render ById 1`] = `
         content="max-image-preview:large"
         name="robots"
       />
+      <script
+        type="application/ld+json"
+      >
+        {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+      </script>
     </div>
-    <script
-      data-testid="fake-script"
-      type="application/ld+json"
-    >
-      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
-    </script>
     <div
       class="emotion-3 emotion-4"
     >
@@ -2226,14 +2217,6 @@ exports[`Page Container should render BySlug 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1000/400"
-        property="og:image"
-      />
-      <meta
-        content="1000"
-        property="og:image:width"
-      />
-      <meta
         content="https://unsplash.it/800/400"
         property="og:image"
       />
@@ -2281,13 +2264,12 @@ exports[`Page Container should render BySlug 1`] = `
         content="max-image-preview:large"
         name="robots"
       />
+      <script
+        type="application/ld+json"
+      >
+        {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+      </script>
     </div>
-    <script
-      data-testid="fake-script"
-      type="application/ld+json"
-    >
-      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
-    </script>
     <div
       class="emotion-3 emotion-4"
     >
@@ -4408,14 +4390,6 @@ exports[`Page Container should render ByToken 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1000/400"
-        property="og:image"
-      />
-      <meta
-        content="1000"
-        property="og:image:width"
-      />
-      <meta
         content="https://unsplash.it/800/400"
         property="og:image"
       />
@@ -4463,13 +4437,12 @@ exports[`Page Container should render ByToken 1`] = `
         content="max-image-preview:large"
         name="robots"
       />
+      <script
+        type="application/ld+json"
+      >
+        {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+      </script>
     </div>
-    <script
-      data-testid="fake-script"
-      type="application/ld+json"
-    >
-      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
-    </script>
     <div
       class="emotion-3 emotion-4"
     >
@@ -6590,14 +6563,6 @@ exports[`Page Container should render WithChildren 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1000/400"
-        property="og:image"
-      />
-      <meta
-        content="1000"
-        property="og:image:width"
-      />
-      <meta
         content="https://unsplash.it/800/400"
         property="og:image"
       />
@@ -6645,13 +6610,12 @@ exports[`Page Container should render WithChildren 1`] = `
         content="max-image-preview:large"
         name="robots"
       />
+      <script
+        type="application/ld+json"
+      >
+        {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+      </script>
     </div>
-    <script
-      data-testid="fake-script"
-      type="application/ld+json"
-    >
-      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
-    </script>
     <div
       class="emotion-3 emotion-4"
     >
@@ -8775,14 +8739,6 @@ exports[`Page Container should render WithClassName 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1000/400"
-        property="og:image"
-      />
-      <meta
-        content="1000"
-        property="og:image:width"
-      />
-      <meta
         content="https://unsplash.it/800/400"
         property="og:image"
       />
@@ -8830,13 +8786,12 @@ exports[`Page Container should render WithClassName 1`] = `
         content="max-image-preview:large"
         name="robots"
       />
+      <script
+        type="application/ld+json"
+      >
+        {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+      </script>
     </div>
-    <script
-      data-testid="fake-script"
-      type="application/ld+json"
-    >
-      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
-    </script>
     <div
       class="emotion-3 emotion-4"
     >
@@ -10957,14 +10912,6 @@ exports[`Page Container should render WithEmotion 1`] = `
         property="og:image:width"
       />
       <meta
-        content="https://unsplash.it/1000/400"
-        property="og:image"
-      />
-      <meta
-        content="1000"
-        property="og:image:width"
-      />
-      <meta
         content="https://unsplash.it/800/400"
         property="og:image"
       />
@@ -11012,13 +10959,12 @@ exports[`Page Container should render WithEmotion 1`] = `
         content="max-image-preview:large"
         name="robots"
       />
+      <script
+        type="application/ld+json"
+      >
+        {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+      </script>
     </div>
-    <script
-      data-testid="fake-script"
-      type="application/ld+json"
-    >
-      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":{"__typename":"Image","id":"ljh9FHAvHAs0AxC","mimeType":"image/jpg","format":"jpg","createdAt":"2023-04-18T12:38:56.369Z","modifiedAt":"2023-04-18T12:38:56.371Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":null,"link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200"},"description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
-    </script>
     <div
       class="emotion-3 emotion-4"
     >
