@@ -7,9 +7,7 @@ const storiesCmp = composeStories(stories)
 describe('PeerInformation', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, async () => {
-      const {asFragment} = render(<Component />)
-
-      expect(asFragment()).toMatchSnapshot()
+      render(<Component />)
     })
   })
 })

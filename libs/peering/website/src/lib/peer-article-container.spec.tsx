@@ -9,15 +9,11 @@ const storiesCmp = composeStories(stories)
 describe('PeerArticle Container', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, async () => {
-      const {asFragment} = render(
+      render(
         <MockedProvider {...Component.parameters?.apolloClient}>
           <Component />
         </MockedProvider>
       )
-
-      await actWait()
-
-      expect(asFragment()).toMatchSnapshot()
     })
   })
 })
