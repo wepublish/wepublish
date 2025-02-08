@@ -15,7 +15,7 @@ fragment ArticleWithoutBlocks on Article {
   disableComments
 
   trackingPixels {
-    ...PublicTrackingPixel
+    ...FullTrackingPixel
   }
 
   tags {
@@ -41,15 +41,6 @@ fragment ArticleWithoutBlocks on Article {
   properties {
     ...FullProperty
   }
-}
-
-fragment PublicTrackingPixel on TrackingPixel {
-  id
-  uri
-}
-
-fragment PublicTrackingPixelMethod on TrackingPixelMethod {
-  trackingPixelProviderType
 }
 
 fragment FullArticle on Article {
