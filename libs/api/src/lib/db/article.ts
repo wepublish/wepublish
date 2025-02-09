@@ -4,7 +4,8 @@ import {
   ArticleRevision as PrismaArticleRevision,
   ArticleRevisionAuthor,
   ArticleRevisionSocialMediaAuthor,
-  ArticleTrackingPixels
+  ArticleTrackingPixels,
+  TrackingPixelMethod
 } from '@prisma/client'
 import {ArticleBlock} from './block'
 import {DateFilter} from './common'
@@ -122,7 +123,7 @@ export type ArticleWithRevisions = PrismaArticle & {
   draft: ArticleRevisionWithRelations | null
   pending: ArticleRevisionWithRelations | null
   published: ArticleRevisionWithRelations | null
-  trackingPixels: ArticleTrackingPixels[]
+  trackingPixels: (ArticleTrackingPixels & {trackingPixelMethod: TrackingPixelMethod})[]
 }
 
 export const articleWithRevisionsToPublicArticle = ({

@@ -1,30 +1,26 @@
-import {PublicTrackingPixelFragment} from '@wepublish/website/api'
+import {FullTrackingPixelFragment} from '@wepublish/website/api'
 
-interface ArticleTrackingPixelsProps {
-  trackingPixels?: (PublicTrackingPixelFragment | null)[] | null
+export type ArticleTrackingPixelsProps = {
+  trackingPixels?: (FullTrackingPixelFragment | null)[] | null
 }
 
-export default function ArticleTrackingPixels({trackingPixels}: ArticleTrackingPixelsProps) {
-  // no valid tracking pixel
-  if (!trackingPixels?.find(trackingPixel => !!trackingPixel?.uri)) {
-    return
-  }
+export const ArticleTrackingPixels = ({trackingPixels}: ArticleTrackingPixelsProps) => (
+  <>
+    {trackingPixels?.map(trackingPixel => {
+      if (trackingPixel?.uri) {
+        return (
+          <img
+            key={trackingPixel.uri}
+            src={trackingPixel.uri}
+            width="1"
+            height="1"
+            alt="tracking pixel"
+            loading="lazy"
+          />
+        )
+      }
 
-  return (
-    <>
-      {trackingPixels.map(trackingPixel => {
-        if (trackingPixel?.uri) {
-          return (
-            <img
-              key={trackingPixel.uri}
-              src={trackingPixel.uri}
-              width="1"
-              height="1"
-              alt="tracking-pixel"
-            />
-          )
-        }
-      })}
-    </>
-  )
-}
+      return null
+    })}
+  </>
+)

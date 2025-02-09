@@ -98,13 +98,11 @@ challenge:
   siteKey: ${TURNSTILE_SITE_KEY}
 trackingPixelProviders:
   - type: prolitteris
-    id: prolitteris-1
-    name: "Pro Litteris 1"
-    username: 'test'
-    memberNr: '1234567890'
-    password: 'test'
+    id: prolitteris
+    name: "Pro Litteris"
+    memberNr: '892761'
     onlyPaidContentAccess: false
-    publisherInternalKeyDomain: 'pl01.owen.prolitteris.ch'
+    publisherInternalKeyDomain: 'pl02.owen.prolitteris.ch'
     usePublisherInternalKey: true
 mediaServer:
   type: 'nova'

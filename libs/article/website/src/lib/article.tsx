@@ -4,7 +4,7 @@ import {Article as ArticleType, Block} from '@wepublish/website/api'
 import {ArticleListWrapper} from './article-list/article-list'
 import {CommentListWrapper} from '@wepublish/comments/website'
 import {ContentWrapper} from '@wepublish/content/website'
-import ArticleTrackingPixels from './article-tracking-pixels'
+import {ArticleTrackingPixels} from './article-tracking-pixels'
 
 export const ArticleWrapper = styled(ContentWrapper)`
   ${({theme}) => theme.breakpoints.up('md')} {

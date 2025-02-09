@@ -2536,10 +2536,6 @@ export type HotAndTrendingQuery = { __typename?: 'Query', hotAndTrending: Array<
 
 export type ArticleWithoutBlocksFragment = { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, preTitle?: string | null, title: string, lead?: string | null, slug: string, breaking: boolean, url: string, peeredArticleURL?: string | null, disableComments?: boolean | null, socialMediaDescription?: string | null, socialMediaTitle?: string | null, likes: number, trackingPixels?: Array<{ __typename?: 'TrackingPixel', id: string, uri?: string | null } | null> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null, main: boolean, url: string }>, authors: Array<{ __typename?: 'Author', id: string, name: string, jobTitle?: string | null, slug: string, bio?: Node[] | null, url: string, createdAt: string, modifiedAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null, main: boolean, url: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, socialMediaImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> };
 
-export type PublicTrackingPixelFragment = { __typename?: 'TrackingPixel', id: string, uri?: string | null };
-
-export type PublicTrackingPixelMethodFragment = { __typename?: 'TrackingPixelMethod', trackingPixelProviderType: TrackingPixelProviderType };
-
 export type ArticleListQueryVariables = Exact<{
   filter?: InputMaybe<ArticleFilter>;
   cursor?: InputMaybe<Scalars['ID']>;
@@ -3068,6 +3064,10 @@ export type TagQueryVariables = Exact<{
 
 export type TagQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null, main: boolean, url: string }> } | null };
 
+export type FullTrackingPixelFragment = { __typename?: 'TrackingPixel', id: string, uri?: string | null };
+
+export type FullTrackingPixelMethodFragment = { __typename?: 'TrackingPixelMethod', trackingPixelProviderType: TrackingPixelProviderType };
+
 export type FullOAuth2AccountFragment = { __typename?: 'OAuth2Account', type: string, provider: string, scope: string };
 
 export type FullPaymentProviderCustomerFragment = { __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string };
@@ -3140,8 +3140,8 @@ export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type VersionInformationQuery = { __typename?: 'Query', versionInformation: { __typename?: 'VersionInformation', version: string } };
 
-export const PublicTrackingPixelFragmentDoc = gql`
-    fragment PublicTrackingPixel on TrackingPixel {
+export const FullTrackingPixelFragmentDoc = gql`
+    fragment FullTrackingPixel on TrackingPixel {
   id
   uri
 }
@@ -3258,7 +3258,7 @@ export const ArticleWithoutBlocksFragmentDoc = gql`
   peeredArticleURL
   disableComments
   trackingPixels {
-    ...PublicTrackingPixel
+    ...FullTrackingPixel
   }
   tags {
     ...FullTag
@@ -3279,7 +3279,7 @@ export const ArticleWithoutBlocksFragmentDoc = gql`
     ...FullProperty
   }
 }
-    ${PublicTrackingPixelFragmentDoc}
+    ${FullTrackingPixelFragmentDoc}
 ${FullTagFragmentDoc}
 ${FullAuthorFragmentDoc}
 ${FullImageFragmentDoc}
@@ -3648,11 +3648,6 @@ export const FullArticleFragmentDoc = gql`
 }
     ${ArticleWithoutBlocksFragmentDoc}
 ${FullBlockFragmentDoc}`;
-export const PublicTrackingPixelMethodFragmentDoc = gql`
-    fragment PublicTrackingPixelMethod on TrackingPixelMethod {
-  trackingPixelProviderType
-}
-    `;
 export const PageRefFragmentDoc = gql`
     fragment PageRef on PageModel {
   id
@@ -4021,6 +4016,11 @@ export const FullSettingFragmentDoc = gql`
   id
   name
   value
+}
+    `;
+export const FullTrackingPixelMethodFragmentDoc = gql`
+    fragment FullTrackingPixelMethod on TrackingPixelMethod {
+  trackingPixelProviderType
 }
     `;
 export const FullUserSessionFragmentDoc = gql`
