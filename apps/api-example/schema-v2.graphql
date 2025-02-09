@@ -590,6 +590,7 @@ enum SubscriptionDeactivationReason {
 }
 
 enum SubscriptionEvent {
+  CONFIRM_SUBSCRIPTION
   CUSTOM
   DEACTIVATION_BY_USER
   DEACTIVATION_UNPAID

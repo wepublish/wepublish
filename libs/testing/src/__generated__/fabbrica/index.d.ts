@@ -1230,6 +1230,10 @@ type MemberPlanfailPageFactory = {
     _factoryFor: "Page";
     build: () => PromiseLike<Prisma.PageCreateNestedOneWithoutMemberPlansFailInput["create"]>;
 };
+type MemberPlanconfirmationPageFactory = {
+    _factoryFor: "Page";
+    build: () => PromiseLike<Prisma.PageCreateNestedOneWithoutMemberPlansConfirmationInput["create"]>;
+};
 type MemberPlanFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -1249,6 +1253,7 @@ type MemberPlanFactoryDefineInput = {
     image?: MemberPlanimageFactory | Prisma.ImageCreateNestedOneWithoutMemberPlanInput;
     successPage?: MemberPlansuccessPageFactory | Prisma.PageCreateNestedOneWithoutMemberPlansSuccessInput;
     failPage?: MemberPlanfailPageFactory | Prisma.PageCreateNestedOneWithoutMemberPlansFailInput;
+    confirmationPage?: MemberPlanconfirmationPageFactory | Prisma.PageCreateNestedOneWithoutMemberPlansConfirmationInput;
     subscription?: Prisma.SubscriptionCreateNestedManyWithoutMemberPlanInput;
     subscriptionFlows?: Prisma.SubscriptionFlowCreateNestedManyWithoutMemberPlanInput;
 };
@@ -1453,6 +1458,7 @@ type PageFactoryDefineInput = {
     tags?: Prisma.TaggedPagesCreateNestedManyWithoutPageInput;
     memberPlansSuccess?: Prisma.MemberPlanCreateNestedManyWithoutSuccessPageInput;
     memberPlansFail?: Prisma.MemberPlanCreateNestedManyWithoutFailPageInput;
+    memberPlansConfirmation?: Prisma.MemberPlanCreateNestedManyWithoutConfirmationPageInput;
     banners?: Prisma.BannerCreateNestedManyWithoutShowOnPagesInput;
 };
 type PageFactoryDefineOptions = {
@@ -1901,6 +1907,7 @@ type SubscriptionFactoryDefineInput = {
     paidUntil?: Date | null;
     extendable?: boolean;
     currency?: Currency;
+    confirmed?: boolean;
     periods?: Prisma.SubscriptionPeriodCreateNestedManyWithoutSubscriptionInput;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutSubscriptionInput;
     deactivation?: SubscriptiondeactivationFactory | Prisma.SubscriptionDeactivationCreateNestedOneWithoutSubscriptionInput;

@@ -103,6 +103,9 @@ export class SubscriptionService {
         // skip invoices where the subscription has been deleted
         subscriptionID: {
           not: null
+        },
+        subscription: {
+          confirmed: true
         }
       },
       include: {

@@ -956,6 +956,8 @@ export type MemberPlan = {
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
+  confirmationPage?: Maybe<Page>;
+  confirmationPageId?: Maybe<Scalars['ID']>;
   createdAt: Scalars['DateTime'];
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
@@ -992,6 +994,7 @@ export type MemberPlanInput = {
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
+  confirmationPageId?: InputMaybe<Scalars['ID']>;
   currency: Currency;
   description?: InputMaybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
@@ -2912,6 +2915,7 @@ export enum UserSort {
 export type UserSubscription = {
   __typename?: 'UserSubscription';
   autoRenew: Scalars['Boolean'];
+  confirmed: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   currency: Currency;
   deactivation?: Maybe<SubscriptionDeactivation>;

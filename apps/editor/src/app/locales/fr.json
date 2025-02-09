@@ -679,6 +679,33 @@
     "mailTemplateSelect": {
       "noMailSentSelectNow": "pas d'envoi mail"
     },
+    "memberPlanEdit": {
+      "active": "Actif",
+      "activeDescription": "Rend le plan disponible",
+      "currency": "Devise",
+      "currencyRequired": "Devise requise",
+      "amountPerMonthMin": "Montant minimal / mois",
+      "amountPerMonthMinRequired": "Montant minimal requis",
+      "amountPerMonthMinZero": "Le montant minimal ne peut pas être inférieur à 0",
+      "autoRenewalDescription": "Force le renouvellement automatique de l'abonnement",
+      "createMemberPlanHeader": "Créer un plan membre",
+      "description": "Description",
+      "editPaymentSetting": "Modifier les paramètres de paiement",
+      "forceAutoRenewal": "Forcer le renouvellement automatique",
+      "loadingTitle": "Chargement",
+      "name": "Nom",
+      "nameRequired": "Nom requis",
+      "noMemberPlanName": "Aucun nom de plan membre",
+      "paymentConfigs": "Paramètres de paiement",
+      "saveAndCloseBtnTitle": "Enregistrer et fermer",
+      "saveBtnTitle": "Enregistrer",
+      "slug": "Slug",
+      "slugRequired": "Slug requis",
+      "tags": "Tags",
+      "savedChanges": "Enregistré",
+      "successPage": "Redirection vers la page en cas de succès du paiement",
+      "failPage": "Redirection vers la page en cas d'erreur de paiement"
+    },
     "memberPlanList": {
       "action": "Actions",
       "createNew": "Nouveau plan membre",
@@ -1035,6 +1062,43 @@
         "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes"
       }
     },
+    "subscriptionFlow": {
+      "subscribe": "S'abonner",
+      "renewal_success": "Renouvellement réussi",
+      "renewal_failed": "Échec du renouvellement",
+      "deactivation_by_user": "Désactivé par l'utilisateur",
+      "reactivation": "Réactivé",
+      "invoice_creation": "Création de facture",
+      "deactivation_unpaid": "Désactivation pour facture impayée",
+      "custom": "Événement personnalisé",
+      "settings": "Paramètres du flux d'abonnement",
+      "edit": "Modifier le flux d'abonnement",
+      "titleDefaultSettings": "Paramètres d'abonnement par défaut",
+      "settingsDescription": "Vous pouvez remplacer ces paramètres pour chaque plan d'abonnement.",
+      "addNew": "Créer un nouveau flux",
+      "dayWithNumber": "jour {{day}}",
+      "days": "jours",
+      "savedChange": "Modification enregistrée avec succès",
+      "add": "Ajouter",
+      "memberplan": "Plan d'adhésion",
+      "paymentMethod": "Mode de paiement",
+      "periodicity": "Périodicité",
+      "autoRenewal": "Renouvellement automatique ?",
+      "booleanFilter": {
+        "true": "Oui",
+        "false": "Non"
+      },
+      "deleteFlowQuestion": "La suppression de ce flux est permanente et ne peut pas être annulée. Voulez-vous quand même continuer ?",
+      "deletePermanently": "Supprimer définitivement",
+      "dropHere": "Déposer ici",
+      "filters": "Filtres",
+      "subscriptionEvents": "Événements d'abonnement statiques",
+      "timeline": "Chronologie",
+      "actions": "Actions",
+      "dayOfRenewal": "Jour de renouvellement / fin d'abonnement",
+      "subscriptionsAffected": "Le filtre s'applique à {{numberOfSubscriptions}} abonnements",
+      "confirm_subscription": "Confirmation d'abonnement"
+    },
     "subscriptionList": {
       "filter": {
         "deactivationReason": "Motif de désactivation",
@@ -1234,6 +1298,8 @@
       "invoiceNr": "N° de facture {{invoiceId}}",
       "invoicePaid": "payée",
       "invoiceUnpaid": "non payée",
+      "confirmed": "confirmé",
+      "unconfirmed": "non confirmé",
       "monthlyAmount": "Montant mensuel : {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "L'abonnement expire, pas de renouvellement automatique",
       "noDeactivation": "Pas de désactivation.",
@@ -1262,7 +1328,9 @@
       "forceAutoRenewNotPossible": "Le renouvellement automatique n'est pas possible, car le plan d'abonnement n'est pas extensible.",
       "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela.",
       "migratePMTitle": "Migrer les abonnements vers le mode de paiement cible",
-      "migratePMHelptext": "Migre les abonnements de ce plan vers un nouveau mode de paiement. Les abonnements qui sont encore débités automatiquement ne sont pas migrés. La migration n'a lieu que lorsqu'un utilisateur agit lui-même et veut par exemple payer une facture ouverte dans son profil ou prolonger un abonnement de manière anticipée."
+      "migratePMHelptext": "Migre les abonnements de ce plan vers un nouveau mode de paiement. Les abonnements qui sont encore débités automatiquement ne sont pas migrés. La migration n'a lieu que lorsqu'un utilisateur agit lui-même et veut par exemple payer une facture ouverte dans son profil ou prolonger un abonnement de manière anticipée.",
+      "confirmationPage": "Redirection vers la page en cas d'utilisateur existant (retargeting)",
+      "confirmationPageHelptext": "Si l'identifiant de l'utilisateur est connu lors de la souscription d'un abonnement, la personne reçoit un e-mail pour payer l'abonnement. Cela pourrait être signalé sur cette page."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Paramètres avancés",

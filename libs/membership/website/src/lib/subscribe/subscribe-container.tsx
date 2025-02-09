@@ -5,6 +5,7 @@ import {
   useInvoicesLazyQuery,
   useMemberPlanListQuery,
   useRegisterMutation,
+  useResubscribeMutation,
   useSubscribeMutation,
   useSubscriptionsLazyQuery
 } from '@wepublish/website/api'
@@ -29,7 +30,7 @@ export type SubscribeContainerProps<
 > = BuilderContainerProps &
   Pick<
     BuilderSubscribeProps<T>,
-    'fields' | 'schema' | 'defaults' | 'termsOfServiceUrl' | 'donate'
+    'fields' | 'schema' | 'defaults' | 'termsOfServiceUrl' | 'donate' | 'returningUserId'
   > & {
     filter?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
     deactivateSubscriptionId?: string
@@ -43,7 +44,8 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
   filter,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate
+  donate,
+  returningUserId
 }: SubscribeContainerProps<T>) => {
   const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
@@ -60,6 +62,8 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
       take: 50
     }
   })
+
+  const [resubscribe] = useResubscribeMutation({})
 
   const [subscribe] = useSubscribeMutation({
     onCompleted(data) {
@@ -132,6 +136,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
         memberPlans={filteredMemberPlans}
         termsOfServiceUrl={termsOfServiceUrl}
         donate={donate}
+        returningUserId={returningUserId}
         onSubscribe={async formData => {
           const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
             mb => mb.id === formData.memberPlanId
@@ -166,6 +171,17 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
               ...formData.subscribe,
               successURL: selectedMemberplan?.successPage?.url,
               failureURL: selectedMemberplan?.failPage?.url
+            }
+          })
+        }}
+        onResubscribe={async formData => {
+          const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
+            mb => mb.id === formData.memberPlanId
+          )
+          await resubscribe({
+            variables: formData,
+            onCompleted() {
+              window.location.href = selectedMemberplan?.confirmationPage?.url ?? ''
             }
           })
         }}

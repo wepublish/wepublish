@@ -1,263 +1,290 @@
 fragment FullPaymentMethod on PaymentMethod {
-  id
-  paymentProviderID
-  name
-  slug
-  description
-  image {
-    ...FullImage
-  }
+    id
+    paymentProviderID
+    name
+    slug
+    description
+    image {
+        ...FullImage
+    }
 }
 
 fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
-  paymentMethods {
-    ...FullPaymentMethod
-  }
-  paymentPeriodicities
-  forceAutoRenewal
+    paymentMethods {
+        ...FullPaymentMethod
+    }
+    paymentPeriodicities
+    forceAutoRenewal
 }
 
 fragment FullMemberPlan on MemberPlan {
-  id
-  slug
+    id
+    slug
 
-  name
-  tags
-  description
-  image {
-    ...FullImage
-  }
+    name
+    tags
+    description
+    image {
+        ...FullImage
+    }
 
-  amountPerMonthMin
-  amountPerMonthTarget
-  currency
-  availablePaymentMethods {
-    ...FullAvailablePaymentMethod
-  }
-  extendable
+    amountPerMonthMin
+    amountPerMonthTarget
+    currency
+    availablePaymentMethods {
+        ...FullAvailablePaymentMethod
+    }
+    extendable
 
-  successPage {
-    url
-  }
-  failPage {
-    url
-  }
+    successPage {
+        url
+    }
+    failPage {
+        url
+    }
+    confirmationPage {
+        url
+    }
 }
 
 fragment FullPayment on Payment {
-  id
+    id
 
-  intentSecret
-  state
+    intentSecret
+    state
 
-  paymentMethod {
-    ...FullPaymentMethod
-  }
+    paymentMethod {
+        ...FullPaymentMethod
+    }
 }
 
 fragment FullSubscriptionDeactivation on SubscriptionDeactivation {
-  date
-  reason
+    date
+    reason
 }
 
 fragment FullSubscription on Subscription {
-  id
-  url
+    id
+    url
 
-  paymentPeriodicity
-  monthlyAmount
-  autoRenew
-  startsAt
-  extendable
+    paymentPeriodicity
+    monthlyAmount
+    autoRenew
+    startsAt
+    extendable
 
-  paidUntil
-  paymentMethod {
-    ...FullPaymentMethod
-  }
+    paidUntil
+    paymentMethod {
+        ...FullPaymentMethod
+    }
 
-  deactivation {
-    ...FullSubscriptionDeactivation
-  }
+    deactivation {
+        ...FullSubscriptionDeactivation
+    }
 
-  memberPlan {
-    ...FullMemberPlan
-  }
+    memberPlan {
+        ...FullMemberPlan
+    }
 
-  properties {
-    ...FullProperty
-  }
+    properties {
+        ...FullProperty
+    }
 }
 
 fragment FullInvoiceItem on InvoiceItem {
-  createdAt
-  modifiedAt
+    createdAt
+    modifiedAt
 
-  name
-  description
+    name
+    description
 
-  quantity
-  amount
-  total
+    quantity
+    amount
+    total
 }
 
 fragment FullInvoice on Invoice {
-  id
-  createdAt
-  modifiedAt
-  mail
+    id
+    createdAt
+    modifiedAt
+    mail
 
-  paidAt
-  dueAt
-  canceledAt
+    paidAt
+    dueAt
+    canceledAt
 
-  subscriptionID
-  subscription {
-    ...FullSubscription
-  }
+    subscriptionID
+    subscription {
+        ...FullSubscription
+    }
 
-  description
-  items {
-    ...FullInvoiceItem
-  }
-  total
+    description
+    items {
+        ...FullInvoiceItem
+    }
+    total
 }
 
 mutation Subscribe(
-  $memberPlanId: ID
-  $memberPlanSlug: Slug
-  $autoRenew: Boolean!
-  $paymentPeriodicity: PaymentPeriodicity!
-  $monthlyAmount: Int!
-  $paymentMethodId: ID
-  $paymentMethodSlug: Slug
-  $subscriptionProperties: [PublicPropertiesInput!]
-  $successURL: String
-  $failureURL: String
-  $deactivateSubscriptionId: ID
+    $memberPlanId: ID
+    $memberPlanSlug: Slug
+    $autoRenew: Boolean!
+    $paymentPeriodicity: PaymentPeriodicity!
+    $monthlyAmount: Int!
+    $paymentMethodId: ID
+    $paymentMethodSlug: Slug
+    $subscriptionProperties: [PublicPropertiesInput!]
+    $successURL: String
+    $failureURL: String
+    $deactivateSubscriptionId: ID
 ) {
-  createSubscription(
-    memberPlanID: $memberPlanId
-    memberPlanSlug: $memberPlanSlug
-    autoRenew: $autoRenew
-    paymentPeriodicity: $paymentPeriodicity
-    monthlyAmount: $monthlyAmount
-    paymentMethodID: $paymentMethodId
-    paymentMethodSlug: $paymentMethodSlug
-    subscriptionProperties: $subscriptionProperties
-    successURL: $successURL
-    failureURL: $failureURL
-    deactivateSubscriptionId: $deactivateSubscriptionId
-  ) {
-    ...FullPayment
-  }
+    createSubscription(
+        memberPlanID: $memberPlanId
+        memberPlanSlug: $memberPlanSlug
+        autoRenew: $autoRenew
+        paymentPeriodicity: $paymentPeriodicity
+        monthlyAmount: $monthlyAmount
+        paymentMethodID: $paymentMethodId
+        paymentMethodSlug: $paymentMethodSlug
+        subscriptionProperties: $subscriptionProperties
+        successURL: $successURL
+        failureURL: $failureURL
+        deactivateSubscriptionId: $deactivateSubscriptionId
+    ) {
+        ...FullPayment
+    }
+}
+
+mutation Resubscribe(
+    $userId: ID
+    $memberPlanId: ID
+    $memberPlanSlug: Slug
+    $autoRenew: Boolean!
+    $paymentPeriodicity: PaymentPeriodicity!
+    $monthlyAmount: Int!
+    $paymentMethodId: ID
+    $paymentMethodSlug: Slug
+    $subscriptionProperties: [PublicPropertiesInput!]
+) {
+    createSubscriptionWithConfirmation(
+        userId: $userId
+        memberPlanID: $memberPlanId
+        memberPlanSlug: $memberPlanSlug
+        autoRenew: $autoRenew
+        paymentPeriodicity: $paymentPeriodicity
+        monthlyAmount: $monthlyAmount
+        paymentMethodID: $paymentMethodId
+        paymentMethodSlug: $paymentMethodSlug
+        subscriptionProperties: $subscriptionProperties
+    )
 }
 
 mutation PayInvoice(
-  $invoiceId: ID!
-  $paymentMethodId: ID
-  $paymentMethodSlug: Slug
-  $successURL: String
-  $failureURL: String
+    $invoiceId: ID!
+    $paymentMethodId: ID
+    $paymentMethodSlug: Slug
+    $successURL: String
+    $failureURL: String
 ) {
-  createPaymentFromInvoice(
-    input: {
-      invoiceID: $invoiceId
-      paymentMethodID: $paymentMethodId
-      paymentMethodSlug: $paymentMethodSlug
-      successURL: $successURL
-      failureURL: $failureURL
+    createPaymentFromInvoice(
+        input: {
+            invoiceID: $invoiceId
+            paymentMethodID: $paymentMethodId
+            paymentMethodSlug: $paymentMethodSlug
+            successURL: $successURL
+            failureURL: $failureURL
+        }
+    ) {
+        ...FullPayment
     }
-  ) {
-    ...FullPayment
-  }
 }
 
 mutation PaySubscription($subscriptionId: ID!, $successURL: String, $failureURL: String) {
-  createPaymentFromSubscription(
-    subscriptionId: $subscriptionId
-    successURL: $successURL
-    failureURL: $failureURL
-  ) {
-    ...FullPayment
-  }
+    createPaymentFromSubscription(
+        subscriptionId: $subscriptionId
+        successURL: $successURL
+        failureURL: $failureURL
+    ) {
+        ...FullPayment
+    }
 }
 
 mutation CancelSubscription($subscriptionId: ID!) {
-  cancelUserSubscription(id: $subscriptionId) {
-    ...FullSubscription
-  }
+    cancelUserSubscription(id: $subscriptionId) {
+        ...FullSubscription
+    }
 }
 
 mutation ExtendSubscription($subscriptionId: ID!, $successURL: String, $failureURL: String) {
-  extendSubscription(
-    subscriptionId: $subscriptionId
-    successURL: $successURL
-    failureURL: $failureURL
-  ) {
-    ...FullPayment
-  }
+    extendSubscription(
+        subscriptionId: $subscriptionId
+        successURL: $successURL
+        failureURL: $failureURL
+    ) {
+        ...FullPayment
+    }
 }
 
 query Invoices {
-  invoices {
-    ...FullInvoice
-  }
+    invoices {
+        ...FullInvoice
+    }
 }
 
 query Subscriptions {
-  subscriptions {
-    ...FullSubscription
-  }
+    subscriptions {
+        ...FullSubscription
+    }
 }
 
 query CheckInvoiceStatus($id: ID!) {
-  checkInvoiceStatus(id: $id) {
-    ...FullInvoice
-  }
+    checkInvoiceStatus(id: $id) {
+        ...FullInvoice
+    }
 }
 
 query MemberPlanList(
-  $filter: MemberPlanFilter
-  $cursor: ID
-  $take: Int
-  $skip: Int
-  $order: SortOrder
-  $sort: MemberPlanSort
+    $filter: MemberPlanFilter
+    $cursor: ID
+    $take: Int
+    $skip: Int
+    $order: SortOrder
+    $sort: MemberPlanSort
 ) {
-  memberPlans(
-    filter: $filter
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
-    nodes {
-      ...FullMemberPlan
-    }
+    memberPlans(
+        filter: $filter
+        cursor: $cursor
+        take: $take
+        skip: $skip
+        order: $order
+        sort: $sort
+    ) {
+        nodes {
+            ...FullMemberPlan
+        }
 
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
+        pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+        }
 
-    totalCount
-  }
+        totalCount
+    }
 }
 
 query Revenue($start: DateTime!, $end: DateTime) {
-  revenue(start: $start, end: $end) {
-    amount
-    paidAt
-    memberPlan
-  }
+    revenue(start: $start, end: $end) {
+        amount
+        paidAt
+        memberPlan
+    }
 }
 
 query NewSubscribers($start: DateTime!, $end: DateTime) {
-  newSubscribers(start: $start, end: $end) {
-    monthlyAmount
-    memberPlan
-  }
+    newSubscribers(start: $start, end: $end) {
+        monthlyAmount
+        memberPlan
+    }
 }

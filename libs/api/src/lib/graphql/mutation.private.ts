@@ -892,7 +892,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       resolve: (
         root,
         {input},
-        {authenticate, loaders, paymentProviders, prisma: {payment, memberPlan}}
+        {authenticate, loaders, paymentProviders, prisma: {payment, memberPlan, subscription}}
       ) =>
         createPaymentFromInvoice(
           input,
@@ -901,7 +901,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           loaders.invoicesByID,
           loaders.paymentMethodsByID,
           memberPlan,
-          payment
+          payment,
+          subscription
         )
     },
 

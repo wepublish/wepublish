@@ -1,80 +1,85 @@
 fragment MemberPlanRef on MemberPlan {
-  id
-  name
-  description
-  slug
-  active
-  tags
-  image {
-    ...ImageRef
-  }
+    id
+    name
+    description
+    slug
+    active
+    tags
+    image {
+        ...ImageRef
+    }
 
-  successPageId
-  successPage {
-    ...PageRef
-  }
+    successPageId
+    successPage {
+        ...PageRef
+    }
 
-  failPageId
-  failPage {
-    ...PageRef
-  }
+    failPageId
+    failPage {
+        ...PageRef
+    }
+
+    confirmationPageId
+    confirmationPage {
+        ...PageRef
+    }
 }
 
 fragment FullMemberPlan on MemberPlan {
-  tags
-  amountPerMonthMin
-  amountPerMonthTarget
-  currency
-  availablePaymentMethods {
-    paymentMethods {
-      ...FullPaymentMethod
+    tags
+    amountPerMonthMin
+    amountPerMonthTarget
+    currency
+    availablePaymentMethods {
+        paymentMethods {
+            ...FullPaymentMethod
+        }
+        paymentPeriodicities
+        forceAutoRenewal
     }
-    paymentPeriodicities
-    forceAutoRenewal
-  }
-  ...MemberPlanRef
-  extendable
-  maxCount
-  migrateToTargetPaymentMethodID
+    ...MemberPlanRef
+    extendable
+    maxCount
+    migrateToTargetPaymentMethodID
 }
 
 query MemberPlanList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
-  memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-    nodes {
-      ...FullMemberPlan
-    }
+    memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+        nodes {
+            ...FullMemberPlan
+        }
 
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
+        pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+        }
 
-    totalCount
-  }
+        totalCount
+    }
 }
 
 query MemberPlan($id: ID!) {
-  memberPlan(id: $id) {
-    ...FullMemberPlan
-  }
+    memberPlan(id: $id) {
+        ...FullMemberPlan
+    }
 }
 
 mutation CreateMemberPlan($input: MemberPlanInput!) {
-  createMemberPlan(input: $input) {
-    ...FullMemberPlan
-  }
+    createMemberPlan(input: $input) {
+        ...FullMemberPlan
+    }
 }
 
 mutation UpdateMemberPlan($id: ID!, $input: MemberPlanInput!) {
-  updateMemberPlan(id: $id, input: $input) {
-    ...FullMemberPlan
-  }
+    updateMemberPlan(id: $id, input: $input) {
+        ...FullMemberPlan
+    }
 }
 
 mutation DeleteMemberPlan($id: ID!) {
-  deleteMemberPlan(id: $id) {
-    ...FullMemberPlan
-  }
+    deleteMemberPlan(id: $id) {
+        ...FullMemberPlan
+    }
 }

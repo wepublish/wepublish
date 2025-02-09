@@ -1088,6 +1088,43 @@
         "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden."
       }
     },
+    "subscriptionFlow": {
+      "subscribe": "Abonnieren",
+      "renewal_success": "Verlängerung erfolgreich",
+      "renewal_failed": "Verlängerung fehlgeschlagen",
+      "deactivation_by_user": "Vom Benutzer deaktiviert",
+      "reactivation": "Reaktiviert",
+      "invoice_creation": "Rechnungserstellung",
+      "deactivation_unpaid": "Deaktivierung wegen unbezahlter Rechnung",
+      "custom": "Benutzerdefiniertes Ereignis",
+      "settings": "Abonnement-Ablauf Einstellungen",
+      "edit": "Abonnement-Ablauf bearbeiten",
+      "titleDefaultSettings": "Standard-Abonnement Einstellungen",
+      "settingsDescription": "Sie können diese Einstellungen für jeden Abonnementplan überschreiben.",
+      "addNew": "Neuen Ablauf erstellen",
+      "dayWithNumber": "Tag {{day}}",
+      "days": "Tage",
+      "savedChange": "Änderung erfolgreich gespeichert",
+      "add": "Hinzufügen",
+      "memberplan": "Mitgliedsplan",
+      "paymentMethod": "Zahlungsmethode",
+      "periodicity": "Periodizität",
+      "autoRenewal": "Automatische Verlängerung?",
+      "booleanFilter": {
+        "true": "Ja",
+        "false": "Nein"
+      },
+      "deleteFlowQuestion": "Das Löschen dieses Ablaufs ist permanent und kann nicht rückgängig gemacht werden. Möchten Sie trotzdem fortfahren?",
+      "deletePermanently": "Permanent löschen",
+      "dropHere": "Hier ablegen",
+      "filters": "Filter",
+      "subscriptionEvents": "Statische Abonnement-Ereignisse",
+      "timeline": "Zeitleiste",
+      "actions": "Aktionen",
+      "dayOfRenewal": "Tag der Verlängerung / Abonnement endet",
+      "subscriptionsAffected": "Filter gilt für {{numberOfSubscriptions}} Abonnements",
+      "confirm_subscription": "Abonnementbestätigung"
+    },
     "subscriptionList": {
       "filter": {
         "deactivationReason": "Grund Deaktivierung",
@@ -1288,6 +1325,8 @@
       "invoiceNr": "Rechnung Nr. {{invoiceId}}",
       "invoicePaid": "bezahlt",
       "invoiceUnpaid": "unbezahlt",
+      "confirmed": "bestätigt",
+      "unconfirmed": "unbestätigt",
       "monthlyAmount": "Monatlicher Betrag: {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "Subscription läuft aus, keine automatische Erneuerung",
       "noDeactivation": "Keine Deaktivierung.",
@@ -1319,7 +1358,9 @@
       "migratePMHelptext": "Migriere die Abos dieses Planes zu einer neuen Zahlungsmethode. Abos, die noch automatisch abgebucht werden, werden nicht migriert. Die Migration findet erst dann statt, wenn ein User selbst tätig wird und in seinem Profil etwa eine offene Rechnung bezahlen will oder ein Abo frühzeitig verlängert.",
       "amountPerMonthTarget": "Ziel-Betrag / Monat",
       "amountPerMonthTargetHelpText": "Der monatliche Zielbetrag legt den gewünschten Abopreis fest, den die Benutzer:innen bezahlen sollten. Er muss höher als der Minimalbetrag sein und definiert typischerweise die Voreinstellung im Zahlungsformular.",
-      "amountPerMonthMinHelpText": "Der minimale monatliche Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen."
+      "amountPerMonthMinHelpText": "Der minimale monatliche Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen.",
+      "confirmationPage": "Weiterleitung zur Seite bei bestehendem User (Retargeting)",
+      "confirmationPageHelptext": "Wenn beim Lösen eines Abos die User-ID bekannt ist, erhält die Person eine E-Mail, um das Abo zu bezahlen. Darauf könnte auf dieser Seite hingewiesen werden."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Erweiterte Einstellungen",

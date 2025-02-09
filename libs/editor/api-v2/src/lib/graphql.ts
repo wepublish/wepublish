@@ -850,6 +850,8 @@ export type MemberPlan = {
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
+  confirmationPage?: Maybe<Page>;
+  confirmationPageId?: Maybe<Scalars['ID']>;
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
@@ -913,6 +915,8 @@ export type Mutation = {
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Create a subscription interval */
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
+  /** Allows authenticated users to create additional subscriptions */
+  createSubscriptionWithConfirmation: Scalars['Boolean'];
   /**
    *
    *       Creates a new userConsent based on input.
@@ -1098,6 +1102,19 @@ export type MutationCreateSubscriptionIntervalArgs = {
   event: SubscriptionEvent;
   mailTemplateId?: InputMaybe<Scalars['String']>;
   subscriptionFlowId: Scalars['String'];
+};
+
+
+export type MutationCreateSubscriptionWithConfirmationArgs = {
+  autoRenew: Scalars['Boolean'];
+  memberPlanID?: InputMaybe<Scalars['ID']>;
+  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
+  monthlyAmount: Scalars['Int'];
+  paymentMethodID?: InputMaybe<Scalars['ID']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  paymentPeriodicity: PaymentPeriodicity;
+  subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>;
+  userId?: InputMaybe<Scalars['ID']>;
 };
 
 
@@ -2200,6 +2217,7 @@ export enum SubscriptionDeactivationReason {
 }
 
 export enum SubscriptionEvent {
+  ConfirmSubscription = 'CONFIRM_SUBSCRIPTION',
   Custom = 'CUSTOM',
   DeactivationByUser = 'DEACTIVATION_BY_USER',
   DeactivationUnpaid = 'DEACTIVATION_UNPAID',

@@ -1,11 +1,11 @@
 import React, {Dispatch, SetStateAction, useMemo, useState} from 'react'
 import {
   AvailablePaymentMethod,
+  Currency,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   ImageRefFragment,
-  PaymentMethod,
-  Currency
+  PaymentMethod
 } from '@wepublish/editor/api'
 import {
   Button,
@@ -19,10 +19,10 @@ import {
   Message,
   Panel,
   Row,
+  SelectPicker,
   TagPicker,
   toaster,
-  Toggle,
-  SelectPicker
+  Toggle
 } from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import styled from '@emotion/styled'
@@ -441,7 +441,7 @@ export function MemberPlanForm({
                 />
               </Row>
 
-              <Row>
+              <RowPaddingTop>
                 <Form.ControlLabel>{t('memberPlanEdit.failPage')}</Form.ControlLabel>
                 <SelectPage
                   setSelectedPage={failPageId => {
@@ -454,7 +454,23 @@ export function MemberPlanForm({
                   selectedPage={memberPlan?.failPageId}
                   name="failPageId"
                 />
-              </Row>
+              </RowPaddingTop>
+
+              <RowPaddingTop>
+                <Form.ControlLabel>{t('memberplanForm.confirmationPage')}</Form.ControlLabel>
+                <SelectPage
+                  setSelectedPage={confirmationPageId => {
+                    if (!memberPlan) {
+                      return
+                    }
+
+                    setMemberPlan({...memberPlan, confirmationPageId})
+                  }}
+                  selectedPage={memberPlan?.confirmationPageId}
+                  name="failPageId"
+                />
+              </RowPaddingTop>
+              <HelpText>{t('memberplanForm.confirmationPageHelptext')}</HelpText>
             </Col>
           </Row>
         </Panel>

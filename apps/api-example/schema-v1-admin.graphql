@@ -213,6 +213,7 @@ type UserSubscription {
   monthlyAmount: Int!
   currency: Currency!
   autoRenew: Boolean!
+  confirmed: Boolean!
   startsAt: DateTime!
   paidUntil: DateTime
   properties: [Properties!]!
@@ -277,6 +278,8 @@ type MemberPlan {
   successPage: Page
   failPageId: ID
   failPage: Page
+  confirmationPageId: ID
+  confirmationPage: Page
 }
 
 type AvailablePaymentMethod {
@@ -1956,6 +1959,7 @@ input MemberPlanInput {
   migrateToTargetPaymentMethodID: ID
   successPageId: ID
   failPageId: ID
+  confirmationPageId: ID
 }
 
 input AvailablePaymentMethodInput {
