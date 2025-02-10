@@ -7,7 +7,7 @@ import {fluidTypography} from '../website-builder-overwrites/blocks/teaser-overw
 import BaselBg from './basel.jpg'
 import FasnachtBg from './fasnacht.jpg'
 import FcbBg from './fcb.jpg'
-import {BriefingType, isBaselBriefing} from './is-briefing'
+import {BriefingType, isBaselBriefingIgnoringBlockType} from './is-briefing'
 
 export type BaselBriefingProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
   teasers?: ApiV1.CustomTeaser[]
@@ -399,7 +399,7 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
             )}
 
             <ButtonRow>
-              {isBaselBriefing({blockStyle}) && (
+              {isBaselBriefingIgnoringBlockType({blockStyle}) && (
                 <LinkWrapper
                   color="inherit"
                   underline="none"
