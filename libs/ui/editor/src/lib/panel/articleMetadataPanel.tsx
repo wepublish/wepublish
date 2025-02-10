@@ -32,7 +32,8 @@ import {
   Toggle as RToggle,
   Tooltip,
   Whisper,
-  Badge
+  Badge,
+  InputNumber
 } from 'rsuite'
 import {
   ChooseEditImage,
@@ -177,7 +178,8 @@ function ArticleMetadataPanel({
     socialMediaAuthors,
     socialMediaImage,
     properties,
-    trackingPixels
+    trackingPixels,
+    likes
   } = value
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General)
@@ -327,9 +329,16 @@ function ArticleMetadataPanel({
             <PaddingBottom>
               {t('articleEditor.panels.totalCharCount', {totalCharCount: infoData.charCount})}
             </PaddingBottom>
-            <PaddingBottom>
-              {t('articleEditor.panels.likeCount', {likeCount: value.likes})}
-            </PaddingBottom>
+            <Group>
+              <ControlLabel>{t('articleEditor.panels.likeCount')}</ControlLabel>
+              <Control
+                accepter={InputNumber}
+                name="likes"
+                className="likes"
+                value={likes}
+                onChange={(likes: string | number) => onChange?.({...value, likes: +likes})}
+              />
+            </Group>
             <Group>
               <ControlLabel>
                 {t('articleEditor.panels.preTitle')}
