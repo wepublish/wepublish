@@ -336,7 +336,7 @@ function ArticleMetadataPanel({
                 name="likes"
                 className="likes"
                 value={likes}
-                onChange={(likes: string | number) => onChange?.({...value, likes: Number(likes)})}
+                onChange={(likes: string | number) => onChange?.({...value, likes: +likes})}
               />
             </Group>
             <Group>
