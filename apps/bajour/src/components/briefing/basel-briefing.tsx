@@ -7,7 +7,7 @@ import {fluidTypography} from '../website-builder-overwrites/blocks/teaser-overw
 import BaselBg from './basel.jpg'
 import FasnachtBg from './fasnacht.jpg'
 import FcbBg from './fcb.jpg'
-import {BriefingType} from './is-briefing'
+import {BriefingType, isBaselBriefing} from './is-briefing'
 
 export type BaselBriefingProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
   teasers?: ApiV1.CustomTeaser[]
@@ -382,42 +382,47 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
             </Briefing>
           </BriefingTextWrapper>
         </BriefingContainer>
+      </LinkWrapper>
 
-        <TeaserContentWrapper>
-          <TeaserContentStyled>
-            <TeaserContentInterior>
-              {briefingDynamicValues.authorAvatar && (
-                <Avatar image={briefingDynamicValues.authorAvatar} square />
-              )}
+      <TeaserContentWrapper>
+        <TeaserContentStyled>
+          <TeaserContentInterior>
+            {briefingDynamicValues.authorAvatar && (
+              <Avatar image={briefingDynamicValues.authorAvatar} square />
+            )}
 
-              {briefingDynamicValues.authorName && (
-                <Author>
-                  Heute von <br />
-                  {briefingDynamicValues.authorName}
-                </Author>
-              )}
+            {briefingDynamicValues.authorName && (
+              <Author>
+                Heute von <br />
+                {briefingDynamicValues.authorName}
+              </Author>
+            )}
 
-              <ButtonRow>
-                {isBaselBriefing({blockStyle}) && (
-                  <ReadMoreButton
-                    onClick={e => {
-                      e.preventDefault()
-                      window.open('https://bajour.ch/basel-briefing-podcast', '_blank')
-                    }}
-                    variant="outlined"
-                    color="inherit"
-                    size="small">
+            <ButtonRow>
+              {isBaselBriefing({blockStyle}) && (
+                <LinkWrapper
+                  color="inherit"
+                  underline="none"
+                  href="https://bajour.ch/basel-briefing-podcast"
+                  target={'_blank'}>
+                  <ReadMoreButton variant="outlined" color="inherit" size="small">
                     Briefing hören
                   </ReadMoreButton>
-                )}
+                </LinkWrapper>
+              )}
+              <LinkWrapper
+                color="inherit"
+                underline="none"
+                href={briefingDynamicValues.contentUrl}
+                target={'_blank'}>
                 <ReadMoreButton variant="outlined" color="inherit" size="small">
                   Briefing lesen
                 </ReadMoreButton>
-              </ButtonRow>
-            </TeaserContentInterior>
-          </TeaserContentStyled>
-        </TeaserContentWrapper>
-      </LinkWrapper>
+              </LinkWrapper>
+            </ButtonRow>
+          </TeaserContentInterior>
+        </TeaserContentStyled>
+      </TeaserContentWrapper>
     </BaselBriefingStyled>
   )
 }
