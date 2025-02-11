@@ -52,67 +52,63 @@ export const getPageSEO = (page: Page) => {
 }
 
 export const PageSEO = ({page}: BuilderPageSEOProps) => {
-  const {meta, Head, Script} = useWebsiteBuilder()
+  const {meta, Head} = useWebsiteBuilder()
   const seo = useMemo(() => getPageSEO(page), [page])
 
   const title = `${seo.title ? `${seo.title} —` : ``} ${meta.siteTitle}`
 
   return (
-    <>
-      <Head>
-        <title key="title">{title}</title>
+    <Head>
+      <title key="title">{title}</title>
 
-        <meta key={'og:type'} property="og:type" content={seo.type} />
+      <meta key={'og:type'} property="og:type" content={seo.type} />
 
-        {seo.socialMediaTitle && (
-          <meta key={'og:title'} property="og:title" content={seo.socialMediaTitle} />
-        )}
+      {seo.socialMediaTitle && (
+        <meta key={'og:title'} property="og:title" content={seo.socialMediaTitle} />
+      )}
 
-        {seo.socialMediaDescription && (
-          <meta
-            key={'og:description'}
-            property="og:description"
-            content={seo.socialMediaDescription}
-          />
-        )}
+      {seo.socialMediaDescription && (
+        <meta
+          key={'og:description'}
+          property="og:description"
+          content={seo.socialMediaDescription}
+        />
+      )}
 
-        {seo.description && (
-          <meta key={'description'} name="description" content={seo.description} />
-        )}
+      {seo.description && <meta key={'description'} name="description" content={seo.description} />}
 
-        <meta key={'og:url'} property="og:url" content={seo.url} />
-        <link key={'canonical'} rel="canonical" href={seo.url} />
+      <meta key={'og:url'} property="og:url" content={seo.url} />
+      <link key={'canonical'} rel="canonical" href={seo.url} />
 
-        {seo.image && (
-          <>
-            <meta key={'og:image:xl'} property="og:image" content={seo.image.xl ?? ''} />
-            <meta key={'og:image:width:xl'} property="og:image:width" content="1200" />
+      {seo.image && (
+        <>
+          <meta key={'og:image:xl'} property="og:image" content={seo.image.xl ?? ''} />
+          <meta key={'og:image:width:xl'} property="og:image:width" content="1200" />
 
-            <meta key={'og:image:l'} property="og:image" content={seo.image.l ?? ''} />
-            <meta key={'og:image:width:l'} property="og:image:width" content="1000" />
+          <meta key={'og:image:m'} property="og:image" content={seo.image.m ?? ''} />
+          <meta key={'og:image:width:m'} property="og:image:width" content="800" />
 
-            <meta key={'og:image:m'} property="og:image" content={seo.image.m ?? ''} />
-            <meta key={'og:image:width:m'} property="og:image:width" content="800" />
+          <meta key={'og:image:s'} property="og:image" content={seo.image.s ?? ''} />
+          <meta key={'og:image:width:s'} property="og:image:width" content="500" />
 
-            <meta key={'og:image:s'} property="og:image" content={seo.image.s ?? ''} />
-            <meta key={'og:image:width:s'} property="og:image:width" content="500" />
+          <meta key={'og:image:xs'} property="og:image" content={seo.image.xs ?? ''} />
+          <meta key={'og:image:width:xs'} property="og:image:width" content="300" />
 
-            <meta key={'og:image:xs'} property="og:image" content={seo.image.xs ?? ''} />
-            <meta key={'og:image:width:xs'} property="og:image:width" content="300" />
+          <meta key={'og:image:xxs'} property="og:image" content={seo.image.xxs ?? ''} />
+          <meta key={'og:image:width:xxs'} property="og:image:width" content="200" />
 
-            <meta key={'og:image:xxs'} property="og:image" content={seo.image.xxs ?? ''} />
-            <meta key={'og:image:width:xxs'} property="og:image:width" content="200" />
+          <meta key={'og:image:l'} property="og:image" content={seo.image.l ?? ''} />
+          <meta key={'og:image:width:l'} property="og:image:width" content="1000" />
+        </>
+      )}
 
-            <meta key={'og:image:l'} property="og:image" content={seo.image.l ?? ''} />
-            <meta key={'og:image:width:l'} property="og:image:width" content="1000" />
-          </>
-        )}
+      <meta key={'twitter:card'} name="twitter:card" content="summary_large_image" />
+      <meta key={'max-image-preview'} name="robots" content="max-image-preview:large" />
 
-        <meta key={'twitter:card'} name="twitter:card" content="summary_large_image" />
-        <meta key={'max-image-preview'} name="robots" content="max-image-preview:large" />
-      </Head>
-
-      <Script type="application/ld+json">{JSON.stringify(seo.schema)}</Script>
-    </>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{__html: JSON.stringify(seo.schema)}}
+      />
+    </Head>
   )
 }
