@@ -232,7 +232,7 @@ function PeerArticleList() {
                       peerId: rowData.peer!.id
                     })
                   }}>
-                  Import
+                  {t('peerArticles.import.import')}
                 </Button>
               )}
             </Cell>
@@ -262,7 +262,7 @@ function PeerArticleList() {
         onClose={() => setArticleToImport(undefined)}
         onExited={() => reset()}>
         <Modal.Header>
-          <Modal.Title>Artikel importieren</Modal.Title>
+          <Modal.Title>{t('peerArticles.import.title')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -282,13 +282,10 @@ function PeerArticleList() {
                     importAuthors: checked
                   })
                 }}>
-                Autoren des Artikels importieren
+                {t('peerArticles.import.includeAuthors')}
               </Checkbox>
 
-              <Form.HelpText>
-                Importiert oder updated Autoren des Artikels. Falls eine andere Person bei euch den
-                gleichen Namen trägt, werden die unterschieden.
-              </Form.HelpText>
+              <Form.HelpText>{t('peerArticles.import.includeAuthorsHint')}</Form.HelpText>
             </Form.Group>
 
             <Form.Group>
@@ -300,12 +297,10 @@ function PeerArticleList() {
                     importTags: checked
                   })
                 }}>
-                Tags des Artikels importieren
+                {t('peerArticles.import.includeTags')}
               </Checkbox>
 
-              <Form.HelpText>
-                Importiert die Tags des Artikels solange sie nicht schon existieren.
-              </Form.HelpText>
+              <Form.HelpText>{t('peerArticles.import.includeTagsHint')}</Form.HelpText>
             </Form.Group>
 
             <Form.Group>
@@ -317,14 +312,10 @@ function PeerArticleList() {
                     importContentImages: checked
                   })
                 }}>
-                Bilder des Artikels importieren
+                {t('peerArticles.import.includeImages')}
               </Checkbox>
 
-              <Form.HelpText>
-                Bilder welche in den Metadaten oder Blöcken des Artikels vorkommen werden auch
-                importiert. Ist das gleiche Bild mehrmals vorhanden, wird dieses auch mehrmals
-                importiert.
-              </Form.HelpText>
+              <Form.HelpText>{t('peerArticles.import.includeImagesHint')}</Form.HelpText>
             </Form.Group>
           </CheckboxGroup>
         </Modal.Body>
@@ -342,14 +333,14 @@ function PeerArticleList() {
             }}
             disabled={importingInProgress}
             appearance="primary">
-            Artikel importieren
+            {t('peerArticles.import.confirm')}
           </Button>
 
           <Button
             onClick={() => setArticleToImport(undefined)}
             disabled={importingInProgress}
             appearance="subtle">
-            Abbrechen
+            {t('cancel')}
           </Button>
         </Modal.Footer>
       </Modal>

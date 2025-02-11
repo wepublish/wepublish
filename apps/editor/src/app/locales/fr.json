@@ -861,7 +861,6 @@
     },
     "peerArticles": {
       "articleImage": "Image de l'article",
-      "authors": "Auteurs·trices",
       "filterByPeer": "Filtrer par peer",
       "lead": "Lead",
       "peer": "Peer",

@@ -943,14 +943,25 @@
     },
     "peerArticles": {
       "articleImage": "Article image",
-      "authors": "Authors",
       "filterByPeer": "Filter by peer",
       "lead": "Lead",
       "peer": "Peer",
       "peerArticles": "Peerable Articles",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publication date",
-      "title": "Title"
+      "title": "Title",
+
+      "import": {
+        "import": "Import",
+        "title": "Import article",
+        "includeAuthors": "Import authors of the article",
+        "includeAuthorsHint": "Imported or updated authors of the article. If another person has the same name, they will be distinguished.",
+        "includeTags": "Import tags of the article",
+        "includeTagsHint": "Imports the tags of the article as long as they do not already exist.",
+        "includeImages": "Import images of the article",
+        "includeImagesHint": "Images that appear in the metadata or blocks of the article are also imported. If the same image exists several times, it will also be imported several times.",
+        "confirm": "Yes, import article"
+      }
     },
     "peerList": {
       "overview": {
