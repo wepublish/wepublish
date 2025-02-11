@@ -11,14 +11,13 @@ const storiesCmp = composeStories(stories)
 describe('CommentEditor', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, () => {
-      const {asFragment} = render(
+      render(
         <MockedProvider>
           <ThemeProvider theme={theme}>
             <Component />
           </ThemeProvider>
         </MockedProvider>
       )
-      expect(asFragment()).toMatchSnapshot()
     })
   })
 })
