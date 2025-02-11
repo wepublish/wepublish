@@ -172,10 +172,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
                 <main>
                   <MainSpacer maxWidth="lg">
-                    <NoSsr>
-                      <Paywall />
-                    </NoSsr>
-
                     <Component {...pageProps} />
                   </MainSpacer>
                 </main>
