@@ -37,6 +37,7 @@ import {
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
+  BuilderSubscribeBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
   BuilderInstagramPostBlockProps,
@@ -188,6 +189,7 @@ export type WebsiteBuilderProps = {
     Quote: ComponentType<BuilderQuoteBlockProps>
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
+    Subscribe: ComponentType<BuilderSubscribeBlockProps>
     FacebookPost: ComponentType<BuilderFacebookPostBlockProps>
     FacebookVideo: ComponentType<BuilderFacebookVideoBlockProps>
     InstagramPost: ComponentType<BuilderInstagramPostBlockProps>
@@ -308,6 +310,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     Quote: NoComponent,
     RichText: NoComponent,
     HTML: NoComponent,
+    Subscribe: NoComponent,
     FacebookPost: NoComponent,
     FacebookVideo: NoComponent,
     InstagramPost: NoComponent,

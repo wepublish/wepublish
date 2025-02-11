@@ -211,7 +211,7 @@ export type BildwurfAdBlock = {
   zoneID: Scalars['String'];
 };
 
-export type Block = BildwurfAdBlock | CommentBlock | EmbedBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | LinkPageBreakBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type Block = BildwurfAdBlock | CommentBlock | EmbedBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | LinkPageBreakBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockStyle = {
   __typename?: 'BlockStyle';
@@ -227,6 +227,7 @@ export enum BlockType {
   Embed = 'Embed',
   Event = 'Event',
   Html = 'HTML',
+  Subscribe = 'Subscribe',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
   LinkPageBreak = 'LinkPageBreak',
@@ -2185,6 +2186,11 @@ export type Stats = {
   articlesCount: Scalars['Int'];
   authorsCount: Scalars['Int'];
   firstArticleDate?: Maybe<Scalars['DateTime']>;
+};
+
+export type SubscribeBlock = {
+  __typename?: 'SubscribeBlock';
+  blockStyle?: Maybe<Scalars['String']>;
 };
 
 export type Subscription = {
