@@ -119,7 +119,7 @@ export default function ArticleBySlugIdOrToken() {
                 {!isFDT &&
                   data.article.authors.map(a => (
                     <AuthorWrapper key={a.id}>
-                      <ArticleAuthor key={a.id} author={a} />
+                      <ArticleAuthor author={a} />
                     </AuthorWrapper>
                   ))}
 
