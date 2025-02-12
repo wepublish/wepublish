@@ -66,6 +66,10 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
   const [resubscribe] = useResubscribeMutation({})
 
   const [subscribe] = useSubscribeMutation({
+    onError() {
+      fetchUserSubscriptions()
+      fetchUserInvoices()
+    },
     onCompleted(data) {
       if (!data.createSubscription?.intentSecret) {
         return
@@ -143,7 +147,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
           )
           setStripeMemberPlan(selectedMemberplan)
 
-          await subscribe({
+          const result = await subscribe({
             variables: {
               ...formData,
               successURL: selectedMemberplan?.successPage?.url,
@@ -151,6 +155,10 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
               deactivateSubscriptionId
             }
           })
+
+          if (result.errors) {
+            throw result.errors
+          }
         }}
         onSubscribeWithRegister={async formData => {
           const {errors: registerErrors} = await register({
@@ -164,15 +172,20 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
           const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
             mb => mb.id === formData.subscribe.memberPlanId
           )
+
           setStripeMemberPlan(selectedMemberplan)
 
-          await subscribe({
+          const result = await subscribe({
             variables: {
               ...formData.subscribe,
               successURL: selectedMemberplan?.successPage?.url,
               failureURL: selectedMemberplan?.failPage?.url
             }
           })
+
+          if (result.errors) {
+            throw result.errors
+          }
         }}
         onResubscribe={async formData => {
           const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(

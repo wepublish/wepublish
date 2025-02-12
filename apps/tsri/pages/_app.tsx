@@ -30,7 +30,7 @@ import {TsriArticleMeta} from '../src/components/tsri-article-meta'
 import {TsriBanner} from '../src/components/website-builder-overwrites/banner/tsri-banner'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
 import {TsriContextBox} from '../src/components/tsri-context-box'
-import {MitmachenButton, TsriNavbar} from '../src/components/tsri-navbar'
+import {TsriNavbar} from '../src/components/tsri-navbar'
 import {TsriQuoteBlock} from '../src/components/tsri-quote-block'
 import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
@@ -168,7 +168,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
-                  actions={<MitmachenButton />}
                 />
 
                 <main>

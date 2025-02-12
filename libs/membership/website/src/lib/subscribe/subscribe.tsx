@@ -522,6 +522,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
         </SubscribeSection>
       )}
+
       {error && <ApiAlert error={error as ApolloError} severity="error" />}
 
       <SubscribeNarrowSection>

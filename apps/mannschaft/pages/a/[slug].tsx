@@ -9,12 +9,12 @@ import {
   CommentListContainer,
   useWebsiteBuilder
 } from '@wepublish/website'
+import {useHasActiveSubscription} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
-import {useHasSubscription} from '../../src/paywall/has-subscription'
 import {PaywallBlock} from '../../src/paywall/paywall-block'
 
 const paywallCss = css`
@@ -31,7 +31,7 @@ const paywallCss = css`
 `
 
 export default function ArticleBySlugIdOrToken() {
-  const hasSubscription = useHasSubscription()
+  const hasSubscription = useHasActiveSubscription()
   const {
     query: {slug: slugs, id, token, articleId}
   } = useRouter()

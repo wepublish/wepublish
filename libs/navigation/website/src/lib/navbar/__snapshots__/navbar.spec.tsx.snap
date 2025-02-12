@@ -94,36 +94,14 @@ https://unsplash.it/200/100 200w"
           class="emotion-20 emotion-21"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
-            href="/login"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-22"
+            href="/mitmachen"
+            tabindex="0"
           >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-label="Login"
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-10"
-              />
-            </button>
+            Member werden
+            <span
+              class="MuiTouchRipple-root emotion-10"
+            />
           </a>
         </div>
       </div>
@@ -226,36 +204,14 @@ https://unsplash.it/200/100 200w"
           class="emotion-20 emotion-21"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
-            href="/login"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-22"
+            href="/mitmachen"
+            tabindex="0"
           >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-label="Login"
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-10"
-              />
-            </button>
+            Member werden
+            <span
+              class="MuiTouchRipple-root emotion-10"
+            />
           </a>
         </div>
       </div>
@@ -358,36 +314,14 @@ https://unsplash.it/200/100 200w"
           class="emotion-20 emotion-21"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
-            href="/login"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-22"
+            href="/mitmachen"
+            tabindex="0"
           >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-label="Login"
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-10"
-              />
-            </button>
+            Member werden
+            <span
+              class="MuiTouchRipple-root emotion-10"
+            />
           </a>
         </div>
       </div>
@@ -490,36 +424,14 @@ https://unsplash.it/200/100 200w"
           class="emotion-20 emotion-21"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
-            href="/login"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-22"
+            href="/mitmachen"
+            tabindex="0"
           >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-label="Login"
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-10"
-              />
-            </button>
+            Member werden
+            <span
+              class="MuiTouchRipple-root emotion-10"
+            />
           </a>
         </div>
       </div>
@@ -606,36 +518,14 @@ https://unsplash.it/200/100 200w"
           class="emotion-16 emotion-17"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-18"
-            href="/login"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-18"
+            href="/mitmachen"
+            tabindex="0"
           >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-19"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-label="Login"
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-10"
-              />
-            </button>
+            Member werden
+            <span
+              class="MuiTouchRipple-root emotion-10"
+            />
           </a>
         </div>
       </div>
@@ -722,36 +612,14 @@ https://unsplash.it/200/100 200w"
           class="emotion-16 emotion-17"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-18"
-            href="/login"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-18"
+            href="/mitmachen"
+            tabindex="0"
           >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-19"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-label="Login"
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-10"
-              />
-            </button>
+            Member werden
+            <span
+              class="MuiTouchRipple-root emotion-10"
+            />
           </a>
         </div>
       </div>
@@ -854,36 +722,14 @@ https://unsplash.it/200/100 200w"
           class="emotion-20 emotion-21"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-22"
-            href="/profile"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-22"
+            href="/mitmachen"
+            tabindex="0"
           >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-23"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-label="Profil"
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-10"
-              />
-            </button>
+            Member werden
+            <span
+              class="MuiTouchRipple-root emotion-10"
+            />
           </a>
         </div>
       </div>
@@ -970,36 +816,14 @@ https://unsplash.it/200/100 200w"
           class="emotion-16 emotion-17"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-18"
-            href="/login"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-18"
+            href="/mitmachen"
+            tabindex="0"
           >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-19"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-label="Login"
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-10"
-              />
-            </button>
+            Member werden
+            <span
+              class="MuiTouchRipple-root emotion-10"
+            />
           </a>
         </div>
       </div>
@@ -1083,36 +907,14 @@ exports[`Navbar should render WithoutLogo 1`] = `
           class="emotion-18 emotion-19"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-20"
-            href="/login"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-20"
+            href="/mitmachen"
+            tabindex="0"
           >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium login-button emotion-21"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-label="Login"
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-10"
-              />
-            </button>
+            Member werden
+            <span
+              class="MuiTouchRipple-root emotion-10"
+            />
           </a>
         </div>
       </div>

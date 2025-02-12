@@ -2199,6 +2199,7 @@ export type Stats = {
 export type Subscription = {
   __typename?: 'Subscription';
   autoRenew: Scalars['Boolean'];
+  canExtend: Scalars['Boolean'];
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean'];
   id: Scalars['ID'];
