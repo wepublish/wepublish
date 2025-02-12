@@ -37,12 +37,12 @@ import {MannschaftBlockRenderer} from '../src/mannschaft-block-renderer'
 import {MannschaftBlocks} from '../src/mannschaft-blocks'
 import {MannschaftBreakBlock} from '../src/mannschaft-break-block'
 import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
+import {MannschaftGlobalStyles} from '../src/mannschaft-global-styles'
 import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftRichtextBlock} from '../src/mannschaft-richtext-block'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
 import theme from '../src/theme'
-import {MannschaftGlobalStyles} from '../src/mannschaft-global-styles'
 
 setDefaultOptions({
   locale: de

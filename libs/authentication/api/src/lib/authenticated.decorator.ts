@@ -1,5 +1,5 @@
 import {applyDecorators, SetMetadata} from '@nestjs/common'
-import {OneOf} from '@wepublish/authentication/api'
+import {OneOf} from './one-of.decorator'
 import {AuthenticatedGuard} from './authenticated.guard'
 
 export const AUTHENTICATED_METADATA_KEY = 'authenticated'
