@@ -1,5 +1,6 @@
 import {BannerDocumentType, usePrimaryBannerQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useUser} from '@wepublish/authentication/website'
 
 export type BannerContainerProps = {
   documentType: BannerDocumentType
@@ -8,11 +9,13 @@ export type BannerContainerProps = {
 
 export function BannerContainer({documentType, documentId, className}: BannerContainerProps) {
   const {Banner} = useWebsiteBuilder()
+  const {hasUser} = useUser()
 
   const {data, loading, error} = usePrimaryBannerQuery({
     variables: {
       documentId: documentId ?? '',
-      documentType
+      documentType,
+      loggedIn: hasUser
     }
   })
 

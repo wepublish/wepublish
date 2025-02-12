@@ -213,6 +213,7 @@ type UserSubscription {
   monthlyAmount: Int!
   currency: Currency!
   autoRenew: Boolean!
+  confirmed: Boolean!
   startsAt: DateTime!
   paidUntil: DateTime
   properties: [Properties!]!
@@ -243,6 +244,7 @@ enum SubscriptionDeactivationReason {
   none
   userSelfDeactivated
   invoiceNotPaid
+  userReplacedSubscription
 }
 
 type SubscriptionPeriod {
@@ -276,6 +278,8 @@ type MemberPlan {
   successPage: Page
   failPageId: ID
   failPage: Page
+  confirmationPageId: ID
+  confirmationPage: Page
 }
 
 type AvailablePaymentMethod {
@@ -658,6 +662,7 @@ type Article {
   pending: ArticleRevision
   latest: ArticleRevision!
   tags: [Tag!]!
+  trackingPixels: [TrackingPixel]
 }
 
 type ArticleRevision {
@@ -707,6 +712,24 @@ type Author {
 type AuthorLink {
   title: String!
   url: String!
+}
+
+type TrackingPixel {
+  id: ID!
+  trackingPixelMethod: TrackingPixelMethod!
+  pixelUid: String
+  uri: String
+  error: String
+}
+
+type TrackingPixelMethod {
+  id: ID!
+  trackingPixelProviderID: String!
+  trackingPixelProviderType: TrackingPixelProviderType!
+}
+
+enum TrackingPixelProviderType {
+  prolitteris
 }
 
 type PeerArticleTeaser {
@@ -1936,6 +1959,7 @@ input MemberPlanInput {
   migrateToTargetPaymentMethodID: ID
   successPageId: ID
   failPageId: ID
+  confirmationPageId: ID
 }
 
 input AvailablePaymentMethodInput {

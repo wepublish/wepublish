@@ -1,6 +1,7 @@
 import {
   CreateBannerActionInput,
   ImageRefFragment,
+  LoginStatus,
   UpdateBannerInput,
   getApiClientV2,
   useBannerQuery,
@@ -26,7 +27,8 @@ export const EditBannerForm = () => {
     title: '',
     text: '',
     active: false,
-    showOnArticles: false
+    showOnArticles: false,
+    showForLoginStatus: LoginStatus.All
     //tags: []
   })
 

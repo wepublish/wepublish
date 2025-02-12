@@ -5,3 +5,6 @@ Allow: /
 # Disallow GPT-4 from crawling the pages
 User-agent: GPTBot
 Disallow: /
+
+
+Sitemap: https://xn--cltr-0rac.ch/api/sitemap

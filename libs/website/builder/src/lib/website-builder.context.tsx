@@ -14,7 +14,8 @@ import {
   BuilderArticleDateProps,
   BuilderArticleListProps,
   BuilderArticleProps,
-  BuilderArticleSEOProps
+  BuilderArticleSEOProps,
+  BuilderArticleMetaProps
 } from './article.interface'
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
@@ -81,6 +82,7 @@ import {
   BuilderInvoiceListProps,
   BuilderMemberPlanItemProps,
   BuilderMemberPlanPickerProps,
+  BuilderPaymentAmountProps,
   BuilderPaymentMethodPickerProps,
   BuilderPeriodicityPickerProps,
   BuilderSubscribeProps,
@@ -115,6 +117,7 @@ export type WebsiteBuilderProps = {
   PageSEO: ComponentType<BuilderPageSEOProps>
   Article: ComponentType<BuilderArticleProps>
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
+  ArticleMeta: ComponentType<BuilderArticleMetaProps>
   ArticleDate: ComponentType<BuilderArticleDateProps>
   PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
@@ -144,6 +147,7 @@ export type WebsiteBuilderProps = {
   InvoiceListItem: ComponentType<BuilderInvoiceListItemProps>
   MemberPlanPicker: ComponentType<BuilderMemberPlanPickerProps>
   MemberPlanItem: ComponentType<BuilderMemberPlanItemProps>
+  PaymentAmount: ComponentType<BuilderPaymentAmountProps>
   PaymentMethodPicker: ComponentType<BuilderPaymentMethodPickerProps>
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>
   TransactionFee: ComponentType<BuilderTransactionFeeProps>
@@ -238,12 +242,14 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   TransactionFee: NoComponent,
   MemberPlanPicker: NoComponent,
   MemberPlanItem: NoComponent,
+  PaymentAmount: NoComponent,
   PaymentMethodPicker: NoComponent,
   PeriodicityPicker: NoComponent,
   Page: NoComponent,
   PageSEO: NoComponent,
   Article: NoComponent,
   ArticleSEO: NoComponent,
+  ArticleMeta: NoComponent,
   ArticleDate: NoComponent,
   PeerInformation: NoComponent,
   Author: NoComponent,

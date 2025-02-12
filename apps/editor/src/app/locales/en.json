@@ -111,7 +111,7 @@
         "title": "Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
         "totalCharCount": "Total characters count is {{totalCharCount}}",
-        "likeCount": "Like count is {{likeCount}}",
+        "likeCount": "Likes",
         "type": "Type",
         "untitled": "Untitled",
         "updateDate": "Update Date",
@@ -127,7 +127,8 @@
         "light": "Light",
         "style": "Style",
         "text": "Text",
-        "default": "Default"
+        "default": "Default",
+        "tracking": "Tracking"
       }
     },
     "articleList": {
@@ -228,6 +229,12 @@
         "active": "Active",
         "showOnArticles": "Display on articles",
         "showOnPages": "Display on those pages",
+        "showForLoginStatus": "Display for",
+        "loginStatus": {
+          "ALL": "all visitors",
+          "LOGGED_IN": "logged in visitors",
+          "LOGGED_OUT": "logged out visitors"
+        },
         "actions": "Actions",
         "image": "Image",
         "action": {
@@ -1198,12 +1205,14 @@
       "timeline": "Timeline",
       "actions": "Actions",
       "dayOfRenewal": "Day of renewal / subscription ends",
-      "subscriptionsAffected": "Filter applies to {{numberOfSubscriptions}} subscriptions"
+      "subscriptionsAffected": "Filter applies to {{numberOfSubscriptions}} subscriptions",
+      "confirm_subscription": "Subscription confirmation"
     },
     "subscriptionList": {
       "filter": {
         "deactivationReason": "Deactivation reason",
         "reasonInvoiceNotPaid": "Invoice not paid",
+        "reasonUserReplacedSubscription": "Replaced by other subscription",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "By user",
         "reset": "Reset Filter",
@@ -1385,6 +1394,7 @@
         },
         "reason": "Deactivation Reason",
         "reasonInvoiceNotPaid": "User did not pay invoices",
+        "reasonUserReplacedSubscription": "Replaced by other subscription",
         "cancellation": "Cancellation Date",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "User wants to deactivate",
@@ -1417,6 +1427,8 @@
       "invoiceNr": "Invoice No. {{invoiceId}}",
       "invoicePaid": "paid",
       "invoiceUnpaid": "unpaid",
+      "confirmed": "confirmed",
+      "unconfirmed": "unconfirmed",
       "monthlyAmount": "Monthly amount: {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "Subscription expires, no automatic renewal",
       "noDeactivation": "No deactivation.",
@@ -1457,7 +1469,9 @@
       "migratePMHelptext": "Migrate the subscriptions of this plan to a new Payment Method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early.",
       "amountPerMonthTarget": "Target amount / month",
       "amountPerMonthTargetHelpText": "The monthly target amount defines the desired member plan price that users should pay. It must be higher than the minimum amount and typically defines the default setting in the payment form.",
-      "amountPerMonthMinHelpText": "The minimum monthly amount is the actual member plan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing."
+      "amountPerMonthMinHelpText": "The minimum monthly amount is the actual member plan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing.",
+      "confirmationPage": "Redirect to page for existing users (retargeting)",
+      "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an e-mail to pay for the subscription. This could be indicated on this page."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Advanced settings",
@@ -1493,6 +1507,11 @@
     },
     "selectableItemsActions": {
       "selectedItems": "Selected {{numberOfItems}} items"
+    },
+    "trackingPixels": {
+      "noPixelInfoHeader": "No tracking integration available",
+      "noPixelInfoDescription": "This is the case, for example, if no tracking is configured or for old articles.",
+      "errorHeader": "Error"
     }
   }
 }

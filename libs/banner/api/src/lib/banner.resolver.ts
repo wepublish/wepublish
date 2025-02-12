@@ -7,7 +7,6 @@ import {
   PrimaryBannerArgs,
   UpdateBannerInput
 } from './banner.model'
-import {NotFoundException} from '@nestjs/common'
 import {BannerActionService} from './banner-action.service'
 import {BannerAction} from './banner-action.model'
 import {PaginationArgs} from './pagination.model'
@@ -17,8 +16,10 @@ import {
   CanUpdateBanner,
   CanDeleteBanner,
   CanGetBanner,
-  Permissions
+  Permissions,
+  Public
 } from '@wepublish/permissions/api'
+import {NotFoundException} from '@nestjs/common'
 
 @Resolver(() => Banner)
 export class BannerResolver {
@@ -38,18 +39,15 @@ export class BannerResolver {
   async banner(@Args('id') args: string): Promise<Banner> {
     const banner = await this.bannerService.findOne(args)
     if (!banner) {
-      throw new NotFoundException()
+      throw new NotFoundException(`Banner with id ${args} not found`)
     }
     return banner
   }
 
-  @Query(() => Banner)
-  async primaryBanner(@Args() args: PrimaryBannerArgs): Promise<Banner> {
-    const banner = await this.bannerService.findFirst(args)
-    if (!banner) {
-      throw new NotFoundException()
-    }
-    return banner
+  @Public()
+  @Query(() => Banner, {nullable: true})
+  async primaryBanner(@Args() args: PrimaryBannerArgs): Promise<Banner | null> {
+    return await this.bannerService.findFirst(args)
   }
 
   @ResolveField(() => [BannerAction])

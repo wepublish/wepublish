@@ -62,6 +62,7 @@ export type Article = {
   socialMediaTitle?: Maybe<Scalars['String']>;
   tags: Array<Tag>;
   title: Scalars['String'];
+  trackingPixels?: Maybe<Array<Maybe<TrackingPixel>>>;
   updatedAt: Scalars['DateTime'];
   url: Scalars['String'];
 };
@@ -172,6 +173,7 @@ export type Banner = {
   id: Scalars['ID'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
+  showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: Maybe<Array<PageModel>>;
   text: Scalars['String'];
@@ -388,6 +390,7 @@ export type CreateBannerInput = {
   active: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['String']>;
+  showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
   text: Scalars['String'];
@@ -820,6 +823,12 @@ export type ListicleItem = {
   title: Scalars['String'];
 };
 
+export enum LoginStatus {
+  All = 'ALL',
+  LoggedIn = 'LOGGED_IN',
+  LoggedOut = 'LOGGED_OUT'
+}
+
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
   name: Scalars['String'];
@@ -847,6 +856,8 @@ export type MemberPlan = {
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
+  confirmationPage?: Maybe<Page>;
+  confirmationPageId?: Maybe<Scalars['ID']>;
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
@@ -910,6 +921,8 @@ export type Mutation = {
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Create a subscription interval */
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
+  /** Allows authenticated users to create additional subscriptions */
+  createSubscriptionWithConfirmation: Scalars['Boolean'];
   /**
    *
    *       Creates a new userConsent based on input.
@@ -1095,6 +1108,19 @@ export type MutationCreateSubscriptionIntervalArgs = {
   event: SubscriptionEvent;
   mailTemplateId?: InputMaybe<Scalars['String']>;
   subscriptionFlowId: Scalars['String'];
+};
+
+
+export type MutationCreateSubscriptionWithConfirmationArgs = {
+  autoRenew: Scalars['Boolean'];
+  memberPlanID?: InputMaybe<Scalars['ID']>;
+  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
+  monthlyAmount: Scalars['Int'];
+  paymentMethodID?: InputMaybe<Scalars['ID']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  paymentPeriodicity: PaymentPeriodicity;
+  subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>;
+  userId?: InputMaybe<Scalars['ID']>;
 };
 
 
@@ -1724,7 +1750,7 @@ export type Query = {
   poll: FullPoll;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
-  primaryBanner: Banner;
+  primaryBanner?: Maybe<Banner>;
   provider: MailProviderModel;
   ratingSystem: FullCommentRatingSystem;
   /**
@@ -2005,6 +2031,7 @@ export type QueryPollVotesArgs = {
 export type QueryPrimaryBannerArgs = {
   documentId: Scalars['ID'];
   documentType: BannerDocumentType;
+  loggedIn: Scalars['Boolean'];
 };
 
 
@@ -2170,6 +2197,7 @@ export type Stats = {
 export type Subscription = {
   __typename?: 'Subscription';
   autoRenew: Scalars['Boolean'];
+  canExtend: Scalars['Boolean'];
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean'];
   id: Scalars['ID'];
@@ -2192,10 +2220,12 @@ export type SubscriptionDeactivation = {
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
+  UserReplacedSubscription = 'userReplacedSubscription',
   UserSelfDeactivated = 'userSelfDeactivated'
 }
 
 export enum SubscriptionEvent {
+  ConfirmSubscription = 'CONFIRM_SUBSCRIPTION',
   Custom = 'CUSTOM',
   DeactivationByUser = 'DEACTIVATION_BY_USER',
   DeactivationUnpaid = 'DEACTIVATION_UNPAID',
@@ -2335,6 +2365,22 @@ export type TitleBlock = {
   title?: Maybe<Scalars['String']>;
 };
 
+export type TrackingPixel = {
+  __typename?: 'TrackingPixel';
+  id: Scalars['ID'];
+  trackingPixelMethod: TrackingPixelMethod;
+  uri?: Maybe<Scalars['String']>;
+};
+
+export type TrackingPixelMethod = {
+  __typename?: 'TrackingPixelMethod';
+  trackingPixelProviderType: TrackingPixelProviderType;
+};
+
+export enum TrackingPixelProviderType {
+  Prolitteris = 'prolitteris'
+}
+
 export type TwitterTweetBlock = {
   __typename?: 'TwitterTweetBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -2348,6 +2394,7 @@ export type UpdateBannerInput = {
   cta?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
   imageId?: InputMaybe<Scalars['String']>;
+  showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
   text: Scalars['String'];

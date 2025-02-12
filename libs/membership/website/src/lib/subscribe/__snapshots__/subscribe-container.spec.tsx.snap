@@ -1776,9 +1776,9 @@ exports[`Subscribe Container should render LoggedIn 1`] = `
           Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen in deinem 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-9"
-            href="/profile/subscription"
+            href="/profile"
           >
-            Abo-Dashboard
+            Profil
           </a>
            anschauen.
         </div>
@@ -1808,9 +1808,9 @@ exports[`Subscribe Container should render LoggedIn 1`] = `
           Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-9"
-            href="/profile/subscription"
+            href="/profile"
           >
-            Abo-Dashboard
+            Profil
           </a>
            anschauen.
         </div>

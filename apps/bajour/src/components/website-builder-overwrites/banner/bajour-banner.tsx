@@ -1,8 +1,7 @@
 import {styled} from '@mui/material'
 import {PageBanner} from '@wepublish/website'
-import {BuilderBannerProps} from '@wepublish/website'
 
-const BajourBannerInner = styled(PageBanner.Banner)(
+const BajourBanner = styled(PageBanner.Banner)(
   ({theme}) => `
 ${PageBanner.BannerContent} {
   padding: ${theme.spacing(2)};
@@ -45,6 +44,4 @@ ${PageBanner.BannerCta} {
 }`
 )
 
-export function BajourBanner(props: BuilderBannerProps) {
-  return <BajourBannerInner {...props} />
-}
+export {BajourBanner}

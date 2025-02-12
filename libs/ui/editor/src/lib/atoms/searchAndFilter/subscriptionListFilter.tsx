@@ -263,6 +263,10 @@ export function SubscriptionListFilter({
               {
                 value: SubscriptionDeactivationReason.InvoiceNotPaid,
                 label: t('subscriptionList.filter.reasonInvoiceNotPaid')
+              },
+              {
+                value: SubscriptionDeactivationReason.UserReplacedSubscription,
+                label: t('subscriptionList.filter.reasonUserReplacedSubscription')
               }
             ]}
             block

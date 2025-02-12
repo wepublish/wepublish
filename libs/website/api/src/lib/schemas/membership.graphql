@@ -42,6 +42,9 @@ fragment FullMemberPlan on MemberPlan {
   failPage {
     url
   }
+  confirmationPage {
+    url
+  }
 }
 
 fragment FullPayment on Payment {
@@ -86,6 +89,8 @@ fragment FullSubscription on Subscription {
   properties {
     ...FullProperty
   }
+
+  canExtend
 }
 
 fragment FullInvoiceItem on InvoiceItem {
@@ -150,6 +155,30 @@ mutation Subscribe(
   ) {
     ...FullPayment
   }
+}
+
+mutation Resubscribe(
+  $userId: ID
+  $memberPlanId: ID
+  $memberPlanSlug: Slug
+  $autoRenew: Boolean!
+  $paymentPeriodicity: PaymentPeriodicity!
+  $monthlyAmount: Int!
+  $paymentMethodId: ID
+  $paymentMethodSlug: Slug
+  $subscriptionProperties: [PublicPropertiesInput!]
+) {
+  createSubscriptionWithConfirmation(
+    userId: $userId
+    memberPlanID: $memberPlanId
+    memberPlanSlug: $memberPlanSlug
+    autoRenew: $autoRenew
+    paymentPeriodicity: $paymentPeriodicity
+    monthlyAmount: $monthlyAmount
+    paymentMethodID: $paymentMethodId
+    paymentMethodSlug: $paymentMethodSlug
+    subscriptionProperties: $subscriptionProperties
+  )
 }
 
 mutation PayInvoice(

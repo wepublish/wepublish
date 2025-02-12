@@ -88,6 +88,11 @@ export const getPublishedArticleByIdOrSlug = async (
             authors: true,
             socialMediaAuthors: true
           }
+        },
+        trackingPixels: {
+          include: {
+            trackingPixelMethod: true
+          }
         }
       }
     })
@@ -119,6 +124,5 @@ export const getPublishedArticleByIdOrSlug = async (
   if (session?.type === AuthSessionType.Token) {
     return article?.shared ? article : null
   }
-
   return article
 }

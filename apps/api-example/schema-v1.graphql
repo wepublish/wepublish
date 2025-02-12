@@ -610,6 +610,7 @@ type Article {
   lead: String
   seoTitle: String
   tags: [Tag!]!
+  trackingPixels: [TrackingPixel]
   canonicalUrl: String
   properties: [PublicProperties!]!
   image: Image
@@ -622,6 +623,20 @@ type Article {
   likes: Int!
   blocks: [Block!]!
   comments: [Comment!]!
+}
+
+type TrackingPixel {
+  id: ID!
+  trackingPixelMethod: TrackingPixelMethod!
+  uri: String
+}
+
+type TrackingPixelMethod {
+  trackingPixelProviderType: TrackingPixelProviderType!
+}
+
+enum TrackingPixelProviderType {
+  prolitteris
 }
 
 type Author {
@@ -864,6 +879,7 @@ type Subscription {
   properties: [PublicProperties!]!
   deactivation: SubscriptionDeactivation
   url: String!
+  canExtend: Boolean!
 }
 
 type MemberPlan {
@@ -883,6 +899,8 @@ type MemberPlan {
   successPage: Page
   failPageId: ID
   failPage: Page
+  confirmationPageId: ID
+  confirmationPage: Page
 }
 
 enum Currency {
@@ -922,6 +940,7 @@ enum SubscriptionDeactivationReason {
   none
   userSelfDeactivated
   invoiceNotPaid
+  userReplacedSubscription
 }
 
 type MemberPlanConnection {
@@ -1059,6 +1078,9 @@ type Mutation {
 
   """Allows authenticated users to create additional subscriptions"""
   createSubscription(memberPlanID: ID, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: ID, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, deactivateSubscriptionId: ID): Payment!
+
+  """Allows authenticated users to create additional subscriptions"""
+  createSubscriptionWithConfirmation(userId: ID, memberPlanID: ID, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: ID, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!]): Boolean!
 
   """This mutation extends an subscription early"""
   extendSubscription(subscriptionId: ID!, successURL: String, failureURL: String): Payment!

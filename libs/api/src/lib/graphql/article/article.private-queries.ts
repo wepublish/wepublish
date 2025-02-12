@@ -17,7 +17,9 @@ import {SortOrder} from '@wepublish/utils/api'
 export const getArticleById = async (
   id: string,
   authenticate: Context['authenticate'],
-  articleLoader: Context['loaders']['articles']
+  articleLoader: Context['loaders']['articles'],
+  trackingPixelContext: Context['trackingPixelContext'],
+  prisma: PrismaClient
 ): Promise<ArticleWithRevisions | null> => {
   const {roles} = authenticate()
 
@@ -26,6 +28,12 @@ export const getArticleById = async (
 
   if (canGetArticle || canGetSharedArticle) {
     const article = await articleLoader.load(id)
+
+    await trackingPixelContext.addMissingArticleTrackingPixels(
+      prisma,
+      article.id,
+      article.trackingPixels
+    )
 
     if (canGetArticle) {
       return article

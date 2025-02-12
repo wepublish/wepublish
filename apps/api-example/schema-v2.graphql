@@ -44,6 +44,7 @@ type Banner {
   id: ID!
   image: Image
   imageId: String
+  showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
   showOnPages: [PageModel!]
   text: String!
@@ -123,6 +124,7 @@ input CreateBannerInput {
   active: Boolean!
   cta: String
   imageId: String
+  showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
   showOnPages: [PageModelInput!]
   text: String!
@@ -252,6 +254,12 @@ type ImportedEventsDocument {
   nodes: [EventFromSource!]!
   pageInfo: PageInfo!
   totalCount: Float!
+}
+
+enum LoginStatus {
+  ALL
+  LOGGED_IN
+  LOGGED_OUT
 }
 
 type MailProviderModel {
@@ -493,7 +501,7 @@ type Query {
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: ID, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
-  primaryBanner(documentId: ID!, documentType: BannerDocumentType!): Banner!
+  primaryBanner(documentId: ID!, documentType: BannerDocumentType!, loggedIn: Boolean!): Banner
   provider: MailProviderModel!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
@@ -585,10 +593,12 @@ type Stats {
 enum SubscriptionDeactivationReason {
   invoiceNotPaid
   none
+  userReplacedSubscription
   userSelfDeactivated
 }
 
 enum SubscriptionEvent {
+  CONFIRM_SUBSCRIPTION
   CUSTOM
   DEACTIVATION_BY_USER
   DEACTIVATION_UNPAID
@@ -627,6 +637,7 @@ input UpdateBannerInput {
   cta: String
   id: ID!
   imageId: String
+  showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
   showOnPages: [PageModelInput!]
   text: String!

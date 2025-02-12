@@ -11,6 +11,9 @@ export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
     },
     [SubscriptionDeactivationReason.invoiceNotPaid]: {
       value: SubscriptionDeactivationReason.invoiceNotPaid
+    },
+    [SubscriptionDeactivationReason.userReplacedSubscription]: {
+      value: SubscriptionDeactivationReason.userReplacedSubscription
     }
   }
 })

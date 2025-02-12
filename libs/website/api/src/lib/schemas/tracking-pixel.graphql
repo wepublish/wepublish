@@ -1,0 +1,8 @@
+fragment FullTrackingPixel on TrackingPixel {
+  id
+  uri
+}
+
+fragment FullTrackingPixelMethod on TrackingPixelMethod {
+  trackingPixelProviderType
+}

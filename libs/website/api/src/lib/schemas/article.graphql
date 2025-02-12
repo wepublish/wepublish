@@ -14,6 +14,10 @@ fragment ArticleWithoutBlocks on Article {
   peeredArticleURL
   disableComments
 
+  trackingPixels {
+    ...FullTrackingPixel
+  }
+
   tags {
     ...FullTag
   }

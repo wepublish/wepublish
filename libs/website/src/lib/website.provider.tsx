@@ -1,5 +1,11 @@
 import {css, GlobalStyles, TextField, Theme, ThemeProvider} from '@mui/material'
-import {Article, ArticleDate, ArticleList, ArticleSEO} from '@wepublish/article/website'
+import {
+  Article,
+  ArticleDate,
+  ArticleList,
+  ArticleSEO,
+  ArticleTags
+} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {
   Author,
@@ -60,6 +66,7 @@ import {
   InvoiceListItem,
   MemberPlanItem,
   MemberPlanPicker,
+  PaymentAmountSlider,
   PaymentMethodPicker,
   PeriodicityPicker,
   Subscribe,
@@ -150,6 +157,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           ArticleList={ArticleList}
           Article={Article}
           ArticleDate={ArticleDate}
+          ArticleMeta={ArticleTags}
           ArticleSEO={ArticleSEO}
           Banner={PageBanner}
           PeerInformation={PeerInformation}
@@ -178,6 +186,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           MemberPlanPicker={MemberPlanPicker}
           MemberPlanItem={MemberPlanItem}
           PeriodicityPicker={PeriodicityPicker}
+          PaymentAmount={PaymentAmountSlider}
           PaymentMethodPicker={PaymentMethodPicker}
           TransactionFee={TransactionFee}
           Subscribe={Subscribe}

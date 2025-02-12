@@ -17,6 +17,8 @@ import {
   MdEvent,
   MdEventAvailable,
   MdMoneyOff,
+  MdOutlineCheckBox,
+  MdOutlineCheckBoxOutlineBlank,
   MdOutlineKeyboardArrowRight,
   MdRefresh,
   MdTimelapse
@@ -111,7 +113,8 @@ function UserSubscriptionsList({subscriptions, userId}: UserSubscriptionsProps) 
     if (subscription.autoRenew && !subscription.deactivation) {
       return (
         <>
-          <MdRefresh css={commonIconMargin} /> {t('userSubscriptionList.subscriptionIsAutoRenewed')}
+          <MdRefresh css={commonIconMargin} />
+          {t('userSubscriptionList.subscriptionIsAutoRenewed')}
           .&nbsp;
           {getDeactivationString(subscription)}
         </>
@@ -120,7 +123,8 @@ function UserSubscriptionsList({subscriptions, userId}: UserSubscriptionsProps) 
     // subscription is not auto renewed
     return (
       <>
-        <MdDisabledByDefault css={commonIconMargin} /> {t('userSubscriptionList.noAutoRenew')}
+        <MdDisabledByDefault css={commonIconMargin} />
+        {t('userSubscriptionList.noAutoRenew')}
         .&nbsp;
         {getDeactivationString(subscription)}
       </>
@@ -257,7 +261,22 @@ function UserSubscriptionsList({subscriptions, userId}: UserSubscriptionsProps) 
                   </FlexboxGrid.Item>
                   {/* paid until */}
                   <FlexboxGrid.Item colspan={24}>
-                    <MdMoneyOff css={commonIconMargin} /> {paidUntilView(subscription)}
+                    <MdMoneyOff css={commonIconMargin} />
+                    {paidUntilView(subscription)}
+                  </FlexboxGrid.Item>
+                  {/* confirmed */}
+                  <FlexboxGrid.Item colspan={24}>
+                    {subscription.confirmed ? (
+                      <>
+                        <MdOutlineCheckBox css={commonIconMargin} />
+                        {t('userSubscriptionList.confirmed')}
+                      </>
+                    ) : (
+                      <>
+                        <MdOutlineCheckBoxOutlineBlank css={commonIconMargin} />
+                        {t('userSubscriptionList.unconfirmed')}
+                      </>
+                    )}
                   </FlexboxGrid.Item>
                   {/* auto renewal */}
                   <FlexboxGrid.Item colspan={24}>{autoRenewalView(subscription)}</FlexboxGrid.Item>

@@ -5,15 +5,15 @@ import {GraphQLImage} from './image'
 import {Context} from '../context'
 import {createProxyingResolver} from '../utility'
 import {
+  GraphQLBoolean,
+  GraphQLEnumType,
   GraphQLID,
+  GraphQLInputObjectType,
+  GraphQLInt,
+  GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString,
-  GraphQLBoolean,
-  GraphQLList,
-  GraphQLInt,
-  GraphQLInputObjectType,
-  GraphQLEnumType
+  GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLPageInfo} from './common'
@@ -140,6 +140,13 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
       resolve: createProxyingResolver(({failPageId}, args, {loaders}) => {
         return failPageId ? loaders.pages.load(failPageId) : null
       })
+    },
+    confirmationPageId: {type: GraphQLID},
+    confirmationPage: {
+      type: GraphQLPage,
+      resolve: createProxyingResolver(({confirmationPageId}, args, {loaders}) => {
+        return confirmationPageId ? loaders.pages.load(confirmationPageId) : null
+      })
     }
   })
 })
@@ -181,6 +188,13 @@ export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context
       type: GraphQLPublicPage,
       resolve: createProxyingResolver(({failPageId}, args, {loaders}) => {
         return failPageId ? loaders.publicPagesByID.load(failPageId) : null
+      })
+    },
+    confirmationPageId: {type: GraphQLID},
+    confirmationPage: {
+      type: GraphQLPublicPage,
+      resolve: createProxyingResolver(({confirmationPageId}, args, {loaders}) => {
+        return confirmationPageId ? loaders.publicPagesByID.load(confirmationPageId) : null
       })
     }
   })
@@ -255,6 +269,7 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
     },
     migrateToTargetPaymentMethodID: {type: GraphQLID},
     successPageId: {type: GraphQLID},
-    failPageId: {type: GraphQLID}
+    failPageId: {type: GraphQLID},
+    confirmationPageId: {type: GraphQLID}
   })
 })
