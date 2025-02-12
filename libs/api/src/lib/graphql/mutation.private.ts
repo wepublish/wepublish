@@ -9,7 +9,7 @@ import {
 import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
 import {SettingName} from '@wepublish/settings/api'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {NotFound} from '../error'
 import {Validator} from '../validator'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
@@ -610,7 +610,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       resolve: (
         root,
         {input},
-        {authenticate, loaders, paymentProviders, prisma: {payment, memberPlan}}
+        {authenticate, loaders, paymentProviders, prisma: {payment, memberPlan, subscription}}
       ) =>
         createPaymentFromInvoice(
           input,
@@ -619,7 +619,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           loaders.invoicesByID,
           loaders.paymentMethodsByID,
           memberPlan,
-          payment
+          payment,
+          subscription
         )
     },
 

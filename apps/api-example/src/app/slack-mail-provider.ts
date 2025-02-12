@@ -43,14 +43,12 @@ export class SlackMailProvider extends BaseMailProvider {
   }
 
   async getTemplates() {
-    return [
-      {
-        name: 'SlackEmptyTemplate',
-        uniqueIdentifier: 'slack-empty',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ]
+    return [...Array(10).keys()].map(key => ({
+      name: `Slack Template ${key + 1}`,
+      uniqueIdentifier: `slack-template-${key + 1}`,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }))
   }
 
   getTemplateUrl() {

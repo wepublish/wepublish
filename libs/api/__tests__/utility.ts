@@ -12,21 +12,13 @@ import * as crypto from 'crypto'
 import {URL} from 'url'
 import {
   AlgebraicCaptchaChallenge,
-  Article,
   Author,
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
   KarmaMediaAdapter,
-  PublicArticle,
   PublicComment,
-  PublicPage,
-  URLAdapter,
-  DefaultSessionTTL,
-  FakeMailProvider,
-  PayrexxPaymentProvider,
-  GatewayClient,
-  TransactionClient
+  DefaultSessionTTL
 } from '../src'
 import {createUserSession} from '../src/lib/graphql/session/session.mutation'
 import {PartialDeep} from 'type-fest'
@@ -229,6 +221,7 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
         prisma,
         mediaAdapter,
         mailProvider,
+        trackingPixelProviders,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
           defaultReplyToAddress: 'reply-to@fake.org'

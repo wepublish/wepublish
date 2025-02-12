@@ -84,8 +84,22 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
       return object
     }, {} as Record<string, number>)
 
+    // Adding a number (even as string) to an object key ignores sorting
+    // So we have to re-sort the array
+    const sortedArticleViewMap = Object.entries(articleViewMap).sort(([, a], [, b]) => {
+      if (a > b) {
+        return -1
+      }
+
+      if (b > a) {
+        return 1
+      }
+
+      return 0
+    })
+
     const slicedArticleViewMap = Object.fromEntries(
-      Object.entries(articleViewMap).slice(skip ?? 0, (skip ?? 0) + getMaxTake(take ?? 10))
+      sortedArticleViewMap.slice(skip ?? 0, (skip ?? 0) + getMaxTake(take ?? 10))
     )
 
     const articles = await this.prisma.article.findMany({
@@ -106,11 +120,11 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
 
     return articles.sort((a, b) => {
       if (!a.slug || !articleViewMap[a.slug]) {
-        return -1
+        return 1
       }
 
       if (!b.slug || !articleViewMap[b.slug]) {
-        return 1
+        return -1
       }
 
       return articleViewMap[a.slug] > articleViewMap[b.slug]

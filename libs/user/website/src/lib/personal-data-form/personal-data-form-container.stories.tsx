@@ -1,7 +1,6 @@
 import {css} from '@emotion/react'
 import {action} from '@storybook/addon-actions'
 import {StoryObj} from '@storybook/react'
-import {userEvent, within} from '@storybook/testing-library'
 import {WithUserDecorator} from '@wepublish/storybook'
 import {
   FullImageFragment,
@@ -212,18 +211,18 @@ export const Filled: StoryObj = {
   }
 }
 
-export const DeleteImage: StoryObj = {
-  ...Default,
-  play: async ({canvasElement, step}) => {
-    const canvas = within(canvasElement)
+// export const DeleteImage: StoryObj = {
+//   ...Default,
+//   play: async ({canvasElement, step}) => {
+//     const canvas = within(canvasElement)
 
-    const button = canvas.getByTitle('Bild löschen')
+//     const button = canvas.getByTitle('Bild löschen')
 
-    await step('Click delete image', async () => {
-      await userEvent.click(button)
-    })
-  }
-}
+//     await step('Click delete image', async () => {
+//       await userEvent.click(button)
+//     })
+//   }
+// }
 
 export const WithClassName: StoryObj = {
   ...Default,

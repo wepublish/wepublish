@@ -1,18 +1,19 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, InputAdornment, Slider, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, styled} from '@mui/material'
 import {
   Challenge,
-  UserForm,
   defaultRegisterSchema,
   requiredRegisterSchema,
+  UserForm,
   useUser,
   zodAlwaysRefine
 } from '@wepublish/authentication/website'
 import {
   Currency,
-  MemberPlan,
+  FullMemberPlanFragment,
   PaymentPeriodicity,
   RegisterMutationVariables,
+  ResubscribeMutationVariables,
   SubscribeMutationVariables,
   UserAddressInput
 } from '@wepublish/website/api'
@@ -63,6 +64,20 @@ export const SubscribeSection = styled('div')`
   }
 `
 
+export const SubscribeAmount = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(1)};
+  grid-template-columns: 1fr;
+  align-items: center;
+  padding: ${({theme}) => theme.spacing(3)};
+  border: 1px solid ${({theme}) => theme.palette.divider};
+  border-radius: ${({theme}) => theme.shape.borderRadius}px;
+`
+
+export const SubscribeAmountText = styled('p')`
+  text-align: center;
+`
+
 export const SubscribePayment = styled('div')`
   display: flex;
   flex-flow: row wrap;
@@ -78,32 +93,6 @@ export const SubscribePayment = styled('div')`
 
 const buttonStyles = css`
   justify-self: center;
-`
-
-export const SubscribeAmount = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
-  grid-template-columns: 1fr;
-  align-items: center;
-  padding: ${({theme}) => theme.spacing(3)};
-  border: 1px solid ${({theme}) => theme.palette.divider};
-  border-radius: ${({theme}) => theme.shape.borderRadius}px;
-`
-
-export const SubscribeAmountSlider = styled('div')`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: ${({theme}) => theme.spacing(3)};
-  align-items: center;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    grid-auto-flow: column;
-    grid-auto-columns: 300px;
-  }
-`
-
-export const SubscribeAmountText = styled('p')`
-  text-align: center;
 `
 
 export const SubscribeCancelable = styled('div')`
@@ -141,11 +130,8 @@ export const getPaymentText = (
         locale
       )}`
 
-const extraMoneyOffsetDefault = () => 0
-
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
-  extraMoneyOffset = extraMoneyOffsetDefault,
   memberPlans,
   challenge,
   userSubscriptions,
@@ -155,16 +141,19 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   className,
   onSubscribe,
   onSubscribeWithRegister,
+  onResubscribe,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate
+  donate,
+  returningUserId
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale, siteTitle},
-    elements: {Alert, Button, TextField, H5, Link, Paragraph},
+    elements: {Alert, Button, H5, Link, Paragraph},
     MemberPlanPicker,
     PaymentMethodPicker,
-    PeriodicityPicker
+    PeriodicityPicker,
+    PaymentAmount
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
   const [openConfirm, setOpenConfirm] = useState(false)
@@ -180,6 +169,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       ),
     [fields]
   )
+  const hasUserContext = hasUser || !!returningUserId
 
   /**
    * Done like this to avoid type errors due to z.ZodObject vs z.ZodEffect<z.ZodObject>.
@@ -203,7 +193,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const {control, handleSubmit, watch, setValue, resetField} = useForm<
     z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
   >({
-    resolver: zodResolver(hasUser ? loggedInSchema : loggedOutSchema),
+    resolver: zodResolver(hasUserContext ? loggedInSchema : loggedOutSchema),
     defaultValues: {
       ...defaults,
       monthlyAmount: 0,
@@ -231,7 +221,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const sortedMemberPlans = useMemo(
     () =>
       sortBy(
-        (memberPlan: MemberPlan) => memberPlan.amountPerMonthMin,
+        (memberPlan: FullMemberPlanFragment) => memberPlan.amountPerMonthMin,
         memberPlans.data?.memberPlans.nodes ?? []
       ),
     [memberPlans.data?.memberPlans.nodes]
@@ -290,6 +280,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       return callAction(onSubscribe)(subscribeData)
     }
 
+    if (returningUserId) {
+      const resubscribeData: ResubscribeMutationVariables = {
+        ...subscribeData,
+        userId: returningUserId
+      }
+
+      return callAction(onResubscribe)(resubscribeData)
+    }
+
     const {address, challengeAnswer, email, birthday, password, name, firstName} = data as z.infer<
       typeof loggedOutSchema
     >
@@ -314,10 +313,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     if (selectedMemberPlan) {
       setValue<'monthlyAmount'>(
         'monthlyAmount',
-        selectedMemberPlan.amountPerMonthMin + extraMoneyOffset(selectedMemberPlan)
+        selectedMemberPlan.amountPerMonthTarget || selectedMemberPlan.amountPerMonthMin
       )
     }
-  }, [selectedMemberPlan, extraMoneyOffset, setValue])
+  }, [selectedMemberPlan, setValue])
 
   useEffect(() => {
     if (challenge.data?.challenge.challengeID) {
@@ -381,6 +380,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
+      {!hasUser && returningUserId && (
+        <SubscribeSection>
+          <H5 component="h2">
+            {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}, willkommen
+            zurück!
+          </H5>
+        </SubscribeSection>
+      )}
+
       <SubscribeSection>
         {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
           <H5 component="h2">Abo wählen</H5>
@@ -425,44 +433,19 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                 Ich unterstütze {siteTitle} {replace(/^./, toLower)(monthlyPaymentText)}
               </Paragraph>
 
-              <SubscribeAmountSlider>
-                <Slider
-                  {...field}
-                  min={amountPerMonthMin}
-                  max={amountPerMonthMin * 5}
-                  valueLabelFormat={val =>
-                    formatCurrency(val / 100, selectedMemberPlan?.currency ?? Currency.Chf, locale)
-                  }
-                  step={100}
-                  color="secondary"
-                />
-
-                {donate?.(selectedMemberPlan) && (
-                  <TextField
-                    {...field}
-                    value={field.value / 100}
-                    onChange={event => field.onChange(+event.target.value * 100)}
-                    type={'number'}
-                    fullWidth
-                    inputProps={{
-                      step: 'any',
-                      min: amountPerMonthMin / 100
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          {selectedMemberPlan?.currency ?? Currency.Chf}
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                )}
-              </SubscribeAmountSlider>
+              <PaymentAmount
+                {...field}
+                error={error}
+                donate={!!donate?.(selectedMemberPlan)}
+                amountPerMonthMin={amountPerMonthMin}
+                amountPerMonthTarget={selectedMemberPlan?.amountPerMonthTarget ?? undefined}
+                currency={selectedMemberPlan?.currency ?? Currency.Chf}
+              />
             </SubscribeAmount>
           )}
         />
 
-        {!hasUser && <UserForm control={control} fields={fields} />}
+        {!hasUserContext && <UserForm control={control} fields={fields} />}
       </SubscribeSection>
 
       <SubscribeSection>
@@ -515,8 +498,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           )}
         </SubscribePayment>
       </SubscribeSection>
-
-      {!hasUser && (
+      {!hasUserContext && (
         <SubscribeSection>
           <H5 component="h2">Spam-Schutz</H5>
 

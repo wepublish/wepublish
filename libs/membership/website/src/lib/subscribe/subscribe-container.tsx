@@ -1,10 +1,11 @@
 import {useUser} from '@wepublish/authentication/website'
 import {
-  MemberPlan,
+  FullMemberPlanFragment,
   useChallengeLazyQuery,
   useInvoicesLazyQuery,
   useMemberPlanListQuery,
   useRegisterMutation,
+  useResubscribeMutation,
   useSubscribeMutation,
   useSubscriptionsLazyQuery
 } from '@wepublish/website/api'
@@ -29,26 +30,22 @@ export type SubscribeContainerProps<
 > = BuilderContainerProps &
   Pick<
     BuilderSubscribeProps<T>,
-    'fields' | 'schema' | 'defaults' | 'extraMoneyOffset' | 'termsOfServiceUrl' | 'donate'
+    'fields' | 'schema' | 'defaults' | 'termsOfServiceUrl' | 'donate' | 'returningUserId'
   > & {
-    successURL: string
-    failureURL: string
-    filter?: (memberPlans: MemberPlan[]) => MemberPlan[]
+    filter?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
     deactivateSubscriptionId?: string
   }
 
 export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   className,
-  extraMoneyOffset,
-  failureURL,
-  successURL,
   defaults,
   fields,
   schema,
   filter,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate
+  donate,
+  returningUserId
 }: SubscribeContainerProps<T>) => {
   const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
@@ -58,12 +55,15 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
   const [fetchUserInvoices, userInvoices] = useInvoicesLazyQuery()
 
   const [stripeClientSecret, setStripeClientSecret] = useState<string>()
+  const [stripeMemberPlan, setStripeMemberPlan] = useState<FullMemberPlanFragment>()
 
   const memberPlanList = useMemberPlanListQuery({
     variables: {
       take: 50
     }
   })
+
+  const [resubscribe] = useResubscribeMutation({})
 
   const [subscribe] = useSubscribeMutation({
     onCompleted(data) {
@@ -115,7 +115,11 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
         <StripeElement clientSecret={stripeClientSecret}>
           <StripePayment
             onClose={success => {
-              window.location.href = success ? successURL : failureURL
+              if (stripeMemberPlan) {
+                window.location.href = success
+                  ? stripeMemberPlan.successPage?.url ?? ''
+                  : stripeMemberPlan.failPage?.url ?? ''
+              }
             }}
           />
         </StripeElement>
@@ -123,7 +127,6 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
 
       <Subscribe
         className={className}
-        extraMoneyOffset={extraMoneyOffset}
         defaults={defaults}
         fields={fields}
         schema={schema}
@@ -133,14 +136,19 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
         memberPlans={filteredMemberPlans}
         termsOfServiceUrl={termsOfServiceUrl}
         donate={donate}
+        returningUserId={returningUserId}
         onSubscribe={async formData => {
+          const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
+            mb => mb.id === formData.memberPlanId
+          )
+          setStripeMemberPlan(selectedMemberplan)
+
           await subscribe({
             variables: {
               ...formData,
-              successURL,
-              failureURL,
-              deactivateSubscriptionId:
-                (deactivateSubscriptionId as string | undefined) || undefined
+              successURL: selectedMemberplan?.successPage?.url,
+              failureURL: selectedMemberplan?.failPage?.url,
+              deactivateSubscriptionId
             }
           })
         }}
@@ -153,15 +161,31 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
             throw registerErrors
           }
 
+          const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
+            mb => mb.id === formData.subscribe.memberPlanId
+          )
+          setStripeMemberPlan(selectedMemberplan)
+
           await subscribe({
             variables: {
               ...formData.subscribe,
-              successURL,
-              failureURL
+              successURL: selectedMemberplan?.successPage?.url,
+              failureURL: selectedMemberplan?.failPage?.url
             }
           })
         }}
-        deactivateSubscriptionId={deactivateSubscriptionId as string | undefined}
+        onResubscribe={async formData => {
+          const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
+            mb => mb.id === formData.memberPlanId
+          )
+          await resubscribe({
+            variables: formData,
+            onCompleted() {
+              window.location.href = selectedMemberplan?.confirmationPage?.url ?? ''
+            }
+          })
+        }}
+        deactivateSubscriptionId={deactivateSubscriptionId}
       />
     </>
   )

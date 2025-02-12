@@ -760,14 +760,6 @@ export const WithCurrency: StoryObj<typeof Subscribe> = {
   })
 }
 
-export const WithExtraMoneyOffset: StoryObj<typeof Subscribe> = {
-  ...LoggedIn,
-  args: {
-    ...LoggedIn.args,
-    extraMoneyOffset: () => 300
-  }
-}
-
 export const WithDonate: StoryObj<typeof Subscribe> = {
   ...LoggedIn,
   args: {

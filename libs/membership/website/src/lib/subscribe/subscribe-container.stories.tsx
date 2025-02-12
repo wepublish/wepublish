@@ -213,10 +213,7 @@ const registerVariables = {
 }
 
 export const Default: StoryObj<typeof SubscribeContainer> = {
-  args: {
-    failureURL: '/',
-    successURL: '/'
-  },
+  args: {},
   parameters: {
     apolloClient: {
       mocks: [
@@ -299,9 +296,7 @@ export const Default: StoryObj<typeof SubscribeContainer> = {
               memberPlanId: '123',
               paymentMethodId: '12345',
               paymentPeriodicity: 'MONTHLY',
-              autoRenew: true,
-              successURL: '/',
-              failureURL: '/'
+              autoRenew: true
             }
           },
           result: {

@@ -8,6 +8,7 @@ import {
 } from './navigation.model'
 import {NavigationService} from './navigation.service'
 import {NavigationDataloaderService} from './navigation-dataloader.service'
+import {Public} from '@wepublish/authentication/api'
 
 @Resolver(() => Navigation)
 export class NavigationResolver {
@@ -16,11 +17,13 @@ export class NavigationResolver {
     private readonly navigationDataLoader: NavigationDataloaderService
   ) {}
 
+  @Public()
   @Query(() => Navigation, {description: `Returns a navigation by id.`})
   navigation(@Args('id') id: string) {
     return this.navigationDataLoader.load(id)
   }
 
+  @Public()
   @Query(() => [Navigation], {description: `Returns a list of navigations.`})
   navigations() {
     return this.navigationService.getNavigations()

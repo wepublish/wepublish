@@ -5,3 +5,5 @@ export * from './lib/next-wepublish-link'
 export * from './lib/session.provider'
 export * from './lib/prerender-teaser-paths'
 export * from './lib/user-country'
+
+export * from './lib/pages/subscribe-page'

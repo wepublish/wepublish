@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
 import {AuthSessionType, AuthSession} from './auth-session'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from './unselect-password'
 
 @Injectable()
 export class AuthenticationService {

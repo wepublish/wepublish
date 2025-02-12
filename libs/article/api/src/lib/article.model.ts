@@ -14,6 +14,7 @@ import {Tag} from '@wepublish/tag/api'
 import {DateFilter, PaginatedType, Property, PropertyInput, SortOrder} from '@wepublish/utils/api'
 import {BlockContent, BlockContentInput, HasBlockContent} from '@wepublish/block-content/api'
 import {HasOptionalPeerLc, Peer} from '@wepublish/peering/api'
+import {TrackingPixel} from '@wepublish/tracking-pixel/api'
 
 export enum ArticleSort {
   CreatedAt = 'CreatedAt',
@@ -100,6 +101,9 @@ export class Article implements HasOptionalPeerLc {
   @Field({nullable: true})
   slug?: string
 
+  @Field(() => Int)
+  likes!: number
+
   @Field()
   url!: string
 
@@ -129,6 +133,9 @@ export class Article implements HasOptionalPeerLc {
 
   @Field(() => [Tag])
   tags!: Tag[]
+
+  @Field(() => [TrackingPixel])
+  trackingPixels!: TrackingPixel[]
 
   @Field({nullable: true})
   peerArticleId?: string
@@ -164,6 +171,8 @@ export class CreateArticleInput extends OmitType(
   disableComments!: boolean
   @Field({nullable: true})
   slug?: string
+  @Field(() => Int, {nullable: true})
+  likes?: number
 
   @Field(() => [BlockContentInput])
   blocks!: BlockContentInput[]
@@ -195,6 +204,8 @@ export class ArticleFilter {
   preTitle?: string
   @Field({nullable: true})
   lead?: string
+  @Field({nullable: true})
+  body?: string
 
   @Field({nullable: true})
   shared?: boolean

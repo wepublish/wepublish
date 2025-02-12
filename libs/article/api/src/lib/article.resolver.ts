@@ -22,7 +22,8 @@ import {
   hasPermission,
   CanGetArticle
 } from '@wepublish/permissions/api'
-import {CurrentUser, UserSession} from '@wepublish/authentication/api'
+import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
+import {TrackingPixelService} from '@wepublish/tracking-pixel/api'
 
 @Resolver(() => Article)
 export class ArticleResolver {
@@ -30,16 +31,24 @@ export class ArticleResolver {
     private articleDataloader: ArticleDataloaderService,
     private articleRevisionsDataloader: ArticleRevisionDataloaderService,
     private articleService: ArticleService,
+    private trackingPixelService: TrackingPixelService,
     private urlAdapter: URLAdapter
   ) {}
 
+  @Public()
   @Query(() => Article, {description: `Returns an article by id or slug.`})
-  public article(
+  public async article(
     @Args('id', {nullable: true}) id?: string,
     @Args('slug', {nullable: true}) slug?: string
   ) {
     if (id != null) {
-      return this.articleDataloader.load(id)
+      const article = await this.articleDataloader.load(id)
+
+      if (!article?.peerId) {
+        await this.trackingPixelService.addMissingArticleTrackingPixels(id)
+      }
+
+      return article
     }
 
     if (slug != null) {
@@ -49,6 +58,7 @@ export class ArticleResolver {
     throw new BadRequestException('id or slug required.')
   }
 
+  @Public()
   @Query(() => PaginatedArticles, {
     description: `Returns a paginated list of articles based on the filters given.`
   })
@@ -119,6 +129,22 @@ export class ArticleResolver {
     return this.articleService.unpublishArticle(id)
   }
 
+  @Public()
+  @Mutation(() => Article, {
+    description: `Likes an article.`
+  })
+  public likeArticle(@Args('id') id: string) {
+    return this.articleService.likeArticle(id)
+  }
+
+  @Public()
+  @Mutation(() => Article, {
+    description: `Dislikes an article.`
+  })
+  public dislikeArticle(@Args('id') id: string) {
+    return this.articleService.dislikeArticle(id)
+  }
+
   @ResolveField(() => ArticleRevision)
   async latest(@Parent() parent: PArticle, @CurrentUser() user: UserSession | undefined) {
     const {id: articleId} = parent
@@ -169,5 +195,10 @@ export class ArticleResolver {
     const tagIds = await this.articleService.getTagIds(articleId)
 
     return tagIds.map(({id}) => ({__typename: 'Tag', id}))
+  }
+
+  @ResolveField(() => String, {nullable: true})
+  async trackingPixels(@Parent() {id}: PArticle) {
+    return this.articleService.getTrackingPixels(id)
   }
 }

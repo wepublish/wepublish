@@ -1,7 +1,7 @@
 import {Prisma, PrismaClient, UserEvent} from '@prisma/client'
 import {Context} from '../../context'
 import {hashPassword} from '../../db/user'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {EmailAlreadyInUseError} from '../../error'
 import {Validator} from '../../validator'
 import {authorise} from '../permissions'

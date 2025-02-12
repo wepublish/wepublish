@@ -8,10 +8,10 @@ import {
 import {DEFAULT_QUERY_OPTIONS} from '../common'
 import {
   SubscriptionEvent,
-  useSystemMailsQuery,
   useMailTemplateQuery,
   UserEvent,
-  getApiClientV2
+  getApiClientV2,
+  useSystemMailsQuery
 } from '@wepublish/editor/api-v2'
 import {
   Grid,
@@ -28,6 +28,7 @@ import {TypeAttributes} from 'rsuite/esm/@types/common'
 interface DecoratedEvent {
   event:
     | SubscriptionEvent.Subscribe
+    | SubscriptionEvent.ConfirmSubscription
     | SubscriptionEvent.RenewalSuccess
     | SubscriptionEvent.RenewalFailed
     | SubscriptionEvent.DeactivationByUser

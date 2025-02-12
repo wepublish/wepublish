@@ -67,6 +67,7 @@ export type Article = HasOptionalPeerLc & {
   hidden: Scalars['Boolean']
   id: Scalars['String']
   latest: ArticleRevision
+  likes: Scalars['Int']
   modifiedAt: Scalars['DateTime']
   peer?: Maybe<Peer>
   peerArticleId?: Maybe<Scalars['String']>
@@ -77,6 +78,7 @@ export type Article = HasOptionalPeerLc & {
   shared: Scalars['Boolean']
   slug?: Maybe<Scalars['String']>
   tags: Array<Tag>
+  trackingPixels: Array<TrackingPixel>
   url: Scalars['String']
 }
 
@@ -91,6 +93,7 @@ export type ArticleCreatedAction = BaseAction &
 
 export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>
+  body?: InputMaybe<Scalars['String']>
   draft?: InputMaybe<Scalars['Boolean']>
   includeHidden?: InputMaybe<Scalars['Boolean']>
   lead?: InputMaybe<Scalars['String']>
@@ -1279,15 +1282,19 @@ export type MailTemplateWithUrlAndStatusModel = {
 export type MemberPlan = {
   __typename?: 'MemberPlan'
   amountPerMonthMin: Scalars['Int']
+  amountPerMonthTarget?: Maybe<Scalars['Int']>
   availablePaymentMethods: Array<AvailablePaymentMethod>
+  confirmationPageId?: Maybe<Scalars['String']>
   currency: Currency
   description?: Maybe<Scalars['RichText']>
   extendable: Scalars['Boolean']
+  failPageId?: Maybe<Scalars['String']>
   id: Scalars['String']
   image?: Maybe<Image>
   maxCount?: Maybe<Scalars['Int']>
   name: Scalars['String']
   slug: Scalars['String']
+  successPageId?: Maybe<Scalars['String']>
   tags?: Maybe<Array<Scalars['String']>>
 }
 
@@ -1345,6 +1352,8 @@ export type Mutation = {
   createSubscriptionFlow: Array<SubscriptionFlowModel>
   /** Create a subscription interval */
   createSubscriptionInterval: Array<SubscriptionFlowModel>
+  /** Allows authenticated users to create additional subscriptions */
+  createSubscriptionWithConfirmation: Scalars['Boolean']
   /**
    *
    *       Creates a new userConsent based on input.
@@ -1382,6 +1391,8 @@ export type Mutation = {
    *
    */
   deleteUserConsent: UserConsent
+  /** Dislikes an article. */
+  dislikeArticle: Article
   /** Duplicates an article. */
   duplicateArticle: Article
   /** Duplicates a page. */
@@ -1397,6 +1408,8 @@ export type Mutation = {
   importEvent: Scalars['String']
   /** Imports an article from a peer as a draft. */
   importPeerArticle: Article
+  /** Likes an article. */
+  likeArticle: Article
   /** Publishes an article at the given time. */
   publishArticle: Article
   /** Publishes a page at the given time. */
@@ -1484,6 +1497,7 @@ export type MutationCreateArticleArgs = {
   hideAuthor: Scalars['Boolean']
   imageID?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
+  likes?: InputMaybe<Scalars['Int']>
   preTitle?: InputMaybe<Scalars['String']>
   properties: Array<PropertyInput>
   seoTitle?: InputMaybe<Scalars['String']>
@@ -1596,6 +1610,18 @@ export type MutationCreateSubscriptionIntervalArgs = {
   subscriptionFlowId: Scalars['String']
 }
 
+export type MutationCreateSubscriptionWithConfirmationArgs = {
+  autoRenew: Scalars['Boolean']
+  memberPlanID?: InputMaybe<Scalars['String']>
+  memberPlanSlug?: InputMaybe<Scalars['Slug']>
+  monthlyAmount: Scalars['Int']
+  paymentMethodID?: InputMaybe<Scalars['String']>
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>
+  paymentPeriodicity: PaymentPeriodicity
+  subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>
+  userId?: InputMaybe<Scalars['String']>
+}
+
 export type MutationCreateUserConsentArgs = {
   consentId: Scalars['String']
   userId: Scalars['String']
@@ -1646,6 +1672,10 @@ export type MutationDeleteUserConsentArgs = {
   id: Scalars['String']
 }
 
+export type MutationDislikeArticleArgs = {
+  id: Scalars['String']
+}
+
 export type MutationDuplicateArticleArgs = {
   id: Scalars['String']
 }
@@ -1669,6 +1699,10 @@ export type MutationImportPeerArticleArgs = {
   articleId: Scalars['String']
   options?: ImportArticleOptions
   peerId: Scalars['String']
+}
+
+export type MutationLikeArticleArgs = {
+  id: Scalars['String']
 }
 
 export type MutationPublishArticleArgs = {
@@ -1744,6 +1778,7 @@ export type MutationUpdateArticleArgs = {
   id: Scalars['String']
   imageID?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
+  likes?: InputMaybe<Scalars['Int']>
   preTitle?: InputMaybe<Scalars['String']>
   properties: Array<PropertyInput>
   seoTitle?: InputMaybe<Scalars['String']>
@@ -2131,6 +2166,7 @@ export type PeerArticle = HasOptionalPeerLc & {
 
 export type PeerArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>
+  body?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
   peerId?: InputMaybe<Scalars['String']>
   preTitle?: InputMaybe<Scalars['String']>
@@ -2900,10 +2936,12 @@ export type SubscriptionDeactivation = {
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
+  UserReplacedSubscription = 'userReplacedSubscription',
   UserSelfDeactivated = 'userSelfDeactivated'
 }
 
 export enum SubscriptionEvent {
+  ConfirmSubscription = 'CONFIRM_SUBSCRIPTION',
   Custom = 'CUSTOM',
   DeactivationByUser = 'DEACTIVATION_BY_USER',
   DeactivationUnpaid = 'DEACTIVATION_UNPAID',
@@ -3099,6 +3137,26 @@ export type TitleBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
   title?: InputMaybe<Scalars['String']>
+}
+
+export type TrackingPixel = {
+  __typename?: 'TrackingPixel'
+  error?: Maybe<Scalars['String']>
+  id: Scalars['String']
+  pixelUid?: Maybe<Scalars['String']>
+  trackingPixelMethod: TrackingPixelMethod
+  uri?: Maybe<Scalars['String']>
+}
+
+export type TrackingPixelMethod = {
+  __typename?: 'TrackingPixelMethod'
+  id: Scalars['String']
+  trackingPixelProviderID: Scalars['String']
+  trackingPixelProviderType: TrackingPixelProviderType
+}
+
+export enum TrackingPixelProviderType {
+  Prolitteris = 'prolitteris'
 }
 
 export type TwitterTweetBlock = BaseBlock & {

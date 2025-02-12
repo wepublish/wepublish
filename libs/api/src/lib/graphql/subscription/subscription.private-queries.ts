@@ -1,7 +1,7 @@
 import {PrismaClient, Subscription} from '@prisma/client'
 import {Context} from '../../context'
 import {SubscriptionFilter, SubscriptionSort} from '../../db/subscription'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {mapSubscriptionsAsCsv} from '../../utility'
 import {authorise} from '../permissions'
 import {CanGetSubscription, CanGetSubscriptions, CanGetUsers} from '@wepublish/permissions/api'

@@ -9,7 +9,7 @@ import {Context} from '../context'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {PaymentProvider} from '@wepublish/payment/api'
 import {createProxyingResolver} from '../utility'
-import {GraphQLSlug} from './slug'
+import {GraphQLSlug} from '@wepublish/utils/api'
 import {PaymentMethod} from '@prisma/client'
 import {GraphQLImage} from './image'
 

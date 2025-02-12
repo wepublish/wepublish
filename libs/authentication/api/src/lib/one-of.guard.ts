@@ -24,7 +24,7 @@ export class OneOfGuard implements CanActivate {
     )
 
     if (!guards.length) {
-      return true
+      return false
     }
 
     const checks = await Promise.all(

@@ -5,6 +5,7 @@ import {
   CanUpdateEvent,
   Permissions
 } from '@wepublish/permissions/api'
+import {Public} from '@wepublish/authentication/api'
 import {
   CreateEventInput,
   Event,
@@ -27,6 +28,7 @@ export class EventResolver {
     private urlAdapter: URLAdapter
   ) {}
 
+  @Public()
   @Query(() => PaginatedEvents, {
     description: `Returns a paginated list of events based on the filters given.`
   })
@@ -34,6 +36,7 @@ export class EventResolver {
     return this.eventService.getEvents(filter)
   }
 
+  @Public()
   @Query(() => Event, {description: `Returns a event by id.`})
   public event(@Args('id') id: string) {
     return this.eventDataloader.load(id)
@@ -41,18 +44,21 @@ export class EventResolver {
 
   @Mutation(() => Event, {description: `Creates a new event.`})
   @Permissions(CanCreateEvent)
+  @Mutation(returns => Event, {description: `Creates a new event.`})
   public createEvent(@Args() event: CreateEventInput) {
     return this.eventService.createEvent(event)
   }
 
   @Mutation(() => Event, {description: `Updates an existing event.`})
   @Permissions(CanUpdateEvent)
+  @Mutation(returns => Event, {description: `Updates an existing event.`})
   public updateEvent(@Args() event: UpdateEventInput) {
     return this.eventService.updateEvent(event)
   }
 
   @Mutation(() => Event, {description: `Deletes an existing event.`})
   @Permissions(CanDeleteEvent)
+  @Mutation(returns => Event, {description: `Deletes an existing event.`})
   public deleteEvent(@Args('id') id: string) {
     return this.eventService.deleteEvent(id)
   }

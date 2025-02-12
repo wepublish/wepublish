@@ -7,6 +7,10 @@ export enum BriefingType {
   FasnachtsBriefing = 'FasnachtsBriefing'
 }
 
+export const isBaselBriefingIgnoringBlockType = (
+  block: ApiV1.Block
+): block is ApiV1.TeaserGridBlock => hasBlockStyle(BriefingType.BaselBriefing)(block)
+
 export const isBaselBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
   allPass([hasBlockStyle(BriefingType.BaselBriefing), isTeaserGridBlock])(block)
 

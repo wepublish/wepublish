@@ -1,5 +1,5 @@
 import {Subscription} from '@prisma/client'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {
   GraphQLBoolean,
   GraphQLEnumType,

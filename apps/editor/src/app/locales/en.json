@@ -109,7 +109,8 @@
         "tags": "Tags",
         "title": "Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
-        "totalCharCount": "Total character count is {{totalCharCount}}",
+        "totalCharCount": "Total characters count is {{totalCharCount}}",
+        "likeCount": "Likes",
         "type": "Type",
         "untitled": "Untitled",
         "uploadImage": "Upload Image",
@@ -123,7 +124,8 @@
         "light": "Light",
         "style": "Style",
         "text": "Text",
-        "default": "Default"
+        "default": "Default",
+        "tracking": "Tracking"
       }
     },
     "articleList": {
@@ -751,7 +753,9 @@
       "slug": "Slug",
       "slugRequired": "Slug required",
       "tags": "Tags",
-      "savedChanges": "Saved"
+      "savedChanges": "Saved",
+      "successPage": "Redirect to page on payment success",
+      "failPage": "Redirect to page on payment error"
     },
     "memberPlanList": {
       "action": "Actions",
@@ -1198,12 +1202,14 @@
       "timeline": "Timeline",
       "actions": "Actions",
       "dayOfRenewal": "Day of renewal / subscription ends",
-      "subscriptionsAffected": "Filter applies to {{numberOfSubscriptions}} subscriptions"
+      "subscriptionsAffected": "Filter applies to {{numberOfSubscriptions}} subscriptions",
+      "confirm_subscription": "Subscription confirmation"
     },
     "subscriptionList": {
       "filter": {
         "deactivationReason": "Deactivation reason",
         "reasonInvoiceNotPaid": "Invoice not paid",
+        "reasonUserReplacedSubscription": "Replaced by other subscription",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "By user",
         "reset": "Reset Filter",
@@ -1376,7 +1382,7 @@
         },
         "date": "Deactivation Date",
         "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true. Once deactivated, the subscription cannot be reactivated.",
-        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Probably, a new subscription can be created.",
+        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Reason: {{reason}}. Probably, a new subscription can be created.",
         "modalMessage": {
           "activated": "Do you want to deactivate the subscription of \"{{userName}}\" with the email address \"{{userEmail}}\"?"
         },
@@ -1385,6 +1391,7 @@
         },
         "reason": "Deactivation Reason",
         "reasonInvoiceNotPaid": "User did not pay invoices",
+        "reasonUserReplacedSubscription": "Replaced by other subscription",
         "cancellation": "Cancellation Date",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "User wants to deactivate",
@@ -1417,6 +1424,8 @@
       "invoiceNr": "Invoice No. {{invoiceId}}",
       "invoicePaid": "paid",
       "invoiceUnpaid": "unpaid",
+      "confirmed": "confirmed",
+      "unconfirmed": "unconfirmed",
       "monthlyAmount": "Monthly amount: {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "Subscription expires, no automatic renewal",
       "noDeactivation": "No deactivation.",
@@ -1454,7 +1463,12 @@
       "forceAutoRenewNotPossible": "Automatic renewal is not possible because the subscription plan is not extendable.",
       "trialSubscriptionNotPossible": "The subscription plan must remain renewable because an automatic renewal is forced in a payment setting. You can of course change this.",
       "migratePMTitle": "Migration of subscriptions to target payment method",
-      "migratePMHelptext": "Migrate the subscriptions of this plan to a new Payment Method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early."
+      "migratePMHelptext": "Migrate the subscriptions of this plan to a new Payment Method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early.",
+      "amountPerMonthTarget": "Target amount / month",
+      "amountPerMonthTargetHelpText": "The monthly target amount defines the desired member plan price that users should pay. It must be higher than the minimum amount and typically defines the default setting in the payment form.",
+      "amountPerMonthMinHelpText": "The minimum monthly amount is the actual member plan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing.",
+      "confirmationPage": "Redirect to page for existing users (retargeting)",
+      "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an e-mail to pay for the subscription. This could be indicated on this page."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Advanced settings",
@@ -1490,6 +1504,11 @@
     },
     "selectableItemsActions": {
       "selectedItems": "Selected {{numberOfItems}} items"
+    },
+    "trackingPixels": {
+      "noPixelInfoHeader": "No tracking integration available",
+      "noPixelInfoDescription": "This is the case, for example, if no tracking is configured or for old articles.",
+      "errorHeader": "Error"
     }
   }
 }

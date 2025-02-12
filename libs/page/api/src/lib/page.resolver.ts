@@ -14,7 +14,7 @@ import {PageRevisionDataloaderService} from './page-revision-dataloader.service'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Page as PPage} from '@prisma/client'
 import {BadRequestException} from '@nestjs/common'
-import {CurrentUser, UserSession} from '@wepublish/authentication/api'
+import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
 import {CanGetPage, hasPermission, Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => Page)
@@ -26,6 +26,7 @@ export class PageResolver {
     private urlAdapter: URLAdapter
   ) {}
 
+  @Public()
   @Query(() => Page, {description: `Returns a page by id or slug.`})
   public page(
     @Args('id', {nullable: true}) id?: string,
@@ -42,6 +43,7 @@ export class PageResolver {
     throw new BadRequestException('id or slug required.')
   }
 
+  @Public()
   @Query(() => PaginatedPages, {
     description: `Returns a paginated list of pages based on the filters given.`
   })

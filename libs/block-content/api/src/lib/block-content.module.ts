@@ -20,7 +20,6 @@ import {BaseBlockResolver} from './base-block.resolver'
     ImageModule,
     forwardRef(() => ArticleModule),
     forwardRef(() => PageModule),
-    PageModule,
     EventModule,
     PeerModule,
     CommentModule

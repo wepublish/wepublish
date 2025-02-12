@@ -7,7 +7,7 @@ import {
   HOT_AND_TRENDING_DATA_SOURCE,
   HotAndTrendingDataSource
 } from '@wepublish/article/api'
-import {Inject} from '@nestjs/common'
+import {forwardRef, Inject} from '@nestjs/common'
 import {PageService, PageSort} from '@wepublish/page/api'
 import {Article} from '@prisma/client'
 import {SortOrder} from '@wepublish/utils/api'
@@ -17,9 +17,11 @@ import {Tag} from '@wepublish/tag/api'
 @Resolver(() => TeaserListBlock)
 export class TeaserListBlockResolver {
   constructor(
-    private articleService: ArticleService,
-    private pageService: PageService,
     private eventService: EventService,
+    @Inject(forwardRef(() => ArticleService))
+    private articleService: ArticleService,
+    @Inject(forwardRef(() => PageService))
+    private pageService: PageService,
     @Inject(HOT_AND_TRENDING_DATA_SOURCE) private hotAndTrending: HotAndTrendingDataSource
   ) {}
 

@@ -32,7 +32,6 @@ import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/
 import {BajourTeaserSlider} from '../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
 import {BajourBreakBlock} from '../src/components/website-builder-overwrites/break/bajour-break'
 import {BajourContextBox} from '../src/components/website-builder-overwrites/context-box/context-box'
-import {BajourPaymentMethodPicker} from '../src/components/website-builder-overwrites/payment-method-picker/payment-method-picker'
 import {BajourQuoteBlock} from '../src/components/website-builder-overwrites/quote/bajour-quote'
 import {
   BajourTeaserGrid,
@@ -134,7 +133,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             thirdParty={{
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
             }}
-            PaymentMethodPicker={BajourPaymentMethodPicker}
             Banner={BajourBanner}>
             <ThemeProvider theme={theme}>
               <CssBaseline />

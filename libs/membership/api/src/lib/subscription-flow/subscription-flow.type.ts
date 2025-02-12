@@ -2,6 +2,7 @@ import {SubscriptionEvent} from '@prisma/client'
 
 export const subscriptionFlowDaysAwayFromEndingNeedToBeNull: SubscriptionEvent[] = [
   SubscriptionEvent.SUBSCRIBE,
+  SubscriptionEvent.CONFIRM_SUBSCRIPTION,
   SubscriptionEvent.DEACTIVATION_BY_USER,
   SubscriptionEvent.RENEWAL_FAILED,
   SubscriptionEvent.RENEWAL_SUCCESS

@@ -43,44 +43,6 @@ fragment FullArticleRevision on ArticleRevision {
   }
 }
 
-fragment FullArticle on Article {
-  id
-  publishedAt
-  createdAt
-  modifiedAt
-  shared
-  hidden
-  disableComments
-  slug
-  url
-
-  latest {
-    ...FullArticleRevision
-  }
-
-  draft {
-    id
-  }
-
-  pending {
-    id
-    publishedAt
-  }
-
-  published {
-    id
-    publishedAt
-  }
-
-  tags {
-    ...FullTag
-  }
-
-  peer {
-    ...FullPeer
-  }
-}
-
 fragment ArticleWithoutBlocks on Article {
   id
   publishedAt
@@ -90,6 +52,7 @@ fragment ArticleWithoutBlocks on Article {
   hidden
   disableComments
   slug
+  likes
   url
 
   latest {
@@ -116,6 +79,18 @@ fragment ArticleWithoutBlocks on Article {
 
   peer {
     ...FullPeer
+  }
+
+  trackingPixels {
+    ...FullTrackingPixel
+  }
+}
+
+fragment FullArticle on Article {
+  ...ArticleWithoutBlocks
+
+  latest {
+    ...FullArticleRevision
   }
 }
 
@@ -171,6 +146,7 @@ mutation CreateArticle(
   $socialMediaTitle: String
   $tagIds: [String!]!
   $title: String
+  $likes: Int!
 ) {
   createArticle(
     authorIds: $authorIds
@@ -193,6 +169,7 @@ mutation CreateArticle(
     socialMediaTitle: $socialMediaTitle
     tagIds: $tagIds
     title: $title
+    likes: $likes
   ) {
     ...FullArticle
   }

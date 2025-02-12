@@ -15,11 +15,18 @@ import {
   PrimeDataLoader,
   SortOrder
 } from '@wepublish/utils/api'
-import {mapBlockUnionMap} from '@wepublish/block-content/api'
+import {
+  BlockContent,
+  mapBlockUnionMap,
+  RichTextBlock,
+  BlockType
+} from '@wepublish/block-content/api'
+import {TrackingPixelService} from '@wepublish/tracking-pixel/api'
+import {toPlaintext} from '@wepublish/richtext'
 
 @Injectable()
 export class ArticleService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient, private trackingPixelService: TrackingPixelService) {}
 
   @PrimeDataLoader(ArticleDataloaderService)
   async getArticleBySlug(slug: string) {
@@ -84,6 +91,7 @@ export class ArticleService {
       slug,
       shared,
       hidden,
+      likes,
       disableComments,
       authorIds,
       socialMediaAuthorIds,
@@ -94,8 +102,12 @@ export class ArticleService {
     }: CreateArticleInput,
     userId: string | null | undefined
   ) {
-    return this.prisma.article.create({
+    const mappedBlocks = blocks.map(mapBlockUnionMap)
+    const searchPlainText = blocksToSearchText(mappedBlocks)
+
+    const article = await this.prisma.article.create({
       data: {
+        likes,
         slug,
         shared,
         hidden,
@@ -112,7 +124,8 @@ export class ArticleService {
           create: {
             ...revision,
             userId,
-            blocks: blocks.map(mapBlockUnionMap) as any[],
+            blocks: mappedBlocks as any[],
+            searchPlainText,
             properties: {
               createMany: {
                 data: properties
@@ -132,12 +145,22 @@ export class ArticleService {
         }
       }
     })
+
+    if (!article.peerId) {
+      const trackingPixels = await this.trackingPixelService.getArticlePixels(article.id)
+      await this.prisma.articleTrackingPixels.createMany({
+        data: trackingPixels
+      })
+    }
+
+    return article
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
   async updateArticle(
     {
       id,
+      likes,
       slug,
       shared,
       hidden,
@@ -162,9 +185,13 @@ export class ArticleService {
       throw new NotFoundException(`Article with id ${id} not found`)
     }
 
+    const mappedBlocks = blocks.map(mapBlockUnionMap)
+    const searchPlainText = blocksToSearchText(mappedBlocks)
+
     return this.prisma.article.update({
       where: {id},
       data: {
+        likes,
         slug,
         shared,
         hidden,
@@ -172,7 +199,8 @@ export class ArticleService {
         revisions: {
           create: {
             ...revision,
-            blocks: blocks.map(mapBlockUnionMap) as any[],
+            blocks: mappedBlocks as any[],
+            searchPlainText,
             userId,
             properties: {
               createMany: {
@@ -394,6 +422,44 @@ export class ArticleService {
     })
   }
 
+  @PrimeDataLoader(ArticleDataloaderService)
+  async likeArticle(id: string) {
+    return this.prisma.article.update({
+      where: {
+        id
+      },
+      data: {
+        likes: {
+          increment: 1
+        }
+      }
+    })
+  }
+
+  @PrimeDataLoader(ArticleDataloaderService)
+  async dislikeArticle(id: string) {
+    const article = await this.prisma.article.findUnique({
+      where: {
+        id
+      }
+    })
+
+    if (!article?.likes) {
+      return article
+    }
+
+    return this.prisma.article.update({
+      where: {
+        id
+      },
+      data: {
+        likes: {
+          decrement: 1
+        }
+      }
+    })
+  }
+
   async getTagIds(articleId: string) {
     return this.prisma.tag.findMany({
       select: {
@@ -405,6 +471,17 @@ export class ArticleService {
             articleId
           }
         }
+      }
+    })
+  }
+
+  async getTrackingPixels(articleId: string) {
+    return this.prisma.articleTrackingPixels.findMany({
+      where: {
+        articleId
+      },
+      include: {
+        trackingPixelMethod: true
       }
     })
   }
@@ -479,6 +556,25 @@ const createLeadFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereIn
       }
     }
   }
+
+  return {}
+}
+
+const createBodyFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.body) {
+    return {
+      revisions: {
+        some: {
+          searchPlainText: {
+            contains: filter.body,
+            mode: 'insensitive'
+          }
+        }
+      }
+    }
+  }
+
+  return {}
 
   return {}
 }
@@ -636,6 +732,7 @@ export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.Arti
     createPublicationDateFromFilter(filter),
     createPublicationDateToFilter(filter),
     createLeadFilter(filter),
+    createBodyFilter(filter),
     createSharedFilter(filter),
     createTagsFilter(filter),
     createAuthorFilter(filter),
@@ -646,3 +743,25 @@ export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.Arti
     }
   ]
 })
+
+/**
+ * Parse rich text blocks to plain text. It allows to search in articles and pages for the whole content.
+ * TODO: write migration for existing articles and pages. Implement function on all page mutations.
+ * @param blocks
+ * @returns
+ */
+export function blocksToSearchText(blocks: Array<typeof BlockContent>): string | undefined {
+  if (!blocks) {
+    return
+  }
+
+  try {
+    const richTextBlocks = blocks.filter(
+      (block): block is RichTextBlock => block.type === BlockType.RichText
+    )
+
+    return richTextBlocks.map(richTextBlock => toPlaintext(richTextBlock.richText)).join(' ')
+  } catch (error) {
+    console.log(error)
+  }
+}

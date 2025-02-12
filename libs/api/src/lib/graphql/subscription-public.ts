@@ -16,7 +16,7 @@ import {GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
 import {GraphQLPublicPaymentMethod} from './paymentMethod'
 import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
 import {GraphQLPublicUser} from './user'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 
 export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithRelations, Context>({
   name: 'PublicSubscription',

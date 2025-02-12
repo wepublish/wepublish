@@ -200,6 +200,7 @@ type UserSubscription {
   monthlyAmount: Int!
   currency: Currency!
   autoRenew: Boolean!
+  confirmed: Boolean!
   startsAt: DateTime!
   paidUntil: DateTime
   properties: [Properties!]!
@@ -230,6 +231,7 @@ enum SubscriptionDeactivationReason {
   none
   userSelfDeactivated
   invoiceNotPaid
+  userReplacedSubscription
 }
 
 type SubscriptionPeriod {
@@ -253,11 +255,15 @@ type MemberPlan {
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
   currency: Currency!
   maxCount: Int
   extendable: Boolean!
   availablePaymentMethods: [AvailablePaymentMethod!]!
   migrateToTargetPaymentMethodID: String
+  successPageId: String
+  failPageId: String
+  confirmationPageId: String
 }
 
 type AvailablePaymentMethod {
@@ -1022,11 +1028,15 @@ input MemberPlanInput {
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
   currency: Currency!
   extendable: Boolean!
   maxCount: Int
   availablePaymentMethods: [AvailablePaymentMethodInput!]!
   migrateToTargetPaymentMethodID: String
+  successPageId: String
+  failPageId: String
+  confirmationPageId: String
 }
 
 input AvailablePaymentMethodInput {

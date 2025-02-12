@@ -59,6 +59,12 @@ import {PhraseModule} from '@wepublish/phrase/api'
 import {ActionModule} from '@wepublish/action/api'
 import {NavigationModule} from '@wepublish/navigation/api'
 import {UserModule} from '@wepublish/user/api'
+import {
+  ProlitterisTrackingPixelProvider,
+  TrackingPixelProvider,
+  TrackingPixelsModule
+} from '@wepublish/tracking-pixel/api'
+import {HttpModule, HttpService} from '@nestjs/axios'
 
 @Global()
 @Module({
@@ -142,6 +148,47 @@ import {UserModule} from '@wepublish/user/api'
       },
       inject: [ConfigService],
       global: true
+    }),
+    TrackingPixelsModule.registerAsync({
+      imports: [ConfigModule, HttpModule],
+      useFactory: async (config: ConfigService, httpClient: HttpService) => {
+        const trackingPixelProviders: TrackingPixelProvider[] = []
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+
+        const trackingPixelProvidersRaw = configFile.trackingPixelProviders
+
+        if (!trackingPixelProvidersRaw) {
+          return {trackingPixelProviders}
+        }
+
+        for (const trackingPixelProvider of trackingPixelProvidersRaw) {
+          if (trackingPixelProvider.type === 'prolitteris') {
+            trackingPixelProviders.push(
+              new ProlitterisTrackingPixelProvider(
+                trackingPixelProvider.id,
+                trackingPixelProvider.name,
+                trackingPixelProvider.type,
+                {
+                  memberNr: trackingPixelProvider.memberNr,
+                  username: trackingPixelProvider.username,
+                  password: trackingPixelProvider.password,
+                  onlyPaidContentAccess: Boolean(trackingPixelProvider.onlyPaidContentAccess),
+                  publisherInternalKeyDomain: trackingPixelProvider.publisherInternalKeyDomain,
+                  usePublisherInternalKey: Boolean(trackingPixelProvider.usePublisherInternalKey)
+                },
+                httpClient
+              )
+            )
+          } else {
+            throw new Error(
+              `Unknown tracking Pixel type defined: ${(trackingPixelProvider as any).type}`
+            )
+          }
+        }
+
+        return {trackingPixelProviders}
+      },
+      inject: [ConfigService, HttpService]
     }),
     PaymentsModule.registerAsync({
       imports: [ConfigModule, PrismaModule],

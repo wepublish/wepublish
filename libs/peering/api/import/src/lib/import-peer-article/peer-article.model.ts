@@ -10,7 +10,7 @@ export class PeerArticleFilter extends OmitType(
   InputType
 ) {
   @Field({nullable: true})
-  peerId?: string
+  override peerId?: string
 }
 
 @ArgsType()

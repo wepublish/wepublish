@@ -14,7 +14,7 @@ import {Context} from '../context'
 
 import {GraphQLPageInfo} from './common'
 import {GraphQLImage} from './image'
-import {GraphQLSlug} from './slug'
+import {GraphQLSlug} from '@wepublish/utils/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {createProxyingResolver} from '../utility'

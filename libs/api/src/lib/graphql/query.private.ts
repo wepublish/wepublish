@@ -83,7 +83,7 @@ import {GraphQLSession} from './session'
 import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSetting} from './setting'
 import {getSetting, getSettings} from './setting/setting.private-queries'
-import {GraphQLSlug} from './slug'
+import {GraphQLSlug} from '@wepublish/utils/api'
 import {
   GraphQLSubscribersPerMonth,
   GraphQLSubscription,

@@ -408,9 +408,13 @@ type MemberPlan {
   tags: [String!]
   currency: Currency!
   amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
   maxCount: Int
   extendable: Boolean!
   availablePaymentMethods: [AvailablePaymentMethod!]!
+  successPageId: String
+  failPageId: String
+  confirmationPageId: String
 }
 
 enum Currency {
@@ -450,6 +454,7 @@ enum SubscriptionDeactivationReason {
   none
   userSelfDeactivated
   invoiceNotPaid
+  userReplacedSubscription
 }
 
 type MemberPlanConnection {
@@ -574,6 +579,9 @@ type Mutation {
 
   """Allows authenticated users to create additional subscriptions"""
   createSubscription(memberPlanID: String, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, deactivateSubscriptionId: String): Payment!
+
+  """Allows authenticated users to create additional subscriptions"""
+  createSubscriptionWithConfirmation(userId: String, memberPlanID: String, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!]): Boolean!
 
   """This mutation extends an subscription early"""
   extendSubscription(subscriptionId: String!, successURL: String, failureURL: String): Payment!

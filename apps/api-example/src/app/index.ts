@@ -34,8 +34,7 @@ export async function runServer({
   publicExpressApp,
   mediaAdapter,
   mailProvider,
-  paymentProviders,
-  hotAndTrendingDataSource
+  paymentProviders
 }: RunServerProps) {
   /*
    * Load User specific configuration

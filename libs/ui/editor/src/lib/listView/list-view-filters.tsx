@@ -6,6 +6,7 @@ import {
   usePeerListLazyQuery,
   usePollLazyQuery,
   UserFilter,
+  useTagListLazyQuery,
   useUserRoleListLazyQuery
 } from '@wepublish/editor/api'
 import {useEffect, useMemo, useState} from 'react'
@@ -34,6 +35,7 @@ import {
   PeerArticleFilter
 } from '@wepublish/editor/api-v2'
 import {getApiClientV2} from '@wepublish/editor/api-v2'
+import {TagCheckPicker, TagRefFragment} from '../panel/tagCheckPicker'
 
 const {Group} = RForm
 
@@ -94,6 +96,7 @@ type Field =
   | 'includeHidden'
   | 'answerIds'
   | 'fingerprint'
+  | 'tags'
 
 export type ImportableEventFilter = {
   startsAt?: InputMaybe<Scalars['String']>
@@ -141,6 +144,10 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
   })
 
   const [pollFetch, {data: pollData}] = usePollLazyQuery({
+    fetchPolicy: 'network-only'
+  })
+
+  const [tagFetch, {data: tagData}] = useTagListLazyQuery({
     fetchPolicy: 'network-only'
   })
 
@@ -279,6 +286,7 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
   }
 
   const authorsData = filter?.authors?.map(author => ({id: author})) || []
+  const tagsData = filter?.tags?.map(tag => ({id: tag})) || []
   return (
     <>
       <Form className={className}>
@@ -417,6 +425,17 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
               list={authorsData as AuthorRefFragment[]}
               onChange={value => {
                 return updateFilter({authors: value ? value.map(author => author.id) : []})
+              }}
+            />
+          </Group>
+        )}
+
+        {fields.includes('tags') && (
+          <Group style={formInputStyle}>
+            <TagCheckPicker
+              list={tagsData as TagRefFragment[]}
+              onChange={value => {
+                return updateFilter({tags: value ? value.map(tag => tag.id) : []})
               }}
             />
           </Group>

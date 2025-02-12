@@ -6,7 +6,7 @@ import {
 } from '@prisma/client'
 import {AuthSessionType} from '@wepublish/authentication/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {
   GraphQLBoolean,
   GraphQLEnumType,

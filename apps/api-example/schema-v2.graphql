@@ -47,6 +47,7 @@ type Article implements HasOptionalPeerLc {
   hidden: Boolean!
   id: String!
   latest: ArticleRevision!
+  likes: Int!
   modifiedAt: DateTime!
   peer: Peer
   peerArticleId: String
@@ -57,6 +58,7 @@ type Article implements HasOptionalPeerLc {
   shared: Boolean!
   slug: String
   tags: [Tag!]!
+  trackingPixels: [TrackingPixel!]!
   url: String!
 }
 
@@ -69,6 +71,7 @@ type ArticleCreatedAction implements BaseAction & HasArticleLc {
 
 input ArticleFilter {
   authors: [String!]
+  body: String
   draft: Boolean
   includeHidden: Boolean
   lead: String
@@ -150,6 +153,12 @@ type AuthorCreatedAction implements BaseAction & HasAuthor {
   author: Author!
   authorId: String!
   date: DateTime!
+}
+
+type AvailablePaymentMethod {
+  forceAutoRenewal: Boolean!
+  paymentMethods: [PaymentMethod!]!
+  paymentPeriodicities: [PaymentPeriodicity!]!
 }
 
 type Banner {
@@ -385,6 +394,11 @@ input CreateBannerInput {
   showOnPages: [PageModelInput!]
   text: String!
   title: String!
+}
+
+enum Currency {
+  CHF
+  EUR
 }
 
 type CustomTeaser implements BaseTeaser & HasImage {
@@ -926,13 +940,26 @@ type MailTemplateWithUrlAndStatusModel {
 }
 
 type MemberPlan {
+  amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
+  availablePaymentMethods: [AvailablePaymentMethod!]!
+  confirmationPageId: String
+  currency: Currency!
+  description: RichText
+  extendable: Boolean!
+  failPageId: String
   id: String!
+  image: Image
+  maxCount: Int
   name: String!
+  slug: String!
+  successPageId: String
+  tags: [String!]
 }
 
 type Mutation {
   """Creates an article."""
-  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   createBanner(input: CreateBannerInput!): Banner!
 
   """Creates a new block style."""
@@ -990,6 +1017,9 @@ type Mutation {
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
 
+  """Dislikes an article."""
+  dislikeArticle(id: String!): Article!
+
   """Duplicates an article."""
   duplicateArticle(id: String!): Article!
 
@@ -1001,6 +1031,9 @@ type Mutation {
 
   """Imports an article from a peer as a draft."""
   importPeerArticle(articleId: String!, options: ImportArticleOptions! = {importAuthors: true, importContentImages: true, importTags: true}, peerId: String!): Article!
+
+  """Likes an article."""
+  likeArticle(id: String!): Article!
 
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
@@ -1019,7 +1052,7 @@ type Mutation {
   unpublishPage(id: String!): Page!
 
   """Updates an article."""
-  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
@@ -1211,8 +1244,13 @@ type PaginatedPollVotes {
 }
 
 type PaymentMethod {
+  description: String!
   id: String!
+  image: Image
+  imageId: String
   name: String!
+  paymentProviderID: String!
+  slug: Slug!
 }
 
 enum PaymentPeriodicity {
@@ -1241,6 +1279,7 @@ type PeerArticle implements HasOptionalPeerLc {
 
 input PeerArticleFilter {
   authors: [String!]
+  body: String
   lead: String
   peerId: String
   preTitle: String
@@ -1552,6 +1591,8 @@ input SingleEventFilter {
   source: String!
 }
 
+scalar Slug
+
 enum SortOrder {
   Ascending
   Descending
@@ -1586,10 +1627,12 @@ type SubscriptionCreatedAction implements BaseAction & HasSubscription {
 enum SubscriptionDeactivationReason {
   invoiceNotPaid
   none
+  userReplacedSubscription
   userSelfDeactivated
 }
 
 enum SubscriptionEvent {
+  CONFIRM_SUBSCRIPTION
   CUSTOM
   DEACTIVATION_BY_USER
   DEACTIVATION_UNPAID
@@ -1736,6 +1779,24 @@ input TitleBlockInput {
   blockStyleName: String
   lead: String
   title: String
+}
+
+type TrackingPixel {
+  error: String
+  id: String!
+  pixelUid: String
+  trackingPixelMethod: TrackingPixelMethod!
+  uri: String
+}
+
+type TrackingPixelMethod {
+  id: String!
+  trackingPixelProviderID: String!
+  trackingPixelProviderType: TrackingPixelProviderType!
+}
+
+enum TrackingPixelProviderType {
+  prolitteris
 }
 
 type TwitterTweetBlock implements BaseBlock {

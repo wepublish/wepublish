@@ -12,7 +12,7 @@ import {
   Subscription,
   SubscriptionDeactivationReason
 } from '@prisma/client'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {AlreadyUnpaidInvoices, NotFound, UserSubscriptionAlreadyDeactivated} from '../../error'
 import {MemberContext} from '../../memberContext'
 import {PaymentProvider} from '@wepublish/payment/api'
@@ -126,6 +126,7 @@ export const createSubscription = async (
     properties,
     input['autoRenew'],
     input['extendable'],
+    null,
     input['startsAt']
   )
   return subscription

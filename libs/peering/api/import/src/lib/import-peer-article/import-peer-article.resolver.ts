@@ -7,11 +7,13 @@ import {
   PeerArticle,
   PeerArticleListArgs
 } from './peer-article.model'
+import {CanGetPeerArticles, Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => PeerArticle)
 export class ImportPeerArticleResolver {
   constructor(private importPeerArticleService: ImportPeerArticleService) {}
 
+  @Permissions(CanGetPeerArticles)
   @Query(() => PaginatedPeerArticle, {
     description: `Returns a paginated list of peer articles based on the filters given.`
   })
@@ -19,6 +21,7 @@ export class ImportPeerArticleResolver {
     return this.importPeerArticleService.getArticles(args)
   }
 
+  @Permissions(CanGetPeerArticles)
   @Mutation(() => Article, {
     description: `Imports an article from a peer as a draft.`
   })

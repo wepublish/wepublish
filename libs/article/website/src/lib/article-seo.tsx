@@ -48,6 +48,7 @@ export const getArticleSEO = (article: Article) => {
 
   return {
     type: 'article',
+    title,
     socialMediaTitle,
     description,
     socialMediaDescription,
@@ -82,96 +83,95 @@ export const getArticleSEO = (article: Article) => {
 }
 
 export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
-  const {meta, Head, Script} = useWebsiteBuilder()
+  const {meta, Head} = useWebsiteBuilder()
   const seo = useMemo(() => getArticleSEO(article), [article])
 
-  const title = `${seo.socialMediaTitle ? `${seo.socialMediaTitle} —` : ``} ${meta.siteTitle}`
+  const title = `${seo.title ? `${seo.title} —` : ``} ${meta.siteTitle}`
 
   return (
-    <>
-      <Head>
-        <title key="title">{title}</title>
+    <Head>
+      <title key="title">{title}</title>
 
-        <meta key={'og:type'} property="og:type" content={seo.type} />
+      <meta key={'og:type'} property="og:type" content={seo.type} />
 
-        {seo.socialMediaTitle && (
-          <meta key={'og:title'} property="og:title" content={seo.socialMediaTitle} />
-        )}
+      {seo.socialMediaTitle && (
+        <meta key={'og:title'} property="og:title" content={seo.socialMediaTitle} />
+      )}
 
-        {seo.socialMediaDescription && (
+      {seo.socialMediaDescription && (
+        <meta
+          key={'og:description'}
+          property="og:description"
+          content={seo.socialMediaDescription}
+        />
+      )}
+
+      {seo.description && <meta key={'description'} name="description" content={seo.description} />}
+
+      <meta key={'og:url'} property="og:url" content={seo.url} />
+      <link key={'canonical'} rel="canonical" href={seo.url} />
+
+      {seo.image && (
+        <>
+          <meta key={'og:image:xl'} property="og:image" content={seo.image.xl ?? ''} />
+          <meta key={'og:image:width:xl'} property="og:image:width" content="1200" />
+
+          <meta key={'og:image:m'} property="og:image" content={seo.image.m ?? ''} />
+          <meta key={'og:image:width:m'} property="og:image:width" content="800" />
+
+          <meta key={'og:image:s'} property="og:image" content={seo.image.s ?? ''} />
+          <meta key={'og:image:width:s'} property="og:image:width" content="500" />
+
+          <meta key={'og:image:xs'} property="og:image" content={seo.image.xs ?? ''} />
+          <meta key={'og:image:width:xs'} property="og:image:width" content="300" />
+
+          <meta key={'og:image:xxs'} property="og:image" content={seo.image.xxs ?? ''} />
+          <meta key={'og:image:width:xxs'} property="og:image:width" content="200" />
+
+          <meta key={'og:image:l'} property="og:image" content={seo.image.l ?? ''} />
+          <meta key={'og:image:width:l'} property="og:image:width" content="1000" />
+        </>
+      )}
+
+      <meta key={'twitter:card'} name="twitter:card" content="summary_large_image" />
+      <meta key={'max-image-preview'} name="robots" content="max-image-preview:large" />
+
+      {seo.publishedAt && (
+        <meta
+          key={`og:article:published_time`}
+          property="og:article:published_time"
+          content={seo.publishedAt}
+        />
+      )}
+
+      {seo.publishedAt && (
+        <meta
+          key={`og:article:modified_time`}
+          property="og:article:modified_time"
+          content={seo.publishedAt}
+        />
+      )}
+
+      {seo.authors.map(author => (
+        <Fragment key={author.id}>
+          <meta key={`author:${author.id}`} name="author" content={author.name} />
+
           <meta
-            key={'og:description'}
-            property="og:description"
-            content={seo.socialMediaDescription}
+            key={`og:article:author:username:${author.id}`}
+            property="og:article:author:username"
+            content={author.name}
           />
-        )}
+        </Fragment>
+      ))}
 
-        {seo.description && (
-          <meta key={'description'} name="description" content={seo.description} />
-        )}
+      {seo.tags.map(tag => (
+        <meta key={`og:article:tag:${tag}`} property="og:article:tag" content={tag.tag ?? ''} />
+      ))}
 
-        <meta key={'og:url'} property="og:url" content={seo.url} />
-        <link key={'canonical'} rel="canonical" href={seo.url} />
-
-        {seo.image && (
-          <>
-            <meta key={'og:image:xxs'} property="og:image" content={seo.image.xxs ?? ''} />
-            <meta key={'og:image:width:xxs'} property="og:image:width" content="200" />
-
-            <meta key={'og:image:xs'} property="og:image" content={seo.image.xs ?? ''} />
-            <meta key={'og:image:width:xs'} property="og:image:width" content="300" />
-
-            <meta key={'og:image:s'} property="og:image" content={seo.image.s ?? ''} />
-            <meta key={'og:image:width:s'} property="og:image:width" content="500" />
-
-            <meta key={'og:image:m'} property="og:image" content={seo.image.m ?? ''} />
-            <meta key={'og:image:width:m'} property="og:image:width" content="800" />
-
-            <meta key={'og:image:l'} property="og:image" content={seo.image.l ?? ''} />
-            <meta key={'og:image:width:l'} property="og:image:width" content="1000" />
-
-            <meta key={'og:image:xl'} property="og:image" content={seo.image.xl ?? ''} />
-            <meta key={'og:image:width:xl'} property="og:image:width" content="1200" />
-          </>
-        )}
-
-        <meta key={'twitter:card'} name="twitter:card" content="summary_large_image" />
-        <meta key={'max-image-preview'} name="robots" content="max-image-preview:large" />
-
-        {seo.publishedAt && (
-          <meta
-            key={`og:article:published_time`}
-            property="og:article:published_time"
-            content={seo.publishedAt}
-          />
-        )}
-
-        {seo.updatedAt && (
-          <meta
-            key={`og:article:modified_time`}
-            property="og:article:modified_time"
-            content={seo.updatedAt}
-          />
-        )}
-
-        {seo.authors.map(author => (
-          <Fragment key={author.id}>
-            <meta key={`author:${author.id}`} name="author" content={author.name} />
-
-            <meta
-              key={`og:article:author:username:${author.id}`}
-              property="og:article:author:username"
-              content={author.name}
-            />
-          </Fragment>
-        ))}
-
-        {seo.tags.map(tag => (
-          <meta key={`og:article:tag:${tag}`} property="og:article:tag" content={tag.tag ?? ''} />
-        ))}
-      </Head>
-
-      <Script type="application/ld+json">{JSON.stringify(seo.schema)}</Script>
-    </>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{__html: JSON.stringify(seo.schema)}}
+      />
+    </Head>
   )
 }

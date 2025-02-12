@@ -32,6 +32,9 @@ ALTER TABLE "articles" ADD COLUMN     "slug" TEXT;
 -- CreateIndex
 CREATE UNIQUE INDEX "articles_slug_key" ON "articles"("slug") WHERE ("publishedAt" is NOT null);
 
+-- AlterTable
+ALTER TABLE "articles" ADD COLUMN     "likes" INTEGER NOT NULL DEFAULT 0;
+
 -- Migrate publishedAt
 UPDATE "articles.revisions"
 SET "publishedAt" = "publishAt"
@@ -45,6 +48,12 @@ WHERE ar.id = a."publishedId";
 -- Migrate slug
 UPDATE "articles" a
 SET "slug" = ar."slug"
+FROM "articles.revisions" ar
+WHERE ar.id = a."publishedId" or ar.id = a."pendingId";
+
+-- Migrate likes
+UPDATE "articles" a
+SET "likes" = ar."likes"
 FROM "articles.revisions" ar
 WHERE ar.id = a."publishedId" or ar.id = a."pendingId";
 
@@ -103,7 +112,8 @@ DROP COLUMN "publishAt",
 DROP COLUMN "revision",
 DROP COLUMN "tags",
 DROP COLUMN "updatedAt",
-DROP COLUMN "slug";
+DROP COLUMN "slug",
+DROP COLUMN "likes";
 
 -- AlterTable
 ALTER TABLE "articles" DROP COLUMN "draftId",

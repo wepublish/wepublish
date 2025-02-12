@@ -144,6 +144,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
             'lead',
             'draft',
             'authors',
+            'tags',
             'pending',
             'published',
             'publicationDate',

@@ -1,14 +1,14 @@
 import {DndContext, DragEndEvent} from '@dnd-kit/core'
 import {
+  styled,
   Table,
   TableBody,
   TableCell,
+  tableCellClasses,
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
-  styled,
-  tableCellClasses
+  Typography
 } from '@mui/material'
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
 import {
@@ -27,10 +27,10 @@ import {
   useUpdateSubscriptionIntervalMutation
 } from '@wepublish/editor/api-v2'
 import {
+  createCheckedPermissionComponent,
   ListViewContainer,
   ListViewHeader,
-  PermissionControl,
-  createCheckedPermissionComponent
+  PermissionControl
 } from '@wepublish/ui/editor'
 import {createContext, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -53,6 +53,7 @@ export const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([]
 
 export const USER_ACTION_EVENTS = [
   SubscriptionEvent.Subscribe,
+  SubscriptionEvent.ConfirmSubscription,
   SubscriptionEvent.RenewalSuccess,
   SubscriptionEvent.RenewalFailed,
   SubscriptionEvent.DeactivationByUser

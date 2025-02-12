@@ -29,11 +29,27 @@ fragment FullMemberPlan on MemberPlan {
   }
 
   amountPerMonthMin
+  amountPerMonthTarget
   currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
   }
   extendable
+
+  successPageId
+  # successPage {
+  #   url
+  # }
+
+  failPageId
+  # failPage {
+  #   url
+  # }
+
+  confirmationPageId
+  # confirmationPage {
+  #   url
+  # }
 }
 
 fragment FullPayment on Payment {
@@ -142,6 +158,30 @@ mutation Subscribe(
   ) {
     ...FullPayment
   }
+}
+
+mutation Resubscribe(
+  $userId: String
+  $memberPlanId: String
+  $memberPlanSlug: Slug
+  $autoRenew: Boolean!
+  $paymentPeriodicity: PaymentPeriodicity!
+  $monthlyAmount: Int!
+  $paymentMethodId: String
+  $paymentMethodSlug: Slug
+  $subscriptionProperties: [PublicPropertiesInput!]
+) {
+  createSubscriptionWithConfirmation(
+    userId: $userId
+    memberPlanID: $memberPlanId
+    memberPlanSlug: $memberPlanSlug
+    autoRenew: $autoRenew
+    paymentPeriodicity: $paymentPeriodicity
+    monthlyAmount: $monthlyAmount
+    paymentMethodID: $paymentMethodId
+    paymentMethodSlug: $paymentMethodSlug
+    subscriptionProperties: $subscriptionProperties
+  )
 }
 
 mutation PayInvoice(

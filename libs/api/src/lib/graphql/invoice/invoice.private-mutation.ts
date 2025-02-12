@@ -1,7 +1,7 @@
 import {Context} from '../../context'
 import {authorise} from '../permissions'
 import {CanCreateInvoice, CanDeleteInvoice} from '@wepublish/permissions/api'
-import {PrismaClient, Prisma, Invoice} from '@prisma/client'
+import {Invoice, Prisma, PrismaClient} from '@prisma/client'
 import {InvoiceWithItems} from '@wepublish/payment/api'
 
 export const deleteInvoiceById = async (
@@ -97,6 +97,13 @@ export const markInvoiceAsPaid = async (
     },
     include: {
       subscriptionPeriods: true
+    }
+  })
+
+  await prismaClient.subscription.update({
+    where: {id: invoice.subscriptionID},
+    data: {
+      confirmed: true
     }
   })
 

@@ -42,6 +42,7 @@ fragment UserSubscription on UserSubscription {
   monthlyAmount
   currency
   autoRenew
+  confirmed
   startsAt
   paidUntil
   periods {
