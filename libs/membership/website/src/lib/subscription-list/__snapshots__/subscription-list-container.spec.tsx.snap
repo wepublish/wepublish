@@ -10,7 +10,7 @@ exports[`SubscriptionList Container should render CancelWithInvoiceList 1`] = `
 - First value
 + Second value
 
-@@ -183,10 +183,136 @@
+@@ -193,10 +193,136 @@
       </div>
     </article>
     <article
@@ -331,6 +331,16 @@ https://unsplash.it/200/100 200w"
               class="MuiTouchRipple-root emotion-25"
             />
           </button>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-26"
+            tabindex="0"
+            type="button"
+          >
+            Jetzt Verlängern
+            <span
+              class="MuiTouchRipple-root emotion-25"
+            />
+          </button>
         </div>
       </div>
     </div>
@@ -513,6 +523,16 @@ https://unsplash.it/200/100 200w"
             type="button"
           >
             Abo kündigen
+            <span
+              class="MuiTouchRipple-root emotion-25"
+            />
+          </button>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-26"
+            tabindex="0"
+            type="button"
+          >
+            Jetzt Verlängern
             <span
               class="MuiTouchRipple-root emotion-25"
             />
@@ -705,6 +725,16 @@ https://unsplash.it/200/100 200w"
               class="MuiTouchRipple-root emotion-25"
             />
           </button>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-26"
+            tabindex="0"
+            type="button"
+          >
+            Jetzt Verlängern
+            <span
+              class="MuiTouchRipple-root emotion-25"
+            />
+          </button>
         </div>
       </div>
     </div>
@@ -893,6 +923,16 @@ https://unsplash.it/200/100 200w"
               class="MuiTouchRipple-root emotion-25"
             />
           </button>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-26"
+            tabindex="0"
+            type="button"
+          >
+            Jetzt Verlängern
+            <span
+              class="MuiTouchRipple-root emotion-25"
+            />
+          </button>
         </div>
       </div>
     </div>
@@ -912,7 +952,13 @@ exports[`SubscriptionList Container should render WithFilter 1`] = `
         class="emotion-4 emotion-5"
       >
         <strong>
-          Kein aktives Abo
+          Du hast noch kein aktives Abo. 
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-6"
+            href="/mitmachen"
+          >
+            Jetzt ein Abo lösen.
+          </a>
         </strong>
       </div>
     </div>

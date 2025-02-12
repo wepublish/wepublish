@@ -17,6 +17,15 @@ const nextConfig = {
       API_URL: process.env.API_URL || '',
       GA_ID: process.env.GA_ID || ''
     }
+  },
+  async redirects() {
+    return [
+      {
+        source: '/abo',
+        destination: '/mitmachen',
+        permanent: false
+      }
+    ]
   }
 }
 

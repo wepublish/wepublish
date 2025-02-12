@@ -1728,7 +1728,7 @@ export type Query = {
   poll: FullPoll
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes
-  primaryBanner: Banner
+  primaryBanner?: Maybe<Banner>
   provider: MailProviderModel
   ratingSystem: FullCommentRatingSystem
   /**
@@ -2132,6 +2132,7 @@ export type Stats = {
 export type Subscription = {
   __typename?: 'Subscription'
   autoRenew: Scalars['Boolean']
+  canExtend: Scalars['Boolean']
   deactivation?: Maybe<SubscriptionDeactivation>
   extendable: Scalars['Boolean']
   id: Scalars['ID']

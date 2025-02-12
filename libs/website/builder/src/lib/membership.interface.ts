@@ -31,6 +31,7 @@ export type BuilderSubscriptionListProps = Pick<
 > & {
   className?: string
   invoices: Pick<QueryResult<InvoicesQuery>, 'data' | 'loading' | 'error'>
+  subscribeUrl: string
   onCancel?: (subscriptionId: string) => Promise<void>
   onExtend?: (subscriptionId: string) => Promise<void>
 }
