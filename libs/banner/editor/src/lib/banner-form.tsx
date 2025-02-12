@@ -29,8 +29,8 @@ export const BannerForm = (props: BannerFormProps) => {
   const {t} = useTranslation()
   const [pages, setPages] = useState<PageWithoutBlocksFragment[]>([])
 
-  const handleChange = (value: any, event: React.ChangeEvent<HTMLInputElement>) => {
-    const {name} = event.target
+  const handleChange = (value: any, event: React.SyntheticEvent) => {
+    const name = (event.target as HTMLInputElement).name
     props.onChange({...props.banner, [name]: value})
   }
 
@@ -100,7 +100,17 @@ export const BannerForm = (props: BannerFormProps) => {
             accepter={Toggle}
           />
         </Form.Group>
-
+        <Form.Group controlId="showForLoginStatus">
+          <Form.ControlLabel>{t('banner.form.showForLoginStatus')}</Form.ControlLabel>
+          <RadioGroup
+            name="showForLoginStatus"
+            value={props.banner.showForLoginStatus}
+            onChange={handleChange}>
+            {Object.values(LoginStatus).map((status: LoginStatus) => (
+              <Radio value={status}>{t(`banner.form.loginStatus.${status}`)}</Radio>
+            ))}
+          </RadioGroup>
+        </Form.Group>
         <Form.Group controlId="showOnArticles">
           <Form.ControlLabel>{t('banner.form.showOnArticles')}</Form.ControlLabel>
           <Form.Control

@@ -1296,10 +1296,17 @@ model Banner {
 
   showOnArticles Boolean @default(true)
   showOnPages    Page[]
+  showForLoginStatus LoginStatus @default(ALL)
 
   actions BannerAction[]
 
   @@map("banners")
+}
+
+enum LoginStatus {
+  LOGGED_IN   @map("logged_in")
+  LOGGED_OUT  @map("logged_out")
+  ALL         @map("all")
 }
 
 model BannerAction {

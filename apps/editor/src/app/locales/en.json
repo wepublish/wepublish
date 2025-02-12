@@ -226,6 +226,12 @@
         "active": "Active",
         "showOnArticles": "Display on articles",
         "showOnPages": "Display on those pages",
+        "showForLoginStatus": "Display for",
+        "loginStatus": {
+          "ALL": "all visitors",
+          "LOGGED_IN": "logged in visitors",
+          "LOGGED_OUT": "logged out visitors"
+        },
         "actions": "Actions",
         "image": "Image",
         "action": {

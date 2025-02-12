@@ -31,6 +31,7 @@ input CreateBannerInput {
   text: String!
   active: Boolean!
   showOnArticles: Boolean!
+  showForLoginStatus: LoginStatus!
   actions: [CreateBannerActionInput]!
   imageId: String!
 }
@@ -47,6 +48,7 @@ input UpdateBannerInput {
   text: String!
   active: Boolean!
   showOnArticles: Boolean!
+  showForLoginStatus: LoginStatus!
   actions: [CreateBannerActionInput!]
   imageId: String!
 }
@@ -67,6 +69,7 @@ fragment FullBanner on Banner {
   showOnPages {
     ...Page2Ref
   }
+  showForLoginStatus
 
   image {
     ...FullImage

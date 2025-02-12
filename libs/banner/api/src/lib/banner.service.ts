@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {Page, PrismaClient} from '@prisma/client'
+import {LoginStatus, Page, PrismaClient} from '@prisma/client'
 import {
   Banner,
   BannerDocumentType,
@@ -33,7 +33,11 @@ export class BannerService {
       return this.prisma.banner.findFirst({
         where: {
           active: true,
-          showOnArticles: true
+          showOnArticles: true,
+          OR: [
+            {showForLoginStatus: LoginStatus.ALL},
+            {showForLoginStatus: args.loggedIn ? LoginStatus.LOGGED_IN : LoginStatus.LOGGED_OUT}
+          ]
         }
       })
     } else if (args.documentType === BannerDocumentType.PAGE) {
@@ -44,7 +48,11 @@ export class BannerService {
             some: {
               id: args.documentId
             }
-          }
+          },
+          OR: [
+            {showForLoginStatus: LoginStatus.ALL},
+            {showForLoginStatus: args.loggedIn ? LoginStatus.LOGGED_IN : LoginStatus.LOGGED_OUT}
+          ]
         }
       })
     } else {

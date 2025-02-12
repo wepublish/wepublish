@@ -173,6 +173,7 @@ export type Banner = {
   id: Scalars['ID'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
+  showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: Maybe<Array<PageModel>>;
   text: Scalars['String'];
@@ -389,6 +390,7 @@ export type CreateBannerInput = {
   active: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['String']>;
+  showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
   text: Scalars['String'];
@@ -820,6 +822,12 @@ export type ListicleItem = {
   richText: Scalars['RichText'];
   title: Scalars['String'];
 };
+
+export enum LoginStatus {
+  All = 'ALL',
+  LoggedIn = 'LOGGED_IN',
+  LoggedOut = 'LOGGED_OUT'
+}
 
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
@@ -2023,6 +2031,7 @@ export type QueryPollVotesArgs = {
 export type QueryPrimaryBannerArgs = {
   documentId: Scalars['ID'];
   documentType: BannerDocumentType;
+  loggedIn: Scalars['Boolean'];
 };
 
 
@@ -2384,6 +2393,7 @@ export type UpdateBannerInput = {
   cta?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
   imageId?: InputMaybe<Scalars['String']>;
+  showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
   text: Scalars['String'];

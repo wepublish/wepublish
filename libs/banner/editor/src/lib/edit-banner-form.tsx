@@ -1,6 +1,7 @@
 import {
   CreateBannerActionInput,
   FullImageFragment,
+  LoginStatus,
   UpdateBannerInput,
   getApiClientV2,
   useBannerQuery,
@@ -26,7 +27,8 @@ export const EditBannerForm = () => {
     title: '',
     text: '',
     active: false,
-    showOnArticles: false
+    showOnArticles: false,
+    showForLoginStatus: LoginStatus.All
     //tags: []
   })
 
@@ -38,12 +40,11 @@ export const EditBannerForm = () => {
     },
     skip: !id,
     onCompleted: data => {
-      const {__typename, ...inputWithoutTypename} = data.banner
-      setBanner({imageId: inputWithoutTypename.image?.id, ...inputWithoutTypename})
+      setBanner({imageId: inputWithoutTypename.image?.id, ...data.banner})
     }
   })
 
-  const {StringType, BooleanType} = Schema.Types
+  const {StringType} = Schema.Types
   const validationModel = Schema.Model({
     title: StringType().isRequired(),
     text: StringType().isRequired()

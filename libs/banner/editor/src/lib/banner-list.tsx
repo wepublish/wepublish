@@ -84,10 +84,18 @@ function BannerList() {
             <HeaderCell>{t('banner.list.text')}</HeaderCell>
             <RCell>{(rowData: RowDataType<Banner>) => (rowData as Banner).text}</RCell>
           </Column>
-          <Column width={300} resizable>
+          <Column width={100} resizable>
             <HeaderCell>{t('banner.list.active')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<Banner>) => ((rowData as Banner).active ? '✓' : '⨯')}
+            </RCell>
+          </Column>
+          <Column width={200} resizable>
+            <HeaderCell>{t('banner.form.showForLoginStatus')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<Banner>) =>
+                t(`banner.form.loginStatus.${(rowData as Banner).showForLoginStatus}`)
+              }
             </RCell>
           </Column>
           <Column resizable fixed="right">

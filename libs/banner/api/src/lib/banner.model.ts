@@ -1,6 +1,11 @@
 import {ArgsType, Field, InputType, ObjectType, OmitType, registerEnumType} from '@nestjs/graphql'
 import {BannerAction, CreateBannerActionInput} from './banner-action.model'
 import {Image} from '@wepublish/image/api'
+import {LoginStatus} from '@prisma/client'
+
+registerEnumType(LoginStatus, {
+  name: 'LoginStatus'
+})
 
 /*
 This is only here to provide the interface for the "showOnPages" field
@@ -43,6 +48,9 @@ export class Banner {
 
   @Field(() => [PageModel], {nullable: true})
   showOnPages?: PageModel[]
+
+  @Field(() => LoginStatus)
+  showForLoginStatus!: LoginStatus
 
   @Field(() => Image, {nullable: true})
   image?: Image
@@ -93,4 +101,7 @@ export class PrimaryBannerArgs {
 
   @Field()
   documentId!: string
+
+  @Field()
+  loggedIn!: boolean
 }

@@ -41,6 +41,7 @@ export const BannerCloseButton = styled('span')`
 export const BannerTitle = styled('h2')`
   margin-top: 0;
   margin-bottom: ${({theme}) => theme.spacing(2)};
+  line-height: 1.2;
 `
 
 export const BannerText = styled('div')`

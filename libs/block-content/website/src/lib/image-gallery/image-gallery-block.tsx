@@ -35,7 +35,10 @@ export const ImageGalleryBlock = ({images, className}: BuilderImageGalleryBlockP
           <ImageListItem key={index}>
             <Image image={image.image!} />
 
-            <Paragraph gutterBottom={false}>{image.caption ?? image.image?.title}</Paragraph>
+            <Paragraph gutterBottom={false}>
+              {image.caption ?? image.image?.title}{' '}
+              {image.image?.source ? <>(Bild: {image.image.source})</> : null}
+            </Paragraph>
           </ImageListItem>
         ))}
       </ImageGalleryBlockImageList>

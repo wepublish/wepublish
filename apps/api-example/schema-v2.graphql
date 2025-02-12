@@ -168,6 +168,7 @@ type Banner {
   id: String!
   image: Image
   imageId: String
+  showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
   showOnPages: [PageModel!]
   text: String!
@@ -390,6 +391,7 @@ input CreateBannerInput {
   active: Boolean!
   cta: String
   imageId: String
+  showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
   showOnPages: [PageModelInput!]
   text: String!
@@ -920,6 +922,12 @@ input ListicleItemInput {
   title: String
 }
 
+enum LoginStatus {
+  ALL
+  LOGGED_IN
+  LOGGED_OUT
+}
+
 type MailProviderModel {
   name: String!
 }
@@ -1410,7 +1418,7 @@ type Query {
 
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Ascending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
-  banner(id: String!): Banner!
+  banner(id: String!): Banner
   banners(skip: Int!, take: Int!): [Banner!]!
 
   """Returns a list of block styles."""
@@ -1484,7 +1492,7 @@ type Query {
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: String, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
-  primaryBanner(documentId: String!, documentType: BannerDocumentType!): Banner!
+  primaryBanner(documentId: String!, documentType: BannerDocumentType!, loggedIn: Boolean!): Banner
   provider: MailProviderModel!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
@@ -1826,6 +1834,7 @@ input UpdateBannerInput {
   cta: String
   id: String!
   imageId: String
+  showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
   showOnPages: [PageModelInput!]
   text: String!

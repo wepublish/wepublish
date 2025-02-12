@@ -235,6 +235,7 @@ export type Banner = {
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
+  showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: Maybe<Array<PageModel>>;
   text: Scalars['String'];
@@ -574,6 +575,7 @@ export type CreateBannerInput = {
   active: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['String']>;
+  showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
   text: Scalars['String'];
@@ -1213,6 +1215,12 @@ export type ListicleItemInput = {
   richText: Scalars['RichText'];
   title?: InputMaybe<Scalars['String']>;
 };
+
+export enum LoginStatus {
+  All = 'ALL',
+  LoggedIn = 'LOGGED_IN',
+  LoggedOut = 'LOGGED_OUT'
+}
 
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
@@ -2395,7 +2403,7 @@ export type Query = {
   author?: Maybe<Author>;
   /** This query is to get the authors. */
   authors: AuthorConnection;
-  banner: Banner;
+  banner?: Maybe<Banner>;
   banners: Array<Banner>;
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>;
@@ -2507,7 +2515,7 @@ export type Query = {
   poll: FullPoll;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
-  primaryBanner: Banner;
+  primaryBanner?: Maybe<Banner>;
   provider: MailProviderModel;
   ratingSystem: FullCommentRatingSystem;
   /**
@@ -2787,6 +2795,7 @@ export type QueryPollVotesArgs = {
 export type QueryPrimaryBannerArgs = {
   documentId: Scalars['String'];
   documentType: BannerDocumentType;
+  loggedIn: Scalars['Boolean'];
 };
 
 
@@ -3245,6 +3254,7 @@ export type UpdateBannerInput = {
   cta?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
   imageId?: InputMaybe<Scalars['String']>;
+  showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
   text: Scalars['String'];
@@ -3476,10 +3486,11 @@ export type PageRefFragment = { __typename?: 'PageModel', id: string };
 export type PrimaryBannerQueryVariables = Exact<{
   documentType: BannerDocumentType;
   documentId: Scalars['String'];
+  loggedIn: Scalars['Boolean'];
 }>;
 
 
-export type PrimaryBannerQuery = { __typename?: 'Query', primaryBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null } };
+export type PrimaryBannerQuery = { __typename?: 'Query', primaryBanner?: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, showOnArticles: boolean, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null } | null };
 
 type BlockWithoutTeaser_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock', zoneID?: string | null, blockStyle?: string | null };
 
@@ -5255,8 +5266,12 @@ export type AuthorListQueryHookResult = ReturnType<typeof useAuthorListQuery>;
 export type AuthorListLazyQueryHookResult = ReturnType<typeof useAuthorListLazyQuery>;
 export type AuthorListQueryResult = Apollo.QueryResult<AuthorListQuery, AuthorListQueryVariables>;
 export const PrimaryBannerDocument = gql`
-    query PrimaryBanner($documentType: BannerDocumentType!, $documentId: String!) {
-  primaryBanner(documentType: $documentType, documentId: $documentId) {
+    query PrimaryBanner($documentType: BannerDocumentType!, $documentId: String!, $loggedIn: Boolean!) {
+  primaryBanner(
+    documentType: $documentType
+    documentId: $documentId
+    loggedIn: $loggedIn
+  ) {
     ...FullBanner
   }
 }
@@ -5276,6 +5291,7 @@ export const PrimaryBannerDocument = gql`
  *   variables: {
  *      documentType: // value for 'documentType'
  *      documentId: // value for 'documentId'
+ *      loggedIn: // value for 'loggedIn'
  *   },
  * });
  */
