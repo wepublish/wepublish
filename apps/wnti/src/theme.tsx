@@ -1,14 +1,21 @@
 import {createTheme, Theme, ThemeOptions} from '@mui/material'
 import {theme as WePTheme} from '@wepublish/ui'
-import {Hanken_Grotesk} from 'next/font/google'
+import localFont from 'next/font/local'
 import {PartialDeep} from 'type-fest'
 
-const hankenGrotesk = Hanken_Grotesk({
-  weight: ['100', '300', '400', '500', '600', '700'],
-  style: ['italic', 'normal'],
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true
+const Faro = localFont({
+  src: [
+    {
+      path: './fonts/FaroWeb-DisplayLucky.woff2',
+      weight: '400',
+      style: 'normal'
+    },
+    {
+      path: './fonts/FaroWeb-SemiBoldLucky.woff2',
+      weight: '600',
+      style: 'normal'
+    }
+  ]
 })
 
 const {
@@ -21,46 +28,47 @@ const theme = createTheme(WePTheme, {
   },
   typography: {
     h1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     h2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     h3: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     h4: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     h5: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     h6: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     body1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-      fontSize: '16px'
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: '600'
     },
     body2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: '600'
     },
     button: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     caption: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     overline: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     subtitle1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     subtitle2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
-    fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+    fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
   },
   components: {
     MuiButton: {

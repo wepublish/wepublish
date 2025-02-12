@@ -1,5 +1,5 @@
 import {EmotionCache} from '@emotion/cache'
-import {Container, css, CssBaseline, NoSsr, styled, ThemeProvider} from '@mui/material'
+import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
@@ -26,7 +26,6 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {Paywall} from '../src/components/paywall'
 import {TsriArticleMeta} from '../src/components/tsri-article-meta'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
 import {TsriContextBox} from '../src/components/tsri-context-box'
@@ -152,13 +151,12 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
                 {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+                <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+                <link rel="shortcut icon" href="/favicon.ico" />
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                <meta name="apple-mobile-web-app-title" content="Wnti" />
                 <link rel="manifest" href="/site.webmanifest" />
-                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-                <meta name="msapplication-TileColor" content="#ffffff" />
-                <meta name="theme-color" content="#ffffff" />
               </Head>
 
               <Spacer>
@@ -172,10 +170,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
                 <main>
                   <MainSpacer maxWidth="lg">
-                    <NoSsr>
-                      <Paywall />
-                    </NoSsr>
-
                     <Component {...pageProps} />
                   </MainSpacer>
                 </main>
