@@ -26,7 +26,7 @@ import {
 import {useEffect, useMemo, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'
-import {formatCurrency} from '../formatters/format-currency'
+import {formatCurrency, roundUpTo5Cents} from '../formatters/format-currency'
 import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
@@ -146,7 +146,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   deactivateSubscriptionId,
   termsOfServiceUrl,
   donate,
-  transactionFee = amount => amount * 0.02,
+  transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100),
   transactionFeeText,
   returningUserId
 }: BuilderSubscribeProps<T>) => {
