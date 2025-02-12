@@ -39,7 +39,7 @@ export class BannerResolver {
   async banner(@Args('id') args: string): Promise<Banner> {
     const banner = await this.bannerService.findOne(args)
     if (!banner) {
-      throw new NotFoundException()
+      throw new NotFoundException(`Banner with id ${args} not found`)
     }
     return banner
   }
