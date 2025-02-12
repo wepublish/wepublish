@@ -77,6 +77,7 @@ import type { EventStatus } from "@prisma/client";
 import type { UserEvent } from "@prisma/client";
 import type { SubscriptionEvent } from "@prisma/client";
 import type { BlockType } from "@prisma/client";
+import type { LoginStatus } from "@prisma/client";
 import type { BannerActionRole } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { Resolver } from "@quramy/prisma-fabbrica/lib/internal";
@@ -2919,6 +2920,7 @@ type BannerFactoryDefineInput = {
     cta?: string | null;
     active?: boolean;
     showOnArticles?: boolean;
+    showForLoginStatus?: LoginStatus;
     image?: BannerimageFactory | Prisma.ImageCreateNestedOneWithoutBannersInput;
     showOnPages?: Prisma.PageCreateNestedManyWithoutBannersInput;
     actions?: Prisma.BannerActionCreateNestedManyWithoutBannerInput;
