@@ -1750,7 +1750,7 @@ export type Query = {
   poll: FullPoll;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
-  primaryBanner: Banner;
+  primaryBanner?: Maybe<Banner>;
   provider: MailProviderModel;
   ratingSystem: FullCommentRatingSystem;
   /**

@@ -2403,7 +2403,7 @@ export type Query = {
   author?: Maybe<Author>;
   /** This query is to get the authors. */
   authors: AuthorConnection;
-  banner?: Maybe<Banner>;
+  banner: Banner;
   banners: Array<Banner>;
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>;

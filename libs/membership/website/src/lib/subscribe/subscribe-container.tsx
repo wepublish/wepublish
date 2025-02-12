@@ -4,6 +4,7 @@ import {
   useChallengeLazyQuery,
   useInvoicesLazyQuery,
   useMemberPlanListQuery,
+  usePageLazyQuery,
   useRegisterMutation,
   useResubscribeMutation,
   useSubscribeMutation,
@@ -90,6 +91,10 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
     }
   })
 
+  // @TODO: Replace with objects on Memberplan when Memberplan has been migrated to V2
+  // Pages are currently in V2 and Memberplan are in V1, so we have no access to page objects.
+  const [fetchPage] = usePageLazyQuery()
+
   useEffect(() => {
     if (!hasUser) {
       fetchChallenge()
@@ -114,11 +119,19 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
       {stripeClientSecret && (
         <StripeElement clientSecret={stripeClientSecret}>
           <StripePayment
-            onClose={success => {
+            onClose={async success => {
               if (stripeMemberPlan) {
-                window.location.href = success
-                  ? stripeMemberPlan.successPage?.url ?? ''
-                  : stripeMemberPlan.failPage?.url ?? ''
+                const page = await fetchPage({
+                  variables: {
+                    id: success ? stripeMemberPlan.successPageId : stripeMemberPlan.failPageId
+                  }
+                })
+
+                window.location.href = page.data?.page.url ?? ''
+
+                // window.location.href = success
+                //   ? stripeMemberPlan.successPage?.url ?? ''
+                //   : stripeMemberPlan.failPage?.url ?? ''
               }
             }}
           />
@@ -143,11 +156,26 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
           )
           setStripeMemberPlan(selectedMemberplan)
 
+          const [successPage, failPage] = await Promise.all([
+            fetchPage({
+              variables: {
+                id: selectedMemberplan?.successPageId
+              }
+            }),
+            fetchPage({
+              variables: {
+                id: selectedMemberplan?.successPageId
+              }
+            })
+          ])
+
           await subscribe({
             variables: {
               ...formData,
-              successURL: selectedMemberplan?.successPage?.url,
-              failureURL: selectedMemberplan?.failPage?.url,
+              successURL: successPage.data?.page.url,
+              failureURL: failPage.data?.page.url,
+              // successURL: selectedMemberplan?.successPage?.url,
+              // failureURL: selectedMemberplan?.failPage?.url,
               deactivateSubscriptionId
             }
           })
@@ -166,11 +194,26 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
           )
           setStripeMemberPlan(selectedMemberplan)
 
+          const [successPage, failPage] = await Promise.all([
+            fetchPage({
+              variables: {
+                id: selectedMemberplan?.successPageId
+              }
+            }),
+            fetchPage({
+              variables: {
+                id: selectedMemberplan?.successPageId
+              }
+            })
+          ])
+
           await subscribe({
             variables: {
               ...formData.subscribe,
-              successURL: selectedMemberplan?.successPage?.url,
-              failureURL: selectedMemberplan?.failPage?.url
+              successURL: successPage.data?.page.url,
+              failureURL: failPage.data?.page.url
+              // successURL: selectedMemberplan?.successPage?.url,
+              // failureURL: selectedMemberplan?.failPage?.url
             }
           })
         }}
@@ -178,10 +221,17 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
           const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
             mb => mb.id === formData.memberPlanId
           )
+          const page = await fetchPage({
+            variables: {
+              id: selectedMemberplan?.confirmationPageId
+            }
+          })
+
           await resubscribe({
             variables: formData,
-            onCompleted() {
-              window.location.href = selectedMemberplan?.confirmationPage?.url ?? ''
+            async onCompleted() {
+              window.location.href = page.data?.page.url ?? ''
+              // window.location.href = selectedMemberplan?.confirmationPage?.url ?? ''
             }
           })
         }}

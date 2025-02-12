@@ -246,6 +246,7 @@ export type Banner = {
   id: Scalars['String']
   image?: Maybe<Image>
   imageId?: Maybe<Scalars['String']>
+  showForLoginStatus: LoginStatus
   showOnArticles: Scalars['Boolean']
   showOnPages?: Maybe<Array<PageModel>>
   text: Scalars['String']
@@ -613,6 +614,7 @@ export type CreateBannerInput = {
   active: Scalars['Boolean']
   cta?: InputMaybe<Scalars['String']>
   imageId?: InputMaybe<Scalars['String']>
+  showForLoginStatus: LoginStatus
   showOnArticles: Scalars['Boolean']
   showOnPages?: InputMaybe<Array<PageModelInput>>
   text: Scalars['String']
@@ -1255,6 +1257,12 @@ export type ListicleItemInput = {
   imageID?: InputMaybe<Scalars['String']>
   richText: Scalars['RichText']
   title?: InputMaybe<Scalars['String']>
+}
+
+export enum LoginStatus {
+  All = 'ALL',
+  LoggedIn = 'LOGGED_IN',
+  LoggedOut = 'LOGGED_OUT'
 }
 
 export type MailProviderModel = {
@@ -2491,7 +2499,7 @@ export type Query = {
   poll: FullPoll
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes
-  primaryBanner: Banner
+  primaryBanner?: Maybe<Banner>
   provider: MailProviderModel
   ratingSystem: FullCommentRatingSystem
   /**
@@ -2738,6 +2746,7 @@ export type QueryPollVotesArgs = {
 export type QueryPrimaryBannerArgs = {
   documentId: Scalars['String']
   documentType: BannerDocumentType
+  loggedIn: Scalars['Boolean']
 }
 
 export type QueryRenewingSubscribersArgs = {
@@ -3188,6 +3197,7 @@ export type UpdateBannerInput = {
   cta?: InputMaybe<Scalars['String']>
   id: Scalars['String']
   imageId?: InputMaybe<Scalars['String']>
+  showForLoginStatus: LoginStatus
   showOnArticles: Scalars['Boolean']
   showOnPages?: InputMaybe<Array<PageModelInput>>
   text: Scalars['String']

@@ -75,8 +75,7 @@ describe('BannerResolver', () => {
 
     it('should throw NotFoundException when banner not found', async () => {
       mockBannerService.findOne.mockResolvedValue(null)
-      const result = await resolver.banner('1')
-      expect(result).toEqual(null)
+      await expect(resolver.banner('1')).rejects.toThrow()
     })
   })
 
@@ -91,7 +90,7 @@ describe('BannerResolver', () => {
       expect(result).toEqual(mockBanner)
     })
 
-    it('should throw NotFoundException when no primary banner found', async () => {
+    it('should return null when no primary banner found', async () => {
       mockBannerService.findFirst.mockResolvedValue(null)
       const result = await resolver.primaryBanner({
         documentType: BannerDocumentType.ARTICLE,

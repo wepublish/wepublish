@@ -2403,7 +2403,7 @@ export type Query = {
   author?: Maybe<Author>;
   /** This query is to get the authors. */
   authors: AuthorConnection;
-  banner?: Maybe<Banner>;
+  banner: Banner;
   banners: Array<Banner>;
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>;
@@ -3547,7 +3547,7 @@ export type BannerQueryVariables = Exact<{
 }>;
 
 
-export type BannerQuery = { __typename?: 'Query', banner?: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showForLoginStatus: LoginStatus, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null } | null };
+export type BannerQuery = { __typename?: 'Query', banner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, showOnArticles: boolean, showForLoginStatus: LoginStatus, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null } };
 
 export type CreateBannerMutationVariables = Exact<{
   input: CreateBannerInput;

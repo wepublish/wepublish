@@ -82,7 +82,7 @@ const BannerWrapper = styled('div')<BannerWrapperProps>(
 
 export const Banner = ({data, loading, error, className}: BuilderBannerProps) => {
   const [collapsed, setCollapsed] = useState(true)
-  const storageKey = `banner-last-closed-${data?.primaryBanner.id}`
+  const storageKey = `banner-last-closed-${data?.primaryBanner?.id}`
 
   useEffect(() => {
     const lastClosedTime = Number(localStorage.getItem(storageKey)) ?? 0
