@@ -19,6 +19,7 @@ import {
   Permissions,
   Public
 } from '@wepublish/permissions/api'
+import {NotFoundException} from '@nestjs/common'
 
 @Resolver(() => Banner)
 export class BannerResolver {
@@ -34,9 +35,13 @@ export class BannerResolver {
   }
 
   @Permissions(CanGetBanner)
-  @Query(() => Banner, {nullable: true})
-  async banner(@Args('id') args: string): Promise<Banner | null> {
-    return await this.bannerService.findOne(args)
+  @Query(() => Banner)
+  async banner(@Args('id') args: string): Promise<Banner> {
+    const banner = await this.bannerService.findOne(args)
+    if (!banner) {
+      throw new NotFoundException()
+    }
+    return banner
   }
 
   @Public()

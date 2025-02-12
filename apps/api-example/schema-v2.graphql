@@ -501,7 +501,7 @@ type Query {
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: ID, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
-  primaryBanner(documentId: ID!, documentType: BannerDocumentType!, loggedIn: Boolean!): Banner!
+  primaryBanner(documentId: ID!, documentType: BannerDocumentType!, loggedIn: Boolean!): Banner
   provider: MailProviderModel!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
