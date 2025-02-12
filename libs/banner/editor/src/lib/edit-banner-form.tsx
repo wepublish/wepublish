@@ -40,7 +40,7 @@ export const EditBannerForm = () => {
     },
     skip: !id,
     onCompleted: data => {
-      setBanner({imageId: inputWithoutTypename.image?.id, ...data.banner})
+      setBanner({imageId: data.banner.image?.id, ...data.banner})
     }
   })
 
