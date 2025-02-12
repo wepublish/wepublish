@@ -76,6 +76,23 @@ const createPreTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhe
   return {}
 }
 
+const createBodyFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.body) {
+    const containsBody: Prisma.ArticleRevisionWhereInput = {
+      searchPlainText: {
+        contains: filter.body,
+        mode: 'insensitive'
+      }
+    }
+
+    return {
+      OR: [{draft: containsBody}, {pending: containsBody}, {published: containsBody}]
+    }
+  }
+
+  return {}
+}
+
 const createLeadFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.lead) {
     const containsLead: Prisma.ArticleRevisionWhereInput = {
@@ -243,7 +260,9 @@ const createHiddenFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhere
 
 export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => ({
   AND: [
-    createTitleFilter(filter),
+    {
+      OR: [createTitleFilter(filter), createBodyFilter(filter)]
+    },
     createPreTitleFilter(filter),
     createPublicationDateFromFilter(filter),
     createPublicationDateToFilter(filter),
@@ -301,6 +320,11 @@ export const getArticles = async (
             properties: true,
             authors: true,
             socialMediaAuthors: true
+          }
+        },
+        trackingPixels: {
+          include: {
+            trackingPixelMethod: true
           }
         }
       }

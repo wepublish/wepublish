@@ -63,11 +63,18 @@ import {GraphQLPublicPhrase} from './phrase/phrase'
 import {queryPhrase} from './phrase/phrase.public-queries'
 import {GraphQLFullPoll} from './poll/poll'
 import {getPoll, userPollVote} from './poll/poll.public-queries'
-import {GraphQLSlug} from './slug'
+import {GraphQLSlug} from '@wepublish/utils/api'
 import {GraphQLPublicSubscription} from './subscription-public'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
 import {TagSort, getTags} from './tag/tag.query'
 import {GraphQLPublicUser} from './user'
+import {
+  GraphQLEvent,
+  GraphQLEventConnection,
+  GraphQLEventFilter,
+  GraphQLEventSort
+} from './event/event'
+import {EventSort, getEvent, getEvents} from './event/event.query'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -536,6 +543,32 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {pollId}, {authenticateUser, prisma: {pollVote}}) =>
         userPollVote(pollId, authenticateUser, pollVote)
+    },
+
+    // Event
+    // =======
+    events: {
+      type: GraphQLEventConnection,
+      description: 'This query returns a list of events',
+      args: {
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        filter: {type: GraphQLEventFilter},
+        sort: {type: GraphQLEventSort, defaultValue: EventSort.StartsAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve: (root, {cursor, take, skip, filter, sort, order}, {prisma: {event}}) =>
+        getEvents(filter, sort, order, cursor, skip, take, event)
+    },
+
+    event: {
+      type: new GraphQLNonNull(GraphQLEvent),
+      description: 'This query returns an event',
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
     },
 
     // Tag

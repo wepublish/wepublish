@@ -1,13 +1,9 @@
-import {Link, styled, Theme} from '@mui/material'
+import {Link, styled} from '@mui/material'
 import {Button} from '@wepublish/ui'
 import {BannerAction, BannerActionRole} from '@wepublish/website/api'
 import {BuilderBannerProps} from '@wepublish/website/builder'
 import {differenceInHours} from 'date-fns'
 import {useEffect, useState} from 'react'
-
-interface BannerWrapperProps {
-  hasImage?: boolean
-}
 
 export const BannerImage = styled('div')(
   ({theme}) => `
@@ -45,6 +41,7 @@ export const BannerCloseButton = styled('span')`
 export const BannerTitle = styled('h2')`
   margin-top: 0;
   margin-bottom: ${({theme}) => theme.spacing(2)};
+  line-height: 1.2;
 `
 
 export const BannerText = styled('div')`
@@ -58,7 +55,11 @@ const BannerActions = styled('div')`
   justify-content: center;
 `
 
-const BannerWrapper = styled('div')<BannerWrapperProps & {theme?: Theme}>(
+type BannerWrapperProps = {
+  hasImage?: boolean
+}
+
+const BannerWrapper = styled('div')<BannerWrapperProps>(
   ({theme, hasImage}) => `
   z-index: 11;
   position: sticky;
@@ -66,10 +67,13 @@ const BannerWrapper = styled('div')<BannerWrapperProps & {theme?: Theme}>(
   display: grid;
   grid-template-columns: 1fr;
   background-color: ${theme.palette.secondary.main};
+  color: ${theme.palette.secondary.contrastText};
   width: 100%;
+
   &[data-collapsed='true'] {
     display: none;
   }
+
   ${theme.breakpoints.up('md')} {
     grid-template-columns: ${hasImage ? 'minmax(auto, 50%) 1fr' : '1fr'};
   }
@@ -78,8 +82,7 @@ const BannerWrapper = styled('div')<BannerWrapperProps & {theme?: Theme}>(
 
 export const Banner = ({data, loading, error, className}: BuilderBannerProps) => {
   const [collapsed, setCollapsed] = useState(true)
-
-  const storageKey = `banner-last-closed-${data?.primaryBanner.id}`
+  const storageKey = `banner-last-closed-${data?.primaryBanner?.id}`
 
   useEffect(() => {
     const lastClosedTime = Number(localStorage.getItem(storageKey)) ?? 0
@@ -112,29 +115,30 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
       className={className}
       data-collapsed={collapsed}>
       <BannerCloseButton onClick={handleClose}>&#x2715;</BannerCloseButton>
+
       {data?.primaryBanner.image && (
         <BannerImage
           style={{backgroundImage: `url(${data?.primaryBanner.image.url})`}}></BannerImage>
       )}
+
       <BannerContent>
         <BannerTitle>{data?.primaryBanner.title}</BannerTitle>
         <BannerText>{data?.primaryBanner.text}</BannerText>
         {data?.primaryBanner.cta && <BannerCta>{data?.primaryBanner.cta}</BannerCta>}
+
         <BannerActions>
           {data?.primaryBanner.actions &&
-            data?.primaryBanner.actions.map(a => {
-              return (
-                <Link
-                  href={a.url}
-                  key={a.url}
-                  onClick={e => handleActionClick(e, a)}
-                  data-role={a.role}>
-                  <Button color={a.role === BannerActionRole.Primary ? 'primary' : 'secondary'}>
-                    {a.label}
-                  </Button>
-                </Link>
-              )
-            })}
+            data?.primaryBanner.actions.map(a => (
+              <Link
+                href={a.url}
+                key={a.url}
+                onClick={e => handleActionClick(e, a)}
+                data-role={a.role}>
+                <Button color={a.role === BannerActionRole.Primary ? 'primary' : 'secondary'}>
+                  {a.label}
+                </Button>
+              </Link>
+            ))}
         </BannerActions>
       </BannerContent>
     </BannerWrapper>

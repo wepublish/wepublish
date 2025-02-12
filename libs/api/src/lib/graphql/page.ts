@@ -16,7 +16,7 @@ import {Context} from '../context'
 
 import {GraphQLImage} from './image'
 import {PublicPage, PageRevision, Page, PageSort} from '../db/page'
-import {GraphQLSlug} from './slug'
+import {GraphQLSlug} from '@wepublish/utils/api'
 import {
   GraphQLDateFilter,
   GraphQLMetadataProperty,

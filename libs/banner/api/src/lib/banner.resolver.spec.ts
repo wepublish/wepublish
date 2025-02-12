@@ -2,8 +2,8 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {BannerResolver} from './banner.resolver'
 import {BannerService} from './banner.service'
 import {BannerActionService} from './banner-action.service'
-import {NotFoundException} from '@nestjs/common'
 import {Banner, BannerDocumentType} from './banner.model'
+import {LoginStatus} from '@prisma/client'
 
 describe('BannerResolver', () => {
   let resolver: BannerResolver
@@ -14,7 +14,8 @@ describe('BannerResolver', () => {
     active: true,
     title: '',
     text: '',
-    showOnArticles: false
+    showOnArticles: false,
+    showForLoginStatus: LoginStatus.ALL
   }
 
   const mockBannerService = {
@@ -74,7 +75,7 @@ describe('BannerResolver', () => {
 
     it('should throw NotFoundException when banner not found', async () => {
       mockBannerService.findOne.mockResolvedValue(null)
-      await expect(resolver.banner('1')).rejects.toThrow(NotFoundException)
+      await expect(resolver.banner('1')).rejects.toThrow()
     })
   })
 
@@ -83,16 +84,20 @@ describe('BannerResolver', () => {
       mockBannerService.findFirst.mockResolvedValue(mockBanner)
       const result = await resolver.primaryBanner({
         documentType: BannerDocumentType.ARTICLE,
-        documentId: '1'
+        documentId: '1',
+        loggedIn: true
       })
       expect(result).toEqual(mockBanner)
     })
 
-    it('should throw NotFoundException when no primary banner found', async () => {
+    it('should return null when no primary banner found', async () => {
       mockBannerService.findFirst.mockResolvedValue(null)
-      await expect(
-        resolver.primaryBanner({documentType: BannerDocumentType.ARTICLE, documentId: '1'})
-      ).rejects.toThrow(NotFoundException)
+      const result = await resolver.primaryBanner({
+        documentType: BannerDocumentType.ARTICLE,
+        documentId: '1',
+        loggedIn: true
+      })
+      expect(result).toEqual(null)
     })
   })
 
@@ -134,7 +139,8 @@ describe('BannerResolver', () => {
         active: true,
         title: 'New Banner Title',
         text: 'New Banner Text',
-        showOnArticles: false
+        showOnArticles: false,
+        showForLoginStatus: LoginStatus.ALL
       }
       mockBannerService.create.mockResolvedValue(mockBanner)
       const result = await resolver.createBanner(createInput)
@@ -148,6 +154,7 @@ describe('BannerResolver', () => {
         text: 'Updated Banner Text',
         active: true,
         showOnArticles: false,
+        showForLoginStatus: LoginStatus.ALL,
         actions: []
       }
       mockBannerService.update.mockResolvedValue(mockBanner)

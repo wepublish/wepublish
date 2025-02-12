@@ -51,12 +51,14 @@ model ArticleRevision {
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json
+  searchPlainText        String?
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
   socialMediaAuthors     ArticleRevisionSocialMediaAuthor[]
   socialMediaImage       Image?                             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   socialMediaImageID     String?
+  likes                  Int                                @default(0)
 
   revision    Int       @default(0)
   createdAt   DateTime  @default(now())
@@ -121,12 +123,45 @@ model Article {
   hidden          Boolean @default(false)
   disableComments Boolean @default(false)
 
-  navigations NavigationLink[]
-  tags        TaggedArticles[]
+  navigations    NavigationLink[]
+  tags           TaggedArticles[]
+  trackingPixels ArticleTrackingPixels[]
 
   @@index([createdAt])
   @@index([modifiedAt])
   @@map("articles")
+}
+
+enum TrackingPixelProviderType {
+  prolitteris @map("prolitteris")
+}
+
+model ArticleTrackingPixels {
+  id                   String              @id @default(cuid())
+  article              Article             @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId            String
+  createdAt            DateTime            @default(now())
+  modifiedAt           DateTime            @updatedAt
+  tackingPixelMethodID String
+  trackingPixelMethod  TrackingPixelMethod @relation(fields: [tackingPixelMethodID], references: [id])
+
+  uri      String? @unique
+  pixelUid String? @unique
+  error    String?
+
+  @@map("articles.tracking-pixels")
+}
+
+model TrackingPixelMethod {
+  id                        String                    @id @default(cuid())
+  createdAt                 DateTime                  @default(now())
+  modifiedAt                DateTime                  @updatedAt
+  trackingPixelProviderID   String                    @unique
+  trackingPixelProviderType TrackingPixelProviderType
+
+  ArticleTrackingPixels ArticleTrackingPixels[]
+
+  @@map("tracking.pixels.methods")
 }
 
 model TaggedArticles {
@@ -526,6 +561,9 @@ model MemberPlan {
   failPageId String?
   failPage   Page?   @relation("failPage", fields: [failPageId], references: [id])
 
+  confirmationPageId String?
+  confirmationPage   Page?   @relation("confirmationPage", fields: [confirmationPageId], references: [id])
+
   subscription      Subscription[]
   subscriptionFlows SubscriptionFlow[]
 
@@ -589,6 +627,7 @@ model PageRevision {
   socialMediaImageID     String?
   socialMediaImage       Image?             @relation("pageRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   blocks                 Json
+  searchPlainText        String?
   PublishedPage          Page[]             @relation("publishedPageRevision")
   PendingPage            Page[]             @relation("pendingPageRevision")
   DraftPage              Page[]             @relation("draftPageRevision")
@@ -614,10 +653,11 @@ model Page {
   draftId String?       @unique
   draft   PageRevision? @relation("draftPageRevision", fields: [draftId], references: [id], onDelete: SetNull)
 
-  navigations        NavigationLink[]
-  tags               TaggedPages[]
-  memberPlansSuccess MemberPlan[]     @relation("successPage")
-  memberPlansFail    MemberPlan[]     @relation("failPage")
+  navigations             NavigationLink[]
+  tags                    TaggedPages[]
+  memberPlansSuccess      MemberPlan[]     @relation("successPage")
+  memberPlansFail         MemberPlan[]     @relation("failPage")
+  memberPlansConfirmation MemberPlan[]     @relation("confirmationPage")
 
   banners Banner[]
 
@@ -766,9 +806,10 @@ model SubscriptionPeriod {
 }
 
 enum SubscriptionDeactivationReason {
-  none                @map("none")
-  userSelfDeactivated @map("userSelfDeactivated")
-  invoiceNotPaid      @map("invoiceNotPaid")
+  none                     @map("none")
+  userSelfDeactivated      @map("userSelfDeactivated")
+  invoiceNotPaid           @map("invoiceNotPaid")
+  userReplacedSubscription @map("userReplacedSubscription")
 }
 
 model SubscriptionDeactivation {
@@ -799,6 +840,7 @@ model Subscription {
   deactivation       SubscriptionDeactivation?
   extendable         Boolean                   @default(true)
   currency           Currency
+  confirmed          Boolean                   @default(true)
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
@@ -808,6 +850,10 @@ model Subscription {
 
   userID String
   user   User   @relation(fields: [userID], references: [id])
+
+  replacesSubscriptionID String?
+  replacesSubscription   Subscription?  @relation(name: "ReplacementHistory", fields: [replacesSubscriptionID], references: [id])
+  replacedBy             Subscription[] @relation("ReplacementHistory")
 
   invoices Invoice[]
 
@@ -1137,6 +1183,7 @@ model UserFlowMail {
 
 enum SubscriptionEvent {
   SUBSCRIBE
+  CONFIRM_SUBSCRIPTION
   INVOICE_CREATION
   RENEWAL_SUCCESS
   RENEWAL_FAILED
@@ -1259,10 +1306,17 @@ model Banner {
 
   showOnArticles Boolean @default(true)
   showOnPages    Page[]
+  showForLoginStatus LoginStatus @default(ALL)
 
   actions BannerAction[]
 
   @@map("banners")
+}
+
+enum LoginStatus {
+  LOGGED_IN   @map("logged_in")
+  LOGGED_OUT  @map("logged_out")
+  ALL         @map("all")
 }
 
 model BannerAction {

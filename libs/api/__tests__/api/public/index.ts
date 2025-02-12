@@ -49,6 +49,7 @@ export type Article = {
   id: Scalars['ID'];
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
+  likes: Scalars['Int'];
   peeredArticleURL?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
   properties: Array<PublicProperties>;
@@ -61,6 +62,7 @@ export type Article = {
   socialMediaTitle?: Maybe<Scalars['String']>;
   tags: Array<Tag>;
   title: Scalars['String'];
+  trackingPixels?: Maybe<Array<Maybe<TrackingPixel>>>;
   updatedAt: Scalars['DateTime'];
   url: Scalars['String'];
 };
@@ -74,9 +76,15 @@ export type ArticleConnection = {
 
 export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['ID']>>;
+  body?: InputMaybe<Scalars['String']>;
   includeHidden?: InputMaybe<Scalars['Boolean']>;
+  lead?: InputMaybe<Scalars['String']>;
+  preTitle?: InputMaybe<Scalars['String']>;
+  publicationDateFrom?: InputMaybe<DateFilter>;
+  publicationDateTo?: InputMaybe<DateFilter>;
   shared?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type ArticleNavigationLink = BaseNavigationLink & {
@@ -165,6 +173,7 @@ export type Banner = {
   id: Scalars['ID'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
+  showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: Maybe<Array<PageModel>>;
   text: Scalars['String'];
@@ -381,6 +390,7 @@ export type CreateBannerInput = {
   active: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['String']>;
+  showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
   text: Scalars['String'];
@@ -424,6 +434,19 @@ export type DashboardSubscription = {
   startsAt: Scalars['DateTime'];
 };
 
+export type DateFilter = {
+  comparison: DateFilterComparison;
+  date?: InputMaybe<Scalars['DateTime']>;
+};
+
+export enum DateFilterComparison {
+  Eq = 'eq',
+  Gt = 'gt',
+  Gte = 'gte',
+  Lt = 'lt',
+  Lte = 'lte'
+}
+
 export type DeletePollVotesResult = {
   __typename?: 'DeletePollVotesResult';
   count: Scalars['Int'];
@@ -442,19 +465,15 @@ export type EmbedBlock = {
 
 export type Event = {
   __typename?: 'Event';
-  createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['RichText']>;
   endsAt?: Maybe<Scalars['DateTime']>;
   externalSourceId?: Maybe<Scalars['String']>;
   externalSourceName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
-  imageId?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  page?: Maybe<Page>;
   startsAt: Scalars['DateTime'];
   status: EventStatus;
   tags: Array<Tag>;
@@ -474,11 +493,18 @@ export type EventBlockFilter = {
   tags?: Maybe<Array<Scalars['ID']>>;
 };
 
+export type EventConnection = {
+  __typename?: 'EventConnection';
+  nodes: Array<Event>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type EventFilter = {
   from?: InputMaybe<Scalars['DateTime']>;
   location?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<Array<Scalars['ID']>>;
   to?: InputMaybe<Scalars['DateTime']>;
   upcomingOnly?: InputMaybe<Scalars['Boolean']>;
 };
@@ -496,7 +522,6 @@ export type EventFromSource = {
   location?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  page?: Maybe<Page>;
   startsAt: Scalars['DateTime'];
   status: EventStatus;
 };
@@ -524,6 +549,24 @@ export type EventTeaser = {
   /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
+};
+
+export type EventV2 = {
+  __typename?: 'EventV2';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  endsAt?: Maybe<Scalars['DateTime']>;
+  externalSourceId?: Maybe<Scalars['String']>;
+  externalSourceName?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  startsAt: Scalars['DateTime'];
+  status: EventStatus;
 };
 
 export type ExternalNavigationLink = BaseNavigationLink & {
@@ -741,6 +784,14 @@ export type InvoiceItem = {
   total: Scalars['Int'];
 };
 
+export type LikeCreateInput = {
+  articleId: Scalars['ID'];
+};
+
+export type LikeDeleteInput = {
+  articleId: Scalars['ID'];
+};
+
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -772,6 +823,12 @@ export type ListicleItem = {
   title: Scalars['String'];
 };
 
+export enum LoginStatus {
+  All = 'ALL',
+  LoggedIn = 'LOGGED_IN',
+  LoggedOut = 'LOGGED_OUT'
+}
+
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
   name: Scalars['String'];
@@ -799,6 +856,8 @@ export type MemberPlan = {
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
+  confirmationPage?: Maybe<Page>;
+  confirmationPageId?: Maybe<Scalars['ID']>;
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
@@ -836,6 +895,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** This mutation allows to add a comment. The input is of type CommentInput. */
   addComment: Comment;
+  /** Add a like to an existing article. */
+  addLike: Scalars['Int'];
   /** This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now */
   cancelUserSubscription?: Maybe<Subscription>;
   createBanner: Banner;
@@ -847,8 +908,6 @@ export type Mutation = {
    *
    */
   createConsent: Consent;
-  /** Creates a new event. */
-  createEvent: Event;
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
   createPaymentFromInvoice?: Maybe<Payment>;
   /** This mutation allows to create payment by referencing a subscription. */
@@ -862,6 +921,8 @@ export type Mutation = {
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Create a subscription interval */
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
+  /** Allows authenticated users to create additional subscriptions */
+  createSubscriptionWithConfirmation: Scalars['Boolean'];
   /**
    *
    *       Creates a new userConsent based on input.
@@ -878,8 +939,6 @@ export type Mutation = {
    *
    */
   deleteConsent: Consent;
-  /** Deletes an existing event. */
-  deleteEvent: Event;
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
   /** Delete an existing subscription flow */
@@ -908,6 +967,8 @@ export type Mutation = {
   registerMember: Registration;
   /** This mutation allows to register a new member, select a member plan, payment method and create an invoice.  */
   registerMemberAndReceivePayment: RegistrationAndPayment;
+  /** Remove a like from an existing article. */
+  removeLike: Scalars['Int'];
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
@@ -926,8 +987,6 @@ export type Mutation = {
    *
    */
   updateConsent: Consent;
-  /** Updates an existing event. */
-  updateEvent: Event;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
   updatePassword?: Maybe<User>;
   /** This mutation allows to update the Payment Provider Customers */
@@ -963,6 +1022,11 @@ export type MutationAddCommentArgs = {
 };
 
 
+export type MutationAddLikeArgs = {
+  input: LikeCreateInput;
+};
+
+
 export type MutationCancelUserSubscriptionArgs = {
   id: Scalars['ID'];
 };
@@ -983,18 +1047,6 @@ export type MutationCreateConsentArgs = {
   defaultValue: Scalars['Boolean'];
   name: Scalars['String'];
   slug: Scalars['String'];
-};
-
-
-export type MutationCreateEventArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  imageId?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  startsAt: Scalars['DateTime'];
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -1059,6 +1111,19 @@ export type MutationCreateSubscriptionIntervalArgs = {
 };
 
 
+export type MutationCreateSubscriptionWithConfirmationArgs = {
+  autoRenew: Scalars['Boolean'];
+  memberPlanID?: InputMaybe<Scalars['ID']>;
+  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
+  monthlyAmount: Scalars['Int'];
+  paymentMethodID?: InputMaybe<Scalars['ID']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  paymentPeriodicity: PaymentPeriodicity;
+  subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>;
+  userId?: InputMaybe<Scalars['ID']>;
+};
+
+
 export type MutationCreateUserConsentArgs = {
   consentId: Scalars['String'];
   userId: Scalars['String'];
@@ -1077,11 +1142,6 @@ export type MutationDeleteBlockStyleArgs = {
 
 
 export type MutationDeleteConsentArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteEventArgs = {
   id: Scalars['String'];
 };
 
@@ -1158,6 +1218,11 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
 };
 
 
+export type MutationRemoveLikeArgs = {
+  input: LikeDeleteInput;
+};
+
+
 export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String'];
 };
@@ -1190,19 +1255,6 @@ export type MutationUpdateConsentArgs = {
   id: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationUpdateEventArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  id: Scalars['String'];
-  imageId?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  startsAt?: InputMaybe<Scalars['DateTime']>;
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -1344,13 +1396,6 @@ export type PageTeaser = {
   /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
-};
-
-export type PaginatedEvents = {
-  __typename?: 'PaginatedEvents';
-  nodes: Array<Event>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Float'];
 };
 
 export type PaginatedPollVotes = {
@@ -1615,7 +1660,7 @@ export type Query = {
    *
    */
   consents: Array<Consent>;
-  /** Returns a event by id. */
+  /** This query returns an event */
   event: Event;
   /**
    *
@@ -1623,8 +1668,8 @@ export type Query = {
    *
    */
   eventProviders: Array<Scalars['String']>;
-  /** Returns a paginated list of events based on the filters given. */
-  events: PaginatedEvents;
+  /** This query returns a list of events */
+  events?: Maybe<EventConnection>;
   /**
    *
    *       Returns the expected revenue for the time period given.
@@ -1705,7 +1750,7 @@ export type Query = {
   poll: FullPoll;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
-  primaryBanner: Banner;
+  primaryBanner?: Maybe<Banner>;
   provider: MailProviderModel;
   ratingSystem: FullCommentRatingSystem;
   /**
@@ -1848,7 +1893,7 @@ export type QueryEventArgs = {
 
 
 export type QueryEventsArgs = {
-  cursorId?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['ID']>;
   filter?: InputMaybe<EventFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -1986,6 +2031,7 @@ export type QueryPollVotesArgs = {
 export type QueryPrimaryBannerArgs = {
   documentId: Scalars['ID'];
   documentType: BannerDocumentType;
+  loggedIn: Scalars['Boolean'];
 };
 
 
@@ -2173,10 +2219,12 @@ export type SubscriptionDeactivation = {
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
+  UserReplacedSubscription = 'userReplacedSubscription',
   UserSelfDeactivated = 'userSelfDeactivated'
 }
 
 export enum SubscriptionEvent {
+  ConfirmSubscription = 'CONFIRM_SUBSCRIPTION',
   Custom = 'CUSTOM',
   DeactivationByUser = 'DEACTIVATION_BY_USER',
   DeactivationUnpaid = 'DEACTIVATION_UNPAID',
@@ -2316,6 +2364,22 @@ export type TitleBlock = {
   title?: Maybe<Scalars['String']>;
 };
 
+export type TrackingPixel = {
+  __typename?: 'TrackingPixel';
+  id: Scalars['ID'];
+  trackingPixelMethod: TrackingPixelMethod;
+  uri?: Maybe<Scalars['String']>;
+};
+
+export type TrackingPixelMethod = {
+  __typename?: 'TrackingPixelMethod';
+  trackingPixelProviderType: TrackingPixelProviderType;
+};
+
+export enum TrackingPixelProviderType {
+  Prolitteris = 'prolitteris'
+}
+
 export type TwitterTweetBlock = {
   __typename?: 'TwitterTweetBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -2329,6 +2393,7 @@ export type UpdateBannerInput = {
   cta?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
   imageId?: InputMaybe<Scalars['String']>;
+  showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
   text: Scalars['String'];
@@ -2600,7 +2665,7 @@ export type EventListQueryVariables = Exact<{
 }>;
 
 
-export type EventListQuery = { __typename?: 'Query', events: { __typename?: 'PaginatedEvents', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type EventListQuery = { __typename?: 'Query', events?: { __typename?: 'EventConnection', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type EventQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -3156,7 +3221,7 @@ export const EventList = gql`
     query EventList($filter: EventFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: EventSort) {
   events(
     filter: $filter
-    cursorId: $cursor
+    cursor: $cursor
     take: $take
     skip: $skip
     order: $order

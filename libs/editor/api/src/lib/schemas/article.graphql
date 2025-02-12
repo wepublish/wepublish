@@ -80,6 +80,22 @@ fragment ArticleRef on Article {
   }
 }
 
+fragment TrackingPixel on TrackingPixel {
+  id
+  uri
+  error
+  pixelUid
+  trackingPixelMethod {
+    ...TrackingPixelMethod
+  }
+}
+
+fragment TrackingPixelMethod on TrackingPixelMethod {
+  id
+  trackingPixelProviderID
+  trackingPixelProviderType
+}
+
 query ArticleList(
   $filter: ArticleFilter
   $cursor: ID
@@ -201,6 +217,10 @@ query Article($id: ID!) {
       type
     }
 
+    trackingPixels {
+      ...TrackingPixel
+    }
+
     draft {
       publishAt
     }
@@ -253,6 +273,8 @@ query Article($id: ID!) {
       blocks {
         ...FullBlock
       }
+
+      likes
     }
   }
 }

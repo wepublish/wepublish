@@ -49,6 +49,8 @@ import {readConfig} from '../readConfig'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
+import {ProlitterisTrackingPixelProvider, TrackingPixelModule} from '@wepublish/tracking-pixel/api'
+import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
 
 @Global()
 @Module({
@@ -128,6 +130,44 @@ import {PollModule} from '@wepublish/poll/api'
           defaultReplyToAddress: configFile.mailProvider.replyToAddress,
           mailProvider
         }
+      },
+      inject: [ConfigService],
+      global: true
+    }),
+    TrackingPixelModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => {
+        const trackingPixelProviders: TrackingPixelProvider[] = []
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+
+        const trackingPixelProvidersRaw = configFile.trackingPixelProviders
+
+        if (!trackingPixelProvidersRaw) {
+          return {trackingPixelProviders}
+        }
+
+        for (const trackingPixelProvider of trackingPixelProvidersRaw) {
+          if (trackingPixelProvider.type === 'prolitteris') {
+            trackingPixelProviders.push(
+              new ProlitterisTrackingPixelProvider({
+                id: trackingPixelProvider.id,
+                type: trackingPixelProvider.type,
+                name: trackingPixelProvider.name,
+                memberNr: trackingPixelProvider.memberNr,
+                username: trackingPixelProvider.username,
+                password: trackingPixelProvider.password,
+                onlyPaidContentAccess: Boolean(trackingPixelProvider.onlyPaidContentAccess),
+                publisherInternalKeyDomain: trackingPixelProvider.publisherInternalKeyDomain,
+                usePublisherInternalKey: Boolean(trackingPixelProvider.usePublisherInternalKey)
+              })
+            )
+          } else {
+            throw new Error(
+              `Unknown tracking Pixel type defined: ${(trackingPixelProvider as any).type}`
+            )
+          }
+        }
+        return {trackingPixelProviders}
       },
       inject: [ConfigService],
       global: true

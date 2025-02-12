@@ -3,6 +3,7 @@ import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
   Article,
+  ArticleAuthor,
   ArticleContainer,
   ArticleList,
   ArticleListContainer,
@@ -23,7 +24,8 @@ import {BriefingNewsletter} from '../../src/components/briefing-newsletter/brief
 import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
 import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
 import {Container} from '../../src/components/layout/container'
-import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
+import {SEARCH_SLIDER_TAG, SliderArticle} from '../../src/components/search-slider/search-slider'
+import {SearchSlider} from '../../src/components/search-slider/search-slider'
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {BajourTeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
@@ -59,7 +61,9 @@ export default function ArticleBySlugIdOrToken() {
   const {data} = ApiV1.useArticleQuery({
     fetchPolicy: 'cache-only',
     variables: {
-      slug: slug as string
+      slug: slug as string,
+      id: id as string,
+      token: token as string
     }
   })
 
@@ -70,6 +74,7 @@ export default function ArticleBySlugIdOrToken() {
   } as ComponentProps<typeof ArticleContainer>
 
   const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
+  const isSearchSlider = data?.article?.tags.some(({tag}) => tag === SEARCH_SLIDER_TAG)
 
   return (
     <WebsiteBuilderProvider
@@ -80,56 +85,64 @@ export default function ArticleBySlugIdOrToken() {
       Article={isFDT ? FdTArticle : Article}
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
-        <ArticleContainer {...containerProps} />
-
-        {/* Waiting for Samuel H. from Bajour to confirm - 2024-11-20
-         !isFDT && (
-          <ArticleWrapper>
-            <H5 component={'h2'} css={uppercase}>
-              Artikel Charts
-            </H5>
-
-            <ArticleCharts />
-          </ArticleWrapper>
-        ) */}
-
-        <BriefingNewsletter />
-
-        {data?.article && (
+        {isSearchSlider && data?.article ? (
+          <SearchSlider key={data.article.id} article={data.article as SliderArticle} />
+        ) : (
           <>
-            <ArticleWrapper>
-              <H5 component={'h2'} css={uppercase}>
-                Das könnte dich auch interessieren
-              </H5>
+            <ArticleContainer {...containerProps} />
+            <BriefingNewsletter />
 
-              <ArticleListContainer
-                variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
-                filter={articles => articles.filter(article => article.id !== data.article?.id)}
-              />
-            </ArticleWrapper>
+            {/* Waiting for Samuel H. from Bajour to confirm - 2024-11-20
+              !isFDT && (
+                <ArticleWrapper>
+                  <H5 component={'h2'} css={uppercase}>
+                    Artikel Charts
+                  </H5>
 
-            {!isFDT &&
-              data.article.authors.map(a => (
-                <AuthorWrapper key={a.id}>
-                  <BajourAuthorChip key={a.id} author={a} />
-                </AuthorWrapper>
-              ))}
+                  <ArticleCharts />
+                </ArticleWrapper>
+              ) */}
 
-            {!isFDT && (
-              <ArticleWrapper>
-                <H5 component={'h2'} css={uppercase}>
-                  Kommentare
-                </H5>
+            {data?.article && !isSearchSlider && (
+              <>
+                <ArticleWrapper>
+                  <H5 component={'h2'} css={uppercase}>
+                    Das könnte dich auch interessieren
+                  </H5>
 
-                {!data.article.disableComments && (
-                  <CommentListContainer
-                    id={data.article.id}
-                    type={ApiV1.CommentItemType.Article}
-                    variables={{sort: ApiV1.CommentSort.Rating, order: ApiV1.SortOrder.Descending}}
-                    maxCommentDepth={1}
+                  <ArticleListContainer
+                    variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
+                    filter={articles => articles.filter(article => article.id !== data.article?.id)}
                   />
+                </ArticleWrapper>
+
+                {!isFDT &&
+                  data.article.authors.map(a => (
+                    <AuthorWrapper key={a.id}>
+                      <ArticleAuthor key={a.id} author={a} />
+                    </AuthorWrapper>
+                  ))}
+
+                {!isFDT && (
+                  <ArticleWrapper>
+                    <H5 component={'h2'} css={uppercase}>
+                      Kommentare
+                    </H5>
+
+                    {!data.article.disableComments && (
+                      <CommentListContainer
+                        id={data.article.id}
+                        type={ApiV1.CommentItemType.Article}
+                        variables={{
+                          sort: ApiV1.CommentSort.Rating,
+                          order: ApiV1.SortOrder.Descending
+                        }}
+                        maxCommentDepth={1}
+                      />
+                    )}
+                  </ArticleWrapper>
                 )}
-              </ArticleWrapper>
+              </>
             )}
           </>
         )}

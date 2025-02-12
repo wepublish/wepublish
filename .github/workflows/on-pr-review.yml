@@ -248,18 +248,18 @@ jobs:
                   apiBaseUrl: ${{ env.API_URL }}
 
               challenge:
-                secret: 'secret'
-                validTime: 600
-                width: 200
-                height: 200
-                background: '#ffffff'
-                noise: 5
-                minValue: 1
-                maxValue: 10
-                operandAmount: 1
-                operandTypes: [ '+', '-' ]
-                mode: 'formula'
-                targetSymbol: '?'
+                type: 'turnstile'
+                secret: 1x0000000000000000000000000000000AA
+                siteKey: 1x00000000000000000000AA
+          
+              trackingPixelProviders:
+                - type: prolitteris
+                  id: prolitteris
+                  name: "Pro Litteris"
+                  memberNr: '892761'
+                  onlyPaidContentAccess: false
+                  publisherInternalKeyDomain: 'pl02.owen.prolitteris.ch'
+                  usePublisherInternalKey: true
 
               mediaServer:
                 type: 'nova'

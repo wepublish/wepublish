@@ -1088,7 +1088,7 @@ describe('PeriodicJobService', () => {
       id: 100
     }
     try {
-      await service['deactivateSubscription'](pjo, invoice)
+      await service['deactivateSubscriptionByInvoice'](pjo, invoice)
       fail()
     } catch (e) {
       expect((e as Error).toString()).toMatchInlineSnapshot(
@@ -1102,7 +1102,7 @@ describe('PeriodicJobService', () => {
       paymentPeriodicity: PaymentPeriodicity.biannual
     }
     try {
-      await service['deactivateSubscription'](pjo, invoice)
+      await service['deactivateSubscriptionByInvoice'](pjo, invoice)
       fail()
     } catch (e) {
       expect((e as Error).toString()).toEqual(

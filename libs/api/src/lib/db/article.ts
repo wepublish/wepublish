@@ -3,7 +3,9 @@ import {
   Article as PrismaArticle,
   ArticleRevision as PrismaArticleRevision,
   ArticleRevisionAuthor,
-  ArticleRevisionSocialMediaAuthor
+  ArticleRevisionSocialMediaAuthor,
+  ArticleTrackingPixels,
+  TrackingPixelMethod
 } from '@prisma/client'
 import {ArticleBlock} from './block'
 import {DateFilter} from './common'
@@ -32,6 +34,8 @@ export interface ArticleData {
   readonly socialMediaDescription?: string | null
   readonly socialMediaAuthors: ArticleRevisionSocialMediaAuthor[]
   readonly socialMediaImageID?: string | null
+
+  readonly likes: number
 }
 
 // Article State Flow:
@@ -73,6 +77,7 @@ export interface PublicArticle extends ArticleData {
   readonly blocks: ArticleBlock[]
   readonly peeredArticleURL?: string
   readonly disableComments?: boolean | null
+  readonly trackingPixels?: ArticleTrackingPixels[]
 }
 
 export interface ArticleFilter {
@@ -81,6 +86,7 @@ export interface ArticleFilter {
   readonly publicationDateFrom?: DateFilter
   readonly publicationDateTo?: DateFilter
   readonly lead?: string
+  readonly body?: string
   readonly draft?: boolean
   readonly published?: boolean
   readonly pending?: boolean
@@ -91,6 +97,9 @@ export interface ArticleFilter {
 }
 
 export interface PublicArticleFilter {
+  readonly title?: string
+  readonly preTitle?: string
+  readonly lead?: string
   readonly authors?: string[]
   readonly tags?: string[]
   readonly includeHidden?: boolean
@@ -114,6 +123,7 @@ export type ArticleWithRevisions = PrismaArticle & {
   draft: ArticleRevisionWithRelations | null
   pending: ArticleRevisionWithRelations | null
   published: ArticleRevisionWithRelations | null
+  trackingPixels: (ArticleTrackingPixels & {trackingPixelMethod: TrackingPixelMethod})[]
 }
 
 export const articleWithRevisionsToPublicArticle = ({
@@ -121,9 +131,10 @@ export const articleWithRevisionsToPublicArticle = ({
   shared,
   disableComments,
   published,
-  pending
+  pending,
+  trackingPixels
 }: Omit<ArticleWithRevisions, 'draft'>): PublicArticle => {
-  const returnValue = {shared, disableComments, ...(published || pending!), id}
+  const returnValue = {shared, disableComments, ...(published || pending!), id, trackingPixels}
 
   return {
     ...returnValue,

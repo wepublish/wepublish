@@ -580,6 +580,18 @@ export const CanDeletePoll: Permission = {
   deprecated: false
 }
 
+export const CanGetPollVote: Permission = {
+  id: 'CAN_GET_POLL_VOTE',
+  description: 'Allows to get a poll vote',
+  deprecated: false
+}
+
+export const CanDeletePollVote: Permission = {
+  id: 'CAN_DELETE_POLL_VOTE',
+  description: 'Allows to delete a poll vote',
+  deprecated: false
+}
+
 export const CanGetEvent: Permission = {
   id: 'CAN_GET_EVENT',
   description: 'Allows to get an event',
@@ -601,6 +613,12 @@ export const CanUpdateEvent: Permission = {
 export const CanDeleteEvent: Permission = {
   id: 'CAN_DELETE_EVENT',
   description: 'Allows to delete an event',
+  deprecated: false
+}
+
+export const CanGetImportedEvents: Permission = {
+  id: 'CAN_GET_IMPORTED_EVENTS',
+  description: 'Allows to get imported events',
   deprecated: false
 }
 
@@ -837,10 +855,13 @@ export const AllPermissions: Permission[] = [
   CanGetPoll,
   CanUpdatePoll,
   CanDeletePoll,
+  CanGetPollVote,
+  CanDeletePollVote,
   CanCreatePoll,
   CanGetEvent,
   CanUpdateEvent,
   CanDeleteEvent,
+  CanGetImportedEvents,
   CanCreateConsent,
   CanUpdateConsent,
   CanDeleteConsent,

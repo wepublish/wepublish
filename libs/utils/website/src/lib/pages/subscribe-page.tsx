@@ -17,7 +17,8 @@ export function SubscribePage(props: SubscribePageProps) {
       firstName,
       mail,
       lastName,
-      deactivateSubscriptionId
+      deactivateSubscriptionId,
+      userId
     }
   } = useRouter()
 
@@ -51,6 +52,7 @@ export function SubscribePage(props: SubscribePageProps) {
       deactivateSubscriptionId={
         props.deactivateSubscriptionId ?? (deactivateSubscriptionId as string | undefined)
       }
+      returningUserId={userId as string | undefined}
     />
   )
 }

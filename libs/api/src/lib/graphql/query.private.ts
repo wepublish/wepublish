@@ -122,7 +122,7 @@ import {GraphQLSession} from './session'
 import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSetting} from './setting'
 import {getSetting, getSettings} from './setting/setting.private-queries'
-import {GraphQLSlug} from './slug'
+import {GraphQLSlug} from '@wepublish/utils/api'
 import {
   GraphQLSubscribersPerMonth,
   GraphQLSubscription,
@@ -466,8 +466,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     article: {
       type: GraphQLArticle,
       args: {id: {type: new GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, loaders}) =>
-        getArticleById(id, authenticate, loaders.articles)
+      resolve: (root, {id}, {authenticate, loaders, trackingPixelContext, prisma}) =>
+        getArticleById(id, authenticate, loaders.articles, trackingPixelContext, prisma)
     },
 
     articles: {

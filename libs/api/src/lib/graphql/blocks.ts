@@ -1143,28 +1143,26 @@ export const GraphQLEventBlock = new GraphQLObjectType<EventBlock, Context>({
     events: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLEvent))),
       resolve: async ({filter}, _, {prisma}) =>
-        (
-          await prisma.event.findMany({
-            where: {
-              OR: [
-                {
-                  tags: {
-                    some: {
-                      tagId: {
-                        in: filter.tags ?? []
-                      }
+        await prisma.event.findMany({
+          where: {
+            OR: [
+              {
+                tags: {
+                  some: {
+                    tagId: {
+                      in: filter.tags ?? []
                     }
                   }
-                },
-                {
-                  id: {
-                    in: filter.events ?? []
-                  }
                 }
-              ]
-            }
-          })
-        ).map(event => ({__typename: 'Event', id: event.id}))
+              },
+              {
+                id: {
+                  in: filter.events ?? []
+                }
+              }
+            ]
+          }
+        })
     }
   }),
   isTypeOf: createProxyingIsTypeOf(value => {

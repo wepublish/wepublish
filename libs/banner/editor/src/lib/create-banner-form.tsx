@@ -3,6 +3,7 @@ import {
   CreateBannerInput,
   getApiClientV2,
   ImageRefFragment,
+  LoginStatus,
   useCreateBannerMutation
 } from '@wepublish/editor/api-v2'
 import {useMemo, useState} from 'react'
@@ -20,7 +21,8 @@ export const CreateBannerForm = () => {
 
   const [banner, setBanner] = useState({
     active: false,
-    showOnArticles: false
+    showOnArticles: false,
+    showForLoginStatus: LoginStatus.All
   } as CreateBannerInput & {image?: ImageRefFragment | null})
 
   const {StringType, BooleanType} = Schema.Types

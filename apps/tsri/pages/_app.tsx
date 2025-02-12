@@ -1,5 +1,5 @@
 import {EmotionCache} from '@emotion/cache'
-import {Container, css, CssBaseline, NoSsr, styled, ThemeProvider} from '@mui/material'
+import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
@@ -7,6 +7,7 @@ import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
+  PaymentAmountPicker,
   TitleBlock,
   TitleBlockTitle,
   WebsiteBuilderProvider,
@@ -25,7 +26,8 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {Paywall} from '../src/components/paywall'
+import {TsriArticleMeta} from '../src/components/tsri-article-meta'
+import {TsriBanner} from '../src/components/website-builder-overwrites/banner/tsri-banner'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
 import {TsriContextBox} from '../src/components/tsri-context-box'
 import {MitmachenButton, TsriNavbar} from '../src/components/tsri-navbar'
@@ -116,6 +118,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Head={Head}
             Script={Script}
             Navbar={TsriNavbar}
+            ArticleMeta={TsriArticleMeta}
+            PaymentAmount={PaymentAmountPicker}
             elements={{Link: NextWepublishLink}}
             blocks={{
               Teaser: TsriTeaser,
@@ -131,7 +135,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             meta={{siteTitle}}
             thirdParty={{
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
-            }}>
+            }}
+            Banner={TsriBanner}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
 
@@ -168,10 +173,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
                 <main>
                   <MainSpacer maxWidth="lg">
-                    <NoSsr>
-                      <Paywall />
-                    </NoSsr>
-
                     <Component {...pageProps} />
                   </MainSpacer>
                 </main>

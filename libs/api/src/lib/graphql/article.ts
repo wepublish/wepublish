@@ -17,7 +17,7 @@ import {Context} from '../context'
 import {GraphQLImage} from './image'
 import {GraphQLAuthor} from './author'
 import {PublicArticle, ArticleRevision, Article, ArticleSort, PeerArticle} from '../db/article'
-import {GraphQLSlug} from './slug'
+import {GraphQLSlug} from '@wepublish/utils/api'
 import {
   GraphQLDateFilter,
   GraphQLMetadataProperty,
@@ -34,6 +34,7 @@ import {AuthSessionType} from '@wepublish/authentication/api'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 import {SortOrder} from '@wepublish/utils/api'
 import {GraphQLTag} from './tag/tag'
+import {GraphQLTrackingPixel, GraphQLTrackingPixelPublic} from './tracking-pixel/tracking-pixel'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -55,12 +56,18 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
 
 export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
-  fields: () => ({
+  fields: {
+    title: {type: GraphQLString},
+    preTitle: {type: GraphQLString},
+    lead: {type: GraphQLString},
+    body: {type: GraphQLString},
+    publicationDateFrom: {type: GraphQLDateFilter},
+    publicationDateTo: {type: GraphQLDateFilter},
     authors: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     includeHidden: {type: GraphQLBoolean},
     shared: {type: GraphQLBoolean}
-  })
+  }
 })
 
 export const GraphQLArticleSort = new GraphQLEnumType({
@@ -118,7 +125,9 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
 
     blocks: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlockInput)))
-    }
+    },
+
+    likes: {type: GraphQLInt}
   })
 })
 
@@ -202,6 +211,8 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
       })
     },
 
+    likes: {type: GraphQLInt},
+
     blocks: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlock)))}
   })
 })
@@ -243,7 +254,8 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
 
         return tags
       })
-    }
+    },
+    trackingPixels: {type: new GraphQLList(GraphQLTrackingPixel)}
   })
 })
 
@@ -330,6 +342,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
           return tags
         })
       },
+      trackingPixels: {type: new GraphQLList(GraphQLTrackingPixelPublic)},
 
       canonicalUrl: {type: GraphQLString},
 
@@ -387,6 +400,8 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
           return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
         })
       },
+
+      likes: {type: new GraphQLNonNull(GraphQLInt)},
 
       blocks: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicBlock)))},
 
