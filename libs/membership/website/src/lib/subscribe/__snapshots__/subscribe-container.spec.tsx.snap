@@ -1534,7 +1534,7 @@ exports[`Subscribe Container should render Filled 1`] = `
               >
                 Ort / Stadt
               </label>
-@@ -648,60 +655,98 @@
+@@ -648,61 +655,99 @@
                   autocomplete="city"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":rn:"
@@ -1579,13 +1579,13 @@ exports[`Subscribe Container should render Filled 1`] = `
                 <div
 -                 class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1y6ah8l-MuiInputBase-root-MuiOutlinedInput-root"
 +                 class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-fv07na-MuiInputBase-root-MuiOutlinedInput-root"
-+               >
+                >
 +                 <div
 +                   class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-16su6c8-MuiInputAdornment-root"
 +                 >
 +                   <span
 +                     class="notranslate"
-                    >
++                   >
 +                     ​
 +                   </span>
 +                   <img
@@ -1613,14 +1613,14 @@ exports[`Subscribe Container should render Filled 1`] = `
                   />
                   <div
                     class="MuiAutocomplete-endAdornment css-p1olib-MuiAutocomplete-endAdornment"
-+                 >
-+                   <button
+                  >
+                    <button
 +                     aria-label="Clear"
 +                     class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-clearIndicator css-1glvl0p-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-clearIndicator"
 +                     tabindex="-1"
 +                     title="Clear"
 +                     type="button"
-                    >
++                   >
 +                     <svg
 +                       aria-hidden="true"
 +                       class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
@@ -1636,11 +1636,12 @@ exports[`Subscribe Container should render Filled 1`] = `
 +                       class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
 +                     />
 +                   </button>
-                    <button
++                   <button
                       aria-label="Open"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-qzbt6i-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator"
                       tabindex="-1"
                       title="Open"
+                      type="button"
 @@ -726,11 +771,11 @@
                   <fieldset
                     aria-hidden="true"
@@ -1721,20 +1722,7 @@ exports[`Subscribe Container should render Filled 1`] = `
             </svg>
             <span
               class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-@@ -1236,11 +1281,11 @@
-        <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary css-1yo1oar-MuiButtonBase-root-MuiButton-root-buttonStyles"
-          tabindex="0"
-          type="submit"
-        >
--         1 Monat für CHF 5.- abonnieren
-+         1 Monat für CHF 5.10 abonnieren
-          <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-          />
-        </button>
-      </div>"
+            />"
 `;
 
 exports[`Subscribe Container should render LoggedIn 1`] = `
