@@ -8,7 +8,7 @@ const pickerItems = [1000, 1500, 2000]
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
-  grid-template-columns: repeat(auto-fit, 120px);
+  grid-template-columns: repeat(auto-fit, 125px);
   align-items: top;
   justify-content: center;
   gap: ${({theme}) => theme.spacing(2)};
