@@ -7,7 +7,8 @@ import {
   ArticleContainer,
   ArticleListContainer,
   ArticleWrapper,
-  CommentListContainer
+  CommentListContainer,
+  ContentWrapper
 } from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
@@ -19,6 +20,14 @@ import TsriAdHeader from '../../src/components/tsri-ad-header'
 const AfterArticleTitle = styled(H2)`
   ${({theme}) => theme.breakpoints.down('sm')} {
     font-size: 2rem;
+  }
+`
+
+export const AuthorWrapper = styled(ContentWrapper)`
+  margin: 0 ${({theme}) => theme.spacing(6)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    margin: 0;
   }
 `
 
@@ -48,7 +57,9 @@ export default function ArticleBySlugIdOrToken() {
 
       <ArticleContainer {...containerProps}>
         {data?.article?.authors.map(author => (
-          <ArticleAuthor key={author.id} author={author} />
+          <AuthorWrapper key={author.id} fullWidth>
+            <ArticleAuthor author={author} />
+          </AuthorWrapper>
         ))}
       </ArticleContainer>
 
