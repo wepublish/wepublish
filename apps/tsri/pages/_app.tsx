@@ -27,7 +27,7 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {TsriArticleMeta} from '../src/components/tsri-article-meta'
-import {TsriBanner} from '../src/components/website-builder-overwrites/banner/tsri-banner'
+import {TsriBanner} from '../src/components/tsri-banner'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
 import {TsriContextBox} from '../src/components/tsri-context-box'
 import {TsriNavbar} from '../src/components/tsri-navbar'
