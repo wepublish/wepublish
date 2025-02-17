@@ -167,6 +167,12 @@ jobs:
               DEFAULT_FROM_ADDRESS: 'dev@wepublish.ch'
               DEFAULT_REPLY_TO_ADDRESS: 'dev@wepublish.ch'
               SYSTEM_INFO_KEY: 'review'
+            envFromSecrets:
+              JWT_SECRET_KEY_2:
+                valueFrom:
+                  secretKeyRef:
+                    name: review-1654-app-wepublish-api-environment-1
+                    key: MEDIA_SERVER_URL
             config:
               general:
                 apolloPlayground: true
