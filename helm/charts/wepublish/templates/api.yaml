@@ -68,10 +68,12 @@ spec:
                   key: API_URL
             - name: CONFIG_FILE_PATH
               value: /wepublish/config/application.yaml
+            {{- if .Values.api.envFromSecret }}
             { { - range $key, $value := .Values.api.envFromSecret } }
             - name: { { $key } }
               { { - toYaml $value | nindent 14 } }
             { { - end } }
+            {{ - end }}
           envFrom:
             - secretRef:
                 name: {{ include "helm.fullname" . }}-api-environment-{{ .Release.Revision }}
