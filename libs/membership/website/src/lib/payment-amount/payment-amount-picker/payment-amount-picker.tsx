@@ -8,7 +8,7 @@ const pickerItems = [1000, 1500, 2000]
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
-  grid-template-columns: repeat(auto-fit, 150px);
+  grid-template-columns: repeat(auto-fit, 125px);
   align-items: top;
   justify-content: center;
   gap: ${({theme}) => theme.spacing(2)};
@@ -133,7 +133,7 @@ export const PaymentAmountPicker = forwardRef<HTMLInputElement, BuilderPaymentAm
                 type={'number'}
                 fullWidth
                 error={!!error}
-                helperText={error?.message}
+                helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
                 inputProps={{
                   step: 'any',
                   min: amountPerMonthMin / 100

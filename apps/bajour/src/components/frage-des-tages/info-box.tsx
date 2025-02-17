@@ -15,6 +15,7 @@ export const InfoBoxWrapper = styled('aside')<{expanded: boolean}>`
   grid-template-columns: 1fr 1fr;
   gap: ${({theme}) => theme.spacing(1)};
   height: ${({theme}) => theme.spacing(28)};
+  interpolate-size: allow-keywords;
   transition: height 0.3s ease;
   background-color: ${({theme}) => theme.palette.common.white};
   padding: ${({theme}) => theme.spacing(1.5)};
@@ -48,9 +49,9 @@ const AllAbout = styled('div')`
 
 const RichTextBlockWrapper = styled('div')<{expanded: boolean}>`
   height: ${({theme}) => theme.spacing(14)};
-  max-height: ${({theme}) => theme.spacing(14)};
   overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
+  interpolate-size: allow-keywords;
+  transition: height 0.3s ease-in-out;
   span {
     font-weight: 300;
   }
@@ -59,7 +60,6 @@ const RichTextBlockWrapper = styled('div')<{expanded: boolean}>`
     expanded &&
     css`
       height: auto;
-      max-height: ${theme.spacing(100)};
     `}
 `
 

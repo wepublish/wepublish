@@ -238,6 +238,7 @@ exports[`PaymentAmountPicker should render PaymentAmountPicker 1`] = `
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-52"
           >
             <input
+              aria-describedby=":r1:-helper-text"
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-53"
               id=":r1:"
@@ -261,6 +262,12 @@ exports[`PaymentAmountPicker should render PaymentAmountPicker 1`] = `
               </legend>
             </fieldset>
           </div>
+          <p
+            class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained MuiFormHelperText-filled emotion-56"
+            id=":r1:-helper-text"
+          >
+            Min EUR 10.00
+          </p>
         </div>
       </div>
       <span

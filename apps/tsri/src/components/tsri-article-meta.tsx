@@ -9,7 +9,9 @@ export const ArticleMetaWrapper = styled('div')`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-export const ArticleMetaComments = styled('div')``
+export const ArticleMetaComments = styled('div')`
+  margin-right: ${({theme}) => theme.spacing(2)};
+`
 
 const ArticleMetaBadge = styled(Badge)`
   .MuiBadge-badge {
