@@ -2366,6 +2366,7 @@ export type PublicPropertiesInput = {
 export type PublicSubscription = {
   __typename?: 'PublicSubscription';
   autoRenew: Scalars['Boolean'];
+  canExtend: Scalars['Boolean'];
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean'];
   id: Scalars['String'];

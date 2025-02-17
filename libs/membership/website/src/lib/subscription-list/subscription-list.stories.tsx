@@ -114,6 +114,7 @@ export const Default = {
         ]
       }
     },
+    subscribeUrl: '/mitmachen',
     onPay: action('onPay'),
     onCancel: action('onCancel'),
     onExtend: action('onExtend')

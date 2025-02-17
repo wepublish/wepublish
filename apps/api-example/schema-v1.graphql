@@ -397,6 +397,7 @@ type PublicSubscription {
   deactivation: SubscriptionDeactivation
   url: String!
   user: User
+  canExtend: Boolean!
 }
 
 type MemberPlan {

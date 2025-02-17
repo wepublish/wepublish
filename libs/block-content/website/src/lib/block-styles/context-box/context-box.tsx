@@ -29,16 +29,15 @@ export const ContextBoxTitle = styled('div')`
 
 export const ContextBoxCollapse = styled('div')<{expanded: boolean}>`
   height: ${({theme}) => theme.spacing(15)};
-  max-height: ${({theme}) => theme.spacing(15)};
   overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
+  interpolate-size: allow-keywords;
+  transition: height 0.3s ease-in-out;
   font-style: italic;
 
   ${({theme, expanded}) =>
     expanded &&
     css`
       height: auto;
-      max-height: ${theme.spacing(100)};
     `}
 `
 

@@ -397,14 +397,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         {hasOpenInvoices && (
           <Alert severity="warning">
             Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen
-            in deinem <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+            in deinem <Link href="/profile">Profil</Link> anschauen.
           </Alert>
         )}
 
         {alreadyHasSubscription && (
           <Alert severity="warning">
             Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem{' '}
-            <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+            <Link href="/profile">Profil</Link> anschauen.
           </Alert>
         )}
 
@@ -522,6 +522,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
         </SubscribeSection>
       )}
+
       {error && <ApiAlert error={error as ApolloError} severity="error" />}
 
       <SubscribeNarrowSection>
@@ -565,14 +566,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         {hasOpenInvoices && (
           <Paragraph gutterBottom={false}>
             Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen
-            in deinem <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+            in deinem <Link href="/profile">Profil</Link> anschauen.
           </Paragraph>
         )}
 
         {alreadyHasSubscription && (
           <Paragraph gutterBottom={false}>
             Du hast dieses Abo schon. Du kannst deine Abos in deinem{' '}
-            <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+            <Link href="/profile">Profil</Link> anschauen.
           </Paragraph>
         )}
       </MembershipModal>

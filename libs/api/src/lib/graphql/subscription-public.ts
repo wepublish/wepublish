@@ -17,6 +17,7 @@ import {GraphQLPublicPaymentMethod} from './paymentMethod'
 import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
 import {GraphQLPublicUser} from './user'
 import {unselectPassword} from '@wepublish/authentication/api'
+import {add} from 'date-fns'
 
 export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithRelations, Context>({
   name: 'PublicSubscription',
@@ -63,6 +64,42 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
           select: unselectPassword
         })
       }
+    },
+    canExtend: {
+      type: new GraphQLNonNull(GraphQLBoolean),
+      resolve: createProxyingResolver(async (subscription, _, context) => {
+        const [paymentMethod, unpaidInvoice] = await Promise.all([
+          context.loaders.paymentMethodsByID.load(subscription.paymentMethodID),
+          context.prisma.invoice.findFirst({
+            where: {
+              subscription: {
+                userID: subscription.userID
+              },
+              paidAt: null,
+              canceledAt: {
+                not: null
+              }
+            }
+          })
+        ])
+
+        /**
+         * Can only extend when:
+         *   Subscription is extendable
+         *   Subscription is not deactivated
+         *   Subscription is about to run out (less than 1 month)
+         *   All invoices have been paid (or cancelled)
+         *   Not using a deprecated payment method
+         */
+        return (
+          subscription.extendable &&
+          !subscription.deactivation &&
+          +add(new Date(), {months: 1}) > +subscription.paidUntil &&
+          !unpaidInvoice &&
+          // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
+          paymentMethod.slug !== 'payrexx-subscription'
+        )
+      })
     }
   })
 })

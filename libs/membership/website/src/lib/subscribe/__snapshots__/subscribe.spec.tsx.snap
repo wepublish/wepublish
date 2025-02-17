@@ -892,9 +892,9 @@ exports[`Subscribe should render LoggedIn 1`] = `
           Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen in deinem 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-9"
-            href="/profile/subscription"
+            href="/profile"
           >
-            Abo-Dashboard
+            Profil
           </a>
            anschauen.
         </div>
@@ -924,9 +924,9 @@ exports[`Subscribe should render LoggedIn 1`] = `
           Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-9"
-            href="/profile/subscription"
+            href="/profile"
           >
-            Abo-Dashboard
+            Profil
           </a>
            anschauen.
         </div>
@@ -3081,9 +3081,9 @@ exports[`Subscribe should render NoWarningDeactivatedSubscription 1`] = `
           Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen in deinem 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-9"
-            href="/profile/subscription"
+            href="/profile"
           >
-            Abo-Dashboard
+            Profil
           </a>
            anschauen.
         </div>
@@ -3899,9 +3899,9 @@ exports[`Subscribe should render NoWarningPaindInvoice 1`] = `
           Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-9"
-            href="/profile/subscription"
+            href="/profile"
           >
-            Abo-Dashboard
+            Profil
           </a>
            anschauen.
         </div>
@@ -11727,7 +11727,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 + Second value
 
 @@ -41,42 +41,10 @@
-              Abo-Dashboard
+              Profil
             </a>
              anschauen.
           </div>
@@ -11757,9 +11757,9 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -           Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem 
 -           <a
 -             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
--             href="/profile/subscription"
+-             href="/profile"
 -           >
--             Abo-Dashboard
+-             Profil
 -           </a>
 -            anschauen.
 -         </div>
@@ -16290,7 +16290,7 @@ exports[`Subscribe should render WithCurrency 1`] = `
 + Second value
 
 @@ -41,42 +41,10 @@
-              Abo-Dashboard
+              Profil
             </a>
              anschauen.
           </div>
@@ -16320,9 +16320,9 @@ exports[`Subscribe should render WithCurrency 1`] = `
 -           Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem 
 -           <a
 -             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
--             href="/profile/subscription"
+-             href="/profile"
 -           >
--             Abo-Dashboard
+-             Profil
 -           </a>
 -            anschauen.
 -         </div>
@@ -17011,9 +17011,9 @@ exports[`Subscribe should render WithDonate 1`] = `
           Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen in deinem 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-9"
-            href="/profile/subscription"
+            href="/profile"
           >
-            Abo-Dashboard
+            Profil
           </a>
            anschauen.
         </div>
@@ -17043,9 +17043,9 @@ exports[`Subscribe should render WithDonate 1`] = `
           Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-9"
-            href="/profile/subscription"
+            href="/profile"
           >
-            Abo-Dashboard
+            Profil
           </a>
            anschauen.
         </div>
@@ -19682,9 +19682,9 @@ exports[`Subscribe should render WithUserInvoicesLoading 1`] = `
           Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-9"
-            href="/profile/subscription"
+            href="/profile"
           >
-            Abo-Dashboard
+            Profil
           </a>
            anschauen.
         </div>
@@ -20498,9 +20498,9 @@ exports[`Subscribe should render WithUserSubscriptionsLoading 1`] = `
           Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen in deinem 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-9"
-            href="/profile/subscription"
+            href="/profile"
           >
-            Abo-Dashboard
+            Profil
           </a>
            anschauen.
         </div>

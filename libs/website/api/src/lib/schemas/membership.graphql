@@ -94,6 +94,8 @@ fragment FullSubscription on PublicSubscription {
   properties {
     ...FullPublicProperty
   }
+
+  canExtend
 }
 
 fragment FullInvoiceItem on InvoiceItem {
