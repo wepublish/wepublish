@@ -18,7 +18,7 @@ api:
     DEFAULT_FROM_ADDRESS: ''
     DEFAULT_REPLY_TO_ADDRESS: ''
   envFromSecretRefName:
-  envFromSecrets: {}
+  dynamicEnv: {}
   properties: {}
   replicaCount: 1
   config:
@@ -118,7 +118,7 @@ migration:
   env:
     DATABASE_URL: postgres://
   envFromSecretRefName:
-  envFromSecrets: {}
+  dynamicEnv: {}
   properties: {}
   replicaCount: 1
 
@@ -127,7 +127,7 @@ editor:
   env:
     PEER_BY_DEFAULT: "true"
   envFromSecretRefName:
-  envFromSecrets: {}
+  dynamicEnv: {}
   properties: {}
   replicaCount: 1
 
@@ -137,7 +137,7 @@ website:
   env:
     NODE_ENV: production
   envFromSecretRefName:
-  envFromSecrets: {}
+  dynamicEnv: {}
   properties: { }
   replicaCount: 1
 
@@ -153,7 +153,7 @@ storybook:
 media:
   image: ghcr.io/wepublish/media
   env: {}
-  envFromSecrets: {}
+  dynamicEnv: {}
   envFromSecretRefName:
   properties: {}
   replicaCount: 1

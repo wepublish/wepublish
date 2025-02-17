@@ -28,8 +28,8 @@ spec:
           image: {{ .Values.migration.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
           env:
-            {{- if .Values.migration.envFromSecrets }}
-            {{- range $key, $value := .Values.migration.envFromSecrets }}
+            {{- if .Values.migration.dynamicEnv }}
+            {{- range $key, $value := .Values.migration.dynamicEnv }}
             - name: {{ $key }}
               {{- toYaml $value | nindent 14 }}
             {{- end }}

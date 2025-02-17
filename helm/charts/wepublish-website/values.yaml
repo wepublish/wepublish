@@ -10,7 +10,7 @@ website:
   env:
     NODE_ENV: production
   envFromSecretRefName:
-  envFromSecrets: {}
+  dynamicEnv: {}
   properties: {}
   replicaCount: 1
 

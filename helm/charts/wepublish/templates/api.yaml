@@ -68,8 +68,8 @@ spec:
                   key: API_URL
             - name: CONFIG_FILE_PATH
               value: /wepublish/config/application.yaml
-            {{- if .Values.api.envFromSecrets }}
-            {{- range $key, $value := .Values.api.envFromSecrets }}
+            {{- if .Values.api.dynamicEnv }}
+            {{- range $key, $value := .Values.api.dynamicEnv }}
             - name: {{ $key }}
               {{- toYaml $value | nindent 14 }}
             {{- end }}
