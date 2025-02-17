@@ -61,10 +61,12 @@ spec:
               containerPort: 3000
               protocol: TCP
           env:
-            { { - range $key, $value := .Values.editor.envFromSecrets } }
-            - name: { { $key } }
-              { { - toYaml $value | nindent 14 } }
-            { { - end } }
+            {{- if .Values.editor.envFromSecrets }}
+            {{- range $key, $value := .Values.editor.envFromSecrets }}
+            - name: {{ $key }}
+              {{- toYaml $value | nindent 14 }}
+            {{- end }}
+            {{- end }}
           envFrom:
             - secretRef:
                 name: {{ include "helm.fullname" . }}-editor-environment-{{ .Release.Revision }}

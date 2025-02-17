@@ -64,9 +64,12 @@ spec:
               containerPort: 8000
               protocol: TCP
           env:
-            { { - range $key, $value := .Values.api.envFromSecrets } }
-            - name: { { $key } }
-              { { - toYaml $value | nindent 14 } }
+            {{- if .Values.website.envFromSecrets }}
+            {{- range $key, $value := .Values.website.envFromSecrets }}
+            - name: {{ $key }}
+              {{- toYaml $value | nindent 14 }}
+            {{- end }}
+            {{- end }}
             { { - end } }
           envFrom:
             - secretRef:
