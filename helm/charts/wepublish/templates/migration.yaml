@@ -28,7 +28,7 @@ spec:
           image: {{ .Values.migration.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
           env:
-            { { - range $key, $value := .Values.migration.envFromSecret } }
+            { { - range $key, $value := .Values.migration.envFromSecrets } }
             - name: { { $key } }
               { { - toYaml $value | nindent 14 } }
             { { - end } }

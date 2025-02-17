@@ -61,7 +61,7 @@ spec:
               containerPort: 4100
               protocol: TCP
           env:
-            { { - range $key, $value := .Values.media.envFromSecret } }
+            { { - range $key, $value := .Values.media.envFromSecrets } }
             - name: { { $key } }
               { { - toYaml $value | nindent 14 } }
             { { - end } }

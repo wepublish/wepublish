@@ -61,7 +61,7 @@ spec:
               containerPort: 3000
               protocol: TCP
           env:
-            { { - range $key, $value := .Values.editor.envFromSecret } }
+            { { - range $key, $value := .Values.editor.envFromSecrets } }
             - name: { { $key } }
               { { - toYaml $value | nindent 14 } }
             { { - end } }
