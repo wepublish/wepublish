@@ -60,6 +60,11 @@ spec:
             - name: http
               containerPort: 4100
               protocol: TCP
+          env:
+            { { - range $key, $value := .Values.media.envFromSecret } }
+            - name: { { $key } }
+              { { - toYaml $value | nindent 14 } }
+            { { - end } }
           envFrom:
             - secretRef:
                 name: {{ include "helm.fullname" . }}-media-environment-{{ .Release.Revision }}
