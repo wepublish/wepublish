@@ -198,7 +198,8 @@ export enum MetaDataType {
   General = 'general',
   SocialMedia = 'socialMedia',
   Properties = 'properties',
-  Comments = 'Comments'
+  Comments = 'Comments',
+  Tracking = 'Tracking'
 }
 
 export interface ArticleTeaserLink {

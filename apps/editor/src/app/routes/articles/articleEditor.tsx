@@ -167,7 +167,8 @@ function ArticleEditor() {
     socialMediaDescription: undefined,
     socialMediaAuthors: [],
     socialMediaImage: undefined,
-    likes: 0
+    likes: 0,
+    trackingPixels: undefined
   })
 
   const isNew = id === undefined
@@ -207,7 +208,8 @@ function ArticleEditor() {
 
   useEffect(() => {
     if (articleData?.article) {
-      const {latest, shared, hidden, disableComments, pending, tags} = articleData.article
+      const {latest, shared, hidden, disableComments, pending, tags, trackingPixels} =
+        articleData.article
       const {
         slug,
         preTitle,
@@ -266,7 +268,8 @@ function ArticleEditor() {
           socialMediaAuthor => socialMediaAuthor != null
         ) as AuthorRefFragment[],
         socialMediaImage: socialMediaImage || undefined,
-        likes: likes ?? 0
+        likes: likes ?? 0,
+        trackingPixels: trackingPixels || undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))
@@ -376,7 +379,8 @@ function ArticleEditor() {
       socialMediaTitle: metadata.socialMediaTitle || undefined,
       socialMediaDescription: metadata.socialMediaDescription || undefined,
       socialMediaAuthorIDs: metadata.socialMediaAuthors.map(({id}) => id),
-      socialMediaImageID: metadata.socialMediaImage?.id || undefined
+      socialMediaImageID: metadata.socialMediaImage?.id || undefined,
+      likes: metadata.likes ?? 0
     }
   }
 

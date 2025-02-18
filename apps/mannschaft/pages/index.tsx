@@ -1,6 +1,4 @@
-import {UTCDate} from '@date-fns/utc'
 import {ApiV1, PageContainer} from '@wepublish/website'
-import {startOfDay} from 'date-fns'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
@@ -14,6 +12,9 @@ export const getStaticProps: GetStaticProps = async () => {
   if (!publicRuntimeConfig.env.API_URL) {
     return {props: {}, revalidate: 1}
   }
+
+  const now = new Date()
+  now.setUTCHours(0, 0, 0, 0)
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
   await Promise.all([
@@ -33,7 +34,7 @@ export const getStaticProps: GetStaticProps = async () => {
       query: ApiV1.HotAndTrendingDocument,
       variables: {
         take: 5,
-        start: startOfDay(new UTCDate()).toISOString()
+        start: now.toISOString()
       }
     })
   ])

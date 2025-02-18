@@ -18,6 +18,11 @@ export type BuilderArticleSEOProps = {
   article: Article
 }
 
+export type BuilderArticleMetaProps = {
+  article: Article
+  className?: string
+}
+
 export type BuilderArticleListProps = Pick<
   QueryResult<ArticleListQuery>,
   'data' | 'loading' | 'error'

@@ -7,10 +7,7 @@ import {ComponentProps} from 'react'
 import {ssrAuthLink} from '../auth-link'
 import {getSessionTokenProps} from '../get-session-token-props'
 
-type SubscribePageProps = Omit<
-  ComponentProps<typeof SubscribeContainer>,
-  'failureURL' | 'successURL'
->
+type SubscribePageProps = Omit<ComponentProps<typeof SubscribeContainer>, ''>
 
 export function SubscribePage(props: SubscribePageProps) {
   const {
@@ -20,7 +17,8 @@ export function SubscribePage(props: SubscribePageProps) {
       firstName,
       mail,
       lastName,
-      deactivateSubscriptionId
+      deactivateSubscriptionId,
+      userId
     }
   } = useRouter()
 
@@ -54,6 +52,7 @@ export function SubscribePage(props: SubscribePageProps) {
       deactivateSubscriptionId={
         props.deactivateSubscriptionId ?? (deactivateSubscriptionId as string | undefined)
       }
+      returningUserId={userId as string | undefined}
     />
   )
 }

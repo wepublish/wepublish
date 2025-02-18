@@ -2,12 +2,13 @@ import {
   CreateBannerActionInput,
   CreateBannerInput,
   ImageRefFragment,
+  LoginStatus,
   UpdateBannerInput
 } from '@wepublish/editor/api-v2'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate} from 'react-router-dom'
-import {CheckPicker, Drawer, Form, Input, Panel, Toggle} from 'rsuite'
+import {CheckPicker, Drawer, Form, Input, Panel, Radio, RadioGroup, Toggle} from 'rsuite'
 import {BannerActionList} from './banner-action-list'
 import {ChooseEditImage, ImageEditPanel, ImageSelectPanel} from '@wepublish/ui/editor'
 import {PageRefFragment, usePageListQuery} from '@wepublish/editor/api'
@@ -31,8 +32,8 @@ export const BannerForm = (props: BannerFormProps) => {
   const {t} = useTranslation()
   const [pages, setPages] = useState<PageRefFragment[]>([])
 
-  const handleChange = (value: any, event: React.ChangeEvent<HTMLInputElement>) => {
-    const {name} = event.target
+  const handleChange = (value: any, event: React.SyntheticEvent) => {
+    const name = (event.target as HTMLInputElement).name
     props.onChange({...props.banner, [name]: value})
   }
 
@@ -101,6 +102,17 @@ export const BannerForm = (props: BannerFormProps) => {
             onChange={handleChange}
             accepter={Toggle}
           />
+        </Form.Group>
+        <Form.Group controlId="showForLoginStatus">
+          <Form.ControlLabel>{t('banner.form.showForLoginStatus')}</Form.ControlLabel>
+          <RadioGroup
+            name="showForLoginStatus"
+            value={props.banner.showForLoginStatus}
+            onChange={handleChange}>
+            {Object.values(LoginStatus).map((status: LoginStatus) => (
+              <Radio value={status}>{t(`banner.form.loginStatus.${status}`)}</Radio>
+            ))}
+          </RadioGroup>
         </Form.Group>
         <Form.Group controlId="showOnArticles">
           <Form.ControlLabel>{t('banner.form.showOnArticles')}</Form.ControlLabel>

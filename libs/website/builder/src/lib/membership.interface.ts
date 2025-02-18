@@ -2,8 +2,9 @@ import {QueryResult} from '@apollo/client'
 import {RadioProps} from '@mui/material'
 import {
   ChallengeQuery,
-  FullSubscriptionFragment,
   FullInvoiceFragment,
+  FullMemberPlanFragment,
+  FullSubscriptionFragment,
   InvoicesQuery,
   MemberPlanListQuery,
   PaymentMethod,
@@ -11,10 +12,11 @@ import {
   RegisterMutationVariables,
   SubscribeMutationVariables,
   SubscriptionsQuery,
-  FullMemberPlanFragment
+  Currency
 } from '@wepublish/website/api'
 import {BuilderRegistrationFormProps} from './authentication.interface'
 import {BuilderUserFormFields} from './user.interface'
+import {FieldError} from 'react-hook-form'
 
 export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
   className?: string
@@ -29,6 +31,7 @@ export type BuilderSubscriptionListProps = Pick<
 > & {
   className?: string
   invoices: Pick<QueryResult<InvoicesQuery>, 'data' | 'loading' | 'error'>
+  subscribeUrl: string
   onCancel?: (subscriptionId: string) => Promise<void>
   onExtend?: (subscriptionId: string) => Promise<void>
 }
@@ -78,6 +81,18 @@ export type BuilderPaymentMethodPickerProps = {
   value?: string
 }
 
+export type BuilderPaymentAmountProps = {
+  amountPerMonthMin: number
+  amountPerMonthTarget: number | undefined
+  currency: Currency
+  donate: boolean
+  onChange: (amount: number) => void
+  name?: string
+  value: number
+  error: FieldError | undefined
+  className?: string
+}
+
 export type BuilderSubscribeProps<
   T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<BuilderUserFormFields, 'flair'>
 > = {
@@ -93,6 +108,9 @@ export type BuilderSubscribeProps<
   onSubscribe?: (
     data: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
   ) => Promise<void>
+  onResubscribe?: (
+    data: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
+  ) => Promise<void>
   defaults?: Partial<{
     memberPlanSlug: string | null
     email: string
@@ -102,4 +120,5 @@ export type BuilderSubscribeProps<
   deactivateSubscriptionId?: string
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean
   termsOfServiceUrl?: string
+  returningUserId?: string
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>

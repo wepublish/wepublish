@@ -12,7 +12,7 @@ type IndexProps = {
 export default function Index({campaigns}: IndexProps) {
   return (
     <DailyBriefingContext.Provider value={campaigns}>
-      <ContentWidthProvider fullWidth={false}>
+      <ContentWidthProvider fullWidth={true}>
         <PageContainer slug={''} />
       </ContentWidthProvider>
     </DailyBriefingContext.Provider>

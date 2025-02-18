@@ -88,17 +88,17 @@ export class PeriodicJobService {
       try {
         this.logger.log('Executing periodic job...')
         this.logger.log('Processing custom mails...')
-        await this.findAndSendCustomMails(periodicJobRunObject)
+        await this.sendCustomSubscriptionEmails(periodicJobRunObject)
         this.logger.log('Processing invoice creation...')
-        await this.findAndCreateInvoices(periodicJobRunObject)
+        await this.createMissingInvoicesForActiveSubscriptions(periodicJobRunObject)
         this.logger.log('Processing charge of invoices...')
-        await this.findAndChargeDueInvoices(periodicJobRunObject)
+        await this.chargeUnpaidDueInvoices(periodicJobRunObject)
         this.logger.log('Processing deactivation of subscriptions with unpaid invoice...')
-        await this.findAndDeactivateSubscriptions(periodicJobRunObject)
+        await this.deactivateSubscriptionsWithUnpaidInvoices(periodicJobRunObject)
         this.logger.log(
           'Processing deactivation of subscriptions with which are not auto renewed...'
         )
-        await this.findAndDeactivateExpiredNotAutoRenewSubscription(periodicJobRunObject)
+        await this.deactivateExpiredNotAutoRenewSubscriptions(periodicJobRunObject)
         this.logger.log('Periodic job successfully finished.')
       } catch (e) {
         await this.markJobFailed(inspect(e))
@@ -109,11 +109,11 @@ export class PeriodicJobService {
     }
   }
 
-  private async findAndDeactivateExpiredNotAutoRenewSubscription(
+  private async deactivateExpiredNotAutoRenewSubscriptions(
     periodicJobRunObject: PeriodicJobRunObject
   ) {
     const subscriptionsToDeactivate =
-      await this.subscriptionController.getExpiredNotAutoRenewSubscriptionsToDeactivate(
+      await this.subscriptionController.findActiveExpiredNotAutoRenewSubscriptions(
         periodicJobRunObject.date
       )
 
@@ -147,41 +147,44 @@ export class PeriodicJobService {
     this.prismaService.$transaction(promises)
   }
 
-  private async findAndDeactivateSubscriptions(
+  private async deactivateSubscriptionsWithUnpaidInvoices(
     periodicJobRunObject: PeriodicJobRunObject
   ): Promise<void> {
-    const unpaidInvoices = await this.subscriptionController.getSubscriptionsToDeactivate(
-      periodicJobRunObject.date
-    )
+    const unpaidInvoices =
+      await this.subscriptionController.findUnpaidScheduledForDeactivationInvoices(
+        periodicJobRunObject.date
+      )
 
     for (const unpaidInvoice of unpaidInvoices) {
-      await this.deactivateSubscription(periodicJobRunObject, unpaidInvoice)
+      await this.deactivateSubscriptionByInvoice(periodicJobRunObject, unpaidInvoice)
     }
   }
 
-  private async findAndChargeDueInvoices(periodicJobRunObject: PeriodicJobRunObject) {
-    const invoicesToCharge = await this.subscriptionController.getInvoicesToCharge(
+  private async chargeUnpaidDueInvoices(periodicJobRunObject: PeriodicJobRunObject) {
+    const invoices = await this.subscriptionController.findUnpaidDueInvoices(
       endOfDay(periodicJobRunObject.date)
     )
-    for (const invoiceToCharge of invoicesToCharge) {
-      await this.chargeInvoice(periodicJobRunObject, invoiceToCharge)
+    for (const invoice of invoices) {
+      await this.chargeInvoice(periodicJobRunObject, invoice)
     }
   }
 
-  private async findAndCreateInvoices(periodicJobRunObject: PeriodicJobRunObject) {
-    const subscriptionsToCreateInvoice =
-      await this.subscriptionController.getSubscriptionsForInvoiceCreation(
+  private async createMissingInvoicesForActiveSubscriptions(
+    periodicJobRunObject: PeriodicJobRunObject
+  ) {
+    const activeSubscriptionsWithoutInvoice =
+      await this.subscriptionController.getActiveSubscriptionsWithoutInvoice(
         periodicJobRunObject.date,
         await this.subscriptionEventDictionary.getEarliestInvoiceCreationDate(
           periodicJobRunObject.date
         )
       )
-    for (const subscriptionToCreateInvoice of subscriptionsToCreateInvoice) {
-      await this.createInvoice(periodicJobRunObject, subscriptionToCreateInvoice)
+    for (const subscription of activeSubscriptionsWithoutInvoice) {
+      await this.createInvoice(periodicJobRunObject, subscription)
     }
   }
 
-  private async findAndSendCustomMails(periodicJobRunObject: PeriodicJobRunObject) {
+  private async sendCustomSubscriptionEmails(periodicJobRunObject: PeriodicJobRunObject) {
     const subscriptionsWithEvents = await this.prismaService.subscription.findMany({
       where: {
         OR: (
@@ -288,9 +291,13 @@ export class PeriodicJobService {
       return false
     }
 
+    const deactivationDate = add(subscriptionToCreateInvoice.paidUntil || new Date(), {
+      days: deactivationEvent.daysAwayFromEnding || undefined
+    })
+
     const invoice = await this.subscriptionController.createInvoice(
       subscriptionToCreateInvoice,
-      deactivationEvent
+      deactivationDate
     )
 
     const paymentProvider = await this.payments.findPaymentProviderByPaymentMethodeId(
@@ -374,7 +381,7 @@ export class PeriodicJobService {
     }
   }
 
-  private async deactivateSubscription(
+  private async deactivateSubscriptionByInvoice(
     periodicJobRunObject: PeriodicJobRunObject,
     unpaidInvoice: Invoice & {subscription: (Subscription & {user: User}) | null}
   ) {

@@ -321,6 +321,11 @@ export const getArticles = async (
             authors: true,
             socialMediaAuthors: true
           }
+        },
+        trackingPixels: {
+          include: {
+            trackingPixelMethod: true
+          }
         }
       }
     })

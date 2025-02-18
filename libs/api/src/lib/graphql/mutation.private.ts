@@ -693,8 +693,18 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createArticle: {
       type: new GraphQLNonNull(GraphQLArticle),
       args: {input: {type: new GraphQLNonNull(GraphQLArticleInput)}},
-      resolve: (root, {input}, {authenticate, prisma: {article}}) =>
-        createArticle({...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, article)
+      resolve: (
+        root,
+        {input},
+        {authenticate, prisma: {article}, trackingPixelContext, prisma: {articleTrackingPixels}}
+      ) =>
+        createArticle(
+          {...input, blocks: input.blocks.map(mapBlockUnionMap)},
+          authenticate,
+          article,
+          articleTrackingPixels,
+          trackingPixelContext
+        )
     },
 
     updateArticle: {
@@ -882,7 +892,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       resolve: (
         root,
         {input},
-        {authenticate, loaders, paymentProviders, prisma: {payment, memberPlan}}
+        {authenticate, loaders, paymentProviders, prisma: {payment, memberPlan, subscription}}
       ) =>
         createPaymentFromInvoice(
           input,
@@ -891,7 +901,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           loaders.invoicesByID,
           loaders.paymentMethodsByID,
           memberPlan,
-          payment
+          payment,
+          subscription
         )
     },
 

@@ -4,7 +4,8 @@ import {
   ArticleAuthors,
   ArticleDate,
   ArticleList,
-  ArticleSEO
+  ArticleSEO,
+  ArticleTags
 } from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {
@@ -66,6 +67,7 @@ import {
   InvoiceListItem,
   MemberPlanItem,
   MemberPlanPicker,
+  PaymentAmountSlider,
   PaymentMethodPicker,
   PeriodicityPicker,
   Subscribe,
@@ -156,6 +158,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Article={Article}
           ArticleDate={ArticleDate}
           ArticleAuthors={ArticleAuthors}
+          ArticleMeta={ArticleTags}
           ArticleSEO={ArticleSEO}
           Banner={PageBanner}
           PeerInformation={PeerInformation}
@@ -186,6 +189,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           MemberPlanPicker={MemberPlanPicker}
           MemberPlanItem={MemberPlanItem}
           PeriodicityPicker={PeriodicityPicker}
+          PaymentAmount={PaymentAmountSlider}
           PaymentMethodPicker={PaymentMethodPicker}
           Subscribe={Subscribe}
           elements={{

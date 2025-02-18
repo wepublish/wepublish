@@ -99,10 +99,12 @@ export const BajourQuoteBlock = ({quote, author, image, className}: BuilderQuote
           <Image image={image} square />
         </QuoteImage>
       )}
+
       <BajourQuoteContent>
         <Paragraph component={BajourQuoteQuote} gutterBottom={false}>
           {quote}
         </Paragraph>
+
         {author && (
           <Paragraph component={BajourQuoteAuthor} gutterBottom={false}>
             {author}

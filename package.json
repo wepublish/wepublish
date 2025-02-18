@@ -30,7 +30,8 @@
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
     "prepare": "prisma generate",
     "postinstall": "node build/postInstall.js",
-    "deploy:production": "node deployment/deploy_production.js"
+    "deploy:production": "node deployment/deploy_production.js",
+    "deploy:production:tags": "bash deployment/clean_deploy_tags.sh"
   },
   "nx": {
     "includedScripts": [
@@ -210,7 +211,6 @@
     "@apollo/gateway": "^2.8.4",
     "@apollo/server": "^4.9.1",
     "@apollo/subgraph": "^2.2.3",
-    "@date-fns/utc": "^2.1.0",
     "@dnd-kit/core": "^6.0.7",
     "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.11.1",
@@ -330,6 +330,7 @@
     "react-hook-form": "^7.44.3",
     "react-i18next": "^13.0.0",
     "react-icons": "^5.3.0",
+    "react-onesignal": "^3.0.1",
     "react-page-visibility": "^6.4.0",
     "react-player": "3.0.0-canary.4",
     "react-router-dom": "^6.3.0",

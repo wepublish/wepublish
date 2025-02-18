@@ -69,8 +69,9 @@ export function Navbar({
   logo,
   loginUrl = '/login',
   profileUrl = '/profile',
-  subscriptionsUrl = '/profile/subscription',
-  actions,
+  subscribeUrl = '/profile/subscription',
+  hasRunningSubscription,
+  hasUnpaidInvoices,
   ...menuProps
 }: BuilderNavbarProps) {
   const menuToggle = useToggle()
@@ -84,16 +85,15 @@ export function Navbar({
         logo={logo}
         loginUrl={loginUrl}
         profileUrl={profileUrl}
-        subscriptionsUrl={subscriptionsUrl}
+        subscriptionsUrl={subscribeUrl}
         headerItems={headerItems}
         menuToggle={menuToggle}
-        actions={actions}
       />
 
       {menuToggle.value && Boolean(mainItems || categories?.length) && (
         <NavPaper
           profileUrl={profileUrl}
-          subscriptionsUrl={subscriptionsUrl}
+          subscriptionsUrl={subscribeUrl}
           loginUrl={loginUrl}
           main={mainItems}
           categories={categories}

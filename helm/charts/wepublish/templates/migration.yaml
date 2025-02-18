@@ -27,6 +27,13 @@ spec:
         - name: {{ include "helm.fullname" . }}
           image: {{ .Values.migration.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
+          env:
+            {{- if .Values.migration.dynamicEnv }}
+            {{- range $key, $value := .Values.migration.dynamicEnv }}
+            - name: {{ $key }}
+              {{- toYaml $value | nindent 14 }}
+            {{- end }}
+            {{- end }}
           envFrom:
             - secretRef:
                 name: {{ include "helm.fullname" . }}-migration-environment-{{ .Release.Revision }}

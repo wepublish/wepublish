@@ -63,9 +63,7 @@ export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
     `}
 `
 
-export const ContentWrapper = (
-  props: Omit<ComponentProps<typeof ContentWrapperStyled>, 'fullWidth'>
-) => {
+export const ContentWrapper = (props: ComponentProps<typeof ContentWrapperStyled>) => {
   const fullWidth = useFullWidthContent()
 
   return <ContentWrapperStyled fullWidth={fullWidth} {...props} />

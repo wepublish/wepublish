@@ -49,6 +49,7 @@ export type Article = {
   published?: Maybe<ArticleRevision>;
   shared: Scalars['Boolean'];
   tags: Array<Tag>;
+  trackingPixels?: Maybe<Array<Maybe<TrackingPixel>>>;
 };
 
 export type ArticleConnection = {
@@ -955,6 +956,8 @@ export type MemberPlan = {
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
+  confirmationPage?: Maybe<Page>;
+  confirmationPageId?: Maybe<Scalars['ID']>;
   createdAt: Scalars['DateTime'];
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
@@ -991,6 +994,7 @@ export type MemberPlanInput = {
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
+  confirmationPageId?: InputMaybe<Scalars['ID']>;
   currency: Currency;
   description?: InputMaybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
@@ -2486,6 +2490,7 @@ export type SubscriptionDeactivationInput = {
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
+  UserReplacedSubscription = 'userReplacedSubscription',
   UserSelfDeactivated = 'userSelfDeactivated'
 }
 
@@ -2697,6 +2702,26 @@ export type Token = {
 export type TokenInput = {
   name: Scalars['String'];
 };
+
+export type TrackingPixel = {
+  __typename?: 'TrackingPixel';
+  error?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  pixelUid?: Maybe<Scalars['String']>;
+  trackingPixelMethod: TrackingPixelMethod;
+  uri?: Maybe<Scalars['String']>;
+};
+
+export type TrackingPixelMethod = {
+  __typename?: 'TrackingPixelMethod';
+  id: Scalars['ID'];
+  trackingPixelProviderID: Scalars['String'];
+  trackingPixelProviderType: TrackingPixelProviderType;
+};
+
+export enum TrackingPixelProviderType {
+  Prolitteris = 'prolitteris'
+}
 
 export type TwitterTweetBlock = {
   __typename?: 'TwitterTweetBlock';

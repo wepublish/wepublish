@@ -1,5 +1,5 @@
 import {Test, TestingModule} from '@nestjs/testing'
-import {BannerActionRole, PrismaClient} from '@prisma/client'
+import {BannerActionRole, LoginStatus, PrismaClient} from '@prisma/client'
 import {BannerActionService} from './banner-action.service'
 
 describe('BannerActionService', () => {
@@ -27,7 +27,8 @@ describe('BannerActionService', () => {
     imageId: null,
     active: true,
     tags: [],
-    showOnArticles: true
+    showOnArticles: true,
+    showForLoginStatus: LoginStatus.ALL
   }
 
   beforeEach(async () => {
