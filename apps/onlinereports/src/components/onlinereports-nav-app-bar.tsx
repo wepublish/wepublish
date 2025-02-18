@@ -81,8 +81,8 @@ export const NavbarInnerWrapper = styled('div')`
     ${theme.breakpoints.up('md')} {
       padding-left: ${theme.spacing(7)};
       padding-right: ${theme.spacing(7)};
-      padding-top: ${({theme}) => theme.spacing(5)};
-      padding-bottom: ${({theme}) => theme.spacing(5)};
+      padding-top: ${theme.spacing(5)};
+      padding-bottom: ${theme.spacing(5)};
     }
   `}
 `

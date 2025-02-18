@@ -7,7 +7,6 @@ import {
   FooterContainer,
   FooterPaperWrapper,
   NavbarContainer,
-  TeaserGridBlockWrapper,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
@@ -33,6 +32,7 @@ import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
 import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
 import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
 import {OnlineReportsAuthorChip} from '../src/components/author-chip'
+import {OnlineReportsArticleAuthors} from '../src/components/online-reports-article-authors'
 
 setDefaultOptions({
   locale: de
@@ -71,21 +71,6 @@ const Advertisement = styled(Box)`
 const MainSpacer = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2.5)};
-
-  > * {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: ${({theme}) => theme.spacing(2.5)} !important;
-    row-gap: ${({theme}) => theme.spacing(4.5)} !important;
-
-    > * {
-      grid-column: span 3;
-    }
-
-    ${TeaserGridBlockWrapper} {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
 
   ${theme.breakpoints.up('md')} {
     gap: ${theme.spacing(2.5)};
@@ -173,6 +158,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Head={Head}
             Script={Script}
             AuthorChip={OnlineReportsAuthorChip}
+            ArticleAuthors={OnlineReportsArticleAuthors}
             NavPaper={OnlineReportsNavPaper}
             NavAppBar={OnlineReportsNavAppBar}
             elements={{Link: NextWepublishLink}}

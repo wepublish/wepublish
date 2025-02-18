@@ -37,6 +37,16 @@ export const useImageStyles = () => {
     [theme]
   )
 }
+const useLinkStyles = () => {
+  const theme = useTheme()
+
+  return useMemo(
+    () => css`
+      align-content: start;
+    `,
+    [theme]
+  )
+}
 
 export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const {title, preTitle, lead, href, image, publishDate, authors, tags} = extractTeaserData(teaser)
@@ -46,9 +56,10 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   } = useWebsiteBuilder()
 
   const imageStyles = useImageStyles()
+  const linkStyles = useLinkStyles()
 
   return (
-    <Link href={href} className={className}>
+    <Link href={href} className={className} css={linkStyles}>
       <TeaserImageWrapper>{image && <Image image={image} css={imageStyles} />}</TeaserImageWrapper>
 
       {preTitle && (

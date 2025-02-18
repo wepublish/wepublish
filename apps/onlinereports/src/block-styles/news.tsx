@@ -10,12 +10,25 @@ import {
 import {allPass} from 'ramda'
 
 import {NewsTeaser} from '../custom-teasers/news'
-import {Box, styled} from '@mui/material'
+import {Box, css, styled, useTheme} from '@mui/material'
+import {useMemo} from 'react'
 
 export const isNewsTeasers = (
   block: ApiV1.Block
 ): block is ApiV1.TeaserGridBlock | ApiV1.TeaserListBlock =>
   allPass([hasBlockStyle('News'), isTeaserListBlock])(block)
+
+const useLinkStyles = () => {
+  const theme = useTheme()
+
+  return useMemo(
+    () => css`
+      padding-top: ${theme.spacing(1.5)};
+      color: ${theme.palette.accent.contrastText};
+    `,
+    [theme]
+  )
+}
 
 export const NewsBlockStyle = ({
   title,
@@ -23,10 +36,11 @@ export const NewsBlockStyle = ({
   blockStyle,
   className
 }: Pick<BuilderTeaserListBlockProps, 'teasers' | 'title' | 'blockStyle' | 'className'>) => {
+  const linkStyles = useLinkStyles()
   const filledTeasers = teasers.filter(isFilledTeaser)
   const numColumns = 1
   const {
-    elements: {H3}
+    elements: {H3, Link}
   } = useWebsiteBuilder()
 
   return (
@@ -42,6 +56,9 @@ export const NewsBlockStyle = ({
             blockStyle={blockStyle}
           />
         ))}
+        <Link href={'/a/tag/news'} css={linkStyles}>
+          Weitere news
+        </Link>
       </NewsTeaserListWrapper>
       <Filler />
     </>

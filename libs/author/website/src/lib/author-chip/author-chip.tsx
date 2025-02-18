@@ -25,17 +25,6 @@ export const AuthorChipContent = styled('div')`
 
 export const AuthorChipName = styled('div')`
   font-weight: 500;
-  :after {
-    content: ', ';
-  }
-  &:last-of-type:after {
-    content: '';
-  }
-  a {
-    color: ${({theme}) => theme.palette.text.primary};
-    text-decoration: none;
-    font-weight: 500;
-  }
 `
 
 export const AuthorChipJob = styled('div')``
