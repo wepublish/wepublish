@@ -1,7 +1,7 @@
 import 'keen-slider/keen-slider.min.css'
 
 import {styled} from '@mui/material'
-import {Button, H1, H4} from '@wepublish/ui'
+import {H1, H4} from '@wepublish/ui'
 import {
   ApiV1,
   CommentListItemShare,
@@ -230,7 +230,7 @@ const uniqueById = uniqWith(eqBy<ApiV1.FullArticleFragment>(a => a.id))
 
 export function SearchSlider({article}: SearchSliderProps) {
   const {
-    elements: {Image, H5}
+    elements: {Image, H5, Button}
   } = useWebsiteBuilder()
 
   const router = useRouter()
