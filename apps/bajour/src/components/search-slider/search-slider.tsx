@@ -5,6 +5,7 @@ import {H1, H4} from '@wepublish/ui'
 import {
   ApiV1,
   CommentListItemShare,
+  isEmbedBlock,
   isRichTextBlock,
   RichTextBlock,
   useWebsiteBuilder
@@ -195,6 +196,25 @@ const SlideTitle = styled('span')`
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.58);
 `
 
+const FullScreenVideoContainer = styled('div')`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  z-index: 13;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+const FullScreenVideo = styled('video')`
+  width: 90vw;
+  height: 85vh;
+  margin: 5vh 5vw 0 5vw;
+`
+
 export type SliderArticle = Omit<ApiV1.Article, 'comments' | 'socialMediaAuthors'> & {
   blocks: ApiV1.Block[]
 }
@@ -211,7 +231,7 @@ const uniqueById = uniqWith(eqBy<ApiV1.FullArticleFragment>(a => a.id))
 
 export function SearchSlider({article}: SearchSliderProps) {
   const {
-    elements: {Image, H5}
+    elements: {Image, H5, Button}
   } = useWebsiteBuilder()
 
   const router = useRouter()
@@ -220,6 +240,7 @@ export function SearchSlider({article}: SearchSliderProps) {
   const [slidesDetails, setSlidesDetails] = useState<TrackDetails['slides']>()
   const [searchQuery, setSearchQuery] = useState<string | null>()
   const [searchHits, setSearchHits] = useState<number | undefined>(undefined)
+  const [videoUrl, setVideoUrl] = useState<string | null>(null)
 
   // getting the first tag from initial article which is not the technical search-slider tag.
   const tag = useMemo(() => article?.tags.find(tag => tag.tag !== SEARCH_SLIDER_TAG), [article])
@@ -414,6 +435,7 @@ export function SearchSlider({article}: SearchSliderProps) {
   }, [tag])
 
   const textBlock = (mainArticle?.blocks as ApiV1.Block[])?.find(isRichTextBlock)
+  const videoBlock = (mainArticle?.blocks as ApiV1.Block[])?.find(isEmbedBlock)
   const publicationDate = mainArticle?.publishedAt
     ? format(new Date(mainArticle?.publishedAt), 'd. MMM yyyy')
     : ''
@@ -474,6 +496,12 @@ export function SearchSlider({article}: SearchSliderProps) {
               className={`keen-slider__slide`}
               mainImage={mainArticle.id === article?.id}
               onClick={() => {
+                // Click on current slide
+                if (currentSlide === idx) {
+                  if (videoBlock?.url) {
+                    setVideoUrl(videoBlock.url)
+                  }
+                }
                 keenSliderRef.current?.moveToIdx(idx)
                 // used for the stuck slider elements on the very right side, if slider can't be moved further to the right.
                 setCurrentSlide(idx)
@@ -493,6 +521,13 @@ export function SearchSlider({article}: SearchSliderProps) {
           )
         })}
       </SliderContainer>
+
+      {videoUrl && (
+        <FullScreenVideoContainer>
+          <FullScreenVideo src={videoUrl} controls autoPlay />
+          <Button onClick={() => setVideoUrl(null)}>Schliessen</Button>
+        </FullScreenVideoContainer>
+      )}
 
       <TextContainer>
         <div>{mainArticle.preTitle && <H5 gutterBottom>{mainArticle.preTitle} </H5>}</div>
