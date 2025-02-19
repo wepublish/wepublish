@@ -5,6 +5,7 @@ import {H1, H4} from '@wepublish/ui'
 import {
   ApiV1,
   CommentListItemShare,
+  isEmbedBlock,
   isRichTextBlock,
   RichTextBlock,
   useWebsiteBuilder
@@ -434,6 +435,7 @@ export function SearchSlider({article}: SearchSliderProps) {
   }, [tag])
 
   const textBlock = (mainArticle?.blocks as ApiV1.Block[])?.find(isRichTextBlock)
+  const videoBlock = (mainArticle?.blocks as ApiV1.Block[])?.find(isEmbedBlock)
   const publicationDate = mainArticle?.publishedAt
     ? format(new Date(mainArticle?.publishedAt), 'd. MMM yyyy')
     : ''
@@ -496,9 +498,8 @@ export function SearchSlider({article}: SearchSliderProps) {
               onClick={() => {
                 // Click on current slide
                 if (currentSlide === idx) {
-                  const videoProperty = article?.properties.find(p => p.key === 'video')
-                  if (videoProperty) {
-                    setVideoUrl(videoProperty.value)
+                  if (videoBlock?.url) {
+                    setVideoUrl(videoBlock.url)
                   }
                 }
                 keenSliderRef.current?.moveToIdx(idx)
