@@ -1,5 +1,6 @@
 import {styled} from '@mui/material'
-import {ApiV1, hasBlockStyle, isTeaserGridBlock, isTeaserListBlock} from '@wepublish/website'
+import {hasBlockStyle, isTeaserGridBlock, isTeaserListBlock} from '@wepublish/block-content/website'
+import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
 import {allPass, anyPass} from 'ramda'
 
 import {TeaserOverwrite} from './teaser-overwrite'
@@ -12,9 +13,7 @@ import {
   TextLine
 } from './teaser-overwrite.style'
 
-export const isSmallTeaser = (
-  block: ApiV1.Block
-): block is ApiV1.TeaserGridBlock | ApiV1.TeaserListBlock =>
+export const isSmallTeaser = (block: BlockContent): block is TeaserGridBlock | TeaserListBlock =>
   allPass([hasBlockStyle('Kleine Teaser'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)
 
 export const SmallTeaser = styled(TeaserOverwrite)`

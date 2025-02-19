@@ -10,6 +10,7 @@ import {
   usePublishArticleMutation,
   useUpdateArticleMutation
 } from '@wepublish/editor/api-v2'
+import {CanPreview} from '@wepublish/permissions'
 import {
   ArticleMetadata,
   ArticleMetadataPanel,
@@ -565,7 +566,7 @@ function ArticleEditor() {
                 </CenterChildren>
               }
               rightChildren={
-                <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
+                <PermissionControl qualifyingPermissions={[CanPreview.id]}>
                   <Link to={articleData?.article.url ?? ''} className="actionButton">
                     <IconButtonMarginTop
                       disabled={hasChanged || !id || !canPreview}

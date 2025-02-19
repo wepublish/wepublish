@@ -7,6 +7,7 @@ import {
   usePublishPageMutation,
   useUpdatePageMutation
 } from '@wepublish/editor/api-v2'
+import {CanPreview} from '@wepublish/permissions'
 import {
   blockForQueryBlock,
   BlockList,
@@ -389,7 +390,7 @@ function PageEditor() {
                 </CenterChildren>
               }
               rightChildren={
-                <PermissionControl qualifyingPermissions={['CAN_GET_PAGE_PREVIEW_LINK']}>
+                <PermissionControl qualifyingPermissions={[CanPreview.id]}>
                   <Link to={pageData?.page.url ?? ''}>
                     <IconButtonMTop
                       className="actionButton"
@@ -447,6 +448,6 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_CREATE_PAGE',
   'CAN_PUBLISH_PAGE',
   'CAN_DELETE_PAGE',
-  'CAN_GET_PAGE_PREVIEW_LINK'
+  CanPreview.id
 ])(PageEditor)
 export {CheckedPermissionComponent as PageEditor}

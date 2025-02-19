@@ -1,6 +1,6 @@
 import {Context} from '../../context'
 import {authorise} from '../permissions'
-import {CanCreateInvoice, CanDeleteInvoice} from '@wepublish/permissions/api'
+import {CanCreateInvoice, CanDeleteInvoice} from '@wepublish/permissions'
 import {Invoice, Prisma, PrismaClient} from '@prisma/client'
 import {InvoiceWithItems} from '@wepublish/payment/api'
 

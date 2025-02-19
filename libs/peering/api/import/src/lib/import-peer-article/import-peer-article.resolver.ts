@@ -7,7 +7,8 @@ import {
   PeerArticle,
   PeerArticleListArgs
 } from './peer-article.model'
-import {CanGetPeerArticles, Permissions} from '@wepublish/permissions/api'
+import {CanGetPeerArticles} from '@wepublish/permissions'
+import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => PeerArticle)
 export class ImportPeerArticleResolver {

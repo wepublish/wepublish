@@ -42,7 +42,8 @@ export class TeaserListBlockResolver {
         articles = (
           await this.articleService.getArticles({
             filter: {
-              tags: filter.tags
+              tags: filter.tags,
+              published: true
             },
             sort: ArticleSort.PublishedAt,
             order: SortOrder.Descending,
@@ -67,7 +68,8 @@ export class TeaserListBlockResolver {
     if (teaserType === TeaserType.Page) {
       const pages = await this.pageService.getPages({
         filter: {
-          tags: filter.tags
+          tags: filter.tags,
+          published: true
         },
         sort: PageSort.PublishedAt,
         order: SortOrder.Descending,

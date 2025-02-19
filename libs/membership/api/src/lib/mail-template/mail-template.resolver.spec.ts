@@ -8,7 +8,7 @@ import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {APP_GUARD} from '@nestjs/core'
-import {PermissionsGuard} from '@wepublish/permissions/api'
+import {PermissionsGuard} from '@wepublish/permissions'
 import request from 'supertest'
 import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
 

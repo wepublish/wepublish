@@ -4,12 +4,8 @@ import {SystemMailModel, SystemMailUpdateInput} from './system-mail.model'
 import {MailContext, mailLogType} from '@wepublish/mail/api'
 import {NotFoundException} from '@nestjs/common'
 import {CurrentUser, UserSession} from '@wepublish/authentication/api'
-import {
-  CanGetSystemMails,
-  CanTestSystemMails,
-  CanUpdateSystemMails,
-  Permissions
-} from '@wepublish/permissions/api'
+import {CanGetSystemMails, CanTestSystemMails, CanUpdateSystemMails} from '@wepublish/permissions'
+import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => SystemMailModel)
 export class SystemMailResolver {

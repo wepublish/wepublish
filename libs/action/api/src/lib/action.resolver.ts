@@ -9,9 +9,9 @@ import {
   CanGetComments,
   CanGetPoll,
   CanGetUser,
-  CanGetEvent,
-  Permissions
-} from '@wepublish/permissions/api'
+  CanGetEvent
+} from '@wepublish/permissions'
+import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => Action)
 export class ActionResolver {

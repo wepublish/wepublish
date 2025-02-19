@@ -1,6 +1,6 @@
 import {Context} from '../../context'
 import {authorise} from '../permissions'
-import {CanCreateMemberPlan, CanDeleteMemberPlan} from '@wepublish/permissions/api'
+import {CanCreateMemberPlan, CanDeleteMemberPlan} from '@wepublish/permissions'
 import {PrismaClient, Prisma} from '@prisma/client'
 import {InvalidMemberPlanSettings, MonthlyTargetAmountNotEnough} from '../../error'
 

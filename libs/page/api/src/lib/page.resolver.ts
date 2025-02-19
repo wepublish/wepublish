@@ -15,7 +15,8 @@ import {URLAdapter} from '@wepublish/nest-modules'
 import {Page as PPage} from '@prisma/client'
 import {BadRequestException} from '@nestjs/common'
 import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
-import {CanGetPage, hasPermission, Permissions} from '@wepublish/permissions/api'
+import {CanCreatePage, CanDeletePage, CanGetPage, CanPublishPage} from '@wepublish/permissions'
+import {hasPermission, Permissions, PreviewMode} from '@wepublish/permissions/api'
 
 @Resolver(() => Page)
 export class PageResolver {
@@ -27,8 +28,8 @@ export class PageResolver {
   ) {}
 
   @Public()
-  @Query(() => Page, {description: `Returns a page by id or slug.`})
-  public page(
+  @Query(() => Page, {description: `Returns an page by id or slug.`})
+  public async page(
     @Args('id', {nullable: true}) id?: string,
     @Args('slug', {nullable: true}) slug?: string
   ) {
@@ -60,58 +61,67 @@ export class PageResolver {
     return this.pageService.getPages(args)
   }
 
+  @Permissions(CanCreatePage)
   @Mutation(() => Page, {
-    description: `Creates a page.`
+    description: `Creates an page.`
   })
   public createPage(@Args() input: CreatePageInput, @CurrentUser() user: UserSession | undefined) {
     return this.pageService.createPage(input, user?.user?.id)
   }
 
+  @Permissions(CanCreatePage)
   @Mutation(() => Page, {
-    description: `Updates a page.`
+    description: `Updates an page.`
   })
   public updatePage(@Args() input: UpdatePageInput, @CurrentUser() user: UserSession | undefined) {
     return this.pageService.updatePage(input, user?.user?.id)
   }
 
+  @Permissions(CanCreatePage)
   @Mutation(() => Page, {
-    description: `Duplicates a page.`
+    description: `Duplicates an page.`
   })
   public duplicatePage(@Args('id') id: string, @CurrentUser() user: UserSession | undefined) {
     return this.pageService.duplicatePage(id, user?.user?.id)
   }
 
+  @Permissions(CanDeletePage)
   @Mutation(() => String, {
-    description: `Deletes a page.`
+    description: `Deletes an page.`
   })
   public async deletePage(@Args('id') id: string) {
     return (await this.pageService.deletePage(id)).id
   }
 
+  @Permissions(CanPublishPage)
   @Mutation(() => Page, {
-    description: `Publishes a page at the given time.`
+    description: `Publishes an page at the given time.`
   })
   public publishPage(@Args('id') id: string, @Args('publishedAt') publishedAt: Date) {
     return this.pageService.publishPage(id, publishedAt)
   }
 
+  @Permissions(CanPublishPage)
   @Mutation(() => Page, {
-    description: `Unpublishes all revisions of a page.`
+    description: `Unpublishes all revisions of an page.`
   })
   public unpublishPage(@Args('id') id: string) {
     return this.pageService.unpublishPage(id)
   }
 
   @ResolveField(() => PageRevision)
-  async latest(@Parent() parent: PPage, @CurrentUser() user: UserSession | undefined) {
+  async latest(
+    @Parent() parent: PPage,
+    @CurrentUser() user: UserSession | undefined,
+    @PreviewMode() isPreview: boolean
+  ) {
     const {id: pageId} = parent
     const {draft, pending, published} = await this.pageRevisionsDataloader.load(pageId)
 
-    if (!hasPermission(CanGetPage, user?.roles ?? [])) {
+    if (!isPreview || !hasPermission(CanGetPage, user?.roles ?? [])) {
       return published
     }
 
-    // @TODO: Only show all when preview enabled
     return draft ?? pending ?? published
   }
 

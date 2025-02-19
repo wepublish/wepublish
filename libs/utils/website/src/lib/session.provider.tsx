@@ -1,20 +1,22 @@
-import {ApiV1, AuthTokenStorageKey, SessionTokenContext} from '@wepublish/website'
+import {User, UserSession} from '@wepublish/website/api'
+import {AuthTokenStorageKey, SessionTokenContext} from '@wepublish/authentication/website'
+import {useMeLazyQuery} from '@wepublish/website/api'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import {memo, PropsWithChildren, useCallback, useEffect, useState} from 'react'
 
-export const SessionProvider = memo<PropsWithChildren<{sessionToken: ApiV1.UserSession | null}>>(
+export const SessionProvider = memo<PropsWithChildren<{sessionToken: UserSession | null}>>(
   function SessionProvider({sessionToken, children}) {
     const [token, setToken] = useState<typeof sessionToken>(sessionToken)
-    const [user, setUser] = useState<ApiV1.User | null>(null)
+    const [user, setUser] = useState<User | null>(null)
 
-    const [getMe] = ApiV1.useMeLazyQuery({
+    const [getMe] = useMeLazyQuery({
       onCompleted(data) {
-        setUser((data.me as ApiV1.User) ?? null)
+        setUser((data.me as User) ?? null)
       }
     })
 
     const setCookieAndToken = useCallback(
-      (newToken: ApiV1.UserSession | null) => {
+      (newToken: UserSession | null) => {
         setToken(newToken)
 
         if (newToken) {
@@ -37,7 +39,7 @@ export const SessionProvider = memo<PropsWithChildren<{sessionToken: ApiV1.UserS
       const sToken = sessionToken
         ? sessionToken
         : cookie
-        ? (JSON.parse(cookie.toString()) as ApiV1.UserSession)
+        ? (JSON.parse(cookie.toString()) as UserSession)
         : null
 
       if (sToken) {

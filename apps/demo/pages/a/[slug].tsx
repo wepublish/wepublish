@@ -1,38 +1,43 @@
+import {ArticleContainer, ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
+import {CommentListContainer} from '@wepublish/comments/website'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
-  ApiV1,
-  ArticleContainer,
-  ArticleListContainer,
-  ArticleWrapper,
-  CommentListContainer,
-  useWebsiteBuilder
-} from '@wepublish/website'
+  addClientCacheToV1Props,
+  ArticleDocument,
+  ArticleListDocument,
+  CommentItemType,
+  CommentListDocument,
+  getV1ApiClient,
+  NavigationListDocument,
+  PeerProfileDocument,
+  Tag,
+  useArticleQuery
+} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
-export default function ArticleBySlugIdOrToken() {
+export default function ArticleBySlugOrId() {
   const {
-    query: {slug, id, token}
+    query: {slug, id}
   } = useRouter()
   const {
     elements: {H3}
   } = useWebsiteBuilder()
 
-  const {data} = ApiV1.useArticleQuery({
+  const {data} = useArticleQuery({
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,
-      id: id as string,
-      token: token as string
+      id: id as string
     }
   })
 
   const containerProps = {
     slug,
-    id,
-    token
+    id
   } as ComponentProps<typeof ArticleContainer>
 
   return (
@@ -53,7 +58,7 @@ export default function ArticleBySlugIdOrToken() {
       {!data?.article?.disableComments && (
         <ArticleWrapper>
           <H3 component={'h2'}>Kommentare</H3>
-          <CommentListContainer id={data!.article!.id} type={ApiV1.CommentItemType.Article} />
+          <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
         </ArticleWrapper>
       )}
     </>
@@ -66,36 +71,36 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   const {slug} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
   const [article] = await Promise.all([
     client.query({
-      query: ApiV1.ArticleDocument,
+      query: ArticleDocument,
       variables: {
         slug
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     })
   ])
 
   if (article.data.article) {
     await Promise.all([
       client.query({
-        query: ApiV1.ArticleListDocument,
+        query: ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags.map((tag: ApiV1.Tag) => tag.id)
+            tags: article.data.article.tags.map((tag: Tag) => tag.id)
           },
           take: 4
         }
       }),
       client.query({
-        query: ApiV1.CommentListDocument,
+        query: CommentListDocument,
         variables: {
           itemId: article.data.article.id
         }
@@ -103,7 +108,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     ])
   }
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,

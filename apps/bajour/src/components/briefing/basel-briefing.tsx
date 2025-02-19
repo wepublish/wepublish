@@ -1,6 +1,8 @@
 import {Button, styled} from '@mui/material'
+import {Image} from '@wepublish/image/website'
 import {NextWepublishLink} from '@wepublish/utils/website'
-import {ApiV1, BuilderTeaserGridBlockProps, Image} from '@wepublish/website'
+import {CustomTeaser, FullImageFragment} from '@wepublish/website/api'
+import {BuilderTeaserGridBlockProps} from '@wepublish/website/builder'
 
 import {isWithinTimeslot} from '../../utils/is-within-timeslot'
 import {fluidTypography} from '../website-builder-overwrites/blocks/teaser-overwrite.style'
@@ -10,7 +12,7 @@ import FcbBg from './fcb.jpg'
 import {BriefingType, isBaselBriefingIgnoringBlockType} from './is-briefing'
 
 export type BaselBriefingProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
-  teasers?: ApiV1.CustomTeaser[]
+  teasers?: CustomTeaser[]
 }
 
 const baselBg = {
@@ -31,7 +33,7 @@ const baselBg = {
   s: BaselBg.src,
   xs: BaselBg.src,
   xxs: BaselBg.src
-} satisfies ApiV1.FullImageFragment
+} satisfies FullImageFragment
 
 const fcbBg = {
   id: '1234',
@@ -51,7 +53,7 @@ const fcbBg = {
   s: FcbBg.src,
   xs: FcbBg.src,
   xxs: FcbBg.src
-} satisfies ApiV1.FullImageFragment
+} satisfies FullImageFragment
 
 const fasnachtBg = {
   id: '1234',
@@ -71,7 +73,7 @@ const fasnachtBg = {
   s: FasnachtBg.src,
   xs: FasnachtBg.src,
   xxs: FasnachtBg.src
-} satisfies ApiV1.FullImageFragment
+} satisfies FullImageFragment
 
 const getValuesBasedOnBriefing = (briefing: BriefingType) => {
   switch (briefing) {

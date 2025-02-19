@@ -1,7 +1,7 @@
 import {delegateToSchema} from '@graphql-tools/delegate'
 import {schemaFromExecutor} from '@graphql-tools/wrap'
 import {PrismaClient} from '@prisma/client'
-import {CanCreatePeer, CanGetPeerProfile} from '@wepublish/permissions/api'
+import {CanCreatePeer, CanGetPeerProfile} from '@wepublish/permissions'
 import {SettingName} from '@wepublish/settings/api'
 import {GraphQLResolveInfo} from 'graphql'
 import {Context, createFetcher} from '../../context'

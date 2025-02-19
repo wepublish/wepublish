@@ -1,10 +1,5 @@
 import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
-import {
-  CanCreateEvent,
-  CanDeleteEvent,
-  CanUpdateEvent,
-  Permissions
-} from '@wepublish/permissions/api'
+import {CanCreateEvent, CanDeleteEvent, CanUpdateEvent} from '@wepublish/permissions'
 import {Public} from '@wepublish/authentication/api'
 import {
   CreateEventInput,
@@ -19,6 +14,7 @@ import {EventDataloaderService} from './event-dataloader.service'
 import {Tag} from '@wepublish/tag/api'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Event as PEvent} from '@prisma/client'
+import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => Event)
 export class EventResolver {

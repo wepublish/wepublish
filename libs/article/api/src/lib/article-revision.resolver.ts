@@ -5,7 +5,8 @@ import {Image} from '@wepublish/image/api'
 import {ArticleRevisionService} from './article-revision.service'
 import {Property} from '@wepublish/utils/api'
 import {CurrentUser, UserSession} from '@wepublish/authentication/api'
-import {hasPermission, CanGetArticle} from '@wepublish/permissions/api'
+import {CanGetArticle} from '@wepublish/permissions'
+import {hasPermission} from '@wepublish/permissions/api'
 
 @Resolver(() => ArticleRevision)
 export class ArticleRevisionResolver {

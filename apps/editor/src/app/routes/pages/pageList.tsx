@@ -11,6 +11,7 @@ import {
   usePageListQuery,
   useUnpublishPageMutation
 } from '@wepublish/editor/api-v2'
+import {CanPreview} from '@wepublish/permissions'
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -454,6 +455,6 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_CREATE_PAGE',
   'CAN_DELETE_PAGE',
   'CAN_PUBLISH_PAGE',
-  'CAN_GET_PAGE_PREVIEW_LINK'
+  CanPreview.id
 ])(PageList)
 export {CheckedPermissionComponent as PageList}

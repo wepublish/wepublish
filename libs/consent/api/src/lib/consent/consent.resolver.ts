@@ -1,13 +1,9 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {
-  CanCreateConsent,
-  CanDeleteConsent,
-  CanUpdateConsent,
-  Permissions
-} from '@wepublish/permissions/api'
+import {CanCreateConsent, CanDeleteConsent, CanUpdateConsent} from '@wepublish/permissions'
 import {Public} from '@wepublish/authentication/api'
 import {Consent, ConsentFilter, CreateConsentInput, UpdateConsentInput} from './consent.model'
 import {ConsentService} from './consent.service'
+import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver()
 export class ConsentResolver {

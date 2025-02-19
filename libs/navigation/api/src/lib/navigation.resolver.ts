@@ -1,5 +1,6 @@
 import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
-import {CanCreateNavigation, CanDeleteNavigation, Permissions} from '@wepublish/permissions/api'
+import {CanCreateNavigation, CanDeleteNavigation} from '@wepublish/permissions'
+import {Permissions} from '@wepublish/permissions/api'
 import {
   BaseNavigationLink,
   CreateNavigationInput,

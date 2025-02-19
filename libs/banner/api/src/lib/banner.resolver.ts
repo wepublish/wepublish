@@ -15,11 +15,11 @@ import {
   CanCreateBanner,
   CanUpdateBanner,
   CanDeleteBanner,
-  CanGetBanner,
-  Permissions
-} from '@wepublish/permissions/api'
+  CanGetBanner
+} from '@wepublish/permissions'
 import {Public} from '@wepublish/authentication/api'
 import {NotFoundException} from '@nestjs/common'
+import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => Banner)
 export class BannerResolver {

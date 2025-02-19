@@ -3229,6 +3229,7 @@ export type User = {
   name: Scalars['String']
   oauth2Accounts: Array<OAuth2Account>
   paymentProviderCustomers: Array<PaymentProviderCustomer>
+  permissions: Array<Scalars['String']>
   properties: Array<PublicProperties>
 }
 

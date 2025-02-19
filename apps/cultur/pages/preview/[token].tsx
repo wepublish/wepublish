@@ -1,31 +1,30 @@
-import {ApiV1} from '@wepublish/website'
 import {GetServerSideProps} from 'next'
 import getConfig from 'next/config'
 
-import PageBySlugIdOrToken from '../[slug]'
+import PageBySlugOrId from '../[slug]'
 
 export default function PreviewPageByToken() {
-  return <PageBySlugIdOrToken />
+  return <PageBySlugOrId />
 }
 
 export const getServerSideProps = (async ({params}) => {
   const {token} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
   const [page] = await Promise.all([
     client.query({
-      query: ApiV1.PageDocument,
+      query: PageDocument,
       variables: {
         token
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     })
   ])
 
@@ -35,7 +34,7 @@ export const getServerSideProps = (async ({params}) => {
     }
   }
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {props}
 }) satisfies GetServerSideProps

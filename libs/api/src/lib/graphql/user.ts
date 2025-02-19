@@ -27,6 +27,7 @@ import {GraphQLInvoice} from './invoice'
 import {createProxyingResolver} from '../utility'
 import {GraphQLImage, GraphQLUploadImageInput} from './image'
 import {isMeBySession} from './utils'
+import {uniq} from 'ramda'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
@@ -223,6 +224,16 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublic))),
       resolve: ({properties}) =>
         properties.filter(property => property.public).map(({key, value}) => ({key, value}))
+    },
+    permissions: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString))),
+      resolve: createProxyingResolver(({id}, _, {session}) => {
+        if (!isMeBySession(id, session)) {
+          return []
+        }
+
+        return uniq(session.roles.flatMap(role => role.permissionIDs))
+      })
     }
   }
 })

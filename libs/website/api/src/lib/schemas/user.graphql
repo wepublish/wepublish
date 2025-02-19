@@ -21,6 +21,7 @@ fragment FullUser on User {
   flair
   birthday
   email
+  permissions
 
   address {
     ...FullAddress

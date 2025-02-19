@@ -982,7 +982,7 @@ type Mutation {
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
-  """Creates a page."""
+  """Creates an page."""
   createPage(blocks: [BlockContentInput!]!, description: String, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """Create a new subscription flow"""
@@ -1010,7 +1010,7 @@ type Mutation {
   """Deletes an existing navigation."""
   deleteNavigation(id: String!): Navigation!
 
-  """Deletes a page."""
+  """Deletes an page."""
   deletePage(id: String!): String!
 
   """Delete poll votes"""
@@ -1031,7 +1031,7 @@ type Mutation {
   """Duplicates an article."""
   duplicateArticle(id: String!): Article!
 
-  """Duplicates a page."""
+  """Duplicates an page."""
   duplicatePage(id: String!): Page!
 
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
@@ -1046,7 +1046,7 @@ type Mutation {
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
 
-  """Publishes a page at the given time."""
+  """Publishes an page at the given time."""
   publishPage(id: String!, publishedAt: DateTime!): Page!
   syncTemplates: Boolean
 
@@ -1056,7 +1056,7 @@ type Mutation {
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!
 
-  """Unpublishes all revisions of a page."""
+  """Unpublishes all revisions of an page."""
   unpublishPage(id: String!): Page!
 
   """Updates an article."""
@@ -1075,7 +1075,7 @@ type Mutation {
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
-  """Updates a page."""
+  """Updates an page."""
   updatePage(blocks: [BlockContentInput!]!, description: String, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """Updates an existing setting."""
@@ -1472,7 +1472,7 @@ type Query {
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
-  """Returns a page by id or slug."""
+  """Returns an page by id or slug."""
   page(id: String, slug: String): Page!
 
   """Returns a paginated list of pages based on the filters given."""

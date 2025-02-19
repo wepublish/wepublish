@@ -80,7 +80,7 @@ const Logout = () => {
       localStorage.removeItem(LocalStorageKey.SessionToken)
       authDispatch({type: AuthDispatchActionType.Logout})
     }
-  }, [session])
+  }, [authDispatch, logout, session])
 
   return <Navigate to="/login" replace />
 }

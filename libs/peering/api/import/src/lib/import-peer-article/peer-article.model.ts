@@ -1,5 +1,5 @@
 import {ArgsType, Field, InputType, ObjectType, OmitType, PickType} from '@nestjs/graphql'
-import {PaginatedType} from '@wepublish/api'
+import {PaginatedType} from '@wepublish/utils/api'
 import {Article, ArticleFilter, ArticleListArgs, ArticleRevision} from '@wepublish/article/api'
 import {HasOptionalPeerLc, Peer} from '@wepublish/peering/api'
 

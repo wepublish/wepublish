@@ -12,7 +12,8 @@ import {
   UserInputError
 } from '../../error'
 import {countRichtextChars} from '../../utility'
-import {CanCreateApprovedComment, hasPermission} from '@wepublish/permissions/api'
+import {CanCreateApprovedComment} from '@wepublish/permissions'
+import {hasPermission} from '@wepublish/permissions/api'
 
 export const addPublicComment = async (
   input: {

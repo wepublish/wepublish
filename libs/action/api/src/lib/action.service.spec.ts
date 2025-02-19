@@ -2,7 +2,7 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {ActionService} from './action.service'
 import {PrismaClient} from '@prisma/client'
 import {UserRole} from '@wepublish/user-role/api'
-import {CanGetArticles, CanGetAuthors, CanGetSubscriptions} from '@wepublish/permissions/api'
+import {CanGetArticles, CanGetAuthors, CanGetSubscriptions} from '@wepublish/permissions'
 
 describe('ActionService', () => {
   let service: ActionService

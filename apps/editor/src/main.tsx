@@ -74,6 +74,7 @@ const onDOMContentLoaded = async () => {
     operation.setContext({
       headers: {
         authorization: token ? `Bearer ${token}` : '',
+        preview: 'preview',
         ...context.headers
       },
       credentials: 'include',

@@ -15,13 +15,12 @@ import {URLAdapter} from '@wepublish/nest-modules'
 import {Article as PArticle} from '@prisma/client'
 import {BadRequestException} from '@nestjs/common'
 import {
-  Permissions,
   CanCreateArticle,
   CanDeleteArticle,
   CanPublishArticle,
-  hasPermission,
   CanGetArticle
-} from '@wepublish/permissions/api'
+} from '@wepublish/permissions'
+import {hasPermission, Permissions, PreviewMode} from '@wepublish/permissions/api'
 import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
 import {TrackingPixelService} from '@wepublish/tracking-pixel/api'
 
@@ -146,15 +145,18 @@ export class ArticleResolver {
   }
 
   @ResolveField(() => ArticleRevision)
-  async latest(@Parent() parent: PArticle, @CurrentUser() user: UserSession | undefined) {
+  async latest(
+    @Parent() parent: PArticle,
+    @CurrentUser() user: UserSession | undefined,
+    @PreviewMode() isPreview: boolean
+  ) {
     const {id: articleId} = parent
     const {draft, pending, published} = await this.articleRevisionsDataloader.load(articleId)
 
-    if (!hasPermission(CanGetArticle, user?.roles ?? [])) {
+    if (!isPreview || !hasPermission(CanGetArticle, user?.roles ?? [])) {
       return published
     }
 
-    // @TODO: Only show all when preview enabled
     return draft ?? pending ?? published
   }
 

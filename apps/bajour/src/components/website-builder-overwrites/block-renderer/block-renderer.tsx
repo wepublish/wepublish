@@ -1,12 +1,10 @@
+import {BlockRenderer, isTeaserGridBlock, isTeaserListBlock} from '@wepublish/block-content/website'
+import {BlockContent, TeaserGridBlock} from '@wepublish/website/api'
 import {
-  ApiV1,
-  BlockRenderer,
   BuilderBlockRendererProps,
-  isTeaserGridBlock,
-  isTeaserListBlock,
   useWebsiteBuilder,
   WebsiteBuilderProvider
-} from '@wepublish/website'
+} from '@wepublish/website/builder'
 import {allPass, cond} from 'ramda'
 import {Fragment, useCallback, useMemo} from 'react'
 
@@ -38,7 +36,7 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
   // They are hidden for now instead of removed from the API as we will migrate these to article metadata at some point.
   // This allows us to show predefined related articles & enhance it with automatic generated once.
   const isOldRelatedArticles = useCallback(
-    (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
+    (block: BlockContent): block is TeaserGridBlock =>
       allPass([
         isTeaserGridBlock,
         () => props.type === 'Article' && props.index === props.count - 1

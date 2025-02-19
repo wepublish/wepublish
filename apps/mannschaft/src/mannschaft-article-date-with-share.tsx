@@ -1,10 +1,6 @@
 import {css, NoSsr, styled} from '@mui/material'
-import {
-  ArticleDate,
-  ArticleDateWrapper,
-  BuilderArticleDateProps,
-  useWebsiteBuilder
-} from '@wepublish/website'
+import {ArticleDate, ArticleDateWrapper} from '@wepublish/article/website'
+import {BuilderArticleDateProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdShare} from 'react-icons/md'
 
 const iconButtonStyles = css`

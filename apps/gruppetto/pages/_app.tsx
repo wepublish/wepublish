@@ -11,15 +11,14 @@ import {
 } from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
+import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {theme} from '@wepublish/ui'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
-import {
-  ApiV1,
-  FooterContainer,
-  NavbarContainer,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {AdminBar} from '@wepublish/website/admin'
+import {UserSession} from '@wepublish/website/api'
+import {createWithV1ApiClient} from '@wepublish/website/api'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
@@ -122,7 +121,7 @@ const NavBar = styled(NavbarContainer)`
 const {publicRuntimeConfig} = getConfig()
 
 type CustomAppProps = AppProps<{
-  sessionToken?: ApiV1.UserSession
+  sessionToken?: UserSession
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
@@ -221,6 +220,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 </FooterContainer>
               </Spacer>
 
+              <AdminBar />
+
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
               )}
@@ -232,8 +233,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   )
 }
 
-const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  CustomApp
-)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(CustomApp)
 
 export {ConnectedApp as default}

@@ -1,29 +1,31 @@
 import {styled} from '@mui/material'
 import {
-  BuilderEmbedBlockProps,
+  hasBlockStyle,
+  isIFrameBlock,
+  isImageBlock,
+  isRichTextBlock
+} from '@wepublish/block-content/website'
+import {BlockContent, ImageBlock, RichTextBlock} from '@wepublish/website/api'
+import {
+  BuilderIFrameBlockProps,
   BuilderImageBlockProps,
-  BuilderRichTextBlockProps
-} from '@wepublish/website'
-import {useWebsiteBuilder} from '@wepublish/website'
-import {ApiV1} from '@wepublish/website'
-import {hasBlockStyle} from '@wepublish/website'
-import {isImageBlock} from '@wepublish/website'
-import {isRichTextBlock} from '@wepublish/website'
-import {isEmbedBlock} from '@wepublish/website'
+  BuilderRichTextBlockProps,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
 import {allPass, anyPass} from 'ramda'
 
 export const MannschaftContentBox = (
-  props: BuilderImageBlockProps | BuilderRichTextBlockProps | BuilderEmbedBlockProps
+  props: BuilderImageBlockProps | BuilderRichTextBlockProps | BuilderIFrameBlockProps
 ) => {
   const {
-    blocks: {Image, RichText, Embed}
+    blocks: {Image, RichText, IFrame}
   } = useWebsiteBuilder()
 
   return (
     <MannschaftContentBoxWrapper>
       {isImageBlock(props) && <Image {...props} />}
       {isRichTextBlock(props) && <RichText {...props} />}
-      {isEmbedBlock(props) && <Embed {...props} />}
+      {isIFrameBlock(props) && <IFrame {...props} />}
     </MannschaftContentBoxWrapper>
   )
 }
@@ -38,8 +40,8 @@ const MannschaftContentBoxWrapper = styled('div')`
 `
 
 export const isContentBoxBlock = (
-  block: ApiV1.Block
-): block is ApiV1.ImageBlock | ApiV1.RichTextBlock | ApiV1.EmbedBlock =>
-  allPass([anyPass([isImageBlock, isRichTextBlock, isEmbedBlock]), hasBlockStyle('ContentBox')])(
+  block: BlockContent
+): block is ImageBlock | RichTextBlock | IFrameBlock =>
+  allPass([anyPass([isImageBlock, isRichTextBlock, isIFrameBlock]), hasBlockStyle('ContentBox')])(
     block
   )

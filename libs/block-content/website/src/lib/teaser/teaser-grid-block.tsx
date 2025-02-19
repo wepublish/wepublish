@@ -35,8 +35,7 @@ export const TeaserGridBlockWrapper = styled('div', {
 // @TODO: Have API filter these out by default
 export const isFilledTeaser = (teaser: Teaser | null | undefined): teaser is Teaser => {
   switch (teaser?.__typename) {
-    case 'ArticleTeaser':
-    case 'PeerArticleTeaser': {
+    case 'ArticleTeaser': {
       return Boolean(teaser.article)
     }
 

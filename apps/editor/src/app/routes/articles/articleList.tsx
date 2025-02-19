@@ -11,6 +11,7 @@ import {
   useDuplicateArticleMutation,
   useUnpublishArticleMutation
 } from '@wepublish/editor/api-v2'
+import {CanPreview} from '@wepublish/permissions'
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -487,6 +488,6 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_ARTICLE',
   'CAN_CREATE_ARTICLE',
   'CAN_DELETE_ARTICLE',
-  'CAN_GET_ARTICLE_PREVIEW_LINK'
+  CanPreview.id
 ])(ArticleList)
 export {CheckedPermissionComponent as ArticleList}

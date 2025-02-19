@@ -1,6 +1,6 @@
 import {applyDecorators, SetMetadata} from '@nestjs/common'
 import {PublicGuard} from './public.guard'
-import {OneOf} from './one-of.decorator'
+import {OneOf} from '@wepublish/nest-modules'
 
 export const PUBLIC_METADATA_KEY = 'public'
 

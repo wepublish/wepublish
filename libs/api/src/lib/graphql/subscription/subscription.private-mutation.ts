@@ -4,7 +4,7 @@ import {
   CanCancelSubscription,
   CanCreateSubscription,
   CanDeleteSubscription
-} from '@wepublish/permissions/api'
+} from '@wepublish/permissions'
 import {
   MetadataProperty,
   Prisma,

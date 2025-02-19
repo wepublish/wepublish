@@ -1,4 +1,4 @@
-import {CanGetPaymentProviders, CanLoginAsOtherUser} from '@wepublish/permissions/api'
+import {CanGetPaymentProviders, CanLoginAsOtherUser} from '@wepublish/permissions'
 import {SortOrder} from '@wepublish/utils/api'
 import {GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 import {Context} from '../context'

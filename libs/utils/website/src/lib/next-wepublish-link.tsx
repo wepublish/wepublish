@@ -1,5 +1,5 @@
 import {Link as BuilderLink} from '@wepublish/ui'
-import {BuilderLinkProps} from '@wepublish/website'
+import {BuilderLinkProps} from '@wepublish/website/builder'
 import NextLink from 'next/link'
 import {forwardRef} from 'react'
 

@@ -129,7 +129,7 @@ import {
 } from './user/user.private-mutation'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
-import {CanSendJWTLogin} from '@wepublish/permissions/api'
+import {CanSendJWTLogin} from '@wepublish/permissions'
 import {mailLogType} from '@wepublish/mail/api'
 import {GraphQLSubscriptionDeactivationReason} from './subscriptionDeactivation'
 
