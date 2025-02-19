@@ -9,13 +9,27 @@ import {
 } from '@wepublish/website'
 import {allPass} from 'ramda'
 
-import {Box, styled} from '@mui/material'
+import {Box, css, styled, useTheme} from '@mui/material'
 import {RuckSpiegelTeaser} from '../custom-teasers/ruck-spiegel'
+import {useMemo} from 'react'
+import {Advertisement} from '../components/advertisement'
 
 export const isRuckSpiegelTeasers = (
   block: ApiV1.Block
 ): block is ApiV1.TeaserGridBlock | ApiV1.TeaserListBlock =>
   allPass([hasBlockStyle('RuckSpiegel'), isTeaserListBlock])(block)
+
+const useLinkStyles = () => {
+  const theme = useTheme()
+
+  return useMemo(
+    () => css`
+      padding-top: ${theme.spacing(1.5)};
+      color: ${theme.palette.accent.contrastText};
+    `,
+    [theme]
+  )
+}
 
 export const RuckSpiegelBlockStyle = ({
   title,
@@ -26,13 +40,14 @@ export const RuckSpiegelBlockStyle = ({
   const filledTeasers = teasers.filter(isFilledTeaser)
   const numColumns = 1
 
+  const linkStyles = useLinkStyles()
   const {
-    elements: {H3}
+    elements: {H3, Link}
   } = useWebsiteBuilder()
 
   return (
-    <>
-      <RuckSpiegelTeaserListWrapper>
+    <RuckSpiegelTeaserListWrapper>
+      <TeaserList>
         <H3 gutterBottom>{title}</H3>
         {filledTeasers.map((teaser, index) => (
           <RuckSpiegelTeaser
@@ -43,18 +58,33 @@ export const RuckSpiegelBlockStyle = ({
             blockStyle={blockStyle}
           />
         ))}
-      </RuckSpiegelTeaserListWrapper>
-      <Filler />
-    </>
+        <Link href={'/a/tag/ruckspiegel'} css={linkStyles}>
+          Zum Archiv {'->'}
+        </Link>
+      </TeaserList>
+      <Filler>
+        <Advertisement type={'small'} />
+      </Filler>
+    </RuckSpiegelTeaserListWrapper>
   )
 }
 
 const RuckSpiegelTeaserListWrapper = styled(Box)`
-  padding: ${({theme}) => theme.spacing(3)};
-  background-color: ${({theme}) => theme.palette.primary.main};
+  display: grid;
+  gap: ${({theme}) => theme.spacing(2.5)};
+  grid-template-columns: 1fr;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`
+
+const TeaserList = styled('div')`
+  grid-column: span 1;
   display: flex;
   flex-direction: column;
-  grid-column: span 3;
+  padding: ${({theme}) => theme.spacing(3)};
+  background-color: ${({theme}) => theme.palette.primary.main};
 
   ${({theme}) => theme.breakpoints.up('md')} {
     grid-column: span 2;
@@ -63,10 +93,5 @@ const RuckSpiegelTeaserListWrapper = styled(Box)`
 `
 
 const Filler = styled(Box)`
-  display: none;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    display: block;
-    grid-column: span 1;
-  }
+  grid-column: span 1;
 `

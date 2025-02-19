@@ -59,38 +59,42 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const linkStyles = useLinkStyles()
 
   return (
-    <Link href={href} className={className} css={linkStyles}>
-      <TeaserImageWrapper>{image && <Image image={image} css={imageStyles} />}</TeaserImageWrapper>
+    <TeaserWrapper {...alignment}>
+      <Link href={href} className={className} css={linkStyles}>
+        <TeaserImageWrapper>
+          {image && <Image image={image} css={imageStyles} />}
+        </TeaserImageWrapper>
 
-      {preTitle && (
-        <OnlineReportsTeaserPreTitleWrapper>{preTitle}</OnlineReportsTeaserPreTitleWrapper>
-      )}
-      {!preTitle && <TeaserPreTitleNoContent />}
-
-      <H4 component={OnlineReportsTeaserTitleWrapper}>{title}</H4>
-      {lead && <Paragraph component={TeaserLead}>{lead}</Paragraph>}
-
-      <TeaserMetadata>
-        {authors && authors?.length ? (
-          <TeaserAuthors>Von {authors?.join(', ')} </TeaserAuthors>
-        ) : null}
-
-        {publishDate && (
-          <TeaserTime suppressHydrationWarning dateTime={publishDate}>
-            {authors && authors?.length ? '| ' : null}
-            {date.format(new Date(publishDate), false)}{' '}
-          </TeaserTime>
+        {preTitle && (
+          <OnlineReportsTeaserPreTitleWrapper>{preTitle}</OnlineReportsTeaserPreTitleWrapper>
         )}
-      </TeaserMetadata>
+        {!preTitle && <TeaserPreTitleNoContent />}
 
-      {!!tags?.length && (
-        <TeaserTags>
-          {tags?.slice(0, 5).map(tag => (
-            <Chip key={tag.id} label={tag.tag} color="primary" variant="outlined" />
-          ))}
-        </TeaserTags>
-      )}
-    </Link>
+        <H4 component={OnlineReportsTeaserTitleWrapper}>{title}</H4>
+        {lead && <Paragraph component={TeaserLead}>{lead}</Paragraph>}
+
+        <TeaserMetadata>
+          {authors && authors?.length ? (
+            <TeaserAuthors>Von {authors?.join(', ')} </TeaserAuthors>
+          ) : null}
+
+          {publishDate && (
+            <TeaserTime suppressHydrationWarning dateTime={publishDate}>
+              {authors && authors?.length ? '| ' : null}
+              {date.format(new Date(publishDate), false)}{' '}
+            </TeaserTime>
+          )}
+        </TeaserMetadata>
+
+        {!!tags?.length && (
+          <TeaserTags>
+            {tags?.slice(0, 5).map(tag => (
+              <Chip key={tag.id} label={tag.tag} color="primary" variant="outlined" />
+            ))}
+          </TeaserTags>
+        )}
+      </Link>
+    </TeaserWrapper>
   )
 }
 
@@ -109,11 +113,6 @@ export const OnlineReportsBaseTeaser = styled(Teaser)`
   color: inherit;
   text-decoration: none;
   display: grid;
-  grid-column: span 3;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    grid-column: span 1;
-  }
 
   grid-template-areas:
     'image'
@@ -129,6 +128,10 @@ export const OnlineReportsBaseTeaser = styled(Teaser)`
   }
 
   ${TeaserMetadata} {
+    display: none;
+  }
+
+  ${TeaserPreTitleNoContent} {
     display: none;
   }
 

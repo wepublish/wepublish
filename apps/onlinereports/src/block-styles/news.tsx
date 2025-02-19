@@ -12,6 +12,7 @@ import {allPass} from 'ramda'
 import {NewsTeaser} from '../custom-teasers/news'
 import {Box, css, styled, useTheme} from '@mui/material'
 import {useMemo} from 'react'
+import {Advertisement} from '../components/advertisement'
 
 export const isNewsTeasers = (
   block: ApiV1.Block
@@ -46,43 +47,52 @@ export const NewsBlockStyle = ({
   return (
     <>
       <NewsTeaserListWrapper>
-        <H3 gutterBottom>{title}</H3>
-        {filledTeasers.map((teaser, index) => (
-          <NewsTeaser
-            key={index}
-            teaser={teaser}
-            numColumns={numColumns}
-            alignment={alignmentForTeaserBlock(index, numColumns)}
-            blockStyle={blockStyle}
-          />
-        ))}
-        <Link href={'/a/tag/news'} css={linkStyles}>
-          Weitere news
-        </Link>
+        <TeaserList>
+          <H3 gutterBottom>{title}</H3>
+          {filledTeasers.map((teaser, index) => (
+            <NewsTeaser
+              key={index}
+              teaser={teaser}
+              numColumns={numColumns}
+              alignment={alignmentForTeaserBlock(index, numColumns)}
+              blockStyle={blockStyle}
+            />
+          ))}
+          <Link href={'/a/tag/news'} css={linkStyles}>
+            Weitere news {'->'}
+          </Link>
+        </TeaserList>
+        <Filler>
+          <Advertisement type={'small'} />
+        </Filler>
       </NewsTeaserListWrapper>
-      <Filler />
     </>
   )
 }
 
 const NewsTeaserListWrapper = styled(Box)`
-  padding: ${({theme}) => theme.spacing(3)};
-  background-color: ${({theme}) => theme.palette.primary.main};
+  display: grid;
+  gap: ${({theme}) => theme.spacing(2.5)};
+  grid-template-columns: 1fr;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`
+
+const TeaserList = styled('div')`
+  grid-column: span 1;
   display: flex;
   flex-direction: column;
-  grid-column: span 3;
+  padding: ${({theme}) => theme.spacing(3)};
+  background-color: ${({theme}) => theme.palette.primary.main};
 
   ${({theme}) => theme.breakpoints.up('md')} {
     grid-column: span 2;
-    padding: ${({theme}) => theme.spacing(4)};
+    padding: ${({theme}) => theme.spacing(4.5)};
   }
 `
 
 const Filler = styled(Box)`
-  display: none;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    display: block;
-    grid-column: span 1;
-  }
+  grid-column: span 1;
 `

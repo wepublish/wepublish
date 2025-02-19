@@ -1,30 +1,17 @@
-import {
-  alignmentForTeaserBlock,
-  BuilderTeaserListBlockProps,
-  useWebsiteBuilder
-} from '@wepublish/website'
+import {BuilderTeaserListBlockProps, TeaserListBlock, useWebsiteBuilder} from '@wepublish/website'
+import {css, styled} from '@mui/material'
 
-export const OnlineReportsTeaserListBlock = ({
-  title,
-  teasers,
-  blockStyle,
-  className
-}: BuilderTeaserListBlockProps) => {
+const ORTeaserListBlockWrapper = styled('div')`
+  //grid-column: span 3;
+`
+
+export const OnlineReportsTeaserListBlock = (props: BuilderTeaserListBlockProps) => {
   const {
     elements: {H5},
     blocks: {Teaser}
   } = useWebsiteBuilder()
 
-  return (
-    <>
-      {teasers.map((teaser, index) => (
-        <Teaser
-          key={index}
-          teaser={teaser}
-          alignment={alignmentForTeaserBlock(index, 3)}
-          blockStyle={blockStyle}
-        />
-      ))}
-    </>
-  )
+  const teaserListCss = css``
+
+  return <TeaserListBlock {...props} css={teaserListCss} />
 }

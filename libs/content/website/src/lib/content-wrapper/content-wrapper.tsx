@@ -30,8 +30,7 @@ export const useFullWidthContent = () => {
 
 export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
   display: grid;
-  // Revert
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({theme}) => theme.spacing(2.5)};
 
   ${({theme, fullWidth}) =>
     !fullWidth &&

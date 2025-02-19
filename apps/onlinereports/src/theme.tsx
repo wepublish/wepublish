@@ -22,6 +22,10 @@ const theme = createTheme(WePTheme, {
       primary: '#10243A'
     },
     primary: augmentColor({color: {main: '#89B9DC', light: '#89B9DC', contrastText: '#10243A'}}),
+    secondary: {
+      background: '#323232',
+      main: '#fff'
+    },
     accent: augmentColor({
       color: {
         main: '#nnn',

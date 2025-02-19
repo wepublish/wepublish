@@ -1,5 +1,5 @@
 import {EmotionCache} from '@emotion/cache'
-import {Box, Container, CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {Container, CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
@@ -30,9 +30,10 @@ import theme from '../src/theme'
 
 import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
 import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
-import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
 import {OnlineReportsAuthorChip} from '../src/components/author-chip'
 import {OnlineReportsArticleAuthors} from '../src/components/online-reports-article-authors'
+import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
+import {Advertisement} from '../src/components/advertisement'
 
 setDefaultOptions({
   locale: de
@@ -61,11 +62,6 @@ const Spacer = styled('div')`
   main {
     overflow-x: hidden;
   }
-`
-
-const Advertisement = styled(Box)`
-  background: repeating-linear-gradient(-45deg, #dde8ee, #dde8ee 15px, #eee 15px, #eee 40px);
-  border: 5px solid #eee;
 `
 
 const MainSpacer = styled('div')`
@@ -117,29 +113,19 @@ const DesktopSidebarAd = styled(Container)`
 
   margin-bottom: 40px;
 
-  @media (min-width: 1050px) {
+  @media (min-width: 1250px) {
     grid-template-columns: 994px 300px;
-  }
-
-  ${Advertisement}:first-child {
-    width: 994px;
-    margin: auto;
-    @media (max-width: 1050px) {
-      width: 300px;
-    }
   }
 
   ${({theme}) => theme.breakpoints.up('lg')} {
     padding-left: 0;
     padding-right: 0;
   }
+`
 
-  > ${Advertisement} {
+const AdvertisementPlacer = styled('div')`
+  @media (max-width: 1250px) {
     display: none;
-
-    ${theme.breakpoints.up('md')} {
-      display: block;
-    }
   }
 `
 
@@ -205,10 +191,12 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <main>
                   <DesktopSidebarAd maxWidth="lg">
                     <MainSpacer>
-                      <Advertisement height={250} />
+                      <Advertisement type={'whiteboard'} />
                       <Component {...pageProps} />
                     </MainSpacer>
-                    <Advertisement height={600} />
+                    <AdvertisementPlacer>
+                      <Advertisement type={'half-page'} />
+                    </AdvertisementPlacer>
                   </DesktopSidebarAd>
                 </main>
 

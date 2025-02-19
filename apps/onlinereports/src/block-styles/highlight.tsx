@@ -6,7 +6,8 @@ import {
   hasBlockStyle,
   isFilledTeaser,
   isTeaserGridBlock,
-  isTeaserListBlock
+  isTeaserListBlock,
+  TeaserGridBlockWrapper
 } from '@wepublish/website'
 import {allPass, anyPass} from 'ramda'
 
@@ -26,7 +27,7 @@ export const HighlightBlockStyle = ({
   const numColumns = 1
 
   return (
-    <>
+    <TeaserGridBlockWrapper className={className} numColumns={numColumns}>
       {filledTeasers.map((teaser, index) => (
         <HighlightTeaser
           key={index}
@@ -36,6 +37,6 @@ export const HighlightBlockStyle = ({
           blockStyle={blockStyle}
         />
       ))}
-    </>
+    </TeaserGridBlockWrapper>
   )
 }
