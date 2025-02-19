@@ -318,7 +318,7 @@ export const Avatar = styled(Image)`
   }
 `
 
-const DesktopOnly = styled('span')`
+const HideOnMobile = styled('span')`
   display: none;
 
   ${({theme}) => theme.breakpoints.up('sm')} {
@@ -414,7 +414,7 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
                   href="https://bajour.ch/basel-briefing-podcast"
                   target={'_blank'}>
                   <ReadMoreButton variant="outlined" color="inherit" size="small">
-                    <DesktopOnly>Briefing </DesktopOnly>hören
+                    <HideOnMobile>Briefing </HideOnMobile>hören
                   </ReadMoreButton>
                 </LinkWrapper>
               )}
@@ -424,7 +424,7 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
                 href={briefingDynamicValues.contentUrl}
                 target={'_blank'}>
                 <ReadMoreButton variant="outlined" color="inherit" size="small">
-                  <DesktopOnly>Briefing </DesktopOnly>lesen
+                  <HideOnMobile>Briefing </HideOnMobile>lesen
                 </ReadMoreButton>
               </LinkWrapper>
             </ButtonRow>
