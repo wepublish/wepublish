@@ -33,7 +33,8 @@ export enum BlockType {
   HTML = 'html',
   Poll = 'poll',
   Comment = 'comment',
-  Event = 'event'
+  Event = 'event',
+  Subscribe = 'subscribe'
 }
 
 export interface BaseBlock {
@@ -129,6 +130,10 @@ export interface EmbedBlock extends BaseBlock {
 export interface HTMLBlock extends BaseBlock {
   type: BlockType.HTML
   html: string
+}
+
+export interface SubscribeBlock extends BaseBlock {
+  type: BlockType.Subscribe
 }
 
 export type PollAnswerWithVoteCount = PollAnswer & {

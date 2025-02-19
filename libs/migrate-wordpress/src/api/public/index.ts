@@ -228,6 +228,7 @@ export type Block =
   | QuoteBlock
   | RichTextBlock
   | SoundCloudTrackBlock
+  | SubscribeBlock
   | TeaserGridBlock
   | TeaserGridFlexBlock
   | TeaserListBlock
@@ -2129,6 +2130,11 @@ export type Stats = {
   firstArticleDate?: Maybe<Scalars['DateTime']>
 }
 
+export type SubscribeBlock = {
+  __typename?: 'SubscribeBlock'
+  blockStyle?: Maybe<Scalars['String']>
+}
+
 export type Subscription = {
   __typename?: 'Subscription'
   autoRenew: Scalars['Boolean']
@@ -2491,6 +2497,7 @@ export type ArticleQuery = {
       | {__typename: 'QuoteBlock'}
       | {__typename: 'RichTextBlock'; richText: Node[]}
       | {__typename: 'SoundCloudTrackBlock'}
+      | {__typename: 'SubscribeBlock'}
       | {__typename: 'TeaserGridBlock'}
       | {__typename: 'TeaserGridFlexBlock'}
       | {__typename: 'TeaserListBlock'}

@@ -4,6 +4,7 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website/builder'
 import {isHtmlBlock} from './html/html-block'
+import {isSubscribeBlock} from './subscribe/subscribe-block'
 import {isImageBlock} from './image/image-block'
 import {isQuoteBlock} from './quote/quote-block'
 import {isRichTextBlock} from './richtext/richtext-block'
@@ -92,6 +93,7 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
       [isBreakBlock, block => <blocks.Break {...block} />],
       [isRichTextBlock, block => <blocks.RichText {...block} />],
       [isHtmlBlock, block => <blocks.HTML {...block} />],
+      [isSubscribeBlock, block => <blocks.Subscribe {...block} />],
       [isEventBlock, block => <blocks.Event {...block} />],
       [isPollBlock, block => <blocks.Poll {...block} />],
       [isListicleBlock, block => <blocks.Listicle {...block} />],

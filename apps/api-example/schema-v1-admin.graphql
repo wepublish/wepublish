@@ -339,7 +339,7 @@ type PageRevision {
   blocks: [Block!]!
 }
 
-union Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HTMLBlock | PollBlock | EventBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock
+union Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HTMLBlock | SubscribeBlock | PollBlock | EventBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock
 
 type RichTextBlock {
   blockStyle: String
@@ -441,6 +441,10 @@ type EmbedBlock {
 type HTMLBlock {
   blockStyle: String
   html: String
+}
+
+type SubscribeBlock {
+  blockStyle: String
 }
 
 type PollBlock {
@@ -1671,6 +1675,7 @@ input BlockInput {
   bildwurfAd: BildwurfAdBlockInput
   embed: EmbedBlockInput
   html: HTMLBlockInput
+  subscribe: SubscribeBlockInput
   poll: PollBlockInput
   event: EventBlockInput
   comment: CommentBlockInput
@@ -1793,6 +1798,10 @@ input EmbedBlockInput {
 input HTMLBlockInput {
   blockStyle: String
   html: String
+}
+
+input SubscribeBlockInput {
+  blockStyle: String
 }
 
 input PollBlockInput {
