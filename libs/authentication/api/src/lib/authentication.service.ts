@@ -1,7 +1,8 @@
 import {Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
 import {AuthSessionType, AuthSession} from './auth-session'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from './unselect-password'
+import {addPredefinedPermissions} from '@wepublish/permissions/api'
 
 @Injectable()
 export class AuthenticationService {
@@ -27,13 +28,15 @@ export class AuthenticationService {
         id: tokenMatch.id,
         name: tokenMatch.name,
         token: tokenMatch.token,
-        roles: await this.prisma.userRole.findMany({
-          where: {
-            id: {
-              in: tokenMatch.roleIDs
+        roles: (
+          await this.prisma.userRole.findMany({
+            where: {
+              id: {
+                in: tokenMatch.roleIDs
+              }
             }
-          }
-        })
+          })
+        ).map(addPredefinedPermissions)
       }
     }
 
@@ -56,13 +59,15 @@ export class AuthenticationService {
         createdAt: session.createdAt,
         expiresAt: session.expiresAt,
         user,
-        roles: await this.prisma.userRole.findMany({
-          where: {
-            id: {
-              in: user.roleIDs
+        roles: (
+          await this.prisma.userRole.findMany({
+            where: {
+              id: {
+                in: user.roleIDs
+              }
             }
-          }
-        })
+          })
+        ).map(addPredefinedPermissions)
       }
     }
 

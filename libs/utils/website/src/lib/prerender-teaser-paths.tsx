@@ -1,5 +1,11 @@
-import {ApiV1} from '@wepublish/website'
-import {FullTagFragment, FullTagFragmentDoc} from '@wepublish/website/api'
+import {
+  Article,
+  FullTagFragment,
+  FullTagFragmentDoc,
+  getV1ApiClient,
+  Page,
+  PageDocument
+} from '@wepublish/website/api'
 import {GetStaticPaths} from 'next'
 import getConfig from 'next/config'
 
@@ -7,10 +13,10 @@ export const getPagePathsBasedOnPage =
   (pageSlug: string, maxPathCount = 20, excludedSlugs?: string[]): GetStaticPaths =>
   async () => {
     const {publicRuntimeConfig} = getConfig()
-    const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+    const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
     await client.query({
-      query: ApiV1.PageDocument,
+      query: PageDocument,
       variables: {
         slug: pageSlug
       }
@@ -21,7 +27,7 @@ export const getPagePathsBasedOnPage =
 
     for (const storeObj of cache) {
       if (storeObj?.__typename === 'Page') {
-        const slug = (storeObj as ApiV1.Page).slug
+        const slug = (storeObj as Page).slug
         if (slug !== pageSlug && !excludedSlugs?.includes(slug)) {
           pageSlugs.push(slug)
         }
@@ -46,10 +52,10 @@ export const getArticlePathsBasedOnPage =
   (pageSlug: string, maxPathCount = 20): GetStaticPaths =>
   async () => {
     const {publicRuntimeConfig} = getConfig()
-    const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+    const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
     await client.query({
-      query: ApiV1.PageDocument,
+      query: PageDocument,
       variables: {
         slug: pageSlug
       }
@@ -59,7 +65,7 @@ export const getArticlePathsBasedOnPage =
     const articleSlugs = [] as {slug: string; tag?: string}[]
 
     for (const storeObj of cache) {
-      if (storeObj?.__typename === 'Article' && !(storeObj as ApiV1.Article).peeredArticleURL) {
+      if (storeObj?.__typename === 'Article' && !(storeObj as Article).peeredArticleURL) {
         const article = storeObj as {slug: string; tags: {__ref: string}[]}
         let tag: string | undefined
 

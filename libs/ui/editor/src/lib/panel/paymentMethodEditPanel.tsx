@@ -1,7 +1,7 @@
 import {
   FullPaymentMethodFragment,
   FullPaymentProviderFragment,
-  ImageRefFragment,
+  FullImageFragment,
   useCreatePaymentMethodMutation,
   usePaymentMethodQuery,
   usePaymentProviderListQuery,
@@ -40,7 +40,7 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
   const [paymentProviders, setPaymentProviders] = useState<FullPaymentProviderFragment[]>([])
 
   const [imageSelectionOpen, setImageSelectionOpen] = useState(false)
-  const [image, setImage] = useState<ImageRefFragment>()
+  const [image, setImage] = useState<FullImageFragment>()
 
   const {
     data,
@@ -255,7 +255,7 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
         }}>
         <ImageSelectPanel
           onClose={() => setImageSelectionOpen(false)}
-          onSelect={(image: ImageRefFragment) => {
+          onSelect={(image: FullImageFragment) => {
             setImage(image)
             setImageSelectionOpen(false)
           }}

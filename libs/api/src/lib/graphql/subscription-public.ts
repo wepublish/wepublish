@@ -1,6 +1,5 @@
 import {
   GraphQLBoolean,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -16,12 +15,14 @@ import {GraphQLMetadataPropertyPublic} from './common'
 import {GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
 import {GraphQLPublicPaymentMethod} from './paymentMethod'
 import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
+import {GraphQLPublicUser} from './user'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {add} from 'date-fns'
 
 export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithRelations, Context>({
-  name: 'Subscription',
-  fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+  name: 'PublicSubscription',
+  fields: () => ({
+    id: {type: new GraphQLNonNull(GraphQLString)},
     memberPlan: {
       type: new GraphQLNonNull(GraphQLPublicMemberPlan),
       resolve({memberPlanID}, args, {loaders}) {
@@ -52,6 +53,17 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
       resolve: createProxyingResolver(async (subscription, _, {urlAdapter}) => {
         return await urlAdapter.getSubscriptionURL(subscription)
       })
+    },
+    user: {
+      type: GraphQLPublicUser,
+      async resolve({userID}, args, {prisma}) {
+        return prisma.user.findUnique({
+          where: {
+            id: userID
+          },
+          select: unselectPassword
+        })
+      }
     },
     canExtend: {
       type: new GraphQLNonNull(GraphQLBoolean),
@@ -89,13 +101,13 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
         )
       })
     }
-  }
+  })
 })
 
 export const GraphQLPublicSubscriptionInput = new GraphQLInputObjectType({
   name: 'SubscriptionInput',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     memberPlanID: {type: new GraphQLNonNull(GraphQLString)},
     paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
     monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
@@ -103,3 +115,16 @@ export const GraphQLPublicSubscriptionInput = new GraphQLInputObjectType({
     paymentMethodID: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
+
+export const GraphQLSubscriptionResolver = {
+  __resolveReference: async (reference, {loaders}: Context) => {
+    const {id} = reference
+    const subscription = await loaders.subscriptionsById.load(id)
+
+    if (!subscription) {
+      throw new Error('Subscription not found')
+    }
+
+    return subscription
+  }
+}

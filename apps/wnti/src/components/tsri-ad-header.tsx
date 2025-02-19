@@ -1,6 +1,7 @@
 import {styled} from '@mui/material'
+import {ArticleWrapper} from '@wepublish/article/website'
 import {Link} from '@wepublish/ui'
-import {ArticleWrapper, BuilderAuthor, Image} from '@wepublish/website'
+import {BuilderAuthor} from '@wepublish/website/builder'
 import {useMemo} from 'react'
 
 import {TsriRichText} from './tsri-richtext'
@@ -47,7 +48,7 @@ function getFirstLink(author: BuilderAuthor): string {
   return links?.length ? links[0].url : ''
 }
 
-export default function TsriAdHeader({authors}: {authors?: BuilderAuthor[]}) {
+export function TsriAdHeader({authors}: {authors?: BuilderAuthor[]}) {
   const advertisers: BuilderAuthor[] | undefined = useMemo(() => {
     return authors?.filter(author => isSponsor(author) || isPromo(author))
   }, [authors])

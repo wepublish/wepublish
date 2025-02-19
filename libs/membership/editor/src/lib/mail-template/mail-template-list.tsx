@@ -9,13 +9,16 @@ import {
   css,
   keyframes
 } from '@mui/material'
-import {useMailTemplateQuery, useSynchronizeMailTemplatesMutation} from '@wepublish/editor/api-v2'
+import {
+  getApiClientV2,
+  useMailTemplateQuery,
+  useSynchronizeMailTemplatesMutation
+} from '@wepublish/editor/api-v2'
 import {
   ListViewContainer,
   ListViewHeader,
   PermissionControl,
-  createCheckedPermissionComponent,
-  getApiClientV2
+  createCheckedPermissionComponent
 } from '@wepublish/ui/editor'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'

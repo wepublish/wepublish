@@ -1,9 +1,9 @@
 import {styled} from '@mui/material'
 import {truncateFirstParagraph} from '@wepublish/richtext'
-import {Block, EventBlock as EventBlockType} from '@wepublish/website/api'
+import {BlockContent, EventBlock as EventBlockType} from '@wepublish/website/api'
 import {BuilderEventBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-export const isEventBlock = (block: Block): block is EventBlockType =>
+export const isEventBlock = (block: BlockContent): block is EventBlockType =>
   block.__typename === 'EventBlock'
 
 export const EventBlockWrapper = styled('aside')`

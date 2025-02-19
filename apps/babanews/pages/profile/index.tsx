@@ -1,12 +1,17 @@
 import {styled} from '@mui/material'
+import {AuthTokenStorageKey} from '@wepublish/authentication/website'
+import {ContentWrapper} from '@wepublish/content/website'
+import {PersonalDataFormContainer} from '@wepublish/user/website'
 import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
 import {
-  ApiV1,
-  AuthTokenStorageKey,
-  ContentWrapper,
-  PersonalDataFormContainer,
-  useWebsiteBuilder
-} from '@wepublish/website'
+  addClientCacheToV1Props,
+  getV1ApiClient,
+  LoginWithJwtDocument,
+  MeDocument,
+  NavigationListDocument,
+  UserSession
+} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
@@ -38,28 +43,24 @@ export {GuardedProfile as default}
   }
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
     ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
     const data = await client.mutate({
-      mutation: ApiV1.LoginWithJwtDocument,
+      mutation: LoginWithJwtDocument,
       variables: {
         jwt: ctx.query.jwt
       }
     })
 
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(data.data.createSessionWithJWT as ApiV1.UserSession),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict'
-      }
-    )
+    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
+      req: ctx.req,
+      res: ctx.res,
+      expires: new Date(data.data.createSessionWithJWT.expiresAt),
+      sameSite: 'strict'
+    })
   }
 
   const sessionProps = getSessionTokenProps(ctx)
@@ -67,15 +68,15 @@ export {GuardedProfile as default}
   if (sessionProps.sessionToken) {
     await Promise.all([
       client.query({
-        query: ApiV1.MeDocument
+        query: MeDocument
       }),
       client.query({
-        query: ApiV1.NavigationListDocument
+        query: NavigationListDocument
       })
     ])
   }
 
-  const props = ApiV1.addClientCacheToV1Props(client, sessionProps)
+  const props = addClientCacheToV1Props(client, sessionProps)
 
   return props
 }

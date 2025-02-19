@@ -1,6 +1,6 @@
 import {Link, css, styled} from '@mui/material'
 import {BuilderImageBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Block, ImageBlock as ImageBlockType} from '@wepublish/website/api'
+import {BlockContent, ImageBlock as ImageBlockType} from '@wepublish/website/api'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -9,7 +9,7 @@ declare module 'react' {
   }
 }
 
-export const isImageBlock = (block: Block): block is ImageBlockType =>
+export const isImageBlock = (block: BlockContent): block is ImageBlockType =>
   block.__typename === 'ImageBlock'
 
 export const ImageBlockWrapper = styled('figure')`

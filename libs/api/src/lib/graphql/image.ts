@@ -6,8 +6,7 @@ import {
   GraphQLString,
   GraphQLFloat,
   GraphQLEnumType,
-  GraphQLInputObjectType,
-  GraphQLID
+  GraphQLInputObjectType
 } from 'graphql'
 
 import {GraphQLDateTime} from 'graphql-scalars'
@@ -121,7 +120,7 @@ export const GraphQLImageSort = new GraphQLEnumType({
 export const GraphQLImage = new GraphQLObjectType<ImageWithTransformURL, Context>({
   name: 'Image',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},

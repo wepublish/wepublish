@@ -1,8 +1,10 @@
 import {
   FullNavigationFragment,
+  getApiClientV2,
+  SlimNavigationFragment,
   useDeleteNavigationMutation,
   useNavigationListQuery
-} from '@wepublish/editor/api'
+} from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
   DescriptionList,
@@ -45,18 +47,20 @@ function NavigationList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [navigations, setNavigations] = useState<FullNavigationFragment[]>([])
+  const [navigations, setNavigations] = useState<SlimNavigationFragment[]>([])
   const [currentNavigation, setCurrentNavigation] = useState<FullNavigationFragment>()
 
+  const client = getApiClientV2()
   const {
     data,
     refetch,
     loading: isLoading
   } = useNavigationListQuery({
-    fetchPolicy: 'network-only'
+    client,
+    fetchPolicy: 'cache-and-network'
   })
 
-  const [deleteNavigation, {loading: isDeleting}] = useDeleteNavigationMutation()
+  const [deleteNavigation, {loading: isDeleting}] = useDeleteNavigationMutation({client})
 
   useEffect(() => {
     if (isCreateRoute) {

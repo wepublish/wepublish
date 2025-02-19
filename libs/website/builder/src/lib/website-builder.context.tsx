@@ -32,7 +32,7 @@ import {
   BuilderBlocksProps,
   BuilderBreakBlockProps,
   BuilderCommentBlockProps,
-  BuilderEmbedBlockProps,
+  BuilderIFrameBlockProps,
   BuilderEventBlockProps,
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
@@ -198,7 +198,7 @@ export type WebsiteBuilderProps = {
     PolisConversation: ComponentType<BuilderPolisConversationBlockProps>
     TikTokVideo: ComponentType<BuilderTikTokVideoBlockProps>
     BildwurfAd: ComponentType<BuilderBildwurfAdBlockProps>
-    Embed: ComponentType<BuilderEmbedBlockProps>
+    IFrame: ComponentType<BuilderIFrameBlockProps>
     Event: ComponentType<BuilderEventBlockProps>
     Poll: ComponentType<BuilderPollBlockProps>
     Listicle: ComponentType<BuilderListicleBlockProps>
@@ -318,7 +318,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     PolisConversation: NoComponent,
     TikTokVideo: NoComponent,
     BildwurfAd: NoComponent,
-    Embed: NoComponent,
+    IFrame: NoComponent,
     Event: NoComponent,
     Poll: NoComponent,
     Listicle: NoComponent,

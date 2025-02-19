@@ -1,6 +1,6 @@
 import {styled} from '@mui/material'
 import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Article as ArticleType, Block} from '@wepublish/website/api'
+import {Article as ArticleType, BlockContent} from '@wepublish/website/api'
 import {ArticleListWrapper} from './article-list/article-list'
 import {CommentListWrapper} from '@wepublish/comments/website'
 import {ContentWrapper} from '@wepublish/content/website'
@@ -34,13 +34,14 @@ export function Article({className, data, children, loading, error}: BuilderArti
     blocks: {Blocks}
   } = useWebsiteBuilder()
 
-  const article = data?.article as ArticleType
-  const authors = article?.authors.filter(author => !author.hideOnArticle) || []
+  const article = data?.article
+  const authors = article?.latest.authors.filter(author => !author.hideOnArticle) || []
 
   return (
     <ArticleWrapper className={className}>
-      {article && <ArticleSEO article={article} />}
-      <Blocks blocks={(article?.blocks as Block[]) ?? []} type="Article" />
+      {article && <ArticleSEO article={data.article as ArticleType} />}
+
+      <Blocks blocks={(article?.latest.blocks as BlockContent[]) ?? []} type="Article" />
 
       <ArticleInfoWrapper>
         {!!authors.length && (

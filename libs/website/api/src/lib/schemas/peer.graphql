@@ -39,7 +39,7 @@ query PeerProfile {
   }
 }
 
-query Peer($id: ID, $slug: Slug) {
+query Peer($id: String, $slug: Slug) {
   peer(id: $id, slug: $slug) {
     ...FullPeer
   }

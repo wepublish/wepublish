@@ -1,5 +1,10 @@
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
-import {Event, EventListQuery, useDeleteEventMutation} from '@wepublish/editor/api'
+import {
+  Event,
+  EventListQuery,
+  getApiClientV2,
+  useDeleteEventMutation
+} from '@wepublish/editor/api-v2'
 import {TFunction} from 'i18next'
 import {useTranslation} from 'react-i18next'
 import {Button, Message, Modal, toaster} from 'rsuite'
@@ -28,7 +33,8 @@ const onCompletedToast = (t: TFunction) => () => {
 
 export function DeleteEventModal({event, onClose, onDelete}: DeleteEventProps) {
   const {t} = useTranslation()
-  const [deleteEventMutation] = useDeleteEventMutation()
+  const client = getApiClientV2()
+  const [deleteEventMutation] = useDeleteEventMutation({client})
 
   async function deleteEvent() {
     if (!event) {

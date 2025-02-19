@@ -1,4 +1,8 @@
-import {IntendedRouteExpiryInSeconds, IntendedRouteStorageKey, useUser} from '@wepublish/website'
+import {
+  useUser,
+  IntendedRouteStorageKey,
+  IntendedRouteExpiryInSeconds
+} from '@wepublish/authentication/website'
 import {setCookie} from 'cookies-next'
 import {add} from 'date-fns'
 import {useRouter} from 'next/router'

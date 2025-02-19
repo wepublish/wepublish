@@ -15,16 +15,18 @@ const VimeoEmbed = styled.div`
 `
 
 export interface VimeoVideoEmbedProps {
-  videoID: string
+  videoID: string | null | undefined
 }
 
 export function VimeoVideoEmbed({videoID}: VimeoVideoEmbedProps) {
   return (
     <VimeoEmbed>
-      <Iframe
-        src={`https://player.vimeo.com/video/${encodeURIComponent(videoID)}`}
-        allowFullScreen
-      />
+      {videoID && (
+        <Iframe
+          src={`https://player.vimeo.com/video/${encodeURIComponent(videoID)}`}
+          allowFullScreen
+        />
+      )}
     </VimeoEmbed>
   )
 }

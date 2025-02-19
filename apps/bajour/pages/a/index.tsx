@@ -1,4 +1,13 @@
-import {ApiV1, ArticleListContainer, useWebsiteBuilder} from '@wepublish/website'
+import {ArticleListContainer} from '@wepublish/article/website'
+import {
+  addClientCacheToV1Props,
+  ArticleListDocument,
+  getV1ApiClient,
+  NavigationListDocument,
+  PeerProfileDocument,
+  useArticleListQuery
+} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -29,7 +38,7 @@ export default function ArticleList() {
     [page]
   )
 
-  const {data} = ApiV1.useArticleListQuery({
+  const {data} = useArticleListQuery({
     fetchPolicy: 'cache-only',
     variables
   })
@@ -72,16 +81,16 @@ export const getStaticProps: GetStaticProps = async () => {
     return {props: {}, revalidate: 1}
   }
 
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
   await Promise.all([
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     }),
     client.query({
-      query: ApiV1.ArticleListDocument,
+      query: ArticleListDocument,
       variables: {
         take,
         skip: 0
@@ -89,7 +98,7 @@ export const getStaticProps: GetStaticProps = async () => {
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,

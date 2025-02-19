@@ -1,20 +1,39 @@
 import {css, styled} from '@mui/material'
-import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
-  ApiV1,
   Article,
-  ArticleAuthor,
   ArticleContainer,
   ArticleList,
   ArticleListContainer,
-  ArticleWrapper,
+  ArticleWrapper
+} from '@wepublish/article/website'
+import {ArticleAuthor} from '@wepublish/author/website'
+import {PollBlock} from '@wepublish/block-content/website'
+import {Comment} from '@wepublish/comments/website'
+import {ContentWrapper} from '@wepublish/content/website'
+import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
+import {
+  addClientCacheToV1Props,
+  ArticleDocument,
+  ArticleListDocument,
+  BannerDocumentType,
+  CommentItemType,
+  CommentListDocument,
+  CommentSort,
+  getV1ApiClient,
+  HotAndTrendingDocument,
+  NavigationListDocument,
+  PeerProfileDocument,
+  PrimaryBannerDocument,
+  SettingListDocument,
+  SortOrder,
+  Tag,
+  useArticleQuery
+} from '@wepublish/website/api'
+import {
   BuilderArticleListProps,
-  Comment,
-  ContentWrapper,
-  PollBlock,
   useWebsiteBuilder,
   WebsiteBuilderProvider
-} from '@wepublish/website'
+} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -50,7 +69,7 @@ export const AuthorWrapper = styled(ContentWrapper)`
   }
 `
 
-export default function ArticleBySlugIdOrToken() {
+export default function ArticleBySlugOrId() {
   const {
     query: {slug, id, token}
   } = useRouter()
@@ -58,12 +77,11 @@ export default function ArticleBySlugIdOrToken() {
     elements: {H5}
   } = useWebsiteBuilder()
 
-  const {data} = ApiV1.useArticleQuery({
+  const {data} = useArticleQuery({
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,
-      id: id as string,
-      token: token as string
+      id: id as string
     }
   })
 
@@ -117,7 +135,7 @@ export default function ArticleBySlugIdOrToken() {
                 </ArticleWrapper>
 
                 {!isFDT &&
-                  data.article.authors.map(a => (
+                  data.article.latest.authors.map(a => (
                     <AuthorWrapper key={a.id}>
                       <ArticleAuthor author={a} />
                     </AuthorWrapper>
@@ -132,10 +150,10 @@ export default function ArticleBySlugIdOrToken() {
                     {!data.article.disableComments && (
                       <CommentListContainer
                         id={data.article.id}
-                        type={ApiV1.CommentItemType.Article}
+                        type={CommentItemType.Article}
                         variables={{
-                          sort: ApiV1.CommentSort.Rating,
-                          order: ApiV1.SortOrder.Descending
+                          sort: CommentSort.Rating,
+                          order: SortOrder.Descending
                         }}
                         maxCommentDepth={1}
                       />
@@ -157,26 +175,26 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   const {slug} = params || {}
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
   const [article] = await Promise.all([
     client.query({
-      query: ApiV1.ArticleDocument,
+      query: ArticleDocument,
       variables: {
         slug
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     }),
     client.query({
-      query: ApiV1.SettingListDocument
+      query: SettingListDocument
     }),
     client.query({
-      query: ApiV1.HotAndTrendingDocument,
+      query: HotAndTrendingDocument,
       variables: {
         take: 4
       }
@@ -186,30 +204,30 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   if (article.data.article) {
     await Promise.all([
       client.query({
-        query: ApiV1.ArticleListDocument,
+        query: ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags.map((tag: ApiV1.Tag) => tag.id)
+            tags: article.data.article.tags.map((tag: Tag) => tag.id)
           },
           take: 4
         }
       }),
       client.query({
-        query: ApiV1.CommentListDocument,
+        query: CommentListDocument,
         variables: {
-          sort: ApiV1.CommentSort.Rating,
-          order: ApiV1.SortOrder.Descending,
+          sort: CommentSort.Rating,
+          order: SortOrder.Descending,
           itemId: article.data.article.id
         }
       }),
       client.query({
-        query: ApiV1.PeerProfileDocument
+        query: PeerProfileDocument
       }),
       client.query({
-        query: ApiV1.PrimaryBannerDocument,
+        query: PrimaryBannerDocument,
         variables: {
           document: {
-            type: ApiV1.BannerDocumentType.Article,
+            type: BannerDocumentType.Article,
             id: article.data.article.id
           }
         }
@@ -217,7 +235,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     ])
   }
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,

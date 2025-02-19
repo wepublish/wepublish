@@ -3,7 +3,7 @@ import YAML from 'yaml'
 import {MappedReplacer} from 'mapped-replacer'
 import {GoogleAnalyticsConfig} from '@wepublish/api'
 import StipeType from 'stripe'
-import {ProLitterisCountPixelProps} from '@wepublish/tracking-pixel/api'
+import {ProLitterisCountPixelProps, TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
 
 type General = {
   apolloPlayground: boolean
@@ -158,7 +158,7 @@ interface ProLitteris extends ProLitterisCountPixelProps {
   type: 'prolitteris'
 }
 
-type TrackingPixels = ProLitteris
+type TrackingPixels = ProLitteris & Omit<TrackingPixelProvider, 'createPixelUri'>
 
 type Config = {
   general: General

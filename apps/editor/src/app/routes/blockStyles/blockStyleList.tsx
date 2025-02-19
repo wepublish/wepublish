@@ -2,7 +2,7 @@ import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
 import {
   BlockStyle,
-  BlockType,
+  EditorBlockType,
   getApiClientV2,
   useBlockStylesQuery,
   useCreateBlockStyleMutation,
@@ -136,7 +136,7 @@ const BlockStyleList = memo(() => {
 
   const {loading} = useBlockStylesQuery({
     client,
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     onError: showErrors,
     onCompleted(newData) {
       dispatchApiValue({
@@ -284,7 +284,7 @@ const BlockStyleList = memo(() => {
                     name={`blocks:${blockstyleId}`}
                     block
                     value={inputValue.blocks}
-                    data={Object.values(BlockType).map(blockType => ({
+                    data={Object.values(EditorBlockType).map(blockType => ({
                       value: blockType,
                       label: blockType
                     }))}

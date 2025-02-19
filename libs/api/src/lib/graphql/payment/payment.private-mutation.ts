@@ -1,7 +1,7 @@
 import {Context} from '../../context'
 import {authorise} from '../permissions'
 import {Payment, PaymentState, PrismaClient} from '@prisma/client'
-import {CanCreatePayment} from '@wepublish/permissions/api'
+import {CanCreatePayment} from '@wepublish/permissions'
 
 export const createPaymentFromInvoice = async (
   input: {

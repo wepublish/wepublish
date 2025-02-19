@@ -2,29 +2,26 @@ import {Global} from '@emotion/react'
 import NextScript from 'next/script'
 import {CssBaseline, css} from '@mui/material'
 import {Preview} from '@storybook/react'
-import {
-  ApiV1,
-  CommentRatingContext,
-  CommentRatingContextProps,
-  PollBlockContext,
-  SessionTokenContext,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
 import {ComponentType, PropsWithChildren, memo, useCallback, useState} from 'react'
 import {
   PollVoteMutationResult,
   RateCommentMutationResult,
   User,
-  UserPollVoteQueryResult
+  UserPollVoteQueryResult,
+  UserSession
 } from '@wepublish/website/api'
 import {action} from '@storybook/addon-actions'
+import {SessionTokenContext} from '@wepublish/authentication/website'
+import {PollBlockContext} from '@wepublish/block-content/website'
+import {CommentRatingContextProps, CommentRatingContext} from '@wepublish/comments/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 
 const SessionProvider = memo<PropsWithChildren>(({children}) => {
-  const [token, setToken] = useState<ApiV1.UserSession | null>()
-  const [user, setUser] = useState<ApiV1.User | null>(null)
+  const [token, setToken] = useState<UserSession | null>()
+  const [user, setUser] = useState<User | null>(null)
 
-  const setTokenAndGetMe = useCallback((newToken: ApiV1.UserSession | null) => {
+  const setTokenAndGetMe = useCallback((newToken: UserSession | null) => {
     setToken(newToken)
 
     if (newToken) {
@@ -35,7 +32,8 @@ const SessionProvider = memo<PropsWithChildren>(({children}) => {
         email: 'foobar@example.com',
         oauth2Accounts: [],
         paymentProviderCustomers: [],
-        properties: []
+        properties: [],
+        permissions: []
       })
     } else {
       setUser(null)

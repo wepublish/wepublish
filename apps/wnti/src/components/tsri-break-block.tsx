@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {BreakBlock, HeadingWithImage, HeadingWithoutImage} from '@wepublish/website'
+import {BreakBlock, HeadingWithImage, HeadingWithoutImage} from '@wepublish/block-content/website'
 
 export const TsriBreakBlock = styled(BreakBlock)`
   background-color: ${({theme}) => theme.palette.accent.main};

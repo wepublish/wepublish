@@ -1,4 +1,11 @@
-import {ApiV1, PageContainer} from '@wepublish/website'
+import {PageContainer} from '@wepublish/page/website'
+import {
+  addClientCacheToV1Props,
+  getV1ApiClient,
+  NavigationListDocument,
+  PageDocument,
+  PeerProfileDocument
+} from '@wepublish/website/api'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
@@ -13,23 +20,23 @@ export const getStaticProps: GetStaticProps = async () => {
     return {props: {}, revalidate: 1}
   }
 
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
   await Promise.all([
     client.query({
-      query: ApiV1.PageDocument,
+      query: PageDocument,
       variables: {
         slug: ''
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,

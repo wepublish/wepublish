@@ -1,4 +1,5 @@
-import {ApiV1, hasBlockStyle, isTeaserGridBlock} from '@wepublish/website'
+import {hasBlockStyle, isTeaserGridBlock} from '@wepublish/block-content/website'
+import {BlockContent, TeaserGridBlock} from '@wepublish/website/api'
 import {allPass, anyPass} from 'ramda'
 
 export enum BriefingType {
@@ -7,18 +8,17 @@ export enum BriefingType {
   FasnachtsBriefing = 'FasnachtsBriefing'
 }
 
-export const isBaselBriefingIgnoringBlockType = (
-  block: ApiV1.Block
-): block is ApiV1.TeaserGridBlock => hasBlockStyle(BriefingType.BaselBriefing)(block)
+export const isBaselBriefingIgnoringBlockType = (block: BlockContent): block is TeaserGridBlock =>
+  hasBlockStyle(BriefingType.BaselBriefing)(block)
 
-export const isBaselBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
+export const isBaselBriefing = (block: BlockContent): block is TeaserGridBlock =>
   allPass([hasBlockStyle(BriefingType.BaselBriefing), isTeaserGridBlock])(block)
 
-export const isFCBBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
+export const isFCBBriefing = (block: BlockContent): block is TeaserGridBlock =>
   allPass([hasBlockStyle(BriefingType.FCBBriefing), isTeaserGridBlock])(block)
 
-export const isFasnachtsBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
+export const isFasnachtsBriefing = (block: BlockContent): block is TeaserGridBlock =>
   allPass([hasBlockStyle(BriefingType.FasnachtsBriefing), isTeaserGridBlock])(block)
 
-export const isAnyBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
+export const isAnyBriefing = (block: BlockContent): block is TeaserGridBlock =>
   anyPass([isBaselBriefing, isFCBBriefing, isFasnachtsBriefing])(block)

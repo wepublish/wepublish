@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import {Alert, AlertColor, AlertTitle} from '@mui/material'
-import {PeriodicJob, usePeriodicJobLogsQuery} from '@wepublish/editor/api-v2'
-import {getApiClientV2} from '@wepublish/ui/editor'
+import {getApiClientV2, PeriodicJob, usePeriodicJobLogsQuery} from '@wepublish/editor/api-v2'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdOutlineHourglassEmpty} from 'react-icons/md'

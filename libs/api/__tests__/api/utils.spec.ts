@@ -1,4 +1,4 @@
-import {AuthSession, AuthSessionType} from '@wepublish/api'
+import {AuthSession, AuthSessionType} from '@wepublish/website/api'
 import {isMeBySession} from 'libs/api/src/lib/graphql/utils'
 
 describe('utils', () => {

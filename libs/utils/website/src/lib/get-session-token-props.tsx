@@ -1,13 +1,13 @@
-import {ApiV1, AuthTokenStorageKey} from '@wepublish/website'
+import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {deleteCookie, getCookie} from 'cookies-next'
 import {GetServerSidePropsContext, NextPageContext} from 'next'
 
 export const getSessionTokenProps = (
   ctx: GetServerSidePropsContext | NextPageContext
-): {sessionToken: ApiV1.UserSession | null} => {
+): {sessionToken: UserSession | null} => {
   try {
     const token = getCookie(AuthTokenStorageKey, {req: ctx.req})
-    const sessionToken = token ? (JSON.parse(token.toString()) as ApiV1.UserSession) : null
+    const sessionToken = token ? (JSON.parse(token.toString()) as UserSession) : null
 
     return {
       sessionToken

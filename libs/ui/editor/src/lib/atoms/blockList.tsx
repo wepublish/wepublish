@@ -1,7 +1,21 @@
 import styled from '@emotion/styled'
-import {BlockStyle, BlockType, getApiClientV2, useBlockStylesQuery} from '@wepublish/editor/api-v2'
+import {
+  BlockStyle,
+  EditorBlockType,
+  getApiClientV2,
+  useBlockStylesQuery
+} from '@wepublish/editor/api-v2'
 import nanoid from 'nanoid'
-import React, {Fragment, memo, ReactNode, useCallback, useEffect, useMemo, useState} from 'react'
+import React, {
+  Fragment,
+  memo,
+  ReactElement,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from 'react'
 import {MdArrowDownward, MdArrowUpward, MdDelete} from 'react-icons/md'
 import {IconButton, Panel as RPanel, SelectPicker} from 'rsuite'
 
@@ -92,7 +106,7 @@ export type BlockConstructorFn<V = any> = (props: BlockProps<V>) => JSX.Element
 
 export interface BlockCaseProps<V = any> {
   label: string
-  icon: React.ReactElement
+  icon: ReactElement
   defaultValue: ValueConstructor<V>
   field: BlockConstructorFn<V>
 }
@@ -174,27 +188,19 @@ const BlockListItem = memo(function BlockListItem({
   )
 })
 
-export function useBlockMap<V extends BlockListValue>(
-  map: () => BlockMapForValue<V>,
-  deps: ReadonlyArray<any> | undefined
-) {
-  return useMemo(map, deps)
-}
-
 export interface BlockListProps<V extends BlockListValue> extends BlockProps<V[]> {
-  children: BlockMapForValue<V>
+  blockMap: BlockMapForValue<V>
 }
 
 export function BlockList<V extends BlockListValue>({
   itemId,
   value: values,
-  children,
+  blockMap: blocMap,
   disabled,
   onChange
 }: BlockListProps<V>) {
   const [focusIndex, setFocusIndex] = useState<number | null>(null)
-
-  const blockMap = children as BlockMap
+  const blockMap = blocMap as BlockMap
 
   const handleItemChange = useCallback(
     (index: number, itemValue: React.SetStateAction<BlockListValue>) => {
@@ -340,8 +346,9 @@ function ListItemWrapper({
 
   const stylesForBlock = useMemo(
     () =>
-      data?.blockStyles.filter(blockStyle => blockStyle.blocks.includes(value.type as BlockType)) ??
-      [],
+      data?.blockStyles.filter(blockStyle =>
+        blockStyle.blocks.includes(value.type as EditorBlockType)
+      ) ?? [],
     [data?.blockStyles, value.type]
   )
 

@@ -1,5 +1,6 @@
 import {styled} from '@mui/material'
-import {ApiV1, BreakBlock, hasBlockStyle, isBreakBlock} from '@wepublish/website'
+import {BreakBlock, hasBlockStyle, isBreakBlock} from '@wepublish/block-content/website'
+import {BlockContent, BreakBlock as BreakBlockType} from '@wepublish/website/api'
 import {allPass} from 'ramda'
 
 export const BajourBreakBlock = styled(BreakBlock)`
@@ -17,7 +18,7 @@ export const BajourBreakBlock = styled(BreakBlock)`
   }
 `
 
-export const isLightBreak = (block: ApiV1.Block): block is ApiV1.LinkPageBreakBlock =>
+export const isLightBreak = (block: BlockContent): block is BreakBlockType =>
   allPass([hasBlockStyle('Light'), isBreakBlock])(block)
 
 export const BajourLightBreakBlock = styled(BajourBreakBlock)`
@@ -25,7 +26,7 @@ export const BajourLightBreakBlock = styled(BajourBreakBlock)`
   color: ${({theme}) => theme.palette.secondary.contrastText};
 `
 
-export const isSponsoredBreak = (block: ApiV1.Block): block is ApiV1.LinkPageBreakBlock =>
+export const isSponsoredBreak = (block: BlockContent): block is BreakBlockType =>
   allPass([hasBlockStyle('Sponsored'), isBreakBlock])(block)
 
 export const BajourSponsoredBreakBlock = styled(BajourBreakBlock)`

@@ -13,9 +13,9 @@ import {
   CanCreateApprovedComment,
   CanDeleteComments,
   CanTakeActionOnComment,
-  CanUpdateComments,
-  hasPermission
-} from '@wepublish/permissions/api'
+  CanUpdateComments
+} from '@wepublish/permissions'
+import {hasPermission} from '@wepublish/permissions/api'
 import {RichTextNode} from '@wepublish/richtext/api'
 
 export const takeActionOnComment = (

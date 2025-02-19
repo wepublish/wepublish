@@ -1,4 +1,11 @@
-import {ApiV1, EventContainer} from '@wepublish/website'
+import {EventContainer} from '@wepublish/event/website'
+import {
+  addClientCacheToV1Props,
+  EventDocument,
+  getV1ApiClient,
+  NavigationListDocument,
+  PeerProfileDocument
+} from '@wepublish/website/api'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -28,24 +35,24 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   const {id} = params || {}
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
   await Promise.all([
     client.query({
-      query: ApiV1.EventDocument,
+      query: EventDocument,
       variables: {
         id
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,

@@ -14,7 +14,8 @@ To replace the `InvoiceList` component that is being rendered by a custom compon
 
 <CodeOrSourceMdx>
 ```typescript
-import {WebsiteBuilderProvider, BuilderInvoiceListProps, InvoiceListContainer} from '@wepublish/website'
+import {WebsiteBuilderProvider, BuilderInvoiceListProps} from '@wepublish/website/builder'
+import {InvoiceListContainer} from '@wepublish/membership/website'
 
 const MyInvoiceList = (props: BuilderInvoiceListProps) => <div>My Invoice List</div>
 
@@ -34,7 +35,8 @@ To replace the `InvoiceListItem` component that is being rendered by a custom co
 
 <CodeOrSourceMdx>
 ```typescript
-import {WebsiteBuilderProvider, BuilderInvoiceListItemProps, InvoiceListContainer} from '@wepublish/website'
+import {WebsiteBuilderProvider, BuilderInvoiceListItemProps } from '@wepublish/website/builder'
+import {InvoiceListContainer} from '@wepublish/membership/website'
 
 const MyInvoiceListItem = (props: BuilderInvoiceListItemProps) => <div>My Invoice List Item</div>
 

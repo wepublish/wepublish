@@ -1,5 +1,4 @@
 import {ApolloError} from '@apollo/client'
-import {Event} from '@wepublish/editor/api'
 import {
   ImportedEventFilter,
   useImportEventMutation,
@@ -10,7 +9,7 @@ import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-import {getApiClientV2} from '@wepublish/editor/api-v2'
+import {Event, getApiClientV2} from '@wepublish/editor/api-v2'
 
 import styled from '@emotion/styled'
 import {
@@ -90,7 +89,7 @@ function ImportableEventListView() {
 
   const {data, loading: queryLoading} = useImportedEventListQuery({
     client,
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     variables: importedEventListVariables,
     onError: onErrorToast
   })
@@ -109,7 +108,7 @@ function ImportableEventListView() {
   })
 
   const {data: ids} = useImportedEventsIdsQuery({
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'cache-and-network'
   })
   const alreadyImported = ids?.importedEventsIds
 

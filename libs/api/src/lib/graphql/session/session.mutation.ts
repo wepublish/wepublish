@@ -3,7 +3,7 @@ import nanoid from 'nanoid/generate'
 import {Issuer} from 'openid-client'
 import {Context} from '../../context'
 import {AuthSessionType} from '@wepublish/authentication/api'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {
   InvalidCredentialsError,
   InvalidOAuth2TokenError,

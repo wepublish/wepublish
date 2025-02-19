@@ -1,6 +1,6 @@
 import {Context} from '../../context'
 import {authorise} from '../permissions'
-import {CanCreateUserRole, CanDeleteUserRole} from '@wepublish/permissions/api'
+import {CanCreateUserRole, CanDeleteUserRole} from '@wepublish/permissions'
 import {Prisma, PrismaClient} from '@prisma/client'
 
 export const deleteUserRoleById = async (

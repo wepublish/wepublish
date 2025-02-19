@@ -3,7 +3,7 @@ import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/buil
 import {allPass} from 'ramda'
 import {alignmentForTeaserBlock} from '../../teaser/teaser-grid-block'
 import {TeaserListBlockTeasers, isTeaserListBlock} from '../../teaser/teaser-list-block'
-import {Block, TeaserListBlock} from '@wepublish/website/api'
+import {BlockContent, TeaserListBlock} from '@wepublish/website/api'
 import {hasBlockStyle} from '../../blocks'
 import {selectTeaserTags} from '../../teaser/teaser'
 import {ImageWrapper} from '@wepublish/image/website'
@@ -111,5 +111,5 @@ export const FocusTeaser = ({
   )
 }
 
-export const isFocusTeaserBlockStyle = (block: Block): block is TeaserListBlock =>
+export const isFocusTeaserBlockStyle = (block: BlockContent): block is TeaserListBlock =>
   allPass([hasBlockStyle('Focus'), isTeaserListBlock])(block)

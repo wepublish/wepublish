@@ -50,7 +50,7 @@ export const UserConsentForm = ({userConsent, onChange, isEdit}: UserConsentForm
 
   const {loading: loadingConsents, data: consentsData} = useConsentsQuery({
     client,
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     onError: onErrorToast
   })
 

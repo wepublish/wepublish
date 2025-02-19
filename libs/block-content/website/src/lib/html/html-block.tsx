@@ -1,9 +1,9 @@
 import {styled} from '@mui/material'
 import {BuilderHTMLBlockProps} from '@wepublish/website/builder'
-import {Block, HtmlBlock as HtmlBlockType} from '@wepublish/website/api'
+import {BlockContent, HtmlBlock as HtmlBlockType} from '@wepublish/website/api'
 import InnerHTML from 'dangerously-set-html-content'
 
-export const isHtmlBlock = (block: Block): block is HtmlBlockType =>
+export const isHtmlBlock = (block: BlockContent): block is HtmlBlockType =>
   block.__typename === 'HTMLBlock'
 
 export const HtmlBlockWrapper = styled('div')``

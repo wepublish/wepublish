@@ -1,6 +1,6 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
-import {PageSort, SortOrder, usePageListQuery} from '@wepublish/editor/api'
+import {getApiClientV2, PageSort, SortOrder, usePageListQuery} from '@wepublish/editor/api-v2'
 import {useMemo, useState} from 'react'
 import {
   Divider as RDivider,
@@ -52,7 +52,9 @@ export function SelectPage({
   /**
    * Loading page
    */
+  const client = getApiClientV2()
   const {data: pageData, refetch} = usePageListQuery({
+    client,
     variables: {
       sort: PageSort.PublishedAt,
       order: SortOrder.Ascending,

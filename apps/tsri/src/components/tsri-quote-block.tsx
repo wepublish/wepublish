@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {QuoteBlock} from '@wepublish/website'
+import {QuoteBlock} from '@wepublish/block-content/website'
 
 export const TsriQuoteBlock = styled(QuoteBlock)`
   border: 0;

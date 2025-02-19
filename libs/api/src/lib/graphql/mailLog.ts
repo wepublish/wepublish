@@ -1,7 +1,6 @@
 import {MailLog, MailLogState} from '@prisma/client'
 import {
   GraphQLEnumType,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -29,7 +28,7 @@ export const GraphQLMailLogState = new GraphQLEnumType({
 export const GraphQLMailLog = new GraphQLObjectType<MailLog, Context>({
   name: 'MailLog',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},

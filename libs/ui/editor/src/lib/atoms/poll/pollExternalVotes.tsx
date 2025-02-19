@@ -134,9 +134,8 @@ export function AddSource({poll, setLoading, onPollChange}: AddSourceProps) {
   const {t} = useTranslation()
   const [newSource, setNewSource] = useState<string | undefined>(undefined)
 
-  const [createExternalVoteSource, {loading}] = useCreatePollExternalVoteSourceMutation({
-    fetchPolicy: 'no-cache'
-  })
+  const [createExternalVoteSource, {loading}] = useCreatePollExternalVoteSourceMutation()
+
   useEffect(() => {
     setLoading(loading)
   }, [loading])
@@ -218,9 +217,7 @@ export function DeleteModal({
   onPollChange
 }: DeleteModalProps) {
   const {t} = useTranslation()
-  const [deleteExternalVoteSource] = useDeletePollExternalVoteSourceMutation({
-    fetchPolicy: 'no-cache'
-  })
+  const [deleteExternalVoteSource] = useDeletePollExternalVoteSourceMutation()
 
   async function deletePoll() {
     const id = sourceToDelete?.id

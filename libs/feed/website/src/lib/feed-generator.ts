@@ -20,13 +20,13 @@ export const generateFeed =
       const seo = getArticleSEO(article)
 
       const content = await toHtml(
-        article.blocks?.reduce((acc, curr) => {
+        article.published?.blocks?.reduce((acc, curr) => {
           if (isRichTextBlock(curr)) {
             acc.push(...curr.richText)
           }
 
           return acc
-        }, [] as Node[])
+        }, [] as Node[]) ?? []
       )
 
       return {

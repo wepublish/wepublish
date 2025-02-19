@@ -1,7 +1,7 @@
 import {styled} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {
-  Block,
+  BlockContent,
   PollBlock as PollBlockType,
   PollVoteMutationResult,
   UserPollVoteQueryResult
@@ -12,7 +12,7 @@ import {PollBlockResult} from './poll-block-result'
 import {usePollBlock} from './poll-block.context'
 import {H4} from '@wepublish/ui'
 
-export const isPollBlock = (block: Block): block is PollBlockType =>
+export const isPollBlock = (block: BlockContent): block is PollBlockType =>
   block.__typename === 'PollBlock'
 
 export const PollBlockWrapper = styled('article')`

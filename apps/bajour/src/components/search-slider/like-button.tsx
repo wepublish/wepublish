@@ -1,5 +1,5 @@
 import {css} from '@mui/material'
-import {useWebsiteBuilder} from '@wepublish/website'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdFavorite, MdFavoriteBorder} from 'react-icons/md'
 
 interface LikeButtonProps {

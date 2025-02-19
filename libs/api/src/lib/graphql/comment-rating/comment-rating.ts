@@ -7,7 +7,6 @@ import {
 import {
   GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -21,7 +20,7 @@ import {Context} from '../../context'
 export const GraphQLCommentRatingSystem = new GraphQLObjectType<CommentRatingSystem, Context>({
   name: 'CommentRatingSystem',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     name: {type: GraphQLString}
   }
 })
@@ -39,8 +38,8 @@ export const GraphQLCommentRatingSystemAnswer = new GraphQLObjectType<
 >({
   name: 'CommentRatingSystemAnswer',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
-    ratingSystemId: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
+    ratingSystemId: {type: new GraphQLNonNull(GraphQLString)},
     answer: {type: GraphQLString},
     type: {type: new GraphQLNonNull(GraphQLRatingSystemType)}
   }
@@ -49,9 +48,9 @@ export const GraphQLCommentRatingSystemAnswer = new GraphQLObjectType<
 export const GraphQLCommentRating = new GraphQLObjectType<CommentRating, Context>({
   name: 'CommentRating',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
-    userId: {type: GraphQLID},
-    commentId: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
+    userId: {type: GraphQLString},
+    commentId: {type: new GraphQLNonNull(GraphQLString)},
     value: {type: new GraphQLNonNull(GraphQLInt)},
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     fingerprint: {type: GraphQLString},
@@ -66,7 +65,7 @@ export const GraphQLCommentRatingSystemWithAnswers = new GraphQLObjectType<
 >({
   name: 'CommentRatingSystemWithAnswers',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     name: {type: GraphQLString},
     answers: {
       type: new GraphQLList(new GraphQLNonNull(GraphQLCommentRatingSystemAnswer))
@@ -77,7 +76,7 @@ export const GraphQLCommentRatingSystemWithAnswers = new GraphQLObjectType<
 export const GraphQLFullCommentRatingSystem = new GraphQLObjectType<CommentRatingSystem, Context>({
   name: 'FullCommentRatingSystem',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     name: {type: GraphQLString},
     answers: {
       type: new GraphQLNonNull(
@@ -90,7 +89,7 @@ export const GraphQLFullCommentRatingSystem = new GraphQLObjectType<CommentRatin
 export const GraphQLUpdateCommentRatingSystemAnswer = new GraphQLInputObjectType({
   name: 'UpdateCommentRatingSystemAnswer',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     type: {type: GraphQLRatingSystemType},
     answer: {type: GraphQLString}
   }

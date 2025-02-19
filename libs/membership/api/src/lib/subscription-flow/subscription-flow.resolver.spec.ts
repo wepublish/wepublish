@@ -5,7 +5,7 @@ import {GraphQLModule} from '@nestjs/graphql'
 import {Test, TestingModule} from '@nestjs/testing'
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {PermissionsGuard} from '@wepublish/permissions/api'
+import {PermissionsGuard} from '@wepublish/permissions'
 import {
   clearDatabase,
   defineMemberPlanFactory,

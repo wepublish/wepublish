@@ -1,7 +1,8 @@
 import {Args, Int, Query, Resolver} from '@nestjs/graphql'
-import {CanGetPeriodicJobLog, Permissions} from '@wepublish/permissions/api'
+import {CanGetPeriodicJobLog} from '@wepublish/permissions'
 import {PeriodicJob} from './periodic-job.model'
 import {PeriodicJobService} from './periodic-job.service'
+import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => PeriodicJob)
 export class PeriodicJobResolver {
