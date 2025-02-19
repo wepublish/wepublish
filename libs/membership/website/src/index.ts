@@ -17,6 +17,7 @@ export * from './lib/memberplan-picker/memberplan-picker'
 export * from './lib/memberplan-picker/memberplan-picker-item'
 export * from './lib/periodicity-picker/periodicity-picker'
 export * from './lib/payment-method-picker/payment-method-picker'
+export * from './lib/transaction-fee/transaction-fee'
 
 export * from './lib/payment-amount/payment-amount-slider/payment-amount-slider'
 export * from './lib/payment-amount/payment-amount-picker/payment-amount-picker'

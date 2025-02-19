@@ -81,6 +81,14 @@ export type BuilderPaymentMethodPickerProps = {
   value?: string
 }
 
+export type BuilderTransactionFeeProps = {
+  text?: string
+  className?: string
+  onChange: (value: boolean) => void
+  name?: string
+  value?: boolean
+}
+
 export type BuilderPaymentAmountProps = {
   amountPerMonthMin: number
   amountPerMonthTarget: number | undefined
@@ -120,5 +128,7 @@ export type BuilderSubscribeProps<
   deactivateSubscriptionId?: string
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean
   termsOfServiceUrl?: string
+  transactionFee?: (monthlyAmount: number) => number
+  transactionFeeText?: string
   returningUserId?: string
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>
