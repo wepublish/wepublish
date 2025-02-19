@@ -151,6 +151,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "7.32.2",
     "eslint-plugin-react-hooks": "4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-storybook": "^0.6.12",

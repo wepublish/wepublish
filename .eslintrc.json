@@ -40,6 +40,14 @@
         "jest": true
       },
       "rules": {}
+    },
+    {
+      "files": ["*.jsx", "*.tsx"],
+      "excludedFiles": ["pages/**/*.tsx", "pages/**/*.jsx"],
+      "plugins": ["react-refresh"],
+      "rules": {
+        "react-refresh/only-export-components": "error"
+      }
     }
   ],
   "extends": ["plugin:storybook/recommended"]
