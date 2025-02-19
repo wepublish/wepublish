@@ -12,25 +12,27 @@ export const ArticleAuthorsWrapper = styled('div')`
   row-gap: 0;
 `
 
+const AuthorAvatars = styled('div')`
+  grid-area: images;
+  display: flex;
+  column-gap: ${({theme}) => theme.spacing(1.5)};
+`
+
 const AuthorNames = styled('div')`
   grid-area: names;
   display: flex;
   flex-wrap: wrap;
   align-self: end;
-  gap: 4px;
   row-gap: 0;
 
   ${AuthorChipName} {
-    :after {
-      content: ', ';
-    }
-    &:last-of-type:after {
-      content: '';
-    }
+    white-space: pre;
+
     a {
       color: ${({theme}) => theme.palette.text.primary};
       text-decoration: none;
       font-weight: 500;
+      white-space: pre;
     }
   }
 `
@@ -48,7 +50,7 @@ export function OnlineReportsArticleAuthors({article}: BuilderArticleAuthorsProp
 
   return (
     <ArticleAuthorsWrapper>
-      <div style={{display: 'flex', gap: '12px', gridArea: 'images'}}>
+      <AuthorAvatars>
         {authors?.map(author => (
           <>
             {author.image && (
@@ -58,11 +60,12 @@ export function OnlineReportsArticleAuthors({article}: BuilderArticleAuthorsProp
             )}
           </>
         ))}
-      </div>
+      </AuthorAvatars>
       <AuthorNames>
-        {authors?.map(author => (
+        {authors?.map((author, i) => (
           <AuthorChipName key={author.id}>
             <Link href={author.url}>{author.name}</Link>
+            {i < authors.length - 1 && ', '}
           </AuthorChipName>
         ))}
       </AuthorNames>
