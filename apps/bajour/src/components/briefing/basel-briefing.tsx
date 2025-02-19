@@ -318,6 +318,14 @@ export const Avatar = styled(Image)`
   }
 `
 
+const DesktopOnly = styled('span')`
+  display: none;
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    display: inline;
+  }
+`
+
 export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
   let showFrom = undefined
   let showUntil = undefined
@@ -406,7 +414,7 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
                   href="https://bajour.ch/basel-briefing-podcast"
                   target={'_blank'}>
                   <ReadMoreButton variant="outlined" color="inherit" size="small">
-                    Briefing hören
+                    <DesktopOnly>Briefing </DesktopOnly>hören
                   </ReadMoreButton>
                 </LinkWrapper>
               )}
@@ -416,7 +424,7 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
                 href={briefingDynamicValues.contentUrl}
                 target={'_blank'}>
                 <ReadMoreButton variant="outlined" color="inherit" size="small">
-                  Briefing lesen
+                  <DesktopOnly>Briefing </DesktopOnly>lesen
                 </ReadMoreButton>
               </LinkWrapper>
             </ButtonRow>
