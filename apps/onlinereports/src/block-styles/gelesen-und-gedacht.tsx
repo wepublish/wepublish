@@ -9,54 +9,51 @@ import {
 } from '@wepublish/website'
 import {allPass} from 'ramda'
 
-import {NewsTeaser} from '../custom-teasers/news'
 import {Box, styled} from '@mui/material'
 import {Advertisement} from '../components/advertisement'
 import {BlueBox} from '../components/blue-box'
+import {GelesenUndGedachtTeaser} from '../custom-teasers/gelesen-und-gedacht'
 
-export const isNewsTeasers = (
+export const isGelesenUndGedacthTeasers = (
   block: ApiV1.Block
 ): block is ApiV1.TeaserGridBlock | ApiV1.TeaserListBlock =>
-  allPass([hasBlockStyle('News'), isTeaserListBlock])(block)
+  allPass([hasBlockStyle('Gelesen und Gedacht'), isTeaserListBlock])(block)
 
-export const NewsBlockStyle = ({
+export const GelesenUndGedachtBlockStyle = ({
   title,
   teasers,
   blockStyle,
   className
-}: Pick<BuilderTeaserListBlockProps, 'teasers' | 'title' | 'blockStyle' | 'className'>) => {
+}: Pick<BuilderTeaserListBlockProps, 'title' | 'teasers' | 'blockStyle' | 'className'>) => {
   const filledTeasers = teasers.filter(isFilledTeaser)
   const numColumns = 1
+
   const {
     elements: {H3, Link}
   } = useWebsiteBuilder()
 
   return (
-    <>
-      <NewsTeaserListWrapper>
-        <BlueBox>
-          <TeaserList>
-            <H3 gutterBottom>{title}</H3>
-            {filledTeasers.map((teaser, index) => (
-              <NewsTeaser
-                key={index}
-                teaser={teaser}
-                numColumns={numColumns}
-                alignment={alignmentForTeaserBlock(index, numColumns)}
-                blockStyle={blockStyle}
-              />
-            ))}
-          </TeaserList>
-          <Link href={'/a/tag/news'}>
-            <b>Weitere news {'->'}</b>
-          </Link>
-        </BlueBox>
-
-        <Filler>
-          <Advertisement type={'small'} />
-        </Filler>
-      </NewsTeaserListWrapper>
-    </>
+    <GelesenUndGedachtWrapper>
+      <Filler>
+        <Advertisement type={'small'} />
+      </Filler>
+      <BlueBox>
+        <TeaserList>
+          {filledTeasers.map((teaser, index) => (
+            <GelesenUndGedachtTeaser
+              key={index}
+              teaser={teaser}
+              numColumns={numColumns}
+              alignment={alignmentForTeaserBlock(index, numColumns)}
+              blockStyle={blockStyle}
+            />
+          ))}
+        </TeaserList>
+        <Link href={'/a/tag/gelesen-und-gedacht'}>
+          <b>Zum Archiv {'->'}</b>
+        </Link>
+      </BlueBox>
+    </GelesenUndGedachtWrapper>
   )
 }
 
@@ -67,13 +64,14 @@ const TeaserList = styled('div')`
 
 const Filler = styled(Box)``
 
-const NewsTeaserListWrapper = styled(Box)`
+const GelesenUndGedachtWrapper = styled(Box)`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: ${({theme}) => theme.spacing(2.5)};
 
   ${BlueBox} {
     grid-column: span 3;
+
     ${({theme}) => theme.breakpoints.up('md')} {
       grid-column: span 2;
     }
@@ -81,6 +79,7 @@ const NewsTeaserListWrapper = styled(Box)`
 
   ${Filler} {
     grid-column: span 3;
+
     ${({theme}) => theme.breakpoints.up('md')} {
       grid-column: span 1;
     }

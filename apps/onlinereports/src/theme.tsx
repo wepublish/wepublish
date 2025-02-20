@@ -1,10 +1,18 @@
 import {createTheme, Theme, ThemeOptions} from '@mui/material'
 import {theme as WePTheme} from '@wepublish/ui'
-import {Inter} from 'next/font/google'
+import {Inter, Lora} from 'next/font/google'
 import {PartialDeep} from 'type-fest'
 
 const inter = Inter({
-  weight: ['100', '300', '400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600'],
+  style: ['normal'],
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true
+})
+
+const lora = Lora({
+  weight: ['600'],
   style: ['normal'],
   subsets: ['latin'],
   display: 'swap',
@@ -19,19 +27,17 @@ const {
 const theme = createTheme(WePTheme, {
   palette: {
     text: {
-      primary: '#10243A'
+      primary: '#141414',
+      secondary: '#10243A'
     },
-    primary: augmentColor({color: {main: '#89B9DC', light: '#89B9DC', contrastText: '#10243A'}}),
+    primary: {
+      // main: '#E1190F',
+      contrastText: '#fff'
+    },
     secondary: {
-      background: '#323232',
-      main: '#fff'
-    },
-    accent: augmentColor({
-      color: {
-        main: '#nnn',
-        contrastText: '#E1190F'
-      }
-    })
+      main: '#89B9DC',
+      contrastText: '#10243A'
+    }
   },
   typography: {
     h1: {
@@ -57,7 +63,8 @@ const theme = createTheme(WePTheme, {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
     },
     body1: {
-      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 300
     },
     body2: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
@@ -75,9 +82,18 @@ const theme = createTheme(WePTheme, {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
     },
     subtitle2: {
-      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [lora.style.fontFamily, 'sans-serif'].join(',')
     },
     fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
+  },
+  components: {
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          textDecoration: 'none'
+        }
+      }
+    }
   }
 } as PartialDeep<Theme> | ThemeOptions)
 
