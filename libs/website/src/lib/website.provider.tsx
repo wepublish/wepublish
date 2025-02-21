@@ -1,6 +1,7 @@
 import {css, GlobalStyles, TextField, Theme, ThemeProvider} from '@mui/material'
 import {
   Article,
+  ArticleAuthors,
   ArticleDate,
   ArticleList,
   ArticleSEO,
@@ -73,7 +74,7 @@ import {
   SubscriptionList,
   SubscriptionListItem
 } from '@wepublish/membership/website'
-import {Footer, Navbar} from '@wepublish/navigation/website'
+import {Footer, NavAppBar, Navbar, NavPaper} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
 import {PeerInformation} from '@wepublish/peering/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
@@ -156,11 +157,14 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           ArticleList={ArticleList}
           Article={Article}
           ArticleDate={ArticleDate}
+          ArticleAuthors={ArticleAuthors}
           ArticleMeta={ArticleTags}
           ArticleSEO={ArticleSEO}
           Banner={PageBanner}
           PeerInformation={PeerInformation}
           Navbar={Navbar}
+          NavAppBar={NavAppBar}
+          NavPaper={NavPaper}
           Footer={Footer}
           Event={Event}
           EventSEO={EventSEO}
