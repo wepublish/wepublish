@@ -27,7 +27,7 @@ export const useImageStyles = () => {
       aspect-ratio: 4/3;
 
       :where(${TeaserWrapper}:hover &) {
-        transform: scale(1.1);
+        transform: scale(1);
       }
 
       ${theme.breakpoints.up('md')} {
@@ -103,8 +103,8 @@ export const OnlineReportsTeaserTitleWrapper = styled('h2')`
   font-size: 24px !important;
 `
 
-const OnlineReportsTeaserPreTitleWrapper = styled(Box)`
-  color: ${({theme}) => theme.palette.accent.contrastText};
+export const OnlineReportsTeaserPreTitleWrapper = styled(Box)`
+  color: ${({theme}) => theme.palette.primary.main};
   grid-area: pretitle;
   font-size: 18px !important;
 `

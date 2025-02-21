@@ -15,6 +15,7 @@ import {
   GelesenUndGedachtBlockStyle,
   isGelesenUndGedacthTeasers
 } from './block-styles/gelesen-und-gedacht'
+import {AktuelleBild, IsAktuelleBildTeasers} from './block-styles/aktuelle-bild'
 
 export const OnlineReportsBlockRenderer = (props: BuilderBlockRendererProps) => {
   const extraBlockMap = useMemo(
@@ -27,7 +28,8 @@ export const OnlineReportsBlockRenderer = (props: BuilderBlockRendererProps) => 
         [isHighlightTeasers, block => <HighlightBlockStyle {...block} />],
         [isNewsTeasers, block => <NewsBlockStyle {...block} />],
         [isRuckSpiegelTeasers, block => <RuckSpiegelBlockStyle {...block} />],
-        [isGelesenUndGedacthTeasers, block => <GelesenUndGedachtBlockStyle {...block} />]
+        [isGelesenUndGedacthTeasers, block => <GelesenUndGedachtBlockStyle {...block} />],
+        [IsAktuelleBildTeasers, block => <AktuelleBild {...block} />]
       ]),
     []
   )

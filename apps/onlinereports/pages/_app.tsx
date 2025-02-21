@@ -4,6 +4,7 @@ import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
+  ContentWrapperStyled,
   FooterContainer,
   FooterPaperWrapper,
   NavbarContainer,
@@ -71,6 +72,16 @@ const MainSpacer = styled('div')`
   ${theme.breakpoints.up('md')} {
     gap: ${theme.spacing(2.5)};
   }
+
+  ${ContentWrapperStyled} {
+    ${theme.breakpoints.down('md')} {
+      row-gap: ${({theme}) => theme.spacing(7.5)};
+    }
+
+    ${theme.breakpoints.up('md')} {
+      row-gap: ${({theme}) => theme.spacing(4)};
+    }
+  }
 `
 
 const LogoLink = styled(NextWepublishLink)`
@@ -124,6 +135,11 @@ const DesktopSidebarAd = styled(Container)`
 `
 
 const AdvertisementPlacer = styled('div')`
+  position: relative;
+  > * {
+    top: 0;
+    position: sticky;
+  }
   @media (max-width: 1250px) {
     display: none;
   }
