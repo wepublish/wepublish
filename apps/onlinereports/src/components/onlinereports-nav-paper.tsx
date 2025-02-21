@@ -22,8 +22,8 @@ const NavPaperOverlay = styled('div')`
 
 const NavPaperWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};
-  background-color: ${({theme}) => theme.palette.primary.main};
-  color: ${({theme}) => theme.palette.primary.contrastText};
+  background-color: ${({theme}) => theme.palette.secondary.main};
+  color: ${({theme}) => theme.palette.secondary.contrastText};
   gap: ${({theme}) => theme.spacing(3)};
   display: flex;
   flex-direction: column;
@@ -215,7 +215,7 @@ export const OnlineReportsNavPaper = ({
 }
 
 const Cover = styled('div')`
-  background-color: ${({theme}) => theme.palette.primary.main};
+  background-color: ${({theme}) => theme.palette.secondary.main};
   grid-area: cover;
 `
 
