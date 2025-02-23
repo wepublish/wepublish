@@ -1,15 +1,15 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {PrismaClient} from '@prisma/client'
 import {NavigationService} from './navigation.service'
-import {NavigationDataloader} from './navigation-dataloader.service'
+import {NavigationDataloaderService} from './navigation-dataloader.service'
 
 describe('NavigationService', () => {
   let service: NavigationService
-  let navigationDataloader: {[method in keyof NavigationDataloader]?: jest.Mock}
+  let navigationDataloaderService: {[method in keyof NavigationDataloaderService]?: jest.Mock}
   let prismaMock: any
 
   beforeEach(async () => {
-    navigationDataloader = {
+    navigationDataloaderService = {
       load: jest.fn()
     }
 
@@ -29,26 +29,12 @@ describe('NavigationService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         NavigationService,
-        {provide: NavigationDataloader, useValue: navigationDataloader},
+        {provide: NavigationDataloaderService, useValue: navigationDataloaderService},
         {provide: PrismaClient, useValue: prismaMock}
       ]
     }).compile()
 
     service = module.get<NavigationService>(NavigationService)
-  })
-
-  it('should get a navigation by id', async () => {
-    prismaMock.navigation.findUnique.mockResolvedValueOnce({})
-    await service.getNavigationById('123')
-    expect(prismaMock.navigation.findUnique).toHaveBeenCalled()
-    expect(prismaMock.navigation.findUnique.mock.calls[0]).toMatchSnapshot()
-  })
-
-  it('should get a navigation by key', async () => {
-    prismaMock.navigation.findUnique.mockResolvedValueOnce({})
-    await service.getNavigationByKey('key123')
-    expect(prismaMock.navigation.findUnique).toHaveBeenCalled()
-    expect(prismaMock.navigation.findUnique.mock.calls[0]).toMatchSnapshot()
   })
 
   it('should get all navigations', async () => {

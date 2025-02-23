@@ -3,35 +3,44 @@ import {MockLink, MockedProvider as MockedProviderBase} from '@apollo/client/tes
 import '@testing-library/jest-dom'
 import {format} from 'date-fns'
 import {fireEvent, render, screen, waitFor} from '@testing-library/react'
-import {CreateEventDocument, ImportedEventsIdsDocument} from '@wepublish/editor/api'
+import {CreateEventDocument, ImportedEventsIdsDocument} from '@wepublish/editor/api-v2'
 import * as v2Client from '@wepublish/editor/api-v2'
 import {ImportedEventListDocument, ImportedEventListQuery} from '@wepublish/editor/api-v2'
 import {AuthContext, actWait, sessionWithPermissions} from '@wepublish/ui/editor'
 import fetch from 'jest-fetch-mock'
 import {BrowserRouter} from 'react-router-dom'
-import {ImportableEventListView} from './importable-event-list'
+import ImportableEventListView from './importable-event-list'
+
 jest.setMock('node-fetch', fetch)
 
-const MockedProvider = MockedProviderBase as any
-
-const eventsMockData = {
+const eventsMockData: ImportedEventListQuery = {
   importedEvents: {
     nodes: [
       {
-        __typename: 'Query',
+        __typename: 'EventFromSource',
         id: '1',
         name: 'Event 1',
         startsAt: '2023-05-01T09:00:00.000Z',
         endsAt: '2023-05-01T17:00:00.000Z',
-        externalSourceName: 'AgendaBasel'
+        externalSourceName: 'AgendaBasel',
+        status: v2Client.EventStatus.Scheduled,
+        imageUrl: null,
+        description: null,
+        externalSourceId: null,
+        location: null
       },
       {
-        __typename: 'Query',
+        __typename: 'EventFromSource',
         id: '2',
         name: 'Event 2',
         startsAt: '2023-05-02T10:00:00.000Z',
         endsAt: '2023-05-02T18:00:00.000Z',
-        externalSourceName: 'AgendaBasel'
+        externalSourceName: 'AgendaBasel',
+        status: v2Client.EventStatus.Scheduled,
+        imageUrl: null,
+        description: null,
+        externalSourceId: null,
+        location: null
       }
     ],
     pageInfo: {
@@ -135,11 +144,11 @@ describe('ImportableEventListView', () => {
   test('renders the event list view with events', async () => {
     const {asFragment} = render(
       <AuthContext.Provider value={sessionWithPermissions}>
-        <MockedProvider mocks={mocks} addTypename={false}>
+        <MockedProviderBase mocks={mocks} addTypename={false}>
           <BrowserRouter>
             <ImportableEventListView />
           </BrowserRouter>
-        </MockedProvider>
+        </MockedProviderBase>
       </AuthContext.Provider>
     )
 
@@ -160,11 +169,11 @@ describe('ImportableEventListView', () => {
   test('imports an event when import button is clicked', async () => {
     render(
       <AuthContext.Provider value={sessionWithPermissions}>
-        <MockedProvider mocks={mocks} addTypename={false}>
+        <MockedProviderBase mocks={mocks} addTypename={false}>
           <BrowserRouter>
             <ImportableEventListView />
           </BrowserRouter>
-        </MockedProvider>
+        </MockedProviderBase>
       </AuthContext.Provider>
     )
 

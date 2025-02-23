@@ -1,6 +1,7 @@
 import {
   ApolloClient,
   ApolloLink,
+  ApolloProvider,
   createHttpLink,
   InMemoryCache,
   NormalizedCacheObject
@@ -8,6 +9,7 @@ import {
 import {removeTypenameFromVariables} from '@apollo/client/link/remove-typename'
 
 import possibleTypes from './graphql'
+import {ComponentType, memo} from 'react'
 
 export enum ElementID {
   Settings = 'settings',
@@ -80,3 +82,19 @@ export function getApiClientV2() {
 
   return client
 }
+
+export const createWithV2ApiClient = <
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  P extends object
+>(
+  ControlledComponent: ComponentType<P>
+) =>
+  memo<P>(props => {
+    const client = getApiClientV2()
+
+    return (
+      <ApolloProvider client={client}>
+        <ControlledComponent {...(props as P)} />
+      </ApolloProvider>
+    )
+  })

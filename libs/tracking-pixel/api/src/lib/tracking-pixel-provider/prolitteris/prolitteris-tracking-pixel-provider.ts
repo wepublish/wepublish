@@ -4,13 +4,29 @@ import {GatewayClient} from './client-gateway'
 import {InternalKey} from './internalKey'
 import {HttpService} from '@nestjs/axios'
 
-export interface ProLitterisCountPixelProps {
+type ProLitterisInternal = {
+  username?: never
+  password?: never
+
+  usePublisherInternalKey: true
+  publisherInternalKeyDomain: string
+}
+
+type ProLitterisGateway = {
+  publisherInternalKeyDomain?: never
+
+  usePublisherInternalKey: false
+  username: string
+  password: string
+}
+
+export type ProLitterisCountPixelProps = {
   username?: string
-  memberNr: string
   password?: string
-  onlyPaidContentAccess: boolean
-  usePublisherInternalKey: boolean
+  memberNr: string
   publisherInternalKeyDomain?: string
+  usePublisherInternalKey: boolean
+  onlyPaidContentAccess: boolean
 }
 
 export class ProlitterisTrackingPixelProvider implements TrackingPixelProvider {
@@ -28,7 +44,7 @@ export class ProlitterisTrackingPixelProvider implements TrackingPixelProvider {
     public readonly id: string,
     public readonly name: string,
     public readonly type: TrackingPixelProviderType,
-    private props: ProLitterisCountPixelProps,
+    private props: ProLitterisCountPixelProps & (ProLitterisInternal | ProLitterisGateway),
     private httpClient: HttpService
   ) {}
 

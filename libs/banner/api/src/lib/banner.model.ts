@@ -46,14 +46,14 @@ export class Banner {
   @Field({nullable: true})
   imageId?: string
 
+  @Field(() => Image, {nullable: true})
+  image?: Image
+
   @Field(() => [PageModel], {nullable: true})
   showOnPages?: PageModel[]
 
   @Field(() => LoginStatus)
   showForLoginStatus!: LoginStatus
-
-  @Field(() => Image, {nullable: true})
-  image?: Image
 
   @Field(() => [BannerAction], {nullable: true})
   actions?: BannerAction[]

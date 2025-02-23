@@ -1,5 +1,7 @@
-fragment PageRevisionsWithoutBlocks on PageRevision {
+fragment PageRevisionWithoutBlocks on PageRevision {
   id
+  createdAt
+  publishedAt
   description
   title
   image {
@@ -17,6 +19,14 @@ fragment PageRevisionsWithoutBlocks on PageRevision {
   }
 }
 
+fragment FullPageRevision on PageRevision {
+  ...PageRevisionWithoutBlocks
+
+  blocks {
+    ...FullBlock
+  }
+}
+
 fragment PageWithoutBlocks on Page {
   id
   publishedAt
@@ -29,7 +39,7 @@ fragment PageWithoutBlocks on Page {
   }
 
   latest {
-    ...PageRevisionsWithoutBlocks
+    ...PageRevisionWithoutBlocks
   }
 }
 
@@ -37,11 +47,7 @@ fragment FullPage on Page {
   ...PageWithoutBlocks
 
   latest {
-    ...PageRevisionsWithoutBlocks
-
-    blocks {
-      ...FullBlock
-    }
+    ...FullPageRevision
   }
 }
 

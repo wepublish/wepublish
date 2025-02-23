@@ -168,14 +168,20 @@ import {HttpModule, HttpService} from '@nestjs/axios'
                 trackingPixelProvider.id,
                 trackingPixelProvider.name,
                 trackingPixelProvider.type,
-                {
-                  memberNr: trackingPixelProvider.memberNr,
-                  username: trackingPixelProvider.username,
-                  password: trackingPixelProvider.password,
-                  onlyPaidContentAccess: Boolean(trackingPixelProvider.onlyPaidContentAccess),
-                  publisherInternalKeyDomain: trackingPixelProvider.publisherInternalKeyDomain,
-                  usePublisherInternalKey: Boolean(trackingPixelProvider.usePublisherInternalKey)
-                },
+                trackingPixelProvider.usePublisherInternalKey
+                  ? {
+                      memberNr: trackingPixelProvider.memberNr,
+                      onlyPaidContentAccess: Boolean(trackingPixelProvider.onlyPaidContentAccess),
+                      publisherInternalKeyDomain: trackingPixelProvider.publisherInternalKeyDomain,
+                      usePublisherInternalKey: true
+                    }
+                  : {
+                      memberNr: trackingPixelProvider.memberNr,
+                      username: trackingPixelProvider.username,
+                      password: trackingPixelProvider.password,
+                      onlyPaidContentAccess: Boolean(trackingPixelProvider.onlyPaidContentAccess),
+                      usePublisherInternalKey: false
+                    },
                 httpClient
               )
             )

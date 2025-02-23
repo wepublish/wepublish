@@ -1,9 +1,10 @@
-fragment ArticleRevisionsWithoutBlocks on ArticleRevision {
+fragment ArticleRevisionWithoutBlocks on ArticleRevision {
   id
+  publishedAt
+  createdAt
   preTitle
   title
   lead
-  breaking
   lead
   title
 
@@ -23,6 +24,14 @@ fragment ArticleRevisionsWithoutBlocks on ArticleRevision {
 
   properties {
     ...FullProperty
+  }
+}
+
+fragment FullArticleRevision on ArticleRevision {
+  ...ArticleRevisionWithoutBlocks
+
+  blocks {
+    ...FullBlock
   }
 }
 
@@ -46,7 +55,7 @@ fragment ArticleWithoutBlocks on Article {
   }
 
   latest {
-    ...ArticleRevisionsWithoutBlocks
+    ...ArticleRevisionWithoutBlocks
   }
 }
 
@@ -54,11 +63,7 @@ fragment FullArticle on Article {
   ...ArticleWithoutBlocks
 
   latest {
-    ...ArticleRevisionsWithoutBlocks
-
-    blocks {
-      ...FullBlock
-    }
+    ...FullArticleRevision
   }
 }
 

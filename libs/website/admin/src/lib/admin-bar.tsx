@@ -9,8 +9,8 @@ import {useSessionStorage} from './use-session-storage'
 
 export const AdminBarWrapper = styled(SpeedDial)`
   position: fixed;
-  bottom: 16px;
-  right: 16px;
+  bottom: ${({theme}) => theme.spacing(2)};
+  right: ${({theme}) => theme.spacing(2)};
 `
 
 export const AdminBar = memo(() => {

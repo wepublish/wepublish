@@ -1,5 +1,6 @@
 import {ProLitterisGenerator, ReturnTrackingPixels} from './types'
 import {HttpService} from '@nestjs/axios'
+import {isAxiosError} from 'axios'
 import {lastValueFrom} from 'rxjs'
 
 export class GatewayClient implements ProLitterisGenerator {
@@ -32,12 +33,16 @@ export class GatewayClient implements ProLitterisGenerator {
       })
 
       return response.data
-    } catch (error) {
-      throw new Error(
-        `Getting tracking pixel failed with error: ${JSON.stringify(
-          error.response?.data || error.message
-        )}`
-      )
+    } catch (error: unknown) {
+      if (isAxiosError(error)) {
+        throw new Error(
+          `Getting tracking pixel failed with error: ${JSON.stringify(
+            error.response?.data || error.message
+          )}`
+        )
+      } else {
+        throw error
+      }
     }
   }
 }

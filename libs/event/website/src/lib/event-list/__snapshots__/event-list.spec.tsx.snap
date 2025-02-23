@@ -61,16 +61,16 @@ https://unsplash.it/200/100 200w"
                 />
               </svg>
               <time
-                datetime="2023-02-24T09:00:00.000Z"
+                datetime="2023-01-01T00:00:00.000Z"
               >
-                24.02.2023 09:00
+                01.01.2023 00:00
               </time>
             </div>
             – 
             <time
-              datetime="2023-02-25T07:30:00.000Z"
+              datetime="2023-01-02T00:00:00.000Z"
             >
-              25.02.2023 07:30
+              02.01.2023 00:00
             </time>
           </div>
           <h1
@@ -234,16 +234,16 @@ https://unsplash.it/200/100 200w"
                 />
               </svg>
               <time
-                datetime="2023-02-24T09:00:00.000Z"
+                datetime="2023-01-01T00:00:00.000Z"
               >
-                24.02.2023 09:00
+                01.01.2023 00:00
               </time>
             </div>
             – 
             <time
-              datetime="2023-02-25T07:30:00.000Z"
+              datetime="2023-01-02T00:00:00.000Z"
             >
-              25.02.2023 07:30
+              02.01.2023 00:00
             </time>
           </div>
           <h1
@@ -407,16 +407,16 @@ https://unsplash.it/200/100 200w"
                 />
               </svg>
               <time
-                datetime="2023-02-24T09:00:00.000Z"
+                datetime="2023-01-01T00:00:00.000Z"
               >
-                24.02.2023 09:00
+                01.01.2023 00:00
               </time>
             </div>
             – 
             <time
-              datetime="2023-02-25T07:30:00.000Z"
+              datetime="2023-01-02T00:00:00.000Z"
             >
-              25.02.2023 07:30
+              02.01.2023 00:00
             </time>
           </div>
           <h1
@@ -580,16 +580,16 @@ https://unsplash.it/200/100 200w"
                 />
               </svg>
               <time
-                datetime="2023-02-24T09:00:00.000Z"
+                datetime="2023-01-01T00:00:00.000Z"
               >
-                24.02.2023 09:00
+                01.01.2023 00:00
               </time>
             </div>
             – 
             <time
-              datetime="2023-02-25T07:30:00.000Z"
+              datetime="2023-01-02T00:00:00.000Z"
             >
-              25.02.2023 07:30
+              02.01.2023 00:00
             </time>
           </div>
           <h1
@@ -753,1764 +753,16 @@ https://unsplash.it/200/100 200w"
                 />
               </svg>
               <time
-                datetime="2023-02-24T09:00:00.000Z"
+                datetime="2023-01-01T00:00:00.000Z"
               >
-                24.02.2023 09:00
+                01.01.2023 00:00
               </time>
             </div>
             – 
             <time
-              datetime="2023-02-25T07:30:00.000Z"
+              datetime="2023-01-02T00:00:00.000Z"
             >
-              25.02.2023 07:30
-            </time>
-          </div>
-          <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15"
-          >
-            Cool concert
-          </h1>
-          <div
-            class="emotion-16 emotion-17"
-          >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
-    </a>
-  </article>
-</DocumentFragment>
-`;
-
-exports[`EventList should render WithClassName 1`] = `
-<DocumentFragment>
-  <article
-    class="extra-classname emotion-0 emotion-1"
-  >
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <article
-        class="emotion-3 emotion-4"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        >
-          <img
-            alt="DSC07717"
-            class="emotion-7 emotion-8"
-            loading="lazy"
-            sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-            srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-            title=""
-          />
-        </div>
-        <div
-          class="emotion-9 emotion-10"
-        >
-          <div
-            class="emotion-11 emotion-12"
-          >
-            <div
-              class="emotion-13 emotion-14"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-                />
-              </svg>
-              <time
-                datetime="2023-02-24T09:00:00.000Z"
-              >
-                24.02.2023 09:00
-              </time>
-            </div>
-            – 
-            <time
-              datetime="2023-02-25T07:30:00.000Z"
-            >
-              25.02.2023 07:30
-            </time>
-          </div>
-          <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15"
-          >
-            Cool concert
-          </h1>
-          <div
-            class="emotion-16 emotion-17"
-          >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <article
-        class="emotion-3 emotion-4"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        >
-          <img
-            alt="DSC07717"
-            class="emotion-7 emotion-8"
-            loading="lazy"
-            sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-            srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-            title=""
-          />
-        </div>
-        <div
-          class="emotion-9 emotion-10"
-        >
-          <div
-            class="emotion-11 emotion-12"
-          >
-            <div
-              class="emotion-13 emotion-14"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-                />
-              </svg>
-              <time
-                datetime="2023-02-24T09:00:00.000Z"
-              >
-                24.02.2023 09:00
-              </time>
-            </div>
-            – 
-            <time
-              datetime="2023-02-25T07:30:00.000Z"
-            >
-              25.02.2023 07:30
-            </time>
-          </div>
-          <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15"
-          >
-            Cool concert
-          </h1>
-          <div
-            class="emotion-16 emotion-17"
-          >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <article
-        class="emotion-3 emotion-4"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        >
-          <img
-            alt="DSC07717"
-            class="emotion-7 emotion-8"
-            loading="lazy"
-            sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-            srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-            title=""
-          />
-        </div>
-        <div
-          class="emotion-9 emotion-10"
-        >
-          <div
-            class="emotion-11 emotion-12"
-          >
-            <div
-              class="emotion-13 emotion-14"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-                />
-              </svg>
-              <time
-                datetime="2023-02-24T09:00:00.000Z"
-              >
-                24.02.2023 09:00
-              </time>
-            </div>
-            – 
-            <time
-              datetime="2023-02-25T07:30:00.000Z"
-            >
-              25.02.2023 07:30
-            </time>
-          </div>
-          <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15"
-          >
-            Cool concert
-          </h1>
-          <div
-            class="emotion-16 emotion-17"
-          >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <article
-        class="emotion-3 emotion-4"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        >
-          <img
-            alt="DSC07717"
-            class="emotion-7 emotion-8"
-            loading="lazy"
-            sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-            srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-            title=""
-          />
-        </div>
-        <div
-          class="emotion-9 emotion-10"
-        >
-          <div
-            class="emotion-11 emotion-12"
-          >
-            <div
-              class="emotion-13 emotion-14"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-                />
-              </svg>
-              <time
-                datetime="2023-02-24T09:00:00.000Z"
-              >
-                24.02.2023 09:00
-              </time>
-            </div>
-            – 
-            <time
-              datetime="2023-02-25T07:30:00.000Z"
-            >
-              25.02.2023 07:30
-            </time>
-          </div>
-          <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15"
-          >
-            Cool concert
-          </h1>
-          <div
-            class="emotion-16 emotion-17"
-          >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <article
-        class="emotion-3 emotion-4"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        >
-          <img
-            alt="DSC07717"
-            class="emotion-7 emotion-8"
-            loading="lazy"
-            sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-            srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-            title=""
-          />
-        </div>
-        <div
-          class="emotion-9 emotion-10"
-        >
-          <div
-            class="emotion-11 emotion-12"
-          >
-            <div
-              class="emotion-13 emotion-14"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-                />
-              </svg>
-              <time
-                datetime="2023-02-24T09:00:00.000Z"
-              >
-                24.02.2023 09:00
-              </time>
-            </div>
-            – 
-            <time
-              datetime="2023-02-25T07:30:00.000Z"
-            >
-              25.02.2023 07:30
-            </time>
-          </div>
-          <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15"
-          >
-            Cool concert
-          </h1>
-          <div
-            class="emotion-16 emotion-17"
-          >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
-    </a>
-  </article>
-</DocumentFragment>
-`;
-
-exports[`EventList should render WithEmotion 1`] = `
-<DocumentFragment>
-  <article
-    class="emotion-0 emotion-1"
-  >
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <article
-        class="emotion-3 emotion-4"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        >
-          <img
-            alt="DSC07717"
-            class="emotion-7 emotion-8"
-            loading="lazy"
-            sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-            srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-            title=""
-          />
-        </div>
-        <div
-          class="emotion-9 emotion-10"
-        >
-          <div
-            class="emotion-11 emotion-12"
-          >
-            <div
-              class="emotion-13 emotion-14"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-                />
-              </svg>
-              <time
-                datetime="2023-02-24T09:00:00.000Z"
-              >
-                24.02.2023 09:00
-              </time>
-            </div>
-            – 
-            <time
-              datetime="2023-02-25T07:30:00.000Z"
-            >
-              25.02.2023 07:30
-            </time>
-          </div>
-          <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15"
-          >
-            Cool concert
-          </h1>
-          <div
-            class="emotion-16 emotion-17"
-          >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <article
-        class="emotion-3 emotion-4"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        >
-          <img
-            alt="DSC07717"
-            class="emotion-7 emotion-8"
-            loading="lazy"
-            sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-            srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-            title=""
-          />
-        </div>
-        <div
-          class="emotion-9 emotion-10"
-        >
-          <div
-            class="emotion-11 emotion-12"
-          >
-            <div
-              class="emotion-13 emotion-14"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-                />
-              </svg>
-              <time
-                datetime="2023-02-24T09:00:00.000Z"
-              >
-                24.02.2023 09:00
-              </time>
-            </div>
-            – 
-            <time
-              datetime="2023-02-25T07:30:00.000Z"
-            >
-              25.02.2023 07:30
-            </time>
-          </div>
-          <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15"
-          >
-            Cool concert
-          </h1>
-          <div
-            class="emotion-16 emotion-17"
-          >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <article
-        class="emotion-3 emotion-4"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        >
-          <img
-            alt="DSC07717"
-            class="emotion-7 emotion-8"
-            loading="lazy"
-            sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-            srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-            title=""
-          />
-        </div>
-        <div
-          class="emotion-9 emotion-10"
-        >
-          <div
-            class="emotion-11 emotion-12"
-          >
-            <div
-              class="emotion-13 emotion-14"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-                />
-              </svg>
-              <time
-                datetime="2023-02-24T09:00:00.000Z"
-              >
-                24.02.2023 09:00
-              </time>
-            </div>
-            – 
-            <time
-              datetime="2023-02-25T07:30:00.000Z"
-            >
-              25.02.2023 07:30
-            </time>
-          </div>
-          <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15"
-          >
-            Cool concert
-          </h1>
-          <div
-            class="emotion-16 emotion-17"
-          >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <article
-        class="emotion-3 emotion-4"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        >
-          <img
-            alt="DSC07717"
-            class="emotion-7 emotion-8"
-            loading="lazy"
-            sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-            srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-            title=""
-          />
-        </div>
-        <div
-          class="emotion-9 emotion-10"
-        >
-          <div
-            class="emotion-11 emotion-12"
-          >
-            <div
-              class="emotion-13 emotion-14"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-                />
-              </svg>
-              <time
-                datetime="2023-02-24T09:00:00.000Z"
-              >
-                24.02.2023 09:00
-              </time>
-            </div>
-            – 
-            <time
-              datetime="2023-02-25T07:30:00.000Z"
-            >
-              25.02.2023 07:30
-            </time>
-          </div>
-          <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-15"
-          >
-            Cool concert
-          </h1>
-          <div
-            class="emotion-16 emotion-17"
-          >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <article
-        class="emotion-3 emotion-4"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        >
-          <img
-            alt="DSC07717"
-            class="emotion-7 emotion-8"
-            loading="lazy"
-            sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-            srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-            title=""
-          />
-        </div>
-        <div
-          class="emotion-9 emotion-10"
-        >
-          <div
-            class="emotion-11 emotion-12"
-          >
-            <div
-              class="emotion-13 emotion-14"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-                />
-              </svg>
-              <time
-                datetime="2023-02-24T09:00:00.000Z"
-              >
-                24.02.2023 09:00
-              </time>
-            </div>
-            – 
-            <time
-              datetime="2023-02-25T07:30:00.000Z"
-            >
-              25.02.2023 07:30
+              02.01.2023 00:00
             </time>
           </div>
           <h1
@@ -2652,15 +904,34 @@ exports[`EventList should render WithoutImage 1`] = `
       >
         <div
           class="emotion-5 emotion-6"
-        />
+        >
+          <img
+            alt="DSC07717"
+            class="emotion-7 emotion-8"
+            loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+            title=""
+          />
+        </div>
         <div
-          class="emotion-7 emotion-8"
+          class="emotion-9 emotion-10"
         >
           <div
-            class="emotion-9 emotion-10"
+            class="emotion-11 emotion-12"
           >
             <div
-              class="emotion-11 emotion-12"
+              class="emotion-13 emotion-14"
             >
               <svg
                 fill="currentColor"
@@ -2680,25 +951,25 @@ exports[`EventList should render WithoutImage 1`] = `
                 />
               </svg>
               <time
-                datetime="2023-02-24T09:00:00.000Z"
+                datetime="2023-01-01T00:00:00.000Z"
               >
-                24.02.2023 09:00
+                01.01.2023 00:00
               </time>
             </div>
             – 
             <time
-              datetime="2023-02-25T07:30:00.000Z"
+              datetime="2023-01-02T00:00:00.000Z"
             >
-              25.02.2023 07:30
+              02.01.2023 00:00
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13"
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
           >
             Cool concert
           </h1>
           <div
-            class="emotion-14 emotion-15"
+            class="emotion-16 emotion-17"
           >
             <div
               data-gramm="false"
@@ -2707,7 +978,7 @@ exports[`EventList should render WithoutImage 1`] = `
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                 data-slate-node="element"
               >
                 <span
@@ -2809,7 +1080,7 @@ exports[`EventList should render WithoutImage 1`] = `
         >
           <img
             alt="DSC07717"
-            class="emotion-22 emotion-23"
+            class="emotion-7 emotion-8"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -2827,13 +1098,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="emotion-7 emotion-8"
+          class="emotion-9 emotion-10"
         >
           <div
-            class="emotion-9 emotion-10"
+            class="emotion-11 emotion-12"
           >
             <div
-              class="emotion-11 emotion-12"
+              class="emotion-13 emotion-14"
             >
               <svg
                 fill="currentColor"
@@ -2853,25 +1124,25 @@ https://unsplash.it/200/100 200w"
                 />
               </svg>
               <time
-                datetime="2023-02-24T09:00:00.000Z"
+                datetime="2023-01-01T00:00:00.000Z"
               >
-                24.02.2023 09:00
+                01.01.2023 00:00
               </time>
             </div>
             – 
             <time
-              datetime="2023-02-25T07:30:00.000Z"
+              datetime="2023-01-02T00:00:00.000Z"
             >
-              25.02.2023 07:30
+              02.01.2023 00:00
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13"
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
           >
             Cool concert
           </h1>
           <div
-            class="emotion-14 emotion-15"
+            class="emotion-16 emotion-17"
           >
             <div
               data-gramm="false"
@@ -2880,161 +1151,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
-      href="https://example.com"
-    >
-      <article
-        class="emotion-3 emotion-4"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        />
-        <div
-          class="emotion-7 emotion-8"
-        >
-          <div
-            class="emotion-9 emotion-10"
-          >
-            <div
-              class="emotion-11 emotion-12"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-                />
-              </svg>
-              <time
-                datetime="2023-02-24T09:00:00.000Z"
-              >
-                24.02.2023 09:00
-              </time>
-            </div>
-            – 
-            <time
-              datetime="2023-02-25T07:30:00.000Z"
-            >
-              25.02.2023 07:30
-            </time>
-          </div>
-          <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13"
-          >
-            Cool concert
-          </h1>
-          <div
-            class="emotion-14 emotion-15"
-          >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                 data-slate-node="element"
               >
                 <span
@@ -3136,7 +1253,7 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="emotion-22 emotion-23"
+            class="emotion-7 emotion-8"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -3154,13 +1271,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="emotion-7 emotion-8"
+          class="emotion-9 emotion-10"
         >
           <div
-            class="emotion-9 emotion-10"
+            class="emotion-11 emotion-12"
           >
             <div
-              class="emotion-11 emotion-12"
+              class="emotion-13 emotion-14"
             >
               <svg
                 fill="currentColor"
@@ -3180,25 +1297,25 @@ https://unsplash.it/200/100 200w"
                 />
               </svg>
               <time
-                datetime="2023-02-24T09:00:00.000Z"
+                datetime="2023-01-01T00:00:00.000Z"
               >
-                24.02.2023 09:00
+                01.01.2023 00:00
               </time>
             </div>
             – 
             <time
-              datetime="2023-02-25T07:30:00.000Z"
+              datetime="2023-01-02T00:00:00.000Z"
             >
-              25.02.2023 07:30
+              02.01.2023 00:00
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13"
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
           >
             Cool concert
           </h1>
           <div
-            class="emotion-14 emotion-15"
+            class="emotion-16 emotion-17"
           >
             <div
               data-gramm="false"
@@ -3207,7 +1324,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                 data-slate-node="element"
               >
                 <span
@@ -3306,15 +1423,34 @@ https://unsplash.it/200/100 200w"
       >
         <div
           class="emotion-5 emotion-6"
-        />
+        >
+          <img
+            alt="DSC07717"
+            class="emotion-7 emotion-8"
+            loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+            title=""
+          />
+        </div>
         <div
-          class="emotion-7 emotion-8"
+          class="emotion-9 emotion-10"
         >
           <div
-            class="emotion-9 emotion-10"
+            class="emotion-11 emotion-12"
           >
             <div
-              class="emotion-11 emotion-12"
+              class="emotion-13 emotion-14"
             >
               <svg
                 fill="currentColor"
@@ -3334,25 +1470,25 @@ https://unsplash.it/200/100 200w"
                 />
               </svg>
               <time
-                datetime="2023-02-24T09:00:00.000Z"
+                datetime="2023-01-01T00:00:00.000Z"
               >
-                24.02.2023 09:00
+                01.01.2023 00:00
               </time>
             </div>
             – 
             <time
-              datetime="2023-02-25T07:30:00.000Z"
+              datetime="2023-01-02T00:00:00.000Z"
             >
-              25.02.2023 07:30
+              02.01.2023 00:00
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 emotion-13"
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
           >
             Cool concert
           </h1>
           <div
-            class="emotion-14 emotion-15"
+            class="emotion-16 emotion-17"
           >
             <div
               data-gramm="false"
@@ -3361,7 +1497,180 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                data-slate-node="element"
+              >
+                <span
+                  data-slate-node="text"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Lorem ipsum dolor sit amet, 
+                  </span>
+                </span>
+                <span
+                  data-slate-node="text"
+                >
+                  <strong
+                    data-slate-leaf="true"
+                  >
+                    <span
+                      data-slate-string="true"
+                    >
+                      consectetur adipiscing elit, 
+                    </span>
+                  </strong>
+                </span>
+                <span
+                  data-slate-node="text"
+                >
+                  <em
+                    data-slate-leaf="true"
+                  >
+                    <span
+                      data-slate-string="true"
+                    >
+                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                    </span>
+                  </em>
+                </span>
+                <span
+                  data-slate-node="text"
+                >
+                  <u
+                    data-slate-leaf="true"
+                  >
+                    <span
+                      data-slate-string="true"
+                    >
+                      Ut enim ad minim veniam, 
+                    </span>
+                  </u>
+                </span>
+                <span
+                  data-slate-node="text"
+                >
+                  <del
+                    data-slate-leaf="true"
+                  >
+                    <span
+                      data-slate-string="true"
+                    >
+                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
+                    </span>
+                  </del>
+                </span>
+                <span
+                  data-slate-node="text"
+                >
+                  <span
+                    data-slate-length="0"
+                    data-slate-zero-width="z"
+                  >
+                    ﻿
+                  </span>
+                </span>
+                <span
+                  data-slate-node="text"
+                >
+                  <span
+                    data-slate-length="0"
+                    data-slate-zero-width="z"
+                  >
+                    ﻿
+                  </span>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
+      href="https://example.com"
+    >
+      <article
+        class="emotion-3 emotion-4"
+      >
+        <div
+          class="emotion-5 emotion-6"
+        >
+          <img
+            alt="DSC07717"
+            class="emotion-7 emotion-8"
+            loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+(max-width: 1600px) 800w,
+(max-width: 2000px) 1000w,
+1200w"
+            srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+            title=""
+          />
+        </div>
+        <div
+          class="emotion-9 emotion-10"
+        >
+          <div
+            class="emotion-11 emotion-12"
+          >
+            <div
+              class="emotion-13 emotion-14"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+                />
+              </svg>
+              <time
+                datetime="2023-01-01T00:00:00.000Z"
+              >
+                01.01.2023 00:00
+              </time>
+            </div>
+            – 
+            <time
+              datetime="2023-01-02T00:00:00.000Z"
+            >
+              02.01.2023 00:00
+            </time>
+          </div>
+          <h1
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
+          >
+            Cool concert
+          </h1>
+          <div
+            class="emotion-16 emotion-17"
+          >
+            <div
+              data-gramm="false"
+              data-slate-editor="true"
+              data-slate-node="value"
+              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+            >
+              <p
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                 data-slate-node="element"
               >
                 <span

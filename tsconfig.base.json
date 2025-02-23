@@ -79,6 +79,7 @@
       "@wepublish/settings/editor": ["libs/settings/editor/src/index.ts"],
       "@wepublish/stats/api": ["libs/stats/api/src/index.ts"],
       "@wepublish/storybook": ["libs/storybook/src/index.ts"],
+      "@wepublish/storybook/mocks": ["libs/storybook/mocks/src/index.ts"],
       "@wepublish/system-info": ["libs/system-info/api/src/index.ts"],
       "@wepublish/tag/api": ["libs/tag/api/src/index.ts"],
       "@wepublish/testing": ["libs/testing/src/index.ts"],

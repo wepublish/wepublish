@@ -555,7 +555,6 @@ type EventFromSource {
   name: String!
   startsAt: DateTime!
   status: EventStatus!
-  url: String!
 }
 
 enum EventSort {
@@ -880,7 +879,7 @@ enum ImportedEventSort {
 type ImportedEventsDocument {
   nodes: [EventFromSource!]!
   pageInfo: PageInfo!
-  totalCount: Float!
+  totalCount: Int!
 }
 
 type InstagramPostBlock implements BaseBlock {
@@ -1224,31 +1223,31 @@ input PageTeaserInput {
 type PaginatedArticles {
   nodes: [Article!]!
   pageInfo: PageInfo!
-  totalCount: Float!
+  totalCount: Int!
 }
 
 type PaginatedEvents {
   nodes: [Event!]!
   pageInfo: PageInfo!
-  totalCount: Float!
+  totalCount: Int!
 }
 
 type PaginatedPages {
   nodes: [Page!]!
   pageInfo: PageInfo!
-  totalCount: Float!
+  totalCount: Int!
 }
 
 type PaginatedPeerArticle {
   nodes: [PeerArticle!]!
   pageInfo: PageInfo!
-  totalCount: Float!
+  totalCount: Int!
 }
 
 type PaginatedPollVotes {
   nodes: [PollVote!]!
   pageInfo: PageInfo!
-  totalCount: Float!
+  totalCount: Int!
 }
 
 type PaymentMethod {
@@ -1345,7 +1344,6 @@ type PollAnswerInVote {
 type PollBlock implements BaseBlock & HasOptionalPoll {
   blockStyle: String
   blockStyleName: String
-  image: Image
   poll: FullPoll
   pollId: String
   type: BlockType!
@@ -1459,9 +1457,6 @@ type Query {
 
   """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
-
-  """Returns a navigation by id."""
-  navigation(id: String!): Navigation!
 
   """Returns a list of navigations."""
   navigations: [Navigation!]!

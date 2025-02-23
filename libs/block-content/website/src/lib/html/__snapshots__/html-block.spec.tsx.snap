@@ -24,38 +24,6 @@ exports[`HTML Block should render Empty 1`] = `
 </DocumentFragment>
 `;
 
-exports[`HTML Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <div
-    class="extra-classname css-1moxsbr-HtmlBlockWrapper emotion-0"
-  >
-    <div>
-      <div
-        style="color: red;"
-      >
-        This is a html embed
-      </div>
-    </div>
-  </div>
-</DocumentFragment>
-`;
-
-exports[`HTML Block should render WithEmotion 1`] = `
-<DocumentFragment>
-  <div
-    class="css-1moxsbr-HtmlBlockWrapper emotion-0"
-  >
-    <div>
-      <div
-        style="color: red;"
-      >
-        This is a html embed
-      </div>
-    </div>
-  </div>
-</DocumentFragment>
-`;
-
 exports[`HTML Block should render WithScript 1`] = `
 <DocumentFragment>
   <div

@@ -37,9 +37,6 @@ type Query {
   tags(cursor: String, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
   poll(id: String): FullPoll
-
-  """This query returns a list of original ids of imported events"""
-  importedEventsIds: [String]
   newSubscribersPerMonth(monthsBack: Int): [SubscribersPerMonth]
 }
 

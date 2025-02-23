@@ -1,3 +1,61 @@
+fragment FullPageTeaser on PageTeaser {
+  type
+  image {
+    ...FullImage
+  }
+
+  preTitle
+  title
+  lead
+
+  page {
+    ...PageWithoutBlocks
+  }
+}
+
+fragment FullArticleTeaser on ArticleTeaser {
+  type
+  image {
+    ...FullImage
+  }
+
+  preTitle
+  title
+  lead
+
+  article {
+    ...ArticleWithoutBlocks
+
+    published {
+      blocks {
+        __typename
+
+        ... on PollBlock {
+          blockStyle: blockStyleName
+          poll {
+            ...FullPoll
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment FullEventTeaser on EventTeaser {
+  type
+  image {
+    ...FullImage
+  }
+
+  preTitle
+  title
+  lead
+
+  event {
+    ...FullEvent
+  }
+}
+
 fragment BlockWithoutTeaser on BlockContent {
   __typename
 
@@ -150,61 +208,19 @@ fragment BlockWithoutTeaser on BlockContent {
 
 fragment FullTeaser on Teaser {
   ... on ArticleTeaser {
-    image {
-      ...FullImage
-    }
-
-    preTitle
-    title
-    lead
-
-    article {
-      ...ArticleWithoutBlocks
-
-      published {
-        blocks {
-          __typename
-
-          ... on PollBlock {
-            blockStyle: blockStyleName
-            poll {
-              ...FullPoll
-            }
-          }
-        }
-      }
-    }
+    ...FullArticleTeaser
   }
 
   ... on PageTeaser {
-    image {
-      ...FullImage
-    }
-
-    preTitle
-    title
-    lead
-
-    page {
-      ...PageWithoutBlocks
-    }
+    ...FullPageTeaser
   }
 
   ... on EventTeaser {
-    image {
-      ...FullImage
-    }
-
-    preTitle
-    title
-    lead
-
-    event {
-      ...FullEvent
-    }
+    ...FullEventTeaser
   }
 
   ... on CustomTeaser {
+    type
     image {
       ...FullImage
     }
@@ -220,41 +236,56 @@ fragment FullTeaser on Teaser {
   }
 }
 
+fragment FullTeaserGridFlexBlock on TeaserGridFlexBlock {
+  type
+  blockStyle: blockStyleName
+  flexTeasers {
+    alignment {
+      x
+      y
+      w
+      h
+    }
+
+    teaser {
+      ...FullTeaser
+    }
+  }
+}
+
+fragment FullTeaserGridBlock on TeaserGridBlock {
+  type
+  blockStyle: blockStyleName
+  teasers {
+    ...FullTeaser
+  }
+  numColumns
+}
+
+fragment FullTeaserListBlock on TeaserListBlock {
+  title
+  type
+  blockStyle: blockStyleName
+  filter {
+    tags
+  }
+  teasers {
+    ...FullTeaser
+  }
+}
+
 fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
 
   ... on TeaserGridFlexBlock {
-    blockStyle: blockStyleName
-    flexTeasers {
-      alignment {
-        x
-        y
-        w
-        h
-      }
-
-      teaser {
-        ...FullTeaser
-      }
-    }
+    ...FullTeaserGridFlexBlock
   }
 
   ... on TeaserGridBlock {
-    blockStyle: blockStyleName
-    teasers {
-      ...FullTeaser
-    }
-    numColumns
+    ...FullTeaserGridBlock
   }
 
   ... on TeaserListBlock {
-    title
-    blockStyle: blockStyleName
-    filter {
-      tags
-    }
-    teasers {
-      ...FullTeaser
-    }
+    ...FullTeaserListBlock
   }
 }

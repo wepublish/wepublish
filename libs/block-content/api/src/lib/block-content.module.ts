@@ -1,6 +1,5 @@
 import {forwardRef, Module} from '@nestjs/common'
 import {BlockStylesModule} from './block-styles/block-styles.module'
-import {PollBlockResolver} from './poll/poll-block.resolver'
 import {EventBlockResolver} from './event/event-block.resolver'
 import {CommentBlockResolver} from './comment/comment-block.resolver'
 import {ImageModule} from '@wepublish/image/api'
@@ -26,7 +25,6 @@ import {BaseBlockResolver} from './base-block.resolver'
   ],
   providers: [
     BaseBlockResolver,
-    PollBlockResolver,
     EventBlockResolver,
     CommentBlockResolver,
     TeaserListBlockResolver,

@@ -764,4 +764,6 @@ export function blocksToSearchText(blocks: Array<typeof BlockContent>): string |
   } catch (error) {
     console.log(error)
   }
+
+  return undefined
 }

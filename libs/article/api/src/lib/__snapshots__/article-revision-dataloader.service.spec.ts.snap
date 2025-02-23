@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArticleRevisionDataloaderService load should load many 1`] = `
+[
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "articleId": "123",
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "articleId": "123",
+        "publishedAt": {
+          "gt": 2025-02-23T19:19:43.595Z,
+        },
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "articleId": "123",
+        "publishedAt": {
+          "lte": 2025-02-23T19:19:43.595Z,
+        },
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "articleId": "321",
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "articleId": "321",
+        "publishedAt": {
+          "gt": 2025-02-23T19:19:43.595Z,
+        },
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "articleId": "321",
+        "publishedAt": {
+          "lte": 2025-02-23T19:19:43.595Z,
+        },
+      },
+    },
+  ],
+]
+`;
+
+exports[`ArticleRevisionDataloaderService load should load one 1`] = `
+[
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "articleId": "123",
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "articleId": "123",
+        "publishedAt": {
+          "gt": 2025-02-23T19:19:43.593Z,
+        },
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "articleId": "123",
+        "publishedAt": {
+          "lte": 2025-02-23T19:19:43.593Z,
+        },
+      },
+    },
+  ],
+]
+`;
+
+exports[`ArticleRevisionDataloaderService should prime 1`] = `
+[
+  "123",
+  {},
+]
+`;

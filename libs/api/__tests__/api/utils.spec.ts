@@ -1,5 +1,5 @@
-import {AuthSession, AuthSessionType} from '@wepublish/website/api'
 import {isMeBySession} from 'libs/api/src/lib/graphql/utils'
+import {AuthSession, AuthSessionType} from '@wepublish/authentication/api'
 
 describe('utils', () => {
   test('isMeBySession returns true if userId matches session', () => {

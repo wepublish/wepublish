@@ -138,7 +138,7 @@ export class CreateEventInput extends PickType(
   @Field(type => EventStatus, {
     defaultValue: EventStatus.Scheduled
   })
-  status!: EventStatus
+  status?: EventStatus
 }
 
 @ArgsType()

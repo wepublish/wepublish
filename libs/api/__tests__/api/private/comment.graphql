@@ -125,7 +125,7 @@ mutation updateComment(
   $guestUserImageID: String
   $featured: Boolean
   $source: String
-  $tagIds: [String]
+  $tagIds: [String!]
   $ratingOverrides: [CommentRatingOverrideUpdateInput!]
 ) {
   updateComment(
@@ -148,7 +148,7 @@ mutation createComment(
   $itemType: CommentItemType!
   $parentID: String
   $text: RichText
-  $tagIds: [String]
+  $tagIds: [String!]
 ) {
   createComment(
     itemID: $itemID

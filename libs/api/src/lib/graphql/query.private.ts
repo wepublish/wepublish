@@ -31,7 +31,6 @@ import {
 } from './comment/comment'
 import {getAdminComments, getComment} from './comment/comment.private-queries'
 import {GraphQLSortOrder} from './common'
-import {getImportedEventsIds} from './event/event.query'
 import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
 import {getAdminImages, getImageById} from './image/image.private-queries'
 import {
@@ -579,15 +578,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLString}
       },
       resolve: (root, {id}, {prisma: {poll}}) => getPoll(id, poll)
-    },
-
-    // Events
-    // =======
-
-    importedEventsIds: {
-      type: new GraphQLList(GraphQLString),
-      description: 'This query returns a list of original ids of imported events',
-      resolve: (root, _, {prisma: {event}}) => getImportedEventsIds(event)
     },
 
     // Stats

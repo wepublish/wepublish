@@ -140,10 +140,10 @@ exports[`PeriodicityPicker should render Selected 1`] = `
 
 exports[`PeriodicityPicker should render Single 1`] = `<DocumentFragment />`;
 
-exports[`PeriodicityPicker should render WithClassName 1`] = `
+exports[`PeriodicityPicker should render WithError 1`] = `
 <DocumentFragment>
   <div
-    class="MuiFormControl-root extra-classname emotion-0 emotion-1"
+    class="MuiFormControl-root emotion-0 emotion-1"
   >
     <label
       class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-2"
@@ -209,7 +209,7 @@ exports[`PeriodicityPicker should render WithClassName 1`] = `
 </DocumentFragment>
 `;
 
-exports[`PeriodicityPicker should render WithEmotion 1`] = `
+exports[`PeriodicityPicker should render WithLoading 1`] = `
 <DocumentFragment>
   <div
     class="MuiFormControl-root emotion-0 emotion-1"
@@ -228,144 +228,6 @@ exports[`PeriodicityPicker should render WithEmotion 1`] = `
         aria-invalid="false"
         class="MuiNativeSelect-select MuiNativeSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-4"
         id=":r4:"
-      >
-        <option
-          value="monthly"
-        >
-          Monatlich
-        </option>
-        <option
-          value="quarterly"
-        >
-          Vierteljährlich
-        </option>
-        <option
-          value="biannual"
-        >
-          Halbjährlich
-        </option>
-        <option
-          value="yearly"
-        >
-          Jährlich
-        </option>
-      </select>
-      <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiNativeSelect-icon MuiNativeSelect-iconOutlined emotion-5"
-        data-testid="ArrowDropDownIcon"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M7 10l5 5 5-5z"
-        />
-      </svg>
-      <fieldset
-        aria-hidden="true"
-        class="MuiOutlinedInput-notchedOutline emotion-6"
-      >
-        <legend
-          class="emotion-7"
-        >
-          <span>
-            Zahlungsintervall
-          </span>
-        </legend>
-      </fieldset>
-    </div>
-  </div>
-</DocumentFragment>
-`;
-
-exports[`PeriodicityPicker should render WithError 1`] = `
-<DocumentFragment>
-  <div
-    class="MuiFormControl-root emotion-0 emotion-1"
-  >
-    <label
-      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-2"
-      data-shrink="true"
-      for=":r5:"
-    >
-      Zahlungsintervall
-    </label>
-    <div
-      class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl  emotion-3"
-    >
-      <select
-        aria-invalid="false"
-        class="MuiNativeSelect-select MuiNativeSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-4"
-        id=":r5:"
-      >
-        <option
-          value="monthly"
-        >
-          Monatlich
-        </option>
-        <option
-          value="quarterly"
-        >
-          Vierteljährlich
-        </option>
-        <option
-          value="biannual"
-        >
-          Halbjährlich
-        </option>
-        <option
-          value="yearly"
-        >
-          Jährlich
-        </option>
-      </select>
-      <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiNativeSelect-icon MuiNativeSelect-iconOutlined emotion-5"
-        data-testid="ArrowDropDownIcon"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M7 10l5 5 5-5z"
-        />
-      </svg>
-      <fieldset
-        aria-hidden="true"
-        class="MuiOutlinedInput-notchedOutline emotion-6"
-      >
-        <legend
-          class="emotion-7"
-        >
-          <span>
-            Zahlungsintervall
-          </span>
-        </legend>
-      </fieldset>
-    </div>
-  </div>
-</DocumentFragment>
-`;
-
-exports[`PeriodicityPicker should render WithLoading 1`] = `
-<DocumentFragment>
-  <div
-    class="MuiFormControl-root emotion-0 emotion-1"
-  >
-    <label
-      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-2"
-      data-shrink="true"
-      for=":r6:"
-    >
-      Zahlungsintervall
-    </label>
-    <div
-      class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl  emotion-3"
-    >
-      <select
-        aria-invalid="false"
-        class="MuiNativeSelect-select MuiNativeSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-4"
-        id=":r6:"
       >
         <option
           value="monthly"

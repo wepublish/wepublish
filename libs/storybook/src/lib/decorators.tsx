@@ -1,6 +1,5 @@
-import {Global} from '@emotion/react'
 import NextScript from 'next/script'
-import {CssBaseline, css} from '@mui/material'
+import {CssBaseline} from '@mui/material'
 import {Preview} from '@storybook/react'
 import {ComponentType, PropsWithChildren, memo, useCallback, useState} from 'react'
 import {
@@ -69,23 +68,7 @@ const withWebsiteProvider = (Story: ComponentType) => (
   </WebsiteProvider>
 )
 
-const extraClassname = css`
-  .extra-classname {
-    background-color: pink;
-  }
-`
-
-const withExtraClassname = (Story: ComponentType) => {
-  return (
-    <>
-      <Global styles={extraClassname} />
-
-      <Story />
-    </>
-  )
-}
-
-export const decorators = [withWebsiteProvider, withExtraClassname] as Preview['decorators']
+export const decorators = [withWebsiteProvider] as Preview['decorators']
 
 export const WithUserDecorator = (user: User | null) => (Story: ComponentType) => {
   return (

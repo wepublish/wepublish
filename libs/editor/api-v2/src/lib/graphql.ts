@@ -1302,7 +1302,7 @@ export type Mutation = {
   createEvent: Event;
   /** Creates a new navigation. */
   createNavigation: Navigation;
-  /** Creates a page. */
+  /** Creates an page. */
   createPage: Page;
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
   createPaymentFromInvoice?: Maybe<Payment>;
@@ -1341,7 +1341,7 @@ export type Mutation = {
   deleteEvent: Event;
   /** Deletes an existing navigation. */
   deleteNavigation: Navigation;
-  /** Deletes a page. */
+  /** Deletes an page. */
   deletePage: Scalars['String'];
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
@@ -1360,7 +1360,7 @@ export type Mutation = {
   dislikeArticle: Article;
   /** Duplicates an article. */
   duplicateArticle: Article;
-  /** Duplicates a page. */
+  /** Duplicates an page. */
   duplicatePage: Page;
   /** This mutation extends an subscription early */
   extendSubscription: Payment;
@@ -1377,7 +1377,7 @@ export type Mutation = {
   likeArticle: Article;
   /** Publishes an article at the given time. */
   publishArticle: Article;
-  /** Publishes a page at the given time. */
+  /** Publishes an page at the given time. */
   publishPage: Page;
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
   rateComment: Comment;
@@ -1394,7 +1394,7 @@ export type Mutation = {
   testSystemMail: Scalars['Boolean'];
   /** Unpublishes all revisions of an article. */
   unpublishArticle: Article;
-  /** Unpublishes all revisions of a page. */
+  /** Unpublishes all revisions of an page. */
   unpublishPage: Page;
   /** Updates an article. */
   updateArticle: Article;
@@ -1413,7 +1413,7 @@ export type Mutation = {
   updateEvent: Event;
   /** Updates an existing navigation. */
   updateNavigation: Navigation;
-  /** Updates a page. */
+  /** Updates an page. */
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
   updatePassword?: Maybe<User>;
@@ -2497,7 +2497,7 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
-  /** Returns a page by id or slug. */
+  /** Returns an page by id or slug. */
   page: Page;
   /** Returns a paginated list of pages based on the filters given. */
   pages: PaginatedPages;

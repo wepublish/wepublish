@@ -4,8 +4,7 @@ import {BetaAnalyticsDataClient} from '@google-analytics/data'
 import {JWTInput} from 'google-auth-library'
 import {format} from 'date-fns'
 import {HotAndTrendingDataSource} from '@wepublish/article/api'
-import {getMaxTake, PrimeDataLoader} from '@wepublish/utils/api'
-import {ArticleDataloaderService} from '@wepublish/article/api'
+import {getMaxTake} from '@wepublish/utils/api'
 
 export const GA_CLIENT_OPTIONS = Symbol('GA_CLIENT_OPTIONS')
 export type GoogleAnalyticsConfig = {
@@ -26,7 +25,6 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
     private config: GoogleAnalyticsConfig
   ) {}
 
-  @PrimeDataLoader(ArticleDataloaderService)
   async getMostViewedArticles({
     start,
     take,
@@ -108,12 +106,8 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
           in: Object.keys(slicedArticleViewMap),
           mode: 'insensitive'
         },
-        revisions: {
-          some: {
-            publishedAt: {
-              not: null
-            }
-          }
+        publishedAt: {
+          not: null
         }
       }
     })

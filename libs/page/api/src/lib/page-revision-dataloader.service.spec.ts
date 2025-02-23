@@ -1,28 +1,30 @@
 import {Test, TestingModule} from '@nestjs/testing'
-import {PageDataloaderService} from './page-dataloader.service'
 import {PrismaClient} from '@prisma/client'
 import DataLoader from 'dataloader'
+import {PageRevisionDataloaderService} from './page-revision-dataloader.service'
 
 jest.mock('dataloader')
 
-describe('PageDataloaderService', () => {
-  let service: PageDataloaderService
+describe('PageRevisionDataloaderService', () => {
+  let service: PageRevisionDataloaderService
   let prismaMock: {
     pageRevision: {
       findMany: jest.Mock
+      findFirst: jest.Mock
     }
   }
 
   beforeEach(async () => {
     prismaMock = {
       pageRevision: {
-        findMany: jest.fn()
+        findMany: jest.fn(),
+        findFirst: jest.fn()
       }
     }
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        PageDataloaderService,
+        PageRevisionDataloaderService,
         {
           provide: PrismaClient,
           useValue: prismaMock
@@ -30,7 +32,7 @@ describe('PageDataloaderService', () => {
       ]
     }).compile()
 
-    service = await module.resolve<PageDataloaderService>(PageDataloaderService)
+    service = await module.resolve<PageRevisionDataloaderService>(PageRevisionDataloaderService)
   })
 
   it('should prime', () => {
@@ -52,7 +54,7 @@ describe('PageDataloaderService', () => {
 
       const module: TestingModule = await Test.createTestingModule({
         providers: [
-          PageDataloaderService,
+          PageRevisionDataloaderService,
           {
             provide: PrismaClient,
             useValue: prismaMock
@@ -60,23 +62,23 @@ describe('PageDataloaderService', () => {
         ]
       }).compile()
 
-      service = await module.resolve<PageDataloaderService>(PageDataloaderService)
+      service = await module.resolve<PageRevisionDataloaderService>(PageRevisionDataloaderService)
     })
 
     it('should load one', async () => {
       prismaMock.pageRevision.findMany.mockResolvedValue([])
 
       await service.load('123')
-      expect(prismaMock.pageRevision.findMany).toHaveBeenCalled()
-      expect(prismaMock.pageRevision.findMany.mock.calls[0]).toMatchSnapshot()
+      expect(prismaMock.pageRevision.findFirst).toHaveBeenCalled()
+      expect(prismaMock.pageRevision.findFirst.mock.calls).toMatchSnapshot()
     })
 
     it('should load many', async () => {
       prismaMock.pageRevision.findMany.mockResolvedValue([])
 
       await service.loadMany(['123', '321'])
-      expect(prismaMock.pageRevision.findMany).toHaveBeenCalled()
-      expect(prismaMock.pageRevision.findMany.mock.calls[0]).toMatchSnapshot()
+      expect(prismaMock.pageRevision.findFirst).toHaveBeenCalled()
+      expect(prismaMock.pageRevision.findFirst.mock.calls).toMatchSnapshot()
     })
   })
 })

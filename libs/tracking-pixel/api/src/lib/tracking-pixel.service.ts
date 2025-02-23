@@ -42,7 +42,7 @@ export class TrackingPixelService {
           uri: trackingPixel.uri,
           pixelUid: trackingPixel.pixelUid
         })
-      } catch (error) {
+      } catch (error: any) {
         trackingPixels.push({
           articleId,
           tackingPixelMethodID: tackingPixelMethode.id,
@@ -105,7 +105,7 @@ export class TrackingPixelService {
             pixelUid: trackingPixel.pixelUid
           }
         })
-      } catch (error) {
+      } catch (error: any) {
         await this.prisma.articleTrackingPixels.create({
           data: {
             articleId,

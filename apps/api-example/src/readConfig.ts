@@ -154,7 +154,7 @@ type Turnstile = {
   siteKey: string
 }
 
-interface ProLitteris extends ProLitterisCountPixelProps {
+type ProLitteris = ProLitterisCountPixelProps & {
   type: 'prolitteris'
 }
 

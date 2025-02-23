@@ -23,7 +23,7 @@ export class TrackingPixel {
   id!: string
 
   @Field(() => TrackingPixelMethod)
-  trackingPixelMethod: TrackingPixelMethod
+  trackingPixelMethod!: TrackingPixelMethod
 
   @Field({nullable: true})
   pixelUid?: string
