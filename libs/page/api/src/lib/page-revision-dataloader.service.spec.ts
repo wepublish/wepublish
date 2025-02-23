@@ -14,6 +14,15 @@ describe('PageRevisionDataloaderService', () => {
     }
   }
 
+  beforeAll(() => {
+    jest.useFakeTimers()
+    jest.setSystemTime(new Date('2023-01-01'))
+  })
+
+  afterAll(() => {
+    jest.useRealTimers()
+  })
+
   beforeEach(async () => {
     prismaMock = {
       pageRevision: {

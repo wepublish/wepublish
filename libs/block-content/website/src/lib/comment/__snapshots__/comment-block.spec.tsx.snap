@@ -7,7 +7,6 @@ exports[`Comment List should render Comment 1`] = `
   >
     <article
       class="emotion-2 emotion-3"
-      id="WKxExIFhnoJX6EiH-kpZy"
     >
       <header
         class="emotion-4 emotion-5"
@@ -408,7 +407,6 @@ https://unsplash.it/200/200 200w"
     </article>
     <article
       class="emotion-2 emotion-3"
-      id="qBkJEB8vI9ETkDtALeVzR"
     >
       <header
         class="emotion-4 emotion-5"
@@ -809,7 +807,6 @@ https://unsplash.it/200/200 200w"
     </article>
     <article
       class="emotion-2 emotion-3"
-      id="BeritGxX6BNddeRpnYQSi"
     >
       <header
         class="emotion-4 emotion-5"

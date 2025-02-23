@@ -5,9 +5,12 @@ import {CommentAuthorType, CommentState} from '@wepublish/website/api'
 import {Comment} from './comment'
 import nanoid from 'nanoid'
 
-const anonymousComment = mockComment()
+const anonymousComment = mockComment({
+  id: '1'
+})
 
 const verifiedUserComment = mockComment({
+  id: '2',
   user: {
     __typename: 'User',
     id: nanoid(),

@@ -60,6 +60,7 @@ export const mockUserCommentRating = ({
   } as CommentRating)
 
 export const mockComment = ({
+  id = nanoid(),
   authorType = CommentAuthorType.GuestUser,
   children = [],
   calculatedRatings = [mockCommentRating(), mockCommentRating({answer: 'Barfoo'})],
@@ -78,7 +79,7 @@ export const mockComment = ({
   user
 }: Partial<FullCommentFragment> = {}) =>
   ({
-    id: nanoid(),
+    id,
     __typename: 'Comment',
     authorType,
     children,

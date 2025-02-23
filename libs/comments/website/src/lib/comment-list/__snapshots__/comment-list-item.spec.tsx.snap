@@ -4,7 +4,7 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="WlXVYTwZk-WpA1ZqSySDw"
+    id="2"
   >
     <header
       class="emotion-2 emotion-3"
@@ -612,7 +612,7 @@ exports[`Comment List Item should render Commenting 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="WlXVYTwZk-WpA1ZqSySDw"
+    id="2"
   >
     <header
       class="emotion-2 emotion-3"
@@ -1309,7 +1309,7 @@ exports[`Comment List Item should render Default 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="WlXVYTwZk-WpA1ZqSySDw"
+    id="2"
   >
     <header
       class="emotion-2 emotion-3"
@@ -1886,7 +1886,7 @@ exports[`Comment List Item should render Editing 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="WlXVYTwZk-WpA1ZqSySDw"
+    id="2"
   >
     <header
       class="emotion-2 emotion-3"
@@ -2614,7 +2614,7 @@ exports[`Comment List Item should render MaxNesting 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="WlXVYTwZk-WpA1ZqSySDw"
+    id="2"
   >
     <header
       class="emotion-2 emotion-3"
@@ -3339,7 +3339,7 @@ https://unsplash.it/200/200 200w"
     >
       <article
         class="emotion-0 emotion-1"
-        id="WlXVYTwZk-WpA1ZqSySDw"
+        id="2"
       >
         <header
           class="emotion-2 emotion-3"
@@ -3812,7 +3812,7 @@ https://unsplash.it/200/200 200w"
       </article>
       <article
         class="emotion-0 emotion-1"
-        id="Usw2qxBZSk68OedA_KNVv"
+        id="1"
       >
         <header
           class="emotion-2 emotion-3"
@@ -4261,7 +4261,7 @@ exports[`Comment List Item should render Nested 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="WlXVYTwZk-WpA1ZqSySDw"
+    id="2"
   >
     <header
       class="emotion-2 emotion-3"
@@ -4986,7 +4986,7 @@ https://unsplash.it/200/200 200w"
     >
       <article
         class="emotion-0 emotion-1"
-        id="WlXVYTwZk-WpA1ZqSySDw"
+        id="2"
       >
         <header
           class="emotion-2 emotion-3"
@@ -5492,7 +5492,7 @@ https://unsplash.it/200/200 200w"
         >
           <article
             class="emotion-0 emotion-1"
-            id="Usw2qxBZSk68OedA_KNVv"
+            id="1"
           >
             <header
               class="emotion-2 emotion-3"
@@ -5967,7 +5967,7 @@ https://unsplash.it/200/200 200w"
       </article>
       <article
         class="emotion-0 emotion-1"
-        id="Usw2qxBZSk68OedA_KNVv"
+        id="1"
       >
         <header
           class="emotion-2 emotion-3"
@@ -6442,7 +6442,7 @@ https://unsplash.it/200/200 200w"
         >
           <article
             class="emotion-0 emotion-1"
-            id="WlXVYTwZk-WpA1ZqSySDw"
+            id="2"
           >
             <header
               class="emotion-2 emotion-3"

@@ -4,7 +4,7 @@ exports[`Comment should render AnonymousUser 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="w60nuIh_xx8qH3VLwjXYe"
+    id="1"
   >
     <header
       class="emotion-2 emotion-3"
@@ -410,7 +410,7 @@ exports[`Comment should render PendingApproval 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="UkrWgeSTlScV7yGhjYFuq"
+    id="2"
   >
     <header
       class="emotion-2 emotion-3"
@@ -816,7 +816,7 @@ exports[`Comment should render PendingUserChanges 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="UkrWgeSTlScV7yGhjYFuq"
+    id="2"
   >
     <header
       class="emotion-2 emotion-3"
@@ -1222,7 +1222,7 @@ exports[`Comment should render Rejected 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="UkrWgeSTlScV7yGhjYFuq"
+    id="2"
   >
     <header
       class="emotion-2 emotion-3"
@@ -1628,7 +1628,7 @@ exports[`Comment should render VerifiedUser 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="UkrWgeSTlScV7yGhjYFuq"
+    id="2"
   >
     <header
       class="emotion-2 emotion-3"
@@ -2034,7 +2034,7 @@ exports[`Comment should render WithoutFlair 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="UkrWgeSTlScV7yGhjYFuq"
+    id="2"
   >
     <header
       class="emotion-2 emotion-3"
@@ -2440,7 +2440,7 @@ exports[`Comment should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="UkrWgeSTlScV7yGhjYFuq"
+    id="2"
   >
     <header
       class="emotion-2 emotion-3"
@@ -2846,7 +2846,7 @@ exports[`Comment should render WithoutSource 1`] = `
 <DocumentFragment>
   <article
     class="emotion-0 emotion-1"
-    id="UkrWgeSTlScV7yGhjYFuq"
+    id="2"
   >
     <header
       class="emotion-2 emotion-3"

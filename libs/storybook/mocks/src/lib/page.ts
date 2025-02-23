@@ -28,12 +28,13 @@ export const mockPageRevision = ({
 })
 
 export const mockPage = ({
+  id = nanoid(),
   tags = [mockTag({main: true}), mockTag()],
   latest = mockPageRevision()
 }: Partial<FullPageFragment> = {}): FullPageFragment => ({
   __typename: 'Page',
-  id: nanoid(),
-  slug: nanoid(),
+  id,
+  slug: 'slug',
   modifiedAt: new Date('2023-01-01').toISOString(),
   publishedAt: new Date('2023-01-01').toISOString(),
   tags,

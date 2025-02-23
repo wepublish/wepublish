@@ -21,9 +21,12 @@ const challenge = {
   __typename: 'Challenge'
 } as Challenge
 
-const anonymousComment = mockComment()
+const anonymousComment = mockComment({
+  id: '1'
+})
 
 const verifiedUserComment = mockComment({
+  id: '2',
   user: {
     __typename: 'User',
     id: nanoid(),

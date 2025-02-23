@@ -20,11 +20,11 @@ exports[`Event Container should render Default 1`] = `
         property="og:title"
       />
       <meta
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        content="This is a lead"
         property="og:description"
       />
       <meta
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        content="This is a lead"
         name="description"
       />
       <meta
@@ -94,7 +94,7 @@ exports[`Event Container should render Default 1`] = `
       <script
         type="application/ld+json"
       >
-        {"@context":"http://schema.org","@type":"Event","startDate":"2023-01-01T00:00:00Z","endDate":"2023-01-02T00:00:00Z","duration":"P0Y0M1DT0H0M0S","keywords":"Concert,Concert","eventStatus":"Scheduled","location":"Basel","image":{"__typename":"Image","id":"kaCan25vGGC9hdPcaRU9u","mimeType":"image/jpg","format":"jpg","createdAt":"2023-01-01T00:00:00.000Z","modifiedAt":"2023-01-01T00:00:00.000Z","filename":"DSC07717","extension":".JPG","width":4000,"height":6000,"fileSize":8667448,"description":null,"tags":[],"source":"Source","link":null,"license":null,"focalPoint":{"x":0.5,"y":0.5},"title":null,"url":"https://unsplash.it/500/281","xl":"https://unsplash.it/1200/400","l":"https://unsplash.it/1000/400","m":"https://unsplash.it/800/400","s":"https://unsplash.it/500/300","xs":"https://unsplash.it/300/200","xxs":"https://unsplash.it/200/100","xlSquare":"https://unsplash.it/1200/1200","lSquare":"https://unsplash.it/1000/1000","mSquare":"https://unsplash.it/800/800","sSquare":"https://unsplash.it/500/500","xsSquare":"https://unsplash.it/300/300","xxsSquare":"https://unsplash.it/200/200"},"name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+        {"@context":"http://schema.org","@type":"Event","startDate":"2023-01-01T00:00:00Z","endDate":"2023-01-02T00:00:00Z","duration":"P0Y0M1DT0H0M0S","keywords":"Concert,Concert","eventStatus":"Scheduled","location":"Basel","image":{"height":6000,"width":4000,"representativeOfPage":true,"contentUrl":"https://unsplash.it/500/281","thumbnailUrl":"https://unsplash.it/800/400","url":"https://unsplash.it/500/281","encodingFormat":"image/jpg"},"name":"Cool concert","description":"This is a lead"}
       </script>
     </div>
     <figure

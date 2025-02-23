@@ -20,6 +20,7 @@ const challenge = {
 } as Challenge
 
 const verifiedUserComment = mockComment({
+  id: '1',
   user: {
     __typename: 'User',
     id: nanoid(),
@@ -39,14 +40,15 @@ const verifiedUserComment = mockComment({
   authorType: CommentAuthorType.VerifiedUser
 })
 
-const nestedChildren = () => [
+const nestedChildren = (id: string) => [
   {
     ...verifiedUserComment,
-    id: nanoid(),
-    children: [{...verifiedUserComment, id: nanoid()}]
+    id: `${id}-1`,
+    children: [{...verifiedUserComment, id: `${id}-1-1`}]
   },
   mockComment({
-    children: [{...verifiedUserComment, id: nanoid()}]
+    id: `${id}-2`,
+    children: [{...verifiedUserComment, id: `${id}-2-1`}]
   })
 ]
 
@@ -73,11 +75,11 @@ export const Default: StoryObj = {
     data: {
       comments: [
         verifiedUserComment,
-        {...verifiedUserComment, children: nestedChildren(), id: nanoid()},
-        {...mockComment(), children: nestedChildren()},
-        {...verifiedUserComment, id: nanoid()},
-        {...mockComment(), children: nestedChildren()},
-        {...verifiedUserComment, children: nestedChildren(), id: nanoid()}
+        {...verifiedUserComment, children: nestedChildren('2'), id: '2'},
+        {...mockComment({id: '3'}), children: nestedChildren('3')},
+        {...verifiedUserComment, id: '4'},
+        {...mockComment({id: '5'}), children: nestedChildren('5')},
+        {...verifiedUserComment, children: nestedChildren('6'), id: '6'}
       ],
       ratingSystem: {
         answers: [],

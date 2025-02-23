@@ -63,7 +63,17 @@ export const getArticleSEO = (article: Article) => {
       '@type': 'NewsArticle',
       articleBody,
       keywords: article.tags.map(({tag}) => tag).join(','),
-      image,
+      image: image
+        ? {
+            height: image.height,
+            width: image.width,
+            representativeOfPage: true,
+            contentUrl: image.url,
+            thumbnailUrl: image.m,
+            url: image.url,
+            encodingFormat: image.mimeType
+          }
+        : undefined,
       description,
       author: {
         '@context': 'https://schema.org',
@@ -76,7 +86,7 @@ export const getArticleSEO = (article: Article) => {
       datePublished: article.publishedAt,
       name: title,
       headline,
-      identifier: article.id,
+      identifier: article.slug,
       url
     }
   }

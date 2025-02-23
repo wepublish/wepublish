@@ -41,12 +41,22 @@ export const getPageSEO = (page: Page) => {
       '@context': 'http://schema.org',
       '@type': 'WebPage',
       keywords: page.tags.join(','),
-      image,
+      image: image
+        ? {
+            height: image.height,
+            width: image.width,
+            representativeOfPage: true,
+            contentUrl: image.url,
+            thumbnailUrl: image.m,
+            url: image.url,
+            encodingFormat: image.mimeType
+          }
+        : undefined,
       description,
       datePublished: page.publishedAt,
       name: title,
       headline,
-      identifier: page.id,
+      identifier: page.slug,
       url
     }
   }

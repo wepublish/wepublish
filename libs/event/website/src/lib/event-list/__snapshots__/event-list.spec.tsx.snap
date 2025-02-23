@@ -78,103 +78,11 @@ https://unsplash.it/200/100 200w"
           >
             Cool concert
           </h1>
-          <div
-            class="emotion-16 emotion-17"
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
+            This is a lead
+          </p>
         </div>
       </article>
     </a>
@@ -251,103 +159,11 @@ https://unsplash.it/200/100 200w"
           >
             Cool concert
           </h1>
-          <div
-            class="emotion-16 emotion-17"
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
+            This is a lead
+          </p>
         </div>
       </article>
     </a>
@@ -424,103 +240,11 @@ https://unsplash.it/200/100 200w"
           >
             Cool concert
           </h1>
-          <div
-            class="emotion-16 emotion-17"
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
+            This is a lead
+          </p>
         </div>
       </article>
     </a>
@@ -597,103 +321,11 @@ https://unsplash.it/200/100 200w"
           >
             Cool concert
           </h1>
-          <div
-            class="emotion-16 emotion-17"
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
+            This is a lead
+          </p>
         </div>
       </article>
     </a>
@@ -770,103 +402,11 @@ https://unsplash.it/200/100 200w"
           >
             Cool concert
           </h1>
-          <div
-            class="emotion-16 emotion-17"
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
+            This is a lead
+          </p>
         </div>
       </article>
     </a>
@@ -968,103 +508,11 @@ https://unsplash.it/200/100 200w"
           >
             Cool concert
           </h1>
-          <div
-            class="emotion-16 emotion-17"
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
+            This is a lead
+          </p>
         </div>
       </article>
     </a>
@@ -1141,103 +589,11 @@ https://unsplash.it/200/100 200w"
           >
             Cool concert
           </h1>
-          <div
-            class="emotion-16 emotion-17"
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
+            This is a lead
+          </p>
         </div>
       </article>
     </a>
@@ -1314,103 +670,11 @@ https://unsplash.it/200/100 200w"
           >
             Cool concert
           </h1>
-          <div
-            class="emotion-16 emotion-17"
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
+            This is a lead
+          </p>
         </div>
       </article>
     </a>
@@ -1487,103 +751,11 @@ https://unsplash.it/200/100 200w"
           >
             Cool concert
           </h1>
-          <div
-            class="emotion-16 emotion-17"
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
+            This is a lead
+          </p>
         </div>
       </article>
     </a>
@@ -1660,103 +832,11 @@ https://unsplash.it/200/100 200w"
           >
             Cool concert
           </h1>
-          <div
-            class="emotion-16 emotion-17"
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-16"
           >
-            <div
-              data-gramm="false"
-              data-slate-editor="true"
-              data-slate-node="value"
-              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
-                data-slate-node="element"
-              >
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-string="true"
-                  >
-                    Lorem ipsum dolor sit amet, 
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <strong
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      consectetur adipiscing elit, 
-                    </span>
-                  </strong>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <em
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </span>
-                  </em>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <u
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      Ut enim ad minim veniam, 
-                    </span>
-                  </u>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <del
-                    data-slate-leaf="true"
-                  >
-                    <span
-                      data-slate-string="true"
-                    >
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
-                    </span>
-                  </del>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-                <span
-                  data-slate-node="text"
-                >
-                  <span
-                    data-slate-length="0"
-                    data-slate-zero-width="z"
-                  >
-                    ﻿
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
+            This is a lead
+          </p>
         </div>
       </article>
     </a>

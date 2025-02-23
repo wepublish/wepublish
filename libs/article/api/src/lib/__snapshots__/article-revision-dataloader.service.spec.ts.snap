@@ -20,7 +20,7 @@ exports[`ArticleRevisionDataloaderService load should load many 1`] = `
       "where": {
         "articleId": "123",
         "publishedAt": {
-          "gt": 2025-02-23T19:19:43.595Z,
+          "gt": 2023-01-01T00:00:00.000Z,
         },
       },
     },
@@ -33,7 +33,7 @@ exports[`ArticleRevisionDataloaderService load should load many 1`] = `
       "where": {
         "articleId": "123",
         "publishedAt": {
-          "lte": 2025-02-23T19:19:43.595Z,
+          "lte": 2023-01-01T00:00:00.000Z,
         },
       },
     },
@@ -56,7 +56,7 @@ exports[`ArticleRevisionDataloaderService load should load many 1`] = `
       "where": {
         "articleId": "321",
         "publishedAt": {
-          "gt": 2025-02-23T19:19:43.595Z,
+          "gt": 2023-01-01T00:00:00.000Z,
         },
       },
     },
@@ -69,7 +69,7 @@ exports[`ArticleRevisionDataloaderService load should load many 1`] = `
       "where": {
         "articleId": "321",
         "publishedAt": {
-          "lte": 2025-02-23T19:19:43.595Z,
+          "lte": 2023-01-01T00:00:00.000Z,
         },
       },
     },
@@ -97,7 +97,7 @@ exports[`ArticleRevisionDataloaderService load should load one 1`] = `
       "where": {
         "articleId": "123",
         "publishedAt": {
-          "gt": 2025-02-23T19:19:43.593Z,
+          "gt": 2023-01-01T00:00:00.000Z,
         },
       },
     },
@@ -110,7 +110,7 @@ exports[`ArticleRevisionDataloaderService load should load one 1`] = `
       "where": {
         "articleId": "123",
         "publishedAt": {
-          "lte": 2025-02-23T19:19:43.593Z,
+          "lte": 2023-01-01T00:00:00.000Z,
         },
       },
     },

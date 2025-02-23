@@ -44,7 +44,7 @@ export const mockArticle = ({
 }: Partial<FullArticleFragment> = {}): FullArticleFragment => ({
   __typename: 'Article',
   id,
-  slug: nanoid(),
+  slug: 'slug',
   disableComments,
   likes,
   modifiedAt: new Date('2023-01-01').toISOString(),
