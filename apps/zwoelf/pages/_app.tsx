@@ -144,7 +144,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </MainSpacer>
                 </main>
 
-                <FooterContainer slug="main" categorySlugs={[['abo']]}>
+                <FooterContainer slug="main" categorySlugs={[['about']]}>
                   <LogoLink href="/" aria-label="Startseite">
                     <LogoWrapper />
                   </LogoLink>
