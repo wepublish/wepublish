@@ -1,4 +1,4 @@
-import {SortOrder} from '@wepublish/api'
+import {SortOrder} from '@wepublish/website/api'
 import {
   ArticleListDocument,
   ArticleListQueryVariables,

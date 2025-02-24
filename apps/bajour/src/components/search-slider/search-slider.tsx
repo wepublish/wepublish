@@ -219,13 +219,10 @@ const FullScreenVideo = styled('video')`
   margin: 5vh 5vw 0 5vw;
 `
 
-export type SliderArticle = Omit<Article, 'comments' | 'socialMediaAuthors'> & {
-  blocks: BlockContent[]
-}
-
 type SearchSliderProps = {
-  article: SliderArticle
+  article: Article
   includeSEO?: boolean
+  className?: string
 }
 
 const sortArticlesByPublishedAt = sortWith<FullArticleFragment>([
@@ -234,7 +231,7 @@ const sortArticlesByPublishedAt = sortWith<FullArticleFragment>([
 
 const uniqueById = uniqWith(eqBy<FullArticleFragment>(a => a.id))
 
-export function SearchSlider({article, includeSEO}: SearchSliderProps) {
+export function SearchSlider({article, includeSEO, className}: SearchSliderProps) {
   const {
     elements: {Image, H5, Button}
   } = useWebsiteBuilder()
@@ -452,7 +449,7 @@ export function SearchSlider({article, includeSEO}: SearchSliderProps) {
   }
 
   return (
-    <Container>
+    <Container className={className}>
       {includeSEO && <ArticleSEO article={article as Article} />}
 
       <HeaderContainer>

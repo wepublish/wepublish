@@ -1,5 +1,4 @@
 import {
-  Article,
   FullTagFragment,
   FullTagFragmentDoc,
   getV1ApiClient,
@@ -28,7 +27,8 @@ export const getPagePathsBasedOnPage =
     for (const storeObj of cache) {
       if (storeObj?.__typename === 'Page') {
         const slug = (storeObj as Page).slug
-        if (slug !== pageSlug && !excludedSlugs?.includes(slug)) {
+
+        if (slug && slug !== pageSlug && !excludedSlugs?.includes(slug)) {
           pageSlugs.push(slug)
         }
       }
@@ -65,8 +65,8 @@ export const getArticlePathsBasedOnPage =
     const articleSlugs = [] as {slug: string; tag?: string}[]
 
     for (const storeObj of cache) {
-      if (storeObj?.__typename === 'Article' && !(storeObj as Article).peeredArticleURL) {
-        const article = storeObj as {slug: string; tags: {__ref: string}[]}
+      if (storeObj?.__typename === 'Article') {
+        const article = storeObj as {slug?: string; tags: {__ref: string}[]}
         let tag: string | undefined
 
         for (const {__ref} of article.tags) {
@@ -82,7 +82,7 @@ export const getArticlePathsBasedOnPage =
         }
 
         articleSlugs.push({
-          slug: article.slug,
+          slug: article.slug ?? '',
           tag
         })
       }

@@ -50,11 +50,11 @@ export function Article({className, data, children, loading, error}: BuilderArti
               <AuthorChip key={author.id} author={author} />
             ))}
 
-            <ArticleDate article={article} />
+            <ArticleDate article={article as ArticleType} />
           </ArticleAuthors>
         )}
 
-        {article && <ArticleMeta article={article} />}
+        {article && <ArticleMeta article={article as ArticleType} />}
       </ArticleInfoWrapper>
 
       {children}

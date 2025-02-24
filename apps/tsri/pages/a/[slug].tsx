@@ -5,7 +5,7 @@ import {CommentListContainer} from '@wepublish/comments/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {H2} from '@wepublish/ui'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
-import {CommentItemType} from '@wepublish/website/api'
+import {CommentItemType, Tag} from '@wepublish/website/api'
 import {
   addClientCacheToV1Props,
   ArticleDocument,
@@ -16,7 +16,6 @@ import {
   PeerProfileDocument,
   useArticleQuery
 } from '@wepublish/website/api'
-import {Tag} from 'minio'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'

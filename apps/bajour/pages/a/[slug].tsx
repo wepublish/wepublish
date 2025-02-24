@@ -13,6 +13,7 @@ import {ContentWrapper} from '@wepublish/content/website'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   addClientCacheToV1Props,
+  Article as ArticleType,
   ArticleDocument,
   ArticleListDocument,
   BannerDocumentType,
@@ -43,7 +44,7 @@ import {BriefingNewsletter} from '../../src/components/briefing-newsletter/brief
 import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
 import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
 import {Container} from '../../src/components/layout/container'
-import {SEARCH_SLIDER_TAG, SliderArticle} from '../../src/components/search-slider/search-slider'
+import {SEARCH_SLIDER_TAG} from '../../src/components/search-slider/search-slider'
 import {SearchSlider} from '../../src/components/search-slider/search-slider'
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
@@ -104,7 +105,7 @@ export default function ArticleBySlugOrId() {
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
         {isSearchSlider && data?.article ? (
-          <SearchSlider key={data.article.id} article={data.article as SliderArticle} includeSEO />
+          <SearchSlider key={data.article.id} article={data.article as ArticleType} includeSEO />
         ) : (
           <>
             <ArticleContainer {...containerProps} />

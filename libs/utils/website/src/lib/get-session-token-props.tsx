@@ -1,4 +1,5 @@
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
+import {UserSession} from '@wepublish/website/api'
 import {deleteCookie, getCookie} from 'cookies-next'
 import {GetServerSidePropsContext, NextPageContext} from 'next'
 

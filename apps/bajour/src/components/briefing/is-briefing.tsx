@@ -8,11 +8,11 @@ export enum BriefingType {
   FasnachtsBriefing = 'FasnachtsBriefing'
 }
 
-export const isBaselBriefingIgnoringBlockType = (block: BlockContent): block is TeaserGridBlock =>
+export const isBaselBriefingIgnoringBlockType = (block: Pick<BlockContent, 'blockStyle'>) =>
   hasBlockStyle(BriefingType.BaselBriefing)(block)
 
 export const isBaselBriefing = (block: BlockContent): block is TeaserGridBlock =>
-  allPass([hasBlockStyle(BriefingType.BaselBriefing), isTeaserGridBlock])(block)
+  allPass([isBaselBriefingIgnoringBlockType, isTeaserGridBlock])(block)
 
 export const isFCBBriefing = (block: BlockContent): block is TeaserGridBlock =>
   allPass([hasBlockStyle(BriefingType.FCBBriefing), isTeaserGridBlock])(block)

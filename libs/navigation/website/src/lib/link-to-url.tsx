@@ -1,6 +1,6 @@
-import {NavigationQuery} from '@wepublish/website/api'
+import {FullNavigationFragment} from '@wepublish/website/api'
 
-export const navigationLinkToUrl = <T extends NonNullable<NavigationQuery['navigation']>>(
+export const navigationLinkToUrl = <T extends FullNavigationFragment>(
   link: T['links'][number]
 ): string | undefined => {
   switch (link.__typename) {

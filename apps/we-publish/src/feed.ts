@@ -1,9 +1,9 @@
-import {SortOrder} from '@wepublish/api'
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
-  getV1ApiClient
+  getV1ApiClient,
+  SortOrder
 } from '@wepublish/website/api'
 import {generateFeed} from '@wepublish/website/server'
 import {NextApiRequest} from 'next'
