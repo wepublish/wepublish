@@ -86,7 +86,7 @@ export default function ArticleBySlugIdOrToken() {
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
         {isSearchSlider && data?.article ? (
-          <SearchSlider key={data.article.id} article={data.article as SliderArticle} />
+          <SearchSlider key={data.article.id} article={data.article as SliderArticle} includeSEO />
         ) : (
           <>
             <ArticleContainer {...containerProps} />
