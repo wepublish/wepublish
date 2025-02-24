@@ -396,22 +396,21 @@ export function SearchSlider({article, includeSEO}: SearchSliderProps) {
 
   // like main article via query param userAction
   useEffect(() => {
-    // useLikeStatus hook must be ready (local store must be read)
-    if (!isReady) {
-      return
-    }
     // main article must be ready
     if (!mainArticle) {
       return
     }
+
     // router query must contain a slug
     if (!router.query?.slug) {
       return
     }
+
     // only vote on the designated main article
     if (router.query.slug !== mainArticle.slug) {
       return
     }
+
     // router must be ready
     if (!router.isReady) {
       return
@@ -421,7 +420,7 @@ export function SearchSlider({article, includeSEO}: SearchSliderProps) {
     if (router.query?.userAction === 'like') {
       handleLike(true)
     }
-  }, [router.isReady, router.query, mainArticle, isReady, handleLike])
+  }, [router.isReady, router.query, mainArticle, handleLike])
 
   // generate an upper and lower part of the title
   const title = useMemo(() => {
