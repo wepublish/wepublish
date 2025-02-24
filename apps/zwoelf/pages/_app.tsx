@@ -131,7 +131,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               <Spacer>
                 <NavBar
-                  categorySlugs={[['abo']]}
+                  categorySlugs={[['about']]}
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
