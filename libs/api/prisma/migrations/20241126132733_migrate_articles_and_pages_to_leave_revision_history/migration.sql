@@ -26,6 +26,9 @@
 -- AlterTable
 ALTER TABLE "articles" ADD COLUMN     "publishedAt" TIMESTAMP(3);
 
+-- CreateIndex
+CREATE INDEX "articles_publishedAt_idx" ON "articles"("publishedAt");
+
 -- AlterTable
 ALTER TABLE "articles" ADD COLUMN     "slug" TEXT;
 
@@ -125,6 +128,9 @@ DROP COLUMN "publishedId";
 **/
 -- AlterTable
 ALTER TABLE "pages" ADD COLUMN     "publishedAt" TIMESTAMP(3);
+
+-- CreateIndex
+CREATE INDEX "pages_publishedAt_idx" ON "pages"("publishedAt");
 
 -- AlterTable
 ALTER TABLE "pages" ADD COLUMN     "slug" TEXT;
