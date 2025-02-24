@@ -4,6 +4,7 @@ import {styled} from '@mui/material'
 import {H1, H4} from '@wepublish/ui'
 import {
   ApiV1,
+  ArticleSEO,
   CommentListItemShare,
   isEmbedBlock,
   isRichTextBlock,
@@ -219,8 +220,9 @@ export type SliderArticle = Omit<ApiV1.Article, 'comments' | 'socialMediaAuthors
   blocks: ApiV1.Block[]
 }
 
-interface SearchSliderProps {
+type SearchSliderProps = {
   article: SliderArticle
+  includeSEO?: boolean
 }
 
 const sortArticlesByPublishedAt = sortWith<ApiV1.FullArticleFragment>([
@@ -229,7 +231,7 @@ const sortArticlesByPublishedAt = sortWith<ApiV1.FullArticleFragment>([
 
 const uniqueById = uniqWith(eqBy<ApiV1.FullArticleFragment>(a => a.id))
 
-export function SearchSlider({article}: SearchSliderProps) {
+export function SearchSlider({article, includeSEO}: SearchSliderProps) {
   const {
     elements: {Image, H5, Button}
   } = useWebsiteBuilder()
@@ -419,7 +421,7 @@ export function SearchSlider({article}: SearchSliderProps) {
     if (router.query?.userAction === 'like') {
       handleLike(true)
     }
-  }, [router.isReady, router.query, mainArticle, isReady])
+  }, [router.isReady, router.query, mainArticle, isReady, handleLike])
 
   // generate an upper and lower part of the title
   const title = useMemo(() => {
@@ -449,6 +451,8 @@ export function SearchSlider({article}: SearchSliderProps) {
 
   return (
     <Container>
+      {includeSEO && <ArticleSEO article={article as ApiV1.Article} />}
+
       <HeaderContainer>
         <TitleContainer>
           <TitleUpperPart>{title.upperTitlePart}</TitleUpperPart>
