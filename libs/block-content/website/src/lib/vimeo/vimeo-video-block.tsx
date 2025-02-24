@@ -3,8 +3,9 @@ import {BlockContent, VimeoVideoBlock as VimeoVideoBlockType} from '@wepublish/w
 import {BuilderVimeoVideoBlockProps} from '@wepublish/website/builder'
 import ReactPlayer from 'react-player'
 
-export const isVimeoVideoBlock = (block: BlockContent): block is VimeoVideoBlockType =>
-  block.__typename === 'VimeoVideoBlock'
+export const isVimeoVideoBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is VimeoVideoBlockType => block.__typename === 'VimeoVideoBlock'
 
 export const VimeoVideoBlockWrapper = styled('div')``
 

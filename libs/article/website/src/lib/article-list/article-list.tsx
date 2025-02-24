@@ -12,7 +12,9 @@ export const articleToTeaser = (article: Article): ArticleTeaser => ({
   image: null,
   lead: null,
   preTitle: null,
-  title: null
+  title: null,
+  articleID: null,
+  imageID: null
 })
 
 export const ArticleList = ({data, className}: BuilderArticleListProps) => {

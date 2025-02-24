@@ -31,5 +31,5 @@ export const Banner = ({image, linkURL, linkTarget}: BuilderBlockStyleProps['Ban
   )
 }
 
-export const isBannerBlockStyle = (block: BlockContent): block is BreakBlock =>
+export const isBannerBlockStyle = (block: Pick<BlockContent, '__typename'>): block is BreakBlock =>
   allPass([hasBlockStyle('Banner'), isBreakBlock])(block)

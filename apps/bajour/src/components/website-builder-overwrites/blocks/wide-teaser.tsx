@@ -15,7 +15,9 @@ import {
   TeaserTitlesStyled
 } from './teaser-overwrite.style'
 
-export const isWideTeaser = (block: BlockContent): block is TeaserGridBlock | TeaserListBlock =>
+export const isWideTeaser = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserGridBlock | TeaserListBlock =>
   allPass([hasBlockStyle('Breite Teaser'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)
 
 export const WideTeaser = styled(TeaserOverwrite)`

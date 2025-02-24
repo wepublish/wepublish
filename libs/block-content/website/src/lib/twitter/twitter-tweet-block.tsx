@@ -3,8 +3,9 @@ import {BlockContent, TwitterTweetBlock as TwitterTweetBlockType} from '@wepubli
 import {BuilderTwitterTweetBlockProps} from '@wepublish/website/builder'
 import {Tweet} from 'react-tweet'
 
-export const isTwitterTweetBlock = (block: BlockContent): block is TwitterTweetBlockType =>
-  block.__typename === 'TwitterTweetBlock'
+export const isTwitterTweetBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is TwitterTweetBlockType => block.__typename === 'TwitterTweetBlock'
 
 export const TwitterTweetBlockWrapper = styled('div')``
 

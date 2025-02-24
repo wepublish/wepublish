@@ -111,5 +111,6 @@ export const FocusTeaser = ({
   )
 }
 
-export const isFocusTeaserBlockStyle = (block: BlockContent): block is TeaserListBlock =>
-  allPass([hasBlockStyle('Focus'), isTeaserListBlock])(block)
+export const isFocusTeaserBlockStyle = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserListBlock => allPass([hasBlockStyle('Focus'), isTeaserListBlock])(block)

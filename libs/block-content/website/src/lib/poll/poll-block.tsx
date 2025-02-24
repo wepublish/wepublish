@@ -12,7 +12,7 @@ import {PollBlockResult} from './poll-block-result'
 import {usePollBlock} from './poll-block.context'
 import {H4} from '@wepublish/ui'
 
-export const isPollBlock = (block: BlockContent): block is PollBlockType =>
+export const isPollBlock = (block: Pick<BlockContent, '__typename'>): block is PollBlockType =>
   block.__typename === 'PollBlock'
 
 export const PollBlockWrapper = styled('article')`

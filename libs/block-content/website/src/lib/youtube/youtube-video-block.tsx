@@ -3,8 +3,9 @@ import {BlockContent, YouTubeVideoBlock as YouTubeVideoBlockType} from '@wepubli
 import {BuilderYouTubeVideoBlockProps} from '@wepublish/website/builder'
 import ReactPlayer from 'react-player'
 
-export const isYouTubeVideoBlock = (block: BlockContent): block is YouTubeVideoBlockType =>
-  block.__typename === 'YouTubeVideoBlock'
+export const isYouTubeVideoBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is YouTubeVideoBlockType => block.__typename === 'YouTubeVideoBlock'
 
 export const YouTubeVideoBlockWrapper = styled('div')``
 

@@ -4,8 +4,9 @@ import {BuilderFacebookVideoBlockProps} from '@wepublish/website/builder'
 import ReactPlayer from 'react-player'
 import {useId} from 'react'
 
-export const isFacebookVideoBlock = (block: BlockContent): block is FacebookVideoBlockType =>
-  block.__typename === 'FacebookVideoBlock'
+export const isFacebookVideoBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is FacebookVideoBlockType => block.__typename === 'FacebookVideoBlock'
 
 export const FacebookVideoBlockWrapper = styled('div')`
   display: grid;

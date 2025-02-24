@@ -3,8 +3,9 @@ import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website
 import {alignmentForTeaserBlock} from './teaser-grid-block'
 import {css, styled} from '@mui/material'
 
-export const isTeaserListBlock = (block: BlockContent): block is TeaserListBlockType =>
-  block.__typename === 'TeaserListBlock'
+export const isTeaserListBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserListBlockType => block.__typename === 'TeaserListBlock'
 
 export const TeaserListBlockWrapper = styled('section')`
   display: grid;

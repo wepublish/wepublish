@@ -5,7 +5,7 @@ import {css} from '@emotion/react'
 import {useMemo} from 'react'
 import IframeResizer from 'iframe-resizer-react'
 
-export const isIFrameBlock = (block: BlockContent): block is IFrameBlockType =>
+export const isIFrameBlock = (block: Pick<BlockContent, '__typename'>): block is IFrameBlockType =>
   block.__typename === 'IFrameBlock'
 
 export const IFrameBlockWrapper = styled('div')``

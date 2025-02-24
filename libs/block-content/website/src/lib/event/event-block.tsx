@@ -3,7 +3,7 @@ import {truncateFirstParagraph} from '@wepublish/richtext'
 import {BlockContent, EventBlock as EventBlockType} from '@wepublish/website/api'
 import {BuilderEventBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-export const isEventBlock = (block: BlockContent): block is EventBlockType =>
+export const isEventBlock = (block: Pick<BlockContent, '__typename'>): block is EventBlockType =>
   block.__typename === 'EventBlock'
 
 export const EventBlockWrapper = styled('aside')`

@@ -9,7 +9,7 @@ declare module 'react' {
   }
 }
 
-export const isImageBlock = (block: BlockContent): block is ImageBlockType =>
+export const isImageBlock = (block: Pick<BlockContent, '__typename'>): block is ImageBlockType =>
   block.__typename === 'ImageBlock'
 
 export const ImageBlockWrapper = styled('figure')`

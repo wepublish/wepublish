@@ -7,8 +7,9 @@ import {
 } from '@wepublish/website/api'
 import {BuilderTeaserGridBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-export const isTeaserGridBlock = (block: BlockContent): block is TeaserGridBlockType =>
-  block.__typename === 'TeaserGridBlock'
+export const isTeaserGridBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserGridBlockType => block.__typename === 'TeaserGridBlock'
 
 export const TeaserGridBlockWrapper = styled('div', {
   shouldForwardProp: propName => propName !== 'numColumns'

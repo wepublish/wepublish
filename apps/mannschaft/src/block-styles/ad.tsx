@@ -19,14 +19,17 @@ const first = hasBlockStyle('1st Teaser Ad')
 const second = hasBlockStyle('2nd Teaser Ad')
 const third = hasBlockStyle('3rd Teaser Ad')
 
-export const isFirstAdTeaser = (block: BlockContent): block is TeaserListBlockType =>
-  allPass([first, isTeaserListBlock])(block)
+export const isFirstAdTeaser = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserListBlockType => allPass([first, isTeaserListBlock])(block)
 
-export const isSecondAdTeaser = (block: BlockContent): block is TeaserListBlockType =>
-  allPass([second, isTeaserListBlock])(block)
+export const isSecondAdTeaser = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserListBlockType => allPass([second, isTeaserListBlock])(block)
 
-export const isThirdAdTeaser = (block: BlockContent): block is TeaserListBlockType =>
-  allPass([third, isTeaserListBlock])(block)
+export const isThirdAdTeaser = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserListBlockType => allPass([third, isTeaserListBlock])(block)
 
 // This allows the ad slot to not create an empty space when not displayed
 const AdTeaserList = styled(TeaserListBlock)`

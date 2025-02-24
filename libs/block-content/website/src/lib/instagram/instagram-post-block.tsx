@@ -13,8 +13,9 @@ declare global {
   }
 }
 
-export const isInstagramBlock = (block: BlockContent): block is InstagramPostBlockType =>
-  block.__typename === 'InstagramPostBlock'
+export const isInstagramBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is InstagramPostBlockType => block.__typename === 'InstagramPostBlock'
 
 export const InstagramBlockWrapper = styled('div')`
   display: grid;

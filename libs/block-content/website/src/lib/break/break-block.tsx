@@ -2,7 +2,7 @@ import {Theme, css, styled, useTheme} from '@mui/material'
 import {BlockContent, BreakBlock as BreakBlockType} from '@wepublish/website/api'
 import {BuilderBreakBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-export const isBreakBlock = (block: BlockContent): block is BreakBlockType =>
+export const isBreakBlock = (block: Pick<BlockContent, '__typename'>): block is BreakBlockType =>
   block.__typename === 'BreakBlock'
 
 export const BreakBlockWrapper = styled('div')`

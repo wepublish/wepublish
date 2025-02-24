@@ -13,7 +13,9 @@ import {
   TextLine
 } from './teaser-overwrite.style'
 
-export const isSmallTeaser = (block: BlockContent): block is TeaserGridBlock | TeaserListBlock =>
+export const isSmallTeaser = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserGridBlock | TeaserListBlock =>
   allPass([hasBlockStyle('Kleine Teaser'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)
 
 export const SmallTeaser = styled(TeaserOverwrite)`

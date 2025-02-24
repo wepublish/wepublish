@@ -4,8 +4,9 @@ import {BildwurfAdBlock as BildwurfAdBlockType, BlockContent} from '@wepublish/w
 import styled from '@emotion/styled'
 import {BuilderBildwurfAdBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-export const isBildwurfAdBlock = (block: BlockContent): block is BildwurfAdBlockType =>
-  block.__typename === 'BildwurfAdBlock'
+export const isBildwurfAdBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is BildwurfAdBlockType => block.__typename === 'BildwurfAdBlock'
 
 export const BildwurfBlockWrapper = styled('div')`
   #bildwurf-ad-in-content {

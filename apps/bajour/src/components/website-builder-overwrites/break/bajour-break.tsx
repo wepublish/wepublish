@@ -18,7 +18,7 @@ export const BajourBreakBlock = styled(BreakBlock)`
   }
 `
 
-export const isLightBreak = (block: BlockContent): block is BreakBlockType =>
+export const isLightBreak = (block: Pick<BlockContent, '__typename'>): block is BreakBlockType =>
   allPass([hasBlockStyle('Light'), isBreakBlock])(block)
 
 export const BajourLightBreakBlock = styled(BajourBreakBlock)`
@@ -26,8 +26,9 @@ export const BajourLightBreakBlock = styled(BajourBreakBlock)`
   color: ${({theme}) => theme.palette.secondary.contrastText};
 `
 
-export const isSponsoredBreak = (block: BlockContent): block is BreakBlockType =>
-  allPass([hasBlockStyle('Sponsored'), isBreakBlock])(block)
+export const isSponsoredBreak = (
+  block: Pick<BlockContent, '__typename'>
+): block is BreakBlockType => allPass([hasBlockStyle('Sponsored'), isBreakBlock])(block)
 
 export const BajourSponsoredBreakBlock = styled(BajourBreakBlock)`
   background-color: #a9eea7;

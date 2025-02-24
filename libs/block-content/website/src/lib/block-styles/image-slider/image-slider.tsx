@@ -72,5 +72,6 @@ export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => 
   )
 }
 
-export const isImageSliderBlockStyle = (block: BlockContent): block is ImageGalleryBlock =>
-  allPass([hasBlockStyle('Slider'), isImageGalleryBlock])(block)
+export const isImageSliderBlockStyle = (
+  block: Pick<BlockContent, '__typename'>
+): block is ImageGalleryBlock => allPass([hasBlockStyle('Slider'), isImageGalleryBlock])(block)

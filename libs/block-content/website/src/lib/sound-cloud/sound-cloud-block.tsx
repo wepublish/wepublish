@@ -6,8 +6,9 @@ import {
 import {BuilderSoundCloudTrackBlockProps} from '@wepublish/website/builder'
 import ReactPlayer from 'react-player'
 
-export const isSoundCloudTrackBlock = (block: BlockContent): block is SoundCloudTrackBlockType =>
-  block.__typename === 'SoundCloudTrackBlock'
+export const isSoundCloudTrackBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is SoundCloudTrackBlockType => block.__typename === 'SoundCloudTrackBlock'
 
 export const SoundCloudTrackBlockWrapper = styled('div')``
 

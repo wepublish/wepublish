@@ -5,7 +5,7 @@ import {
   isImageBlock,
   isRichTextBlock
 } from '@wepublish/block-content/website'
-import {BlockContent, ImageBlock, RichTextBlock} from '@wepublish/website/api'
+import {BlockContent, IFrameBlock, ImageBlock, RichTextBlock} from '@wepublish/website/api'
 import {
   BuilderIFrameBlockProps,
   BuilderImageBlockProps,

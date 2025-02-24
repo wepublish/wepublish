@@ -6,8 +6,9 @@ import {useMemo} from 'react'
 import {createEditor} from 'slate'
 import {Editable, Slate, withReact} from 'slate-react'
 
-export const isRichTextBlock = (block: BlockContent): block is RichTextBlockType =>
-  block.__typename === 'RichTextBlock'
+export const isRichTextBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is RichTextBlockType => block.__typename === 'RichTextBlock'
 
 export const RichTextBlockWrapper = styled('div')``
 

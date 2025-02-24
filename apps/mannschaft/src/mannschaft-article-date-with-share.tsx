@@ -44,8 +44,8 @@ export const MannschaftArticleDateWithShare = ({article}: BuilderArticleDateProp
               onClick={async () => {
                 await navigator.share({
                   url: article.url,
-                  title: article.title,
-                  text: article.lead ?? undefined
+                  title: article.latest.title ?? undefined,
+                  text: article.latest.lead ?? undefined
                 })
               }}
               css={iconButtonStyles}>

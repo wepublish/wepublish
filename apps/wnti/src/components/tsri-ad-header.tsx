@@ -1,5 +1,6 @@
 import {styled} from '@mui/material'
 import {ArticleWrapper} from '@wepublish/article/website'
+import {Image} from '@wepublish/image/website'
 import {Link} from '@wepublish/ui'
 import {BuilderAuthor} from '@wepublish/website/builder'
 import {useMemo} from 'react'

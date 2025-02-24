@@ -80,5 +80,6 @@ export const ContextBox = ({className, richText, text}: BuilderBlockStyleProps['
   )
 }
 
-export const isContextBoxBlockStyle = (block: BlockContent): block is BreakBlock =>
-  allPass([hasBlockStyle('ContextBox'), isBreakBlock])(block)
+export const isContextBoxBlockStyle = (
+  block: Pick<BlockContent, '__typename'>
+): block is BreakBlock => allPass([hasBlockStyle('ContextBox'), isBreakBlock])(block)
