@@ -1,6 +1,7 @@
 import 'keen-slider/keen-slider.min.css'
 
 import {styled} from '@mui/material'
+import {ArticleSEO} from '@wepublish/article/website'
 import {isIFrameBlock, isRichTextBlock, RichTextBlock} from '@wepublish/block-content/website'
 import {CommentListItemShare} from '@wepublish/comments/website'
 import {H1, H4} from '@wepublish/ui'
@@ -222,8 +223,9 @@ export type SliderArticle = Omit<Article, 'comments' | 'socialMediaAuthors'> & {
   blocks: BlockContent[]
 }
 
-interface SearchSliderProps {
+type SearchSliderProps = {
   article: SliderArticle
+  includeSEO?: boolean
 }
 
 const sortArticlesByPublishedAt = sortWith<FullArticleFragment>([
@@ -232,7 +234,7 @@ const sortArticlesByPublishedAt = sortWith<FullArticleFragment>([
 
 const uniqueById = uniqWith(eqBy<FullArticleFragment>(a => a.id))
 
-export function SearchSlider({article}: SearchSliderProps) {
+export function SearchSlider({article, includeSEO}: SearchSliderProps) {
   const {
     elements: {Image, H5, Button}
   } = useWebsiteBuilder()
@@ -397,22 +399,21 @@ export function SearchSlider({article}: SearchSliderProps) {
 
   // like main article via query param userAction
   useEffect(() => {
-    // useLikeStatus hook must be ready (local store must be read)
-    if (!isReady) {
-      return
-    }
     // main article must be ready
     if (!mainArticle) {
       return
     }
+
     // router query must contain a slug
     if (!router.query?.slug) {
       return
     }
+
     // only vote on the designated main article
     if (router.query.slug !== mainArticle.slug) {
       return
     }
+
     // router must be ready
     if (!router.isReady) {
       return
@@ -422,7 +423,7 @@ export function SearchSlider({article}: SearchSliderProps) {
     if (router.query?.userAction === 'like') {
       handleLike(true)
     }
-  }, [router.isReady, router.query, mainArticle, isReady, handleLike])
+  }, [router.isReady, router.query, mainArticle, handleLike])
 
   // generate an upper and lower part of the title
   const title = useMemo(() => {
@@ -452,6 +453,8 @@ export function SearchSlider({article}: SearchSliderProps) {
 
   return (
     <Container>
+      {includeSEO && <ArticleSEO article={article as Article} />}
+
       <HeaderContainer>
         <TitleContainer>
           <TitleUpperPart>{title.upperTitlePart}</TitleUpperPart>
