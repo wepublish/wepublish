@@ -220,7 +220,7 @@ export const TeaserImageWrapper = styled('div')`
   }
 `
 
-const useImageStyles = () => {
+export const useImageStyles = () => {
   const theme = useTheme()
 
   return useMemo(
@@ -353,16 +353,22 @@ const TeaserContent = ({
   return <TeaserContentWrapper className={className}>{children}</TeaserContentWrapper>
 }
 
-export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
-  const title = teaser && selectTeaserTitle(teaser)
+export const extractTeaserData = (teaser: BuilderTeaserProps['teaser']) => {
   const preTitle = teaser && selectTeaserPreTitle(teaser)
-  const lead = teaser && selectTeaserLead(teaser)
-  const href = (teaser && selectTeaserUrl(teaser)) ?? ''
-  const image = teaser && selectTeaserImage(teaser)
-  const publishDate = teaser && selectTeaserDate(teaser)
-  const authors = teaser && selectTeaserAuthors(teaser)
-  const tags = teaser && selectTeaserTags(teaser).filter(tag => tag.tag !== preTitle)
+  return {
+    title: teaser && selectTeaserTitle(teaser),
+    preTitle,
+    lead: teaser && selectTeaserLead(teaser),
+    href: (teaser && selectTeaserUrl(teaser)) ?? '',
+    image: teaser && selectTeaserImage(teaser),
+    publishDate: teaser && selectTeaserDate(teaser),
+    authors: teaser && selectTeaserAuthors(teaser),
+    tags: teaser && selectTeaserTags(teaser).filter(tag => tag.tag !== preTitle)
+  }
+}
 
+export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
+  const {title, preTitle, lead, href, image, publishDate, authors, tags} = extractTeaserData(teaser)
   const {
     date,
     elements: {Image, Paragraph, H4}
