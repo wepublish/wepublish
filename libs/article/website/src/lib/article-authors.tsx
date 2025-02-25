@@ -20,6 +20,7 @@ export const ArticleAuthors = ({article, className}: BuilderArticleAuthorsProps)
       {authors.map(author => (
         <AuthorChip key={author.id} author={author} />
       ))}
+
       <ArticleDate article={article as ArticleType} />
     </ArticleAuthorsWrapper>
   )
