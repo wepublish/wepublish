@@ -28,7 +28,7 @@ export const NewsBlockStyle = ({
   const filledTeasers = teasers.filter(isFilledTeaser)
   const numColumns = 1
   const {
-    elements: {H3, Link}
+    elements: {H2, Link}
   } = useWebsiteBuilder()
 
   return (
@@ -36,7 +36,7 @@ export const NewsBlockStyle = ({
       <NewsTeaserListWrapper>
         <BlueBox>
           <TeaserList>
-            <H3 gutterBottom>{title}</H3>
+            <H2 gutterBottom>{title}</H2>
             {filledTeasers.map((teaser, index) => (
               <NewsTeaser
                 key={index}

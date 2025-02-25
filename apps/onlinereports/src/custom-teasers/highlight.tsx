@@ -2,7 +2,6 @@ import {styled} from '@mui/material'
 import {
   ImageWrapper,
   TeaserLead,
-  TeaserMetadata,
   TeaserPreTitle,
   TeaserPreTitleNoContent,
   TeaserTitle
@@ -23,7 +22,7 @@ export const HighlightTeaser = styled(OnlineReportsBaseTeaser)`
     'pretitle'
     'title'
     'lead'
-    'tags'
+    'authors'
     '.';
   grid-auto-rows: auto;
   grid-template-columns: 1fr;
@@ -37,6 +36,7 @@ export const HighlightTeaser = styled(OnlineReportsBaseTeaser)`
       'image image title'
       'image image lead'
       'image image tags'
+      'image image authors'
       'image image .';
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 20px auto auto auto auto auto;
@@ -51,7 +51,7 @@ export const HighlightTeaser = styled(OnlineReportsBaseTeaser)`
   }
 
   ${TeaserTitle} {
-    font-size: 44px;
+    ${({theme}) => theme.typography.h1};
   }
 
   ${TeaserLead} {
@@ -63,10 +63,6 @@ export const HighlightTeaser = styled(OnlineReportsBaseTeaser)`
 
   ${TeaserLead} {
     display: block;
-  }
-
-  ${TeaserMetadata} {
-    display: none;
   }
 
   ${ImageWrapper} {

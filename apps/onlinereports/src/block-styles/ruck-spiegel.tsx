@@ -29,14 +29,14 @@ export const RuckSpiegelBlockStyle = ({
   const numColumns = 1
 
   const {
-    elements: {H3, Link}
+    elements: {H2, Link}
   } = useWebsiteBuilder()
 
   return (
     <RuckSpiegelTeaserListWrapper>
       <BlueBox>
         <TeaserList>
-          <H3 gutterBottom>{title}</H3>
+          <H2 gutterBottom>{title}</H2>
           {filledTeasers.map((teaser, index) => (
             <RuckSpiegelTeaser
               key={index}

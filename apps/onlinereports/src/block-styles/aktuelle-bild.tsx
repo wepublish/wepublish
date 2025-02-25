@@ -38,13 +38,13 @@ export const AktuelleBild = ({
   const numColumns = 1
 
   const {
-    elements: {H3, Link}
+    elements: {H2, Link}
   } = useWebsiteBuilder()
 
   return (
     <AktuelleBildWrapper>
       <SideInfo>
-        <H3>Das Bild</H3>
+        <H2>Das Bild</H2>
         <Typography>
           Ein aktuelles Bild geschossen? Mailen Sie es uns (mit Adresse & Datum)!
         </Typography>
@@ -104,7 +104,7 @@ const AktuelleBildWrapper = styled(Box)`
     grid-column: span 1;
     display: flex;
     flex-direction: column;
-    gap: ${({theme}) => theme.spacing(2)};
+    gap: ${({theme}) => theme.spacing(1)};
 
     ${({theme}) => theme.breakpoints.down('md')} {
       grid-column: span 3;

@@ -1,12 +1,13 @@
 import {Box, css, styled, useTheme} from '@mui/material'
 import {
   Teaser,
+  TeaserAuthors,
   TeaserLead,
-  TeaserMetadata,
   TeaserPreTitle,
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper,
   TeaserTags,
+  TeaserTime,
   TeaserTitle,
   TeaserWrapper
 } from '@wepublish/website'
@@ -35,16 +36,6 @@ export const useImageStyles = () => {
     [theme]
   )
 }
-const useLinkStyles = () => {
-  const theme = useTheme()
-
-  return useMemo(
-    () => css`
-      align-content: start;
-    `,
-    [theme]
-  )
-}
 
 export const OnlineReportsTeaserTitleWrapper = styled('h2')`
   grid-area: title;
@@ -64,7 +55,8 @@ export const OnlineReportsBaseTeaser = styled(Teaser)`
     'pretitle'
     'title'
     'lead'
-    'tags';
+    'tags'
+    'authors';
   grid-template-rows: auto 12px auto auto auto auto;
 
   .MuiChip-root {
@@ -95,8 +87,7 @@ export const OnlineReportsBaseTeaser = styled(Teaser)`
   }
 
   ${TeaserTitle} {
-    font-size: 24px;
-    font-weight: 700;
+    ${({theme}) => theme.typography.h3};
   }
 
   ${TeaserLead} {
@@ -107,7 +98,11 @@ export const OnlineReportsBaseTeaser = styled(Teaser)`
     display: none;
   }
 
-  ${TeaserMetadata} {
+  ${TeaserAuthors} {
+    ${({theme}) => theme.typography.body2};
+  }
+
+  ${TeaserTime} {
     display: none;
   }
 `

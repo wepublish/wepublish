@@ -13,45 +13,57 @@ const inter = Inter({
 
 const lora = Lora({
   weight: ['600'],
-  style: ['normal'],
+  style: ['italic'],
   subsets: ['latin'],
   display: 'swap',
   preload: true
 })
 
-const {
-  palette: {augmentColor},
-  breakpoints
-} = WePTheme
+const {breakpoints} = WePTheme
+
+const palette: ThemeOptions['palette'] = {
+  ...WePTheme.palette,
+  text: {
+    primary: '#141414',
+    secondary: '#10243A',
+    disabled: '#7C7C7C'
+  },
+  primary: {
+    main: '#E1190F',
+    contrastText: '#fff'
+  },
+  secondary: {
+    main: '#89B9DC',
+    contrastText: '#10243A'
+  }
+}
 
 const theme = createTheme(WePTheme, {
-  palette: {
-    text: {
-      primary: '#141414',
-      secondary: '#10243A'
-    },
-    primary: {
-      main: '#E1190F',
-      contrastText: '#fff'
-    },
-    secondary: {
-      main: '#89B9DC',
-      contrastText: '#10243A'
-    }
-  },
+  palette,
   typography: {
     h1: {
-      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      fontSize: '28px',
+      [breakpoints.up('md')]: {
+        fontSize: '44px'
+      },
+      fontWeight: 700
     },
     h2: {
-      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      fontSize: '36px',
+      [breakpoints.up('md')]: {
+        fontSize: '36px'
+      },
+      fontWeight: 700
     },
     h3: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
       fontSize: '24px',
       [breakpoints.up('md')]: {
-        fontSize: '36px'
-      }
+        fontSize: '24px'
+      },
+      fontWeight: 700
     },
     h4: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
@@ -67,7 +79,9 @@ const theme = createTheme(WePTheme, {
       fontWeight: 300
     },
     body2: {
-      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
+      fontWeight: 300,
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      color: palette.text.disabled
     },
     button: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
@@ -82,7 +96,9 @@ const theme = createTheme(WePTheme, {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
     },
     subtitle2: {
-      fontFamily: [lora.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [lora.style.fontFamily, 'sans-serif'].join(','),
+      fontStyle: 'italic',
+      fontWeight: 600
     },
     fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
   },

@@ -391,7 +391,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
         {!preTitle && <TeaserPreTitleNoContent />}
 
         <H4 component={TeaserTitle} gutterBottom>
-          {title}1
+          {title}
         </H4>
         {lead && <Paragraph component={TeaserLead}>{lead}</Paragraph>}
 
