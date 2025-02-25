@@ -9,7 +9,7 @@ export default function PreviewArticleByToken() {
 }
 
 export const getServerSideProps = (async ({params}) => {
-  const {token} = params || {}
+  const {slug, id, token} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
@@ -18,6 +18,8 @@ export const getServerSideProps = (async ({params}) => {
     client.query({
       query: ApiV1.ArticleDocument,
       variables: {
+        slug,
+        id,
         token
       }
     }),

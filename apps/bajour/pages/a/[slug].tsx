@@ -154,16 +154,18 @@ export default function ArticleBySlugIdOrToken() {
 export const getStaticPaths = getArticlePathsBasedOnPage('home')
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug} = params || {}
-
+  const {slug, id, token} = params || {}
   const {publicRuntimeConfig} = getConfig()
+
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
   const [article] = await Promise.all([
     client.query({
       query: ApiV1.ArticleDocument,
       variables: {
-        slug
+        slug,
+        id,
+        token
       }
     }),
     client.query({
