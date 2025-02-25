@@ -4241,7 +4241,17 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-303 emotion-304"
         style="width: auto; height: auto;"
-      />
+      >
+        <div
+          class="fb-video"
+          data-allowfullscreen="true"
+          data-autoplay="false"
+          data-controls="true"
+          data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
+          id=":r0:"
+          style="width: 100%; height: 100%;"
+        />
+      </div>
     </div>
     <div
       class="emotion-305 emotion-306"
@@ -4275,7 +4285,13 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-313 emotion-314"
         style="width: auto; height: auto;"
-      />
+      >
+        <div
+          style="width: 100%; height: 100%;"
+        >
+          <div />
+        </div>
+      </div>
     </div>
     <div
       class="emotion-315 emotion-316"
@@ -4283,7 +4299,14 @@ https://unsplash.it/200/200 200w"
       <div
         class="emotion-317 emotion-318"
         style="width: auto; height: auto;"
-      />
+      >
+        <iframe
+          allow="autoplay"
+          frameborder="0"
+          src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F744469711"
+          style="width: 100%; height: 100%;"
+        />
+      </div>
     </div>
     <div
       class="emotion-319 emotion-320"

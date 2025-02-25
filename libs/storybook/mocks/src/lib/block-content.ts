@@ -49,19 +49,24 @@ export const mockTitleBlock = ({
 }: Partial<TitleBlock> = {}): TitleBlock => ({
   type: BlockType.Title,
   __typename: 'TitleBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   lead,
   title
 })
 
-export const mockImageBlock = ({image = mockImage()}: Partial<ImageBlock> = {}): ImageBlock => ({
+export const mockImageBlock = ({
+  image = mockImage(),
+  linkUrl = null
+}: Partial<ImageBlock> = {}): ImageBlock => ({
   type: BlockType.Image,
   __typename: 'ImageBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   caption: 'Caption',
-  image
+  image,
+  imageID: image?.id,
+  linkUrl
 })
 
 export const mockRichTextBlock = ({
@@ -69,8 +74,8 @@ export const mockRichTextBlock = ({
 }: Partial<RichTextBlock> = {}): RichTextBlock => ({
   type: BlockType.RichText,
   __typename: 'RichTextBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   richText
 })
 
@@ -81,11 +86,12 @@ export const mockQuoteBlock = ({
 }: Partial<QuoteBlock> = {}): QuoteBlock => ({
   type: BlockType.Quote,
   __typename: 'QuoteBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   quote,
   author,
-  image
+  image,
+  imageID: image?.id
 })
 
 export const mockBreakBlock = ({
@@ -99,11 +105,12 @@ export const mockBreakBlock = ({
 }: Partial<BreakBlock> = {}): BreakBlock => ({
   type: BlockType.LinkPageBreak,
   __typename: 'BreakBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   richText,
   hideButton,
   image,
+  imageID: image?.id,
   linkTarget,
   linkText,
   linkURL,
@@ -113,8 +120,8 @@ export const mockBreakBlock = ({
 export const mockPollBlock = ({poll = mockPoll()}: Partial<PollBlock> = {}): PollBlock => ({
   type: BlockType.Poll,
   __typename: 'PollBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   poll
 })
 
@@ -123,8 +130,8 @@ export const mockEventBlock = ({
 }: Partial<EventBlock> = {}): EventBlock => ({
   type: BlockType.Event,
   __typename: 'EventBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   events,
   filter: {
     __typename: 'EventBlockFilter',
@@ -138,8 +145,8 @@ export const mockHTMLBlock = ({
 }: Partial<HtmlBlock> = {}): HtmlBlock => ({
   type: BlockType.Html,
   __typename: 'HTMLBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   html
 })
 
@@ -167,8 +174,8 @@ export const mockListicleBlock = ({
 }: Partial<ListicleBlock> = {}): ListicleBlock => ({
   type: BlockType.Listicle,
   __typename: 'ListicleBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   items
 })
 
@@ -177,8 +184,8 @@ export const mockCommentBlock = ({
 }: Partial<CommentBlock> = {}): CommentBlock => ({
   type: BlockType.Comment,
   __typename: 'CommentBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   comments,
   filter: {
     __typename: 'CommentBlockFilter',
@@ -192,8 +199,8 @@ export const mockBildwurfBlock = ({
 }: Partial<BildwurfAdBlock> = {}): BildwurfAdBlock => ({
   type: BlockType.BildwurfAd,
   __typename: 'BildwurfAdBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   zoneID
 })
 
@@ -203,8 +210,8 @@ export const mockFacebookPostBlock = ({
 }: Partial<FacebookPostBlock> = {}): FacebookPostBlock => ({
   type: BlockType.FacebookPost,
   __typename: 'FacebookPostBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   postID,
   userID
 })
@@ -215,8 +222,8 @@ export const mockFacebookVideoBlock = ({
 }: Partial<FacebookVideoBlock> = {}): FacebookVideoBlock => ({
   type: BlockType.FacebookVideo,
   __typename: 'FacebookVideoBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   userID,
   videoID
 })
@@ -226,8 +233,8 @@ export const mockInstagramPostBlock = ({
 }: Partial<InstagramPostBlock> = {}): InstagramPostBlock => ({
   type: BlockType.InstagramPost,
   __typename: 'InstagramPostBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   postID
 })
 
@@ -237,8 +244,8 @@ export const mockTikTokVideoBlock = ({
 }: Partial<TikTokVideoBlock> = {}): TikTokVideoBlock => ({
   type: BlockType.TikTokVideo,
   __typename: 'TikTokVideoBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   userID,
   videoID
 })
@@ -248,8 +255,8 @@ export const mockVimeoVideoBlock = ({
 }: Partial<VimeoVideoBlock> = {}): VimeoVideoBlock => ({
   type: BlockType.VimeoVideo,
   __typename: 'VimeoVideoBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   videoID
 })
 
@@ -258,8 +265,8 @@ export const mockYouTubeVideoBlock = ({
 }: Partial<YouTubeVideoBlock> = {}): YouTubeVideoBlock => ({
   type: BlockType.YouTubeVideo,
   __typename: 'YouTubeVideoBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   videoID
 })
 
@@ -268,8 +275,8 @@ export const mockSoundCloudTrackBlock = ({
 }: Partial<SoundCloudTrackBlock> = {}): SoundCloudTrackBlock => ({
   type: BlockType.SoundCloudTrack,
   __typename: 'SoundCloudTrackBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   trackID
 })
 
@@ -279,8 +286,8 @@ export const mockTwitterTweetBlock = ({
 }: Partial<TwitterTweetBlock> = {}): TwitterTweetBlock => ({
   type: BlockType.TwitterTweet,
   __typename: 'TwitterTweetBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   tweetID,
   userID
 })
@@ -290,8 +297,8 @@ export const mockPolisConversationBlock = ({
 }: Partial<PolisConversationBlock> = {}): PolisConversationBlock => ({
   type: BlockType.PolisConversation,
   __typename: 'PolisConversationBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   conversationID
 })
 
@@ -305,8 +312,8 @@ export const mockIFrameBlock = ({
 }: Partial<IFrameBlock> = {}): IFrameBlock => ({
   type: BlockType.Embed,
   __typename: 'IFrameBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   height,
   sandbox,
   styleCustom,
@@ -336,8 +343,8 @@ export const mockImageGalleryBlock = ({
 }: Partial<ImageGalleryBlock> = {}): ImageGalleryBlock => ({
   type: BlockType.ImageGallery,
   __typename: 'ImageGalleryBlock',
-  blockStyle: undefined,
-  blockStyleName: undefined,
+  blockStyle: null,
+  blockStyleName: null,
   images
 })
 
@@ -398,6 +405,7 @@ export const mockCustomTeaser = ({
   __typename: 'CustomTeaser',
   type: TeaserType.Article,
   image,
+  imageID: image?.id,
   lead,
   title,
   preTitle,
@@ -409,12 +417,12 @@ export const mockTeaserListBlock = ({
   filter = {
     tags: []
   },
-  title,
+  title = null,
   teasers = [mockArticleTeaser(), mockArticleTeaser(), mockArticleTeaser()]
 }: Partial<FullTeaserListBlockFragment> = {}): FullTeaserListBlockFragment => ({
   type: BlockType.TeaserList,
   __typename: 'TeaserListBlock',
-  blockStyle: undefined,
+  blockStyle: null,
   filter,
   title,
   teasers
@@ -433,7 +441,7 @@ export const mockTeaserGridBlock = ({
 }: Partial<FullTeaserGridBlockFragment> = {}): FullTeaserGridBlockFragment => ({
   type: BlockType.TeaserList,
   __typename: 'TeaserGridBlock',
-  blockStyle: undefined,
+  blockStyle: null,
   teasers,
   numColumns
 })
@@ -476,9 +484,9 @@ export const mockTeaserGridFlexBlock = ({
     }
   ]
 }: Partial<FullTeaserGridFlexBlockFragment> = {}): FullTeaserGridFlexBlockFragment => ({
-  type: BlockType.TeaserList,
+  type: BlockType.TeaserGridFlex,
   __typename: 'TeaserGridFlexBlock',
-  blockStyle: undefined,
+  blockStyle: null,
   flexTeasers
 })
 

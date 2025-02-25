@@ -1,9 +1,10 @@
 import {Meta} from '@storybook/react'
 import {ArticleDocument} from '@wepublish/website/api'
 import {ArticleContainer} from './article-container'
-import {mockArticle} from '@wepublish/storybook/mocks'
+import {mockArticle, mockPeer} from '@wepublish/storybook/mocks'
 
 const article = mockArticle()
+const articleWithPeer = mockArticle({peer: mockPeer()})
 
 export default {
   component: ArticleContainer,
@@ -80,6 +81,32 @@ export const ByToken = {
           result: {
             data: {
               article
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+export const WithPeer = {
+  args: {
+    id: articleWithPeer.id
+  },
+
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: ArticleDocument,
+            variables: {
+              id: articleWithPeer.id
+            }
+          },
+          result: {
+            data: {
+              article: articleWithPeer
             }
           }
         }

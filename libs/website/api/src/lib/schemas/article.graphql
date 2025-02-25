@@ -7,6 +7,7 @@ fragment ArticleRevisionWithoutBlocks on ArticleRevision {
   lead
   lead
   title
+  canonicalUrl
 
   authors {
     ...FullAuthor
@@ -56,6 +57,10 @@ fragment ArticleWithoutBlocks on Article {
 
   latest {
     ...ArticleRevisionWithoutBlocks
+  }
+
+  peer {
+    ...FullPeer
   }
 }
 

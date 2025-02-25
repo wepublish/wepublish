@@ -7,7 +7,10 @@ export const mockAuthor = ({
   jobTitle = 'Editor',
   image = mockImage(),
   tags = [],
-  bio = mockRichText()
+  bio = mockRichText(),
+  hideOnArticle = false,
+  hideOnTeam = false,
+  hideOnTeaser = false
 }: Partial<FullAuthorFragment> = {}) =>
   ({
     __typename: 'Author',
@@ -37,5 +40,8 @@ export const mockAuthor = ({
     ],
     image,
     tags,
-    bio
+    bio,
+    hideOnArticle,
+    hideOnTeam,
+    hideOnTeaser
   } as FullAuthorFragment)

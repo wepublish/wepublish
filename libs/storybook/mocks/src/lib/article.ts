@@ -14,7 +14,8 @@ export const mockArticleRevision = ({
   socialMediaImage = mockImage(),
   image = mockImage(),
   authors = [mockAuthor(), mockAuthor()],
-  blocks = mockBlockContent()
+  blocks = mockBlockContent(),
+  canonicalUrl = 'https://example.com'
 }: Partial<FullArticleRevisionFragment> = {}): FullArticleRevisionFragment => ({
   __typename: 'ArticleRevision',
   id: nanoid(),
@@ -29,7 +30,8 @@ export const mockArticleRevision = ({
   preTitle,
   socialMediaDescription,
   socialMediaImage,
-  socialMediaTitle
+  socialMediaTitle,
+  canonicalUrl
 })
 
 export const mockArticle = ({
@@ -39,8 +41,9 @@ export const mockArticle = ({
   trackingPixels = [],
   tags = [mockTag({main: true}), mockTag()],
   latest = mockArticleRevision(),
-  peerId,
-  peerArticleId
+  peerId = null,
+  peerArticleId = null,
+  peer = null
 }: Partial<FullArticleFragment> = {}): FullArticleFragment => ({
   __typename: 'Article',
   id,
@@ -54,5 +57,6 @@ export const mockArticle = ({
   latest,
   url: 'https://example.com',
   peerId,
-  peerArticleId
+  peerArticleId,
+  peer
 })

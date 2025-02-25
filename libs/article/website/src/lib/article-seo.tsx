@@ -175,7 +175,7 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
       ))}
 
       {seo.tags.map(tag => (
-        <meta key={`og:article:tag:${tag}`} property="og:article:tag" content={tag.tag ?? ''} />
+        <meta key={`og:article:tag:${tag.id}`} property="og:article:tag" content={tag.tag ?? ''} />
       ))}
 
       <script

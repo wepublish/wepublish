@@ -1,4 +1,8 @@
 import fetch from 'cross-fetch'
+import {loadErrorMessages, loadDevMessages} from '@apollo/client/dev'
+
+loadDevMessages()
+loadErrorMessages()
 
 const originalConsoleError = console.error
 const originalConsoleWarn = console.warn
