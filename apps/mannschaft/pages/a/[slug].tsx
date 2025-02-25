@@ -92,7 +92,7 @@ export default function ArticleBySlugIdOrToken() {
 export const getStaticPaths = getPagePathsBasedOnPage('')
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug} = params || {}
+  const {slug, id, token} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
@@ -101,7 +101,9 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     client.query({
       query: ApiV1.ArticleDocument,
       variables: {
-        slug
+        slug,
+        id,
+        token
       }
     }),
     client.query({
