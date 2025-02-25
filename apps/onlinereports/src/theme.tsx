@@ -81,7 +81,7 @@ const theme = createTheme(WePTheme, {
     body2: {
       fontWeight: 300,
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
-      color: palette.text.disabled
+      color: palette?.text?.disabled ?? 'inherit'
     },
     button: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
