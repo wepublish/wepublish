@@ -20,17 +20,10 @@ export const ArticleInfoWrapper = styled('aside')`
   grid-row-start: 2;
 `
 
-export const ArticleTags = styled('div')`
-  display: flex;
-  flex-flow: row wrap;
-  gap: ${({theme}) => theme.spacing(1)};
-`
-
 export function Article({className, data, children, loading, error}: BuilderArticleProps) {
   const {
     ArticleSEO,
     ArticleAuthors,
-    elements: {Link},
     ArticleMeta,
     blocks: {Blocks}
   } = useWebsiteBuilder()
