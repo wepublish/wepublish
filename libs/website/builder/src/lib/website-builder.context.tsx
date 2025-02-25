@@ -13,9 +13,9 @@ import {PartialDeep} from 'type-fest'
 import {
   BuilderArticleDateProps,
   BuilderArticleListProps,
+  BuilderArticleMetaProps,
   BuilderArticleProps,
-  BuilderArticleSEOProps,
-  BuilderArticleMetaProps
+  BuilderArticleSEOProps
 } from './article.interface'
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
@@ -90,6 +90,8 @@ import {
   BuilderSubscriptionListProps
 } from './membership.interface'
 import {BuilderNavbarProps} from './navbar.interface'
+import {BuilderNavAppBarProps} from './nav-app-bar.interface'
+import {BuilderNavPaperProps} from './nav-paper.interface'
 import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
 import {BuilderPeerProps} from './peer.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
@@ -111,6 +113,8 @@ export type WebsiteBuilderProps = {
   Head: ComponentType<{children: ReactNode}>
   Script: ComponentType<{children?: ReactNode} & ScriptHTMLAttributes<HTMLScriptElement>>
   Navbar: ComponentType<BuilderNavbarProps>
+  NavAppBar: ComponentType<BuilderNavAppBarProps>
+  NavPaper: ComponentType<BuilderNavPaperProps>
   Footer: ComponentType<BuilderFooterProps>
   Page: ComponentType<BuilderPageProps>
   PageSEO: ComponentType<BuilderPageSEOProps>
@@ -231,6 +235,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   Head: NoComponent,
   Script: NoComponent,
   Navbar: NoComponent,
+  NavAppBar: NoComponent,
+  NavPaper: NoComponent,
   Footer: NoComponent,
   SubscriptionList: NoComponent,
   SubscriptionListItem: NoComponent,
