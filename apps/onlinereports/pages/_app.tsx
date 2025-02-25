@@ -35,6 +35,7 @@ import {OnlineReportsAuthorChip} from '../src/components/author-chip'
 import {OnlineReportsArticleAuthors} from '../src/components/online-reports-article-authors'
 import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
 import {Advertisement} from '../src/components/advertisement'
+import {Structure} from '../src/structure'
 
 setDefaultOptions({
   locale: de
@@ -53,23 +54,9 @@ i18next
   })
 z.setErrorMap(zodI18nMap)
 
-const Spacer = styled('div')`
-  display: grid;
-  align-items: flex-start;
+const Spacer = styled(Structure)`
   grid-template-rows: min-content 1fr min-content;
-  grid-template-columns: 1fr minmax(auto, 994px) minmax(auto, 300px) 1fr;
-
-  gap: ${({theme}) => theme.spacing(2.5)};
-
-  ${theme.breakpoints.up('md')} {
-    column-gap: ${theme.spacing(2.5)};
-  }
-
   min-height: 100vh;
-
-  @media (max-width: 1250px) {
-    grid-template-columns: 1fr minmax(auto, 994px) 1fr;
-  }
 
   main {
     overflow-x: hidden;
@@ -83,6 +70,7 @@ const MainContent = styled('main')`
   flex-direction: column;
 
   row-gap: ${({theme}) => theme.spacing(2.5)};
+  padding-right: ${({theme}) => theme.spacing(2.5)};
 
   ${ContentWrapperStyled} {
     ${theme.breakpoints.down('md')} {
@@ -92,6 +80,10 @@ const MainContent = styled('main')`
     ${theme.breakpoints.up('md')} {
       row-gap: ${({theme}) => theme.spacing(4)};
     }
+  }
+  ${theme.breakpoints.down('lg')} {
+    padding-left: ${({theme}) => theme.spacing(2.5)};
+    padding-right: ${({theme}) => theme.spacing(2.5)};
   }
 `
 
@@ -129,12 +121,14 @@ const dateFormatter = (date: Date, includeTime = true) =>
     : format(date, 'dd. MMMM yyyy')
 
 const AdvertisementPlacer = styled('div')`
+  padding-left: ${({theme}) => theme.spacing(2.5)};
   position: sticky;
   top: 140px;
   margin-bottom: ${({theme}) => theme.spacing(2.5)};
   grid-column: 3/4;
+  overflow: hidden;
 
-  @media (max-width: 1250px) {
+  @media (max-width: 1200px) {
     display: none;
   }
 `
@@ -197,20 +191,13 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   headerSlug="header"
                   iconSlug="icons"
                 />
-
                 <MainContent>
-                  {/*<DesktopSidebarAd maxWidth="lg">*/}
-                  {/*  <MainSpacer>*/}
                   <Advertisement type={'whiteboard'} />
                   <Component {...pageProps} />
-                  {/*</MainSpacer>*/}
-                  {/*<div />*/}
-                  {/*</DesktopSidebarAd>*/}
                 </MainContent>
                 <AdvertisementPlacer>
                   <Advertisement type={'half-page'} />
                 </AdvertisementPlacer>
-
                 <Footer slug="footer" categorySlugs={[['categories', 'about-us']]}>
                   <LogoLink href="/" aria-label="Startseite">
                     <LogoWrapper />
