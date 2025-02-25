@@ -4,7 +4,8 @@ import {allPass, anyPass} from 'ramda'
 export enum BriefingType {
   BaselBriefing = 'BaselBriefing',
   FCBBriefing = 'FCBBriefing',
-  FasnachtsBriefing = 'FasnachtsBriefing'
+  FasnachtsBriefing = 'FasnachtsBriefing',
+  EscBriefing = 'EscBriefing'
 }
 
 export const isBaselBriefingIgnoringBlockType = (
@@ -20,5 +21,8 @@ export const isFCBBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBloc
 export const isFasnachtsBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
   allPass([hasBlockStyle(BriefingType.FasnachtsBriefing), isTeaserGridBlock])(block)
 
+export const isEscBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
+  allPass([hasBlockStyle(BriefingType.EscBriefing), isTeaserGridBlock])(block)
+
 export const isAnyBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
-  anyPass([isBaselBriefing, isFCBBriefing, isFasnachtsBriefing])(block)
+  anyPass([isBaselBriefing, isFCBBriefing, isFasnachtsBriefing, isEscBriefing])(block)
