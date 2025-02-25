@@ -12,7 +12,6 @@ import {
   FullInvoiceFragment,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
-  MemberPlan,
   PaymentMethod,
   PaymentPeriodicity,
   SubscriptionDeactivationReason
@@ -278,6 +277,17 @@ const fillCaptcha: StoryObj['play'] = async ({canvasElement, step}) => {
   })
 }
 
+const clickPayTransactionFees: StoryObj['play'] = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement)
+  const transactionFees = canvas.getByText('Bearbeitungsgebühren', {
+    exact: false
+  })
+
+  await step('Pay transaction fees', async () => {
+    await userEvent.click(transactionFees)
+  })
+}
+
 const clickSubscribe: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
   const submitButton = canvas.getByText('Abonnieren', {
@@ -324,7 +334,7 @@ const fillAddress: StoryObj['play'] = async ctx => {
 }
 
 const changeMemberPlan =
-  (plan: MemberPlan): NonNullable<StoryObj['play']> =>
+  (plan: FullMemberPlanFragment): NonNullable<StoryObj['play']> =>
   async ({canvasElement, step}) => {
     const canvas = within(canvasElement)
 
@@ -425,6 +435,7 @@ export const Filled: StoryObj<typeof Subscribe> = {
     await fillFirstName(ctx)
     await fillPassword(ctx)
     await fillAddress(ctx)
+    await clickPayTransactionFees(ctx)
     await clickSubscribe(ctx)
   })
 }

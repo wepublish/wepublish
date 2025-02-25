@@ -1464,8 +1464,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-77"
             data-shrink="false"
-            for=":re:"
-            id=":re:-label"
+            for=":rf:"
+            id=":rf:-label"
           >
             Captcha
           </label>
@@ -1475,7 +1475,7 @@ https://unsplash.it/200/100 200w"
             <input
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-79"
-              id=":re:"
+              id=":rf:"
               name="challengeAnswer.challengeSolution"
               type="text"
               value=""
@@ -1497,10 +1497,69 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-220 emotion-221"
+      class="emotion-2 emotion-3"
+    >
+      <label
+        class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-222 emotion-223"
+      >
+        <div
+          class="emotion-224 emotion-225"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+            />
+          </svg>
+        </div>
+        <span
+          class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium emotion-226"
+        >
+          <input
+            class="PrivateSwitchBase-input emotion-19"
+            data-indeterminate="false"
+            id=":rd:"
+            name="payTransactionFee"
+            type="checkbox"
+          />
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-141"
+            data-testid="CheckBoxOutlineBlankIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
+          <span
+            class="MuiTouchRipple-root emotion-102"
+          />
+        </span>
+        <span
+          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
+        >
+          Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit Newsroom Name zusätzlich unterstützen.
+        </span>
+      </label>
+    </div>
+    <div
+      class="emotion-231 emotion-232"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary emotion-222"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary emotion-233"
         tabindex="0"
         type="submit"
       >
@@ -1529,15 +1588,15 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":rf:"
-              id=":rf:-label"
+              for=":rg:"
+              id=":rg:-label"
             >
               Vorname
             </label>
 @@ -644,18 +644,18 @@
                 autocomplete="firstname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":rf:"
+                id=":rg:"
                 name="firstName"
                 type="text"
 -               value=""
@@ -1565,15 +1624,15 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":rg:"
-              id=":rg:-label"
+              for=":rh:"
+              id=":rh:-label"
             >
               Nachname
             </label>
 @@ -681,18 +681,18 @@
                 autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":rg:"
+                id=":rh:"
                 name="name"
                 type="text"
 -               value=""
@@ -1601,15 +1660,15 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":rh:"
-              id=":rh:-label"
+              for=":ri:"
+              id=":ri:-label"
             >
               Email
             </label>
 @@ -718,18 +718,18 @@
                 autocomplete="email"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":rh:"
+                id=":ri:"
                 name="email"
                 type="email"
 -               value=""
@@ -1637,15 +1696,15 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               data-shrink="false"
 +               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +               data-shrink="true"
-                for=":ri:"
-                id=":ri:-label"
+                for=":rj:"
+                id=":rj:-label"
               >
                 Passwort
               </label>
 @@ -758,11 +758,11 @@
                   autocomplete="new-password"
                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-                  id=":ri:"
+                  id=":rj:"
                   name="password"
                   type="password"
 -                 value=""
@@ -1677,8 +1736,8 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
 +               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
                 data-shrink="false"
-                for=":rj:"
-                id=":rj:-label"
+                for=":rk:"
+                id=":rk:-label"
               >
                 Passwort wiederholen
               </label>
@@ -1688,11 +1747,11 @@ exports[`Subscribe Container should render Filled 1`] = `
               >
                 <input
 -                 aria-invalid="false"
-+                 aria-describedby=":rj:-helper-text"
++                 aria-describedby=":rk:-helper-text"
 +                 aria-invalid="true"
                   autocomplete="new-password"
                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-                  id=":rj:"
+                  id=":rk:"
                   name="passwordRepeated"
                   type="password"
 @@ -870,21 +871,27 @@
@@ -1703,7 +1762,7 @@ exports[`Subscribe Container should render Filled 1`] = `
               </div>
 +             <p
 +               class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1612nlz-MuiFormHelperText-root"
-+               id=":rj:-helper-text"
++               id=":rk:-helper-text"
 +             >
 +               Required
 +             </p>
@@ -1720,15 +1779,15 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               data-shrink="false"
 +               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +               data-shrink="true"
-                for=":rk:"
-                id=":rk:-label"
+                for=":rl:"
+                id=":rl:-label"
               >
                 Strasse und Hausnummer
               </label>
 @@ -896,18 +903,18 @@
                   autocomplete="address"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                  id=":rk:"
+                  id=":rl:"
                   name="address.streetAddress"
                   type="text"
 -                 value=""
@@ -1756,15 +1815,15 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               data-shrink="false"
 +               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +               data-shrink="true"
-                for=":rl:"
-                id=":rl:-label"
+                for=":rm:"
+                id=":rm:-label"
               >
                 PLZ
               </label>
 @@ -933,18 +940,18 @@
                   autocomplete="zip"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                  id=":rl:"
+                  id=":rm:"
                   name="address.zipCode"
                   type="text"
 -                 value=""
@@ -1792,15 +1851,15 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               data-shrink="false"
 +               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +               data-shrink="true"
-                for=":rm:"
-                id=":rm:-label"
+                for=":rn:"
+                id=":rn:-label"
               >
                 Ort / Stadt
               </label>
-@@ -970,60 +977,98 @@
+@@ -970,61 +977,99 @@
                   autocomplete="city"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                  id=":rm:"
+                  id=":rn:"
                   name="address.city"
                   type="text"
 -                 value=""
@@ -1834,21 +1893,21 @@ exports[`Subscribe Container should render Filled 1`] = `
 -                 data-shrink="false"
 +                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +                 data-shrink="true"
-                  for=":rn:"
-                  id=":rn:-label"
+                  for=":ro:"
+                  id=":ro:-label"
                 >
                   Land
                 </label>
                 <div
 -                 class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1y6ah8l-MuiInputBase-root-MuiOutlinedInput-root"
 +                 class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-fv07na-MuiInputBase-root-MuiOutlinedInput-root"
-+               >
+                >
 +                 <div
 +                   class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-16su6c8-MuiInputAdornment-root"
 +                 >
 +                   <span
 +                     class="notranslate"
-                    >
++                   >
 +                     ​
 +                   </span>
 +                   <img
@@ -1867,7 +1926,7 @@ exports[`Subscribe Container should render Filled 1`] = `
                     autocomplete="nothing"
 -                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
 +                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-152mnda-MuiInputBase-input-MuiOutlinedInput-input"
-                    id=":rn:"
+                    id=":ro:"
                     role="combobox"
                     spellcheck="false"
                     type="text"
@@ -1876,14 +1935,14 @@ exports[`Subscribe Container should render Filled 1`] = `
                   />
                   <div
                     class="MuiAutocomplete-endAdornment css-p1olib-MuiAutocomplete-endAdornment"
-+                 >
-+                   <button
+                  >
+                    <button
 +                     aria-label="Clear"
 +                     class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-clearIndicator css-1glvl0p-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-clearIndicator"
 +                     tabindex="-1"
 +                     title="Clear"
 +                     type="button"
-                    >
++                   >
 +                     <svg
 +                       aria-hidden="true"
 +                       class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
@@ -1899,11 +1958,12 @@ exports[`Subscribe Container should render Filled 1`] = `
 +                       class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
 +                     />
 +                   </button>
-                    <button
++                   <button
                       aria-label="Open"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-qzbt6i-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator"
                       tabindex="-1"
                       title="Open"
+                      type="button"
 @@ -1048,11 +1093,11 @@
                   <fieldset
                     aria-hidden="true"
@@ -1927,15 +1987,15 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":rt:"
-              id=":rt:-label"
+              for=":rv:"
+              id=":rv:-label"
             >
               Captcha
             </label>
 @@ -1473,18 +1518,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":rt:"
+                id=":rv:"
                 name="challengeAnswer.challengeSolution"
                 type="text"
 -               value=""
@@ -1952,7 +2012,39 @@ exports[`Subscribe Container should render Filled 1`] = `
                   <span>
                     Captcha
                   </span>
-                </legend>"
+                </legend>
+@@ -1519,11 +1564,11 @@
+                d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              />
+            </svg>
+          </div>
+          <span
+-           class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium css-1peyhh5-MuiButtonBase-root-MuiCheckbox-root"
++           class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium Mui-checked MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium css-1peyhh5-MuiButtonBase-root-MuiCheckbox-root"
+          >
+            <input
+              class="PrivateSwitchBase-input css-1m9pwf3"
+              data-indeterminate="false"
+              id=":rt:"
+@@ -1531,16 +1576,16 @@
+              type="checkbox"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+-             data-testid="CheckBoxOutlineBlankIcon"
++             data-testid="CheckBoxIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+-               d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
++               d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />"
 `;
 
 exports[`Subscribe Container should render LoggedIn 1`] = `
@@ -2661,7 +2753,7 @@ https://unsplash.it/200/100 200w"
         >
           <div
             class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-91"
-            id=":ru:"
+            id=":r10:"
             role="radiogroup"
           >
             <label
@@ -2872,7 +2964,7 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-134"
             data-shrink="true"
-            for=":r10:"
+            for=":r12:"
           >
             Zahlungsintervall
           </label>
@@ -2882,7 +2974,7 @@ https://unsplash.it/200/100 200w"
             <select
               aria-invalid="false"
               class="MuiNativeSelect-select MuiNativeSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-136"
-              id=":r10:"
+              id=":r12:"
               name="paymentPeriodicity"
             >
               <option
@@ -2968,10 +3060,69 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-146 emotion-147"
+      class="emotion-2 emotion-3"
+    >
+      <label
+        class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-148 emotion-149"
+      >
+        <div
+          class="emotion-150 emotion-151"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+            />
+          </svg>
+        </div>
+        <span
+          class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium emotion-152"
+        >
+          <input
+            class="PrivateSwitchBase-input emotion-29"
+            data-indeterminate="false"
+            id=":r13:"
+            name="payTransactionFee"
+            type="checkbox"
+          />
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-143"
+            data-testid="CheckBoxOutlineBlankIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
+          <span
+            class="MuiTouchRipple-root emotion-98"
+          />
+        </span>
+        <span
+          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-33"
+        >
+          Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit Newsroom Name zusätzlich unterstützen.
+        </span>
+      </label>
+    </div>
+    <div
+      class="emotion-157 emotion-158"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary emotion-148"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary emotion-159"
         tabindex="0"
         type="submit"
       >
@@ -3619,8 +3770,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-77"
             data-shrink="false"
-            for=":r12:"
-            id=":r12:-label"
+            for=":r15:"
+            id=":r15:-label"
           >
             Vorname
           </label>
@@ -3631,7 +3782,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-79"
-              id=":r12:"
+              id=":r15:"
               name="firstName"
               type="text"
               value=""
@@ -3656,8 +3807,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-77"
             data-shrink="false"
-            for=":r13:"
-            id=":r13:-label"
+            for=":r16:"
+            id=":r16:-label"
           >
             Nachname
           </label>
@@ -3668,7 +3819,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-79"
-              id=":r13:"
+              id=":r16:"
               name="name"
               type="text"
               value=""
@@ -3693,8 +3844,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-77"
             data-shrink="false"
-            for=":r14:"
-            id=":r14:-label"
+            for=":r17:"
+            id=":r17:-label"
           >
             Email
           </label>
@@ -3705,7 +3856,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-79"
-              id=":r14:"
+              id=":r17:"
               name="email"
               type="email"
               value=""
@@ -3733,8 +3884,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-77"
               data-shrink="false"
-              for=":r15:"
-              id=":r15:-label"
+              for=":r18:"
+              id=":r18:-label"
             >
               Passwort
             </label>
@@ -3745,7 +3896,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-99"
-                id=":r15:"
+                id=":r18:"
                 name="password"
                 type="password"
                 value=""
@@ -3800,8 +3951,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-77"
               data-shrink="false"
-              for=":r16:"
-              id=":r16:-label"
+              for=":r19:"
+              id=":r19:-label"
             >
               Passwort wiederholen
             </label>
@@ -3812,7 +3963,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-99"
-                id=":r16:"
+                id=":r19:"
                 name="passwordRepeated"
                 type="password"
                 value=""
@@ -3871,8 +4022,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-77"
               data-shrink="false"
-              for=":r17:"
-              id=":r17:-label"
+              for=":r1a:"
+              id=":r1a:-label"
             >
               Strasse und Hausnummer
             </label>
@@ -3883,7 +4034,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input emotion-79"
-                id=":r17:"
+                id=":r1a:"
                 name="address.streetAddress"
                 type="text"
                 value=""
@@ -3908,8 +4059,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-77"
               data-shrink="false"
-              for=":r18:"
-              id=":r18:-label"
+              for=":r1b:"
+              id=":r1b:-label"
             >
               PLZ
             </label>
@@ -3920,7 +4071,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input emotion-79"
-                id=":r18:"
+                id=":r1b:"
                 name="address.zipCode"
                 type="text"
                 value=""
@@ -3945,8 +4096,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-77"
               data-shrink="false"
-              for=":r19:"
-              id=":r19:-label"
+              for=":r1c:"
+              id=":r1c:-label"
             >
               Ort / Stadt
             </label>
@@ -3957,7 +4108,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input emotion-79"
-                id=":r19:"
+                id=":r1c:"
                 name="address.city"
                 type="text"
                 value=""
@@ -3986,8 +4137,8 @@ https://unsplash.it/200/100 200w"
               <label
                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-77"
                 data-shrink="false"
-                for=":r1a:"
-                id=":r1a:-label"
+                for=":r1d:"
+                id=":r1d:-label"
               >
                 Land
               </label>
@@ -4001,7 +4152,7 @@ https://unsplash.it/200/100 200w"
                   autocapitalize="none"
                   autocomplete="nothing"
                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-99"
-                  id=":r1a:"
+                  id=":r1d:"
                   role="combobox"
                   spellcheck="false"
                   type="text"
@@ -4067,7 +4218,7 @@ https://unsplash.it/200/100 200w"
         >
           <div
             class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-152"
-            id=":r1c:"
+            id=":r1f:"
             role="radiogroup"
           >
             <label
@@ -4278,7 +4429,7 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-195"
             data-shrink="true"
-            for=":r1e:"
+            for=":r1h:"
           >
             Zahlungsintervall
           </label>
@@ -4288,7 +4439,7 @@ https://unsplash.it/200/100 200w"
             <select
               aria-invalid="false"
               class="MuiNativeSelect-select MuiNativeSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-197"
-              id=":r1e:"
+              id=":r1h:"
               name="paymentPeriodicity"
             >
               <option
@@ -4408,10 +4559,69 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-214 emotion-215"
+      class="emotion-2 emotion-3"
+    >
+      <label
+        class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-216 emotion-217"
+      >
+        <div
+          class="emotion-218 emotion-219"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+            />
+          </svg>
+        </div>
+        <span
+          class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium emotion-220"
+        >
+          <input
+            class="PrivateSwitchBase-input emotion-19"
+            data-indeterminate="false"
+            id=":r1i:"
+            name="payTransactionFee"
+            type="checkbox"
+          />
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-141"
+            data-testid="CheckBoxOutlineBlankIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
+          <span
+            class="MuiTouchRipple-root emotion-102"
+          />
+        </span>
+        <span
+          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
+        >
+          Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit Newsroom Name zusätzlich unterstützen.
+        </span>
+      </label>
+    </div>
+    <div
+      class="emotion-225 emotion-226"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary emotion-216"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary emotion-227"
         tabindex="0"
         type="submit"
       >
@@ -4490,8 +4700,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-19"
             data-shrink="false"
-            for=":r1g:"
-            id=":r1g:-label"
+            for=":r1k:"
+            id=":r1k:-label"
           >
             Vorname
           </label>
@@ -4502,7 +4712,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
               aria-invalid="false"
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-21"
-              id=":r1g:"
+              id=":r1k:"
               name="firstName"
               type="text"
               value=""
@@ -4527,8 +4737,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-19"
             data-shrink="false"
-            for=":r1h:"
-            id=":r1h:-label"
+            for=":r1l:"
+            id=":r1l:-label"
           >
             Nachname
           </label>
@@ -4539,7 +4749,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-21"
-              id=":r1h:"
+              id=":r1l:"
               name="name"
               type="text"
               value=""
@@ -4564,8 +4774,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-19"
             data-shrink="false"
-            for=":r1i:"
-            id=":r1i:-label"
+            for=":r1m:"
+            id=":r1m:-label"
           >
             Email
           </label>
@@ -4576,7 +4786,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
               aria-invalid="false"
               autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-21"
-              id=":r1i:"
+              id=":r1m:"
               name="email"
               type="email"
               value=""
@@ -4604,8 +4814,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-19"
               data-shrink="false"
-              for=":r1j:"
-              id=":r1j:-label"
+              for=":r1n:"
+              id=":r1n:-label"
             >
               Passwort
             </label>
@@ -4616,7 +4826,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
                 aria-invalid="false"
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-41"
-                id=":r1j:"
+                id=":r1n:"
                 name="password"
                 type="password"
                 value=""
@@ -4671,8 +4881,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-19"
               data-shrink="false"
-              for=":r1k:"
-              id=":r1k:-label"
+              for=":r1o:"
+              id=":r1o:-label"
             >
               Passwort wiederholen
             </label>
@@ -4683,7 +4893,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
                 aria-invalid="false"
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd emotion-41"
-                id=":r1k:"
+                id=":r1o:"
                 name="passwordRepeated"
                 type="password"
                 value=""
@@ -4742,8 +4952,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-19"
               data-shrink="false"
-              for=":r1l:"
-              id=":r1l:-label"
+              for=":r1p:"
+              id=":r1p:-label"
             >
               Strasse und Hausnummer
             </label>
@@ -4754,7 +4964,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
                 aria-invalid="false"
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input emotion-21"
-                id=":r1l:"
+                id=":r1p:"
                 name="address.streetAddress"
                 type="text"
                 value=""
@@ -4779,8 +4989,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-19"
               data-shrink="false"
-              for=":r1m:"
-              id=":r1m:-label"
+              for=":r1q:"
+              id=":r1q:-label"
             >
               PLZ
             </label>
@@ -4791,7 +5001,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
                 aria-invalid="false"
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input emotion-21"
-                id=":r1m:"
+                id=":r1q:"
                 name="address.zipCode"
                 type="text"
                 value=""
@@ -4816,8 +5026,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-19"
               data-shrink="false"
-              for=":r1n:"
-              id=":r1n:-label"
+              for=":r1r:"
+              id=":r1r:-label"
             >
               Ort / Stadt
             </label>
@@ -4828,7 +5038,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
                 aria-invalid="false"
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input emotion-21"
-                id=":r1n:"
+                id=":r1r:"
                 name="address.city"
                 type="text"
                 value=""
@@ -4857,8 +5067,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
               <label
                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-19"
                 data-shrink="false"
-                for=":r1o:"
-                id=":r1o:-label"
+                for=":r1s:"
+                id=":r1s:-label"
               >
                 Land
               </label>
@@ -4872,7 +5082,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
                   autocapitalize="none"
                   autocomplete="nothing"
                   class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-41"
-                  id=":r1o:"
+                  id=":r1s:"
                   role="combobox"
                   spellcheck="false"
                   type="text"
@@ -4933,7 +5143,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
         >
           <div
             class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-93"
-            id=":r1q:"
+            id=":r1u:"
             role="radiogroup"
           />
         </div>
@@ -5015,8 +5225,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-19"
             data-shrink="false"
-            for=":r1t:"
-            id=":r1t:-label"
+            for=":r22:"
+            id=":r22:-label"
           >
             Captcha
           </label>
@@ -5026,7 +5236,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
             <input
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-21"
-              id=":r1t:"
+              id=":r22:"
               name="challengeAnswer.challengeSolution"
               type="text"
               value=""
@@ -5048,10 +5258,69 @@ exports[`Subscribe Container should render WithFilter 1`] = `
       </div>
     </div>
     <div
-      class="emotion-107 emotion-108"
+      class="emotion-2 emotion-3"
+    >
+      <label
+        class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-109 emotion-110"
+      >
+        <div
+          class="emotion-111 emotion-112"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+            />
+          </svg>
+        </div>
+        <span
+          class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorError MuiCheckbox-sizeMedium emotion-113"
+        >
+          <input
+            class="PrivateSwitchBase-input emotion-114"
+            data-indeterminate="false"
+            id=":r21:"
+            name="payTransactionFee"
+            type="checkbox"
+          />
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-83"
+            data-testid="CheckBoxOutlineBlankIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
+          <span
+            class="MuiTouchRipple-root emotion-44"
+          />
+        </span>
+        <span
+          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-117"
+        >
+          Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit Newsroom Name zusätzlich unterstützen.
+        </span>
+      </label>
+    </div>
+    <div
+      class="emotion-118 emotion-119"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary emotion-109"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary emotion-120"
         tabindex="0"
         type="submit"
       >

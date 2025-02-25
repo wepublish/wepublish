@@ -97,8 +97,7 @@
       "@wepublish/website": ["libs/website/src/index.ts"],
       "@wepublish/website/admin": ["libs/website/admin/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
-      "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
-      "@wepublish/website/server": ["libs/website/src/server.ts"]
+      "@wepublish/website/builder": ["libs/website/builder/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

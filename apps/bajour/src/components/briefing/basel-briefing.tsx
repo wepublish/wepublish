@@ -7,6 +7,7 @@ import {BuilderTeaserGridBlockProps} from '@wepublish/website/builder'
 import {isWithinTimeslot} from '../../utils/is-within-timeslot'
 import {fluidTypography} from '../website-builder-overwrites/blocks/teaser-overwrite.style'
 import BaselBg from './basel.jpg'
+import EscBg from './esc.jpg'
 import FasnachtBg from './fasnacht.jpg'
 import FcbBg from './fcb.jpg'
 import {BriefingType, isBaselBriefingIgnoringBlockType} from './is-briefing'
@@ -75,6 +76,26 @@ const fasnachtBg = {
   xxs: FasnachtBg.src
 } satisfies FullImageFragment
 
+const escBg = {
+  id: '1234',
+  createdAt: new Date('2023-01-01').toDateString(),
+  modifiedAt: new Date('2023-01-01').toDateString(),
+  extension: '.jpg',
+  fileSize: 1,
+  format: '',
+  height: 500,
+  width: 500,
+  mimeType: 'image/jpg',
+  tags: [],
+  url: EscBg.src,
+  xl: EscBg.src,
+  l: EscBg.src,
+  m: EscBg.src,
+  s: EscBg.src,
+  xs: EscBg.src,
+  xxs: EscBg.src
+} satisfies FullImageFragment
+
 const getValuesBasedOnBriefing = (briefing: BriefingType) => {
   switch (briefing) {
     case BriefingType.BaselBriefing: {
@@ -101,6 +122,15 @@ const getValuesBasedOnBriefing = (briefing: BriefingType) => {
         subtitle: 'DEINE FASNÄCHTLICHE GRUNDVERSORGUNG',
         backgroundImage: fasnachtBg,
         welcome: 'Sali!'
+      }
+    }
+
+    case BriefingType.EscBriefing: {
+      return {
+        title: 'ESC-Briefing',
+        subtitle: 'Das Wichtigste für den Event des Jahres',
+        backgroundImage: escBg,
+        welcome: 'Hello from Basel'
       }
     }
   }
@@ -208,6 +238,7 @@ const BaselBriefingTitle = styled('span')`
   font-weight: bold;
   font-size: ${({theme}) => theme.spacing(4)};
   text-transform: uppercase;
+  text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
 
   ${({theme}) => theme.breakpoints.up('lg')} {
     font-size: 3rem;
@@ -218,6 +249,7 @@ const BaselBriefingSubtitle = styled('span')`
   font-weight: bold;
   font-size: 0.8rem;
   text-transform: uppercase;
+  text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
 
   ${({theme}) => theme.breakpoints.up('lg')} {
     font-size: 1 ${({theme}) => theme.spacing(4)};
@@ -416,7 +448,7 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
                   href="https://bajour.ch/basel-briefing-podcast"
                   target={'_blank'}>
                   <ReadMoreButton variant="outlined" color="inherit" size="small">
-                    <HideOnMobile>Briefing </HideOnMobile>hören
+                    <HideOnMobile>Briefing&nbsp;</HideOnMobile>hören
                   </ReadMoreButton>
                 </LinkWrapper>
               )}
@@ -426,7 +458,7 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
                 href={briefingDynamicValues.contentUrl}
                 target={'_blank'}>
                 <ReadMoreButton variant="outlined" color="inherit" size="small">
-                  <HideOnMobile>Briefing </HideOnMobile>lesen
+                  <HideOnMobile>Briefing&nbsp;</HideOnMobile>lesen
                 </ReadMoreButton>
               </LinkWrapper>
             </ButtonRow>

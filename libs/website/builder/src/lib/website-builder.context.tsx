@@ -87,7 +87,8 @@ import {
   BuilderPeriodicityPickerProps,
   BuilderSubscribeProps,
   BuilderSubscriptionListItemProps,
-  BuilderSubscriptionListProps
+  BuilderSubscriptionListProps,
+  BuilderTransactionFeeProps
 } from './membership.interface'
 import {BuilderNavbarProps} from './navbar.interface'
 import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
@@ -149,6 +150,7 @@ export type WebsiteBuilderProps = {
   PaymentAmount: ComponentType<BuilderPaymentAmountProps>
   PaymentMethodPicker: ComponentType<BuilderPaymentMethodPickerProps>
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>
+  TransactionFee: ComponentType<BuilderTransactionFeeProps>
   Subscribe: ComponentType<BuilderSubscribeProps>
 
   elements: {
@@ -237,6 +239,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   InvoiceList: NoComponent,
   InvoiceListItem: NoComponent,
   Subscribe: NoComponent,
+  TransactionFee: NoComponent,
   MemberPlanPicker: NoComponent,
   MemberPlanItem: NoComponent,
   PaymentAmount: NoComponent,
