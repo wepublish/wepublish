@@ -1,16 +1,14 @@
-import {Box, Chip, css, styled, useTheme} from '@mui/material'
+import {Box, css, styled, useTheme} from '@mui/material'
 import {
-  BuilderTeaserProps,
-  extractTeaserData,
-  TeaserAuthors,
-  TeaserImageWrapper,
+  Teaser,
   TeaserLead,
   TeaserMetadata,
+  TeaserPreTitle,
   TeaserPreTitleNoContent,
+  TeaserPreTitleWrapper,
   TeaserTags,
-  TeaserTime,
-  TeaserWrapper,
-  useWebsiteBuilder
+  TeaserTitle,
+  TeaserWrapper
 } from '@wepublish/website'
 import {useMemo} from 'react'
 
@@ -48,66 +46,12 @@ const useLinkStyles = () => {
   )
 }
 
-export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
-  const {title, preTitle, lead, href, image, publishDate, authors, tags} = extractTeaserData(teaser)
-  const {
-    date,
-    elements: {Image, Paragraph, H4, Link}
-  } = useWebsiteBuilder()
-
-  const imageStyles = useImageStyles()
-  const linkStyles = useLinkStyles()
-
-  return (
-    <TeaserWrapper {...alignment}>
-      <Link href={href} className={className} css={linkStyles}>
-        <TeaserImageWrapper>
-          {image && <Image image={image} css={imageStyles} />}
-        </TeaserImageWrapper>
-
-        {preTitle && (
-          <OnlineReportsTeaserPreTitleWrapper>{preTitle}</OnlineReportsTeaserPreTitleWrapper>
-        )}
-        {!preTitle && <TeaserPreTitleNoContent />}
-
-        <H4 component={OnlineReportsTeaserTitleWrapper}>{title}</H4>
-        {lead && <Paragraph component={TeaserLead}>{lead}</Paragraph>}
-
-        <TeaserMetadata>
-          {authors && authors?.length ? (
-            <TeaserAuthors>Von {authors?.join(', ')} </TeaserAuthors>
-          ) : null}
-
-          {publishDate && (
-            <TeaserTime suppressHydrationWarning dateTime={publishDate}>
-              {authors && authors?.length ? '| ' : null}
-              {date.format(new Date(publishDate), false)}{' '}
-            </TeaserTime>
-          )}
-        </TeaserMetadata>
-
-        {!!tags?.length && (
-          <TeaserTags>
-            {tags?.slice(0, 5).map(tag => (
-              <Chip key={tag.id} label={tag.tag} color="primary" variant="outlined" />
-            ))}
-          </TeaserTags>
-        )}
-      </Link>
-    </TeaserWrapper>
-  )
-}
-
 export const OnlineReportsTeaserTitleWrapper = styled('h2')`
   grid-area: title;
   font-size: 24px !important;
 `
 
-export const OnlineReportsTeaserPreTitleWrapper = styled(Box)`
-  color: ${({theme}) => theme.palette.primary.main};
-  grid-area: pretitle;
-  font-size: 18px !important;
-`
+export const OnlineReportsTeaserPreTitleWrapper = styled(Box)``
 
 export const OnlineReportsBaseTeaser = styled(Teaser)`
   color: inherit;
@@ -123,20 +67,47 @@ export const OnlineReportsBaseTeaser = styled(Teaser)`
     'tags';
   grid-template-rows: auto 12px auto auto auto auto;
 
-  ${TeaserTags} {
-    display: flex;
-  }
-
-  ${TeaserMetadata} {
-    display: none;
+  .MuiChip-root {
+    color: inherit;
+    border-color: inherit;
   }
 
   ${TeaserPreTitleNoContent} {
     display: none;
   }
 
-  .MuiChip-root {
-    color: inherit;
-    border-color: inherit;
+  ${TeaserPreTitleWrapper} {
+    margin-bottom: 0;
+    padding: 0;
+    height: unset;
+    color: ${({theme}) => theme.palette.primary.main};
+    background-color: transparent;
+    grid-area: pretitle;
+  }
+
+  ${TeaserPreTitle} {
+    transform: none;
+    padding: 0;
+    background-color: transparent;
+    color: ${({theme}) => theme.palette.primary.main};
+    font-weight: 600;
+    width: max-content;
+  }
+
+  ${TeaserTitle} {
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  ${TeaserLead} {
+    display: none;
+  }
+
+  ${TeaserTags} {
+    display: none;
+  }
+
+  ${TeaserMetadata} {
+    display: none;
   }
 `

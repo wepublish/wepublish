@@ -4,7 +4,7 @@ import {Inter, Lora} from 'next/font/google'
 import {PartialDeep} from 'type-fest'
 
 const inter = Inter({
-  weight: ['300', '400', '500', '600'],
+  weight: ['300', '400', '500', '600', '700'],
   style: ['normal'],
   subsets: ['latin'],
   display: 'swap',
@@ -31,7 +31,7 @@ const theme = createTheme(WePTheme, {
       secondary: '#10243A'
     },
     primary: {
-      // main: '#E1190F',
+      main: '#E1190F',
       contrastText: '#fff'
     },
     secondary: {
