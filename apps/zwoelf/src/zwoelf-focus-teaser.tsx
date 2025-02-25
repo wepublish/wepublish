@@ -8,5 +8,9 @@ export const ZwoelfFocusTeaser = styled(FocusTeaser)`
   }
   ${FocusedTeaserTitle} {
     background-color: ${({theme}) => theme.palette.primary.main};
+
+    ${({theme}) => theme.breakpoints.down('sm')} {
+      padding: ${({theme}) => theme.spacing(6)};
+    }
   }
 `

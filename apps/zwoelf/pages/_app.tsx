@@ -140,6 +140,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   headerSlug="header"
                   iconSlug="icons"
                   loginUrl={''}
+                  subscribeUrl="https://shop.zwoelf.ch/produkt-kategorie/abos/"
                 />
 
                 <main>
