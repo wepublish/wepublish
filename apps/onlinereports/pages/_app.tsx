@@ -1,5 +1,5 @@
 import {EmotionCache} from '@emotion/cache'
-import {Container, CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
@@ -57,21 +57,32 @@ const Spacer = styled('div')`
   display: grid;
   align-items: flex-start;
   grid-template-rows: min-content 1fr min-content;
-  gap: ${({theme}) => theme.spacing(0.5)};
+  grid-template-columns: 1fr minmax(auto, 994px) minmax(auto, 300px) 1fr;
+
+  gap: ${({theme}) => theme.spacing(2.5)};
+
+  ${theme.breakpoints.up('md')} {
+    column-gap: ${theme.spacing(2.5)};
+  }
+
   min-height: 100vh;
+
+  @media (max-width: 1250px) {
+    grid-template-columns: 1fr minmax(auto, 994px) 1fr;
+  }
 
   main {
     overflow-x: hidden;
   }
 `
 
-const MainSpacer = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(2.5)};
+const MainContent = styled('main')`
+  grid-column: 2/3;
 
-  ${theme.breakpoints.up('md')} {
-    gap: ${theme.spacing(2.5)};
-  }
+  display: flex;
+  flex-direction: column;
+
+  row-gap: ${({theme}) => theme.spacing(2.5)};
 
   ${ContentWrapperStyled} {
     ${theme.breakpoints.down('md')} {
@@ -117,29 +128,12 @@ const dateFormatter = (date: Date, includeTime = true) =>
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
 
-const DesktopSidebarAd = styled(Container)`
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: ${({theme}) => theme.spacing(2.5)} !important;
-
-  margin-bottom: 40px;
-
-  @media (min-width: 1250px) {
-    grid-template-columns: 994px 300px;
-  }
-
-  ${({theme}) => theme.breakpoints.up('lg')} {
-    padding-left: 0;
-    padding-right: 0;
-  }
-`
-
 const AdvertisementPlacer = styled('div')`
-  position: relative;
-  > * {
-    top: 0;
-    position: sticky;
-  }
+  position: sticky;
+  top: 140px;
+  margin-bottom: ${({theme}) => theme.spacing(2.5)};
+  grid-column: 3/4;
+
   @media (max-width: 1250px) {
     display: none;
   }
@@ -204,17 +198,18 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   iconSlug="icons"
                 />
 
-                <main>
-                  <DesktopSidebarAd maxWidth="lg">
-                    <MainSpacer>
-                      <Advertisement type={'whiteboard'} />
-                      <Component {...pageProps} />
-                    </MainSpacer>
-                    <AdvertisementPlacer>
-                      <Advertisement type={'half-page'} />
-                    </AdvertisementPlacer>
-                  </DesktopSidebarAd>
-                </main>
+                <MainContent>
+                  {/*<DesktopSidebarAd maxWidth="lg">*/}
+                  {/*  <MainSpacer>*/}
+                  <Advertisement type={'whiteboard'} />
+                  <Component {...pageProps} />
+                  {/*</MainSpacer>*/}
+                  {/*<div />*/}
+                  {/*</DesktopSidebarAd>*/}
+                </MainContent>
+                <AdvertisementPlacer>
+                  <Advertisement type={'half-page'} />
+                </AdvertisementPlacer>
 
                 <Footer slug="footer" categorySlugs={[['categories', 'about-us']]}>
                   <LogoLink href="/" aria-label="Startseite">
