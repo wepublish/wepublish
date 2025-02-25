@@ -14,6 +14,7 @@ export const useSessionStorage = <I>(
   const deserializeRef = useRef(deserialize)
   const [value, setValue] = useState(defaultValue)
   const previousValue = useRef(defaultValue)
+  const currentValue = useRef(defaultValue)
 
   const remove = useCallback(() => {
     if (typeof window === 'undefined') {
@@ -29,13 +30,20 @@ export const useSessionStorage = <I>(
         return undefined
       }
 
-      previousValue.current = value
       setValue(newVal)
 
-      return sessionStorage.setItem(key, serializeRef.current(newVal))
+      sessionStorage.setItem(key, serializeRef.current(newVal))
+      window.dispatchEvent(new StorageEvent('storage'))
     },
-    [key, value]
+    [key]
   )
+
+  useEffect(() => {
+    if (currentValue.current !== value) {
+      previousValue.current = currentValue.current
+      currentValue.current = value
+    }
+  }, [value])
 
   useEffect(() => {
     const item = sessionStorage.getItem(key)
@@ -44,6 +52,22 @@ export const useSessionStorage = <I>(
       setValue(deserializeRef.current(item))
     }
   }, [key, defaultValue])
+
+  useEffect(() => {
+    const storageEventListener = function (e: StorageEvent) {
+      // manually fired event
+      if (!e.storageArea) {
+        const item = sessionStorage.getItem(key)
+        setValue(item ? deserializeRef.current(item) : undefined)
+      }
+    }
+
+    window.addEventListener('storage', storageEventListener)
+
+    return () => {
+      window.removeEventListener('storage', storageEventListener)
+    }
+  }, [key])
 
   return [value, previousValue, set, remove] as const
 }

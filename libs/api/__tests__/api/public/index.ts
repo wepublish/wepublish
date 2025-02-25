@@ -65,6 +65,7 @@ export type Article = HasOptionalPeerLc & {
   peerArticleId?: Maybe<Scalars['String']>;
   peerId?: Maybe<Scalars['String']>;
   pending?: Maybe<ArticleRevision>;
+  previewUrl: Scalars['String'];
   published?: Maybe<ArticleRevision>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   shared: Scalars['Boolean'];
@@ -741,7 +742,6 @@ export type EventFromSource = {
   name: Scalars['String'];
   startsAt: Scalars['DateTime'];
   status: EventStatus;
-  url: Scalars['String'];
 };
 
 export enum EventSort {
@@ -1137,7 +1137,7 @@ export type ImportedEventsDocument = {
   __typename?: 'ImportedEventsDocument';
   nodes: Array<EventFromSource>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Float'];
+  totalCount: Scalars['Int'];
 };
 
 export type InputPoint = {
@@ -1975,6 +1975,7 @@ export type Page = {
   latest: PageRevision;
   modifiedAt: Scalars['DateTime'];
   pending?: Maybe<PageRevision>;
+  previewUrl: Scalars['String'];
   published?: Maybe<PageRevision>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   slug?: Maybe<Scalars['String']>;
@@ -2076,35 +2077,35 @@ export type PaginatedArticles = {
   __typename?: 'PaginatedArticles';
   nodes: Array<Article>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Float'];
+  totalCount: Scalars['Int'];
 };
 
 export type PaginatedEvents = {
   __typename?: 'PaginatedEvents';
   nodes: Array<Event>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Float'];
+  totalCount: Scalars['Int'];
 };
 
 export type PaginatedPages = {
   __typename?: 'PaginatedPages';
   nodes: Array<Page>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Float'];
+  totalCount: Scalars['Int'];
 };
 
 export type PaginatedPeerArticle = {
   __typename?: 'PaginatedPeerArticle';
   nodes: Array<PeerArticle>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Float'];
+  totalCount: Scalars['Int'];
 };
 
 export type PaginatedPollVotes = {
   __typename?: 'PaginatedPollVotes';
   nodes: Array<PollVote>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Float'];
+  totalCount: Scalars['Int'];
 };
 
 export type Payment = {
@@ -2276,7 +2277,6 @@ export type PollBlock = BaseBlock & HasOptionalPoll & {
   __typename?: 'PollBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
   poll?: Maybe<FullPoll>;
   pollId?: Maybe<Scalars['String']>;
   type: BlockType;

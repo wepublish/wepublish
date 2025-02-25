@@ -2,9 +2,14 @@ import {EmotionCache} from '@emotion/cache'
 import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  SessionProvider
+} from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
-import {AdminBar, previewLink} from '@wepublish/website/admin'
+import {previewLink} from '@wepublish/website/admin'
 import {UserSession} from '@wepublish/website/api'
 import {createWithV1ApiClient} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
@@ -149,7 +154,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 </FooterContainer>
               </Spacer>
 
-              <AdminBar />
+              <RoutedAdminBar />
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>

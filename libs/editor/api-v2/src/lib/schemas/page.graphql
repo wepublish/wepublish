@@ -30,37 +30,6 @@ fragment FullPageRevision on PageRevision {
   }
 }
 
-fragment FullPage on Page {
-  id
-  publishedAt
-  createdAt
-  modifiedAt
-  slug
-  url
-
-  latest {
-    ...FullPageRevision
-  }
-
-  draft {
-    id
-  }
-
-  pending {
-    id
-    publishedAt
-  }
-
-  published {
-    id
-    publishedAt
-  }
-
-  tags {
-    ...FullTag
-  }
-}
-
 fragment PageWithoutBlocks on Page {
   id
   publishedAt
@@ -68,6 +37,7 @@ fragment PageWithoutBlocks on Page {
   modifiedAt
   slug
   url
+  previewUrl
 
   tags {
     ...FullTag
@@ -89,6 +59,14 @@ fragment PageWithoutBlocks on Page {
   published {
     id
     publishedAt
+  }
+}
+
+fragment FullPage on Page {
+  ...PageWithoutBlocks
+
+  latest {
+    ...FullPageRevision
   }
 }
 

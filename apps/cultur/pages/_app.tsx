@@ -4,9 +4,14 @@ import {
   NavbarContainer,
   NavbarIconButtonWrapper
 } from '@wepublish/navigation/website'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  SessionProvider
+} from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
-import {AdminBar, previewLink} from '@wepublish/website/admin'
+import {previewLink} from '@wepublish/website/admin'
 import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {format, setDefaultOptions} from 'date-fns'
@@ -161,7 +166,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               </FooterContainer>
             </Spacer>
 
-            <AdminBar />
+            <RoutedAdminBar />
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>

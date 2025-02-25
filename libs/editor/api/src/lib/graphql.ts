@@ -1131,8 +1131,6 @@ export type Query = {
   createJWTForUser?: Maybe<JwtToken>;
   image?: Maybe<Image>;
   images: ImageConnection;
-  /** This query returns a list of original ids of imported events */
-  importedEventsIds?: Maybe<Array<Maybe<Scalars['String']>>>;
   invoice?: Maybe<Invoice>;
   invoices: InvoiceConnection;
   me?: Maybe<User>;

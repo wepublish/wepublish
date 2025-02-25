@@ -2,9 +2,14 @@ import {EmotionCache} from '@emotion/cache'
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  SessionProvider
+} from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
-import {AdminBar, previewLink} from '@wepublish/website/admin'
+import {previewLink} from '@wepublish/website/admin'
 import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {format, setDefaultOptions} from 'date-fns'
@@ -125,7 +130,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
 
-              <AdminBar />
+              <RoutedAdminBar />
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>

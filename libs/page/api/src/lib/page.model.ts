@@ -83,6 +83,9 @@ export class Page {
   @Field()
   url!: string
 
+  @Field()
+  previewUrl!: string
+
   @Field(() => PageRevision, {nullable: true})
   draft?: PageRevision
 

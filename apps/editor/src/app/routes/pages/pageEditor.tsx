@@ -307,7 +307,7 @@ function PageEditor() {
         </Message>
       )
     }
-  }, [isNotFound])
+  }, [isNotFound, t])
 
   return (
     <>
@@ -391,7 +391,7 @@ function PageEditor() {
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <Link to={pageData?.page.url ?? ''}>
+                  <Link to={pageData?.page.previewUrl ?? ''}>
                     <IconButtonMTop
                       className="actionButton"
                       disabled={hasChanged || !id || !canPreview}

@@ -107,6 +107,9 @@ export class Article implements HasOptionalPeerLc {
   @Field()
   url!: string
 
+  @Field()
+  previewUrl!: string
+
   @Field({nullable: true})
   publishedAt?: Date
 

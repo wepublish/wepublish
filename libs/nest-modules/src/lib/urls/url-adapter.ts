@@ -23,8 +23,16 @@ export class URLAdapter {
     return `${this.baseURL}/a/${article.slug}`
   }
 
+  async getArticlePreviewUrl(article: Article) {
+    return `${await this.getArticleUrl(article)}?preview`
+  }
+
   async getPageUrl(page: Page) {
     return `${this.baseURL}/${page.slug}`
+  }
+
+  async getPagePreviewUrl(page: Page) {
+    return `${await this.getPageUrl(page)}?preview`
   }
 
   async getAuthorURL(author: Pick<Author, 'id' | 'slug'>) {
@@ -41,14 +49,6 @@ export class URLAdapter {
     }
 
     return `${await this.getPageUrl(item as Page)}#${comment.id}`
-  }
-
-  async getArticlePreviewURL(token: string) {
-    return `${this.baseURL}/a/preview/${token}`
-  }
-
-  async getPagePreviewURL(token: string) {
-    return `${this.baseURL}/preview/${token}`
   }
 
   getLoginURL(token: string) {

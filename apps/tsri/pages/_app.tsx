@@ -5,9 +5,14 @@ import {GoogleAnalytics} from '@next/third-parties/google'
 import {TitleBlock, TitleBlockTitle} from '@wepublish/block-content/website'
 import {PaymentAmountPicker} from '@wepublish/membership/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  SessionProvider
+} from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
-import {AdminBar, previewLink} from '@wepublish/website/admin'
+import {previewLink} from '@wepublish/website/admin'
 import {UserSession} from '@wepublish/website/api'
 import {createWithV1ApiClient} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
@@ -181,7 +186,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 </FooterContainer>
               </Spacer>
 
-              <AdminBar />
+              <RoutedAdminBar />
 
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />

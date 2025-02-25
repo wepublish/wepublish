@@ -156,6 +156,11 @@ export class PageResolver {
     return this.urlAdapter.getPageUrl(parent)
   }
 
+  @ResolveField(() => String, {nullable: true})
+  async previewUrl(@Parent() parent: PPage) {
+    return this.urlAdapter.getPagePreviewUrl(parent)
+  }
+
   @ResolveField(() => [Tag])
   async tags(@Parent() parent: PPage) {
     const {id: pageId} = parent

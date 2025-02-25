@@ -191,6 +191,11 @@ export class ArticleResolver {
     return this.urlAdapter.getArticleUrl(parent)
   }
 
+  @ResolveField(() => String, {nullable: true})
+  async previewUrl(@Parent() parent: PArticle) {
+    return this.urlAdapter.getArticlePreviewUrl(parent)
+  }
+
   @ResolveField(() => [Tag])
   async tags(@Parent() parent: PArticle) {
     const {id: articleId} = parent

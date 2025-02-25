@@ -69,7 +69,7 @@ export default function ArticleBySlugOrId() {
 export const getStaticPaths = getArticlePathsBasedOnPage('')
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug} = params || {}
+  const {id, slug} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
@@ -78,6 +78,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     client.query({
       query: ArticleDocument,
       variables: {
+        id,
         slug
       }
     }),

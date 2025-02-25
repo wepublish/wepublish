@@ -53,6 +53,7 @@ type Article implements HasOptionalPeerLc {
   peerArticleId: String
   peerId: String
   pending: ArticleRevision
+  previewUrl: String!
   published: ArticleRevision
   publishedAt: DateTime
   shared: Boolean!
@@ -1129,6 +1130,7 @@ type Page {
   latest: PageRevision!
   modifiedAt: DateTime!
   pending: PageRevision
+  previewUrl: String!
   published: PageRevision
   publishedAt: DateTime
   slug: String
@@ -1457,6 +1459,9 @@ type Query {
 
   """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
+
+  """Returns a navigation by id."""
+  navigation(id: String!): Navigation!
 
   """Returns a list of navigations."""
   navigations: [Navigation!]!

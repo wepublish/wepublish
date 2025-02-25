@@ -54,6 +54,7 @@ fragment ArticleWithoutBlocks on Article {
   slug
   likes
   url
+  previewUrl
 
   latest {
     ...FullArticleRevisionWithoutBlocks
