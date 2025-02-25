@@ -118,7 +118,7 @@ export const useSlidesPadding = () => {
   return 16
 }
 
-type TeaserSliderProps = BuilderBlockStyleProps['TeaserSlider'] & {useSlidesPerView: () => number}
+type TeaserSliderProps = BuilderBlockStyleProps['TeaserSlider'] & {useSlidesPerView?: () => number}
 
 export const TeaserSlider = ({
   blockStyle,
