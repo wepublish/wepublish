@@ -10,6 +10,7 @@ export const ArticleAuthorsWrapper = styled('div')`
 export const ArticleAuthors = ({article, className}: BuilderArticleAuthorsProps) => {
   const {AuthorChip, ArticleDate} = useWebsiteBuilder()
   const authors = article?.authors.filter(author => !author.hideOnArticle) || []
+
   if (!authors.length) {
     return
   }
