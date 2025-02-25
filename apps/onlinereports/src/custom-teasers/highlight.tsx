@@ -1,11 +1,5 @@
 import {styled} from '@mui/material'
-import {
-  ImageWrapper,
-  TeaserLead,
-  TeaserPreTitle,
-  TeaserPreTitleNoContent,
-  TeaserTitle
-} from '@wepublish/website'
+import {TeaserLead, TeaserPreTitle, TeaserPreTitleNoContent, TeaserTitle} from '@wepublish/website'
 
 import {OnlineReportsBaseTeaser} from '../onlinereports-base-teaser'
 
@@ -63,14 +57,5 @@ export const HighlightTeaser = styled(OnlineReportsBaseTeaser)`
 
   ${TeaserLead} {
     display: block;
-  }
-
-  ${ImageWrapper} {
-    height: 100%;
-
-    ${({theme}) => theme.breakpoints.up('md')} {
-      aspect-ratio: 5/3;
-      max-height: unset;
-    }
   }
 `

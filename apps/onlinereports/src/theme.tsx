@@ -43,7 +43,7 @@ const theme = createTheme(WePTheme, {
   typography: {
     h1: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
-      fontSize: '28px',
+      fontSize: '36px',
       [breakpoints.up('md')]: {
         fontSize: '44px'
       },
@@ -51,7 +51,7 @@ const theme = createTheme(WePTheme, {
     },
     h2: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
-      fontSize: '36px',
+      fontSize: '28px',
       [breakpoints.up('md')]: {
         fontSize: '36px'
       },

@@ -2,6 +2,7 @@ import {Box, css, styled, useTheme} from '@mui/material'
 import {
   Teaser,
   TeaserAuthors,
+  TeaserImageWrapper,
   TeaserLead,
   TeaserPreTitle,
   TeaserPreTitleNoContent,
@@ -66,6 +67,13 @@ export const OnlineReportsBaseTeaser = styled(Teaser)`
 
   ${TeaserPreTitleNoContent} {
     display: none;
+  }
+
+  ${TeaserImageWrapper} {
+    img {
+      aspect-ratio: 4/3;
+      max-height: unset;
+    }
   }
 
   ${TeaserPreTitleWrapper} {
