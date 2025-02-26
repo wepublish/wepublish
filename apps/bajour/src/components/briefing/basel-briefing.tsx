@@ -139,7 +139,6 @@ const getValuesBasedOnBriefing = (briefing: BriefingType) => {
 export const BaselBriefingStyled = styled('div')`
   display: grid;
   column-gap: 16px;
-  row-gap: 40px;
   grid-template-columns: 1fr;
   align-items: stretch;
   position: relative;
@@ -238,7 +237,8 @@ const BaselBriefingTitle = styled('span')`
   font-weight: bold;
   font-size: ${({theme}) => theme.spacing(4)};
   text-transform: uppercase;
-  text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.35), 0 0 1em rgba(0, 0, 0, 0.35),
+    0 0 0.2em rgba(0, 0, 0, 0.35);
 
   ${({theme}) => theme.breakpoints.up('lg')} {
     font-size: 3rem;
@@ -249,7 +249,8 @@ const BaselBriefingSubtitle = styled('span')`
   font-weight: bold;
   font-size: 0.8rem;
   text-transform: uppercase;
-  text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.35), 0 0 1em rgba(0, 0, 0, 0.35),
+    0 0 0.2em rgba(0, 0, 0, 0.35);
 
   ${({theme}) => theme.breakpoints.up('lg')} {
     font-size: 1 ${({theme}) => theme.spacing(4)};
