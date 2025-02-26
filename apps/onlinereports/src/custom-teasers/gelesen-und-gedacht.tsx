@@ -1,23 +1,22 @@
-import {BuilderTeaserProps, extractTeaserData, useWebsiteBuilder} from '@wepublish/website'
+import {BuilderTeaserProps, extractTeaserData} from '@wepublish/website'
 import {Box, styled, Typography} from '@mui/material'
+import {useMemo} from 'react'
 
 const GelesenUndGedachtUnstyled = ({teaser, alignment, className}: BuilderTeaserProps) => {
-  const {title, href} = extractTeaserData(teaser)
-  const {
-    elements: {H3, Link}
-  } = useWebsiteBuilder()
+  const {title, lead} = extractTeaserData(teaser)
+  const [gelesen, source, gedacht] = useMemo(() => {
+    return [title, ...(lead?.split(/\n+/, 2) ?? [])]
+  }, [title, lead])
   return (
     <Box className={className}>
       <Gelesen>
         <Box>Gelesen...</Box>
-        <GelesenQuote variant={'subtitle2'}>«Umfrage-Institute blamieren sich»</GelesenQuote>
-        <GelesenSource>bz Schlagzeile vom 8. November 2024 über den Trump-Wahlerfolg</GelesenSource>
+        <GelesenQuote variant={'subtitle2'}>{gelesen}</GelesenQuote>
+        <GelesenSource>{source}</GelesenSource>
       </Gelesen>
       <Gedacht>
         <Box>...und dabei gedacht</Box>
-        <GedachtText variant={'subtitle2'}>
-          Auch die Medien, die die Umfrage-Ergebnisse vorbehaltlos übernommen hatten.
-        </GedachtText>
+        <GedachtText variant={'subtitle2'}>{gedacht}</GedachtText>
       </Gedacht>
     </Box>
   )
