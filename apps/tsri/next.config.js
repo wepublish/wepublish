@@ -28,6 +28,7 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      ...(await wepNextConfig.redirects()),
       {
         source: '/a/:id((?!tag|preview).*)/:slug',
         destination: '/a/:slug',
