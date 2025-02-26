@@ -57,9 +57,7 @@ const MenuContainer = styled('div')`
   }
 `
 
-const OnlineReportsHomeLogoButton = styled(HomeLogoButton)`
-  //margin: -${({theme}) => theme.spacing(2)} 0;
-`
+const OnlineReportsHomeLogoButton = styled(HomeLogoButton)``
 
 export const NavbarActions = styled(Box)`
   display: flex;
@@ -77,8 +75,8 @@ export const NavStructure = styled('div')`
   margin-right: auto;
 
   padding: ${({theme}) => theme.spacing(3)};
-  padding-top: ${({theme}) => theme.spacing(1.5)};
-  padding-bottom: ${({theme}) => theme.spacing(1.5)};
+  padding-top: ${({theme}) => theme.spacing(0.5)};
+  padding-bottom: ${({theme}) => theme.spacing(0.5)};
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
@@ -88,8 +86,8 @@ export const NavStructure = styled('div')`
     ${theme.breakpoints.up('md')} {
       padding-left: ${theme.spacing(5)};
       padding-right: ${theme.spacing(5)};
-      padding-top: ${theme.spacing(5)};
-      padding-bottom: ${theme.spacing(5)};
+      padding-top: ${theme.spacing(2)};
+      padding-bottom: ${theme.spacing(1)};
     }
   `}
 `
