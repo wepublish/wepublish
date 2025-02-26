@@ -146,7 +146,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   deactivateSubscriptionId,
   termsOfServiceUrl,
   donate,
-  transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100),
+  transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
   returningUserId
 }: BuilderSubscribeProps<T>) => {
