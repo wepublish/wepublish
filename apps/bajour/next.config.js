@@ -22,7 +22,7 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      ...(await wepNextConfig.redirects()),
+      ...((await wepNextConfig.redirects?.()) ?? []),
       {
         source: '/home',
         destination: '/',

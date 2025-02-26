@@ -20,7 +20,7 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      ...(await wepNextConfig.redirects()),
+      ...((await wepNextConfig.redirects?.()) ?? []),
       {
         source: '/abo',
         destination: '/mitmachen',
