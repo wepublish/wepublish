@@ -1,10 +1,8 @@
 import {css, FormControlLabel, Radio, RadioGroup, styled} from '@mui/material'
 import {BuilderPaymentAmountProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Currency} from '@wepublish/website/api'
-import {forwardRef, PropsWithChildren} from 'react'
+import {forwardRef, PropsWithChildren, useMemo} from 'react'
 import {formatCurrency} from '../../formatters/format-currency'
-
-const pickerItems = [1000, 1500, 2000]
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
@@ -88,13 +86,32 @@ export const PaymentAmountPickerItem = forwardRef<HTMLButtonElement, PaymentAmou
 
 export const PaymentAmountPicker = forwardRef<HTMLInputElement, BuilderPaymentAmountProps>(
   (
-    {className, currency, amountPerMonthMin, amountPerMonthTarget, name, error, value, onChange},
+    {
+      className,
+      slug,
+      currency,
+      amountPerMonthMin,
+      amountPerMonthTarget,
+      name,
+      error,
+      value,
+      onChange
+    },
     ref
   ) => {
     const {
       elements: {TextField},
-      meta: {locale}
+      meta: {locale, siteTitle}
     } = useWebsiteBuilder()
+
+    const pickerItems = useMemo(() => {
+      switch (siteTitle) {
+        case 'Wnti':
+          return slug?.includes('spende') ? [500, 1000, 2000, 5000, 10000] : [1000, 1500, 2000]
+        default:
+          return [1000, 15000, 2000]
+      }
+    }, [siteTitle, slug])
 
     return (
       <PaymentAmountPickerWrapper
