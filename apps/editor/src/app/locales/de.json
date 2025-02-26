@@ -283,7 +283,7 @@
         "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist."
       },
       "subscribe": {
-        "label": "Mitmachen"
+        "label": "Abonnieren"
       },
       "image": {
         "label": "Bild",

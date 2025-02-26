@@ -89,6 +89,7 @@ enum BlockType {
   Poll
   Quote
   RichText
+  Subscribe
   TeaserGrid1
   TeaserGrid6
   TeaserGridFlex
