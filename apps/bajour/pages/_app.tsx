@@ -38,6 +38,7 @@ import {
   BajourTeaserList
 } from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
+import {BajourArticleDateWithShare} from '../src/components/website-builder-overwrites/article-date/bajour-article-date-with-share'
 
 setDefaultOptions({
   locale: de
@@ -116,6 +117,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             meta={{siteTitle}}
             Head={Head}
             Script={Script}
+            ArticleDate={BajourArticleDateWithShare}
             elements={{Link: NextWepublishLink}}
             date={{format: dateFormatter}}
             blocks={{
