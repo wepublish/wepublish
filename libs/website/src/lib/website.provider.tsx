@@ -1,6 +1,7 @@
 import {css, GlobalStyles, TextField, Theme, ThemeProvider} from '@mui/material'
 import {
   Article,
+  ArticleAuthors,
   ArticleDate,
   ArticleList,
   ArticleSEO,
@@ -157,6 +158,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           ArticleList={ArticleList}
           Article={Article}
           ArticleDate={ArticleDate}
+          ArticleAuthors={ArticleAuthors}
           ArticleMeta={ArticleTags}
           ArticleSEO={ArticleSEO}
           Banner={PageBanner}
