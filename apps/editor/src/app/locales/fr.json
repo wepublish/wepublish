@@ -752,8 +752,9 @@
       "userConsents": "Consentement de l'utilisateur",
       "userRoles": "Rôles d'utilisateur/utilisatrice",
       "users": "Utilisateur/Utilisatrices",
-      "usersAndMembers": "Utilisateur & Abonnements",
-      "authorTags": "Tags"
+      "audience": "Audience",
+      "authorTags": "Tags",
+      "audienceDashboard": "Dashboard"
     },
     "navigation": {
       "overview": {
@@ -1366,6 +1367,9 @@
     },
     "selectableItemsActions": {
       "selectedItems": "{{numberOfItems}} éléments sélectionnés"
+    },
+    "audienceDashboard": {
+      "title": "Audience Dashboard"
     }
   }
 }

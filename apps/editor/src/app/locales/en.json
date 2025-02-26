@@ -821,8 +821,9 @@
       "userConsents": "User Consents",
       "userRoles": "User Roles",
       "users": "Users",
-      "usersAndMembers": "Users & Subscriptions",
-      "authorTags": "Tags"
+      "audience": "Audience",
+      "authorTags": "Tags",
+      "audienceDashboard": "Dashboard"
     },
     "navigation": {
       "overview": {
@@ -1512,6 +1513,9 @@
       "noPixelInfoHeader": "No tracking integration available",
       "noPixelInfoDescription": "This is the case, for example, if no tracking is configured or for old articles.",
       "errorHeader": "Error"
+    },
+    "audienceDashboard": {
+      "title": "Audience Dashboard"
     }
   }
 }
