@@ -92,7 +92,7 @@ export const getV1ApiClient = (
 ) => {
   const client =
     !CACHED_CLIENT || typeof window === 'undefined'
-      ? (CACHED_CLIENT = createV1ApiClient(apiUrl, links, cacheConfig, cache))
+      ? createV1ApiClient(apiUrl, links, cacheConfig, cache)
       : CACHED_CLIENT
 
   if (cache) {
