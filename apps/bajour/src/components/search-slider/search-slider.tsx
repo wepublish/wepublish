@@ -519,7 +519,7 @@ export function SearchSlider({article, includeSEO}: SearchSliderProps) {
                     </SlideItemOverlay>
                   )}
                   {slidesDetails?.[idx].abs === currentSlide && article.image.source && (
-                    <SlideTitle>Bild: {article?.image.source}</SlideTitle>
+                    <SlideTitle>Bild: {article.image.source}</SlideTitle>
                   )}
                 </>
               )}
