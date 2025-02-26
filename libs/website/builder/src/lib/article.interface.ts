@@ -1,9 +1,10 @@
 import {QueryResult} from '@apollo/client'
+
 import {
   Article,
-  ArticleQuery,
   ArticleListQuery,
-  ArticleListQueryVariables
+  ArticleListQueryVariables,
+  ArticleQuery
 } from '@wepublish/website/api'
 import {PropsWithChildren} from 'react'
 
@@ -32,6 +33,11 @@ export type BuilderArticleListProps = Pick<
 }
 
 export type BuilderArticleDateProps = {
+  article: Article
+  className?: string
+}
+
+export type BuilderArticleAuthorsProps = {
   article: Article
   className?: string
 }

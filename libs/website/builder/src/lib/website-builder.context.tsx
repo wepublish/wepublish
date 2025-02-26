@@ -11,6 +11,7 @@ import {
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {
+  BuilderArticleAuthorsProps,
   BuilderArticleDateProps,
   BuilderArticleListProps,
   BuilderArticleProps,
@@ -105,6 +106,8 @@ import {
 } from './ui.interface'
 import {BuilderImageUploadProps, BuilderPersonalDataFormProps} from './user.interface'
 import {BuilderBlockStyleProps} from './block-styles.interface'
+import {BuilderNavPaperProps} from './nav-paper.interface'
+import {BuilderNavAppBarProps} from './nav-app-bar.interface'
 
 const NoComponent = () => null
 
@@ -112,6 +115,8 @@ export type WebsiteBuilderProps = {
   Head: ComponentType<{children: ReactNode}>
   Script: ComponentType<{children?: ReactNode} & ScriptHTMLAttributes<HTMLScriptElement>>
   Navbar: ComponentType<BuilderNavbarProps>
+  NavAppBar: ComponentType<BuilderNavAppBarProps>
+  NavPaper: ComponentType<BuilderNavPaperProps>
   Footer: ComponentType<BuilderFooterProps>
   Page: ComponentType<BuilderPageProps>
   PageSEO: ComponentType<BuilderPageSEOProps>
@@ -119,6 +124,7 @@ export type WebsiteBuilderProps = {
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
   ArticleMeta: ComponentType<BuilderArticleMetaProps>
   ArticleDate: ComponentType<BuilderArticleDateProps>
+  ArticleAuthors: ComponentType<BuilderArticleAuthorsProps>
   PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
   AuthorLinks: ComponentType<BuilderAuthorLinksProps>
@@ -233,6 +239,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   Head: NoComponent,
   Script: NoComponent,
   Navbar: NoComponent,
+  NavAppBar: NoComponent,
+  NavPaper: NoComponent,
   Footer: NoComponent,
   SubscriptionList: NoComponent,
   SubscriptionListItem: NoComponent,
@@ -251,6 +259,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleSEO: NoComponent,
   ArticleMeta: NoComponent,
   ArticleDate: NoComponent,
+  ArticleAuthors: NoComponent,
   PeerInformation: NoComponent,
   Author: NoComponent,
   AuthorLinks: NoComponent,

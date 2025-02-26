@@ -1,10 +1,12 @@
 import {EmotionCache} from '@emotion/cache'
-import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
+  ContentWrapperStyled,
   FooterContainer,
+  FooterPaperWrapper,
   NavbarContainer,
   WebsiteBuilderProvider,
   WebsiteProvider
@@ -23,7 +25,17 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {ReactComponent as Logo} from '../src/logo.svg'
+import {OnlineReportsNavAppBar} from '../src/components/onlinereports-nav-app-bar'
+import {OnlineReportsNavPaper} from '../src/components/onlinereports-nav-paper'
 import theme from '../src/theme'
+
+import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
+import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
+import {OnlineReportsAuthorChip} from '../src/components/author-chip'
+import {OnlineReportsArticleAuthors} from '../src/components/online-reports-article-authors'
+import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
+import {Advertisement} from '../src/components/advertisement'
+import {Structure} from '../src/structure'
 
 setDefaultOptions({
   locale: de
@@ -42,23 +54,37 @@ i18next
   })
 z.setErrorMap(zodI18nMap)
 
-const Spacer = styled('div')`
-  display: grid;
-  align-items: flex-start;
+const Spacer = styled(Structure)`
   grid-template-rows: min-content 1fr min-content;
-  gap: ${({theme}) => theme.spacing(3)};
   min-height: 100vh;
+
+  main {
+    overflow-x: hidden;
+  }
 `
 
-const MainSpacer = styled(Container)`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(5)};
+const MainContent = styled('main')`
+  grid-column: 2/3;
 
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
+  display: flex;
+  flex-direction: column;
+
+  row-gap: ${({theme}) => theme.spacing(2.5)};
+  padding-right: ${({theme}) => theme.spacing(2.5)};
+
+  ${ContentWrapperStyled} {
+    ${theme.breakpoints.down('md')} {
+      row-gap: ${({theme}) => theme.spacing(7.5)};
     }
-  `}
+
+    ${theme.breakpoints.up('md')} {
+      row-gap: ${({theme}) => theme.spacing(4)};
+    }
+  }
+  ${theme.breakpoints.down('lg')} {
+    padding-left: ${({theme}) => theme.spacing(2.5)};
+    padding-right: ${({theme}) => theme.spacing(2.5)};
+  }
 `
 
 const LogoLink = styled(NextWepublishLink)`
@@ -81,11 +107,31 @@ const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
 `
+const Footer = styled(FooterContainer)`
+  grid-column: -1/1;
+
+  ${FooterPaperWrapper} {
+    color: ${({theme}) => theme.palette.common.white};
+  }
+`
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
+
+const AdvertisementPlacer = styled('div')`
+  padding-left: ${({theme}) => theme.spacing(2.5)};
+  position: sticky;
+  top: 140px;
+  margin-bottom: ${({theme}) => theme.spacing(2.5)};
+  grid-column: 3/4;
+  overflow: hidden;
+
+  @media (max-width: 1200px) {
+    display: none;
+  }
+`
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
@@ -101,7 +147,16 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           <WebsiteBuilderProvider
             Head={Head}
             Script={Script}
+            AuthorChip={OnlineReportsAuthorChip}
+            ArticleAuthors={OnlineReportsArticleAuthors}
+            NavPaper={OnlineReportsNavPaper}
+            NavAppBar={OnlineReportsNavAppBar}
             elements={{Link: NextWepublishLink}}
+            blocks={{
+              Teaser: OnlineReportsTeaser,
+              Renderer: OnlineReportsBlockRenderer,
+              TeaserList: OnlineReportsTeaserListBlock
+            }}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>
             <ThemeProvider theme={theme}>
@@ -136,18 +191,18 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   headerSlug="header"
                   iconSlug="icons"
                 />
-
-                <main>
-                  <MainSpacer maxWidth="lg">
-                    <Component {...pageProps} />
-                  </MainSpacer>
-                </main>
-
-                <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
+                <MainContent>
+                  <Advertisement type={'whiteboard'} />
+                  <Component {...pageProps} />
+                </MainContent>
+                <AdvertisementPlacer>
+                  <Advertisement type={'half-page'} />
+                </AdvertisementPlacer>
+                <Footer slug="footer" categorySlugs={[['categories', 'about-us']]}>
                   <LogoLink href="/" aria-label="Startseite">
                     <LogoWrapper />
                   </LogoLink>
-                </FooterContainer>
+                </Footer>
               </Spacer>
             </ThemeProvider>
           </WebsiteBuilderProvider>
