@@ -11,11 +11,12 @@ import {
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {
+  BuilderArticleAuthorsProps,
   BuilderArticleDateProps,
   BuilderArticleListProps,
+  BuilderArticleMetaProps,
   BuilderArticleProps,
-  BuilderArticleSEOProps,
-  BuilderArticleMetaProps
+  BuilderArticleSEOProps
 } from './article.interface'
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
@@ -126,6 +127,7 @@ export type WebsiteBuilderProps = {
   AuthorListItem: ComponentType<BuilderAuthorListItemProps>
   AuthorList: ComponentType<BuilderAuthorListProps>
   ArticleList: ComponentType<BuilderArticleListProps>
+  ArticleAuthors: ComponentType<BuilderArticleAuthorsProps>
   Banner: ComponentType<BuilderBannerProps>
   Event: ComponentType<BuilderEventProps>
   EventSEO: ComponentType<BuilderEventSEOProps>
@@ -251,6 +253,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleSEO: NoComponent,
   ArticleMeta: NoComponent,
   ArticleDate: NoComponent,
+  ArticleAuthors: NoComponent,
   PeerInformation: NoComponent,
   Author: NoComponent,
   AuthorLinks: NoComponent,

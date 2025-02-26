@@ -68,6 +68,15 @@ const nextConfig = {
       }
     ]
   },
+  async redirects() {
+    return [
+      {
+        source: '/profile/subscription',
+        destination: '/profile',
+        permanent: true
+      }
+    ]
+  },
   experimental: {
     scrollRestoration: true,
     outputFileTracingRoot: join(__dirname, '../../../../../'),

@@ -518,6 +518,9 @@ export function SearchSlider({article, includeSEO, className}: SearchSliderProps
                       <SlideTitle>{article?.latest.title}</SlideTitle>
                     </SlideItemOverlay>
                   )}
+                  {slidesDetails?.[idx].abs === currentSlide && article.image.source && (
+                    <SlideTitle>Bild: {article.image.source}</SlideTitle>
+                  )}
                 </>
               )}
             </SlideItem>
