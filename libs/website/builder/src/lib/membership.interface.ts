@@ -99,6 +99,7 @@ export type BuilderPaymentAmountProps = {
   value: number
   error: FieldError | undefined
   className?: string
+  slug?: string
 }
 
 export type BuilderSubscribeProps<

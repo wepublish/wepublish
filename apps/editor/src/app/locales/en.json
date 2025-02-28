@@ -333,6 +333,9 @@
         "placeholder": "Paste your HTML block here..",
         "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly."
       },
+      "subscribe": {
+        "label": "Subscribe"
+      },
       "image": {
         "label": "Image",
         "overview": {
