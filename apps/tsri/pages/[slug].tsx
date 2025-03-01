@@ -1,5 +1,5 @@
 import {getPagePathsBasedOnPage} from '@wepublish/utils/website'
-import {ApiV1, ContentWidthProvider, PageContainer} from '@wepublish/website'
+import {ApiV1, PageContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -16,11 +16,7 @@ export default function PageBySlugIdOrToken() {
     token
   } as ComponentProps<typeof PageContainer>
 
-  return (
-    <ContentWidthProvider fullWidth={true}>
-      <PageContainer {...containerProps} />
-    </ContentWidthProvider>
-  )
+  return <PageContainer {...containerProps} />
 }
 
 export const getStaticPaths = getPagePathsBasedOnPage('')
