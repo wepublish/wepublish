@@ -24,6 +24,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {ZwoelfFocusTeaser} from '../src/zwoelf-focus-teaser'
 
 setDefaultOptions({
   locale: de
@@ -103,7 +104,10 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Script={Script}
             elements={{Link: NextWepublishLink}}
             date={{format: dateFormatter}}
-            meta={{siteTitle}}>
+            meta={{siteTitle}}
+            blockStyles={{
+              FocusTeaser: ZwoelfFocusTeaser
+            }}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
 
@@ -131,11 +135,12 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               <Spacer>
                 <NavBar
-                  categorySlugs={[['abo']]}
+                  categorySlugs={[['about']]}
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
                   loginUrl={''}
+                  subscribeUrl="https://shop.zwoelf.ch/produkt-kategorie/abos/"
                 />
 
                 <main>
@@ -144,7 +149,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </MainSpacer>
                 </main>
 
-                <FooterContainer slug="main" categorySlugs={[['abo']]}>
+                <FooterContainer slug="main" categorySlugs={[['about']]}>
                   <LogoLink href="/" aria-label="Startseite">
                     <LogoWrapper />
                   </LogoLink>
