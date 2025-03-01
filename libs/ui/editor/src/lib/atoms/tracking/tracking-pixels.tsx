@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import {TrackingPixelFragment} from '@wepublish/editor/api'
+import {FullTrackingPixelFragment} from '@wepublish/editor/api-v2'
 import {useTranslation} from 'react-i18next'
 import {Message, Panel} from 'rsuite'
 
 export interface TrackingPixelsProps {
-  trackingPixels: (TrackingPixelFragment | null)[] | undefined
+  trackingPixels: (FullTrackingPixelFragment | null)[] | undefined
 }
 
 const MessageWithMarginBottom = styled(Message)`

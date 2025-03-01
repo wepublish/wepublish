@@ -1,5 +1,5 @@
 import {Context} from '../../context'
-import {AllPermissions, CanGetPermissions} from '@wepublish/permissions/api'
+import {AllPermissions, CanGetPermissions} from '@wepublish/permissions'
 import {authorise} from '../permissions'
 
 export const getPermissions = (authenticate: Context['authenticate']) => {

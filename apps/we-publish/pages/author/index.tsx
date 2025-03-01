@@ -1,4 +1,14 @@
-import {ApiV1, AuthorListContainer, useWebsiteBuilder} from '@wepublish/website'
+import {AuthorListContainer} from '@wepublish/author/website'
+import {AuthorSort, SortOrder} from '@wepublish/website/api'
+import {
+  addClientCacheToV1Props,
+  AuthorListDocument,
+  getV1ApiClient,
+  NavigationListDocument,
+  PeerProfileDocument,
+  useAuthorListQuery
+} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -21,15 +31,15 @@ export default function AuthorList() {
 
   const variables = useMemo(
     () => ({
-      sort: ApiV1.AuthorSort.Name,
-      order: ApiV1.SortOrder.Ascending,
+      sort: AuthorSort.Name,
+      order: SortOrder.Ascending,
       take,
       skip: ((page ?? 1) - 1) * take
     }),
     [page]
   )
 
-  const {data} = ApiV1.useAuthorListQuery({
+  const {data} = useAuthorListQuery({
     fetchPolicy: 'cache-only',
     variables
   })
@@ -72,26 +82,26 @@ export const getStaticProps: GetStaticProps = async () => {
     return {props: {}, revalidate: 1}
   }
 
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
   await Promise.all([
     client.query({
-      query: ApiV1.AuthorListDocument,
+      query: AuthorListDocument,
       variables: {
         take,
         skip: 0,
-        sort: ApiV1.AuthorSort.Name,
-        order: ApiV1.SortOrder.Ascending
+        sort: AuthorSort.Name,
+        order: SortOrder.Ascending
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,

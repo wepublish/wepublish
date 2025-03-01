@@ -37,7 +37,7 @@ exports[`should setup the feed 1`] = `
                     </news:publication>
 
                     <news:publication_date>2023-01-01T00:00:00.000Z</news:publication_date>
-                    <news:title>socialMediaTitle &amp; socialMediaTitle2</news:title>
+                    <news:title>This is an article social media title</news:title>
                 </news:news>
             </url>
         
@@ -52,7 +52,7 @@ exports[`should setup the feed 1`] = `
                     </news:publication>
 
                     <news:publication_date>2023-01-01T00:00:00.000Z</news:publication_date>
-                    <news:title>socialMediaTitle &amp; socialMediaTitle2</news:title>
+                    <news:title>This is an article social media title</news:title>
                 </news:news>
             </url>
         

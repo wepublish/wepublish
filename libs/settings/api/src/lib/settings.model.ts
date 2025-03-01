@@ -1,7 +1,6 @@
 import {
   Field,
   ObjectType,
-  ID,
   Int,
   registerEnumType,
   InputType,
@@ -71,7 +70,7 @@ export class SettingRestriction {
 
 @ObjectType()
 export class Setting {
-  @Field(type => ID)
+  @Field(type => String)
   id!: string
 
   @Field(type => SettingName)

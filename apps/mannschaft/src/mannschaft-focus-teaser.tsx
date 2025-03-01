@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {FocusedTeaserContent, FocusTeaser} from '@wepublish/website'
+import {FocusedTeaserContent, FocusTeaser} from '@wepublish/block-content/website'
 
 export const MannschaftFocusTeaser = styled(FocusTeaser)`
   ${FocusedTeaserContent} {

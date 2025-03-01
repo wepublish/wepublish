@@ -1,4 +1,3 @@
-import {EventRefFragment} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
@@ -8,6 +7,7 @@ import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {SelectEventPanel} from '../panel/selectEventsPanel'
 import {EventBlockValue} from './types'
+import {FullEventFragment} from '@wepublish/editor/api-v2'
 
 export function EventStartsAtView({startsAt}: {startsAt: string}) {
   const startsAtDate = new Date(startsAt)
@@ -26,7 +26,7 @@ export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
   return <>{t('event.list.endsAtNone')}</>
 }
 
-const EventPreview = ({event}: {event: EventRefFragment}) => (
+const EventPreview = ({event}: {event: FullEventFragment}) => (
   <Panel
     key={event.id}
     bordered

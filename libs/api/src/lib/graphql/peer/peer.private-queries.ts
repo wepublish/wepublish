@@ -1,6 +1,6 @@
 import {Context} from '../../context'
 import {authorise} from '../permissions'
-import {CanGetPeer, CanGetPeers} from '@wepublish/permissions/api'
+import {CanGetPeer, CanGetPeers} from '@wepublish/permissions'
 import {PrismaClient} from '@prisma/client'
 import {DisabledPeerError} from '../../error'
 

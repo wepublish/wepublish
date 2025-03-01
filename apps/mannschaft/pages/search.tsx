@@ -1,10 +1,9 @@
 import {Box, css, Skeleton, styled} from '@mui/material'
-import {
-  alignmentForTeaserBlock,
-  ApiV1,
-  articleToTeaser,
-  useWebsiteBuilder
-} from '@wepublish/website'
+import {articleToTeaser} from '@wepublish/article/website'
+import {alignmentForTeaserBlock} from '@wepublish/block-content/website'
+import {Article} from '@wepublish/website/api'
+import {Teaser, usePhraseLazyQuery} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {useRouter} from 'next/router'
 import {FormEvent, useEffect, useMemo, useRef, useState} from 'react'
 
@@ -45,7 +44,7 @@ export default function Search() {
     elements: {Button, TextField, Pagination}
   } = useWebsiteBuilder()
 
-  const [searchRequest, {error, data, loading}] = ApiV1.usePhraseLazyQuery()
+  const [searchRequest, {error, data, loading}] = usePhraseLazyQuery()
 
   function search(e: FormEvent) {
     e?.preventDefault()
@@ -87,8 +86,8 @@ export default function Search() {
   }, [searchQuery, page])
 
   const teasers = useMemo(() => {
-    const articles = data?.phrase?.articles?.nodes || ([] as ApiV1.Article[])
-    return articles.map(article => articleToTeaser(article as ApiV1.Article))
+    const articles = data?.phrase?.articles?.nodes || ([] as Article[])
+    return articles.map(article => articleToTeaser(article as Article))
   }, [data])
 
   const count = useMemo(
@@ -146,7 +145,7 @@ export default function Search() {
         {teasers.map((teaser, teaserIndex) => (
           <div key={teaserIndex}>
             <MannschaftBaseTeaser
-              teaser={teaser as ApiV1.Teaser}
+              teaser={teaser as Teaser}
               blockStyle=""
               alignment={alignmentForTeaserBlock(teaserIndex, 1)}
             />

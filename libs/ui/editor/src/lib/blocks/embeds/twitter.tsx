@@ -38,8 +38,8 @@ export function TwitterProvider({children}: TwitterProviderProps) {
 }
 
 export interface TwitterTweetEmbedProps {
-  userID: string
-  tweetID: string
+  userID: string | null | undefined
+  tweetID: string | null | undefined
 }
 
 export function TwitterTweetEmbed({userID, tweetID}: TwitterTweetEmbedProps) {
@@ -64,13 +64,15 @@ export function TwitterTweetEmbed({userID, tweetID}: TwitterTweetEmbedProps) {
 
   return (
     <TwitterEmbed ref={wrapperRef}>
-      <blockquote className="twitter-tweet">
-        <a
-          href={`https://twitter.com/${encodeURIComponent(userID)}/status/${encodeURIComponent(
-            tweetID
-          )}`}
-        />
-      </blockquote>
+      {userID && tweetID && (
+        <blockquote className="twitter-tweet">
+          <a
+            href={`https://twitter.com/${encodeURIComponent(userID)}/status/${encodeURIComponent(
+              tweetID
+            )}`}
+          />
+        </blockquote>
+      )}
     </TwitterEmbed>
   )
 }

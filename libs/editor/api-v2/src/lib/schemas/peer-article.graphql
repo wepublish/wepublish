@@ -1,0 +1,59 @@
+fragment SlimPeerArticleRevision on PeerArticleRevision {
+  id
+  preTitle
+  title
+  lead
+
+  image {
+    id
+    url
+    license
+    source
+  }
+}
+
+fragment SlimPeerArticle on PeerArticle {
+  id
+  createdAt
+  modifiedAt
+  publishedAt
+  slug
+  url
+
+  latest {
+    ...SlimPeerArticleRevision
+  }
+
+  peer {
+    ...FullPeer
+  }
+}
+
+query PeerArticleList(
+  $filter: PeerArticleFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  peerArticles(filter: $filter, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...SlimPeerArticle
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+mutation ImportPeerArticle($peerId: String!, $articleId: String!, $options: ImportArticleOptions) {
+  importPeerArticle(peerId: $peerId, articleId: $articleId, options: $options) {
+    id
+  }
+}

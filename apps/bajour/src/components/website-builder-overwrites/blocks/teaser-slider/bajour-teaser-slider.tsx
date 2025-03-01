@@ -1,12 +1,11 @@
 import {styled} from '@mui/material'
 import {
-  BuilderBlockStyleProps,
   SliderBall,
   SliderInnerContainer,
   SliderTitle,
-  TeaserSlider,
-  WebsiteBuilderProvider
-} from '@wepublish/website'
+  TeaserSlider
+} from '@wepublish/block-content/website'
+import {BuilderBlockStyleProps, WebsiteBuilderProvider} from '@wepublish/website/builder'
 
 import {TeaserSlide} from './teaser-slide'
 

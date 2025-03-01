@@ -1,5 +1,6 @@
 import {Meta} from '@storybook/react'
 import {InstagramPostBlock} from './instagram-post-block'
+import {mockInstagramPostBlock} from '@wepublish/storybook/mocks'
 
 export default {
   component: InstagramPostBlock,
@@ -7,14 +8,5 @@ export default {
 } as Meta
 
 export const Default = {
-  args: {
-    postID: 'CvACOxxIqT2'
-  }
-}
-
-export const WithClassName = {
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
+  args: mockInstagramPostBlock()
 }

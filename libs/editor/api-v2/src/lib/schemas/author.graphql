@@ -1,0 +1,26 @@
+fragment FullAuthor on Author {
+  id
+  name
+  jobTitle
+  slug
+  bio
+  url
+  createdAt
+  modifiedAt
+
+  links {
+    title
+    url
+  }
+
+  tags {
+    ...FullTag
+  }
+
+  image {
+    ...FullImage
+  }
+  hideOnArticle
+  hideOnTeaser
+  hideOnTeam
+}

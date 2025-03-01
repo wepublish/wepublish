@@ -1,5 +1,6 @@
 import {Meta} from '@storybook/react'
 import {BildwurfAdBlock} from './bildwurf-ad-block'
+import {mockBildwurfBlock} from '@wepublish/storybook/mocks'
 
 export default {
   component: BildwurfAdBlock,
@@ -7,14 +8,5 @@ export default {
 } as Meta
 
 export const Default = {
-  args: {
-    zoneID: '77348'
-  }
-}
-
-export const WithClassName = {
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
+  args: mockBildwurfBlock()
 }

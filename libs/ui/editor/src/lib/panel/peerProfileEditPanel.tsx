@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {
-  ImageRefFragment,
+  FullImageFragment,
   Maybe,
   PeerProfileDocument,
   PeerProfileQuery,
@@ -60,7 +60,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     createDefaultValue()
   )
   const [callToActionTextURL, setCallToActionTextURL] = useState('')
-  const [callToActionImage, setCallToActionImage] = useState<Maybe<ImageRefFragment>>()
+  const [callToActionImage, setCallToActionImage] = useState<Maybe<FullImageFragment>>()
   const [callToActionImageURL, setCallToActionImageURL] = useState('')
   const [isLogoChange, setIsLogoChange] = useState(false)
 

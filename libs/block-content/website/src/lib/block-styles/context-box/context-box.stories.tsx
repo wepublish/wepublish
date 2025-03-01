@@ -1,5 +1,4 @@
 import {Meta} from '@storybook/react'
-import {css} from '@emotion/react'
 import {LinkPageBreakBlock} from '@wepublish/website/api'
 import {ContextBox} from './context-box'
 
@@ -78,23 +77,5 @@ const breakBlock = {
 export const Default = {
   args: {
     ...breakBlock
-  }
-}
-
-export const WithEmotion = {
-  ...Default,
-  args: {
-    ...Default.args,
-    css: css`
-      background-color: #eee;
-    `
-  }
-}
-
-export const WithClassName = {
-  ...Default,
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
   }
 }

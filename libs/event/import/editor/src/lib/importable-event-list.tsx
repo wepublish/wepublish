@@ -1,16 +1,16 @@
 import {ApolloError} from '@apollo/client'
-import {Event} from '@wepublish/editor/api'
 import {
   ImportedEventFilter,
+  createWithV2ApiClient,
   useImportEventMutation,
   useImportedEventListQuery,
   useImportedEventsIdsQuery
 } from '@wepublish/editor/api-v2'
-import {useMemo, useState} from 'react'
+import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-import {getApiClientV2} from '@wepublish/editor/api-v2'
+import {Event} from '@wepublish/editor/api-v2'
 
 import styled from '@emotion/styled'
 import {
@@ -69,9 +69,8 @@ const onErrorToast = (error: ApolloError) => {
   }
 }
 
-function ImportableEventListView() {
+export default function ImportableEventListView() {
   const [filter, setFilter] = useState({} as ImportedEventFilter)
-  const client = useMemo(() => getApiClientV2(), [])
   const navigate = useNavigate()
   const {t} = useTranslation()
   const [page, setPage] = useState<number>(1)
@@ -89,14 +88,12 @@ function ImportableEventListView() {
   }
 
   const {data, loading: queryLoading} = useImportedEventListQuery({
-    client,
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     variables: importedEventListVariables,
     onError: onErrorToast
   })
 
   const [createEvent, {loading: mutationLoading}] = useImportEventMutation({
-    client,
     onCompleted: data => {
       toaster.push(
         <Message type="success" showIcon closable duration={3000}>
@@ -109,7 +106,7 @@ function ImportableEventListView() {
   })
 
   const {data: ids} = useImportedEventsIdsQuery({
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'cache-and-network'
   })
   const alreadyImported = ids?.importedEventsIds
 
@@ -204,11 +201,13 @@ function ImportableEventListView() {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_EVENT',
-  'CAN_CREATE_EVENT',
-  'CAN_UPDATE_EVENT',
-  'CAN_DELETE_EVENT'
-])(ImportableEventListView)
+const CheckedPermissionComponent = createWithV2ApiClient(
+  createCheckedPermissionComponent([
+    'CAN_GET_EVENT',
+    'CAN_CREATE_EVENT',
+    'CAN_UPDATE_EVENT',
+    'CAN_DELETE_EVENT'
+  ])(ImportableEventListView)
+)
 
 export {CheckedPermissionComponent as ImportableEventListView}

@@ -1,4 +1,4 @@
-fragment FullProperty on PublicProperties {
+fragment FullProperty on Property {
   key
   value
 }

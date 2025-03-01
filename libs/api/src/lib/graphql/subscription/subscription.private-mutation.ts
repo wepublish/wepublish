@@ -4,7 +4,7 @@ import {
   CanCancelSubscription,
   CanCreateSubscription,
   CanDeleteSubscription
-} from '@wepublish/permissions/api'
+} from '@wepublish/permissions'
 import {
   MetadataProperty,
   Prisma,
@@ -12,7 +12,7 @@ import {
   Subscription,
   SubscriptionDeactivationReason
 } from '@prisma/client'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {AlreadyUnpaidInvoices, NotFound, UserSubscriptionAlreadyDeactivated} from '../../error'
 import {MemberContext} from '../../memberContext'
 import {PaymentProvider} from '@wepublish/payment/api'

@@ -1,11 +1,9 @@
-import {css} from '@emotion/react'
 import {StoryObj} from '@storybook/react'
 import {
   Challenge,
   ChallengeDocument,
   Currency,
   Exact,
-  FullImageFragment,
   FullInvoiceFragment,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
@@ -21,7 +19,7 @@ import * as registrationFormStories from './subscribe.stories'
 import {ApolloError} from '@apollo/client'
 import {waitFor, within} from '@storybook/testing-library'
 import {useUser} from '@wepublish/authentication/website'
-import {Node} from 'slate'
+import {mockImage, mockRichText} from '@wepublish/storybook/mocks'
 import {WithUserDecorator} from '@wepublish/storybook'
 
 export default {
@@ -29,57 +27,9 @@ export default {
   component: SubscribeContainer
 }
 
-const image = {
-  __typename: 'Image',
-  id: 'ljh9FHAvHAs0AxC',
-  mimeType: 'image/jpg',
-  format: 'jpg',
-  createdAt: '2023-04-18T12:38:56.369Z',
-  modifiedAt: '2023-04-18T12:38:56.371Z',
-  filename: 'DSC07717',
-  extension: '.JPG',
-  width: 4000,
-  height: 6000,
-  fileSize: 8667448,
-  description: null,
-  tags: [],
-  source: null,
-  link: null,
-  license: null,
-  focalPoint: {
-    x: 0.5,
-    y: 0.5
-  },
-  title: null,
-  url: 'https://unsplash.it/500/281',
-  xl: 'https://unsplash.it/1200/400',
-  l: 'https://unsplash.it/1000/400',
-  m: 'https://unsplash.it/800/400',
-  s: 'https://unsplash.it/500/300',
-  xs: 'https://unsplash.it/300/200',
-  xxs: 'https://unsplash.it/200/100',
-  xlSquare: 'https://unsplash.it/1200/1200',
-  lSquare: 'https://unsplash.it/1000/1000',
-  mSquare: 'https://unsplash.it/800/800',
-  sSquare: 'https://unsplash.it/500/500',
-  xsSquare: 'https://unsplash.it/300/300',
-  xxsSquare: 'https://unsplash.it/200/200'
-} as Exact<FullImageFragment>
-
-const text = [
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      }
-    ]
-  }
-] as Node[]
-
 const memberPlan = {
   __typename: 'MemberPlan',
-  image,
+  image: mockImage(),
   name: 'Foobar Memberplan',
   amountPerMonthMin: 500,
   availablePaymentMethods: [
@@ -141,7 +91,7 @@ const memberPlan = {
   ],
   id: '123',
   slug: '',
-  description: text,
+  description: mockRichText(),
   tags: [],
   extendable: true,
   currency: Currency.Chf
@@ -174,7 +124,7 @@ const challenge = {
 } as Challenge
 
 const subscription = {
-  __typename: 'Subscription',
+  __typename: 'PublicSubscription',
   id: '1234',
   autoRenew: false,
   memberPlan,
@@ -384,23 +334,5 @@ export const WithChallengeError: StoryObj<typeof SubscribeContainer> = {
         }
       ]
     }
-  }
-}
-
-export const WithClassName: StoryObj<typeof SubscribeContainer> = {
-  ...Default,
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
-}
-
-export const WithEmotion = {
-  ...Default,
-  args: {
-    ...Default.args,
-    css: css`
-      background-color: #eee;
-    `
   }
 }

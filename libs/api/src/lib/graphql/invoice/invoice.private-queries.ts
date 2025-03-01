@@ -1,6 +1,6 @@
 import {Context} from '../../context'
 import {authorise} from '../permissions'
-import {CanGetInvoice, CanGetInvoices} from '@wepublish/permissions/api'
+import {CanGetInvoice, CanGetInvoices} from '@wepublish/permissions'
 import {InvoiceFilter, InvoiceSort} from '../../db/invoice'
 import {PrismaClient} from '@prisma/client'
 import {getInvoices} from './invoice.queries'

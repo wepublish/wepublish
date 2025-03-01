@@ -28,32 +28,3 @@ exports[`Bildwurf Ad Block should render Default 1`] = `
   </div>
 </DocumentFragment>
 `;
-
-exports[`Bildwurf Ad Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <script
-    data-testid="fake-script"
-    src="https://media.online.bildwurf.ch/js/code.min.js"
-  />
-  <div
-    class="extra-classname emotion-0 emotion-1"
-  >
-    
-            
-    <div
-      id="bildwurf-injection-wrapper"
-    >
-      
-              
-      <ins
-        classname="aso-zone"
-        data-zone="77348"
-      />
-      
-            
-    </div>
-    
-          
-  </div>
-</DocumentFragment>
-`;

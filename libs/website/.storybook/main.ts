@@ -55,7 +55,15 @@ export default {
         // which requires a node package called `stream`, while the package is never
         // used in the browser due to tree shaking, it is included in the storybook dev server.
         // This means we have to mock it.
-        stream: require.resolve('stream-browserify')
+        stream: require.resolve('stream-browserify'),
+        // Nestjs requires these
+        os: false,
+        crypto: false,
+        zlib: false,
+        querystring: false,
+        http: false,
+        https: false,
+        net: false
       }
     }
 

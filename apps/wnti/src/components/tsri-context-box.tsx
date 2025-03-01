@@ -5,7 +5,7 @@ import {
   ContextBoxIcon,
   ContextBoxLine,
   ContextBoxTitle
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
 
 export const TsriContextBox = styled(ContextBox)`
   ${ContextBoxIcon} {

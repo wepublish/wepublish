@@ -49,7 +49,7 @@ export function UserConsentList(props: UserConsentListProps) {
 
   const {loading, data, refetch} = useUserConsentsQuery({
     client,
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     onError: onErrorToast
   })
 

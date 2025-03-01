@@ -14,7 +14,8 @@ To replace the `CommentList` component that is being rendered by a custom compon
 
 <CodeOrSourceMdx>
 ```typescript
-import {WebsiteBuilderProvider, BuilderCommentListProps, CommentListContainer} from '@wepublish/website'
+import {WebsiteBuilderProvider, BuilderCommentListProps} from '@wepublish/website/builder'
+import {CommentListContainer} from '@wepublish/comments/website'
 
 const MyCommentList = (props: BuilderCommentListProps) => <div>My Comment List</div>
 
@@ -34,7 +35,9 @@ To replace the `CommentListItem` component that is being rendered by a custom co
 
 <CodeOrSourceMdx>
 ```typescript
-import {WebsiteBuilderProvider, BuilderCommentListItemProps, CommentListContainer} from '@wepublish/website'
+import {WebsiteBuilderProvider, BuilderCommentListItemProps} from '@wepublish/website/builder'
+import {CommentListContainer} from '@wepublish/comments/website'
+
 
 const MyCommentListItem = (props: BuilderCommentListItemProps) => <div>My Comment List Item</div>
 

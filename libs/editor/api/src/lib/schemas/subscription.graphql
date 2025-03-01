@@ -34,7 +34,7 @@ fragment Deactivation on SubscriptionDeactivation {
 
 query SubscriptionList(
   $filter: SubscriptionFilter
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -63,7 +63,7 @@ query SubscriptionList(
   }
 }
 
-query Subscription($id: ID!) {
+query Subscription($id: String!) {
   subscription(id: $id) {
     ...FullSubscription
   }
@@ -79,33 +79,36 @@ mutation CreateSubscription($input: SubscriptionInput!) {
   }
 }
 
-mutation UpdateSubscription($id: ID!, $input: SubscriptionInput!) {
+mutation UpdateSubscription($id: String!, $input: SubscriptionInput!) {
   updateSubscription(id: $id, input: $input) {
     ...FullSubscription
   }
 }
 
-mutation CancelSubscription($cancelSubscriptionId: ID!, $reason: SubscriptionDeactivationReason!) {
+mutation CancelSubscription(
+  $cancelSubscriptionId: String!
+  $reason: SubscriptionDeactivationReason!
+) {
   cancelSubscription(id: $cancelSubscriptionId, reason: $reason) {
     ...FullSubscription
   }
 }
 
-mutation DeleteSubscription($id: ID!) {
+mutation DeleteSubscription($id: String!) {
   deleteSubscription(id: $id) {
     ...FullSubscription
   }
 }
 
-mutation RenewSubscription($id: ID!) {
+mutation RenewSubscription($id: String!) {
   renewSubscription(id: $id) {
     ...Invoice
   }
 }
 
 query NewSubscribersPerMonth($months: Int!) {
-    newSubscribersPerMonth(monthsBack: $months) {
-        month
-        subscriberCount
-    }
+  newSubscribersPerMonth(monthsBack: $months) {
+    month
+    subscriberCount
+  }
 }

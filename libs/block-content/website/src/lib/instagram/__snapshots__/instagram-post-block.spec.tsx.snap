@@ -19,23 +19,3 @@ exports[`Instagram Post Block should render Default 1`] = `
   </div>
 </DocumentFragment>
 `;
-
-exports[`Instagram Post Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <div
-    class="extra-classname emotion-0 emotion-1"
-  >
-    <blockquote
-      class="instagram-media"
-      data-instgrm-captioned="true"
-      data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
-      data-instgrm-version="14"
-    />
-    <script
-      async=""
-      data-testid="fake-script"
-      src="https://www.instagram.com/embed.js"
-    />
-  </div>
-</DocumentFragment>
-`;

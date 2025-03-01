@@ -44,7 +44,7 @@ export function ConsentList(props: ConsentListProps) {
 
   const {loading, data, refetch} = useConsentsQuery({
     client,
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     onError: onErrorToast
   })
 

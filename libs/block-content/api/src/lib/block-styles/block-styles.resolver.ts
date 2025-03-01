@@ -2,10 +2,10 @@ import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {
   CanCreateBlockStyle,
   CanDeleteBlockStyle,
-  CanUpdateBlockStyle,
-  Permissions,
-  Public
-} from '@wepublish/permissions/api'
+  CanUpdateBlockStyle
+} from '../../../../../permissions/src/lib/permissions'
+import {Permissions} from '@wepublish/permissions/api'
+import {Public} from '@wepublish/authentication/api'
 import {BlockStyle, CreateBlockStyleInput, UpdateBlockStyleInput} from './block-styles.model'
 import {BlockStylesService} from './block-styles.service'
 

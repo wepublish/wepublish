@@ -81,7 +81,7 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
           <TypographicTextArea
             variant="h1"
             placeholder={t('blocks.listicle.title')}
-            value={title}
+            value={title ?? ''}
             onChange={e => {
               const title = e.target.value
               onChange(value => ({...value, title}))

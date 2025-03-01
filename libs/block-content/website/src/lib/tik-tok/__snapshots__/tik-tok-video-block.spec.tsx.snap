@@ -15,19 +15,3 @@ exports[`TikTok Video Block should render Default 1`] = `
   </div>
 </DocumentFragment>
 `;
-
-exports[`TikTok Video Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <div
-    class="extra-classname emotion-0 emotion-1"
-  >
-    <iframe
-      allow="encrypted-media;"
-      allowfullscreen=""
-      class="emotion-2 emotion-3"
-      src="https://www.tiktok.com/embed/v2/6718335390845095173"
-      title="Embedded TikTok Video"
-    />
-  </div>
-</DocumentFragment>
-`;

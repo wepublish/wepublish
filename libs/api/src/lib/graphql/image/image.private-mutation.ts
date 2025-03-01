@@ -2,7 +2,7 @@ import {Prisma, PrismaClient} from '@prisma/client'
 import type {FileUpload} from 'graphql-upload'
 import {Context} from '../../context'
 import {authorise} from '../permissions'
-import {CanCreateImage, CanDeleteImage} from '@wepublish/permissions/api'
+import {CanCreateImage, CanDeleteImage} from '@wepublish/permissions'
 
 export const deleteImageById = async (
   id: string,

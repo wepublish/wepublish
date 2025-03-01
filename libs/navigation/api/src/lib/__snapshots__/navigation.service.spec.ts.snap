@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NavigationService should create a navigation 1`] = `
+[
+  {
+    "data": {
+      "key": "testKey",
+      "links": {
+        "createMany": {
+          "data": [],
+        },
+      },
+      "name": "testName",
+    },
+  },
+]
+`;
+
+exports[`NavigationService should delete a navigation by id 1`] = `
+[
+  {
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
+
+exports[`NavigationService should get all navigations 1`] = `
+[
+  {
+    "orderBy": {
+      "createdAt": "desc",
+    },
+  },
+]
+`;
+
+exports[`NavigationService should update a navigation 1`] = `
+[
+  {
+    "data": {
+      "key": "testKey",
+      "links": {
+        "createMany": {
+          "data": [],
+        },
+      },
+      "name": "testName",
+    },
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;

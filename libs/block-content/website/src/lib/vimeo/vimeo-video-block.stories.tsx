@@ -1,5 +1,6 @@
 import {Meta} from '@storybook/react'
 import {VimeoVideoBlock} from './vimeo-video-block'
+import {mockVimeoVideoBlock} from '@wepublish/storybook/mocks'
 
 export default {
   component: VimeoVideoBlock,
@@ -7,14 +8,5 @@ export default {
 } as Meta
 
 export const Default = {
-  args: {
-    videoID: '104626862'
-  }
-}
-
-export const WithClassName = {
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
+  args: mockVimeoVideoBlock()
 }

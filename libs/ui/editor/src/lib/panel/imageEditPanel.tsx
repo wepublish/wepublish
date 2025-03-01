@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {
   ImageListDocument,
-  ImageRefFragment,
+  FullImageFragment,
   useImageQuery,
   useUpdateImageMutation,
   useUploadImageMutation
@@ -50,7 +50,7 @@ export interface ImageEditPanelProps {
   readonly imageMetaData?: ImageMetaData
 
   onClose?(): void
-  onSave?(image: ImageRefFragment, block: ImageBlockValue | undefined): void
+  onSave?(image: FullImageFragment, block: ImageBlockValue | undefined): void
 }
 
 function ImageEditPanel({id, file, block, onClose, onSave, imageMetaData}: ImageEditPanelProps) {

@@ -1,5 +1,6 @@
 import {Meta} from '@storybook/react'
 import {SoundCloudTrackBlock} from './sound-cloud-block'
+import {mockSoundCloudTrackBlock} from '@wepublish/storybook/mocks'
 
 export default {
   component: SoundCloudTrackBlock,
@@ -7,14 +8,5 @@ export default {
 } as Meta
 
 export const Default = {
-  args: {
-    trackID: '744469711'
-  }
-}
-
-export const WithClassName = {
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
+  args: mockSoundCloudTrackBlock()
 }

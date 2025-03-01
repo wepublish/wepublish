@@ -13,7 +13,7 @@ import {
   User
 } from '@prisma/client'
 import {MailContext, mailLogType} from '@wepublish/mail/api'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {DataLoaderContext} from './context'
 import {InvoiceWithItems, PaymentProvider} from '@wepublish/payment/api'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'

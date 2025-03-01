@@ -1,13 +1,13 @@
 import styled from '@emotion/styled'
 import {Typography} from '@mui/material'
-import {IntendedRouteStorageKey} from '@wepublish/website'
 import {
-  ApiV1,
   AuthTokenStorageKey,
+  IntendedRouteStorageKey,
   LoginFormContainer,
-  useUser,
-  useWebsiteBuilder
-} from '@wepublish/website'
+  useUser
+} from '@wepublish/authentication/website'
+import {getV1ApiClient, LoginWithJwtDocument, UserSession} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
@@ -19,7 +19,7 @@ const LoginWrapper = styled('div')`
   justify-content: center;
 `
 
-type LoginProps = {sessionToken?: ApiV1.UserSession}
+type LoginProps = {sessionToken?: UserSession}
 
 export default function Login({sessionToken}: LoginProps) {
   const {hasUser, setToken} = useUser()
@@ -66,26 +66,22 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
   if (ctx.query.jwt) {
     const data = await client.mutate({
-      mutation: ApiV1.LoginWithJwtDocument,
+      mutation: LoginWithJwtDocument,
       variables: {
         jwt: ctx.query.jwt
       }
     })
 
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(data.data.createSessionWithJWT as ApiV1.UserSession),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict'
-      }
-    )
+    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
+      req: ctx.req,
+      res: ctx.res,
+      expires: new Date(data.data.createSessionWithJWT.expiresAt),
+      sameSite: 'strict'
+    })
 
     return {
       props: {

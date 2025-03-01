@@ -2,7 +2,7 @@ import {
   AuthorLink,
   AuthorListDocument,
   FullAuthorFragment,
-  ImageRefFragment,
+  FullImageFragment,
   Maybe,
   TagType,
   useAuthorQuery,
@@ -75,7 +75,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [tagIds, setTagIds] = useState<string[]>([])
   const [slug, setSlug] = useState('')
   const [jobTitle, setJobTitle] = useState('')
-  const [image, setImage] = useState<Maybe<ImageRefFragment>>()
+  const [image, setImage] = useState<Maybe<FullImageFragment>>()
   const [bio, setBio] = useState<RichTextBlockValue['richText']>(createDefaultValue())
   const [hideOnArticle, setHideOnArticle] = useState<boolean | undefined | null>(undefined)
   const [hideOnTeaser, setHideOnTeaser] = useState<boolean | undefined | null>(undefined)
@@ -145,7 +145,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       )
   }, [loadError, createError, updateError])
 
-  function handleImageChange(image: ImageRefFragment) {
+  function handleImageChange(image: FullImageFragment) {
     setImage(image)
   }
 
@@ -345,7 +345,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={(value: ImageRefFragment) => {
+          onSelect={(value: FullImageFragment) => {
             setChooseModalOpen(false)
             handleImageChange(value)
           }}

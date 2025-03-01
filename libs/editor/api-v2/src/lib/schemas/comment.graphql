@@ -1,0 +1,27 @@
+fragment CommentBlockComment on Comment {
+  id
+  state
+  guestUsername
+  guestUserImage {
+    ...FullImage
+  }
+  user {
+    ...CommentUser
+  }
+  text
+  source
+  itemID
+  itemType
+
+  tags {
+    id
+    tag
+  }
+
+  overriddenRatings {
+    answerId
+    value
+  }
+
+  featured
+}

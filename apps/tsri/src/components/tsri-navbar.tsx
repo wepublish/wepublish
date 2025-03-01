@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {Navbar, NavbarInnerWrapper} from '@wepublish/website'
+import {Navbar, NavbarInnerWrapper} from '@wepublish/navigation/website'
 
 export const TsriNavbar = styled(Navbar)`
   ${NavbarInnerWrapper} {

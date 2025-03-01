@@ -1,15 +1,14 @@
 import {ApolloError} from '@apollo/client'
-import {css} from '@emotion/react'
 import {action} from '@storybook/addon-actions'
 import {Meta, StoryObj} from '@storybook/react'
 import {userEvent, within} from '@storybook/testing-library'
+import {mockImage, mockRichText} from '@wepublish/storybook/mocks'
 import {WithUserDecorator} from '@wepublish/storybook'
 import {wait} from '@wepublish/testing'
 import {
   Challenge,
   Currency,
   Exact,
-  FullImageFragment,
   FullInvoiceFragment,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
@@ -17,7 +16,6 @@ import {
   PaymentPeriodicity,
   SubscriptionDeactivationReason
 } from '@wepublish/website/api'
-import {Node} from 'slate'
 import {z} from 'zod'
 import {Subscribe} from './subscribe'
 
@@ -26,57 +24,9 @@ export default {
   title: 'Components/Subscribe'
 } as Meta<typeof Subscribe>
 
-const image = {
-  __typename: 'Image',
-  id: 'ljh9FHAvHAs0AxC',
-  mimeType: 'image/jpg',
-  format: 'jpg',
-  createdAt: '2023-04-18T12:38:56.369Z',
-  modifiedAt: '2023-04-18T12:38:56.371Z',
-  filename: 'DSC07717',
-  extension: '.JPG',
-  width: 4000,
-  height: 6000,
-  fileSize: 8667448,
-  description: null,
-  tags: [],
-  source: null,
-  link: null,
-  license: null,
-  focalPoint: {
-    x: 0.5,
-    y: 0.5
-  },
-  title: null,
-  url: 'https://unsplash.it/500/281',
-  xl: 'https://unsplash.it/1200/400',
-  l: 'https://unsplash.it/1000/400',
-  m: 'https://unsplash.it/800/400',
-  s: 'https://unsplash.it/500/300',
-  xs: 'https://unsplash.it/300/200',
-  xxs: 'https://unsplash.it/200/100',
-  xlSquare: 'https://unsplash.it/1200/1200',
-  lSquare: 'https://unsplash.it/1000/1000',
-  mSquare: 'https://unsplash.it/800/800',
-  sSquare: 'https://unsplash.it/500/500',
-  xsSquare: 'https://unsplash.it/300/300',
-  xxsSquare: 'https://unsplash.it/200/200'
-} as FullImageFragment
-
-const text = [
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      }
-    ]
-  }
-] as Node[]
-
 const memberPlan = {
   __typename: 'MemberPlan',
-  image,
+  image: mockImage(),
   name: 'Foobar Memberplan',
   amountPerMonthMin: 1200,
   availablePaymentMethods: [
@@ -95,7 +45,7 @@ const memberPlan = {
           name: 'Payrexx',
           slug: 'payrexx',
           paymentProviderID: '1',
-          image,
+          image: mockImage(),
           __typename: 'PaymentMethod'
         },
         {
@@ -104,7 +54,7 @@ const memberPlan = {
           name: 'Payrexx',
           slug: 'payrexx',
           paymentProviderID: '1',
-          image,
+          image: mockImage(),
           __typename: 'PaymentMethod'
         }
       ]
@@ -119,7 +69,7 @@ const memberPlan = {
           name: 'Stripe',
           slug: 'stripe',
           paymentProviderID: '2',
-          image,
+          image: mockImage(),
           __typename: 'PaymentMethod'
         }
       ]
@@ -134,7 +84,7 @@ const memberPlan = {
           name: 'Stripe',
           slug: 'stripe',
           paymentProviderID: '2',
-          image,
+          image: mockImage(),
           __typename: 'PaymentMethod'
         }
       ]
@@ -142,7 +92,7 @@ const memberPlan = {
   ],
   id: '123',
   slug: '',
-  description: text,
+  description: mockRichText(),
   tags: [],
   extendable: true,
   currency: Currency.Chf
@@ -183,7 +133,7 @@ const challenge = {
 } as Exact<Challenge>
 
 const subscription = {
-  __typename: 'Subscription',
+  __typename: 'PublicSubscription',
   id: '1234',
   autoRenew: false,
   memberPlan,
@@ -193,7 +143,8 @@ const subscription = {
   properties: [],
   startsAt: new Date('2024-01-01').toISOString(),
   url: 'https://example.com',
-  extendable: true
+  extendable: true,
+  canExtend: true
 } as Exact<FullSubscriptionFragment>
 
 const invoice = {
@@ -776,23 +727,5 @@ export const WithDonate: StoryObj<typeof Subscribe> = {
   args: {
     ...LoggedIn.args,
     donate: () => true
-  }
-}
-
-export const WithClassName: StoryObj<typeof Subscribe> = {
-  ...LoggedOut,
-  args: {
-    ...LoggedOut.args,
-    className: 'extra-classname'
-  }
-}
-
-export const WithEmotion = {
-  ...LoggedOut,
-  args: {
-    ...LoggedOut.args,
-    css: css`
-      background-color: #eee;
-    `
   }
 }

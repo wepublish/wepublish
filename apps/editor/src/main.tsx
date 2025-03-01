@@ -2,13 +2,12 @@ import {ApolloClient, ApolloLink, ApolloProvider, InMemoryCache} from '@apollo/c
 import {onError} from '@apollo/client/link/error'
 import {CssBaseline, ThemeProvider} from '@mui/material'
 import * as Sentry from '@sentry/react'
+import {getSettings, LocalStorageKey} from '@wepublish/editor/api-v2'
 import {theme} from '@wepublish/ui'
 import {
   AuthProvider,
   FacebookProvider,
-  getSettings,
   InstagramProvider,
-  LocalStorageKey,
   TwitterProvider
 } from '@wepublish/ui/editor'
 import {createUploadLink} from 'apollo-upload-client'
@@ -75,6 +74,7 @@ const onDOMContentLoaded = async () => {
     operation.setContext({
       headers: {
         authorization: token ? `Bearer ${token}` : '',
+        preview: 'preview',
         ...context.headers
       },
       credentials: 'include',

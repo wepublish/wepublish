@@ -1,13 +1,14 @@
 import {styled} from '@mui/material'
 import {BlockFormat} from '@wepublish/richtext'
 import {BuilderRichTextBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Block, RichTextBlock as RichTextBlockType} from '@wepublish/website/api'
+import {BlockContent, RichTextBlock as RichTextBlockType} from '@wepublish/website/api'
 import {useMemo} from 'react'
 import {createEditor} from 'slate'
 import {Editable, Slate, withReact} from 'slate-react'
 
-export const isRichTextBlock = (block: Block): block is RichTextBlockType =>
-  block.__typename === 'RichTextBlock'
+export const isRichTextBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is RichTextBlockType => block.__typename === 'RichTextBlock'
 
 export const RichTextBlockWrapper = styled('div')``
 

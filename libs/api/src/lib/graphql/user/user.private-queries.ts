@@ -1,11 +1,11 @@
 import {Context} from '../../context'
 import {AuthSessionType} from '@wepublish/authentication/api'
-import {CanGetUser, CanGetUsers} from '@wepublish/permissions/api'
+import {CanGetUser, CanGetUsers} from '@wepublish/permissions'
 import {authorise} from '../permissions'
 import {UserInputError} from '../../error'
 import {PrismaClient} from '@prisma/client'
 import {UserFilter, UserSort} from '../../db/user'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {getUsers} from './user.queries'
 import {SortOrder} from '@wepublish/utils/api'
 

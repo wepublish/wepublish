@@ -4,26 +4,30 @@ import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/build
 import {BannerContainer} from '@wepublish/banner/website'
 import {PropsWithChildren} from 'react'
 
-type IdSlugOrToken =
-  | {id: string; token?: never; slug?: never}
-  | {id?: never; token?: never; slug: string}
-  | {id?: never; token: string; slug?: never}
+type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
 
-export type ArticleContainerProps = PropsWithChildren<IdSlugOrToken & BuilderContainerProps>
+export type ArticleContainerProps = PropsWithChildren<IdOrSlug & BuilderContainerProps>
 
-export function ArticleContainer({id, slug, token, className, children}: ArticleContainerProps) {
-  const {Article} = useWebsiteBuilder()
+export function ArticleContainer({id, slug, className, children}: ArticleContainerProps) {
+  const {Article, PeerInformation} = useWebsiteBuilder()
   const {data, loading, error} = useArticleQuery({
     variables: {
       id,
-      slug,
-      token
+      slug
     }
   })
 
   return (
     <PollBlockProvider>
       <BannerContainer documentId={data?.article?.id} documentType={BannerDocumentType.Article} />
+
+      {data?.article?.peer && (
+        <PeerInformation
+          {...data.article.peer}
+          originUrl={data.article.latest.canonicalUrl ?? undefined}
+        />
+      )}
+
       <Article data={data} loading={loading} error={error} className={className}>
         {children}
       </Article>

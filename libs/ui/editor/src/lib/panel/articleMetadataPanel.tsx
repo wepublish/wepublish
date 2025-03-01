@@ -2,10 +2,9 @@ import styled from '@emotion/styled'
 import {
   AuthorRefFragment,
   CommentItemType,
-  ImageRefFragment,
+  FullImageFragment,
   Tag,
-  TagType,
-  TrackingPixelFragment
+  TagType
 } from '@wepublish/editor/api'
 import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
@@ -52,6 +51,7 @@ import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageEditPanel} from './imageEditPanel'
 import TrackingPixels from '../atoms/tracking/tracking-pixels'
+import {FullTrackingPixelFragment} from '@wepublish/editor/api-v2'
 
 const {Item} = RNav
 
@@ -123,7 +123,7 @@ export interface ArticleMetadata {
   readonly url: string
   readonly properties: ArticleMetadataProperty[]
   readonly canonicalUrl: string
-  readonly image?: ImageRefFragment
+  readonly image?: FullImageFragment
   readonly shared: boolean
   readonly hidden?: boolean | null
   readonly disableComments?: boolean | null
@@ -132,9 +132,9 @@ export interface ArticleMetadata {
   readonly socialMediaTitle?: string
   readonly socialMediaDescription?: string
   readonly socialMediaAuthors: AuthorRefFragment[]
-  readonly socialMediaImage?: ImageRefFragment
+  readonly socialMediaImage?: FullImageFragment
   readonly likes: number
-  readonly trackingPixels?: (TrackingPixelFragment | null)[]
+  readonly trackingPixels?: (FullTrackingPixelFragment | null)[]
 }
 
 export interface InfoData {
@@ -142,7 +142,8 @@ export interface InfoData {
 }
 
 export interface ArticleMetadataPanelProps {
-  readonly articleID?: string
+  readonly articleID: string | null | undefined
+  readonly peerId: string | null | undefined
   readonly value: ArticleMetadata
   readonly infoData: InfoData
 
@@ -152,6 +153,7 @@ export interface ArticleMetadataPanelProps {
 
 function ArticleMetadataPanel({
   articleID,
+  peerId,
   value,
   infoData,
   onClose,
@@ -208,7 +210,7 @@ function ArticleMetadataPanel({
     }
   }, [metaDataProperties])
 
-  function handleImageChange(currentImage: ImageRefFragment) {
+  function handleImageChange(currentImage: FullImageFragment) {
     switch (activeKey) {
       case MetaDataType.General: {
         const image = currentImage
@@ -329,6 +331,7 @@ function ArticleMetadataPanel({
             <PaddingBottom>
               {t('articleEditor.panels.totalCharCount', {totalCharCount: infoData.charCount})}
             </PaddingBottom>
+
             <Group>
               <ControlLabel>{t('articleEditor.panels.likeCount')}</ControlLabel>
               <Control
@@ -522,15 +525,18 @@ function ArticleMetadataPanel({
               </HelpText>
             </Group>
 
-            <Group controlId="articlePeering">
-              <ControlLabel>{t('articleEditor.panels.peering')}</ControlLabel>
-              <Toggle
-                checked={shared}
-                disabled={!isAuthorized}
-                onChange={shared => onChange?.({...value, shared})}
-              />
-              <HelpText>{t('articleEditor.panels.allowPeerPublishing')}</HelpText>
-            </Group>
+            {!peerId && (
+              <Group controlId="articlePeering">
+                <ControlLabel>{t('articleEditor.panels.peering')}</ControlLabel>
+
+                <Toggle
+                  checked={shared}
+                  disabled={!isAuthorized}
+                  onChange={shared => onChange?.({...value, shared})}
+                />
+                <HelpText>{t('articleEditor.panels.allowPeerPublishing')}</HelpText>
+              </Group>
+            )}
 
             <Group controlId="hidden">
               <ControlLabel>{t('articleEditor.panels.hidden')}</ControlLabel>

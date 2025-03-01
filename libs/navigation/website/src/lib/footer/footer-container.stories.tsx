@@ -1,4 +1,3 @@
-import {css} from '@emotion/react'
 import {Meta} from '@storybook/react'
 import {FullNavigationFragment, Navigation, NavigationListDocument} from '@wepublish/website/api'
 import {FooterContainer} from './footer-container'
@@ -182,23 +181,5 @@ export const Default = {
         }
       ]
     }
-  }
-}
-
-export const WithClassName = {
-  ...Default,
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
-}
-
-export const WithEmotion = {
-  ...Default,
-  args: {
-    ...Default.args,
-    css: css`
-      background-color: #eee;
-    `
   }
 }

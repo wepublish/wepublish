@@ -1,16 +1,16 @@
 import {css, Theme, useTheme} from '@mui/material'
 import {
-  ApiV1,
   BlockRenderer,
   BreakBlockWrapper,
-  BuilderBlockRendererProps,
   FocusTeaserWrapper,
   isFocusTeaserBlockStyle,
   isTeaserSliderBlockStyle,
   SliderBall,
   SliderWrapper,
   TeaserTitle
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
+import {TeaserListBlock} from '@wepublish/website/api'
+import {BuilderBlockRendererProps} from '@wepublish/website/builder'
 import {anyPass, cond} from 'ramda'
 import {useMemo} from 'react'
 
@@ -56,7 +56,7 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         [isHotAndTrendingTeasers, block => <HotAndTrendingBlockStyle {...block} />],
         [
           anyPass([isFirstAdTeaser, isSecondAdTeaser, isThirdAdTeaser]),
-          (block: ApiV1.TeaserListBlock) => <AdTeaserBlockStyle {...block} />
+          (block: TeaserListBlock) => <AdTeaserBlockStyle {...block} />
         ],
         [isHighlightTeasers, block => <HighlightBlockStyle {...block} />],
         [isContentBoxBlock, block => <MannschaftContentBox {...block} />]

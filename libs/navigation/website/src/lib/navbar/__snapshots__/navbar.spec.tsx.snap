@@ -71,7 +71,7 @@ exports[`Navbar should render Default 1`] = `
             class="emotion-16 emotion-17"
           >
             <img
-              alt="banff2"
+              alt="DSC07717"
               class="emotion-18 emotion-19"
               loading="eager"
               sizes="(max-width: 400px) 200w,
@@ -181,227 +181,7 @@ exports[`Navbar should render WithChildren 1`] = `
             class="emotion-16 emotion-17"
           >
             <img
-              alt="banff2"
-              class="emotion-18 emotion-19"
-              loading="eager"
-              sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-              srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-              title=""
-            />
-          </div>
-        </a>
-        <div
-          class="emotion-20 emotion-21"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-22"
-            href="/mitmachen"
-            tabindex="0"
-          >
-            Member werden
-            <span
-              class="MuiTouchRipple-root emotion-10"
-            />
-          </a>
-        </div>
-      </div>
-    </header>
-  </nav>
-</DocumentFragment>
-`;
-
-exports[`Navbar should render WithClassName 1`] = `
-<DocumentFragment>
-  <nav
-    class="extra-classname emotion-0 emotion-1"
-  >
-    <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic emotion-2"
-    >
-      <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular emotion-3 emotion-4"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        >
-          <div
-            class="emotion-7 emotion-8"
-          >
-            <button
-              aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-10"
-              />
-            </button>
-          </div>
-          <div
-            class="emotion-11 emotion-12"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-              href="/foo/"
-            >
-              Foo
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-              href="/bar"
-            >
-              Bar
-            </a>
-          </div>
-        </div>
-        <a
-          aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-15"
-          href="/"
-        >
-          <div
-            class="emotion-16 emotion-17"
-          >
-            <img
-              alt="banff2"
-              class="emotion-18 emotion-19"
-              loading="eager"
-              sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-              srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-              title=""
-            />
-          </div>
-        </a>
-        <div
-          class="emotion-20 emotion-21"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-22"
-            href="/mitmachen"
-            tabindex="0"
-          >
-            Member werden
-            <span
-              class="MuiTouchRipple-root emotion-10"
-            />
-          </a>
-        </div>
-      </div>
-    </header>
-  </nav>
-</DocumentFragment>
-`;
-
-exports[`Navbar should render WithEmotion 1`] = `
-<DocumentFragment>
-  <nav
-    class="emotion-0 emotion-1"
-  >
-    <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic emotion-2"
-    >
-      <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular emotion-3 emotion-4"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        >
-          <div
-            class="emotion-7 emotion-8"
-          >
-            <button
-              aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeLarge emotion-9"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-10"
-              />
-            </button>
-          </div>
-          <div
-            class="emotion-11 emotion-12"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-              href="/foo/"
-            >
-              Foo
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-13"
-              href="/bar"
-            >
-              Bar
-            </a>
-          </div>
-        </div>
-        <a
-          aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-15"
-          href="/"
-        >
-          <div
-            class="emotion-16 emotion-17"
-          >
-            <img
-              alt="banff2"
+              alt="DSC07717"
               class="emotion-18 emotion-19"
               loading="eager"
               sizes="(max-width: 400px) 200w,
@@ -495,7 +275,7 @@ exports[`Navbar should render WithError 1`] = `
             class="emotion-12 emotion-13"
           >
             <img
-              alt="banff2"
+              alt="DSC07717"
               class="emotion-14 emotion-15"
               loading="eager"
               sizes="(max-width: 400px) 200w,
@@ -589,7 +369,7 @@ exports[`Navbar should render WithLoading 1`] = `
             class="emotion-12 emotion-13"
           >
             <img
-              alt="banff2"
+              alt="DSC07717"
               class="emotion-14 emotion-15"
               loading="eager"
               sizes="(max-width: 400px) 200w,
@@ -699,7 +479,7 @@ exports[`Navbar should render WithLoggedIn 1`] = `
             class="emotion-16 emotion-17"
           >
             <img
-              alt="banff2"
+              alt="DSC07717"
               class="emotion-18 emotion-19"
               loading="eager"
               sizes="(max-width: 400px) 200w,
@@ -793,7 +573,7 @@ exports[`Navbar should render WithoutItems 1`] = `
             class="emotion-12 emotion-13"
           >
             <img
-              alt="banff2"
+              alt="DSC07717"
               class="emotion-14 emotion-15"
               loading="eager"
               sizes="(max-width: 400px) 200w,

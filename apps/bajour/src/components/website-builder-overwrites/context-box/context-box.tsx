@@ -1,5 +1,10 @@
 import {styled} from '@mui/material'
-import {ContextBox, ContextBoxAllAbout, ContextBoxIcon, ContextBoxLine} from '@wepublish/website'
+import {
+  ContextBox,
+  ContextBoxAllAbout,
+  ContextBoxIcon,
+  ContextBoxLine
+} from '@wepublish/block-content/website'
 
 export const BajourContextBox = styled(ContextBox)`
   ${({theme}) => theme.breakpoints.up('sm')} {

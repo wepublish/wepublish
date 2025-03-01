@@ -1,7 +1,7 @@
 import {Context} from '../../context'
 import {ImageFilter, ImageSort} from '../../db/image'
 import {authorise} from '../permissions'
-import {CanGetImage, CanGetImages} from '@wepublish/permissions/api'
+import {CanGetImage, CanGetImages} from '@wepublish/permissions'
 import {PrismaClient} from '@prisma/client'
 import {getImages} from './image.queries'
 import {SortOrder} from '@wepublish/utils/api'

@@ -1,11 +1,4 @@
-import {
-  Comment,
-  CommentAuthorType,
-  CommentItemType,
-  CommentState,
-  Prisma,
-  PrismaClient
-} from '@prisma/client'
+import {Comment, CommentAuthorType, CommentState, Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {SettingName} from '@wepublish/settings/api'
 import {
@@ -16,11 +9,11 @@ import {
   CommentLengthError,
   NotAuthorisedError,
   NotFound,
-  PeerIdMissingCommentError,
   UserInputError
 } from '../../error'
 import {countRichtextChars} from '../../utility'
-import {CanCreateApprovedComment, hasPermission} from '@wepublish/permissions/api'
+import {CanCreateApprovedComment} from '@wepublish/permissions'
+import {hasPermission} from '@wepublish/permissions/api'
 
 export const addPublicComment = async (
   input: {
@@ -75,10 +68,6 @@ export const addPublicComment = async (
 
     if (!challengeValidationResult.valid)
       throw new CommentAuthenticationError(challengeValidationResult.message)
-  }
-
-  if (input.itemType === CommentItemType.peerArticle && !input.peerId) {
-    throw new PeerIdMissingCommentError()
   }
 
   // Cleanup

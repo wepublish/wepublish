@@ -1,5 +1,4 @@
 import {ApolloError} from '@apollo/client'
-import {css} from '@emotion/react'
 import {action} from '@storybook/addon-actions'
 import {Meta, StoryObj} from '@storybook/react'
 import {PaymentPeriodicity} from '@wepublish/website/api'
@@ -70,23 +69,5 @@ export const WithError = {
     error: new ApolloError({
       errorMessage: 'Foobar'
     })
-  }
-}
-
-export const WithClassName = {
-  ...Default,
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
-}
-
-export const WithEmotion = {
-  ...Default,
-  args: {
-    ...Default.args,
-    css: css`
-      background-color: #eee;
-    `
   }
 }

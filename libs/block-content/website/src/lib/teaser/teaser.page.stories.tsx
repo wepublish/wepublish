@@ -1,6 +1,7 @@
 import {Meta} from '@storybook/react'
-import {FullImageFragment, PageTeaser, TeaserStyle} from '@wepublish/website/api'
+import {FullImageFragment, PageTeaser} from '@wepublish/website/api'
 import {Teaser} from './teaser'
+import {mockPage} from '@wepublish/storybook/mocks'
 
 export default {
   component: Teaser,
@@ -43,24 +44,7 @@ const pageTeaser = {
   preTitle: 'Pre Title',
   title: 'Title',
   lead: 'Lead',
-  page: {
-    id: 'cl95fumlq261901phgrctx4mz',
-    title: 'Title on the page',
-    description: 'Description on the page',
-    url: 'https://example.com',
-    blocks: [
-      {
-        __typename: 'TitleBlock',
-        title: 'Title from block',
-        lead: 'Lead from block'
-      },
-      {
-        __typename: 'ImageBlock',
-        caption: null,
-        image
-      }
-    ]
-  }
+  page: mockPage()
 } as PageTeaser
 
 export const Default = {
@@ -73,43 +57,6 @@ export const Default = {
       __typename: 'FlexAlignment'
     },
     teaser: pageTeaser
-  }
-}
-
-export const WithLightStyle = {
-  args: {
-    alignment: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 4,
-      __typename: 'FlexAlignment'
-    },
-    teaser: {
-      ...pageTeaser,
-      style: TeaserStyle.Light
-    }
-  }
-}
-
-export const WithoutBlockWithLightStyle = {
-  args: {
-    alignment: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 4,
-      __typename: 'FlexAlignment'
-    },
-    teaser: {
-      ...pageTeaser,
-      style: TeaserStyle.Light,
-      lead: null,
-      page: {
-        ...pageTeaser.page,
-        blocks: []
-      }
-    }
   }
 }
 

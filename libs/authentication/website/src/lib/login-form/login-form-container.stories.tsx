@@ -1,4 +1,3 @@
-import {css} from '@emotion/react'
 import {StoryObj} from '@storybook/react'
 import {LoginWithCredentialsDocument, LoginWithEmailDocument} from '@wepublish/website/api'
 import {LoginFormContainer} from './login-form-container'
@@ -57,19 +56,5 @@ export const WithCredentials: StoryObj = {
         }
       ]
     }
-  }
-}
-
-export const WithClassName: StoryObj = {
-  args: {
-    className: 'extra-classname'
-  }
-}
-
-export const WithEmotion: StoryObj = {
-  args: {
-    css: css`
-      background-color: #eee;
-    `
   }
 }

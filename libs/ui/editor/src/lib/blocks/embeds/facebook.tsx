@@ -78,8 +78,8 @@ export function FacebookProvider({children, sdkLanguage}: FacebookProviderProps)
 }
 
 export interface FacebookPostEmbedProps {
-  userID: string
-  postID: string
+  userID: string | null | undefined
+  postID: string | null | undefined
 }
 
 export function FacebookPostEmbed({userID, postID}: FacebookPostEmbedProps) {
@@ -102,8 +102,8 @@ export function FacebookPostEmbed({userID, postID}: FacebookPostEmbedProps) {
     }
   }, [isLoaded, isLoading])
 
-  const encodedUserID = encodeURIComponent(userID)
-  const encodedPostID = encodeURIComponent(postID)
+  const encodedUserID = encodeURIComponent(userID ?? '')
+  const encodedPostID = encodeURIComponent(postID ?? '')
 
   return (
     <Wrapper ref={wrapperRef}>
@@ -118,8 +118,8 @@ export function FacebookPostEmbed({userID, postID}: FacebookPostEmbedProps) {
 }
 
 export interface FacebookVideoEmbedProps {
-  userID: string
-  videoID: string
+  userID: string | null | undefined
+  videoID: string | null | undefined
 }
 
 export function FacebookVideoEmbed({userID, videoID}: FacebookVideoEmbedProps) {
@@ -142,8 +142,8 @@ export function FacebookVideoEmbed({userID, videoID}: FacebookVideoEmbedProps) {
     }
   }, [isLoaded, isLoading])
 
-  const encodedUserID = encodeURIComponent(userID)
-  const encodedVideoID = encodeURIComponent(videoID)
+  const encodedUserID = encodeURIComponent(userID ?? '')
+  const encodedVideoID = encodeURIComponent(videoID ?? '')
 
   return (
     <Wrapper ref={wrapperRef}>

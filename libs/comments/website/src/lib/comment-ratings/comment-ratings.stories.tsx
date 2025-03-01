@@ -1,6 +1,7 @@
 import {Meta, StoryObj} from '@storybook/react'
 import {CommentRatings} from './comment-ratings'
-import {CommentRatingSystemAnswer, RatingSystemType} from '@wepublish/website/api'
+import {CommentRatingSystemAnswer} from '@wepublish/website/api'
+import {mockCommentRatingAnswer} from '@wepublish/storybook/mocks'
 import {WithCommentRatingsDecorators, WithUserDecorator} from '@wepublish/storybook'
 import {userEvent, within} from '@storybook/testing-library'
 import {ComponentProps} from 'react'
@@ -13,24 +14,9 @@ export default {
 } as Meta
 
 const answers: CommentRatingSystemAnswer[] = [
-  {
-    id: '111-111',
-    ratingSystemId: '1234-1234',
-    type: RatingSystemType.Star,
-    answer: 'Foobar'
-  },
-  {
-    id: '222-222',
-    ratingSystemId: '1234-1234',
-    type: RatingSystemType.Star,
-    answer: 'Barfoo'
-  },
-  {
-    id: '333-333',
-    ratingSystemId: '1234-1234',
-    type: RatingSystemType.Star,
-    answer: 'Foobaz'
-  }
+  mockCommentRatingAnswer({answer: 'Foobar'}),
+  mockCommentRatingAnswer({answer: 'Barfoo'}),
+  mockCommentRatingAnswer({answer: 'Foobaz'})
 ]
 
 export const Default = {

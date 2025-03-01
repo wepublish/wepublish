@@ -12,13 +12,13 @@ query BlockStyles {
   }
 }
 
-mutation CreateBlockStyle($name: String!, $blocks: [BlockType!]!) {
+mutation CreateBlockStyle($name: String!, $blocks: [EditorBlockType!]!) {
   createBlockStyle(name: $name, blocks: $blocks) {
     ...FullBlockStyle
   }
 }
 
-mutation UpdateBlockStyle($id: String!, $name: String, $blocks: [BlockType!]!) {
+mutation UpdateBlockStyle($id: String!, $name: String, $blocks: [EditorBlockType!]!) {
   updateBlockStyle(id: $id, name: $name, blocks: $blocks) {
     ...FullBlockStyle
   }
