@@ -444,6 +444,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               <PaymentAmount
                 {...field}
                 error={error}
+                slug={selectedMemberPlan?.slug}
                 donate={!!donate?.(selectedMemberPlan)}
                 amountPerMonthMin={amountPerMonthMin}
                 amountPerMonthTarget={selectedMemberPlan?.amountPerMonthTarget ?? undefined}

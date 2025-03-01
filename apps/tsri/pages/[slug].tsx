@@ -1,4 +1,3 @@
-import {ContentWidthProvider} from '@wepublish/content/website'
 import {PageContainer} from '@wepublish/page/website'
 import {getPagePathsBasedOnPage} from '@wepublish/utils/website'
 import {
@@ -23,11 +22,7 @@ export default function PageBySlugOrId() {
     id
   } as ComponentProps<typeof PageContainer>
 
-  return (
-    <ContentWidthProvider fullWidth={true}>
-      <PageContainer {...containerProps} />
-    </ContentWidthProvider>
-  )
+  return <PageContainer {...containerProps} />
 }
 
 export const getStaticPaths = getPagePathsBasedOnPage('')

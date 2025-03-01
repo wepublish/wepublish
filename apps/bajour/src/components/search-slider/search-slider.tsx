@@ -241,8 +241,8 @@ export function SearchSlider({article, includeSEO, className}: SearchSliderProps
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slidesDetails, setSlidesDetails] = useState<TrackDetails['slides']>()
   const [searchQuery, setSearchQuery] = useState<string | null>()
-  const [searchHits, setSearchHits] = useState<number | undefined>(undefined)
-  const [videoUrl, setVideoUrl] = useState<string | null>(null)
+  const [searchHits, setSearchHits] = useState<number>()
+  const [videoUrl, setVideoUrl] = useState<string>()
 
   // getting the first tag from initial article which is not the technical search-slider tag.
   const tag = useMemo(() => article?.tags.find(tag => tag.tag !== SEARCH_SLIDER_TAG), [article])
@@ -471,15 +471,15 @@ export function SearchSlider({article, includeSEO, className}: SearchSliderProps
               await searchArticles(query, keenSliderRef.current!)
             }}
           />
+
           <SearchHits>
-            <b>
-              {!!searchQuery && (
-                <div>
-                  {searchHits} Resultat{searchHits !== 1 && <>e</>}
-                </div>
-              )}
-            </b>
+            {!!searchQuery && (
+              <strong>
+                {searchHits} Resultat{searchHits !== 1 && <>e</>}
+              </strong>
+            )}
           </SearchHits>
+
           <DateContainer>
             <u>{publicationDate}</u>
           </DateContainer>
@@ -518,8 +518,8 @@ export function SearchSlider({article, includeSEO, className}: SearchSliderProps
                       <SlideTitle>{article?.latest.title}</SlideTitle>
                     </SlideItemOverlay>
                   )}
-                  {slidesDetails?.[idx].abs === currentSlide && article.image.source && (
-                    <SlideTitle>Bild: {article.image.source}</SlideTitle>
+                  {slidesDetails?.[idx].abs === currentSlide && article.latest.image.source && (
+                    <SlideTitle>Bild: {article.latest.image.source}</SlideTitle>
                   )}
                 </>
               )}
@@ -531,7 +531,7 @@ export function SearchSlider({article, includeSEO, className}: SearchSliderProps
       {videoUrl && (
         <FullScreenVideoContainer>
           <FullScreenVideo src={videoUrl} controls autoPlay />
-          <Button onClick={() => setVideoUrl(null)}>Schliessen</Button>
+          <Button onClick={() => setVideoUrl(undefined)}>Schliessen</Button>
         </FullScreenVideoContainer>
       )}
 

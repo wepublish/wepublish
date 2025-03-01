@@ -303,7 +303,7 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
@@ -323,6 +323,7 @@ export type BlockContentInput = {
   quote?: InputMaybe<QuoteBlockInput>;
   richText?: InputMaybe<RichTextBlockInput>;
   soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>;
+  subscribe?: InputMaybe<SubscribeBlockInput>;
   teaserGrid?: InputMaybe<TeaserGridBlockInput>;
   teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>;
   teaserList?: InputMaybe<TeaserListBlockInput>;
@@ -360,6 +361,7 @@ export enum BlockType {
   Quote = 'Quote',
   RichText = 'RichText',
   SoundCloudTrack = 'SoundCloudTrack',
+  Subscribe = 'Subscribe',
   TeaserGrid = 'TeaserGrid',
   TeaserGridFlex = 'TeaserGridFlex',
   TeaserList = 'TeaserList',
@@ -657,6 +659,7 @@ export enum EditorBlockType {
   Poll = 'Poll',
   Quote = 'Quote',
   RichText = 'RichText',
+  Subscribe = 'Subscribe',
   TeaserGrid1 = 'TeaserGrid1',
   TeaserGrid6 = 'TeaserGrid6',
   TeaserGridFlex = 'TeaserGridFlex',
@@ -2982,6 +2985,18 @@ export type Stats = {
   articlesCount: Scalars['Int'];
   authorsCount: Scalars['Int'];
   firstArticleDate?: Maybe<Scalars['DateTime']>;
+};
+
+export type SubscribeBlock = BaseBlock & {
+  __typename?: 'SubscribeBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  type: BlockType;
+};
+
+export type SubscribeBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
 };
 
 export type SubscriptionCreatedAction = BaseAction & HasSubscription & {

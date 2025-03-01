@@ -63,7 +63,7 @@ export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
   'amountPerMonthMin' | 'currency'
 > &
-  RadioProps & {className?: string}
+  RadioProps & {className?: string} & {slug: string}
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined
@@ -99,6 +99,7 @@ export type BuilderPaymentAmountProps = {
   value: number
   error: FieldError | undefined
   className?: string
+  slug?: string
 }
 
 export type BuilderSubscribeProps<

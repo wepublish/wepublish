@@ -32,7 +32,7 @@ export function Article({className, data, children, loading, error}: BuilderArti
 
   return (
     <ArticleWrapper className={className}>
-      {article && <ArticleSEO article={data.article as ArticleType} />}
+      {article && <ArticleSEO article={article} />}
 
       <Blocks blocks={(article?.latest.blocks as BlockContent[]) ?? []} type="Article" />
 

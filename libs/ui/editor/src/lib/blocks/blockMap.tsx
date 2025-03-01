@@ -1,5 +1,6 @@
 import nanoid from 'nanoid'
 import {
+  MdAccountBox,
   MdCode,
   MdCoffee,
   MdComment,
@@ -37,6 +38,7 @@ import {BlockValue, EmbedType} from './types'
 import {EditorBlockType, TeaserListBlockSort, TeaserType} from '@wepublish/editor/api-v2'
 import {isFunctionalUpdate} from '../utility'
 import {TeaserListBlock} from './teaserListBlock'
+import {SubscribeBlock} from './subscribeBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [EditorBlockType.Title]: {
@@ -204,6 +206,13 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {html: '', blockStyle: undefined},
     label: 'blocks.html.label',
     icon: <MdCode />
+  },
+
+  [EditorBlockType.Subscribe]: {
+    field: props => <SubscribeBlock {...props} />,
+    defaultValue: {blockStyle: undefined},
+    label: 'blocks.subscribe.label',
+    icon: <MdAccountBox />
   },
 
   [EditorBlockType.Poll]: {

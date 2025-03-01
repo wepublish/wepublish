@@ -334,6 +334,7 @@ export type BlockContent =
   | QuoteBlock
   | RichTextBlock
   | SoundCloudTrackBlock
+  | SubscribeBlock
   | TeaserGridBlock
   | TeaserGridFlexBlock
   | TeaserListBlock
@@ -362,6 +363,7 @@ export type BlockContentInput = {
   quote?: InputMaybe<QuoteBlockInput>
   richText?: InputMaybe<RichTextBlockInput>
   soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>
+  subscribe?: InputMaybe<SubscribeBlockInput>
   teaserGrid?: InputMaybe<TeaserGridBlockInput>
   teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>
   teaserList?: InputMaybe<TeaserListBlockInput>
@@ -399,6 +401,7 @@ export enum BlockType {
   Quote = 'Quote',
   RichText = 'RichText',
   SoundCloudTrack = 'SoundCloudTrack',
+  Subscribe = 'Subscribe',
   TeaserGrid = 'TeaserGrid',
   TeaserGridFlex = 'TeaserGridFlex',
   TeaserList = 'TeaserList',
@@ -699,6 +702,7 @@ export enum EditorBlockType {
   Poll = 'Poll',
   Quote = 'Quote',
   RichText = 'RichText',
+  Subscribe = 'Subscribe',
   TeaserGrid1 = 'TeaserGrid1',
   TeaserGrid6 = 'TeaserGrid6',
   TeaserGridFlex = 'TeaserGridFlex',
@@ -2928,6 +2932,18 @@ export type Stats = {
   firstArticleDate?: Maybe<Scalars['DateTime']>
 }
 
+export type SubscribeBlock = BaseBlock & {
+  __typename?: 'SubscribeBlock'
+  blockStyle?: Maybe<Scalars['String']>
+  blockStyleName?: Maybe<Scalars['String']>
+  type: BlockType
+}
+
+export type SubscribeBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>
+  blockStyleName?: InputMaybe<Scalars['String']>
+}
+
 export type SubscriptionCreatedAction = BaseAction &
   HasSubscription & {
     __typename?: 'SubscriptionCreatedAction'
@@ -3529,6 +3545,12 @@ type BlockWithoutTeaser_SoundCloudTrackBlock_Fragment = {
   trackID?: string | null
 }
 
+type BlockWithoutTeaser_SubscribeBlock_Fragment = {
+  __typename: 'SubscribeBlock'
+  blockStyle?: string | null
+  type: BlockType
+}
+
 type BlockWithoutTeaser_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'}
 
 type BlockWithoutTeaser_TeaserGridFlexBlock_Fragment = {__typename: 'TeaserGridFlexBlock'}
@@ -3593,6 +3615,7 @@ export type BlockWithoutTeaserFragment =
   | BlockWithoutTeaser_QuoteBlock_Fragment
   | BlockWithoutTeaser_RichTextBlock_Fragment
   | BlockWithoutTeaser_SoundCloudTrackBlock_Fragment
+  | BlockWithoutTeaser_SubscribeBlock_Fragment
   | BlockWithoutTeaser_TeaserGridBlock_Fragment
   | BlockWithoutTeaser_TeaserGridFlexBlock_Fragment
   | BlockWithoutTeaser_TeaserListBlock_Fragment
@@ -3643,6 +3666,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
         | {__typename: 'QuoteBlock'}
         | {__typename: 'RichTextBlock'}
         | {__typename: 'SoundCloudTrackBlock'}
+        | {__typename: 'SubscribeBlock'}
         | {__typename: 'TeaserGridBlock'}
         | {__typename: 'TeaserGridFlexBlock'}
         | {__typename: 'TeaserListBlock'}
@@ -3886,6 +3910,12 @@ type FullBlock_SoundCloudTrackBlock_Fragment = {
   trackID?: string | null
 }
 
+type FullBlock_SubscribeBlock_Fragment = {
+  __typename: 'SubscribeBlock'
+  blockStyle?: string | null
+  type: BlockType
+}
+
 type FullBlock_TeaserGridBlock_Fragment = {
   __typename: 'TeaserGridBlock'
   type: BlockType
@@ -3932,6 +3962,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
               | {__typename: 'QuoteBlock'}
               | {__typename: 'RichTextBlock'}
               | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'SubscribeBlock'}
               | {__typename: 'TeaserGridBlock'}
               | {__typename: 'TeaserGridFlexBlock'}
               | {__typename: 'TeaserListBlock'}
@@ -4053,6 +4084,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                 | {__typename: 'QuoteBlock'}
                 | {__typename: 'RichTextBlock'}
                 | {__typename: 'SoundCloudTrackBlock'}
+                | {__typename: 'SubscribeBlock'}
                 | {__typename: 'TeaserGridBlock'}
                 | {__typename: 'TeaserGridFlexBlock'}
                 | {__typename: 'TeaserListBlock'}
@@ -4173,6 +4205,7 @@ type FullBlock_TeaserListBlock_Fragment = {
               | {__typename: 'QuoteBlock'}
               | {__typename: 'RichTextBlock'}
               | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'SubscribeBlock'}
               | {__typename: 'TeaserGridBlock'}
               | {__typename: 'TeaserGridFlexBlock'}
               | {__typename: 'TeaserListBlock'}
@@ -4296,6 +4329,7 @@ export type FullBlockFragment =
   | FullBlock_QuoteBlock_Fragment
   | FullBlock_RichTextBlock_Fragment
   | FullBlock_SoundCloudTrackBlock_Fragment
+  | FullBlock_SubscribeBlock_Fragment
   | FullBlock_TeaserGridBlock_Fragment
   | FullBlock_TeaserGridFlexBlock_Fragment
   | FullBlock_TeaserListBlock_Fragment
@@ -4507,6 +4541,12 @@ type ImportBlock_SoundCloudTrackBlock_Fragment = {
   trackID?: string | null
 }
 
+type ImportBlock_SubscribeBlock_Fragment = {
+  __typename: 'SubscribeBlock'
+  blockStyle?: string | null
+  type: BlockType
+}
+
 type ImportBlock_TeaserGridBlock_Fragment = {
   __typename: 'TeaserGridBlock'
   type: BlockType
@@ -4553,6 +4593,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
               | {__typename: 'QuoteBlock'}
               | {__typename: 'RichTextBlock'}
               | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'SubscribeBlock'}
               | {__typename: 'TeaserGridBlock'}
               | {__typename: 'TeaserGridFlexBlock'}
               | {__typename: 'TeaserListBlock'}
@@ -4674,6 +4715,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
                 | {__typename: 'QuoteBlock'}
                 | {__typename: 'RichTextBlock'}
                 | {__typename: 'SoundCloudTrackBlock'}
+                | {__typename: 'SubscribeBlock'}
                 | {__typename: 'TeaserGridBlock'}
                 | {__typename: 'TeaserGridFlexBlock'}
                 | {__typename: 'TeaserListBlock'}
@@ -4794,6 +4836,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
               | {__typename: 'QuoteBlock'}
               | {__typename: 'RichTextBlock'}
               | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'SubscribeBlock'}
               | {__typename: 'TeaserGridBlock'}
               | {__typename: 'TeaserGridFlexBlock'}
               | {__typename: 'TeaserListBlock'}
@@ -4917,6 +4960,7 @@ export type ImportBlockFragment =
   | ImportBlock_QuoteBlock_Fragment
   | ImportBlock_RichTextBlock_Fragment
   | ImportBlock_SoundCloudTrackBlock_Fragment
+  | ImportBlock_SubscribeBlock_Fragment
   | ImportBlock_TeaserGridBlock_Fragment
   | ImportBlock_TeaserGridFlexBlock_Fragment
   | ImportBlock_TeaserListBlock_Fragment
@@ -5205,6 +5249,7 @@ export type ArticleQuery = {
             type: BlockType
             trackID?: string | null
           }
+        | {__typename: 'SubscribeBlock'; blockStyle?: string | null; type: BlockType}
         | {
             __typename: 'TeaserGridBlock'
             type: BlockType
@@ -5251,6 +5296,7 @@ export type ArticleQuery = {
                         | {__typename: 'QuoteBlock'}
                         | {__typename: 'RichTextBlock'}
                         | {__typename: 'SoundCloudTrackBlock'}
+                        | {__typename: 'SubscribeBlock'}
                         | {__typename: 'TeaserGridBlock'}
                         | {__typename: 'TeaserGridFlexBlock'}
                         | {__typename: 'TeaserListBlock'}
@@ -5371,6 +5417,7 @@ export type ArticleQuery = {
                           | {__typename: 'QuoteBlock'}
                           | {__typename: 'RichTextBlock'}
                           | {__typename: 'SoundCloudTrackBlock'}
+                          | {__typename: 'SubscribeBlock'}
                           | {__typename: 'TeaserGridBlock'}
                           | {__typename: 'TeaserGridFlexBlock'}
                           | {__typename: 'TeaserListBlock'}
@@ -5490,6 +5537,7 @@ export type ArticleQuery = {
                         | {__typename: 'QuoteBlock'}
                         | {__typename: 'RichTextBlock'}
                         | {__typename: 'SoundCloudTrackBlock'}
+                        | {__typename: 'SubscribeBlock'}
                         | {__typename: 'TeaserGridBlock'}
                         | {__typename: 'TeaserGridFlexBlock'}
                         | {__typename: 'TeaserListBlock'}
@@ -5809,6 +5857,10 @@ export const BlockWithoutTeaser = gql`
       height
       styleCustom
       sandbox
+    }
+    ... on SubscribeBlock {
+      blockStyle
+      type
     }
   }
   ${FullImage}
@@ -6134,6 +6186,7 @@ const result: PossibleTypesResultData = {
       'QuoteBlock',
       'RichTextBlock',
       'SoundCloudTrackBlock',
+      'SubscribeBlock',
       'TeaserGridBlock',
       'TeaserGridFlexBlock',
       'TeaserListBlock',
@@ -6163,6 +6216,7 @@ const result: PossibleTypesResultData = {
       'QuoteBlock',
       'RichTextBlock',
       'SoundCloudTrackBlock',
+      'SubscribeBlock',
       'TeaserGridBlock',
       'TeaserGridFlexBlock',
       'TeaserListBlock',

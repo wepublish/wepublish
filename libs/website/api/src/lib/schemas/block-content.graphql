@@ -103,6 +103,10 @@ fragment BlockWithoutTeaser on BlockContent {
     html
   }
 
+  ... on SubscribeBlock {
+    blockStyle
+  }
+
   ... on EventBlock {
     blockStyle: blockStyleName
     events {

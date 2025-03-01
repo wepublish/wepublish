@@ -63,6 +63,7 @@ export const MemberPlanPicker = forwardRef<HTMLButtonElement, BuilderMemberPlanP
                   value={memberPlan.id}
                   control={
                     <MemberPlanItem
+                      slug={memberPlan.slug}
                       key={memberPlan.id}
                       checked={memberPlan.id === value}
                       name={memberPlan.name}

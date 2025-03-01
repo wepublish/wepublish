@@ -416,7 +416,8 @@ export class ImportPeerArticleService {
           case 'TikTokVideoBlock':
           case 'TwitterTweetBlock':
           case 'HTMLBlock':
-          case 'RichTextBlock': {
+          case 'RichTextBlock':
+          case 'SubscribeBlock': {
             return {
               ...stripUnwantedProperties(block),
               type: lower(block.type)

@@ -35,6 +35,7 @@ import {
 } from './teaser/teaser-flex.model'
 import {TeaserListBlock, TeaserListBlockInput} from './teaser/teaser-list.model'
 import {mapTeaserUnionMap} from './teaser/teaser.model'
+import {SubscribeBlock, SubscribeBlockInput} from './subscribe/subscribe-block.model'
 
 export const BlockContent = createUnionType({
   name: 'BlockContent',
@@ -63,6 +64,7 @@ export const BlockContent = createUnionType({
       TwitterTweetBlock,
       VimeoVideoBlock,
       YouTubeVideoBlock,
+      SubscribeBlock,
       TeaserGridBlock,
       TeaserGridFlexBlock,
       TeaserListBlock
@@ -113,6 +115,8 @@ export const BlockContent = createUnionType({
         return VimeoVideoBlock.name
       case BlockType.YouTubeVideo:
         return YouTubeVideoBlock.name
+      case BlockType.Subscribe:
+        return SubscribeBlock.name
       case BlockType.TeaserGrid:
         return TeaserGridBlock.name
       case BlockType.TeaserGridFlex:
@@ -153,6 +157,8 @@ export class BlockContentInput {
   [BlockType.Event]?: EventBlockInput;
   @Field(() => CommentBlockInput, {nullable: true})
   [BlockType.Comment]?: CommentBlockInput;
+  @Field(() => SubscribeBlockInput, {nullable: true})
+  [BlockType.Subscribe]?: SubscribeBlockInput;
 
   @Field(() => IFrameBlockInput, {nullable: true})
   [BlockType.Embed]?: IFrameBlockInput;

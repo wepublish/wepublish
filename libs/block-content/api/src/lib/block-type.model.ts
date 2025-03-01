@@ -25,7 +25,8 @@ export enum BlockType {
   HTML = 'html',
   Poll = 'poll',
   Comment = 'comment',
-  Event = 'event'
+  Event = 'event',
+  Subscribe = 'subscribe'
 }
 
 registerEnumType(BlockType, {

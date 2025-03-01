@@ -236,7 +236,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -256,6 +256,7 @@ input BlockContentInput {
   quote: QuoteBlockInput
   richText: RichTextBlockInput
   soundCloudTrack: SoundCloudTrackBlockInput
+  subscribe: SubscribeBlockInput
   teaserGrid: TeaserGridBlockInput
   teaserGridFlex: TeaserGridFlexBlockInput
   teaserList: TeaserListBlockInput
@@ -292,6 +293,7 @@ enum BlockType {
   Quote
   RichText
   SoundCloudTrack
+  Subscribe
   TeaserGrid
   TeaserGridFlex
   TeaserList
@@ -476,6 +478,7 @@ enum EditorBlockType {
   Poll
   Quote
   RichText
+  Subscribe
   TeaserGrid1
   TeaserGrid6
   TeaserGridFlex
@@ -1623,6 +1626,17 @@ type Stats {
   articlesCount: Int!
   authorsCount: Int!
   firstArticleDate: DateTime
+}
+
+type SubscribeBlock implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  type: BlockType!
+}
+
+input SubscribeBlockInput {
+  blockStyle: String
+  blockStyleName: String
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscription {

@@ -26,7 +26,8 @@ import {
   TitleBlock,
   BreakBlock,
   CommentBlock,
-  TeaserListBlock
+  TeaserListBlock,
+  SubscribeBlock
 } from '@wepublish/website/api'
 
 export type BuilderBlockRendererProps = {
@@ -67,6 +68,7 @@ export type BuilderIFrameBlockProps = Omit<IFrameBlock, 'type'> & {className?: s
 export type BuilderPollBlockProps = Omit<PollBlock, 'type'> & {className?: string}
 export type BuilderListicleBlockProps = Omit<ListicleBlock, 'type'> & {className?: string}
 export type BuilderCommentBlockProps = Omit<CommentBlock, 'type'> & {className?: string}
+export type BuilderSubscribeBlockProps = Omit<SubscribeBlock, 'type'> & {className?: string}
 export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
   className?: string
 }

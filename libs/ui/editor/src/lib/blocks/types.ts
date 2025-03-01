@@ -60,6 +60,8 @@ export interface HTMLBlockValue extends BaseBlockValue {
   html: string
 }
 
+export type SubscribeBlockValue = BaseBlockValue
+
 export interface PollBlockValue extends BaseBlockValue {
   poll: Pick<FullPoll, 'id' | 'question'> | null | undefined
 }
@@ -305,6 +307,7 @@ export type TeaserGridFlexBlockListValue = BlockListValue<
 export type HTMLBlockListValue = BlockListValue<EditorBlockType.Html, HTMLBlockValue>
 
 export type PollBlockListValue = BlockListValue<EditorBlockType.Poll, PollBlockValue>
+export type SubscribeBlockListValue = BlockListValue<EditorBlockType.Subscribe, SubscribeBlockValue>
 
 export type CommentBlockListValue = BlockListValue<EditorBlockType.Comment, CommentBlockValue>
 
@@ -323,6 +326,7 @@ export type BlockValue =
   | TeaserGridBlock6ListValue
   | TeaserGridFlexBlockListValue
   | HTMLBlockListValue
+  | SubscribeBlockListValue
   | PollBlockListValue
   | CommentBlockListValue
   | EventBlockListValue
@@ -365,6 +369,13 @@ export function unionMapForBlock(block: BlockValue): BlockContentInput {
       return {
         html: {
           html: block.value?.html,
+          blockStyle: block.value.blockStyle
+        }
+      }
+
+    case EditorBlockType.Subscribe:
+      return {
+        subscribe: {
           blockStyle: block.value.blockStyle
         }
       }
@@ -932,6 +943,15 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {
           blockStyle: block.blockStyle,
           html: block.html ?? ''
+        }
+      }
+
+    case 'SubscribeBlock':
+      return {
+        key,
+        type: EditorBlockType.Subscribe,
+        value: {
+          blockStyle: block.blockStyle
         }
       }
 

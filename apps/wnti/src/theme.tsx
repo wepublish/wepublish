@@ -24,7 +24,9 @@ const {
 
 const theme = createTheme(WePTheme, {
   palette: {
-    primary: augmentColor({color: {main: '#0E9FED', light: '#36addf', contrastText: '#fff'}})
+    primary: augmentColor({color: {main: '#232524', light: '#F2BDB8', contrastText: '#FFF'}}),
+    secondary: augmentColor({color: {main: '#FFEDEB', contrastText: '#000'}}),
+    accent: augmentColor({color: {main: '#FFEDEB', contrastText: '#000'}})
   },
   typography: {
     h1: {
@@ -73,10 +75,20 @@ const theme = createTheme(WePTheme, {
   components: {
     MuiButton: {
       styleOverrides: {
-        containedSizeLarge: () => ({
+        containedSizeLarge: {
           padding: `${WePTheme.spacing(1.5)} ${WePTheme.spacing(3)}`,
-          fontSize: '1.1em'
-        })
+          fontSize: '1.1em',
+          color: '#000',
+          backgroundColor: '#F2BDB8'
+        },
+        contained: {
+          color: '#000',
+          backgroundColor: '#F2BDB8 !important'
+        },
+        outlined: {
+          color: '#F2BDB8',
+          borderColor: '#F2BDB8'
+        }
       }
     }
   }

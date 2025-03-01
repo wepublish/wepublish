@@ -187,6 +187,11 @@ fragment BlockWithoutTeaser on BlockContent {
     styleCustom
     sandbox
   }
+
+  ... on SubscribeBlock {
+    blockStyle
+    type
+  }
 }
 
 fragment FullTeaser on Teaser {
