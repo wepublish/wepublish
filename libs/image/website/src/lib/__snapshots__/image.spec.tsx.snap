@@ -5,6 +5,7 @@ exports[`Image should render Default 1`] = `
   <img
     alt="An image description"
     class="emotion-0 emotion-1"
+    height="500"
     loading="lazy"
     sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -19,6 +20,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
     title="An image title"
+    width="500"
   />
 </DocumentFragment>
 `;
@@ -51,6 +53,7 @@ exports[`Image should render WithClassName 1`] = `
   <img
     alt="An image description"
     class="extra-classname emotion-0 emotion-1"
+    height="500"
     loading="lazy"
     sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -65,6 +68,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
     title="An image title"
+    width="500"
   />
 </DocumentFragment>
 `;
@@ -74,6 +78,7 @@ exports[`Image should render WithEmotion 1`] = `
   <img
     alt="An image description"
     class="emotion-0 emotion-1"
+    height="500"
     loading="lazy"
     sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -88,6 +93,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
     title="An image title"
+    width="500"
   />
 </DocumentFragment>
 `;
@@ -97,6 +103,7 @@ exports[`Image should render WithMaxWidth 1`] = `
   <img
     alt="An image description"
     class="emotion-0 emotion-1"
+    height="500"
     loading="lazy"
     sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -106,6 +113,7 @@ exports[`Image should render WithMaxWidth 1`] = `
 1200w"
     srcset="https://unsplash.it/200/100 200w"
     title="An image title"
+    width="500"
   />
 </DocumentFragment>
 `;
@@ -115,6 +123,7 @@ exports[`Image should render WithoutDescription 1`] = `
   <img
     alt="An image title"
     class="emotion-0 emotion-1"
+    height="500"
     loading="lazy"
     sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -129,6 +138,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
     title="An image title"
+    width="500"
   />
 </DocumentFragment>
 `;
@@ -138,6 +148,7 @@ exports[`Image should render WithoutTitle 1`] = `
   <img
     alt="An image description"
     class="emotion-0 emotion-1"
+    height="500"
     loading="lazy"
     sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -152,6 +163,7 @@ https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
     title=""
+    width="500"
   />
 </DocumentFragment>
 `;
