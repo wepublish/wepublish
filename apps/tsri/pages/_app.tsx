@@ -36,6 +36,7 @@ import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {MitmachenInner} from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -126,7 +127,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Break: TsriBreakBlock,
               Quote: TsriQuoteBlock,
               RichText: TsriRichText,
-              Title: TsriTitle
+              Title: TsriTitle,
+              Subscribe: MitmachenInner
             }}
             blockStyles={{
               ContextBox: TsriContextBox

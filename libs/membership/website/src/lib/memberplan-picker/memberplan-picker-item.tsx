@@ -34,13 +34,12 @@ export const MemberPlanItemPrice = styled('small')`
 `
 
 export const MemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberPlanItemProps>(
-  ({className, id, name, slug, amountPerMonthMin, currency, ...props}, ref) => {
+  ({className, id, name, slug, amountPerMonthMin, currency, extendable, ...props}, ref) => {
     const {
-      meta: {locale, siteTitle}
+      meta: {locale}
     } = useWebsiteBuilder()
     const radioGroup = useRadioGroup()
     const isChecked = props.checked ?? radioGroup?.value === id
-    const isWintiSpende = siteTitle === 'Wnti' && slug === 'spende'
 
     return (
       <MemberPlanItemWrapper className={className} isChecked={isChecked}>
@@ -50,7 +49,7 @@ export const MemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberPlanIte
           {!!amountPerMonthMin && (
             <MemberPlanItemPrice>
               Ab {formatCurrency(amountPerMonthMin / 100, currency, locale)}
-              {!isWintiSpende && ' pro Monat'}
+              {extendable && ' pro Monat'}
             </MemberPlanItemPrice>
           )}
         </MemberPlanItemContent>
