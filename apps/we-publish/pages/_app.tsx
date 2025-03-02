@@ -22,6 +22,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import Mitmachen from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -99,6 +100,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Head={Head}
           Script={Script}
           elements={{Link: NextWepublishLink}}
+          blocks={{Subscribe: Mitmachen}}
           date={{format: dateFormatter}}
           meta={{siteTitle}}>
           <ThemeProvider theme={theme}>

@@ -38,6 +38,7 @@ import {
   BajourTeaserList
 } from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
+import Mitmachen from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -124,7 +125,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               TeaserGrid: BajourTeaserGrid,
               TeaserList: BajourTeaserList,
               Break: BajourBreakBlock,
-              Quote: BajourQuoteBlock
+              Quote: BajourQuoteBlock,
+              Subscribe: Mitmachen
             }}
             blockStyles={{
               ContextBox: BajourContextBox,
