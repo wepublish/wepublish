@@ -372,6 +372,8 @@ export class ArticleService {
         id: _id,
         createdAt: _createdAt,
         publishedAt: _publishedAt,
+        userId: _userId,
+        articleId: _articleId,
         properties,
         authors,
         socialMediaAuthors,
@@ -396,7 +398,7 @@ export class ArticleService {
           create: {
             ...revision,
             userId,
-            blocks: revision.blocks || Prisma.JsonNull,
+            blocks: revision.blocks || [],
             properties: {
               createMany: {
                 data: properties.map(property => ({

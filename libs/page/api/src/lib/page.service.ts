@@ -282,8 +282,16 @@ export class PageService {
       throw new NotFoundException(`Page with id ${id} not found`)
     }
 
-    const [{id: _id, createdAt: _createdAt, publishedAt: _publishedAt, properties, ...revision}] =
-      page.revisions
+    const [
+      {
+        id: _id,
+        createdAt: _createdAt,
+        publishedAt: _publishedAt,
+        pageId: _pageId,
+        properties,
+        ...revision
+      }
+    ] = page.revisions
 
     return this.prisma.page.create({
       data: {
@@ -299,7 +307,7 @@ export class PageService {
           create: {
             ...revision,
             userId,
-            blocks: revision.blocks || Prisma.JsonNull,
+            blocks: revision.blocks ?? [],
             properties: {
               createMany: {
                 data: properties.map(property => ({

@@ -25,6 +25,8 @@ export class PageRevisionDataloaderService implements Primeable<RevisionMap> {
             },
             orderBy: {
               createdAt: 'desc'
+              // on purpose not checking for publishedAt
+              // so we only get the latest revision, we check for it later on
             }
           }),
           this.prisma.pageRevision.findFirst({

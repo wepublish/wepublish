@@ -361,7 +361,6 @@ export class ImportPeerArticleService {
           }
 
           case 'EventBlock': {
-            //@TODO: Maybe import event?
             return {
               ...stripUnwantedProperties(block),
               type: BlockType.Event,
@@ -373,7 +372,6 @@ export class ImportPeerArticleService {
           }
 
           case 'PollBlock': {
-            //@TODO: Maybe import poll? (With or without votes?)
             return {
               ...stripUnwantedProperties(block),
               type: BlockType.Poll,

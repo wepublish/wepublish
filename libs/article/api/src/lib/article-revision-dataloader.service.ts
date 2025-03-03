@@ -22,6 +22,8 @@ export class ArticleRevisionDataloaderService implements Primeable<RevisionMap> 
           this.prisma.articleRevision.findFirst({
             where: {
               articleId
+              // on purpose not checking for publishedAt
+              // so we only get the latest revision, we check for it later on
             },
             orderBy: {
               createdAt: 'desc'
