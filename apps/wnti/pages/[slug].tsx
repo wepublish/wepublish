@@ -17,7 +17,7 @@ export default function PageBySlugIdOrToken() {
   } as ComponentProps<typeof PageContainer>
 
   return (
-    <ContentWidthProvider fullWidth={true}>
+    <ContentWidthProvider fullWidth={false}>
       <PageContainer {...containerProps} />
     </ContentWidthProvider>
   )
