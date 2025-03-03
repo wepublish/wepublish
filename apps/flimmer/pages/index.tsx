@@ -26,36 +26,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return {props: {}, revalidate: 1}
   }
 
-  mailchimp.setConfig({
-    apiKey: serverRuntimeConfig.env.MAILCHIMP_API_KEY,
-    server: serverRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX
-  })
-
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
-  const [mailchimpResponse] = await Promise.all([
-    mailchimp.campaigns.list({
-      count: 4,
-      sortField: 'send_time',
-      status: 'sent',
-      sortDir: 'DESC',
-      folderId: '90c02813e1',
-      fields: ['campaigns.id', 'campaigns.long_archive_url', 'campaigns.settings.subject_line']
-    }),
-    client.query({
-      query: ApiV1.PageDocument,
-      variables: {
-        slug: ''
-      }
-    }),
-    client.query({
-      query: ApiV1.NavigationListDocument
-    }),
-    client.query({
-      query: ApiV1.PeerProfileDocument
-    })
-  ])
-
-  const {campaigns} = mailchimpResponse as campaigns.CampaignsSuccessResponse
 
   const props = ApiV1.addClientCacheToV1Props(client, {campaigns})
 
