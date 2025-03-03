@@ -7,7 +7,7 @@ const Faro = localFont({
   src: [
     {
       path: './fonts/FaroWeb-DisplayLucky.woff2',
-      weight: '400',
+      weight: '800',
       style: 'normal'
     },
     {
