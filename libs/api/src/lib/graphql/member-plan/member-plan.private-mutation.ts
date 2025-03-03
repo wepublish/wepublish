@@ -101,7 +101,7 @@ function checkMemberPlanIntegrity(input: UpdateMemberPlanInput): void {
     throw new InvalidMemberPlanSettings()
   }
 
-  if (amountPerMonthTarget != null && amountPerMonthTarget <= amountPerMonthMin) {
+  if (amountPerMonthTarget != null && amountPerMonthTarget <= (amountPerMonthMin ?? 0)) {
     throw new MonthlyTargetAmountNotEnough()
   }
 }

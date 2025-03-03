@@ -111,7 +111,7 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
 })
 
 export const GraphQLPeerResolver = {
-  __resolveReference: async (reference, {loaders}: Context) => {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
     const {id} = reference
     const peer = await loaders.peer.load(id)
 

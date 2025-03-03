@@ -86,7 +86,7 @@ export const updatePoll = (
     where: {id: pollId},
     data: {
       ...pollInput,
-      infoText: pollInput.infoText || null,
+      infoText: pollInput.infoText || [],
       answers: {
         update: answers?.map(answer => ({
           where: {id: answer.id},

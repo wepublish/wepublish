@@ -80,7 +80,7 @@ export const GraphQLPublicInvoice = new GraphQLObjectType<InvoiceWithItems, Cont
     subscription: {
       type: GraphQLPublicSubscription,
       resolve({subscriptionID}, args, {loaders}) {
-        return loaders.subscriptionsById.load(subscriptionID)
+        return subscriptionID ? loaders.subscriptionsById.load(subscriptionID) : null
       }
     },
     total: {

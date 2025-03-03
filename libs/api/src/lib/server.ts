@@ -104,7 +104,7 @@ export class WepublishServer {
         Object.values(GraphQLWepublishPublicSchema.getTypeMap())
           .filter(type => type instanceof GraphQLObjectType || type instanceof GraphQLUnionType)
           .map(type => {
-            const resolvers = {}
+            const resolvers = {} as any
 
             if (type instanceof GraphQLObjectType) {
               const fields = type.getFields()
@@ -123,10 +123,10 @@ export class WepublishServer {
               if (type.resolveType) {
                 resolvers['__resolveType'] = type.resolveType
               } else {
-                resolvers['__resolveType'] = (source, context, info) => {
+                resolvers['__resolveType'] = (source: any, context: any, info: any) => {
                   return type
                     .getTypes()
-                    .find(type => type.isTypeOf && type.isTypeOf(source, context, info)).name
+                    .find(type => type.isTypeOf && type.isTypeOf(source, context, info))?.name
                 }
               }
             }
@@ -149,7 +149,10 @@ export class WepublishServer {
     }
 
     for (const type in federatedResolvers) {
-      resolvers[type] = {...resolvers[type], ...federatedResolvers[type]}
+      resolvers[type] = {
+        ...resolvers[type],
+        ...federatedResolvers[type as keyof typeof federatedResolvers]
+      }
     }
 
     const publicSchema = buildSubgraphSchema({

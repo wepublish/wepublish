@@ -169,7 +169,7 @@ export const GraphQLImageConnection = new GraphQLObjectType<any, Context>({
 })
 
 export const GraphQLImageResolver = {
-  __resolveReference: async (reference, {loaders}: Context) => {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
     const {id} = reference
     const image = await loaders.images.load(id)
     if (!image) throw new Error('Image not found')

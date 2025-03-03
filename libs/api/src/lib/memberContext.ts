@@ -41,7 +41,7 @@ export interface ChargeInvoiceProps {
 
 export interface DeactivateSubscriptionForUserProps {
   subscription: Subscription
-  deactivationReason?: SubscriptionDeactivationReason
+  deactivationReason: SubscriptionDeactivationReason
 }
 
 export interface MemberContextInterface {
@@ -268,12 +268,16 @@ export class MemberContext implements MemberContextInterface {
         return null
       }
       const deactivationDate = add(subscription.paidUntil || new Date(), {
-        days: subscriptionFlowActionDeactivationUnpaid.daysAwayFromEnding
+        days: subscriptionFlowActionDeactivationUnpaid.daysAwayFromEnding ?? 0
       })
 
       const memberplan = await this.prisma.memberPlan.findUnique({
         where: {id: subscription.memberPlanID}
       })
+
+      if (!memberplan) {
+        throw new Error('Memberplan not found')
+      }
 
       const newInvoice = await this.prisma.invoice.create({
         data: {
@@ -535,15 +539,22 @@ export class MemberContext implements MemberContextInterface {
         properties: true
       }
     })
+
+    if (!subscription) {
+      throw new Error('Subscription not found')
+    }
+
     const {paymentProviderID} = await this.getPaymentMethodByIDOrSlug(
       this.loaders,
       undefined,
       subscription.paymentMethodID
     )
+
     const paymentProvider = this.paymentProviders.find(
       paymentProvider => paymentProvider.id === paymentProviderID
     )
-    await paymentProvider.cancelRemoteSubscription({
+
+    await paymentProvider?.cancelRemoteSubscription({
       subscription
     })
   }
@@ -591,13 +602,17 @@ export class MemberContext implements MemberContextInterface {
 
   async getPaymentMethodByIDOrSlug(
     loaders: DataLoaderContext,
-    paymentMethodSlug: string,
-    paymentMethodID: string
+    paymentMethodSlug?: string,
+    paymentMethodID?: string
   ) {
     const paymentMethod = paymentMethodID
       ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
-      : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
-    if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
+      : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug!)
+
+    if (!paymentMethod) {
+      throw new NotFound('PaymentMethod', paymentMethodID ?? paymentMethodSlug!)
+    }
+
     return paymentMethod
   }
 
@@ -652,6 +667,11 @@ export class MemberContext implements MemberContextInterface {
     }
 
     const memberPlan = await prisma.memberPlan.findUnique({where: {id: memberPlanId}})
+
+    if (!memberPlan) {
+      throw new Error('Memberplan not found')
+    }
+
     const memberPlanSubscriptionCount = await prisma.subscription.count({
       where: {
         userID,
@@ -659,7 +679,7 @@ export class MemberContext implements MemberContextInterface {
       }
     })
 
-    if (memberPlan.maxCount && memberPlan.maxCount <= memberPlanSubscriptionCount) {
+    if (memberPlan?.maxCount && memberPlan.maxCount <= memberPlanSubscriptionCount) {
       throw new Error(
         `Subscription count exceeded limit (given: ${memberPlanSubscriptionCount + 1} | max: ${
           memberPlan.maxCount
@@ -701,6 +721,10 @@ export class MemberContext implements MemberContextInterface {
     }
 
     const invoice = await this.renewSubscriptionForUser({subscription})
+
+    if (!invoice) {
+      throw new InternalError()
+    }
 
     // Send subscribe mail
 
@@ -761,6 +785,11 @@ export class MemberContext implements MemberContextInterface {
     paidUntil = paidUntil ? new Date(paidUntil) : undefined
 
     const memberPlan = await prisma.memberPlan.findUnique({where: {id: memberPlanId}})
+
+    if (!memberPlan) {
+      throw new Error('Memberplan not found.')
+    }
+
     const memberPlanSubscriptionCount = await prisma.subscription.count({
       where: {
         userID,
@@ -768,7 +797,7 @@ export class MemberContext implements MemberContextInterface {
       }
     })
 
-    if (memberPlan.maxCount && memberPlan.maxCount <= memberPlanSubscriptionCount) {
+    if (memberPlan?.maxCount && memberPlan.maxCount <= memberPlanSubscriptionCount) {
       throw new Error(
         `Subscription count exceeded limit (given: ${memberPlanSubscriptionCount + 1} | max: ${
           memberPlan.maxCount
@@ -818,6 +847,11 @@ export class MemberContext implements MemberContextInterface {
         },
         select: unselectPassword
       })
+
+      if (!user) {
+        throw new InternalError()
+      }
+
       const invoice = await this.prisma.invoice.create({
         data: {
           currency: memberPlan.currency,
@@ -861,6 +895,10 @@ export class MemberContext implements MemberContextInterface {
       }
     } else {
       const invoice = await this.renewSubscriptionForUser({subscription})
+
+      if (!invoice) {
+        throw new InternalError()
+      }
 
       // Send subscribe mail
       await this.sendMailForSubscriptionEvent(SubscriptionEvent.SUBSCRIBE, subscription, {})

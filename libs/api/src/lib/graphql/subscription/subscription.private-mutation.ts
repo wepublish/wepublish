@@ -103,7 +103,7 @@ export const cancelSubscriptionById = async (
   })
 }
 
-type CreateSubscriptionInput = Prisma.SubscriptionCreateInput & {
+type CreateSubscriptionInput = Prisma.SubscriptionUncheckedCreateInput & {
   properties: Prisma.MetadataPropertyCreateManySubscriptionInput[]
 }
 
@@ -125,7 +125,7 @@ export const createSubscription = async (
     input['memberPlanID'],
     properties,
     input['autoRenew'],
-    input['extendable'],
+    !!input['extendable'],
     null,
     input['startsAt']
   )
@@ -150,9 +150,9 @@ export const importSubscription = async (
     input['memberPlanID'],
     properties,
     input['autoRenew'],
-    input['extendable'],
+    !!input['extendable'],
     input['startsAt'],
-    input['paidUntil']
+    input['paidUntil'] ?? undefined
   )
   return subscription
 }
@@ -217,6 +217,10 @@ export const updateAdminSubscription = async (
     }
   })
 
+  if (!originalSubscription) {
+    throw new Error('Subscription not found.')
+  }
+
   if (originalSubscription.deactivation) {
     throw new Error('You are not allowed to change a deactivated subscription!')
   }
@@ -227,10 +231,12 @@ export const updateAdminSubscription = async (
     undefined,
     originalSubscription.paymentMethodID
   )
+
   const paymentProvider = paymentProviders.find(
     paymentProvider => paymentProvider.id === paymentProviderID
   )
-  if (paymentProvider.remoteManagedSubscription) {
+
+  if (paymentProvider?.remoteManagedSubscription) {
     await handleRemoteManagedSubscription({
       paymentProvider,
       input: input as Subscription,

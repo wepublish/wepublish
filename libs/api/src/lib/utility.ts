@@ -241,7 +241,7 @@ export function isBoolean(unknown: unknown): unknown is boolean {
   return typeof unknown === 'boolean'
 }
 
-export function mapEnumToGraphQLEnumValues(enumObject: unknown) {
+export function mapEnumToGraphQLEnumValues(enumObject: Record<string, unknown>) {
   return Object.fromEntries(
     Object.keys(enumObject).map(key => [enumObject[key], {values: enumObject[key]}])
   )

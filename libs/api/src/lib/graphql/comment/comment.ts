@@ -424,7 +424,7 @@ export const GraphQLPublicCommentConnection = new GraphQLObjectType({
 })
 
 export const GraphQLCommentResolver = {
-  __resolveReference: async (reference, {loaders}: Context) => {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
     const {id} = reference
     const comment = await loaders.commentsById.load(id)
 

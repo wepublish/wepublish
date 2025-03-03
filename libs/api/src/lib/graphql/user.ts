@@ -232,7 +232,7 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
           return []
         }
 
-        return uniq(session.roles.flatMap(role => role.permissionIDs))
+        return session ? uniq(session.roles.flatMap(role => role.permissionIDs)) : []
       })
     }
   }
@@ -354,7 +354,7 @@ export const GraphQLMemberRegistrationAndPayment = new GraphQLObjectType({
 })
 
 export const GraphQLUserResolver = {
-  __resolveReference: async (reference, {loaders}: Context) => {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
     const {id} = reference
     const user = await loaders.usersById.load(id)
 

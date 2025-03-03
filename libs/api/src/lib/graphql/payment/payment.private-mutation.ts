@@ -26,6 +26,15 @@ export const createPaymentFromInvoice = async (
   const paymentProvider = paymentProviders.find(pp => pp.id === paymentMethod?.paymentProviderID)
 
   const invoice = await invoicesByID.load(invoiceID)
+
+  if (!invoice) {
+    throw new Error('Invoice not found')
+  }
+
+  if (!invoice.subscriptionID) {
+    throw new Error('Subscription not found')
+  }
+
   const memberPlan = await memberPlanClient.findFirst({
     where: {
       subscription: {

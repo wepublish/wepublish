@@ -207,7 +207,7 @@ export const GraphQLUpdatePollExternalVoteSources = new GraphQLInputObjectType({
 })
 
 export const GraphQLPollResolver = {
-  __resolveReference: async (reference, {loaders}: Context) => {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
     const {id} = reference
     const poll = await loaders.pollById.load(id)
 

@@ -133,9 +133,9 @@ export const updatePublicComment = async (
     data: {
       revisions: {
         create: {
-          text: text ?? comment?.revisions.at(-1)?.text,
-          title: title ?? comment?.revisions.at(-1)?.title,
-          lead: lead ?? comment?.revisions.at(-1)?.lead
+          text: text ?? comment?.revisions.at(-1)?.text ?? '',
+          title: title ?? comment?.revisions.at(-1)?.title ?? '',
+          lead: lead ?? comment?.revisions.at(-1)?.lead ?? ''
         }
       },
       state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval

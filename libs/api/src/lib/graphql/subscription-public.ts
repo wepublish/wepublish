@@ -92,12 +92,13 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
          *   Not using a deprecated payment method
          */
         return (
+          subscription.paidUntil &&
           subscription.extendable &&
           !subscription.deactivation &&
           +add(new Date(), {months: 1}) > +subscription.paidUntil &&
           !unpaidInvoice &&
           // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
-          paymentMethod.slug !== 'payrexx-subscription'
+          paymentMethod?.slug !== 'payrexx-subscription'
         )
       })
     }
@@ -117,7 +118,7 @@ export const GraphQLPublicSubscriptionInput = new GraphQLInputObjectType({
 })
 
 export const GraphQLSubscriptionResolver = {
-  __resolveReference: async (reference, {loaders}: Context) => {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
     const {id} = reference
     const subscription = await loaders.subscriptionsById.load(id)
 

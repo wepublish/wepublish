@@ -806,7 +806,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           paymentMethodID: subscription.paymentMethodID,
           successURL,
           failureURL,
-          migrateToTargetPaymentMethodID: subscription.memberPlan.migrateToTargetPaymentMethodID
+          migrateToTargetPaymentMethodID:
+            subscription.memberPlan.migrateToTargetPaymentMethodID ?? undefined
         })
       }
     },
@@ -1086,7 +1087,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           successURL,
           failureURL,
           user,
-          migrateToTargetPaymentMethodID: subscription.memberPlan.migrateToTargetPaymentMethodID
+          migrateToTargetPaymentMethodID:
+            subscription.memberPlan.migrateToTargetPaymentMethodID ?? undefined
         })
       }
     },
@@ -1126,18 +1128,18 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           throw new NotFound('Unpaid Invoice', subscriptionId)
         }
 
-        if (invoice.subscription.userID !== user.id) {
+        if (invoice.subscription?.userID !== user.id) {
           throw new NotFound('Subscription', subscriptionId)
         }
 
         return await createPaymentWithProvider({
-          paymentMethodID: invoice.subscription.paymentMethodID,
+          paymentMethodID: invoice.subscription?.paymentMethodID,
           invoice,
           saveCustomer: true,
           successURL,
           failureURL,
           migrateToTargetPaymentMethodID:
-            invoice.subscription.memberPlan.migrateToTargetPaymentMethodID
+            invoice.subscription?.memberPlan.migrateToTargetPaymentMethodID ?? undefined
         })
       }
     },

@@ -134,7 +134,7 @@ export const GraphQLAuthorInput = new GraphQLInputObjectType({
 })
 
 export const GraphQLAuthorResolver = {
-  __resolveReference: async (reference, {loaders}: Context) => {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
     const {id} = reference
     const author = await loaders.authorsByID.load(id)
 

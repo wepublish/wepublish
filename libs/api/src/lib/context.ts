@@ -659,8 +659,8 @@ export async function contextFromRequest(
     oauth2Providers,
     paymentProviders,
     hooks,
-    requestIP,
-    fingerprint,
+    requestIP: requestIP ?? '',
+    fingerprint: fingerprint ?? '',
     sessionTTL: sessionTTL ?? DefaultSessionTTL,
     hashCostFactor: hashCostFactor ?? DefaultBcryptHashCostFactor,
 
@@ -746,6 +746,10 @@ export async function contextFromRequest(
         throw new Error('paymentProvider not found')
       }
 
+      if (!invoice.subscriptionID) {
+        throw new Error('Subscription not found')
+      }
+
       /**
        * Gradually migrate subscription's payment method.
        * Mainly used in mutation.public.ts
@@ -782,7 +786,7 @@ export async function contextFromRequest(
         ? await prisma.paymentProviderCustomer.findFirst({
             where: {
               userId: user.id,
-              paymentProviderID: paymentMethod.paymentProviderID
+              paymentProviderID: paymentMethod?.paymentProviderID
             }
           })
         : null
@@ -813,7 +817,7 @@ export async function contextFromRequest(
       // Mark invoice as paid
       if (intent.state === PaymentState.paid) {
         const intentState = await paymentProvider.checkIntentStatus({
-          intentID: updatedPayment.intentID,
+          intentID: updatedPayment.intentID ?? '',
           paymentID: updatedPayment.id
         })
 
