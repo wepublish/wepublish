@@ -145,6 +145,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 headerSlug="header"
                 iconSlug="icons"
                 loginUrl={''}
+                subscribeUrl={''}
               />
 
               <main>
