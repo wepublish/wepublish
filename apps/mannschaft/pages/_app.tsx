@@ -43,6 +43,7 @@ import {MannschaftRichtextBlock} from '../src/mannschaft-richtext-block'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
 import theme from '../src/theme'
+import Mitmachen from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -139,7 +140,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Teaser: MannschaftTeaser,
               TeaserGrid: MannschaftTeaserGrid,
               Break: MannschaftBreakBlock,
-              RichText: MannschaftRichtextBlock
+              RichText: MannschaftRichtextBlock,
+              Subscribe: Mitmachen
             }}
             blockStyles={{
               FocusTeaser: MannschaftFocusTeaser

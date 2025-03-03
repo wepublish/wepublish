@@ -44,7 +44,7 @@ export const Default: StoryObj<typeof MemberPlanPicker> = {
     memberPlans: [
       memberPlan,
       {...memberPlan, id: '2', currency: Currency.Eur},
-      {...memberPlan, id: '3'}
+      {...memberPlan, id: '3', extendable: false}
     ],
     onChange: action('onChange')
   }

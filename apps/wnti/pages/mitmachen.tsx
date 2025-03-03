@@ -36,13 +36,18 @@ const MitmachenPage = styled(PageContainer)`
   }
 `
 
+export const MitmachenInner = () => (
+  <SubscribePage
+    fields={['firstName']}
+    filter={plans => plans.filter(plan => plan.tags?.some(tag => tag === 'selling'))}
+    donate={mb => mb?.slug === 'donate'}
+  />
+)
+
 export default function Mitmachen() {
   return (
     <MitmachenPage slug={'mitmachen'}>
-      <SubscribePage
-        fields={['firstName']}
-        filter={plans => plans.filter(plan => plan.tags?.some(tag => tag === 'selling'))}
-      />
+      <MitmachenInner />
     </MitmachenPage>
   )
 }

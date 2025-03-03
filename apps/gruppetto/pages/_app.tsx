@@ -42,6 +42,7 @@ import {GruppettoBreakBlock} from '../src/break-block'
 import {Footer} from '../src/footer'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
+import Mitmachen from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -142,7 +143,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Footer={Footer}
             MemberPlanItem={YearlyMemberPlanItem}
             elements={{Link: NextWepublishLink}}
-            blocks={{Break: GruppettoBreakBlock}}>
+            blocks={{Break: GruppettoBreakBlock, Subscribe: Mitmachen}}>
             <ThemeProvider theme={gruppettoTheme}>
               <CssBaseline />
 

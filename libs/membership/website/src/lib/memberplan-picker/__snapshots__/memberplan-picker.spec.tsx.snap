@@ -152,7 +152,7 @@ exports[`MemberPlanPicker should render Default 1`] = `
             <small
               class="emotion-11 emotion-12"
             >
-              Ab CHF 50.- pro Monat
+              Ab CHF 50.-
             </small>
           </div>
           <span
@@ -721,7 +721,7 @@ exports[`MemberPlanPicker should render Selected 1`] = `
             <small
               class="emotion-11 emotion-12"
             >
-              Ab CHF 50.- pro Monat
+              Ab CHF 50.-
             </small>
           </div>
           <span
@@ -1663,7 +1663,7 @@ exports[`MemberPlanPicker should render WithError 1`] = `
             <small
               class="emotion-11 emotion-12"
             >
-              Ab CHF 50.- pro Monat
+              Ab CHF 50.-
             </small>
           </div>
           <span
@@ -2231,7 +2231,7 @@ exports[`MemberPlanPicker should render WithLoading 1`] = `
             <small
               class="emotion-11 emotion-12"
             >
-              Ab CHF 50.- pro Monat
+              Ab CHF 50.-
             </small>
           </div>
           <span
