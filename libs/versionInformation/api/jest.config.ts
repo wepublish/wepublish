@@ -7,5 +7,5 @@ export default {
     '^.+\\.[tj]s$': ['ts-jest', {tsconfig: '<rootDir>/tsconfig.spec.json'}]
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../coverage/libs/poll/api'
+  coverageDirectory: '../../../coverage/libs/versionInformation/api'
 }
