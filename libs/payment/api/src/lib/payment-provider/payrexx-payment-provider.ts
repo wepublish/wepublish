@@ -192,6 +192,14 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       0
     )
 
+    let tokenization = {}
+    if (this.offSessionPayments) {
+      tokenization = {
+        preAuthorization: true,
+        chargeOnAuthorization: true
+      }
+    }
+
     const gateway = await this.gatewayClient.createGateway({
       psp: this.psp,
       pm: this.pm,
@@ -207,8 +215,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       cancelRedirectUrl: failureURL as string,
       vatRate: this.vatRate,
       currency,
-      preAuthorization: true,
-      chargeOnAuthorization: true
+      ...tokenization
     })
 
     logger('payrexxPaymentProvider').info(
