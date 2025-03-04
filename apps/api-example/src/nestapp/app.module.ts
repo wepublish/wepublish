@@ -37,7 +37,8 @@ import {
   StatsModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  SystemInfoModule
+  SystemInfoModule,
+  VersionInformationModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -338,7 +339,8 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
       useFactory: (datasource: GoogleAnalyticsService) => datasource,
       inject: [GoogleAnalyticsService]
     }),
-    BannerApiModule
+    BannerApiModule,
+    VersionInformationModule
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [

@@ -1,8 +1,7 @@
 import {Module} from '@nestjs/common'
 import {PrismaModule} from './database/prisma.module'
-import {MaintenanceModule} from './maintenance/maintenance.module'
 
 @Module({
-  imports: [MaintenanceModule, PrismaModule]
+  imports: [PrismaModule]
 })
 export class ApiModule {}
