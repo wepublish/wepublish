@@ -33,7 +33,8 @@ export class NovaMediaAdapter implements MediaAdapter {
       method: 'POST',
       headers: {authorization: `Bearer ${this.token}`},
       body: form,
-      signal: AbortSignal.timeout(50000)
+      // will work with newer node version, @ts-expect-error doesn't work here unfortunately
+      signal: AbortSignal.timeout(50000) as any
     })
 
     const json = await response.json()
