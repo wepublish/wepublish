@@ -1,3 +1,4 @@
+import {styled} from '@mui/material'
 import {
   createCheckedPermissionComponent,
   ListViewContainer,
@@ -8,26 +9,39 @@ import {
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdCalendarMonth, MdCalendarToday, MdCalendarViewWeek} from 'react-icons/md'
-import {DateRangePicker, RadioTile, RadioTileGroup, Table} from 'rsuite'
+import {DateRangePicker, Divider, RadioTile, RadioTileGroup} from 'rsuite'
 import {DateRange} from 'rsuite/esm/DateRangePicker'
-import {RowDataType} from 'rsuite/esm/Table'
 
+import {AudienceChart} from './audience-chart'
 import {AudienceStat, getAudienceStats} from './audience-data-mocker'
+import {AudienceTable} from './audience-table'
 
 export type DateResolution = 'week' | 'month' | 'day'
 
-const {Column, HeaderCell, Cell} = Table
+const AudienceChartWrapper = styled('div')`
+  margin-top: ${({theme}) => theme.spacing(4)};
+  padding-top: ${({theme}) => theme.spacing(2)};
+  padding-right: ${({theme}) => theme.spacing(4)};
+  height: 100%;
+  width: 100%;
+  min-height: 40vh;
+  border: 1px solid ${({theme}) => theme.palette.grey[500]};
+`
+
+const TableWrapperStyled = styled(TableWrapper)`
+  margin-top: ${({theme}) => theme.spacing(8)};
+`
 
 function AudienceDashboard() {
   const {t} = useTranslation()
 
   const [dateResolution, setDateResolution] = useState<DateResolution>('month')
   const [dateRange, setDateRange] = useState<DateRange | null | undefined>(undefined)
-  const [audienceStat, setAudienceStat] = useState<AudienceStat[]>([])
+  const [audienceStats, setAudienceStats] = useState<AudienceStat[]>([])
 
   function loadAudienceStats(): void {
     const audienceStats = getAudienceStats({groupBy: dateResolution})
-    setAudienceStat(audienceStats)
+    setAudienceStats(audienceStats)
   }
 
   function onChangeResolution(dateResolution: DateResolution) {
@@ -62,42 +76,14 @@ function AudienceDashboard() {
           />
         </ListViewFilterArea>
       </ListViewContainer>
-      <TableWrapper>
-        <Table data={audienceStat} style={{width: '100%'}}>
-          <Column resizable>
-            <HeaderCell>{'Monat'}</HeaderCell>
-            <Cell dataKey="date" />
-          </Column>
-          <Column resizable width={150}>
-            <HeaderCell>{'Laufende Abos'}</HeaderCell>
-            <Cell dataKey="ongoingSubscriptions" />
-          </Column>
-          <Column resizable>
-            <HeaderCell>{'Erneuerungen'}</HeaderCell>
-            <Cell dataKey="renewedSubscriptions" />
-          </Column>
-          <Column resizable>
-            <HeaderCell>{'Kündigungen'}</HeaderCell>
-            <Cell dataKey="cancelledSubscriptions" />
-          </Column>
-          <Column resizable width={150}>
-            <HeaderCell>{'Erneuerungsrate'}</HeaderCell>
-            <Cell dataKey="renewalRate">
-              {(rowData: RowDataType<AudienceStat>) => <>{rowData.renewalRate}%</>}
-            </Cell>
-          </Column>
-          <Column resizable width={150}>
-            <HeaderCell>{'Kündigungsrate'}</HeaderCell>
-            <Cell dataKey="cancellationRate">
-              {(rowData: RowDataType<AudienceStat>) => <>{rowData.cancellationRate}%</>}
-            </Cell>
-          </Column>
-          <Column resizable width={150}>
-            <HeaderCell>{'Total aktive Abos'}</HeaderCell>
-            <Cell dataKey="totalActiveSubscriptions" />
-          </Column>
-        </Table>
-      </TableWrapper>
+
+      <AudienceChartWrapper>
+        <AudienceChart audienceStats={audienceStats} />
+      </AudienceChartWrapper>
+
+      <TableWrapperStyled>
+        <AudienceTable audienceStats={audienceStats} />
+      </TableWrapperStyled>
     </>
   )
 }
