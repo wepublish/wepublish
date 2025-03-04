@@ -63,6 +63,7 @@ import {UserRoleList} from './routes/userRoles/userRoleList'
 import {UserEditView} from './routes/users/userEditView'
 import {UserList} from './routes/users/userList'
 import {LocalStorageKey} from './utility'
+import {AudienceDashboard} from './routes/audience/audience-dashboard'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -564,6 +565,17 @@ export function App() {
                 </Base>
               }
             />
+
+            {/* Audience Routes */}
+            <Route
+              path="audience/dashboard"
+              element={
+                <Base>
+                  <AudienceDashboard />
+                </Base>
+              }
+            />
+
             {/* Subscription Routes */}
             <Route
               path="subscriptions"
