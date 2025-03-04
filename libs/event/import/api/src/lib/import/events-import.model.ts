@@ -1,6 +1,6 @@
 import {ArgsType, Field, InputType, ObjectType, OmitType, registerEnumType} from '@nestjs/graphql'
 import {EventStatus} from '@prisma/client'
-import {EventV2} from '@wepublish/event/api'
+import {Event} from '@wepublish/event/api'
 import {PaginatedType} from '@wepublish/utils/api'
 
 export enum ImportedEventSort {
@@ -19,7 +19,7 @@ registerEnumType(EventStatus, {
 })
 
 @ObjectType()
-export class EventFromSource extends OmitType(EventV2, ['imageId', 'image'] as const) {
+export class EventFromSource extends OmitType(Event, ['imageId', 'image', 'url'] as const) {
   @Field({nullable: true})
   imageUrl?: string
 }

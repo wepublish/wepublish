@@ -2,9 +2,9 @@ import {
   CreateBannerActionInput,
   CreateBannerInput,
   getApiClientV2,
-  ImageRefFragment,
-  LoginStatus,
-  useCreateBannerMutation
+  FullImageFragment,
+  useCreateBannerMutation,
+  LoginStatus
 } from '@wepublish/editor/api-v2'
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -23,7 +23,7 @@ export const CreateBannerForm = () => {
     active: false,
     showOnArticles: false,
     showForLoginStatus: LoginStatus.All
-  } as CreateBannerInput & {image?: ImageRefFragment | null})
+  } as CreateBannerInput & {image?: FullImageFragment | null})
 
   const {StringType, BooleanType} = Schema.Types
   const validationModel = Schema.Model({

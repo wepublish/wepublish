@@ -1,6 +1,6 @@
 import {css, styled} from '@mui/material'
 import {
-  Block,
+  BlockContent,
   FlexTeaser,
   TeaserGridFlexBlock as TeaserGridFlexBlockType
 } from '@wepublish/website/api'
@@ -9,8 +9,9 @@ import {ascend, compose, filter, sortWith} from 'ramda'
 import {useMemo} from 'react'
 import {isFilledTeaser} from './teaser-grid-block'
 
-export const isTeaserGridFlexBlock = (block: Block): block is TeaserGridFlexBlockType =>
-  block.__typename === 'TeaserGridFlexBlock'
+export const isTeaserGridFlexBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserGridFlexBlockType => block.__typename === 'TeaserGridFlexBlock'
 
 export const TeaserGridFlexBlockWrapper = styled('div')`
   display: grid;

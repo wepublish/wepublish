@@ -1,4 +1,4 @@
-import {DateFilter} from './common'
+import {DateFilter} from '@wepublish/utils/api'
 
 export enum InvoiceSort {
   CreatedAt = 'createdAt',

@@ -14,7 +14,8 @@ To replace the `SubscriptionList` component that is being rendered by a custom c
 
 <CodeOrSourceMdx>
 ```typescript
-import {WebsiteBuilderProvider, BuilderSubscriptionListProps, SubscriptionListContainer} from '@wepublish/website'
+import {WebsiteBuilderProvider, BuilderSubscriptionListProps} from '@wepublish/website/builder'
+import {SubscriptionListContainer} from '@wepublish/membership/website'
 
 const MySubscriptionList = (props: BuilderSubscriptionListProps) => <div>My Subscription List</div>
 
@@ -34,7 +35,8 @@ To replace the `SubscriptionListItem` component that is being rendered by a cust
 
 <CodeOrSourceMdx>
 ```typescript
-import {WebsiteBuilderProvider, BuilderSubscriptionListItemProps, SubscriptionListContainer} from '@wepublish/website'
+import {WebsiteBuilderProvider, BuilderSubscriptionListItemProps} from '@wepublish/website/builder'
+import {SubscriptionListContainer} from '@wepublish/membership/website'
 
 const MySubscriptionListItem = (props: BuilderSubscriptionListItemProps) => <div>My Subscription List Item</div>
 

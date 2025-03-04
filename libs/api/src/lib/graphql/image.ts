@@ -6,8 +6,7 @@ import {
   GraphQLString,
   GraphQLFloat,
   GraphQLEnumType,
-  GraphQLInputObjectType,
-  GraphQLID
+  GraphQLInputObjectType
 } from 'graphql'
 
 import {GraphQLDateTime} from 'graphql-scalars'
@@ -121,7 +120,7 @@ export const GraphQLImageSort = new GraphQLEnumType({
 export const GraphQLImage = new GraphQLObjectType<ImageWithTransformURL, Context>({
   name: 'Image',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -170,7 +169,7 @@ export const GraphQLImageConnection = new GraphQLObjectType<any, Context>({
 })
 
 export const GraphQLImageResolver = {
-  __resolveReference: async (reference, {loaders}: Context) => {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
     const {id} = reference
     const image = await loaders.images.load(id)
     if (!image) throw new Error('Image not found')

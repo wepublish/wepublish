@@ -9,7 +9,7 @@ import {
   PollBlockVoteBar,
   PollBlockVoteBarFill,
   RichTextBlockWrapper
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
 
 export const PollBlock = styled(BasePollBlock)`
   ${PollBlockTitle} {

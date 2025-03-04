@@ -1,6 +1,5 @@
 import {Meta, StoryObj} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
-import {css} from '@emotion/react'
 import {H5, Paragraph} from '@wepublish/ui'
 import {MembershipModal} from './membership-modal'
 
@@ -28,23 +27,5 @@ export const Default: StoryObj = {
         </Paragraph>
       </div>
     )
-  }
-}
-
-export const WithClassName: StoryObj = {
-  ...Default,
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
-}
-
-export const WithEmotion: StoryObj = {
-  ...Default,
-  args: {
-    ...Default.args,
-    css: css`
-      background-color: #eee;
-    `
   }
 }

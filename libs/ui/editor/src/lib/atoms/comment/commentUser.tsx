@@ -1,4 +1,4 @@
-import {FullCommentFragment, FullUserFragment, ImageRefFragment} from '@wepublish/editor/api'
+import {FullCommentFragment, FullUserFragment, FullImageFragment} from '@wepublish/editor/api'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Col, Drawer, Form, Row} from 'rsuite'
@@ -24,7 +24,7 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
     setComment(oldComment => (oldComment ? {...oldComment, guestUsername} : oldComment))
   }
 
-  function setImage(guestUserImage: ImageRefFragment | undefined) {
+  function setImage(guestUserImage: FullImageFragment | undefined) {
     setComment(oldComment => (oldComment ? {...oldComment, guestUserImage} : oldComment))
   }
 
@@ -71,7 +71,7 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
         }}>
         <ImageSelectPanel
           onClose={() => setOpen(false)}
-          onSelect={(image: ImageRefFragment) => {
+          onSelect={(image: FullImageFragment) => {
             setImage(image)
             setOpen(false)
           }}

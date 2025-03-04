@@ -117,7 +117,7 @@ describe('BannerResolver', () => {
     })
 
     it('should return null when no imageId', () => {
-      const bannerWithoutImage = {...mockBanner, imageId: null}
+      const bannerWithoutImage = {...mockBanner, imageId: undefined}
       const result = resolver.image(bannerWithoutImage)
       expect(result).toBeNull()
     })

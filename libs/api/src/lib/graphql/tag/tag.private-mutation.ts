@@ -1,6 +1,6 @@
 import {TagType, PrismaClient} from '@prisma/client'
 import {authorise} from '../permissions'
-import {CanCreateTag, CanDeleteTag, CanUpdateTag} from '@wepublish/permissions/api'
+import {CanCreateTag, CanDeleteTag, CanUpdateTag} from '@wepublish/permissions'
 import {Context} from '../../context'
 
 export const createTag = (

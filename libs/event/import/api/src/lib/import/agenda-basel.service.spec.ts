@@ -1,7 +1,7 @@
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {Test, TestingModule} from '@nestjs/testing'
 import {EventStatus, PrismaClient} from '@prisma/client'
-import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
+import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
 import {AgendaBaselService} from './agenda-basel.service'
 import {EVENT_IMPORT_PROVIDER} from './events-import.service'
 import {KulturagendaParser} from './kulturagenda-parser'
@@ -67,7 +67,7 @@ describe('AgendaBaselService', () => {
           }
         },
         {
-          provide: MediaAdapterService,
+          provide: MediaAdapter,
           useValue: {
             uploadImageFromArrayBuffer: jest.fn().mockResolvedValue({
               id: 'bar'

@@ -96,7 +96,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
 
   async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
     const intentStates: IntentState[] = []
-    const key = props.req.query?.key as string
+    const key = props.req.query?.['key'] as string
 
     if (!this.timeConstantCompare(key, this.webhookEndpointSecret)) {
       return {

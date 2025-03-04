@@ -1,7 +1,6 @@
 import {
   GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -28,6 +27,7 @@ import {GraphQLInvoice} from './invoice'
 import {createProxyingResolver} from '../utility'
 import {GraphQLImage, GraphQLUploadImageInput} from './image'
 import {isMeBySession} from './utils'
+import {uniq} from 'ramda'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
@@ -61,7 +61,7 @@ export const GraphQLOAuth2Account = new GraphQLObjectType({
 const GraphQLUserSubscription = new GraphQLObjectType<Subscription, Context>({
   name: 'UserSubscription',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
@@ -224,6 +224,16 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublic))),
       resolve: ({properties}) =>
         properties.filter(property => property.public).map(({key, value}) => ({key, value}))
+    },
+    permissions: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString))),
+      resolve: createProxyingResolver(({id}, _, {session}) => {
+        if (!isMeBySession(id, session)) {
+          return []
+        }
+
+        return session ? uniq(session.roles.flatMap(role => role.permissionIDs)) : []
+      })
     }
   }
 })
@@ -282,7 +292,7 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
     address: {type: GraphQLUserAddressInput},
     flair: {type: GraphQLString},
 
-    userImageID: {type: GraphQLID},
+    userImageID: {type: GraphQLString},
 
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
 
@@ -342,3 +352,16 @@ export const GraphQLMemberRegistrationAndPayment = new GraphQLObjectType({
     session: {type: new GraphQLNonNull(GraphQLUserSession)}
   }
 })
+
+export const GraphQLUserResolver = {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
+    const {id} = reference
+    const user = await loaders.usersById.load(id)
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    return user
+  }
+}

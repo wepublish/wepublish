@@ -1,7 +1,0 @@
-mutation AddLike($input: LikeCreateInput!) {
-  addLike(input: $input)
-}
-
-mutation RemoveLike($input: LikeDeleteInput!) {
-  removeLike(input: $input)
-}

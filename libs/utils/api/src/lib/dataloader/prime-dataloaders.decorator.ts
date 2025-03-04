@@ -15,8 +15,9 @@ export function PrimeDataLoader<T extends Primeable<unknown>>(dataloader: Type<T
     descriptor: PropertyDescriptor
   ) => {
     const origin = descriptor.value
+    const injectProperty = `__DATALOADER__${dataloader.name}`
     const injectDataloader = Inject(dataloader)
-    injectDataloader(target, `__DATALOADER__${dataloader.name}`)
+    injectDataloader(target, injectProperty)
 
     descriptor.value = async function (...args: unknown[]) {
       const resultItem = await origin.apply(this, args)
@@ -34,7 +35,7 @@ export function PrimeDataLoader<T extends Primeable<unknown>>(dataloader: Type<T
       for (const result of results) {
         if ('id' in result) {
           const that = this as any
-          const loader = that[`__DATALOADER__${dataloader.name}`] as T
+          const loader = that[injectProperty] as T
           loader.prime(result.id, result)
         }
       }

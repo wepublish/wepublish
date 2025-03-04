@@ -28,7 +28,7 @@ query PeerProfile {
   }
 }
 
-query Peer($id: ID!) {
+query Peer($id: String!) {
   peer(id: $id) {
     ...PeerRef
   }

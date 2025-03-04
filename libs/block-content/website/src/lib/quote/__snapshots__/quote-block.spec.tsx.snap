@@ -23,52 +23,6 @@ exports[`Quote Block should render Default 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Quote Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <blockquote
-    class="extra-classname emotion-0 emotion-1"
-  >
-    <div
-      class="emotion-2 emotion-3"
-    >
-      <p
-        class="MuiTypography-root MuiTypography-h4 emotion-4"
-      >
-        This is a quote that is very long so that we can make sure that linebreaks correctly happen.
-      </p>
-      <cite
-        class="MuiTypography-root MuiTypography-body1 emotion-5"
-      >
-        John Doe
-      </cite>
-    </div>
-  </blockquote>
-</DocumentFragment>
-`;
-
-exports[`Quote Block should render WithEmotion 1`] = `
-<DocumentFragment>
-  <blockquote
-    class="emotion-0 emotion-1"
-  >
-    <div
-      class="emotion-2 emotion-3"
-    >
-      <p
-        class="MuiTypography-root MuiTypography-h4 emotion-4"
-      >
-        This is a quote that is very long so that we can make sure that linebreaks correctly happen.
-      </p>
-      <cite
-        class="MuiTypography-root MuiTypography-body1 emotion-5"
-      >
-        John Doe
-      </cite>
-    </div>
-  </blockquote>
-</DocumentFragment>
-`;
-
 exports[`Quote Block should render WithImage 1`] = `
 <DocumentFragment>
   <blockquote

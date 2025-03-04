@@ -1,38 +1,77 @@
-import {DynamicModule, Module, Provider} from '@nestjs/common'
-import {TrackingPixelService} from './tracking-pixel.service'
-import {createAsyncOptionsProvider} from '@wepublish/utils/api'
+import {DynamicModule, Global, Module, ModuleMetadata, Provider, Type} from '@nestjs/common'
+import {PrismaModule} from '@wepublish/nest-modules'
 import {
-  TrackingPixelModuleAsyncOptions,
   TRACKING_PIXEL_MODULE_OPTIONS,
-  TrackingPixelModuleOptions
-} from './tracking-pixel-module-options'
+  TrackingPixelModuleOptions,
+  TrackingPixelService
+} from './tracking-pixel.service'
 
+export type TrackingPixelsOptionsFactory = {
+  createTrackingPixelsOptions(): Promise<TrackingPixelModuleOptions> | TrackingPixelModuleOptions
+}
+
+export interface TrackingPixelsAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
+  useExisting?: Type<TrackingPixelsOptionsFactory>
+  useClass?: Type<TrackingPixelsOptionsFactory>
+  useFactory?: (...args: any[]) => Promise<TrackingPixelModuleOptions> | TrackingPixelModuleOptions
+  inject?: any[]
+}
+
+@Global()
 @Module({
-  imports: [],
+  imports: [PrismaModule],
+  providers: [TrackingPixelService],
   exports: [TrackingPixelService]
 })
-export class TrackingPixelModule {
-  static registerAsync(options: TrackingPixelModuleAsyncOptions): DynamicModule {
+export class TrackingPixelsModule {
+  public static register(config: TrackingPixelModuleOptions): DynamicModule {
     return {
-      module: TrackingPixelModule,
-      global: options.global,
+      module: TrackingPixelsModule,
+      providers: [
+        {
+          provide: TRACKING_PIXEL_MODULE_OPTIONS,
+          useValue: config
+        }
+      ]
+    }
+  }
+
+  public static registerAsync(options: TrackingPixelsAsyncOptions): DynamicModule {
+    return {
+      module: TrackingPixelsModule,
       imports: options.imports || [],
       providers: this.createAsyncProviders(options)
     }
   }
 
-  private static createAsyncProviders(options: TrackingPixelModuleAsyncOptions): Provider[] {
+  private static createAsyncProviders(options: TrackingPixelsAsyncOptions): Provider[] {
+    if (options.useExisting || options.useFactory) {
+      return [this.createAsyncOptionsProvider(options)]
+    }
+
     return [
-      createAsyncOptionsProvider<TrackingPixelModuleOptions>(
-        TRACKING_PIXEL_MODULE_OPTIONS,
-        options
-      ),
+      this.createAsyncOptionsProvider(options),
       {
-        provide: TrackingPixelService,
-        useFactory: ({trackingPixelProviders}: TrackingPixelModuleOptions) =>
-          new TrackingPixelService(trackingPixelProviders),
-        inject: [TRACKING_PIXEL_MODULE_OPTIONS]
+        provide: options.useClass!,
+        useClass: options.useClass!
       }
     ]
+  }
+
+  private static createAsyncOptionsProvider(options: TrackingPixelsAsyncOptions): Provider {
+    if (options.useFactory) {
+      return {
+        provide: TRACKING_PIXEL_MODULE_OPTIONS,
+        useFactory: options.useFactory,
+        inject: options.inject || []
+      }
+    }
+
+    return {
+      provide: TRACKING_PIXEL_MODULE_OPTIONS,
+      useFactory: async (optionsFactory: TrackingPixelsOptionsFactory) =>
+        await optionsFactory.createTrackingPixelsOptions(),
+      inject: [options.useExisting || options.useClass!]
+    }
   }
 }

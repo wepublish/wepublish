@@ -1,4 +1,4 @@
-import {ApiV1} from '@wepublish/website'
+import {useDislikeArticleMutation, useLikeArticleMutation} from '@wepublish/website/api'
 import {useCallback, useEffect, useState} from 'react'
 import {useCounter} from 'usehooks-ts'
 
@@ -36,19 +36,15 @@ export function useLikeStatus(articleId: string, articleLikes: number) {
     [articleId]
   )
 
-  const [removeLikeMutation] = ApiV1.useRemoveLikeMutation({
+  const [removeLikeMutation] = useDislikeArticleMutation({
     variables: {
-      input: {
-        articleId
-      }
+      id: articleId
     }
   })
 
-  const [addLikeMutation] = ApiV1.useAddLikeMutation({
+  const [addLikeMutation] = useLikeArticleMutation({
     variables: {
-      input: {
-        articleId
-      }
+      id: articleId
     }
   })
 

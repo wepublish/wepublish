@@ -1,10 +1,4 @@
-import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLString,
-  GraphQLInputObjectType,
-  GraphQLID
-} from 'graphql'
+import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLInputObjectType} from 'graphql'
 
 import {Context} from '../context'
 import {GraphQLDateTime} from 'graphql-scalars'
@@ -20,7 +14,7 @@ export const GraphQLTokenInput = new GraphQLInputObjectType({
 export const GraphQLToken = new GraphQLObjectType<Token, Context>({
   name: 'Token',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -32,7 +26,7 @@ export const GraphQLToken = new GraphQLObjectType<Token, Context>({
 export const GraphQLCreatedToken = new GraphQLObjectType<Token, Context>({
   name: 'CreatedToken',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},

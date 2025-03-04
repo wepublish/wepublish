@@ -1,5 +1,6 @@
 import {Meta} from '@storybook/react'
 import {TikTokVideoBlock} from './tik-tok-video-block'
+import {mockTikTokVideoBlock} from '@wepublish/storybook/mocks'
 
 export default {
   component: TikTokVideoBlock,
@@ -7,15 +8,5 @@ export default {
 } as Meta
 
 export const Default = {
-  args: {
-    userID: 'scout2015',
-    videoID: '6718335390845095173'
-  }
-}
-
-export const WithClassName = {
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
+  args: mockTikTokVideoBlock()
 }

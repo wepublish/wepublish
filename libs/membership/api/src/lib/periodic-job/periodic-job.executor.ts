@@ -2,11 +2,11 @@ import {Cron} from '@nestjs/schedule'
 import {Injectable} from '@nestjs/common'
 import {PeriodicJobService} from './periodic-job.service'
 
-const SCHEDULE = process.env.PERIODIC_JOB_EXECUTION_SCHEDULE || '0 0 3 * * *'
+const SCHEDULE = process.env['PERIODIC_JOB_EXECUTION_SCHEDULE'] || '0 0 3 * * *'
 
 @Injectable()
 export class PeriodicJobExecutor {
-  constructor(private readonly periodicJobController: PeriodicJobService) {}
+  constructor(private periodicJobController: PeriodicJobService) {}
 
   @Cron(
     SCHEDULE,

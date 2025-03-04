@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import {CanUpdateSettings} from '@wepublish/permissions/api'
+import {CanUpdateSettings} from '@wepublish/permissions'
 import {Context} from '../../context'
 import {
   SettingRestriction,

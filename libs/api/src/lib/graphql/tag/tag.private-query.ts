@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient, TagType} from '@prisma/client'
-import {CanGetTags} from '@wepublish/permissions/api'
+import {CanGetTags} from '@wepublish/permissions'
 import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 import {Context} from '../../context'
 import {authorise} from '../permissions'

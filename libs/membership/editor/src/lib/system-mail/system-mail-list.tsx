@@ -12,7 +12,8 @@ import {
   useMailTemplateQuery,
   UserEvent,
   useTestSystemMailMutation,
-  useUpdateSystemMailMutation
+  useUpdateSystemMailMutation,
+  getApiClientV2
 } from '@wepublish/editor/api-v2'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -23,7 +24,6 @@ import {RiTestTubeLine} from 'react-icons/ri'
 import {DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS} from '../common'
 import {
   createCheckedPermissionComponent,
-  getApiClientV2,
   ListViewContainer,
   ListViewHeader
 } from '@wepublish/ui/editor'

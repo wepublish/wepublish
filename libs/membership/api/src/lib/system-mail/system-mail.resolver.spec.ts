@@ -91,7 +91,12 @@ describe('SystemMailResolver', () => {
   })
 
   it('should test the system mail', async () => {
-    const result = await resolver.testSystemMail(FAKE_USER, UserEvent.ACCOUNT_CREATION)
+    const result = await resolver.testSystemMail(
+      {
+        user: FAKE_USER
+      } as any,
+      UserEvent.ACCOUNT_CREATION
+    )
     expect(result).toBeTruthy()
   })
 })

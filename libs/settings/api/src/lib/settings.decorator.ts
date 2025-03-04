@@ -1,5 +1,5 @@
 import {applyDecorators} from '@nestjs/common'
-import {OneOf} from '@wepublish/authentication/api'
+import {OneOf} from '@wepublish/nest-modules'
 import {AddMetadata} from '@wepublish/nest-modules'
 import {SettingsGuard} from './settings.guard'
 import {SettingName} from './setting'

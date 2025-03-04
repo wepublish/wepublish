@@ -153,7 +153,7 @@ const TagList = memo<TagListProps>(({type}) => {
         type
       }
     },
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     onError: showErrors,
     onCompleted(newData) {
       dispatchApiValue({

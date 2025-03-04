@@ -14,7 +14,8 @@ To replace the `EventList` component that is being rendered by a custom componen
 
 <CodeOrSourceMdx>
 ```typescript
-import {WebsiteBuilderProvider, BuilderEventListProps, EventListContainer} from '@wepublish/website'
+import {WebsiteBuilderProvider, BuilderEventListProps, } from '@wepublish/website/builder'
+import {EventListContainer} from '@wepublish/event/website'
 
 const MyEventList = (props: BuilderEventListProps) => <div>My Event List</div>
 
@@ -34,7 +35,8 @@ To replace the `EventListItem` component that is being rendered by a custom comp
 
 <CodeOrSourceMdx>
 ```typescript
-import {WebsiteBuilderProvider, BuilderEventListItemProps, EventListContainer} from '@wepublish/website'
+import {WebsiteBuilderProvider, BuilderEventListItemProps} from '@wepublish/website/builder'
+import {EventListContainer} from '@wepublish/event/website'
 
 const MyEventListItem = (props: BuilderEventListItemProps) => <div>My Event List Item</div>
 

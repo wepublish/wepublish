@@ -1,11 +1,7 @@
 import styled from '@emotion/styled'
 import {
-  ArticleFilter,
   AuthorRefFragment,
-  DateFilterComparison,
-  EventFilter,
   FullUserRoleFragment,
-  PageFilter,
   PollAnswerWithVoteCount,
   usePeerListLazyQuery,
   usePollLazyQuery,
@@ -28,10 +24,15 @@ import {
 
 import {AuthorCheckPicker} from '../panel/authorCheckPicker'
 import {
+  ArticleFilter,
   InputMaybe,
+  PageFilter,
   PollVoteFilter,
   Scalars,
-  useEventProvidersLazyQuery
+  useEventProvidersLazyQuery,
+  DateFilterComparison,
+  EventFilter,
+  PeerArticleFilter
 } from '@wepublish/editor/api-v2'
 import {getApiClientV2} from '@wepublish/editor/api-v2'
 import {TagCheckPicker, TagRefFragment} from '../panel/tagCheckPicker'
@@ -84,7 +85,7 @@ type Field =
   | 'published'
   | 'pending'
   | 'authors'
-  | 'peer'
+  | 'peerId'
   | 'publicationDate'
   | 'dates'
   | 'providers'
@@ -104,6 +105,7 @@ export type ImportableEventFilter = {
 }
 
 type Filter = ArticleFilter &
+  PeerArticleFilter &
   PageFilter &
   UserFilter &
   EventFilter &
@@ -116,18 +118,9 @@ export interface ListViewFiltersProps {
   isLoading: boolean
   onSetFilter(filter: Filter): void
   className?: string
-
-  // optional setters for filters
-  setPeerFilter?(value: string): void
 }
 
-export function ListViewFilters({
-  fields,
-  filter,
-  onSetFilter,
-  setPeerFilter,
-  className
-}: ListViewFiltersProps) {
+export function ListViewFilters({fields, filter, onSetFilter, className}: ListViewFiltersProps) {
   const client = useMemo(() => getApiClientV2(), [])
   const {t} = useTranslation()
   const [resetFilterKey, setResetFilterkey] = useState<string>(new Date().getTime().toString())
@@ -162,7 +155,7 @@ export function ListViewFilters({
   const isAnswerFilter = fields.includes('answerIds')
   const isProviderFilter = fields.includes('providers')
   const isUserRoleFilter = fields.includes('userRole')
-  const isPeerFilter = fields.includes('peer') && !!setPeerFilter
+  const isPeerFilter = fields.includes('peerId')
 
   // conditionally get some additional data
   useEffect(() => {
@@ -241,12 +234,15 @@ export function ListViewFilters({
 
   function resetFilter(): void {
     const cleanFilter: Record<string, any> = {}
+
     for (const filterKey in filter) {
       const possibleField = mapFilterFieldToField(filterKey as keyof Filter)
+
       if (!possibleField || !fields.includes(possibleField)) {
         cleanFilter[filterKey] = filter[filterKey as keyof Filter]
       }
     }
+
     onSetFilter(cleanFilter)
     setResetFilterkey(new Date().getTime().toString())
   }
@@ -255,12 +251,15 @@ export function ListViewFilters({
     if (value.authors && !value.authors.length) {
       value = {authors: null}
     }
+
     if (value.userRole && !value.userRole.length) {
       value = {userRole: null}
     }
+
     if (value.answerIds && !value.answerIds.length) {
       value = {answerIds: null}
     }
+
     const newFilter = {
       ...filter,
       ...value
@@ -516,11 +515,11 @@ export function ListViewFilters({
                   updateFilter({
                     publicationDateFrom: {
                       date: value[0]?.toISOString(),
-                      comparison: DateFilterComparison.Gt
+                      comparison: DateFilterComparison.GreaterThan
                     },
                     publicationDateTo: {
                       date: value[1]?.toISOString(),
-                      comparison: DateFilterComparison.Lte
+                      comparison: DateFilterComparison.LowerThanOrEqual
                     }
                   })
                 }
@@ -565,14 +564,15 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <SelectPicker
               virtualized
+              value={filter.peerId ?? null}
               data={allPeers.map(peer => ({
-                value: peer.name,
-                label: peer.profile?.name
+                value: peer.id,
+                label: peer.name
               }))}
               placeholder={t('peerArticles.filterByPeer')}
               searchable
-              onSelect={value => setPeerFilter(value)}
-              onClean={() => setPeerFilter('')}
+              onSelect={value => updateFilter({peerId: value})}
+              onClean={() => updateFilter({peerId: undefined})}
             />
           </Group>
         )}

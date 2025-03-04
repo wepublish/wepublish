@@ -45,12 +45,6 @@ export const CommentAuthor = styled('div')`
   font-weight: ${({theme}) => theme.typography.fontWeightBold};
 `
 
-export const CommentVerifiedBadge = styled('div')`
-  display: grid;
-  align-items: center;
-  color: ${({theme}) => theme.palette.info.main};
-`
-
 export const CommentFlair = styled('div')`
   font-size: 0.75em;
   font-weight: 300;
@@ -81,7 +75,8 @@ export const Comment = ({
   source,
   children,
   createdAt,
-  showContent = true
+  showContent = true,
+  includeAnchor = true
 }: BuilderCommentProps) => {
   const {
     elements: {Paragraph, Image},
@@ -94,7 +89,7 @@ export const Comment = ({
   const name = user ? `${user.firstName} ${user.name}` : guestUsername
 
   return (
-    <CommentWrapper className={className} id={id}>
+    <CommentWrapper className={className} id={includeAnchor ? id : undefined}>
       <CommentHeader>
         {image && <Image image={image} square css={avatarStyles} />}
         {!image && <MdPerson css={avatarStyles} />}
@@ -102,12 +97,6 @@ export const Comment = ({
         <CommentHeaderContent>
           <CommentName>
             <CommentAuthor>{name}</CommentAuthor>
-
-            {/*
-              <CommentVerifiedBadge>
-                <MdVerified title="Member" />
-              </CommentVerifiedBadge>
-            */}
           </CommentName>
 
           {source && isValidUrl(source) && (

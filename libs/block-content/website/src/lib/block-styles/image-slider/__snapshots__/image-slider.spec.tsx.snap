@@ -21,7 +21,7 @@ exports[`Image Slider should render Default 1`] = `
               class="emotion-8 emotion-9"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-10 emotion-11"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -36,12 +36,12 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
               <figcaption
                 class="emotion-12 emotion-13"
               >
-                ABC 
+                ABC (Bild: Source)
               </figcaption>
             </div>
           </figure>
@@ -56,7 +56,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-8 emotion-9"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-10 emotion-11"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -71,8 +71,13 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
+              <figcaption
+                class="emotion-12 emotion-13"
+              >
+                 (Bild: Source)
+              </figcaption>
             </div>
           </figure>
         </div>
@@ -86,7 +91,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-8 emotion-9"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-10 emotion-11"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -101,309 +106,35 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
               <figcaption
                 class="emotion-12 emotion-13"
               >
-                Ultra Long Caption just to make sure this is rendering correctly. Because we never know what some people might write. 
+                Ultra Long Caption just to make sure this is rendering correctly. Because we never know what some people might write. (Bild: Source)
               </figcaption>
             </div>
           </figure>
         </div>
       </div>
       <div
-        class="emotion-28 emotion-29"
+        class="emotion-30 emotion-31"
       >
         <button
           aria-label="Slide 1"
-          class="emotion-30 emotion-31"
+          class="emotion-32 emotion-33"
         >
           <span
-            class="emotion-32 emotion-33"
+            class="emotion-34 emotion-35"
           />
         </button>
         <button
           aria-label="Slide 2"
-          class="emotion-30 emotion-31"
+          class="emotion-32 emotion-33"
         />
         <button
           aria-label="Slide 3"
-          class="emotion-30 emotion-31"
-        />
-      </div>
-    </div>
-  </section>
-</DocumentFragment>
-`;
-
-exports[`Image Slider should render WithClassName 1`] = `
-<DocumentFragment>
-  <section
-    class="emotion-0 emotion-1"
-  >
-    <div
-      class="emotion-2 emotion-3"
-    >
-      <div
-        class="keen-slider emotion-4 emotion-5"
-      >
-        <div
-          class="keen-slider__slide"
-        >
-          <figure
-            class="emotion-6 emotion-7"
-          >
-            <div
-              class="emotion-8 emotion-9"
-            >
-              <img
-                alt="An image description"
-                class="emotion-10 emotion-11"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-              <figcaption
-                class="emotion-12 emotion-13"
-              >
-                ABC 
-              </figcaption>
-            </div>
-          </figure>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <figure
-            class="emotion-6 emotion-7"
-          >
-            <div
-              class="emotion-8 emotion-9"
-            >
-              <img
-                alt="An image description"
-                class="emotion-10 emotion-11"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-            </div>
-          </figure>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <figure
-            class="emotion-6 emotion-7"
-          >
-            <div
-              class="emotion-8 emotion-9"
-            >
-              <img
-                alt="An image description"
-                class="emotion-10 emotion-11"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-              <figcaption
-                class="emotion-12 emotion-13"
-              >
-                Ultra Long Caption just to make sure this is rendering correctly. Because we never know what some people might write. 
-              </figcaption>
-            </div>
-          </figure>
-        </div>
-      </div>
-      <div
-        class="emotion-28 emotion-29"
-      >
-        <button
-          aria-label="Slide 1"
-          class="emotion-30 emotion-31"
-        >
-          <span
-            class="emotion-32 emotion-33"
-          />
-        </button>
-        <button
-          aria-label="Slide 2"
-          class="emotion-30 emotion-31"
-        />
-        <button
-          aria-label="Slide 3"
-          class="emotion-30 emotion-31"
-        />
-      </div>
-    </div>
-  </section>
-</DocumentFragment>
-`;
-
-exports[`Image Slider should render WithEmotion 1`] = `
-<DocumentFragment>
-  <section
-    class="emotion-0 emotion-1"
-  >
-    <div
-      class="emotion-2 emotion-3"
-    >
-      <div
-        class="keen-slider emotion-4 emotion-5"
-      >
-        <div
-          class="keen-slider__slide"
-        >
-          <figure
-            class="emotion-6 emotion-7"
-          >
-            <div
-              class="emotion-8 emotion-9"
-            >
-              <img
-                alt="An image description"
-                class="emotion-10 emotion-11"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-              <figcaption
-                class="emotion-12 emotion-13"
-              >
-                ABC 
-              </figcaption>
-            </div>
-          </figure>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <figure
-            class="emotion-6 emotion-7"
-          >
-            <div
-              class="emotion-8 emotion-9"
-            >
-              <img
-                alt="An image description"
-                class="emotion-10 emotion-11"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-            </div>
-          </figure>
-        </div>
-        <div
-          class="keen-slider__slide"
-        >
-          <figure
-            class="emotion-6 emotion-7"
-          >
-            <div
-              class="emotion-8 emotion-9"
-            >
-              <img
-                alt="An image description"
-                class="emotion-10 emotion-11"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-              <figcaption
-                class="emotion-12 emotion-13"
-              >
-                Ultra Long Caption just to make sure this is rendering correctly. Because we never know what some people might write. 
-              </figcaption>
-            </div>
-          </figure>
-        </div>
-      </div>
-      <div
-        class="emotion-28 emotion-29"
-      >
-        <button
-          aria-label="Slide 1"
-          class="emotion-30 emotion-31"
-        >
-          <span
-            class="emotion-32 emotion-33"
-          />
-        </button>
-        <button
-          aria-label="Slide 2"
-          class="emotion-30 emotion-31"
-        />
-        <button
-          aria-label="Slide 3"
-          class="emotion-30 emotion-31"
+          class="emotion-32 emotion-33"
         />
       </div>
     </div>

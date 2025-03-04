@@ -4,3 +4,8 @@ export * from './lib/subscription-event-dictionary/subscription-event-dictionary
 export * from './lib/periodic-job/periodic-job.service'
 export * from './lib/subscription/subscription.service'
 export * from './lib/subscription-event-dictionary/subscription-event-dictionary.type'
+
+export * from './lib/subscription/subscription.model'
+export * from './lib/subscription/subscription.module'
+export * from './lib/subscription/has-subscription/has-subscription.model'
+export * from './lib/subscription/has-subscription/has-subscription.resolver'

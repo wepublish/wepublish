@@ -15,16 +15,18 @@ const YouTubeEmbed = styled.div`
 `
 
 export interface YouTubeVideoEmbedProps {
-  videoID: string
+  videoID: string | null | undefined
 }
 
 export function YouTubeVideoEmbed({videoID}: YouTubeVideoEmbedProps) {
   return (
     <YouTubeEmbed>
-      <Iframe
-        src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoID)}`}
-        allowFullScreen
-      />
+      {videoID && (
+        <Iframe
+          src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoID)}`}
+          allowFullScreen
+        />
+      )}
     </YouTubeEmbed>
   )
 }

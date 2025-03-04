@@ -1,5 +1,6 @@
 import {Meta} from '@storybook/react'
 import {FacebookVideoBlock} from './facebook-video-block'
+import {mockFacebookVideoBlock} from '@wepublish/storybook/mocks'
 
 export default {
   component: FacebookVideoBlock,
@@ -7,15 +8,5 @@ export default {
 } as Meta
 
 export const Default = {
-  args: {
-    userID: '100064959061177',
-    videoID: '1310370486335266'
-  }
-}
-
-export const WithClassName = {
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
+  args: mockFacebookVideoBlock()
 }

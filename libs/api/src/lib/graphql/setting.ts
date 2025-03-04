@@ -5,7 +5,6 @@ import {
   GraphQLInt,
   GraphQLScalarType,
   GraphQLInputObjectType,
-  GraphQLID,
   GraphQLList,
   GraphQLEnumType,
   GraphQLBoolean
@@ -114,7 +113,7 @@ export const GraphQLSettingsInput = new GraphQLInputObjectType({
 export const GraphQLSetting = new GraphQLObjectType<Setting, Context>({
   name: 'Setting',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     name: {type: new GraphQLNonNull(GraphQLSettingName)},
     value: {type: new GraphQLNonNull(GraphQLSettingValueType)},
     settingRestriction: {type: GraphQLSettingRestriction}

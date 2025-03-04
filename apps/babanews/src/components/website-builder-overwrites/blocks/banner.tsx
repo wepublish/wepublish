@@ -1,4 +1,5 @@
-import {Banner, BuilderBlockStyleProps} from '@wepublish/website'
+import {Banner} from '@wepublish/block-content/website'
+import {BuilderBlockStyleProps} from '@wepublish/website/builder'
 
 import {Container} from '../../layout/container'
 import {FullWidthContainer} from '../../layout/full-width-container'

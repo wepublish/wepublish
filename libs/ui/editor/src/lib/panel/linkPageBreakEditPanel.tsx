@@ -10,28 +10,8 @@ export interface LinkPageBreakEditPanelProps {
   onChange?(value: LinkPageBreakBlockValue): void
 }
 
-const STYLE_OPTIONS = [{id: 'default'}, {id: 'dark'}, {id: 'image'}]
-
-const LAYOUT_OPTIONS = [
-  {id: 'default', disabledIfImageStyle: false},
-  {id: 'right', disabledIfImageStyle: true},
-  {id: 'center', disabledIfImageStyle: true},
-  {id: 'image-right', disabledIfImageStyle: true},
-  {id: 'image-left', disabledIfImageStyle: true}
-]
-
-const TEMPLATE_OPTIONS = [{id: 'none'}, {id: 'donation'}, {id: 'membership'}, {id: 'subscription'}]
-
 export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreakEditPanelProps) {
-  const {
-    styleOption,
-    layoutOption,
-    linkURL,
-    linkText,
-    linkTarget = '_self',
-    hideButton,
-    templateOption
-  } = value
+  const {linkURL, linkText, linkTarget = '_self', hideButton} = value
 
   const {t} = useTranslation()
 

@@ -1,5 +1,6 @@
 import {Meta} from '@storybook/react'
 import {TwitterTweetBlock} from './twitter-tweet-block'
+import {mockTwitterTweetBlock} from '@wepublish/storybook/mocks'
 
 export default {
   component: TwitterTweetBlock,
@@ -7,15 +8,5 @@ export default {
 } as Meta
 
 export const Default = {
-  args: {
-    userID: 'WePublish_media',
-    tweetID: '1600079498845863937'
-  }
-}
-
-export const WithClassName = {
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
+  args: mockTwitterTweetBlock()
 }

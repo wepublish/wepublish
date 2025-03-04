@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {ImageRefFragment, Tag, TagType} from '@wepublish/editor/api'
+import {FullImageFragment, Tag, TagType} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdListAlt, MdSettings, MdShare} from 'react-icons/md'
@@ -75,10 +75,10 @@ export interface PageMetadata {
   readonly defaultTags: Pick<Tag, 'id' | 'tag'>[]
   readonly url: string
   readonly properties: PageMetadataProperty[]
-  readonly image?: ImageRefFragment
+  readonly image?: FullImageFragment
   readonly socialMediaTitle?: string
   readonly socialMediaDescription?: string
-  readonly socialMediaImage?: ImageRefFragment
+  readonly socialMediaImage?: FullImageFragment
 }
 
 export interface PageMetadataPanelProps {
@@ -127,7 +127,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
     }
   }, [metaDataProperties])
 
-  function handleImageChange(currentImage: ImageRefFragment) {
+  function handleImageChange(currentImage: FullImageFragment) {
     switch (activeKey) {
       case MetaDataType.General: {
         const image = currentImage
@@ -343,7 +343,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
       <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={(value: ImageRefFragment) => {
+          onSelect={(value: FullImageFragment) => {
             setChooseModalOpen(false)
             handleImageChange(value)
           }}

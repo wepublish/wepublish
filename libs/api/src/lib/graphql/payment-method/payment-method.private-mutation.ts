@@ -1,7 +1,7 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {authorise} from '../permissions'
-import {CanCreatePaymentMethod, CanDeletePaymentMethod} from '@wepublish/permissions/api'
+import {CanCreatePaymentMethod, CanDeletePaymentMethod} from '@wepublish/permissions'
 
 export const deletePaymentMethodById = (
   id: string,

@@ -3,7 +3,6 @@ import {
   GraphQLNonNull,
   GraphQLString,
   GraphQLInputObjectType,
-  GraphQLID,
   GraphQLBoolean
 } from 'graphql'
 
@@ -20,13 +19,13 @@ export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
   name: 'PeerProfileInput',
   fields: {
     name: {type: new GraphQLNonNull(GraphQLString)},
-    logoID: {type: GraphQLID},
+    logoID: {type: GraphQLString},
     themeColor: {type: new GraphQLNonNull(GraphQLColor)},
     themeFontColor: {type: new GraphQLNonNull(GraphQLColor)},
     callToActionText: {type: new GraphQLNonNull(GraphQLRichText)},
     callToActionURL: {type: new GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
-    callToActionImageID: {type: GraphQLID}
+    callToActionImageID: {type: GraphQLString}
   }
 })
 
@@ -87,7 +86,7 @@ export const GraphQLUpdatePeerInput = new GraphQLInputObjectType({
 export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
   name: 'Peer',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -110,3 +109,16 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
     }
   }
 })
+
+export const GraphQLPeerResolver = {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
+    const {id} = reference
+    const peer = await loaders.peer.load(id)
+
+    if (!peer) {
+      throw new Error('Peer not found')
+    }
+
+    return peer
+  }
+}

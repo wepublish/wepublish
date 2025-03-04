@@ -55,7 +55,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
 
   async createStripeCustomer({intent}: CreateStripeCustomerProps): Promise<string> {
     const customer = await this.stripe.customers.create({
-      email: intent.metadata.mail ?? '',
+      email: intent.metadata['mail'] ?? '',
       payment_method: intent.payment_method as string,
       invoice_settings: {
         default_payment_method: intent.payment_method as string
@@ -82,7 +82,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
     const intent = event.data.object as Stripe.PaymentIntent
     const intentStates: IntentState[] = []
     const state = mapStripeEventToPaymentStatus(intent.status)
-    if (state !== null && intent.metadata.paymentID !== undefined) {
+    if (state !== null && intent.metadata['paymentID'] !== undefined) {
       let customerID
 
       if (
@@ -96,7 +96,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
       }
 
       intentStates.push({
-        paymentID: intent.metadata.paymentID,
+        paymentID: intent.metadata['paymentID'],
         paymentData: JSON.stringify(intent),
         state,
         customerID
@@ -223,7 +223,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
       throw new Error('unknown intent state')
     }
 
-    if (!intent.metadata.paymentID) {
+    if (!intent.metadata['paymentID']) {
       logger('stripePaymentProvider').error(
         'Stripe intent with ID: %s for paymentProvider %s returned with empty paymentID',
         intent.id,
@@ -245,7 +245,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
 
     return {
       state,
-      paymentID: intent.metadata.paymentID,
+      paymentID: intent.metadata['paymentID'],
       paymentData: JSON.stringify(intent),
       customerID
     }

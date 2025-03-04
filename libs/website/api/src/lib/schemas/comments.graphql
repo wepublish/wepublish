@@ -37,7 +37,6 @@ fragment CommentWithoutNesting on Comment {
   id
   itemID
   itemType
-  peerId
   parentID
 
   createdAt
@@ -120,7 +119,7 @@ fragment FullRatingSystem on FullCommentRatingSystem {
   }
 }
 
-query CommentList($itemId: ID!, $order: SortOrder, $sort: CommentSort) {
+query CommentList($itemId: String!, $order: SortOrder, $sort: CommentSort) {
   comments(itemId: $itemId, order: $order, sort: $sort) {
     ...FullComment
   }
@@ -142,7 +141,7 @@ mutation EditComment($input: CommentUpdateInput!) {
   }
 }
 
-mutation RateComment($answerId: ID!, $commentId: ID!, $value: Int!) {
+mutation RateComment($answerId: String!, $commentId: String!, $value: Int!) {
   rateComment(answerId: $answerId, commentId: $commentId, value: $value) {
     ...FullComment
   }

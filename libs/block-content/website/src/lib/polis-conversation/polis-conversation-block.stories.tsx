@@ -1,5 +1,6 @@
 import {Meta} from '@storybook/react'
 import {PolisConversationBlock} from './polis-conversation-block'
+import {mockPolisConversationBlock} from '@wepublish/storybook/mocks'
 
 export default {
   component: PolisConversationBlock,
@@ -7,14 +8,5 @@ export default {
 } as Meta
 
 export const Default = {
-  args: {
-    conversationID: '744469711'
-  }
-}
-
-export const WithClassName = {
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
+  args: mockPolisConversationBlock()
 }

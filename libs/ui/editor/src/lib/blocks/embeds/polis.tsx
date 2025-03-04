@@ -3,7 +3,7 @@ import {useEffect} from 'react'
 import {useScript} from '../../utility'
 
 export interface PolisEmbedProps {
-  conversationID: string
+  conversationID: string | null | undefined
 }
 
 export function PolisEmbed({conversationID}: PolisEmbedProps) {
@@ -11,5 +11,5 @@ export function PolisEmbed({conversationID}: PolisEmbedProps) {
 
   useEffect(() => load(), [])
 
-  return <div className="polis" data-conversation_id={conversationID}></div>
+  return conversationID && <div className="polis" data-conversation_id={conversationID}></div>
 }

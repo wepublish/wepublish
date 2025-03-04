@@ -1,8 +1,9 @@
 import {Args, Query, Resolver} from '@nestjs/graphql'
-import {CanGetInvoices, Permissions} from '@wepublish/permissions/api'
+import {CanGetInvoices} from '@wepublish/permissions'
 import {DashboardInvoice} from './dashboard-invoice.model'
 import {DashboardInvoiceService} from './dashboard-invoice.service'
 import {SettingName, Settings} from '@wepublish/settings/api'
+import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver()
 export class DashboardInvoiceResolver {

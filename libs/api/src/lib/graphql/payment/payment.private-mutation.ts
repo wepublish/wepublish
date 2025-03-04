@@ -1,7 +1,7 @@
 import {Context} from '../../context'
 import {authorise} from '../permissions'
 import {Payment, PaymentState, PrismaClient} from '@prisma/client'
-import {CanCreatePayment} from '@wepublish/permissions/api'
+import {CanCreatePayment} from '@wepublish/permissions'
 
 export const createPaymentFromInvoice = async (
   input: {
@@ -26,6 +26,15 @@ export const createPaymentFromInvoice = async (
   const paymentProvider = paymentProviders.find(pp => pp.id === paymentMethod?.paymentProviderID)
 
   const invoice = await invoicesByID.load(invoiceID)
+
+  if (!invoice) {
+    throw new Error('Invoice not found')
+  }
+
+  if (!invoice.subscriptionID) {
+    throw new Error('Subscription not found')
+  }
+
   const memberPlan = await memberPlanClient.findFirst({
     where: {
       subscription: {

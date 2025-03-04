@@ -1,7 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Membership Modal should render Default 1`] = `<DocumentFragment />`;
-
-exports[`Membership Modal should render WithClassName 1`] = `<DocumentFragment />`;
-
-exports[`Membership Modal should render WithEmotion 1`] = `<DocumentFragment />`;

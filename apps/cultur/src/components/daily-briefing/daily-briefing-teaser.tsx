@@ -1,6 +1,7 @@
 import {campaigns} from '@mailchimp/mailchimp_marketing'
 import {styled} from '@mui/material'
-import {BuilderTeaserProps, TeaserWrapper, useWebsiteBuilder} from '@wepublish/website'
+import {TeaserWrapper} from '@wepublish/block-content/website'
+import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 import {createContext, useContext} from 'react'
 

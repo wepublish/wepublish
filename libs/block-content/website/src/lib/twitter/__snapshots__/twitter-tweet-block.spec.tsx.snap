@@ -12,16 +12,3 @@ exports[`Twitter Tweet Block should render Default 1`] = `
   </div>
 </DocumentFragment>
 `;
-
-exports[`Twitter Tweet Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <div
-    class="extra-classname css-126lgzk-TwitterTweetBlockWrapper emotion-0"
-    data-theme="dark"
-  >
-    <div>
-      Tweet Mock: {"id":"1600079498845863937"}
-    </div>
-  </div>
-</DocumentFragment>
-`;

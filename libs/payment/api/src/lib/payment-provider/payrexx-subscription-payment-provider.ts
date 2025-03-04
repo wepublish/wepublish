@@ -115,7 +115,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
   readonly instanceAPISecret: string
   readonly webhookSecret: string
   readonly prisma: PrismaClient
-  readonly remoteManagedSubscription: boolean
+  override readonly remoteManagedSubscription: boolean
 
   constructor(props: PayrexxSubscripionsPaymentProviderProps) {
     super(props)
@@ -126,7 +126,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     this.prisma = props.prisma
   }
 
-  async updateRemoteSubscriptionAmount(props: UpdateRemoteSubscriptionAmountProps) {
+  override async updateRemoteSubscriptionAmount(props: UpdateRemoteSubscriptionAmountProps) {
     // Find external id property and fail if subscription has been deactivated
     const properties: MetadataProperty[] = props.subscription.properties
     const isPayrexxExt = properties.find(sub => sub.key === 'payrexx_external_id')
@@ -148,7 +148,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     await this.updateAmountUpstream(+isPayrexxExt.value, currency, amount.toString())
   }
 
-  async cancelRemoteSubscription(props: CancelRemoteSubscriptionProps): Promise<void> {
+  override async cancelRemoteSubscription(props: CancelRemoteSubscriptionProps): Promise<void> {
     // Find external id property and fail if subscription has been deactivated
     const properties: MetadataProperty[] = props.subscription.properties
     const isPayrexxExt = properties.find(sub => sub.key === 'payrexx_external_id')
@@ -161,7 +161,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     await this.cancelSubscriptionUpstream(parseInt(isPayrexxExt.value, 10))
   }
 
-  async updatePaymentWithIntentState({
+  override async updatePaymentWithIntentState({
     intentState,
     paymentClient,
     subscriptionClient,
@@ -382,11 +382,13 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     }
   }
 
-  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
+  override async webhookForPaymentIntent(
+    props: WebhookForPaymentIntentProps
+  ): Promise<WebhookResponse> {
     const intentStates: IntentState[] = []
 
     // Protect endpoint
-    const apiKey = props.req.query.apiKey as string
+    const apiKey = props.req.query['apiKey'] as string
     if (!this.timeConstantCompare(apiKey, this.webhookSecret)) {
       return {
         status: 403,
@@ -432,13 +434,11 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     }
   }
 
-  // eslint-disable-next-line
-  async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
+  override async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
     throw new Error('NOT IMPLEMENTED')
   }
 
-  // eslint-disable-next-line
-  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
+  override async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
     throw new Error('NOT IMPLEMENTED')
   }
 }

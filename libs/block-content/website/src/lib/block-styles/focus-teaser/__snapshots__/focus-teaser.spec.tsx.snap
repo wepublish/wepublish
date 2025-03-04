@@ -36,7 +36,7 @@ exports[`Focus Teaser should render Article 1`] = `
                 class="emotion-14 emotion-15"
               >
                 <img
-                  alt="An image description"
+                  alt="DSC07717"
                   class="emotion-16 emotion-17"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
@@ -51,7 +51,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                  title="An image title"
+                  title=""
                 />
               </div>
               <div
@@ -60,39 +60,44 @@ https://unsplash.it/200/100 200w"
                 <div
                   class="emotion-20 emotion-21"
                 >
-                  Pre Title
+                  This is a pretitle
                 </div>
               </div>
               <h1
                 class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
               >
-                Title
+                This is a title
               </h1>
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
               >
-                Lead
+                This is a lead
               </p>
               <div
                 class="emotion-26 emotion-27"
               >
-                <time
+                <span
                   class="emotion-28 emotion-29"
+                >
+                  Von Foobar, Foobar 
+                </span>
+                <time
+                  class="emotion-30 emotion-31"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
-                  01.01.2023 
+                  | 01.01.2023 
                 </time>
               </div>
               <div
-                class="emotion-30 emotion-31"
+                class="emotion-32 emotion-33"
               >
                 <div
-                  class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+                  class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-34"
                 >
                   <span
-                    class="MuiChip-label MuiChip-labelMedium emotion-33"
+                    class="MuiChip-label MuiChip-labelMedium emotion-35"
                   >
-                    Foobar
+                    Concert
                   </span>
                 </div>
               </div>
@@ -102,10 +107,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-34 emotion-35"
+      class="emotion-36 emotion-37"
     >
       <article
-        class="emotion-36 emotion-10"
+        class="emotion-38 emotion-10"
         x="0"
         y="0"
       >
@@ -120,7 +125,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-14 emotion-15"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-16 emotion-17"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -135,7 +140,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -144,39 +149,44 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-20 emotion-21"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-26 emotion-27"
             >
-              <time
+              <span
                 class="emotion-28 emotion-29"
+              >
+                Von Foobar, Foobar 
+              </span>
+              <time
+                class="emotion-30 emotion-31"
                 datetime="2023-01-01T00:00:00.000Z"
               >
-                01.01.2023 
+                | 01.01.2023 
               </time>
             </div>
             <div
-              class="emotion-30 emotion-31"
+              class="emotion-32 emotion-33"
             >
               <div
-                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-34"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-33"
+                  class="MuiChip-label MuiChip-labelMedium emotion-35"
                 >
-                  Foobar
+                  Concert
                 </span>
               </div>
             </div>
@@ -184,7 +194,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-61 emotion-10"
+        class="emotion-65 emotion-10"
         x="3"
         y="0"
       >
@@ -199,7 +209,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-14 emotion-15"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-16 emotion-17"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -214,7 +224,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -223,39 +233,44 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-20 emotion-21"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-26 emotion-27"
             >
-              <time
+              <span
                 class="emotion-28 emotion-29"
+              >
+                Von Foobar, Foobar 
+              </span>
+              <time
+                class="emotion-30 emotion-31"
                 datetime="2023-01-01T00:00:00.000Z"
               >
-                01.01.2023 
+                | 01.01.2023 
               </time>
             </div>
             <div
-              class="emotion-30 emotion-31"
+              class="emotion-32 emotion-33"
             >
               <div
-                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-34"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-33"
+                  class="MuiChip-label MuiChip-labelMedium emotion-35"
                 >
-                  Foobar
+                  Concert
                 </span>
               </div>
             </div>
@@ -263,7 +278,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-86 emotion-10"
+        class="emotion-92 emotion-10"
         x="6"
         y="0"
       >
@@ -278,7 +293,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-14 emotion-15"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-16 emotion-17"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -293,7 +308,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -302,39 +317,44 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-20 emotion-21"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-26 emotion-27"
             >
-              <time
+              <span
                 class="emotion-28 emotion-29"
+              >
+                Von Foobar, Foobar 
+              </span>
+              <time
+                class="emotion-30 emotion-31"
                 datetime="2023-01-01T00:00:00.000Z"
               >
-                01.01.2023 
+                | 01.01.2023 
               </time>
             </div>
             <div
-              class="emotion-30 emotion-31"
+              class="emotion-32 emotion-33"
             >
               <div
-                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-34"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-33"
+                  class="MuiChip-label MuiChip-labelMedium emotion-35"
                 >
-                  Foobar
+                  Concert
                 </span>
               </div>
             </div>
@@ -342,7 +362,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-111 emotion-10"
+        class="emotion-119 emotion-10"
         x="9"
         y="0"
       >
@@ -357,7 +377,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-14 emotion-15"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-16 emotion-17"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -372,7 +392,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -381,39 +401,44 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-20 emotion-21"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-26 emotion-27"
             >
-              <time
+              <span
                 class="emotion-28 emotion-29"
+              >
+                Von Foobar, Foobar 
+              </span>
+              <time
+                class="emotion-30 emotion-31"
                 datetime="2023-01-01T00:00:00.000Z"
               >
-                01.01.2023 
+                | 01.01.2023 
               </time>
             </div>
             <div
-              class="emotion-30 emotion-31"
+              class="emotion-32 emotion-33"
             >
               <div
-                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-34"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-33"
+                  class="MuiChip-label MuiChip-labelMedium emotion-35"
                 >
-                  Foobar
+                  Concert
                 </span>
               </div>
             </div>
@@ -461,7 +486,7 @@ exports[`Focus Teaser should render Event 1`] = `
                 class="emotion-14 emotion-15"
               >
                 <img
-                  alt="An image description"
+                  alt="DSC07717"
                   class="emotion-16 emotion-17"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
@@ -476,7 +501,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                  title="An image title"
+                  title=""
                 />
               </div>
               <div
@@ -485,18 +510,18 @@ https://unsplash.it/200/100 200w"
                 <div
                   class="emotion-20 emotion-21"
                 >
-                  Pre Title
+                  This is a pretitle
                 </div>
               </div>
               <h1
                 class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
               >
-                Title
+                This is a title
               </h1>
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
               >
-                Lead
+                This is a lead
               </p>
               <div
                 class="emotion-26 emotion-27"
@@ -508,16 +533,29 @@ https://unsplash.it/200/100 200w"
                   01.01.2023 
                 </time>
               </div>
+              <div
+                class="emotion-30 emotion-31"
+              >
+                <div
+                  class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+                >
+                  <span
+                    class="MuiChip-label MuiChip-labelMedium emotion-33"
+                  >
+                    Concert
+                  </span>
+                </div>
+              </div>
             </div>
           </a>
         </article>
       </div>
     </div>
     <div
-      class="emotion-30 emotion-31"
+      class="emotion-34 emotion-35"
     >
       <article
-        class="emotion-32 emotion-10"
+        class="emotion-36 emotion-10"
         x="0"
         y="0"
       >
@@ -532,7 +570,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-14 emotion-15"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-16 emotion-17"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -547,7 +585,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -556,18 +594,18 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-20 emotion-21"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-26 emotion-27"
@@ -579,11 +617,24 @@ https://unsplash.it/200/100 200w"
                 01.01.2023 
               </time>
             </div>
+            <div
+              class="emotion-30 emotion-31"
+            >
+              <div
+                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+              >
+                <span
+                  class="MuiChip-label MuiChip-labelMedium emotion-33"
+                >
+                  Concert
+                </span>
+              </div>
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="emotion-53 emotion-10"
+        class="emotion-61 emotion-10"
         x="3"
         y="0"
       >
@@ -598,7 +649,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-14 emotion-15"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-16 emotion-17"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -613,7 +664,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -622,18 +673,18 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-20 emotion-21"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-26 emotion-27"
@@ -645,11 +696,24 @@ https://unsplash.it/200/100 200w"
                 01.01.2023 
               </time>
             </div>
+            <div
+              class="emotion-30 emotion-31"
+            >
+              <div
+                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+              >
+                <span
+                  class="MuiChip-label MuiChip-labelMedium emotion-33"
+                >
+                  Concert
+                </span>
+              </div>
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="emotion-74 emotion-10"
+        class="emotion-86 emotion-10"
         x="6"
         y="0"
       >
@@ -664,7 +728,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-14 emotion-15"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-16 emotion-17"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -679,7 +743,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -688,18 +752,18 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-20 emotion-21"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-26 emotion-27"
@@ -711,11 +775,24 @@ https://unsplash.it/200/100 200w"
                 01.01.2023 
               </time>
             </div>
+            <div
+              class="emotion-30 emotion-31"
+            >
+              <div
+                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+              >
+                <span
+                  class="MuiChip-label MuiChip-labelMedium emotion-33"
+                >
+                  Concert
+                </span>
+              </div>
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="emotion-95 emotion-10"
+        class="emotion-111 emotion-10"
         x="9"
         y="0"
       >
@@ -730,7 +807,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-14 emotion-15"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-16 emotion-17"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -745,7 +822,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -754,18 +831,18 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-20 emotion-21"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-26 emotion-27"
@@ -776,6 +853,19 @@ https://unsplash.it/200/100 200w"
               >
                 01.01.2023 
               </time>
+            </div>
+            <div
+              class="emotion-30 emotion-31"
+            >
+              <div
+                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
+              >
+                <span
+                  class="MuiChip-label MuiChip-labelMedium emotion-33"
+                >
+                  Concert
+                </span>
+              </div>
             </div>
           </div>
         </a>
@@ -821,7 +911,7 @@ exports[`Focus Teaser should render Page 1`] = `
                 class="emotion-14 emotion-15"
               >
                 <img
-                  alt="An image description"
+                  alt="DSC07717"
                   class="emotion-16 emotion-17"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
@@ -836,7 +926,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                  title="An image title"
+                  title=""
                 />
               </div>
               <div
@@ -845,378 +935,18 @@ https://unsplash.it/200/100 200w"
                 <div
                   class="emotion-20 emotion-21"
                 >
-                  Pre Title
+                  This is a pretitle
                 </div>
               </div>
               <h1
                 class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
               >
-                Title
+                This is a title
               </h1>
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
               >
-                Lead
-              </p>
-              <div
-                class="emotion-26 emotion-27"
-              >
-                <time
-                  class="emotion-28 emotion-29"
-                  datetime="2023-01-01T00:00:00.000Z"
-                >
-                  01.01.2023 
-                </time>
-              </div>
-            </div>
-          </a>
-        </article>
-      </div>
-    </div>
-    <div
-      class="emotion-30 emotion-31"
-    >
-      <article
-        class="emotion-32 emotion-10"
-        x="0"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
-          href="https://example.com"
-        >
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <div
-              class="emotion-14 emotion-15"
-            >
-              <img
-                alt="An image description"
-                class="emotion-16 emotion-17"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-            </div>
-            <div
-              class="emotion-18 emotion-19"
-            >
-              <div
-                class="emotion-20 emotion-21"
-              >
-                Pre Title
-              </div>
-            </div>
-            <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
-            >
-              Title
-            </h1>
-            <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
-            >
-              Lead
-            </p>
-            <div
-              class="emotion-26 emotion-27"
-            >
-              <time
-                class="emotion-28 emotion-29"
-                datetime="2023-01-01T00:00:00.000Z"
-              >
-                01.01.2023 
-              </time>
-            </div>
-          </div>
-        </a>
-      </article>
-      <article
-        class="emotion-53 emotion-10"
-        x="3"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
-          href="https://example.com"
-        >
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <div
-              class="emotion-14 emotion-15"
-            >
-              <img
-                alt="An image description"
-                class="emotion-16 emotion-17"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-            </div>
-            <div
-              class="emotion-18 emotion-19"
-            >
-              <div
-                class="emotion-20 emotion-21"
-              >
-                Pre Title
-              </div>
-            </div>
-            <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
-            >
-              Title
-            </h1>
-            <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
-            >
-              Lead
-            </p>
-            <div
-              class="emotion-26 emotion-27"
-            >
-              <time
-                class="emotion-28 emotion-29"
-                datetime="2023-01-01T00:00:00.000Z"
-              >
-                01.01.2023 
-              </time>
-            </div>
-          </div>
-        </a>
-      </article>
-      <article
-        class="emotion-74 emotion-10"
-        x="6"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
-          href="https://example.com"
-        >
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <div
-              class="emotion-14 emotion-15"
-            >
-              <img
-                alt="An image description"
-                class="emotion-16 emotion-17"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-            </div>
-            <div
-              class="emotion-18 emotion-19"
-            >
-              <div
-                class="emotion-20 emotion-21"
-              >
-                Pre Title
-              </div>
-            </div>
-            <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
-            >
-              Title
-            </h1>
-            <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
-            >
-              Lead
-            </p>
-            <div
-              class="emotion-26 emotion-27"
-            >
-              <time
-                class="emotion-28 emotion-29"
-                datetime="2023-01-01T00:00:00.000Z"
-              >
-                01.01.2023 
-              </time>
-            </div>
-          </div>
-        </a>
-      </article>
-      <article
-        class="emotion-95 emotion-10"
-        x="9"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
-          href="https://example.com"
-        >
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <div
-              class="emotion-14 emotion-15"
-            >
-              <img
-                alt="An image description"
-                class="emotion-16 emotion-17"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-            </div>
-            <div
-              class="emotion-18 emotion-19"
-            >
-              <div
-                class="emotion-20 emotion-21"
-              >
-                Pre Title
-              </div>
-            </div>
-            <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
-            >
-              Title
-            </h1>
-            <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
-            >
-              Lead
-            </p>
-            <div
-              class="emotion-26 emotion-27"
-            >
-              <time
-                class="emotion-28 emotion-29"
-                datetime="2023-01-01T00:00:00.000Z"
-              >
-                01.01.2023 
-              </time>
-            </div>
-          </div>
-        </a>
-      </article>
-    </div>
-  </section>
-</DocumentFragment>
-`;
-
-exports[`Focus Teaser should render WithClassName 1`] = `
-<DocumentFragment>
-  <section
-    class="extra-classname emotion-0 emotion-1"
-  >
-    <div
-      class="emotion-2 emotion-3"
-    >
-      <div
-        class="emotion-4 emotion-5"
-      >
-        <h1
-          class="MuiTypography-root MuiTypography-h3 emotion-6"
-        >
-          Foobar Title
-        </h1>
-      </div>
-      <div
-        class="emotion-7 emotion-8"
-      >
-        <article
-          class="emotion-9 emotion-10"
-          x="0"
-          y="0"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
-            href="https://example.com"
-          >
-            <div
-              class="emotion-12 emotion-13"
-            >
-              <div
-                class="emotion-14 emotion-15"
-              >
-                <img
-                  alt="An image description"
-                  class="emotion-16 emotion-17"
-                  loading="lazy"
-                  sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                  srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                  title="An image title"
-                />
-              </div>
-              <div
-                class="emotion-18 emotion-19"
-              >
-                <div
-                  class="emotion-20 emotion-21"
-                >
-                  Pre Title
-                </div>
-              </div>
-              <h1
-                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
-              >
-                Title
-              </h1>
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
-              >
-                Lead
+                This is a lead
               </p>
               <div
                 class="emotion-26 emotion-27"
@@ -1237,7 +967,7 @@ https://unsplash.it/200/100 200w"
                   <span
                     class="MuiChip-label MuiChip-labelMedium emotion-33"
                   >
-                    Foobar
+                    Concert
                   </span>
                 </div>
               </div>
@@ -1265,7 +995,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-14 emotion-15"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-16 emotion-17"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -1280,7 +1010,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -1289,18 +1019,18 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-20 emotion-21"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-26 emotion-27"
@@ -1321,7 +1051,7 @@ https://unsplash.it/200/100 200w"
                 <span
                   class="MuiChip-label MuiChip-labelMedium emotion-33"
                 >
-                  Foobar
+                  Concert
                 </span>
               </div>
             </div>
@@ -1344,7 +1074,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-14 emotion-15"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-16 emotion-17"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -1359,7 +1089,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -1368,18 +1098,18 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-20 emotion-21"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-26 emotion-27"
@@ -1400,7 +1130,7 @@ https://unsplash.it/200/100 200w"
                 <span
                   class="MuiChip-label MuiChip-labelMedium emotion-33"
                 >
-                  Foobar
+                  Concert
                 </span>
               </div>
             </div>
@@ -1423,7 +1153,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-14 emotion-15"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-16 emotion-17"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -1438,7 +1168,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -1447,18 +1177,18 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-20 emotion-21"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-26 emotion-27"
@@ -1479,7 +1209,7 @@ https://unsplash.it/200/100 200w"
                 <span
                   class="MuiChip-label MuiChip-labelMedium emotion-33"
                 >
-                  Foobar
+                  Concert
                 </span>
               </div>
             </div>
@@ -1502,7 +1232,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-14 emotion-15"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-16 emotion-17"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -1517,7 +1247,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -1526,18 +1256,18 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-20 emotion-21"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-26 emotion-27"
@@ -1558,432 +1288,7 @@ https://unsplash.it/200/100 200w"
                 <span
                   class="MuiChip-label MuiChip-labelMedium emotion-33"
                 >
-                  Foobar
-                </span>
-              </div>
-            </div>
-          </div>
-        </a>
-      </article>
-    </div>
-  </section>
-</DocumentFragment>
-`;
-
-exports[`Focus Teaser should render WithEmotion 1`] = `
-<DocumentFragment>
-  <section
-    class="emotion-0 emotion-1"
-  >
-    <div
-      class="emotion-2 emotion-3"
-    >
-      <div
-        class="emotion-4 emotion-5"
-      >
-        <h1
-          class="MuiTypography-root MuiTypography-h3 emotion-6"
-        >
-          Foobar Title
-        </h1>
-      </div>
-      <div
-        class="emotion-7 emotion-8"
-      >
-        <article
-          class="emotion-9 emotion-10"
-          x="0"
-          y="0"
-        >
-          <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
-            href="https://example.com"
-          >
-            <div
-              class="emotion-12 emotion-13"
-            >
-              <div
-                class="emotion-14 emotion-15"
-              >
-                <img
-                  alt="An image description"
-                  class="emotion-16 emotion-17"
-                  loading="lazy"
-                  sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                  srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                  title="An image title"
-                />
-              </div>
-              <div
-                class="emotion-18 emotion-19"
-              >
-                <div
-                  class="emotion-20 emotion-21"
-                >
-                  Pre Title
-                </div>
-              </div>
-              <h1
-                class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
-              >
-                Title
-              </h1>
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
-              >
-                Lead
-              </p>
-              <div
-                class="emotion-26 emotion-27"
-              >
-                <time
-                  class="emotion-28 emotion-29"
-                  datetime="2023-01-01T00:00:00.000Z"
-                >
-                  01.01.2023 
-                </time>
-              </div>
-              <div
-                class="emotion-30 emotion-31"
-              >
-                <div
-                  class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
-                >
-                  <span
-                    class="MuiChip-label MuiChip-labelMedium emotion-33"
-                  >
-                    Foobar
-                  </span>
-                </div>
-              </div>
-            </div>
-          </a>
-        </article>
-      </div>
-    </div>
-    <div
-      class="emotion-34 emotion-35"
-    >
-      <article
-        class="emotion-36 emotion-10"
-        x="0"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
-          href="https://example.com"
-        >
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <div
-              class="emotion-14 emotion-15"
-            >
-              <img
-                alt="An image description"
-                class="emotion-16 emotion-17"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-            </div>
-            <div
-              class="emotion-18 emotion-19"
-            >
-              <div
-                class="emotion-20 emotion-21"
-              >
-                Pre Title
-              </div>
-            </div>
-            <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
-            >
-              Title
-            </h1>
-            <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
-            >
-              Lead
-            </p>
-            <div
-              class="emotion-26 emotion-27"
-            >
-              <time
-                class="emotion-28 emotion-29"
-                datetime="2023-01-01T00:00:00.000Z"
-              >
-                01.01.2023 
-              </time>
-            </div>
-            <div
-              class="emotion-30 emotion-31"
-            >
-              <div
-                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
-              >
-                <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-33"
-                >
-                  Foobar
-                </span>
-              </div>
-            </div>
-          </div>
-        </a>
-      </article>
-      <article
-        class="emotion-61 emotion-10"
-        x="3"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
-          href="https://example.com"
-        >
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <div
-              class="emotion-14 emotion-15"
-            >
-              <img
-                alt="An image description"
-                class="emotion-16 emotion-17"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-            </div>
-            <div
-              class="emotion-18 emotion-19"
-            >
-              <div
-                class="emotion-20 emotion-21"
-              >
-                Pre Title
-              </div>
-            </div>
-            <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
-            >
-              Title
-            </h1>
-            <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
-            >
-              Lead
-            </p>
-            <div
-              class="emotion-26 emotion-27"
-            >
-              <time
-                class="emotion-28 emotion-29"
-                datetime="2023-01-01T00:00:00.000Z"
-              >
-                01.01.2023 
-              </time>
-            </div>
-            <div
-              class="emotion-30 emotion-31"
-            >
-              <div
-                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
-              >
-                <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-33"
-                >
-                  Foobar
-                </span>
-              </div>
-            </div>
-          </div>
-        </a>
-      </article>
-      <article
-        class="emotion-86 emotion-10"
-        x="6"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
-          href="https://example.com"
-        >
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <div
-              class="emotion-14 emotion-15"
-            >
-              <img
-                alt="An image description"
-                class="emotion-16 emotion-17"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-            </div>
-            <div
-              class="emotion-18 emotion-19"
-            >
-              <div
-                class="emotion-20 emotion-21"
-              >
-                Pre Title
-              </div>
-            </div>
-            <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
-            >
-              Title
-            </h1>
-            <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
-            >
-              Lead
-            </p>
-            <div
-              class="emotion-26 emotion-27"
-            >
-              <time
-                class="emotion-28 emotion-29"
-                datetime="2023-01-01T00:00:00.000Z"
-              >
-                01.01.2023 
-              </time>
-            </div>
-            <div
-              class="emotion-30 emotion-31"
-            >
-              <div
-                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
-              >
-                <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-33"
-                >
-                  Foobar
-                </span>
-              </div>
-            </div>
-          </div>
-        </a>
-      </article>
-      <article
-        class="emotion-111 emotion-10"
-        x="9"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-11"
-          href="https://example.com"
-        >
-          <div
-            class="emotion-12 emotion-13"
-          >
-            <div
-              class="emotion-14 emotion-15"
-            >
-              <img
-                alt="An image description"
-                class="emotion-16 emotion-17"
-                loading="lazy"
-                sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-                srcset="https://unsplash.it/1200/400 1200w,
-https://unsplash.it/1000/400 1000w,
-https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-                title="An image title"
-              />
-            </div>
-            <div
-              class="emotion-18 emotion-19"
-            >
-              <div
-                class="emotion-20 emotion-21"
-              >
-                Pre Title
-              </div>
-            </div>
-            <h1
-              class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-22 emotion-23"
-            >
-              Title
-            </h1>
-            <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-24 emotion-25"
-            >
-              Lead
-            </p>
-            <div
-              class="emotion-26 emotion-27"
-            >
-              <time
-                class="emotion-28 emotion-29"
-                datetime="2023-01-01T00:00:00.000Z"
-              >
-                01.01.2023 
-              </time>
-            </div>
-            <div
-              class="emotion-30 emotion-31"
-            >
-              <div
-                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-32"
-              >
-                <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-33"
-                >
-                  Foobar
+                  Concert
                 </span>
               </div>
             </div>
@@ -2036,7 +1341,7 @@ exports[`Focus Teaser should render WithLink 1`] = `
                 class="emotion-15 emotion-16"
               >
                 <img
-                  alt="An image description"
+                  alt="DSC07717"
                   class="emotion-17 emotion-18"
                   loading="lazy"
                   sizes="(max-width: 400px) 200w,
@@ -2051,7 +1356,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                  title="An image title"
+                  title=""
                 />
               </div>
               <div
@@ -2060,39 +1365,44 @@ https://unsplash.it/200/100 200w"
                 <div
                   class="emotion-21 emotion-22"
                 >
-                  Pre Title
+                  This is a pretitle
                 </div>
               </div>
               <h1
                 class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-23 emotion-24"
               >
-                Title
+                This is a title
               </h1>
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25 emotion-26"
               >
-                Lead
+                This is a lead
               </p>
               <div
                 class="emotion-27 emotion-28"
               >
-                <time
+                <span
                   class="emotion-29 emotion-30"
+                >
+                  Von Foobar, Foobar 
+                </span>
+                <time
+                  class="emotion-31 emotion-32"
                   datetime="2023-01-01T00:00:00.000Z"
                 >
-                  01.01.2023 
+                  | 01.01.2023 
                 </time>
               </div>
               <div
-                class="emotion-31 emotion-32"
+                class="emotion-33 emotion-34"
               >
                 <div
-                  class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-33"
+                  class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-35"
                 >
                   <span
-                    class="MuiChip-label MuiChip-labelMedium emotion-34"
+                    class="MuiChip-label MuiChip-labelMedium emotion-36"
                   >
-                    Foobar
+                    Concert
                   </span>
                 </div>
               </div>
@@ -2102,10 +1412,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="emotion-35 emotion-36"
+      class="emotion-37 emotion-38"
     >
       <article
-        class="emotion-37 emotion-11"
+        class="emotion-39 emotion-11"
         x="0"
         y="0"
       >
@@ -2120,7 +1430,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-15 emotion-16"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-17 emotion-18"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -2135,7 +1445,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -2144,39 +1454,44 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-21 emotion-22"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-23 emotion-24"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25 emotion-26"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-27 emotion-28"
             >
-              <time
+              <span
                 class="emotion-29 emotion-30"
+              >
+                Von Foobar, Foobar 
+              </span>
+              <time
+                class="emotion-31 emotion-32"
                 datetime="2023-01-01T00:00:00.000Z"
               >
-                01.01.2023 
+                | 01.01.2023 
               </time>
             </div>
             <div
-              class="emotion-31 emotion-32"
+              class="emotion-33 emotion-34"
             >
               <div
-                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-33"
+                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-35"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-34"
+                  class="MuiChip-label MuiChip-labelMedium emotion-36"
                 >
-                  Foobar
+                  Concert
                 </span>
               </div>
             </div>
@@ -2184,7 +1499,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-62 emotion-11"
+        class="emotion-66 emotion-11"
         x="3"
         y="0"
       >
@@ -2199,7 +1514,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-15 emotion-16"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-17 emotion-18"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -2214,7 +1529,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -2223,39 +1538,44 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-21 emotion-22"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-23 emotion-24"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25 emotion-26"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-27 emotion-28"
             >
-              <time
+              <span
                 class="emotion-29 emotion-30"
+              >
+                Von Foobar, Foobar 
+              </span>
+              <time
+                class="emotion-31 emotion-32"
                 datetime="2023-01-01T00:00:00.000Z"
               >
-                01.01.2023 
+                | 01.01.2023 
               </time>
             </div>
             <div
-              class="emotion-31 emotion-32"
+              class="emotion-33 emotion-34"
             >
               <div
-                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-33"
+                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-35"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-34"
+                  class="MuiChip-label MuiChip-labelMedium emotion-36"
                 >
-                  Foobar
+                  Concert
                 </span>
               </div>
             </div>
@@ -2263,7 +1583,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-87 emotion-11"
+        class="emotion-93 emotion-11"
         x="6"
         y="0"
       >
@@ -2278,7 +1598,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-15 emotion-16"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-17 emotion-18"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -2293,7 +1613,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -2302,39 +1622,44 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-21 emotion-22"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-23 emotion-24"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25 emotion-26"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-27 emotion-28"
             >
-              <time
+              <span
                 class="emotion-29 emotion-30"
+              >
+                Von Foobar, Foobar 
+              </span>
+              <time
+                class="emotion-31 emotion-32"
                 datetime="2023-01-01T00:00:00.000Z"
               >
-                01.01.2023 
+                | 01.01.2023 
               </time>
             </div>
             <div
-              class="emotion-31 emotion-32"
+              class="emotion-33 emotion-34"
             >
               <div
-                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-33"
+                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-35"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-34"
+                  class="MuiChip-label MuiChip-labelMedium emotion-36"
                 >
-                  Foobar
+                  Concert
                 </span>
               </div>
             </div>
@@ -2342,7 +1667,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="emotion-112 emotion-11"
+        class="emotion-120 emotion-11"
         x="9"
         y="0"
       >
@@ -2357,7 +1682,7 @@ https://unsplash.it/200/100 200w"
               class="emotion-15 emotion-16"
             >
               <img
-                alt="An image description"
+                alt="DSC07717"
                 class="emotion-17 emotion-18"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
@@ -2372,7 +1697,7 @@ https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-                title="An image title"
+                title=""
               />
             </div>
             <div
@@ -2381,39 +1706,44 @@ https://unsplash.it/200/100 200w"
               <div
                 class="emotion-21 emotion-22"
               >
-                Pre Title
+                This is a pretitle
               </div>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-23 emotion-24"
             >
-              Title
+              This is a title
             </h1>
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-25 emotion-26"
             >
-              Lead
+              This is a lead
             </p>
             <div
               class="emotion-27 emotion-28"
             >
-              <time
+              <span
                 class="emotion-29 emotion-30"
+              >
+                Von Foobar, Foobar 
+              </span>
+              <time
+                class="emotion-31 emotion-32"
                 datetime="2023-01-01T00:00:00.000Z"
               >
-                01.01.2023 
+                | 01.01.2023 
               </time>
             </div>
             <div
-              class="emotion-31 emotion-32"
+              class="emotion-33 emotion-34"
             >
               <div
-                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-33"
+                class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-outlinedPrimary emotion-35"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-34"
+                  class="MuiChip-label MuiChip-labelMedium emotion-36"
                 >
-                  Foobar
+                  Concert
                 </span>
               </div>
             </div>

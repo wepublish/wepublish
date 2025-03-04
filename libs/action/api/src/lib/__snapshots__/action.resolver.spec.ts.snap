@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ActionResolver Query: actions 1`] = `
+{
+  "data": {
+    "actions": [
+      {
+        "__typename": "EventCreatedAction",
+        "date": "2023-01-02T00:00:00.000Z",
+        "event": {
+          "id": "1",
+          "location": null,
+          "name": "Event name",
+        },
+      },
+    ],
+  },
+}
+`;

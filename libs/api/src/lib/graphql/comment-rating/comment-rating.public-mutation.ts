@@ -84,5 +84,5 @@ export const rateComment = async (
     }
   })
 
-  return mapCommentToPublicComment(comment)
+  return comment ? mapCommentToPublicComment(comment) : null
 }

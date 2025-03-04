@@ -44,9 +44,17 @@ export class MailContext implements MailContextInterface {
     this.defaultReplyToAddress = props.defaultReplyToAddress
   }
 
-  async sendMail(opts: MailControllerConfig) {
+  async sendMail(
+    opts: Omit<MailControllerConfig, 'externalMailTemplateId'> & {
+      externalMailTemplateId: string | null
+    }
+  ) {
     if (opts.externalMailTemplateId) {
-      await new MailController(this.prisma as PrismaClient, this, opts).sendMail()
+      await new MailController(
+        this.prisma as PrismaClient,
+        this,
+        opts as MailControllerConfig
+      ).sendMail()
     }
   }
 

@@ -1,0 +1,14 @@
+fragment FullTrackingPixel on TrackingPixel {
+  id
+  uri
+  error
+  pixelUid
+  trackingPixelMethod {
+    ...FullTrackingPixelMethod
+  }
+}
+
+fragment FullTrackingPixelMethod on TrackingPixelMethod {
+  trackingPixelProviderID
+  trackingPixelProviderType
+}

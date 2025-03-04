@@ -1,6 +1,5 @@
 import {Meta} from '@storybook/react'
 import {AuthorLink} from '@wepublish/website/api'
-import {css} from '@emotion/react'
 import {AuthorLinks} from './author-links'
 
 const links = [
@@ -44,23 +43,5 @@ export default {
 export const Default = {
   args: {
     links
-  }
-}
-
-export const WithClassName = {
-  ...Default,
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
-}
-
-export const WithEmotion = {
-  ...Default,
-  args: {
-    ...Default.args,
-    css: css`
-      background-color: #eee;
-    `
   }
 }

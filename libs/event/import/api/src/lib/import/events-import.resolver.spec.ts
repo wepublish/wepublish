@@ -1,7 +1,7 @@
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {Test, TestingModule} from '@nestjs/testing'
 import {EventStatus, PrismaClient} from '@prisma/client'
-import {MediaAdapterService} from '@wepublish/image/api'
+import {MediaAdapter} from '@wepublish/image/api'
 import {SortOrder} from '@wepublish/utils/api'
 import {Node} from 'slate'
 import {htmlToSlate} from 'slate-serializers'
@@ -69,7 +69,7 @@ describe('EventsImportResolver', () => {
           }
         },
         {
-          provide: MediaAdapterService,
+          provide: MediaAdapter,
           useValue: {
             uploadImageFromArrayBuffer: jest.fn()
           }

@@ -1,7 +1,6 @@
 import {InvoiceItem} from '@prisma/client'
 import {
   GraphQLEnumType,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -39,7 +38,7 @@ export const GraphQLInvoiceItem = new GraphQLObjectType<InvoiceItem, Context>({
 export const GraphQLInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
   name: 'Invoice',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -47,7 +46,7 @@ export const GraphQLInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
     mail: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
-    manuallySetAsPaidByUserId: {type: GraphQLID},
+    manuallySetAsPaidByUserId: {type: GraphQLString},
     items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItem)))},
     canceledAt: {type: GraphQLDateTime},
     currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
@@ -65,7 +64,7 @@ export const GraphQLInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
 export const GraphQLPublicInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
   name: 'Invoice',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -77,11 +76,11 @@ export const GraphQLPublicInvoice = new GraphQLObjectType<InvoiceWithItems, Cont
     dueAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     canceledAt: {type: GraphQLDateTime},
     items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItem)))},
-    subscriptionID: {type: new GraphQLNonNull(GraphQLID)},
+    subscriptionID: {type: new GraphQLNonNull(GraphQLString)},
     subscription: {
       type: GraphQLPublicSubscription,
       resolve({subscriptionID}, args, {loaders}) {
-        return loaders.subscriptionsById.load(subscriptionID)
+        return subscriptionID ? loaders.subscriptionsById.load(subscriptionID) : null
       }
     },
     total: {
@@ -101,8 +100,8 @@ export const GraphQLinvoiceFilter = new GraphQLInputObjectType({
     mail: {type: GraphQLString},
     paidAt: {type: GraphQLDate},
     canceledAt: {type: GraphQLDate},
-    userID: {type: GraphQLID},
-    subscriptionID: {type: GraphQLID}
+    userID: {type: GraphQLString},
+    subscriptionID: {type: GraphQLString}
   }
 })
 
@@ -141,8 +140,8 @@ export const GraphQLInvoiceInput = new GraphQLInputObjectType({
   fields: {
     mail: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
-    subscriptionID: {type: GraphQLID},
-    manuallySetAsPaidByUserId: {type: GraphQLID},
+    subscriptionID: {type: GraphQLString},
+    manuallySetAsPaidByUserId: {type: GraphQLString},
     items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItemInput)))}
   }
 })

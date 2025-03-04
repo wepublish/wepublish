@@ -9,6 +9,7 @@ exports[`EventResolver create 1`] = `
     "location": "Foobar",
     "name": "Foo",
     "startsAt": 2023-01-01T00:00:00.000Z,
+    "status": "Scheduled",
     "tagIds": [
       "1234",
     ],
@@ -109,6 +110,7 @@ exports[`EventResolver update 1`] = `
   {
     "id": "1234",
     "name": "Bar",
+    "status": "Scheduled",
   },
 ]
 `;

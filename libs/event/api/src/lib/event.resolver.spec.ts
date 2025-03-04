@@ -10,6 +10,7 @@ import {EventDataloaderService} from './event-dataloader.service'
 import {CreateEventInput, EventListArgs, EventSort, UpdateEventInput} from './event.model'
 import {EventResolver} from './event.resolver'
 import {EventService} from './event.service'
+import {URLAdapter, URLAdapterModule} from '@wepublish/nest-modules'
 
 const mockEvent = {
   id: '1234',
@@ -28,7 +29,7 @@ const mockEvent = {
 } as Event
 
 const eventQuery = `
-  query Event($id: ID!) {
+  query Event($id: String!) {
     event(id: $id) {
       id
       name
@@ -43,7 +44,7 @@ const eventQuery = `
 const eventListQuery = `
   query EventList(
     $filter: EventFilter
-    $cursorId: ID
+    $cursorId: String
     $take: Int
     $skip: Int
     $order: SortOrder
@@ -180,7 +181,8 @@ describe('EventResolver', () => {
           autoSchemaFile: true,
           path: '/',
           cache: 'bounded'
-        })
+        }),
+        URLAdapterModule.register(new URLAdapter(`https://example.com`))
       ],
       providers: [
         EventResolver,
