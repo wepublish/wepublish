@@ -192,7 +192,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       0
     )
 
-    let tokenization = {}
+    let tokenization: {preAuthorization?: boolean; chargeOnAuthorization?: boolean} = {}
     if (this.offSessionPayments) {
       tokenization = {
         preAuthorization: true,
