@@ -30,16 +30,20 @@ const theme = createTheme(WePTheme, {
   },
   typography: {
     h1: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: '800'
     },
     h2: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: '800'
     },
     h3: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: '800'
     },
     h4: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: '800'
     },
     h5: {
       fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')

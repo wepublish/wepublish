@@ -106,7 +106,7 @@ export const PaymentAmountPicker = forwardRef<HTMLInputElement, BuilderPaymentAm
 
     const pickerItems = useMemo(() => {
       switch (siteTitle) {
-        case 'Wnti':
+        case 'WNTI':
           return slug?.includes('donate') ? [10000, 15000, 20000] : [1000, 1500, 2000]
         default:
           return [1000, 1500, 2000]

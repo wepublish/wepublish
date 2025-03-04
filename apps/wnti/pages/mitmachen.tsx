@@ -33,6 +33,7 @@ export const MitmachenInner = () => (
     fields={['firstName']}
     filter={plans => plans.filter(plan => plan.tags?.some(tag => tag === 'selling'))}
     donate={mb => mb?.slug === 'donate'}
+    defaults={{memberPlanSlug: 'mitgliedschaft'}}
   />
 )
 
