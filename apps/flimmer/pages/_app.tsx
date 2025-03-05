@@ -1,14 +1,19 @@
 import {EmotionCache} from '@emotion/cache'
 import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {authLink, NextWepublishLink, SessionProvider, SubscribePage} from '@wepublish/utils/website'
+import {
+  authLink,
+  NextWepublishLink,
+  SessionProvider,
+  SubscribePage,
+  SubscribePageProps
+} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
   PaymentAmountPicker,
-  SubscribeSection,
-  SubscribeWrapper,
+  RichTextBlockWrapper,
   TitleBlock,
   TitleBlockTitle,
   WebsiteBuilderProvider,
@@ -100,7 +105,18 @@ const dateFormatter = (date: Date, includeTime = true) =>
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
 
-const MitmachenInner = () => <SubscribePage fields={['firstName']} />
+const MitmachenInner = (props: SubscribePageProps) => (
+  <SubscribePage fields={['firstName']} {...props} />
+)
+
+const MitmachenInnerStyled = styled(MitmachenInner)`
+  border: 1px solid ${({theme}) => theme.palette.accent.main};
+  border-radius: ${({theme}) => theme.shape.borderRadius}px;
+  padding: ${({theme}) => theme.spacing(4)};
+  ${RichTextBlockWrapper} {
+    max-width: ${({theme}) => theme.breakpoints.values.sm}px;
+  }
+`
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
@@ -124,7 +140,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Break: FlimmerBreakBlock,
               RichText: FlimmerRichText,
               Title: FlimmerTitle,
-              Subscribe: MitmachenInner
+              Subscribe: MitmachenInnerStyled
             }}
             date={{format: dateFormatter}}
             meta={{siteTitle}}
