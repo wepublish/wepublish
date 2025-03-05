@@ -4,6 +4,7 @@ import {
   AuthTokenStorageKey,
   ContentWrapper,
   InvoiceListContainer,
+  InvoiceListItemContent,
   PersonalDataFormContainer,
   SubscriptionListContainer,
   useHasUnpaidInvoices,
@@ -29,6 +30,13 @@ const SubscriptionsWrapper = styled('div')`
       gap: ${theme.spacing(10)};
     }
   `}
+`
+
+const UnpaidInvoiceListContainer = styled(InvoiceListContainer)`
+  ${InvoiceListItemContent} {
+    border: 8px solid ${({theme}) => theme.palette.primary.main};
+    border-radius: ${({theme}) => theme.shape.borderRadius}px;
+  }
 `
 
 const SubscriptionListWrapper = styled('div')`
@@ -70,7 +78,7 @@ function ProfilePage(props: ProfilePageProps) {
           <SubscriptionListWrapper>
             <H4 component={'h1'}>Offene Rechnungen</H4>
 
-            <InvoiceListContainer
+            <UnpaidInvoiceListContainer
               filter={invoices =>
                 invoices.filter(
                   invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt
