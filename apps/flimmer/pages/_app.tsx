@@ -1,7 +1,7 @@
 import {EmotionCache} from '@emotion/cache'
 import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {authLink, NextWepublishLink, SessionProvider, SubscribePage} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
@@ -31,7 +31,6 @@ import {FlimmerRichText} from '../src/components/flimmer-richtext'
 import {FlimmerTeaser} from '../src/components/flimmer-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
-import {MitmachenInner} from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -98,6 +97,8 @@ const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
+
+const MitmachenInner = () => <SubscribePage fields={['firstName']} />
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
