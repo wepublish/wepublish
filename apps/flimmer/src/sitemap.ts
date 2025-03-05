@@ -40,7 +40,6 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     `${siteUrl}/event`,
     `${siteUrl}/login`,
     `${siteUrl}/signup`,
-    `${siteUrl}/mitmachen`,
     ...(pageData.pages.nodes ?? []).map((page: ApiV1.Page) => page.url)
   ])
 }
