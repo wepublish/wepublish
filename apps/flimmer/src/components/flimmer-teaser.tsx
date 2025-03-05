@@ -6,9 +6,8 @@ import {
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper
 } from '@wepublish/website'
-import {cond, T} from 'ramda'
 
-const OverridenTeaser = styled(Teaser)`
+export const FlimmerTeaser = styled(Teaser)`
   &,
   &:hover {
     ${TeaserPreTitleNoContent},
@@ -25,5 +24,3 @@ const OverridenTeaser = styled(Teaser)`
     min-height: unset;
   }
 `
-
-export const FlimmerTeaser = cond([[T, props => <OverridenTeaser {...props} />]])
