@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import {Icon, styled} from '@mui/material'
 import {withAuthGuard} from '../../../auth-guard'
 import {ssrAuthLink} from '../../../auth-link'
 import {getSessionTokenProps} from '../../../get-session-token-props'
@@ -6,7 +6,8 @@ import {
   ApiV1,
   AuthTokenStorageKey,
   ContentWrapper,
-  SubscriptionListContainer
+  SubscriptionListContainer,
+  useWebsiteBuilder
 } from '@wepublish/website'
 import {setCookie} from 'cookies-next'
 import {NextPage, NextPageContext} from 'next'
@@ -21,11 +22,18 @@ const SubscriptionsWrapper = styled(ContentWrapper)`
 `
 
 function DeactivatedSubscriptions() {
+  const {
+    elements: {Link}
+  } = useWebsiteBuilder()
+
   return (
     <SubscriptionsWrapper>
+      <h1>Gekündigte Abos</h1>
       <SubscriptionListContainer
         filter={subscriptions => subscriptions.filter(subscription => subscription.deactivation)}
       />
+
+      <Link href="/profile">Zurück zum Profil</Link>
     </SubscriptionsWrapper>
   )
 }

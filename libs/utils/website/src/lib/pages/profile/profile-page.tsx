@@ -19,15 +19,27 @@ import {getSessionTokenProps} from '../../get-session-token-props'
 import {ComponentProps} from 'react'
 
 const SubscriptionsWrapper = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  grid-auto-columns: 1fr;
+  gap: ${({theme}) => theme.spacing(3)};
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
-      grid-auto-flow: column;
+      flex-wrap: nowrap;
       gap: ${theme.spacing(10)};
+    }
+  `}
+`
+const SubscriptionListWrapper = styled('div')`
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  gap: ${({theme}) => theme.spacing(2)};
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('md')} {
+      width: 50%;
     }
   `}
 `
@@ -37,12 +49,6 @@ const UnpaidInvoiceListContainer = styled(InvoiceListContainer)`
     border: 8px solid ${({theme}) => theme.palette.primary.main};
     border-radius: ${({theme}) => theme.shape.borderRadius}px;
   }
-`
-
-const SubscriptionListWrapper = styled('div')`
-  display: flex;
-  flex-flow: column;
-  gap: ${({theme}) => theme.spacing(2)};
 `
 
 const DeactivatedSubscriptions = styled('div')`
@@ -99,7 +105,7 @@ function ProfilePage(props: ProfilePageProps) {
 
           {hasDeactivatedSubscriptions && (
             <DeactivatedSubscriptions>
-              <Link href="/profile/subscription/deactivated">Gekündete Abos anzeigen</Link>
+              <Link href="/profile/subscription/deactivated">Gekündigte Abos anzeigen</Link>
             </DeactivatedSubscriptions>
           )}
         </SubscriptionListWrapper>

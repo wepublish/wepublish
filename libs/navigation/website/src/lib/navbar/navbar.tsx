@@ -5,7 +5,7 @@ import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
-import {TextToIcon} from '@wepublish/ui'
+import {Button, TextToIcon} from '@wepublish/ui'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -199,6 +199,18 @@ export const NavbarLogoWrapper = styled('div')`
 
 export const NavbarSpacer = styled('div')``
 
+const OpenInvoiceButton = styled(Button)`
+  &::after {
+    content: 'Rechnung';
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    &::after {
+      content: 'Offene Rechnung';
+    }
+  }
+`
+
 const useImageStyles = () => {
   const theme = useTheme()
   return useMemo(
@@ -302,14 +314,13 @@ export function Navbar({
 
           <NavbarActions isMenuOpen={isMenuOpen}>
             {hasUnpaidInvoices && profileUrl && (
-              <Button
+              <OpenInvoiceButton
                 LinkComponent={Link}
                 href={profileUrl}
                 color="warning"
                 startIcon={<MdWarning />}
-                sx={buttonStyles}>
-                Rechnung
-              </Button>
+                sx={buttonStyles}
+              />
             )}
 
             {!hasRunningSubscription && !hasUnpaidInvoices && subscribeUrl && (
