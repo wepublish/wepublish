@@ -8,8 +8,6 @@ import {
 } from '@wepublish/website'
 import {cond, T} from 'ramda'
 
-import {DailyBriefingTeaser, isDailyBriefingTeaser} from './daily-briefing/daily-briefing-teaser'
-
 const OverridenTeaser = styled(Teaser)`
   &,
   &:hover {
@@ -28,7 +26,4 @@ const OverridenTeaser = styled(Teaser)`
   }
 `
 
-export const TsriTeaser = cond([
-  [isDailyBriefingTeaser, props => <DailyBriefingTeaser {...props} />],
-  [T, props => <OverridenTeaser {...props} />]
-])
+export const FlimmerTeaser = cond([[T, props => <OverridenTeaser {...props} />]])

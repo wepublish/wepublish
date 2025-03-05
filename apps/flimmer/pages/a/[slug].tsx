@@ -53,8 +53,6 @@ export default function ArticleBySlugIdOrToken() {
 
   return (
     <>
-      <TsriAdHeader authors={data?.article?.authors} />
-
       <ArticleContainer {...containerProps}>
         {data?.article?.authors.map(author => (
           <AuthorWrapper key={author.id} fullWidth>

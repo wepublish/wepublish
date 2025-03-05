@@ -1,7 +1,7 @@
 import {styled} from '@mui/material'
 import {BreakBlock, HeadingWithImage, HeadingWithoutImage} from '@wepublish/website'
 
-export const TsriBreakBlock = styled(BreakBlock)`
+export const FlimmerBreakBlock = styled(BreakBlock)`
   background-color: ${({theme}) => theme.palette.accent.main};
   margin-top: ${({theme}) => theme.spacing(5)};
   margin-bottom: ${({theme}) => theme.spacing(5)};
