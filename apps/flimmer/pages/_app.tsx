@@ -7,6 +7,8 @@ import {
   FooterContainer,
   NavbarContainer,
   PaymentAmountPicker,
+  SubscribeSection,
+  SubscribeWrapper,
   TitleBlock,
   TitleBlockTitle,
   WebsiteBuilderProvider,
