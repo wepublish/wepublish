@@ -29,7 +29,7 @@ function askConfirmation() {
     const changelogCommand = `git log --color=always --graph --decorate --pretty=format:'%C(yellow)%h%C(reset) %s %C(cyan)%an%C(reset)' --abbrev-commit $(git describe --abbrev=0 --tags --match 'deploy_${projectName}_*' )..HEAD`
     let changelog = await execCommand(changelogCommand)
     changelog = changelog.replace(/#([0-9]+)/g, (text, number) => `\x1b]8;;https://github.com/wepublish/wepublish/pull/${number}\x1b\\${text}\x1b]8;;\x1b\\`)
-    const filterCommand = `echo "${changelog}" |egrep "core|${projectName}"`
+    const filterCommand = `echo "${changelog}" |egrep -i "core|${projectName}"`
     const changelogFiltered = await execCommand(filterCommand)
     rl.write(`${chalk.underline("All changes you are about to deploy")}:\n\n${changelog}\n\n`)
     rl.write(`${chalk.underline("Changes impacting customer you are about to deploy")}:\n\n${changelogFiltered}\n\n`)
