@@ -81,7 +81,6 @@ function execCommand(command) {
 async function deploy() {
   try {
 
-
     const status = await checkUncommittedChanges();
     if (status.trim() !== '') {
       console.error('Error: There are uncommitted changes in the repository. Please commit your changes before deploying.');
