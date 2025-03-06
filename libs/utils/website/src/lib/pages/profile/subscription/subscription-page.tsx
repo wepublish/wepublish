@@ -41,7 +41,7 @@ function SubscriptionPage() {
     query: {id}
   } = useRouter()
   const {
-    elements: {H4}
+    elements: {H4, Link}
   } = useWebsiteBuilder()
 
   return (
@@ -61,6 +61,8 @@ function SubscriptionPage() {
           filter={invoices => invoices.filter(invoice => invoice.subscriptionID === id)}
         />
       </SubscriptionListWrapper>
+
+      <Link href="/profile">Zurück zum Profil</Link>
     </SubscriptionsWrapper>
   )
 }
