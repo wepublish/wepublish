@@ -44,7 +44,7 @@ export const AktuelleBild = ({
   return (
     <AktuelleBildWrapper>
       <SideInfo>
-        <H2>Das Bild</H2>
+        <H2>Das Wort zum Bild</H2>
         <Typography>
           Ein aktuelles Bild geschossen? Mailen Sie es uns (mit Adresse & Datum)!
         </Typography>
