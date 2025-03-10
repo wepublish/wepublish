@@ -74,6 +74,10 @@ export const OnlineReportsBaseTeaser = styled(Teaser)`
       aspect-ratio: 4/3;
       max-height: unset;
     }
+
+    :where(${TeaserWrapper}:hover &) img {
+      transform: unset;
+    }
   }
 
   ${TeaserPreTitleWrapper} {

@@ -1,7 +1,7 @@
-import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {styled, Typography} from '@mui/material'
+import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website'
 
-const QuoteBlockWrapper = styled(`div`)`
+export const OnlineReportsQuoteBlockWrapper = styled('div')`
   display: flex;
   flex-direction: column;
   row-gap: ${({theme}) => theme.spacing(3)};
@@ -37,7 +37,7 @@ export const OnlineReportsQuoteBlock = ({
   } = useWebsiteBuilder()
 
   return (
-    <QuoteBlockWrapper className={className}>
+    <OnlineReportsQuoteBlockWrapper className={className}>
       <QuoteContent>
         <Quote variant={'subtitle2'}>{quote}</Quote>
         {author && (
@@ -47,7 +47,7 @@ export const OnlineReportsQuoteBlock = ({
         )}
       </QuoteContent>
 
-      <ImageWrapper>{image && <Image image={image} />}</ImageWrapper>
-    </QuoteBlockWrapper>
+      {image && <ImageWrapper>{image && <Image image={image} />}</ImageWrapper>}
+    </OnlineReportsQuoteBlockWrapper>
   )
 }

@@ -4,6 +4,7 @@ import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
+  ArticleInfoWrapper,
   BreakBlockWrapper,
   ContentWrapperStyled,
   EventBlockWrapper,
@@ -11,7 +12,9 @@ import {
   FooterPaperWrapper,
   ImageBlockWrapper,
   NavbarContainer,
+  RichTextBlockWrapper,
   SliderWrapper,
+  TitleBlockWrapper,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
@@ -40,7 +43,10 @@ import {OnlineReportsArticleAuthors} from '../src/components/online-reports-arti
 import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
 import {Advertisement} from '../src/components/advertisement'
 import {Structure} from '../src/structure'
-import {OnlineReportsQuoteBlock} from '../src/components/quote-block'
+import {
+  OnlineReportsQuoteBlock,
+  OnlineReportsQuoteBlockWrapper
+} from '../src/components/quote-block'
 
 setDefaultOptions({
   locale: de
@@ -85,7 +91,13 @@ const MainContent = styled('main')`
     ${theme.breakpoints.up('md')} {
       row-gap: ${({theme}) => theme.spacing(4)};
 
-      & > * {
+      &
+        > :is(
+          ${RichTextBlockWrapper},
+            ${ArticleInfoWrapper},
+            ${TitleBlockWrapper},
+            ${OnlineReportsQuoteBlockWrapper}
+        ) {
         grid-column: 3/11;
       }
 
