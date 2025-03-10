@@ -22,7 +22,6 @@ const NavPaperOverlay = styled('div')`
 `
 
 const NavPaperWrapper = styled('div')`
-  //padding: ${({theme}) => theme.spacing(2.5)};
   background-color: ${({theme}) => theme.palette.secondary.main};
   color: ${({theme}) => theme.palette.secondary.contrastText};
   gap: ${({theme}) => theme.spacing(3)};
@@ -31,14 +30,6 @@ const NavPaperWrapper = styled('div')`
   overflow-y: auto;
   height: 100vh;
   max-width: 100%;
-  max-width: 100%;
-  //padding-top: ${({theme}) => theme.spacing(5)};
-  //padding-bottom: ${({theme}) => theme.spacing(5)};
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    //padding-left: ${({theme}) => theme.spacing(10)};
-    //padding-right: ${({theme}) => theme.spacing(10)};
-  }
 
   grid-area: menu;
 `
@@ -88,9 +79,11 @@ export const OnlineReportsNavPaper = ({
         <NavStructure>
           <NavbarInnerWrapper>
             <NavbarActions>
-              <IconButton size="large" aria-label="Menu" color={'inherit'}>
-                <MdSearch />
-              </IconButton>
+              <Link href="/search" color="inherit" onClick={closeMenu}>
+                <IconButton size="large" aria-label="Menu" color={'inherit'}>
+                  <MdSearch />
+                </IconButton>
+              </Link>
             </NavbarActions>
             <div></div>
             <NavbarActions>
