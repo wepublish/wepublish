@@ -43,9 +43,9 @@ const theme = createTheme(WePTheme, {
   typography: {
     h1: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
-      fontSize: '36px',
+      fontSize: '32px',
       [breakpoints.up('md')]: {
-        fontSize: '44px'
+        fontSize: '40px'
       },
       fontWeight: 700
     },
