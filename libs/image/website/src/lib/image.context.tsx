@@ -1,5 +1,5 @@
 import {BuilderImageProviderProps} from '@wepublish/website/builder'
-import {mergeDeepLeft} from 'ramda'
+import {mergeDeepRight} from 'ramda'
 import {createContext, useContext, useMemo} from 'react'
 
 export const ImageContext = createContext<BuilderImageProviderProps>({})
@@ -9,7 +9,7 @@ export const useImageProps = (props: BuilderImageProviderProps): BuilderImagePro
 
   return useMemo(
     () =>
-      mergeDeepLeft(
+      mergeDeepRight(
         {
           loading: 'lazy',
           fetchPriority: 'low',
