@@ -1,7 +1,7 @@
 import {styled} from '@mui/material'
 import {Navbar, NavbarInnerWrapper} from '@wepublish/website'
 
-export const TsriNavbar = styled(Navbar)`
+export const FlimmerNavbar = styled(Navbar)`
   ${NavbarInnerWrapper} {
     margin-left: auto;
     margin-right: auto;

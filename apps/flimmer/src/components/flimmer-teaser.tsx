@@ -6,11 +6,8 @@ import {
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper
 } from '@wepublish/website'
-import {cond, T} from 'ramda'
 
-import {DailyBriefingTeaser, isDailyBriefingTeaser} from './daily-briefing/daily-briefing-teaser'
-
-const OverridenTeaser = styled(Teaser)`
+export const FlimmerTeaser = styled(Teaser)`
   &,
   &:hover {
     ${TeaserPreTitleNoContent},
@@ -27,8 +24,3 @@ const OverridenTeaser = styled(Teaser)`
     min-height: unset;
   }
 `
-
-export const TsriTeaser = cond([
-  [isDailyBriefingTeaser, props => <DailyBriefingTeaser {...props} />],
-  [T, props => <OverridenTeaser {...props} />]
-])
