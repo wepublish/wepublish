@@ -1,4 +1,14 @@
-import {AppBar, GlobalStyles, SxProps, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
+import {
+  AppBar,
+  Box,
+  GlobalStyles,
+  SxProps,
+  Theme,
+  Toolbar,
+  css,
+  styled,
+  useTheme
+} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -199,18 +209,6 @@ export const NavbarLogoWrapper = styled('div')`
 
 export const NavbarSpacer = styled('div')``
 
-const OpenInvoiceButton = styled(Button)`
-  &::after {
-    content: 'Rechnung';
-  }
-
-  ${({theme}) => theme.breakpoints.up('lg')} {
-    &::after {
-      content: 'Offene Rechnung';
-    }
-  }
-`
-
 const useImageStyles = () => {
   const theme = useTheme()
   return useMemo(
@@ -314,13 +312,14 @@ export function Navbar({
 
           <NavbarActions isMenuOpen={isMenuOpen}>
             {hasUnpaidInvoices && profileUrl && (
-              <OpenInvoiceButton
+              <Button
                 LinkComponent={Link}
                 href={profileUrl}
                 color="warning"
                 startIcon={<MdWarning />}
-                sx={buttonStyles}
-              />
+                sx={buttonStyles}>
+                <Box sx={{display: {xs: 'none', md: 'unset'}}}>Offene</Box>&nbsp;Rechnung
+              </Button>
             )}
 
             {!hasRunningSubscription && !hasUnpaidInvoices && subscribeUrl && (
