@@ -44,7 +44,7 @@ export default function Login({sessionToken}: LoginProps) {
 
   return (
     <LoginWrapper>
-      <H3 component="h1">Login für Member</H3>
+      <H3 component="h1">Login für Mitglieder</H3>
 
       <Typography variant="body1" paragraph>
         (Falls du noch keinen Account hast, <Link href={'/mitmachen'}>klicke hier.</Link>)

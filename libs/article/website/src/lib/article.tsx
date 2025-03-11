@@ -20,22 +20,16 @@ export const ArticleInfoWrapper = styled('aside')`
   grid-row-start: 2;
 `
 
-export const ArticleAuthors = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
-`
-
 export function Article({className, data, children, loading, error}: BuilderArticleProps) {
   const {
-    AuthorChip,
     ArticleSEO,
-    ArticleDate,
+    ArticleAuthors,
+    elements: {Link},
     ArticleMeta,
     blocks: {Blocks}
   } = useWebsiteBuilder()
 
   const article = data?.article as ArticleType
-  const authors = article?.authors.filter(author => !author.hideOnArticle) || []
 
   return (
     <ArticleWrapper className={className}>
@@ -43,16 +37,7 @@ export function Article({className, data, children, loading, error}: BuilderArti
       <Blocks blocks={(article?.blocks as Block[]) ?? []} type="Article" />
 
       <ArticleInfoWrapper>
-        {!!authors.length && (
-          <ArticleAuthors>
-            {authors.map(author => (
-              <AuthorChip key={author.id} author={author} />
-            ))}
-
-            <ArticleDate article={article} />
-          </ArticleAuthors>
-        )}
-
+        {article && <ArticleAuthors article={article} />}
         {article && <ArticleMeta article={article} />}
       </ArticleInfoWrapper>
 

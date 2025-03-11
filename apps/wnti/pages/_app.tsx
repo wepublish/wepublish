@@ -35,6 +35,7 @@ import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {MitmachenInner} from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -107,7 +108,7 @@ type CustomAppProps = AppProps<{
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
-  const siteTitle = 'Wnti'
+  const siteTitle = 'WNTI'
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
@@ -125,7 +126,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Break: TsriBreakBlock,
               Quote: TsriQuoteBlock,
               RichText: TsriRichText,
-              Title: TsriTitle
+              Title: TsriTitle,
+              Subscribe: MitmachenInner
             }}
             blockStyles={{
               ContextBox: TsriContextBox
@@ -155,7 +157,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
                 <link rel="shortcut icon" href="/favicon.ico" />
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <meta name="apple-mobile-web-app-title" content="Wnti" />
+                <meta name="apple-mobile-web-app-title" content="WNTI" />
                 <link rel="manifest" href="/site.webmanifest" />
               </Head>
 
@@ -165,6 +167,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
+                  subscribeUrl={''}
                 />
 
                 <main>

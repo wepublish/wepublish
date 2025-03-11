@@ -58,6 +58,7 @@ export function useLikeStatus(articleId: string, articleLikes: number) {
       if (!isReady) {
         return
       }
+
       // prevent dislikes
       if (isLiked && !preventDislike) {
         decrementLikes()

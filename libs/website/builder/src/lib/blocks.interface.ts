@@ -26,7 +26,8 @@ import {
   TitleBlock,
   LinkPageBreakBlock,
   CommentBlock,
-  TeaserListBlock
+  TeaserListBlock,
+  SubscribeBlock
 } from '@wepublish/website/api'
 
 export type BuilderBlockRendererProps = {
@@ -49,6 +50,7 @@ export type BuilderQuoteBlockProps = QuoteBlock & {className?: string}
 export type BuilderEventBlockProps = EventBlock & {className?: string}
 export type BuilderRichTextBlockProps = RichTextBlock & {className?: string}
 export type BuilderHTMLBlockProps = HtmlBlock & {className?: string}
+export type BuilderSubscribeBlockProps = SubscribeBlock & {className?: string}
 export type BuilderFacebookPostBlockProps = FacebookPostBlock & {className?: string}
 export type BuilderFacebookVideoBlockProps = FacebookVideoBlock & {className?: string}
 export type BuilderInstagramPostBlockProps = InstagramPostBlock & {className?: string}

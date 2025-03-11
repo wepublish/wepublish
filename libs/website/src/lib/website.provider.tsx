@@ -1,6 +1,7 @@
 import {css, GlobalStyles, TextField, Theme, ThemeProvider} from '@mui/material'
 import {
   Article,
+  ArticleAuthors,
   ArticleDate,
   ArticleList,
   ArticleSEO,
@@ -71,7 +72,8 @@ import {
   PeriodicityPicker,
   Subscribe,
   SubscriptionList,
-  SubscriptionListItem
+  SubscriptionListItem,
+  TransactionFee
 } from '@wepublish/membership/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
@@ -156,6 +158,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           ArticleList={ArticleList}
           Article={Article}
           ArticleDate={ArticleDate}
+          ArticleAuthors={ArticleAuthors}
           ArticleMeta={ArticleTags}
           ArticleSEO={ArticleSEO}
           Banner={PageBanner}
@@ -187,6 +190,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           PeriodicityPicker={PeriodicityPicker}
           PaymentAmount={PaymentAmountSlider}
           PaymentMethodPicker={PaymentMethodPicker}
+          TransactionFee={TransactionFee}
           Subscribe={Subscribe}
           elements={{
             TextField,

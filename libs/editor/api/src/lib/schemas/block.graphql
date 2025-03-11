@@ -101,6 +101,10 @@ fragment FullBlock on Block {
     html
   }
 
+  ... on SubscribeBlock {
+    blockStyle
+  }
+
   ... on RichTextBlock {
     blockStyle
     richText

@@ -4,6 +4,7 @@ import {styled} from '@mui/material'
 import {H1, H4} from '@wepublish/ui'
 import {
   ApiV1,
+  ArticleSEO,
   CommentListItemShare,
   isEmbedBlock,
   isRichTextBlock,
@@ -219,8 +220,9 @@ export type SliderArticle = Omit<ApiV1.Article, 'comments' | 'socialMediaAuthors
   blocks: ApiV1.Block[]
 }
 
-interface SearchSliderProps {
+type SearchSliderProps = {
   article: SliderArticle
+  includeSEO?: boolean
 }
 
 const sortArticlesByPublishedAt = sortWith<ApiV1.FullArticleFragment>([
@@ -229,7 +231,7 @@ const sortArticlesByPublishedAt = sortWith<ApiV1.FullArticleFragment>([
 
 const uniqueById = uniqWith(eqBy<ApiV1.FullArticleFragment>(a => a.id))
 
-export function SearchSlider({article}: SearchSliderProps) {
+export function SearchSlider({article, includeSEO}: SearchSliderProps) {
   const {
     elements: {Image, H5, Button}
   } = useWebsiteBuilder()
@@ -394,22 +396,21 @@ export function SearchSlider({article}: SearchSliderProps) {
 
   // like main article via query param userAction
   useEffect(() => {
-    // useLikeStatus hook must be ready (local store must be read)
-    if (!isReady) {
-      return
-    }
     // main article must be ready
     if (!mainArticle) {
       return
     }
+
     // router query must contain a slug
     if (!router.query?.slug) {
       return
     }
+
     // only vote on the designated main article
     if (router.query.slug !== mainArticle.slug) {
       return
     }
+
     // router must be ready
     if (!router.isReady) {
       return
@@ -419,7 +420,7 @@ export function SearchSlider({article}: SearchSliderProps) {
     if (router.query?.userAction === 'like') {
       handleLike(true)
     }
-  }, [router.isReady, router.query, mainArticle, isReady])
+  }, [router.isReady, router.query, mainArticle, handleLike])
 
   // generate an upper and lower part of the title
   const title = useMemo(() => {
@@ -449,6 +450,8 @@ export function SearchSlider({article}: SearchSliderProps) {
 
   return (
     <Container>
+      {includeSEO && <ArticleSEO article={article as ApiV1.Article} />}
+
       <HeaderContainer>
         <TitleContainer>
           <TitleUpperPart>{title.upperTitlePart}</TitleUpperPart>
@@ -514,6 +517,9 @@ export function SearchSlider({article}: SearchSliderProps) {
                     <SlideItemOverlay>
                       <SlideTitle>{article?.title}</SlideTitle>
                     </SlideItemOverlay>
+                  )}
+                  {slidesDetails?.[idx].abs === currentSlide && article.image.source && (
+                    <SlideTitle>Bild: {article.image.source}</SlideTitle>
                   )}
                 </>
               )}
