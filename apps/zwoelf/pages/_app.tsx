@@ -24,6 +24,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {ZwoelfBaseTeaser} from '../src/zwoelf-base-teaser'
 import {ZwoelfFocusTeaser} from '../src/zwoelf-focus-teaser'
 
 setDefaultOptions({
@@ -105,6 +106,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             elements={{Link: NextWepublishLink}}
             date={{format: dateFormatter}}
             meta={{siteTitle}}
+            blocks={{Teaser: ZwoelfBaseTeaser}}
             blockStyles={{
               FocusTeaser: ZwoelfFocusTeaser
             }}>
