@@ -18,20 +18,20 @@ export const Advertisement = ({type}: AdvertisementProps) => {
   switch (type) {
     case 'whiteboard':
       return (
-        <Whiteboard>
-          <ReviveAd reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23506'} />
-        </Whiteboard>
+        <Wideboard>
+          <ReviveAd reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23516'} />
+        </Wideboard>
       )
     case 'half-page':
       return (
         <HalfPage>
-          <ReviveAd reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23507'} />
+          <ReviveAd reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23515'} />
         </HalfPage>
       )
     case 'small':
       return (
         <Small>
-          <ReviveAd reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23508'} />
+          <ReviveAd reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23517'} />
         </Small>
       )
   }
@@ -43,7 +43,7 @@ const AdBox = styled(Box)`
   margin: 0 auto;
 `
 
-const Whiteboard = styled(AdBox)`
+const Wideboard = styled(AdBox)`
   &,
   img {
     height: 250px;
