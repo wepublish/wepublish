@@ -1,1 +1,1 @@
-export * from './lib/crowdfunding.module'
+export * from './lib/crowdfunding-api.module'

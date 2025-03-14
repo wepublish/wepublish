@@ -8,7 +8,7 @@ import {
   AuthenticationModule,
   BexioPaymentProvider,
   BannerApiModule,
-  CrowdfundingModule,
+  CrowdfundingApiModule,
   ConsentModule,
   DashboardModule,
   EventModule,
@@ -53,7 +53,6 @@ import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
 import {ProlitterisTrackingPixelProvider, TrackingPixelModule} from '@wepublish/tracking-pixel/api'
 import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
-import {CrowdfundingModule} from '@wepublish/crowdfunding/api'
 
 @Global()
 @Module({
@@ -343,7 +342,7 @@ import {CrowdfundingModule} from '@wepublish/crowdfunding/api'
     }),
     BannerApiModule,
     VersionInformationModule,
-    CrowdfundingModule
+    CrowdfundingApiModule
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [

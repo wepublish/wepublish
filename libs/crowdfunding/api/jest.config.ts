@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'crowdfunding-editor',
+  displayName: 'crowdfunding-api',
   preset: '../../../jest.preset.js',
   globals: {},
   testEnvironment: 'node',
@@ -13,6 +13,6 @@ export default {
     ]
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../coverage/libs/crowdfunding/editor',
+  coverageDirectory: '../../../coverage/libs/crowdfunding/api',
   maxWorkers: 1
 }

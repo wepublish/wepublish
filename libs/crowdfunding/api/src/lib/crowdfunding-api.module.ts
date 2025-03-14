@@ -8,4 +8,4 @@ import {CrowdfundingResolver} from './crowdfunding.resolver'
   providers: [CrowdfundingResolver, CrowdfundingService],
   exports: [CrowdfundingService]
 })
-export class CrowdfundingModule {}
+export class CrowdfundingApiModule {}
