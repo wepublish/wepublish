@@ -59,4 +59,10 @@ export class CreateCrowdfundingInput extends PickType(Crowdfunding, ['name'], In
 }
 
 @InputType()
-export class UpdateCrowdfundingInput extends PickType(Crowdfunding, ['id', 'name'], InputType) {}
+export class UpdateCrowdfundingInput extends PickType(Crowdfunding, ['id', 'name'], InputType) {
+  @Field(() => [CreateCrowdfundingGoalInput], {nullable: true})
+  goals!: CreateCrowdfundingGoalInput[]
+
+  @Field(() => [CreateCrowdfundingMemberPlan], {nullable: true})
+  memberPlans?: CreateCrowdfundingMemberPlan[]
+}

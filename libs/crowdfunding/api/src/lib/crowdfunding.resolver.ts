@@ -1,4 +1,4 @@
-import {Resolver, Query, Mutation, Args} from '@nestjs/graphql'
+import {Resolver, Query, Mutation, Args, ResolveField, Parent} from '@nestjs/graphql'
 import {
   CreateCrowdfundingInput,
   Crowdfunding,
@@ -11,12 +11,18 @@ import {
   CanGetCrowdfunding,
   CanCreateCrowdfunding,
   CanUpdateCrowdfunding,
-  CanGetCrowdfundings
+  CanGetCrowdfundings,
+  CanDeleteCrowdfunding
 } from '@wepublish/permissions/api'
+import {CrowdfundingGoal} from './crowdfunding-goal.model'
+import {CrowdfundingGoalService} from './crowdfunding-goal.service'
 
 @Resolver(() => Crowdfunding)
 export class CrowdfundingResolver {
-  constructor(private crowdfundingService: CrowdfundingService) {}
+  constructor(
+    private crowdfundingService: CrowdfundingService,
+    private crowdfundingGoalService: CrowdfundingGoalService
+  ) {}
 
   @Permissions(CanGetCrowdfunding)
   @Query(() => Crowdfunding, {description: 'Get a single crowdfunding by id'})
@@ -32,6 +38,12 @@ export class CrowdfundingResolver {
     return this.crowdfundingService.getCrowdfundings()
   }
 
+  @ResolveField(() => [CrowdfundingGoal])
+  async goals(@Parent() crowdfunding: Crowdfunding) {
+    const {id} = crowdfunding
+    return this.crowdfundingGoalService.findAll({crowdfundingId: id})
+  }
+
   @Permissions(CanCreateCrowdfunding)
   @Mutation(returns => Crowdfunding, {description: 'Create a new Crowdfunding'})
   public createCrowdfunding(@Args('input') crowdfunding: CreateCrowdfundingInput) {
@@ -40,7 +52,13 @@ export class CrowdfundingResolver {
 
   @Permissions(CanUpdateCrowdfunding)
   @Mutation(returns => Crowdfunding, {description: 'Update a sinle crowdfunding'})
-  public updateCrowdunding(@Args('input') crowdfunding: UpdateCrowdfundingInput) {
+  public updateCrowdfunding(@Args('input') crowdfunding: UpdateCrowdfundingInput) {
     return this.crowdfundingService.updateCrowdfunding(crowdfunding)
+  }
+
+  @Permissions(CanDeleteCrowdfunding)
+  @Mutation(() => Boolean, {nullable: true})
+  async deleteCrowdfunding(@Args() {id}: CrowdfundingId): Promise<void> {
+    await this.crowdfundingService.delete(id)
   }
 }

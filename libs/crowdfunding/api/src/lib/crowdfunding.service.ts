@@ -49,16 +49,34 @@ export class CrowdfundingService {
   }
 
   async updateCrowdfunding(crowdfunding: UpdateCrowdfundingInput) {
+    const {id, goals, memberPlans, ...crowdfundingWithoutAssociations} = crowdfunding
+
     return this.prisma.crowdfunding.update({
       data: {
-        ...crowdfunding
+        ...crowdfundingWithoutAssociations,
+        goals: {
+          deleteMany: {},
+          create: goals
+        },
+        memberPlans: {
+          set: [],
+          connect: memberPlans?.map(memberPlan => ({id: memberPlan.id}))
+        }
       },
       where: {
-        id: crowdfunding.id
+        id
       },
       include: {
         goals: true,
         memberPlans: true
+      }
+    })
+  }
+
+  async delete(id: string): Promise<undefined> {
+    await this.prisma.crowdfunding.delete({
+      where: {
+        id
       }
     })
   }

@@ -133,8 +133,8 @@ input CreateBannerInput {
 }
 
 input CreateCrowdfundingGoalInput {
-  description: String!
-  goal: Float!
+  amount: Float!
+  description: String
   title: String!
 }
 
@@ -158,9 +158,9 @@ type Crowdfunding {
 }
 
 type CrowdfundingGoal {
+  amount: Float!
   createdAt: DateTime!
-  description: String!
-  goal: Float!
+  description: String
   id: ID!
   modifiedAt: DateTime!
   title: String!
@@ -367,6 +367,7 @@ type Mutation {
 
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
+  deleteCrowdfunding(id: ID!): Boolean
 
   """Delete poll votes"""
   deletePollVotes(ids: [ID!]!): DeletePollVotesResult!
@@ -395,7 +396,7 @@ type Mutation {
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
 
   """Update a sinle crowdfunding"""
-  updateCrowdunding(input: UpdateCrowdfundingInput!): Crowdfunding!
+  updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -697,7 +698,9 @@ input UpdateBannerInput {
 }
 
 input UpdateCrowdfundingInput {
+  goals: [CreateCrowdfundingGoalInput!]
   id: ID!
+  memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String!
 }
 

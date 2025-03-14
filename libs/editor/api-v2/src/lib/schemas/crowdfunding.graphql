@@ -1,0 +1,60 @@
+query Crowdfundings {
+  crowdfundings {
+    ...FullCrowdfunding
+  }
+}
+
+query Crowdfunding($id: ID!) {
+  crowdfunding(id: $id) {
+    ...FullCrowdfunding
+  }
+}
+
+mutation CreateCrowdfunding($input: CreateCrowdfundingInput!) {
+  createCrowdfunding(input: $input) {
+    ...FullCrowdfunding
+  }
+}
+
+mutation UpdateCrowdfunding($input: UpdateCrowdfundingInput!) {
+  updateCrowdfunding(input: $input) {
+    ...FullCrowdfunding
+  }
+}
+
+mutation DeleteCrowdfunding($id: ID!) {
+  deleteCrowdfunding(id: $id)
+}
+
+input CreateCrowdfundingInput {
+  name: String!
+  goals: [CreateCrowdfundingGoalInput]!
+}
+
+input CreateCrowdfundingGoalInput {
+  title: String!
+  description: String!
+  amount: Int!
+}
+
+input UpdateCrowdfundingInput {
+  id: ID!
+  name: String!
+  goals: [CreateCrowdfundingGoalInput!]
+}
+
+fragment FullCrowdfunding on Crowdfunding {
+  id
+  name
+
+  goals {
+    ...FullCrowdfundingGoal
+  }
+}
+
+fragment FullCrowdfundingGoal on CrowdfundingGoal {
+  id
+  title
+  description
+  amount
+}

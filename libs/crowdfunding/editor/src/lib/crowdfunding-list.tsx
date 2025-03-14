@@ -1,24 +1,36 @@
-import React, {useMemo} from 'react'
+import React, {useMemo, useState} from 'react'
 import {
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   createCheckedPermissionComponent,
   IconButton,
-  TableWrapper
+  TableWrapper,
+  PaddedCell
 } from '@wepublish/ui/editor'
-import {MdAdd} from 'react-icons/md'
+import {MdAdd, MdDelete} from 'react-icons/md'
 import {useTranslation} from 'react-i18next'
 import {Link} from 'react-router-dom'
 import {Table as RTable, Table} from 'rsuite'
-import {getApiClientV2} from '@wepublish/editor/api-v2'
+import {RowDataType} from 'rsuite/esm/Table'
+import {Crowdfunding, getApiClientV2, useCrowdfundingsQuery} from '@wepublish/editor/api-v2'
+import {CrowdfundingDeleteModal} from './crowdfunding-delete-modal'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
 function CrowdfundingList() {
   const {t} = useTranslation()
 
+  const [crowdfundingDelete, setCrowdfundingDelete] = useState<Crowdfunding | undefined>(undefined)
+
   const client = useMemo(() => getApiClientV2(), [])
+
+  const {data, loading, error, refetch} = useCrowdfundingsQuery({
+    client,
+    onError: () => {
+      console.log(error)
+    }
+  })
 
   return (
     <>
@@ -31,15 +43,45 @@ function CrowdfundingList() {
           <Link to="create">
             <IconButton appearance="primary" loading={false}>
               <MdAdd />
-              {t('banner.list.createNew')}
+              {t('crowdfunding.list.createNew')}
             </IconButton>
           </Link>
         </ListViewActions>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table fillHeight></Table>
+        <Table fillHeight loading={loading} data={data?.crowdfundings || []}>
+          <Column width={300} resizable>
+            <HeaderCell>{t('crowdfunding.list.name')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<Crowdfunding>) => (
+                <Link to={`/crowdfundings/edit/${rowData.id}`}>{rowData.name}</Link>
+              )}
+            </RCell>
+          </Column>
+          <Column resizable fixed="right">
+            <HeaderCell align={'center'}>{t('crowdfunding.list.delete')}</HeaderCell>
+            <PaddedCell align={'center'}>
+              {(crowdfunding: RowDataType<Crowdfunding>) => (
+                <IconButton
+                  icon={<MdDelete />}
+                  circle
+                  appearance="ghost"
+                  color="red"
+                  size="sm"
+                  onClick={() => setCrowdfundingDelete(crowdfunding as Crowdfunding)}
+                />
+              )}
+            </PaddedCell>
+          </Column>
+        </Table>
       </TableWrapper>
+
+      <CrowdfundingDeleteModal
+        crowdfunding={crowdfundingDelete}
+        onDelete={refetch}
+        onClose={() => setCrowdfundingDelete(undefined)}
+      />
     </>
   )
 }

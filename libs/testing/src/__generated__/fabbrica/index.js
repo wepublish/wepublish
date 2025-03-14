@@ -5467,7 +5467,7 @@ function isCrowdfundingGoalCrowdfundingFactory(x) {
 function autoGenerateCrowdfundingGoalScalarsOrEnums({ seq }) {
     return {
         title: getScalarFieldValueGenerator().String({ modelName: "CrowdfundingGoal", fieldName: "title", isId: false, isUnique: false, seq }),
-        goal: getScalarFieldValueGenerator().Int({ modelName: "CrowdfundingGoal", fieldName: "goal", isId: false, isUnique: false, seq })
+        amount: getScalarFieldValueGenerator().Int({ modelName: "CrowdfundingGoal", fieldName: "amount", isId: false, isUnique: false, seq })
     };
 }
 function defineCrowdfundingGoalFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
@@ -5528,5 +5528,5 @@ function defineCrowdfundingGoalFactoryInternal({ defaultData: defaultDataResolve
  * @returns factory {@link CrowdfundingGoalFactoryInterface}
  */
 export function defineCrowdfundingGoalFactory(options) {
-    return defineCrowdfundingGoalFactoryInternal(options !== null && options !== void 0 ? options : {});
+    return defineCrowdfundingGoalFactoryInternal(options);
 }

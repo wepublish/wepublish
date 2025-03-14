@@ -1352,6 +1352,8 @@ model Crowdfunding {
   name        String
   memberPlans MemberPlan[]
   goals       CrowdfundingGoal[]
+
+  @@map("crowdfundings")
 }
 
 model CrowdfundingGoal {
@@ -1360,7 +1362,9 @@ model CrowdfundingGoal {
   modifiedAt     DateTime      @updatedAt
   title          String
   description    String?
-  goal           Int
-  Crowdfunding   Crowdfunding? @relation(fields: [crowdfundingId], references: [id])
-  crowdfundingId String?       @db.Uuid
+  amount         Int
+  Crowdfunding   Crowdfunding @relation(fields: [crowdfundingId], references: [id], onDelete: Cascade)
+  crowdfundingId String       @db.Uuid
+
+  @@map("crowdfunding_goals")
 }

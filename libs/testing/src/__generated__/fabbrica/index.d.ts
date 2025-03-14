@@ -3047,11 +3047,11 @@ type CrowdfundingGoalFactoryDefineInput = {
     modifiedAt?: Date;
     title?: string;
     description?: string | null;
-    goal?: number;
-    Crowdfunding?: CrowdfundingGoalCrowdfundingFactory | Prisma.CrowdfundingCreateNestedOneWithoutGoalsInput;
+    amount?: number;
+    Crowdfunding: CrowdfundingGoalCrowdfundingFactory | Prisma.CrowdfundingCreateNestedOneWithoutGoalsInput;
 };
 type CrowdfundingGoalFactoryDefineOptions = {
-    defaultData?: Resolver<CrowdfundingGoalFactoryDefineInput, BuildDataOptions>;
+    defaultData: Resolver<CrowdfundingGoalFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
             data: Resolver<Partial<CrowdfundingGoalFactoryDefineInput>, BuildDataOptions>;
@@ -3078,4 +3078,4 @@ export interface CrowdfundingGoalFactoryInterface<TOptions extends CrowdfundingG
  * @param options
  * @returns factory {@link CrowdfundingGoalFactoryInterface}
  */
-export declare function defineCrowdfundingGoalFactory<TOptions extends CrowdfundingGoalFactoryDefineOptions>(options?: TOptions): CrowdfundingGoalFactoryInterface<TOptions>;
+export declare function defineCrowdfundingGoalFactory<TOptions extends CrowdfundingGoalFactoryDefineOptions>(options: TOptions): CrowdfundingGoalFactoryInterface<TOptions>;

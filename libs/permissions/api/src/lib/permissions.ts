@@ -28,6 +28,12 @@ export const CanUpdateCrowdfunding: Permission = {
   deprecated: false
 }
 
+export const CanDeleteCrowdfunding: Permission = {
+  id: 'CAN_DELETE_CROWDFUNDING',
+  description: 'Allows to delete crowdfunding',
+  deprecated: false
+}
+
 export const CanGetNavigation: Permission = {
   id: 'CAN_GET_NAVIGATION',
   description: 'Allows to get navigation',
@@ -792,6 +798,7 @@ export const AllPermissions: Permission[] = [
   CanGetCrowdfundings,
   CanCreateCrowdfunding,
   CanUpdateCrowdfunding,
+  CanDeleteCrowdfunding,
   CanTakeActionOnComment,
   CanCreateNavigation,
   CanGetNavigation,
@@ -915,6 +922,7 @@ export const EditorPermissions: Permission[] = [
   CanGetCrowdfundings,
   CanCreateCrowdfunding,
   CanUpdateCrowdfunding,
+  CanDeleteCrowdfunding,
   CanGetComments,
   CanUpdateComments,
   CanTakeActionOnComment,
