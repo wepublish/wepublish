@@ -793,7 +793,8 @@
       "blocks": {
         "polls": "Polls",
         "blockStyles": "Block Styling",
-        "topMenu": "Content Blocks"
+        "topMenu": "Content Blocks",
+        "crowdfundings": "Crowdfundings"
       },
       "commentRating": "Rating System",
       "comments": "Comments",

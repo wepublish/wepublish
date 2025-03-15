@@ -8,6 +8,7 @@ import {
   AuthenticationModule,
   BexioPaymentProvider,
   BannerApiModule,
+  CrowdfundingApiModule,
   ConsentModule,
   DashboardModule,
   EventModule,
@@ -340,7 +341,8 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
       inject: [GoogleAnalyticsService]
     }),
     BannerApiModule,
-    VersionInformationModule
+    VersionInformationModule,
+    CrowdfundingApiModule
   ],
   exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [
