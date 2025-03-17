@@ -61,3 +61,4 @@ export {
   HotAndTrendingOptionsFactory,
   HotAndTrendingResolver
 } from '@wepublish/article/api'
+export * from '@wepublish/versionInformation/api'

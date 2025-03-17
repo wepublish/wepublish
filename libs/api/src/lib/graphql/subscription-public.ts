@@ -68,7 +68,7 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
     canExtend: {
       type: new GraphQLNonNull(GraphQLBoolean),
       resolve: createProxyingResolver(async (subscription, _, context) => {
-        const [paymentMethod, unpaidInvoice] = await Promise.all([
+        const [paymentMethod, unpaidAndUncanceledInvoice] = await Promise.all([
           context.loaders.paymentMethodsByID.load(subscription.paymentMethodID),
           context.prisma.invoice.findFirst({
             where: {
@@ -76,9 +76,7 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
                 userID: subscription.userID
               },
               paidAt: null,
-              canceledAt: {
-                not: null
-              }
+              canceledAt: null
             }
           })
         ])
@@ -96,7 +94,7 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
           subscription.extendable &&
           !subscription.deactivation &&
           +add(new Date(), {months: 1}) > +subscription.paidUntil &&
-          !unpaidInvoice &&
+          !unpaidAndUncanceledInvoice &&
           // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
           paymentMethod?.slug !== 'payrexx-subscription'
         )

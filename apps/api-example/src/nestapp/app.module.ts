@@ -37,8 +37,8 @@ import {
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   SystemInfoModule,
-  MediaAdapterModule,
-  SubscriptionModule
+  SubscriptionModule,
+  VersionInformationModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule, URLAdapter, URLAdapterModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -65,6 +65,7 @@ import {
   TrackingPixelsModule
 } from '@wepublish/tracking-pixel/api'
 import {HttpModule, HttpService} from '@nestjs/axios'
+import {MediaAdapterModule} from '@wepublish/image/api'
 
 @Global()
 @Module({
@@ -372,6 +373,7 @@ import {HttpModule, HttpService} from '@nestjs/axios'
       inject: [GoogleAnalyticsService]
     }),
     BannerApiModule,
+    VersionInformationModule,
     ImportPeerArticleModule,
     URLAdapterModule.registerAsync({
       imports: [ConfigModule],
@@ -405,6 +407,7 @@ import {HttpModule, HttpService} from '@nestjs/axios'
       inject: [ConfigService]
     })
   ],
+  exports: ['SYSTEM_INFO_KEY'],
   providers: [
     {
       provide: 'SYSTEM_INFO_KEY',
@@ -413,7 +416,6 @@ import {HttpModule, HttpService} from '@nestjs/axios'
       },
       inject: [ConfigService]
     }
-  ],
-  exports: ['SYSTEM_INFO_KEY']
+  ]
 })
 export class AppModule {}

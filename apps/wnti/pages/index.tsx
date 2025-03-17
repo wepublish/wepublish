@@ -1,4 +1,3 @@
-import mailchimp, {campaigns} from '@mailchimp/mailchimp_marketing'
 import {ContentWidthProvider} from '@wepublish/content/website'
 import {PageContainer} from '@wepublish/page/website'
 import {
@@ -11,48 +10,23 @@ import {
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
-import {DailyBriefingContext} from '../src/components/daily-briefing/daily-briefing-teaser'
-
-type IndexProps = {
-  campaigns: campaigns.Campaigns[]
-}
-
-export default function Index({campaigns}: IndexProps) {
+export default function Index() {
   return (
-    <DailyBriefingContext.Provider value={campaigns}>
-      <ContentWidthProvider fullWidth={false}>
-        <PageContainer slug={''} />
-      </ContentWidthProvider>
-    </DailyBriefingContext.Provider>
+    <ContentWidthProvider fullWidth={false}>
+      <PageContainer slug={''} />
+    </ContentWidthProvider>
   )
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const {publicRuntimeConfig, serverRuntimeConfig} = getConfig()
+  const {publicRuntimeConfig} = getConfig()
 
-  if (
-    !publicRuntimeConfig.env.API_URL ||
-    !serverRuntimeConfig.env.MAILCHIMP_API_KEY ||
-    !serverRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX
-  ) {
+  if (!publicRuntimeConfig.env.API_URL) {
     return {props: {}, revalidate: 1}
   }
 
-  mailchimp.setConfig({
-    apiKey: serverRuntimeConfig.env.MAILCHIMP_API_KEY,
-    server: serverRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX
-  })
-
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
-  const [mailchimpResponse] = await Promise.all([
-    mailchimp.campaigns.list({
-      count: 4,
-      sortField: 'send_time',
-      status: 'sent',
-      sortDir: 'DESC',
-      folderId: '90c02813e1',
-      fields: ['campaigns.id', 'campaigns.long_archive_url', 'campaigns.settings.subject_line']
-    }),
+  await Promise.all([
     client.query({
       query: PageDocument,
       variables: {
@@ -67,9 +41,7 @@ export const getStaticProps: GetStaticProps = async () => {
     })
   ])
 
-  const {campaigns} = mailchimpResponse as campaigns.CampaignsSuccessResponse
-
-  const props = addClientCacheToV1Props(client, {campaigns})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,
