@@ -113,6 +113,7 @@ const MitmachenInnerStyled = styled(MitmachenInner)`
   border: 1px solid ${({theme}) => theme.palette.accent.main};
   border-radius: ${({theme}) => theme.shape.borderRadius}px;
   padding: ${({theme}) => theme.spacing(4)};
+
   ${RichTextBlockWrapper} {
     max-width: ${({theme}) => theme.breakpoints.values.sm}px;
   }
