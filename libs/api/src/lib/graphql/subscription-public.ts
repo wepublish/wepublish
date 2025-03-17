@@ -89,7 +89,7 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
          *   All invoices have been paid (or cancelled)
          *   Not using a deprecated payment method
          */
-        return (
+        return !!(
           subscription.paidUntil &&
           subscription.extendable &&
           !subscription.deactivation &&

@@ -12,7 +12,8 @@ import {ContentWrapper} from '@wepublish/content/website'
 import {
   useHasUnpaidInvoices,
   InvoiceListContainer,
-  SubscriptionListContainer
+  SubscriptionListContainer,
+  InvoiceListItemContent
 } from '@wepublish/membership/website'
 import {PersonalDataFormContainer} from '@wepublish/user/website'
 import {
