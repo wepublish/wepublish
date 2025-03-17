@@ -44,7 +44,6 @@ i18next
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
-    partialBundledLanguages: true,
     resources: {
       de: {zod: translation}
     }
