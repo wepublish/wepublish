@@ -132,6 +132,45 @@ input CreateBannerInput {
   title: String!
 }
 
+input CreateCrowdfundingGoalInput {
+  amount: Float!
+  description: String
+  title: String!
+}
+
+input CreateCrowdfundingInput {
+  goals: [CreateCrowdfundingGoalInput!]
+  memberPlans: [CreateCrowdfundingMemberPlan!]
+  name: String!
+}
+
+input CreateCrowdfundingMemberPlan {
+  id: ID!
+}
+
+type Crowdfunding {
+  createdAt: DateTime!
+  goals: [CrowdfundingGoal!]!
+  id: ID!
+  memberPlans: [CrowdfundingMemberPlan!]!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+type CrowdfundingGoal {
+  amount: Float!
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  modifiedAt: DateTime!
+  title: String!
+}
+
+type CrowdfundingMemberPlan {
+  id: ID!
+  name: String!
+}
+
 enum Currency {
   CHF
   EUR
@@ -310,6 +349,9 @@ type Mutation {
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
+  """Create a new Crowdfunding"""
+  createCrowdfunding(input: CreateCrowdfundingInput!): Crowdfunding!
+
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
@@ -325,6 +367,7 @@ type Mutation {
 
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
+  deleteCrowdfunding(id: ID!): Boolean
 
   """Delete poll votes"""
   deletePollVotes(ids: [ID!]!): DeletePollVotesResult!
@@ -351,6 +394,9 @@ type Mutation {
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
+
+  """Update a sinle crowdfunding"""
+  updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -465,6 +511,12 @@ type Query {
 
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
+
+  """Get a single crowdfunding by id"""
+  crowdfunding(id: ID!): Crowdfunding!
+
+  """Returns a paginated list of crowdfundings."""
+  crowdfundings: [Crowdfunding!]!
 
   "\n      Returns a list of Importable Event Providers\n    "
   eventProviders: [String!]!
@@ -643,6 +695,13 @@ input UpdateBannerInput {
   showOnPages: [PageModelInput!]
   text: String!
   title: String!
+}
+
+input UpdateCrowdfundingInput {
+  goals: [CreateCrowdfundingGoalInput!]
+  id: ID!
+  memberPlans: [CreateCrowdfundingMemberPlan!]
+  name: String!
 }
 
 type User {

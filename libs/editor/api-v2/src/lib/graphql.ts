@@ -228,7 +228,6 @@ export enum BlockType {
   Embed = 'Embed',
   Event = 'Event',
   Html = 'HTML',
-  Subscribe = 'Subscribe',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
   LinkPageBreak = 'LinkPageBreak',
@@ -236,6 +235,7 @@ export enum BlockType {
   Poll = 'Poll',
   Quote = 'Quote',
   RichText = 'RichText',
+  Subscribe = 'Subscribe',
   TeaserGrid1 = 'TeaserGrid1',
   TeaserGrid6 = 'TeaserGrid6',
   TeaserGridFlex = 'TeaserGridFlex',
@@ -398,6 +398,48 @@ export type CreateBannerInput = {
   showOnPages?: InputMaybe<Array<PageModelInput>>;
   text: Scalars['String'];
   title: Scalars['String'];
+};
+
+export type CreateCrowdfundingGoalInput = {
+  amount: Scalars['Float'];
+  description?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
+};
+
+export type CreateCrowdfundingInput = {
+  goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
+  memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
+  name: Scalars['String'];
+};
+
+export type CreateCrowdfundingMemberPlan = {
+  id: Scalars['ID'];
+};
+
+export type Crowdfunding = {
+  __typename?: 'Crowdfunding';
+  createdAt: Scalars['DateTime'];
+  goals: Array<CrowdfundingGoal>;
+  id: Scalars['ID'];
+  memberPlans: Array<CrowdfundingMemberPlan>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
+export type CrowdfundingGoal = {
+  __typename?: 'CrowdfundingGoal';
+  amount: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  modifiedAt: Scalars['DateTime'];
+  title: Scalars['String'];
+};
+
+export type CrowdfundingMemberPlan = {
+  __typename?: 'CrowdfundingMemberPlan';
+  id: Scalars['ID'];
+  name: Scalars['String'];
 };
 
 export enum Currency {
@@ -911,6 +953,8 @@ export type Mutation = {
    *
    */
   createConsent: Consent;
+  /** Create a new Crowdfunding */
+  createCrowdfunding: Crowdfunding;
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
   createPaymentFromInvoice?: Maybe<Payment>;
   /** This mutation allows to create payment by referencing a subscription. */
@@ -942,6 +986,7 @@ export type Mutation = {
    *
    */
   deleteConsent: Consent;
+  deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
   /** Delete an existing subscription flow */
@@ -990,6 +1035,8 @@ export type Mutation = {
    *
    */
   updateConsent: Consent;
+  /** Update a sinle crowdfunding */
+  updateCrowdfunding: Crowdfunding;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
   updatePassword?: Maybe<User>;
   /** This mutation allows to update the Payment Provider Customers */
@@ -1050,6 +1097,11 @@ export type MutationCreateConsentArgs = {
   defaultValue: Scalars['Boolean'];
   name: Scalars['String'];
   slug: Scalars['String'];
+};
+
+
+export type MutationCreateCrowdfundingArgs = {
+  input: CreateCrowdfundingInput;
 };
 
 
@@ -1146,6 +1198,11 @@ export type MutationDeleteBlockStyleArgs = {
 
 export type MutationDeleteConsentArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationDeleteCrowdfundingArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -1258,6 +1315,11 @@ export type MutationUpdateConsentArgs = {
   id: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateCrowdfundingArgs = {
+  input: UpdateCrowdfundingInput;
 };
 
 
@@ -1663,6 +1725,10 @@ export type Query = {
    *
    */
   consents: Array<Consent>;
+  /** Get a single crowdfunding by id */
+  crowdfunding: Crowdfunding;
+  /** Returns a paginated list of crowdfundings. */
+  crowdfundings: Array<Crowdfunding>;
   /** This query returns an event */
   event: Event;
   /**
@@ -1887,6 +1953,11 @@ export type QueryConsentArgs = {
 
 export type QueryConsentsArgs = {
   filter?: InputMaybe<ConsentFilter>;
+};
+
+
+export type QueryCrowdfundingArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -2409,6 +2480,13 @@ export type UpdateBannerInput = {
   title: Scalars['String'];
 };
 
+export type UpdateCrowdfundingInput = {
+  goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
+  id: Scalars['ID'];
+  memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
+  name: Scalars['String'];
+};
+
 export type UploadImageInput = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
@@ -2677,6 +2755,43 @@ export type DeleteUserConsentMutationVariables = Exact<{
 
 
 export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
+
+export type CrowdfundingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CrowdfundingsQuery = { __typename?: 'Query', crowdfundings: Array<{ __typename?: 'Crowdfunding', id: string, name: string, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }> }> };
+
+export type CrowdfundingQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type CrowdfundingQuery = { __typename?: 'Query', crowdfunding: { __typename?: 'Crowdfunding', id: string, name: string, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }> } };
+
+export type CreateCrowdfundingMutationVariables = Exact<{
+  input: CreateCrowdfundingInput;
+}>;
+
+
+export type CreateCrowdfundingMutation = { __typename?: 'Mutation', createCrowdfunding: { __typename?: 'Crowdfunding', id: string, name: string, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }> } };
+
+export type UpdateCrowdfundingMutationVariables = Exact<{
+  input: UpdateCrowdfundingInput;
+}>;
+
+
+export type UpdateCrowdfundingMutation = { __typename?: 'Mutation', updateCrowdfunding: { __typename?: 'Crowdfunding', id: string, name: string, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }> } };
+
+export type DeleteCrowdfundingMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteCrowdfundingMutation = { __typename?: 'Mutation', deleteCrowdfunding?: boolean | null };
+
+export type FullCrowdfundingFragment = { __typename?: 'Crowdfunding', id: string, name: string, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }> };
+
+export type FullCrowdfundingGoalFragment = { __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number };
 
 export type ImportableEventRefFragment = { __typename?: 'EventFromSource', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, imageUrl?: string | null, startsAt: string, endsAt?: string | null };
 
@@ -2977,6 +3092,23 @@ export const FullUserConsentFragmentDoc = gql`
   }
 }
     ${FullConsentFragmentDoc}`;
+export const FullCrowdfundingGoalFragmentDoc = gql`
+    fragment FullCrowdfundingGoal on CrowdfundingGoal {
+  id
+  title
+  description
+  amount
+}
+    `;
+export const FullCrowdfundingFragmentDoc = gql`
+    fragment FullCrowdfunding on Crowdfunding {
+  id
+  name
+  goals {
+    ...FullCrowdfundingGoal
+  }
+}
+    ${FullCrowdfundingGoalFragmentDoc}`;
 export const ImportableEventRefFragmentDoc = gql`
     fragment ImportableEventRef on EventFromSource {
   id
@@ -3762,6 +3894,172 @@ export function useDeleteUserConsentMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteUserConsentMutationHookResult = ReturnType<typeof useDeleteUserConsentMutation>;
 export type DeleteUserConsentMutationResult = Apollo.MutationResult<DeleteUserConsentMutation>;
 export type DeleteUserConsentMutationOptions = Apollo.BaseMutationOptions<DeleteUserConsentMutation, DeleteUserConsentMutationVariables>;
+export const CrowdfundingsDocument = gql`
+    query Crowdfundings {
+  crowdfundings {
+    ...FullCrowdfunding
+  }
+}
+    ${FullCrowdfundingFragmentDoc}`;
+
+/**
+ * __useCrowdfundingsQuery__
+ *
+ * To run a query within a React component, call `useCrowdfundingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCrowdfundingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCrowdfundingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCrowdfundingsQuery(baseOptions?: Apollo.QueryHookOptions<CrowdfundingsQuery, CrowdfundingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CrowdfundingsQuery, CrowdfundingsQueryVariables>(CrowdfundingsDocument, options);
+      }
+export function useCrowdfundingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CrowdfundingsQuery, CrowdfundingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CrowdfundingsQuery, CrowdfundingsQueryVariables>(CrowdfundingsDocument, options);
+        }
+export type CrowdfundingsQueryHookResult = ReturnType<typeof useCrowdfundingsQuery>;
+export type CrowdfundingsLazyQueryHookResult = ReturnType<typeof useCrowdfundingsLazyQuery>;
+export type CrowdfundingsQueryResult = Apollo.QueryResult<CrowdfundingsQuery, CrowdfundingsQueryVariables>;
+export const CrowdfundingDocument = gql`
+    query Crowdfunding($id: ID!) {
+  crowdfunding(id: $id) {
+    ...FullCrowdfunding
+  }
+}
+    ${FullCrowdfundingFragmentDoc}`;
+
+/**
+ * __useCrowdfundingQuery__
+ *
+ * To run a query within a React component, call `useCrowdfundingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCrowdfundingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCrowdfundingQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCrowdfundingQuery(baseOptions: Apollo.QueryHookOptions<CrowdfundingQuery, CrowdfundingQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CrowdfundingQuery, CrowdfundingQueryVariables>(CrowdfundingDocument, options);
+      }
+export function useCrowdfundingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CrowdfundingQuery, CrowdfundingQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CrowdfundingQuery, CrowdfundingQueryVariables>(CrowdfundingDocument, options);
+        }
+export type CrowdfundingQueryHookResult = ReturnType<typeof useCrowdfundingQuery>;
+export type CrowdfundingLazyQueryHookResult = ReturnType<typeof useCrowdfundingLazyQuery>;
+export type CrowdfundingQueryResult = Apollo.QueryResult<CrowdfundingQuery, CrowdfundingQueryVariables>;
+export const CreateCrowdfundingDocument = gql`
+    mutation CreateCrowdfunding($input: CreateCrowdfundingInput!) {
+  createCrowdfunding(input: $input) {
+    ...FullCrowdfunding
+  }
+}
+    ${FullCrowdfundingFragmentDoc}`;
+export type CreateCrowdfundingMutationFn = Apollo.MutationFunction<CreateCrowdfundingMutation, CreateCrowdfundingMutationVariables>;
+
+/**
+ * __useCreateCrowdfundingMutation__
+ *
+ * To run a mutation, you first call `useCreateCrowdfundingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCrowdfundingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCrowdfundingMutation, { data, loading, error }] = useCreateCrowdfundingMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateCrowdfundingMutation(baseOptions?: Apollo.MutationHookOptions<CreateCrowdfundingMutation, CreateCrowdfundingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCrowdfundingMutation, CreateCrowdfundingMutationVariables>(CreateCrowdfundingDocument, options);
+      }
+export type CreateCrowdfundingMutationHookResult = ReturnType<typeof useCreateCrowdfundingMutation>;
+export type CreateCrowdfundingMutationResult = Apollo.MutationResult<CreateCrowdfundingMutation>;
+export type CreateCrowdfundingMutationOptions = Apollo.BaseMutationOptions<CreateCrowdfundingMutation, CreateCrowdfundingMutationVariables>;
+export const UpdateCrowdfundingDocument = gql`
+    mutation UpdateCrowdfunding($input: UpdateCrowdfundingInput!) {
+  updateCrowdfunding(input: $input) {
+    ...FullCrowdfunding
+  }
+}
+    ${FullCrowdfundingFragmentDoc}`;
+export type UpdateCrowdfundingMutationFn = Apollo.MutationFunction<UpdateCrowdfundingMutation, UpdateCrowdfundingMutationVariables>;
+
+/**
+ * __useUpdateCrowdfundingMutation__
+ *
+ * To run a mutation, you first call `useUpdateCrowdfundingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCrowdfundingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCrowdfundingMutation, { data, loading, error }] = useUpdateCrowdfundingMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateCrowdfundingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCrowdfundingMutation, UpdateCrowdfundingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCrowdfundingMutation, UpdateCrowdfundingMutationVariables>(UpdateCrowdfundingDocument, options);
+      }
+export type UpdateCrowdfundingMutationHookResult = ReturnType<typeof useUpdateCrowdfundingMutation>;
+export type UpdateCrowdfundingMutationResult = Apollo.MutationResult<UpdateCrowdfundingMutation>;
+export type UpdateCrowdfundingMutationOptions = Apollo.BaseMutationOptions<UpdateCrowdfundingMutation, UpdateCrowdfundingMutationVariables>;
+export const DeleteCrowdfundingDocument = gql`
+    mutation DeleteCrowdfunding($id: ID!) {
+  deleteCrowdfunding(id: $id)
+}
+    `;
+export type DeleteCrowdfundingMutationFn = Apollo.MutationFunction<DeleteCrowdfundingMutation, DeleteCrowdfundingMutationVariables>;
+
+/**
+ * __useDeleteCrowdfundingMutation__
+ *
+ * To run a mutation, you first call `useDeleteCrowdfundingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCrowdfundingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCrowdfundingMutation, { data, loading, error }] = useDeleteCrowdfundingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteCrowdfundingMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCrowdfundingMutation, DeleteCrowdfundingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCrowdfundingMutation, DeleteCrowdfundingMutationVariables>(DeleteCrowdfundingDocument, options);
+      }
+export type DeleteCrowdfundingMutationHookResult = ReturnType<typeof useDeleteCrowdfundingMutation>;
+export type DeleteCrowdfundingMutationResult = Apollo.MutationResult<DeleteCrowdfundingMutation>;
+export type DeleteCrowdfundingMutationOptions = Apollo.BaseMutationOptions<DeleteCrowdfundingMutation, DeleteCrowdfundingMutationVariables>;
 export const ImportedEventListDocument = gql`
     query ImportedEventList($filter: ImportedEventFilter, $order: Int, $skip: Int, $take: Int, $sort: ImportedEventSort) {
   importedEvents(

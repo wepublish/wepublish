@@ -11,6 +11,11 @@ import {
   UserConsentEditView,
   UserConsentList
 } from '@wepublish/consent/editor'
+import {
+  CreateCrowdfundingForm,
+  CrowdfundingList,
+  EditCrowdfundingForm
+} from '@wepublish/crowdfunding/editor'
 import {TagType} from '@wepublish/editor/api'
 import {ImportableEventListView} from '@wepublish/event/import/editor'
 import {
@@ -292,6 +297,32 @@ export function App() {
               element={
                 <Base>
                   <BlockStyleList />
+                </Base>
+              }
+            />
+
+            {/* Crowdfunding Routes */}
+            <Route
+              path="crowdfundings"
+              element={
+                <Base>
+                  <CrowdfundingList />
+                </Base>
+              }
+            />
+            <Route
+              path="crowdfundings/create"
+              element={
+                <Base>
+                  <CreateCrowdfundingForm />
+                </Base>
+              }
+            />
+            <Route
+              path="crowdfundings/edit/:id"
+              element={
+                <Base>
+                  <EditCrowdfundingForm />
                 </Base>
               }
             />

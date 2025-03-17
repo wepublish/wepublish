@@ -259,6 +259,7 @@ export enum BlockType {
   Poll = 'Poll',
   Quote = 'Quote',
   RichText = 'RichText',
+  Subscribe = 'Subscribe',
   TeaserGrid1 = 'TeaserGrid1',
   TeaserGrid6 = 'TeaserGrid6',
   TeaserGridFlex = 'TeaserGridFlex',
@@ -421,6 +422,48 @@ export type CreateBannerInput = {
   showOnPages?: InputMaybe<Array<PageModelInput>>
   text: Scalars['String']
   title: Scalars['String']
+}
+
+export type CreateCrowdfundingGoalInput = {
+  amount: Scalars['Float']
+  description?: InputMaybe<Scalars['String']>
+  title: Scalars['String']
+}
+
+export type CreateCrowdfundingInput = {
+  goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>
+  memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>
+  name: Scalars['String']
+}
+
+export type CreateCrowdfundingMemberPlan = {
+  id: Scalars['ID']
+}
+
+export type Crowdfunding = {
+  __typename?: 'Crowdfunding'
+  createdAt: Scalars['DateTime']
+  goals: Array<CrowdfundingGoal>
+  id: Scalars['ID']
+  memberPlans: Array<CrowdfundingMemberPlan>
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+}
+
+export type CrowdfundingGoal = {
+  __typename?: 'CrowdfundingGoal'
+  amount: Scalars['Float']
+  createdAt: Scalars['DateTime']
+  description?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  modifiedAt: Scalars['DateTime']
+  title: Scalars['String']
+}
+
+export type CrowdfundingMemberPlan = {
+  __typename?: 'CrowdfundingMemberPlan'
+  id: Scalars['ID']
+  name: Scalars['String']
 }
 
 export enum Currency {
@@ -933,6 +976,8 @@ export type Mutation = {
    *
    */
   createConsent: Consent
+  /** Create a new Crowdfunding */
+  createCrowdfunding: Crowdfunding
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
   createPaymentFromInvoice?: Maybe<Payment>
   /** This mutation allows to create payment by referencing a subscription. */
@@ -964,6 +1009,7 @@ export type Mutation = {
    *
    */
   deleteConsent: Consent
+  deleteCrowdfunding?: Maybe<Scalars['Boolean']>
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult
   /** Delete an existing subscription flow */
@@ -1012,6 +1058,8 @@ export type Mutation = {
    *
    */
   updateConsent: Consent
+  /** Update a sinle crowdfunding */
+  updateCrowdfunding: Crowdfunding
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
   updatePassword?: Maybe<User>
   /** This mutation allows to update the Payment Provider Customers */
@@ -1066,6 +1114,10 @@ export type MutationCreateConsentArgs = {
   defaultValue: Scalars['Boolean']
   name: Scalars['String']
   slug: Scalars['String']
+}
+
+export type MutationCreateCrowdfundingArgs = {
+  input: CreateCrowdfundingInput
 }
 
 export type MutationCreatePaymentFromInvoiceArgs = {
@@ -1149,6 +1201,10 @@ export type MutationDeleteBlockStyleArgs = {
 
 export type MutationDeleteConsentArgs = {
   id: Scalars['String']
+}
+
+export type MutationDeleteCrowdfundingArgs = {
+  id: Scalars['ID']
 }
 
 export type MutationDeletePollVotesArgs = {
@@ -1245,6 +1301,10 @@ export type MutationUpdateConsentArgs = {
   id: Scalars['String']
   name?: InputMaybe<Scalars['String']>
   slug?: InputMaybe<Scalars['String']>
+}
+
+export type MutationUpdateCrowdfundingArgs = {
+  input: UpdateCrowdfundingInput
 }
 
 export type MutationUpdatePasswordArgs = {
@@ -1639,6 +1699,10 @@ export type Query = {
    *
    */
   consents: Array<Consent>
+  /** Get a single crowdfunding by id */
+  crowdfunding: Crowdfunding
+  /** Returns a paginated list of crowdfundings. */
+  crowdfundings: Array<Crowdfunding>
   /** This query returns an event */
   event: Event
   /**
@@ -1851,6 +1915,10 @@ export type QueryConsentArgs = {
 
 export type QueryConsentsArgs = {
   filter?: InputMaybe<ConsentFilter>
+}
+
+export type QueryCrowdfundingArgs = {
+  id: Scalars['ID']
 }
 
 export type QueryEventArgs = {
@@ -2340,6 +2408,13 @@ export type UpdateBannerInput = {
   showOnPages?: InputMaybe<Array<PageModelInput>>
   text: Scalars['String']
   title: Scalars['String']
+}
+
+export type UpdateCrowdfundingInput = {
+  goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>
+  id: Scalars['ID']
+  memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>
+  name: Scalars['String']
 }
 
 export type UploadImageInput = {
