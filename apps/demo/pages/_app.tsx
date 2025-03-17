@@ -37,6 +37,7 @@ i18next
   .use(initReactI18next)
   .use(resourcesToBackend(() => deTranlations))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     partialBundledLanguages: true,
     fallbackLng: 'de',

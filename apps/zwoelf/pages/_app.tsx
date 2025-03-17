@@ -40,6 +40,7 @@ i18next
   .use(initReactI18next)
   .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverriden)))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
