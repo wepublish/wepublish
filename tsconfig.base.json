@@ -18,9 +18,9 @@
     "baseUrl": ".",
     "paths": {
       "@wepublish/analytics": ["libs/analytics/src/index.ts"],
-      "@wepublish/google-analytics/api": ["libs/google-analytics/api/src/index.ts"],
       "@wepublish/api": ["libs/api/src/index.ts"],
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
+      "@wepublish/article/api": ["libs/article/api/src/index.ts"],
       "@wepublish/article/website": ["libs/article/website/src/index.ts"],
       "@wepublish/authentication/api": ["libs/authentication/api/src/index.ts"],
       "@wepublish/authentication/website": ["libs/authentication/website/src/index.ts"],
@@ -43,6 +43,7 @@
       "@wepublish/event/import/editor": ["libs/event/import/editor/src/index.ts"],
       "@wepublish/event/website": ["libs/event/website/src/index.ts"],
       "@wepublish/feed/website": ["libs/feed/website/src/index.ts"],
+      "@wepublish/google-analytics/api": ["libs/google-analytics/api/src/index.ts"],
       "@wepublish/health": ["libs/health/api/src/index.ts"],
       "@wepublish/image/api": ["libs/image/api/src/index.ts"],
       "@wepublish/image/website": ["libs/image/website/src/index.ts"],
@@ -57,7 +58,6 @@
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
       "@wepublish/page/website": ["libs/page/website/src/index.ts"],
       "@wepublish/payment/api": ["libs/payment/api/src/index.ts"],
-      "@wepublish/tracking-pixel/api": ["libs/tracking-pixel/api/src/index.ts"],
       "@wepublish/payment/website": ["libs/payment/website/src/index.ts"],
       "@wepublish/peering/website": ["libs/peering/website/src/index.ts"],
       "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],
@@ -71,6 +71,7 @@
       "@wepublish/storybook": ["libs/storybook/src/index.ts"],
       "@wepublish/system-info": ["libs/system-info/api/src/index.ts"],
       "@wepublish/testing": ["libs/testing/src/index.ts"],
+      "@wepublish/tracking-pixel/api": ["libs/tracking-pixel/api/src/index.ts"],
       "@wepublish/ui": ["libs/ui/src/index.ts"],
       "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],
       "@wepublish/user": ["libs/user/src/index.ts"],
@@ -79,15 +80,15 @@
       "@wepublish/utils": ["libs/utils/src/index.ts"],
       "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
+      "@wepublish/utils/website/sentry/client": ["libs/utils/sentry/sentry.client.config.ts"],
       "@wepublish/utils/website/sentry/edge": ["libs/utils/sentry/sentry.edge.config.ts"],
       "@wepublish/utils/website/sentry/server": ["libs/utils/sentry/sentry.server.config.ts"],
-      "@wepublish/utils/website/sentry/client": ["libs/utils/sentry/sentry.client.config.ts"],
+      "@wepublish/versionInformation/api": ["libs/versionInformation/api/src/index.ts"],
       "@wepublish/website": ["libs/website/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
       "@wepublish/website/server": ["libs/website/src/server.ts"],
-      "@wepublish/article/api": ["libs/article/api/src/index.ts"],
-      "@wepublish/versionInformation/api": ["libs/versionInformation/api/src/index.ts"]
+      "@wepublish/website/translations/*": ["libs/website/translations/src/lib/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

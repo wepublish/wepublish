@@ -1,6 +1,4 @@
-import {ApiV1, ContentWidthProvider, PageContainer} from '@wepublish/website'
-import {GetStaticProps} from 'next'
-import getConfig from 'next/config'
+import {ContentWidthProvider, PageContainer} from '@wepublish/website'
 
 export default function Index() {
   return (
@@ -10,33 +8,33 @@ export default function Index() {
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const {publicRuntimeConfig} = getConfig()
+// export const getStaticProps: GetStaticProps = async () => {
+//   const {publicRuntimeConfig} = getConfig()
 
-  if (!publicRuntimeConfig.env.API_URL) {
-    return {props: {}, revalidate: 1}
-  }
+//   if (!publicRuntimeConfig.env.API_URL) {
+//     return {props: {}, revalidate: 1}
+//   }
 
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
-  await Promise.all([
-    client.query({
-      query: ApiV1.PageDocument,
-      variables: {
-        slug: ''
-      }
-    }),
-    client.query({
-      query: ApiV1.NavigationListDocument
-    }),
-    client.query({
-      query: ApiV1.PeerProfileDocument
-    })
-  ])
+//   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+//   await Promise.all([
+//     client.query({
+//       query: ApiV1.PageDocument,
+//       variables: {
+//         slug: ''
+//       }
+//     }),
+//     client.query({
+//       query: ApiV1.NavigationListDocument
+//     }),
+//     client.query({
+//       query: ApiV1.PeerProfileDocument
+//     })
+//   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+//   const props = ApiV1.addClientCacheToV1Props(client, {})
 
-  return {
-    props,
-    revalidate: 60 // every 60 seconds
-  }
-}
+//   return {
+//     props,
+//     revalidate: 60 // every 60 seconds
+//   }
+// }
