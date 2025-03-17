@@ -16,9 +16,10 @@ i18next
   .use(initReactI18next)
   .use(resourcesToBackend(() => deTranlations))
   .init({
-    lng: 'en',
-    fallbackLng: 'en',
-    supportedLngs: ['en'],
+    partialBundledLanguages: true,
+    lng: 'de',
+    fallbackLng: 'de',
+    supportedLngs: ['de'],
     resources: {
       en: {zod: translation}
     }
