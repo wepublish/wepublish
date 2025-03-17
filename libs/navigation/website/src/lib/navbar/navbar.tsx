@@ -15,7 +15,7 @@ import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
-import {Button, TextToIcon} from '@wepublish/ui'
+import {TextToIcon} from '@wepublish/ui'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
