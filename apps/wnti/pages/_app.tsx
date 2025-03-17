@@ -17,6 +17,8 @@ import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -44,6 +46,7 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
+  .use(resourcesToBackend(() => deTranlations))
   .init({
     lng: 'de',
     fallbackLng: 'de',
@@ -108,7 +111,7 @@ type CustomAppProps = AppProps<{
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
-  const siteTitle = 'Wnti'
+  const siteTitle = 'WNTI'
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
@@ -157,7 +160,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
                 <link rel="shortcut icon" href="/favicon.ico" />
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <meta name="apple-mobile-web-app-title" content="Wnti" />
+                <meta name="apple-mobile-web-app-title" content="WNTI" />
                 <link rel="manifest" href="/site.webmanifest" />
               </Head>
 
