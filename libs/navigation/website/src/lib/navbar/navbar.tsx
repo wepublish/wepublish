@@ -1,4 +1,14 @@
-import {AppBar, GlobalStyles, SxProps, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
+import {
+  AppBar,
+  Box,
+  GlobalStyles,
+  SxProps,
+  Theme,
+  Toolbar,
+  css,
+  styled,
+  useTheme
+} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -308,7 +318,7 @@ export function Navbar({
                 color="warning"
                 startIcon={<MdWarning />}
                 sx={buttonStyles}>
-                Rechnung
+                <Box sx={{display: {xs: 'none', md: 'unset'}}}>Offene</Box>&nbsp;Rechnung
               </Button>
             )}
 

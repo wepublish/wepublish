@@ -2,7 +2,6 @@ import {styled} from '@mui/material'
 import {withAuthGuard} from '../../../auth-guard'
 import {ssrAuthLink} from '../../../auth-link'
 import {getSessionTokenProps} from '../../../get-session-token-props'
-
 import {setCookie} from 'cookies-next'
 import {NextPage, NextPageContext} from 'next'
 import getConfig from 'next/config'
@@ -19,6 +18,7 @@ import {
   UserSession
 } from '@wepublish/website/api'
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
@@ -28,11 +28,18 @@ const SubscriptionsWrapper = styled(ContentWrapper)`
 `
 
 function DeactivatedSubscriptions() {
+  const {
+    elements: {Link}
+  } = useWebsiteBuilder()
+
   return (
     <SubscriptionsWrapper>
+      <h1>Gekündigte Abos</h1>
       <SubscriptionListContainer
         filter={subscriptions => subscriptions.filter(subscription => subscription.deactivation)}
       />
+
+      <Link href="/profile">Zurück zum Profil</Link>
     </SubscriptionsWrapper>
   )
 }
