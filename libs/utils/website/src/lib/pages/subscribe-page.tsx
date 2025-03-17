@@ -5,6 +5,9 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ssrAuthLink} from '../auth-link'
 import {getSessionTokenProps} from '../get-session-token-props'
+import {ComponentProps} from 'react'
+
+type SubscribePageProps = Omit<ComponentProps<typeof SubscribeContainer>, ''>
 
 export function SubscribePage(props: SubscribePageProps) {
   const {
