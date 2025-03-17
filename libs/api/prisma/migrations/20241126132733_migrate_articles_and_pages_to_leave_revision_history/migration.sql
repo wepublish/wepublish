@@ -32,9 +32,6 @@ CREATE INDEX "articles_publishedAt_idx" ON "articles"("publishedAt");
 -- AlterTable
 ALTER TABLE "articles" ADD COLUMN     "slug" TEXT;
 
--- CreateIndex
-CREATE UNIQUE INDEX "articles_slug_key" ON "articles"("slug") WHERE ("publishedAt" is NOT null);
-
 -- AlterTable
 ALTER TABLE "articles" ADD COLUMN     "likes" INTEGER NOT NULL DEFAULT 0;
 
@@ -53,6 +50,9 @@ UPDATE "articles" a
 SET "slug" = ar."slug"
 FROM "articles.revisions" ar
 WHERE ar.id = a."publishedId" or ar.id = a."pendingId";
+
+-- CreateIndex
+CREATE UNIQUE INDEX "articles_slug_key" ON "articles"("slug") WHERE ("publishedAt" is NOT null);
 
 -- Migrate likes
 UPDATE "articles" a
@@ -135,9 +135,6 @@ CREATE INDEX "pages_publishedAt_idx" ON "pages"("publishedAt");
 -- AlterTable
 ALTER TABLE "pages" ADD COLUMN     "slug" TEXT;
 
--- CreateIndex
-CREATE UNIQUE INDEX "pages_slug_key" ON "pages"("slug") WHERE ("publishedAt" is NOT null);
-
 -- Migrate publishedAt
 UPDATE "pages.revisions"
 SET "publishedAt" = "publishAt"
@@ -153,6 +150,9 @@ UPDATE "pages" p
 SET "slug" = pr."slug"
 FROM "pages.revisions" pr
 WHERE pr.id = p."publishedId" or pr.id = p."pendingId";
+
+-- CreateIndex
+CREATE UNIQUE INDEX "pages_slug_key" ON "pages"("slug") WHERE ("publishedAt" is NOT null);
 
 -- AlterTable
 ALTER TABLE "pages.revisions" ADD COLUMN "pageId" TEXT;
