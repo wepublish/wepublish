@@ -105,7 +105,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
 
-const MitmachenInner = (props: SubscribePageProps) => (
+const MitmachenInner = (props: ComponentProps<typeof SubscribePage>) => (
   <SubscribePage fields={['firstName']} {...props} />
 )
 
