@@ -18,4 +18,5 @@ export * from '@wepublish/content/website'
 export * from '@wepublish/payment/website'
 
 export * from '@wepublish/website/builder'
+export {default as deTranslations} from '@wepublish/website/translations/de.json'
 export * as ApiV1 from '@wepublish/website/api'
