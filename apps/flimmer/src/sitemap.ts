@@ -1,4 +1,15 @@
-import {ApiV1, generateSitemap} from '@wepublish/website/server'
+import {
+  ArticleListDocument,
+  ArticleListQueryVariables,
+  ArticleSort,
+  getV1ApiClient,
+  Page,
+  PageListQueryVariables,
+  PageSort,
+  SitemapPageListDocument,
+  SortOrder
+} from '@wepublish/website/api'
+import {generateSitemap} from '@wepublish/website/server'
 import {NextApiRequest} from 'next'
 import getConfig from 'next/config'
 import process from 'node:process'
@@ -29,7 +40,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
       query: SitemapPageListDocument,
       variables: {
         take: 100,
-        sort: PublishedPageSort.PublishedAt,
+        sort: PageSort.PublishedAt,
         order: SortOrder.Descending
       } as PageListQueryVariables
     })

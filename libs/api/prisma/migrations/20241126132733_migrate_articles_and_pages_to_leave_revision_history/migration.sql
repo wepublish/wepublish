@@ -167,6 +167,7 @@ WITH DuplicateSlugs AS (
 UPDATE "pages.revisions"
 SET slug = CONCAT("pages.revisions".slug, '-', rn)
 FROM DuplicateSlugs ds
+WHERE "pages.revisions".id = ds.id AND ds.rn > 1;
 
 -- Migrate slug
 UPDATE "pages" p
