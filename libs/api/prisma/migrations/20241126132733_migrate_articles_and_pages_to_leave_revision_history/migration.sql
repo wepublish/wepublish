@@ -45,6 +45,18 @@ SET "publishedAt" = ar."publishedAt"
 FROM "articles.revisions" ar
 WHERE ar.id = a."publishedId";
 
+-- Fix duplicate slugs
+WITH DuplicateSlugs AS (
+    SELECT id, slug,
+           ROW_NUMBER() OVER (PARTITION BY slug ORDER BY "publishedAt") AS rn
+    FROM "articles.revisions"
+    WHERE "publishedAt" IS NOT NULL
+)
+UPDATE "articles.revisions"
+SET slug = CONCAT("articles.revisions".slug, '-', rn)
+FROM DuplicateSlugs ds
+WHERE "articles.revisions".id = ds.id AND ds.rn > 1;
+
 -- Migrate slug
 UPDATE "articles" a
 SET "slug" = ar."slug"
@@ -144,6 +156,17 @@ UPDATE "pages" p
 SET "publishedAt" = pr."publishedAt"
 FROM "pages.revisions" pr
 WHERE pr.id = p."publishedId";
+
+-- Fix duplicate slugs
+WITH DuplicateSlugs AS (
+    SELECT id, slug,
+           ROW_NUMBER() OVER (PARTITION BY slug ORDER BY "publishedAt") AS rn
+    FROM "pages.revisions"
+    WHERE "publishedAt" IS NOT NULL
+)
+UPDATE "pages.revisions"
+SET slug = CONCAT("pages.revisions".slug, '-', rn)
+FROM DuplicateSlugs ds
 
 -- Migrate slug
 UPDATE "pages" p
