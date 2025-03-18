@@ -1,44 +1,42 @@
 import {EmotionCache} from '@emotion/cache'
 import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {GoogleAnalytics} from '@next/third-parties/google'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {authLink, NextWepublishLink, SessionProvider, SubscribePage} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
   PaymentAmountPicker,
+  RichTextBlockWrapper,
   TitleBlock,
   TitleBlockTitle,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import resourcesToBackend from 'i18next-resources-to-backend'
-import deTranlations from '@wepublish/website/translations/de.json'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
+import {mergeDeepRight} from 'ramda'
+import {ComponentProps} from 'react'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {TsriArticleMeta} from '../src/components/tsri-article-meta'
-import {TsriBanner} from '../src/components/tsri-banner'
-import {TsriBreakBlock} from '../src/components/tsri-break-block'
-import {TsriContextBox} from '../src/components/tsri-context-box'
-import {TsriNavbar} from '../src/components/tsri-navbar'
-import {TsriQuoteBlock} from '../src/components/tsri-quote-block'
-import {TsriRichText} from '../src/components/tsri-richtext'
-import {TsriTeaser} from '../src/components/tsri-teaser'
+import deOverriden from '../locales/deOverriden.json'
+import {FlimmerBreakBlock} from '../src/components/flimmer-break-block'
+import {FlimmerNavbar} from '../src/components/flimmer-navbar'
+import {FlimmerRichText} from '../src/components/flimmer-richtext'
+import {FlimmerTeaser} from '../src/components/flimmer-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
-import {MitmachenInner} from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -47,7 +45,7 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
-  .use(resourcesToBackend(() => deTranlations))
+  .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverriden)))
   .init({
     partialBundledLanguages: true,
     lng: 'de',
@@ -95,7 +93,7 @@ const LogoWrapper = styled(Logo)`
   }
 `
 
-const TsriTitle = styled(TitleBlock)`
+const FlimmerTitle = styled(TitleBlock)`
   ${TitleBlockTitle} {
     ${({theme}) => theme.breakpoints.down('sm')} {
       font-size: 2rem;
@@ -107,6 +105,20 @@ const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
+
+const MitmachenInner = (props: ComponentProps<typeof SubscribePage>) => (
+  <SubscribePage fields={['firstName']} {...props} />
+)
+
+const MitmachenInnerStyled = styled(MitmachenInner)`
+  border: 1px solid ${({theme}) => theme.palette.accent.main};
+  border-radius: ${({theme}) => theme.shape.borderRadius}px;
+  padding: ${({theme}) => theme.spacing(4)};
+
+  ${RichTextBlockWrapper} {
+    max-width: ${({theme}) => theme.breakpoints.values.sm}px;
+  }
+`
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
@@ -122,27 +134,21 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           <WebsiteBuilderProvider
             Head={Head}
             Script={Script}
-            Navbar={TsriNavbar}
-            ArticleMeta={TsriArticleMeta}
+            Navbar={FlimmerNavbar}
             PaymentAmount={PaymentAmountPicker}
             elements={{Link: NextWepublishLink}}
             blocks={{
-              Teaser: TsriTeaser,
-              Break: TsriBreakBlock,
-              Quote: TsriQuoteBlock,
-              RichText: TsriRichText,
-              Title: TsriTitle,
-              Subscribe: MitmachenInner
-            }}
-            blockStyles={{
-              ContextBox: TsriContextBox
+              Teaser: FlimmerTeaser,
+              Break: FlimmerBreakBlock,
+              RichText: FlimmerRichText,
+              Title: FlimmerTitle,
+              Subscribe: MitmachenInnerStyled
             }}
             date={{format: dateFormatter}}
             meta={{siteTitle}}
             thirdParty={{
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
-            }}
-            Banner={TsriBanner}>
+            }}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
 
@@ -188,18 +194,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </LogoLink>
                 </FooterContainer>
               </Spacer>
-
-              {publicRuntimeConfig.env.GA_ID && (
-                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
-              )}
-
-              {publicRuntimeConfig.env.SPARKLOOP_ID && (
-                <Script
-                  src={`https://script.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
-                  strategy="lazyOnload"
-                  data-sparkloop
-                />
-              )}
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>
