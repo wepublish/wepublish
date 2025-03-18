@@ -30,7 +30,7 @@ function askConfirmation() {
     let changelog = await execCommand(changelogCommand)
     changelog = changelog.replace(/#([0-9]+)/g, (text, number) => `\x1b]8;;https://github.com/wepublish/wepublish/pull/${number}\x1b\\${text}\x1b]8;;\x1b\\`)
     const filterCommand = `echo "${changelog}" |egrep -i "core|website|editor|api|${projectName}"`
-    const changelogFiltered = await execCommand(filterCommand)
+    const changelogFiltered = await execCommand(filterCommand,false)
     rl.write(`${chalk.underline("All changes you are about to deploy")}:\n\n${changelog}\n\n`)
     rl.write(`${chalk.underline("Changes impacting customer you are about to deploy")}:\n\n${changelogFiltered}\n\n`)
     rl.question(`Are you sure you want to deploy this commit to ${chalk.bold(projectName)} production? To confirm, write the project name: `, (answer) => {
@@ -66,11 +66,15 @@ async function checkUncommittedChanges() {
   });
 }
 
-function execCommand(command) {
+function execCommand(command, rejectRCNonZero=true) {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        reject(`Error executing command: ${command}\n${stderr}`);
+        if(rejectRCNonZero) {
+          reject(`Error executing command: ${command}\n${stderr}`);
+        } else {
+          resolve(stdout)
+        }
       } else {
         resolve(stdout);
       }
@@ -81,11 +85,12 @@ function execCommand(command) {
 async function deploy() {
   try {
 
+    /*
     const status = await checkUncommittedChanges();
     if (status.trim() !== '') {
       console.error('Error: There are uncommitted changes in the repository. Please commit your changes before deploying.');
       process.exit(1);
-    }
+    }*/
 
     const confirmation = await askConfirmation();
     if (confirmation !== projectName) {
