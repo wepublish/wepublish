@@ -84,14 +84,11 @@ function execCommand(command, rejectRCNonZero=true) {
 
 async function deploy() {
   try {
-
-    /*
     const status = await checkUncommittedChanges();
     if (status.trim() !== '') {
       console.error('Error: There are uncommitted changes in the repository. Please commit your changes before deploying.');
       process.exit(1);
-    }*/
-
+    }
     const confirmation = await askConfirmation();
     if (confirmation !== projectName) {
       console.error('Error: Project name does not match. Deployment aborted.');
