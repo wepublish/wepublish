@@ -103,7 +103,7 @@ export class CustomTeaser extends BaseTeaser<TeaserType.Custom> {
   @Field({nullable: true})
   contentUrl?: string
 
-  @Field(() => [NonDbProperty], {defaultValue: []})
+  @Field(() => [NonDbProperty], {defaultValue: [], nullable: true})
   properties!: NonDbProperty[]
 }
 
@@ -113,7 +113,7 @@ export class CustomTeaserInput extends OmitType(
   ['image', 'properties', 'type'] as const,
   InputType
 ) {
-  @Field(() => [PropertyInput], {defaultValue: []})
+  @Field(() => [PropertyInput], {defaultValue: [], nullable: true})
   properties!: PropertyInput[]
 }
 

@@ -511,15 +511,15 @@ export type CommentBlock = BaseBlock & {
 
 export type CommentBlockFilter = {
   __typename?: 'CommentBlockFilter'
-  comments: Array<Scalars['String']>
+  comments?: Maybe<Array<Scalars['String']>>
   item?: Maybe<Scalars['String']>
-  tags: Array<Scalars['String']>
+  tags?: Maybe<Array<Scalars['String']>>
 }
 
 export type CommentBlockFilterInput = {
-  comments?: Array<Scalars['String']>
+  comments?: InputMaybe<Array<Scalars['String']>>
   item?: InputMaybe<Scalars['String']>
-  tags?: Array<Scalars['String']>
+  tags?: InputMaybe<Array<Scalars['String']>>
 }
 
 export type CommentBlockInput = {
@@ -638,7 +638,7 @@ export type CustomTeaser = BaseTeaser &
     imageID?: Maybe<Scalars['String']>
     lead?: Maybe<Scalars['String']>
     preTitle?: Maybe<Scalars['String']>
-    properties: Array<NonDbProperty>
+    properties?: Maybe<Array<NonDbProperty>>
     title?: Maybe<Scalars['String']>
     type: Scalars['String']
   }
@@ -648,7 +648,7 @@ export type CustomTeaserInput = {
   imageID?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
   preTitle?: InputMaybe<Scalars['String']>
-  properties?: Array<PropertyInput>
+  properties?: InputMaybe<Array<PropertyInput>>
   title?: InputMaybe<Scalars['String']>
 }
 
@@ -741,13 +741,13 @@ export type EventBlock = BaseBlock & {
 
 export type EventBlockFilter = {
   __typename?: 'EventBlockFilter'
-  events: Array<Scalars['String']>
-  tags: Array<Scalars['String']>
+  events?: Maybe<Array<Scalars['String']>>
+  tags?: Maybe<Array<Scalars['String']>>
 }
 
 export type EventBlockFilterInput = {
-  events?: Array<Scalars['String']>
-  tags?: Array<Scalars['String']>
+  events?: InputMaybe<Array<Scalars['String']>>
+  tags?: InputMaybe<Array<Scalars['String']>>
 }
 
 export type EventBlockInput = {
@@ -3103,11 +3103,11 @@ export type TeaserListBlock = BaseBlock & {
 export type TeaserListBlockFilter = {
   __typename?: 'TeaserListBlockFilter'
   tagObjects: Array<Tag>
-  tags: Array<Scalars['String']>
+  tags?: Maybe<Array<Scalars['String']>>
 }
 
 export type TeaserListBlockFilterInput = {
-  tags: Array<Scalars['String']>
+  tags?: InputMaybe<Array<Scalars['String']>>
 }
 
 export type TeaserListBlockInput = {
@@ -3398,7 +3398,11 @@ type BlockWithoutTeaser_CommentBlock_Fragment = {
   __typename: 'CommentBlock'
   blockStyle?: string | null
   type: BlockType
-  filter: {__typename?: 'CommentBlockFilter'; tags: Array<string>; comments: Array<string>}
+  filter: {
+    __typename?: 'CommentBlockFilter'
+    tags?: Array<string> | null
+    comments?: Array<string> | null
+  }
   comments: Array<{__typename?: 'Comment'; id: string}>
 }
 
@@ -3406,7 +3410,11 @@ type BlockWithoutTeaser_EventBlock_Fragment = {
   __typename: 'EventBlock'
   blockStyle?: string | null
   type: BlockType
-  filter: {__typename?: 'EventBlockFilter'; tags: Array<string>; events: Array<string>}
+  filter: {
+    __typename?: 'EventBlockFilter'
+    tags?: Array<string> | null
+    events?: Array<string> | null
+  }
   events: Array<{__typename?: 'Event'; id: string}>
 }
 
@@ -3694,7 +3702,12 @@ type FullTeaser_CustomTeaser_Fragment = {
     license?: string | null
     source?: string | null
   } | null
-  properties: Array<{__typename?: 'NonDbProperty'; key: string; value: string; public: boolean}>
+  properties?: Array<{
+    __typename?: 'NonDbProperty'
+    key: string
+    value: string
+    public: boolean
+  }> | null
 }
 
 type FullTeaser_EventTeaser_Fragment = {
@@ -3763,7 +3776,11 @@ type FullBlock_CommentBlock_Fragment = {
   __typename: 'CommentBlock'
   blockStyle?: string | null
   type: BlockType
-  filter: {__typename?: 'CommentBlockFilter'; tags: Array<string>; comments: Array<string>}
+  filter: {
+    __typename?: 'CommentBlockFilter'
+    tags?: Array<string> | null
+    comments?: Array<string> | null
+  }
   comments: Array<{__typename?: 'Comment'; id: string}>
 }
 
@@ -3771,7 +3788,11 @@ type FullBlock_EventBlock_Fragment = {
   __typename: 'EventBlock'
   blockStyle?: string | null
   type: BlockType
-  filter: {__typename?: 'EventBlockFilter'; tags: Array<string>; events: Array<string>}
+  filter: {
+    __typename?: 'EventBlockFilter'
+    tags?: Array<string> | null
+    events?: Array<string> | null
+  }
   events: Array<{__typename?: 'Event'; id: string}>
 }
 
@@ -3989,12 +4010,12 @@ type FullBlock_TeaserGridBlock_Fragment = {
           license?: string | null
           source?: string | null
         } | null
-        properties: Array<{
+        properties?: Array<{
           __typename?: 'NonDbProperty'
           key: string
           value: string
           public: boolean
-        }>
+        }> | null
       }
     | {
         __typename?: 'EventTeaser'
@@ -4111,12 +4132,12 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
             license?: string | null
             source?: string | null
           } | null
-          properties: Array<{
+          properties?: Array<{
             __typename?: 'NonDbProperty'
             key: string
             value: string
             public: boolean
-          }>
+          }> | null
         }
       | {
           __typename?: 'EventTeaser'
@@ -4161,7 +4182,7 @@ type FullBlock_TeaserListBlock_Fragment = {
   teaserType: TeaserType
   filter: {
     __typename?: 'TeaserListBlockFilter'
-    tags: Array<string>
+    tags?: Array<string> | null
     tagObjects: Array<{__typename?: 'Tag'; id: string; tag?: string | null}>
   }
   teasers: Array<
@@ -4232,12 +4253,12 @@ type FullBlock_TeaserListBlock_Fragment = {
           license?: string | null
           source?: string | null
         } | null
-        properties: Array<{
+        properties?: Array<{
           __typename?: 'NonDbProperty'
           key: string
           value: string
           public: boolean
-        }>
+        }> | null
       }
     | {
         __typename?: 'EventTeaser'
@@ -4394,7 +4415,11 @@ type ImportBlock_CommentBlock_Fragment = {
   __typename: 'CommentBlock'
   type: BlockType
   blockStyle?: string | null
-  filter: {__typename?: 'CommentBlockFilter'; tags: Array<string>; comments: Array<string>}
+  filter: {
+    __typename?: 'CommentBlockFilter'
+    tags?: Array<string> | null
+    comments?: Array<string> | null
+  }
   comments: Array<{__typename?: 'Comment'; id: string}>
 }
 
@@ -4402,7 +4427,11 @@ type ImportBlock_EventBlock_Fragment = {
   __typename: 'EventBlock'
   type: BlockType
   blockStyle?: string | null
-  filter: {__typename?: 'EventBlockFilter'; tags: Array<string>; events: Array<string>}
+  filter: {
+    __typename?: 'EventBlockFilter'
+    tags?: Array<string> | null
+    events?: Array<string> | null
+  }
   events: Array<{__typename?: 'Event'; id: string}>
 }
 
@@ -4620,12 +4649,12 @@ type ImportBlock_TeaserGridBlock_Fragment = {
           license?: string | null
           source?: string | null
         } | null
-        properties: Array<{
+        properties?: Array<{
           __typename?: 'NonDbProperty'
           key: string
           value: string
           public: boolean
-        }>
+        }> | null
       }
     | {
         __typename?: 'EventTeaser'
@@ -4742,12 +4771,12 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
             license?: string | null
             source?: string | null
           } | null
-          properties: Array<{
+          properties?: Array<{
             __typename?: 'NonDbProperty'
             key: string
             value: string
             public: boolean
-          }>
+          }> | null
         }
       | {
           __typename?: 'EventTeaser'
@@ -4792,7 +4821,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
   blockStyle?: string | null
   filter: {
     __typename?: 'TeaserListBlockFilter'
-    tags: Array<string>
+    tags?: Array<string> | null
     tagObjects: Array<{__typename?: 'Tag'; id: string; tag?: string | null}>
   }
   teasers: Array<
@@ -4863,12 +4892,12 @@ type ImportBlock_TeaserListBlock_Fragment = {
           license?: string | null
           source?: string | null
         } | null
-        properties: Array<{
+        properties?: Array<{
           __typename?: 'NonDbProperty'
           key: string
           value: string
           public: boolean
-        }>
+        }> | null
       }
     | {
         __typename?: 'EventTeaser'
@@ -5115,8 +5144,8 @@ export type ArticleQuery = {
             blockStyle?: string | null
             filter: {
               __typename?: 'CommentBlockFilter'
-              tags: Array<string>
-              comments: Array<string>
+              tags?: Array<string> | null
+              comments?: Array<string> | null
             }
             comments: Array<{__typename?: 'Comment'; id: string}>
           }
@@ -5124,7 +5153,11 @@ export type ArticleQuery = {
             __typename: 'EventBlock'
             type: BlockType
             blockStyle?: string | null
-            filter: {__typename?: 'EventBlockFilter'; tags: Array<string>; events: Array<string>}
+            filter: {
+              __typename?: 'EventBlockFilter'
+              tags?: Array<string> | null
+              events?: Array<string> | null
+            }
             events: Array<{__typename?: 'Event'; id: string}>
           }
         | {
@@ -5323,12 +5356,12 @@ export type ArticleQuery = {
                     license?: string | null
                     source?: string | null
                   } | null
-                  properties: Array<{
+                  properties?: Array<{
                     __typename?: 'NonDbProperty'
                     key: string
                     value: string
                     public: boolean
-                  }>
+                  }> | null
                 }
               | {
                   __typename?: 'EventTeaser'
@@ -5444,12 +5477,12 @@ export type ArticleQuery = {
                       license?: string | null
                       source?: string | null
                     } | null
-                    properties: Array<{
+                    properties?: Array<{
                       __typename?: 'NonDbProperty'
                       key: string
                       value: string
                       public: boolean
-                    }>
+                    }> | null
                   }
                 | {
                     __typename?: 'EventTeaser'
@@ -5493,7 +5526,7 @@ export type ArticleQuery = {
             blockStyle?: string | null
             filter: {
               __typename?: 'TeaserListBlockFilter'
-              tags: Array<string>
+              tags?: Array<string> | null
               tagObjects: Array<{__typename?: 'Tag'; id: string; tag?: string | null}>
             }
             teasers: Array<
@@ -5564,12 +5597,12 @@ export type ArticleQuery = {
                     license?: string | null
                     source?: string | null
                   } | null
-                  properties: Array<{
+                  properties?: Array<{
                     __typename?: 'NonDbProperty'
                     key: string
                     value: string
                     public: boolean
-                  }>
+                  }> | null
                 }
               | {
                   __typename?: 'EventTeaser'

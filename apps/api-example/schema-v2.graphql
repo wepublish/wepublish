@@ -343,15 +343,15 @@ type CommentBlock implements BaseBlock {
 }
 
 type CommentBlockFilter {
-  comments: [String!]!
+  comments: [String!]
   item: String
-  tags: [String!]!
+  tags: [String!]
 }
 
 input CommentBlockFilterInput {
-  comments: [String!]! = []
+  comments: [String!] = []
   item: String
-  tags: [String!]! = []
+  tags: [String!] = []
 }
 
 input CommentBlockInput {
@@ -412,7 +412,7 @@ type CustomTeaser implements BaseTeaser & HasImage {
   imageID: String
   lead: String
   preTitle: String
-  properties: [NonDbProperty!]!
+  properties: [NonDbProperty!]
   title: String
   type: String!
 }
@@ -422,7 +422,7 @@ input CustomTeaserInput {
   imageID: String
   lead: String
   preTitle: String
-  properties: [PropertyInput!]! = []
+  properties: [PropertyInput!] = []
   title: String
 }
 
@@ -514,13 +514,13 @@ type EventBlock implements BaseBlock {
 }
 
 type EventBlockFilter {
-  events: [String!]!
-  tags: [String!]!
+  events: [String!]
+  tags: [String!]
 }
 
 input EventBlockFilterInput {
-  events: [String!]! = []
-  tags: [String!]! = []
+  events: [String!] = []
+  tags: [String!] = []
 }
 
 input EventBlockInput {
@@ -1743,11 +1743,11 @@ type TeaserListBlock implements BaseBlock {
 
 type TeaserListBlockFilter {
   tagObjects: [Tag!]!
-  tags: [String!]!
+  tags: [String!]
 }
 
 input TeaserListBlockFilterInput {
-  tags: [String!]!
+  tags: [String!] = []
 }
 
 input TeaserListBlockInput {

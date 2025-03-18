@@ -470,15 +470,15 @@ export type CommentBlock = BaseBlock & {
 
 export type CommentBlockFilter = {
   __typename?: 'CommentBlockFilter';
-  comments: Array<Scalars['String']>;
+  comments?: Maybe<Array<Scalars['String']>>;
   item?: Maybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
 };
 
 export type CommentBlockFilterInput = {
-  comments?: Array<Scalars['String']>;
+  comments?: InputMaybe<Array<Scalars['String']>>;
   item?: InputMaybe<Scalars['String']>;
-  tags?: Array<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type CommentBlockInput = {
@@ -595,7 +595,7 @@ export type CustomTeaser = BaseTeaser & HasImage & {
   imageID?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
-  properties: Array<NonDbProperty>;
+  properties?: Maybe<Array<NonDbProperty>>;
   title?: Maybe<Scalars['String']>;
   type: Scalars['String'];
 };
@@ -605,7 +605,7 @@ export type CustomTeaserInput = {
   imageID?: InputMaybe<Scalars['String']>;
   lead?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
-  properties?: Array<PropertyInput>;
+  properties?: InputMaybe<Array<PropertyInput>>;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -698,13 +698,13 @@ export type EventBlock = BaseBlock & {
 
 export type EventBlockFilter = {
   __typename?: 'EventBlockFilter';
-  events: Array<Scalars['String']>;
-  tags: Array<Scalars['String']>;
+  events?: Maybe<Array<Scalars['String']>>;
+  tags?: Maybe<Array<Scalars['String']>>;
 };
 
 export type EventBlockFilterInput = {
-  events?: Array<Scalars['String']>;
-  tags?: Array<Scalars['String']>;
+  events?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type EventBlockInput = {
@@ -3157,11 +3157,11 @@ export type TeaserListBlock = BaseBlock & {
 export type TeaserListBlockFilter = {
   __typename?: 'TeaserListBlockFilter';
   tagObjects: Array<Tag>;
-  tags: Array<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
 };
 
 export type TeaserListBlockFilterInput = {
-  tags: Array<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type TeaserListBlockInput = {

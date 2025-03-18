@@ -15,7 +15,7 @@ registerEnumType(TeaserListBlockSort, {
 
 @ObjectType()
 export class TeaserListBlockFilter {
-  @Field(() => [String])
+  @Field(() => [String], {defaultValue: [], nullable: true})
   tags!: string[]
 
   @Field(() => [Tag])

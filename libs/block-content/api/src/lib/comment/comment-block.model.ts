@@ -8,10 +8,10 @@ export class CommentBlockFilter {
   @Field({nullable: true})
   item?: string
 
-  @Field(() => [String], {defaultValue: []})
+  @Field(() => [String], {defaultValue: [], nullable: true})
   tags!: string[]
 
-  @Field(() => [String], {defaultValue: []})
+  @Field(() => [String], {defaultValue: [], nullable: true})
   comments!: string[]
 }
 
