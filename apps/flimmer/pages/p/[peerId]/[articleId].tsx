@@ -1,10 +1,12 @@
+import {ArticleWrapper} from '@wepublish/article/website'
+import {CommentListContainer} from '@wepublish/comments/website'
 import {
-  ApiV1,
-  ArticleWrapper,
-  CommentListContainer,
-  PeerArticleContainer,
-  useWebsiteBuilder
-} from '@wepublish/website'
+  addClientCacheToV1Props,
+  CommentItemType,
+  CommentListDocument,
+  getV1ApiClient
+} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -27,7 +29,7 @@ export function PeerArticleById() {
 
         <CommentListContainer
           id={articleId as string}
-          type={ApiV1.CommentItemType.PeerArticle}
+          type={CommentItemType.PeerArticle}
           peerId={peerId as string}
           signUpUrl="/mitmachen"
         />
@@ -49,24 +51,24 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   const {peerId, articleId} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
   await Promise.all([
     client.query({
-      query: ApiV1.PeerArticleDocument,
+      query: PeerArticleDocument,
       variables: {
         peerId,
         articleId
       }
     }),
     client.query({
-      query: ApiV1.CommentListDocument,
+      query: CommentListDocument,
       variables: {
         itemId: articleId
       }
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,

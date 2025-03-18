@@ -1,5 +1,6 @@
 import {styled} from '@mui/material'
-import {Navbar, NavbarInnerWrapper} from '@wepublish/website'
+import {NavbarInnerWrapper} from '@wepublish/navigation/website'
+import {Navbar} from 'rsuite'
 
 export const TsriNavbar = styled(Navbar)`
   ${NavbarInnerWrapper} {
