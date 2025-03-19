@@ -20,12 +20,12 @@ import {
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import resourcesToBackend from 'i18next-resources-to-backend'
-import deTranlations from '@wepublish/website/translations/de.json'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'

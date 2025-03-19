@@ -14,9 +14,9 @@ export type NavbarContainerProps = PropsWithChildren<
     | 'slug'
     | 'headerSlug'
     | 'iconSlug'
-    | 'loginUrl'
-    | 'profileUrl'
-    | 'subscribeUrl'
+    | 'loginBtn'
+    | 'profileBtn'
+    | 'subscribeBtn'
   > &
     BuilderContainerProps
 >
@@ -27,9 +27,9 @@ export function NavbarContainer({
   headerSlug,
   slug,
   iconSlug,
-  loginUrl,
-  profileUrl,
-  subscribeUrl,
+  loginBtn,
+  profileBtn,
+  subscribeBtn,
   children
 }: NavbarContainerProps) {
   const {Navbar} = useWebsiteBuilder()
@@ -46,9 +46,9 @@ export function NavbarContainer({
       headerSlug={headerSlug}
       categorySlugs={categorySlugs}
       slug={slug}
-      loginUrl={loginUrl}
-      profileUrl={profileUrl}
-      subscribeUrl={subscribeUrl}
+      loginBtn={loginBtn}
+      profileBtn={profileBtn}
+      subscribeBtn={subscribeBtn}
       data={data}
       loading={loading}
       error={error}

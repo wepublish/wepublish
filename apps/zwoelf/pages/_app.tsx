@@ -139,7 +139,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
-                  loginUrl={''}
+                  loginBtn={null}
                 />
 
                 <main>
