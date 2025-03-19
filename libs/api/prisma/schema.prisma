@@ -1271,6 +1271,7 @@ enum BlockType {
   LinkPageBreak  @map("linkPageBreak")
   TeaserGrid1    @map("teaserGrid1")
   TeaserGrid6    @map("teaserGrid6")
+  TeaserSlots    @map("teaserSlots")
   TeaserGridFlex @map("teaserGridFlex")
   TeaserList     @map("teaserList")
   HTML           @map("html")

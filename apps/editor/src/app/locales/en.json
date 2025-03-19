@@ -287,6 +287,9 @@
         "tagsLabel": "Which tags should be loaded",
         "edit": "Edit teaser list block"
       },
+      "teaserSlots": {
+        "label": "Teaser Slots"
+      },
       "embeds": {
         "label": "Embed",
         "overview": {
@@ -1495,7 +1498,8 @@
         "peerArticle": "Peer Article",
         "page": "Page",
         "event": "Event",
-        "custom": "Custom"
+        "custom": "Custom",
+        "advertisement": "Ad"
       },
       "teaserSort": {
         "hotAndTrending": "Hot & Trending",

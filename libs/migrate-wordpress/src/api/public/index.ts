@@ -232,6 +232,7 @@ export type Block =
   | TeaserGridBlock
   | TeaserGridFlexBlock
   | TeaserListBlock
+  | TeaserSlotsBlock
   | TikTokVideoBlock
   | TitleBlock
   | TwitterTweetBlock
@@ -259,10 +260,12 @@ export enum BlockType {
   Poll = 'Poll',
   Quote = 'Quote',
   RichText = 'RichText',
+  Subscribe = 'Subscribe',
   TeaserGrid1 = 'TeaserGrid1',
   TeaserGrid6 = 'TeaserGrid6',
   TeaserGridFlex = 'TeaserGridFlex',
   TeaserList = 'TeaserList',
+  TeaserSlots = 'TeaserSlots',
   Title = 'Title'
 }
 
@@ -2228,6 +2231,7 @@ export type TagConnection = {
 }
 
 export type TagFilter = {
+  ids?: InputMaybe<Array<InputMaybe<Scalars['String']>>>
   tag?: InputMaybe<Scalars['String']>
   type?: InputMaybe<TagType>
 }
@@ -2278,6 +2282,17 @@ export type TeaserListBlockFilter = {
   tags?: Maybe<Array<Scalars['ID']>>
 }
 
+export type TeaserSlotsBlock = {
+  __typename?: 'TeaserSlotsBlock'
+  blockStyle?: Maybe<Scalars['String']>
+  filter: TeaserListBlockFilter
+  numColumns: Scalars['Int']
+  skip?: Maybe<Scalars['Int']>
+  take?: Maybe<Scalars['Int']>
+  teaserType?: Maybe<TeaserType>
+  teasers: Array<Maybe<Teaser>>
+}
+
 export enum TeaserStyle {
   Default = 'default',
   Light = 'light',
@@ -2285,6 +2300,7 @@ export enum TeaserStyle {
 }
 
 export enum TeaserType {
+  Advertisement = 'advertisement',
   Article = 'article',
   Custom = 'custom',
   Event = 'event',
@@ -2501,6 +2517,7 @@ export type ArticleQuery = {
       | {__typename: 'TeaserGridBlock'}
       | {__typename: 'TeaserGridFlexBlock'}
       | {__typename: 'TeaserListBlock'}
+      | {__typename: 'TeaserSlotsBlock'}
       | {__typename: 'TikTokVideoBlock'}
       | {__typename: 'TitleBlock'}
       | {__typename: 'TwitterTweetBlock'}

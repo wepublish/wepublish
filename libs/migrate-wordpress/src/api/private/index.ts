@@ -38,6 +38,17 @@ export type Action =
   | SubscriptionCreatedAction
   | UserCreatedAction
 
+export type AdvertisementTeaser = {
+  __typename?: 'AdvertisementTeaser'
+  properties?: Maybe<Array<Properties>>
+  zone: Scalars['String']
+}
+
+export type AdvertisementTeaserInput = {
+  properties: Array<PropertiesInput>
+  zone?: InputMaybe<Scalars['String']>
+}
+
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals'
   boolChoice?: Maybe<Scalars['Boolean']>
@@ -303,6 +314,7 @@ export type Block =
   | TeaserGridBlock
   | TeaserGridFlexBlock
   | TeaserListBlock
+  | TeaserSlotsBlock
   | TikTokVideoBlock
   | TitleBlock
   | TwitterTweetBlock
@@ -331,6 +343,7 @@ export type BlockInput = {
   teaserGrid?: InputMaybe<TeaserGridBlockInput>
   teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>
   teaserList?: InputMaybe<TeaserListBlockInput>
+  teaserSlots?: InputMaybe<TeaserSlotsBlockInput>
   tikTokVideo?: InputMaybe<TikTokVideoBlockInput>
   title?: InputMaybe<TitleBlockInput>
   twitterTweet?: InputMaybe<TwitterTweetBlockInput>
@@ -2485,6 +2498,7 @@ export type TagConnection = {
 }
 
 export type TagFilter = {
+  ids?: InputMaybe<Array<InputMaybe<Scalars['String']>>>
   tag?: InputMaybe<Scalars['String']>
   type?: InputMaybe<TagType>
 }
@@ -2503,7 +2517,13 @@ export enum TagType {
   Page = 'Page'
 }
 
-export type Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | PeerArticleTeaser
+export type Teaser =
+  | AdvertisementTeaser
+  | ArticleTeaser
+  | CustomTeaser
+  | EventTeaser
+  | PageTeaser
+  | PeerArticleTeaser
 
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock'
@@ -2530,6 +2550,7 @@ export type TeaserGridFlexBlockInput = {
 }
 
 export type TeaserInput = {
+  advertisement?: InputMaybe<AdvertisementTeaserInput>
   article?: InputMaybe<ArticleTeaserInput>
   custom?: InputMaybe<CustomTeaserInput>
   event?: InputMaybe<EventTeaserInput>
@@ -2574,6 +2595,60 @@ export enum TeaserListBlockSort {
   PublishedAt = 'publishedAt'
 }
 
+export type TeaserSlot = {
+  __typename?: 'TeaserSlot'
+  teaser?: Maybe<Teaser>
+  type: TeaserSlotType
+}
+
+export type TeaserSlotInput = {
+  teaser?: InputMaybe<TeaserInput>
+  type: TeaserSlotType
+}
+
+export enum TeaserSlotType {
+  Autofill = 'Autofill',
+  Manual = 'Manual'
+}
+
+export type TeaserSlotsAutofillConfig = {
+  __typename?: 'TeaserSlotsAutofillConfig'
+  enabled: Scalars['Boolean']
+  skip?: Maybe<Scalars['Int']>
+  sort?: Maybe<TeaserListBlockSort>
+  tags?: Maybe<Array<Scalars['ID']>>
+  take?: Maybe<Scalars['Int']>
+}
+
+export type TeaserSlotsAutofillConfigInput = {
+  enabled: Scalars['Boolean']
+  skip?: InputMaybe<Scalars['Int']>
+  sort?: InputMaybe<TeaserListBlockSort>
+  tags?: InputMaybe<Array<Scalars['ID']>>
+  take?: InputMaybe<Scalars['Int']>
+}
+
+export type TeaserSlotsBlock = {
+  __typename?: 'TeaserSlotsBlock'
+  autofillConfig: TeaserSlotsAutofillConfig
+  blockStyle?: Maybe<Scalars['String']>
+  numColumns: Scalars['Int']
+  slots: Array<TeaserSlot>
+  teaserType?: Maybe<TeaserType>
+  teasers: Array<Maybe<Teaser>>
+  title?: Maybe<Scalars['String']>
+}
+
+export type TeaserSlotsBlockInput = {
+  autofillConfig: TeaserSlotsAutofillConfigInput
+  blockStyle?: InputMaybe<Scalars['String']>
+  numColumns: Scalars['Int']
+  slots: Array<TeaserSlotInput>
+  teaserType?: InputMaybe<TeaserType>
+  teasers: Array<InputMaybe<TeaserInput>>
+  title?: InputMaybe<Scalars['String']>
+}
+
 export enum TeaserStyle {
   Default = 'default',
   Light = 'light',
@@ -2581,6 +2656,7 @@ export enum TeaserStyle {
 }
 
 export enum TeaserType {
+  Advertisement = 'advertisement',
   Article = 'article',
   Custom = 'custom',
   Event = 'event',
@@ -2951,6 +3027,7 @@ export type ArticleRefFragment = {
       | {__typename: 'TeaserGridBlock'}
       | {__typename: 'TeaserGridFlexBlock'}
       | {__typename: 'TeaserListBlock'}
+      | {__typename: 'TeaserSlotsBlock'}
       | {__typename: 'TikTokVideoBlock'}
       | {__typename: 'TitleBlock'}
       | {__typename: 'TwitterTweetBlock'}
@@ -3037,6 +3114,7 @@ export type ArticleListQuery = {
           | {__typename: 'TeaserGridBlock'}
           | {__typename: 'TeaserGridFlexBlock'}
           | {__typename: 'TeaserListBlock'}
+          | {__typename: 'TeaserSlotsBlock'}
           | {__typename: 'TikTokVideoBlock'}
           | {__typename: 'TitleBlock'}
           | {__typename: 'TwitterTweetBlock'}
@@ -3546,6 +3624,7 @@ export type ArticleQuery = {
             __typename: 'TeaserGridBlock'
             numColumns: number
             teasers: Array<
+              | {__typename?: 'AdvertisementTeaser'}
               | {
                   __typename?: 'ArticleTeaser'
                   style: TeaserStyle
@@ -3608,6 +3687,7 @@ export type ArticleQuery = {
                         | {__typename: 'TeaserGridBlock'}
                         | {__typename: 'TeaserGridFlexBlock'}
                         | {__typename: 'TeaserListBlock'}
+                        | {__typename: 'TeaserSlotsBlock'}
                         | {__typename: 'TikTokVideoBlock'}
                         | {__typename: 'TitleBlock'}
                         | {__typename: 'TwitterTweetBlock'}
@@ -3766,6 +3846,7 @@ export type ArticleQuery = {
                         | {__typename: 'TeaserGridBlock'}
                         | {__typename: 'TeaserGridFlexBlock'}
                         | {__typename: 'TeaserListBlock'}
+                        | {__typename: 'TeaserSlotsBlock'}
                         | {__typename: 'TikTokVideoBlock'}
                         | {__typename: 'TitleBlock'}
                         | {__typename: 'TwitterTweetBlock'}
@@ -3809,6 +3890,7 @@ export type ArticleQuery = {
           }
         | {__typename: 'TeaserGridFlexBlock'}
         | {__typename: 'TeaserListBlock'}
+        | {__typename: 'TeaserSlotsBlock'}
         | {__typename: 'TikTokVideoBlock'}
         | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
         | {__typename: 'TwitterTweetBlock'; userID: string; tweetID: string}
@@ -4078,6 +4160,8 @@ export type AuthorBySlugQuery = {
   author?: {__typename?: 'Author'; id: string} | null
 }
 
+type FullTeaser_AdvertisementTeaser_Fragment = {__typename?: 'AdvertisementTeaser'}
+
 type FullTeaser_ArticleTeaser_Fragment = {
   __typename?: 'ArticleTeaser'
   style: TeaserStyle
@@ -4140,6 +4224,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
         | {__typename: 'TeaserGridBlock'}
         | {__typename: 'TeaserGridFlexBlock'}
         | {__typename: 'TeaserListBlock'}
+        | {__typename: 'TeaserSlotsBlock'}
         | {__typename: 'TikTokVideoBlock'}
         | {__typename: 'TitleBlock'}
         | {__typename: 'TwitterTweetBlock'}
@@ -4302,6 +4387,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
         | {__typename: 'TeaserGridBlock'}
         | {__typename: 'TeaserGridFlexBlock'}
         | {__typename: 'TeaserListBlock'}
+        | {__typename: 'TeaserSlotsBlock'}
         | {__typename: 'TikTokVideoBlock'}
         | {__typename: 'TitleBlock'}
         | {__typename: 'TwitterTweetBlock'}
@@ -4342,6 +4428,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
 }
 
 export type FullTeaserFragment =
+  | FullTeaser_AdvertisementTeaser_Fragment
   | FullTeaser_ArticleTeaser_Fragment
   | FullTeaser_CustomTeaser_Fragment
   | FullTeaser_EventTeaser_Fragment
@@ -4509,6 +4596,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
   __typename: 'TeaserGridBlock'
   numColumns: number
   teasers: Array<
+    | {__typename?: 'AdvertisementTeaser'}
     | {
         __typename?: 'ArticleTeaser'
         style: TeaserStyle
@@ -4571,6 +4659,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
               | {__typename: 'TeaserGridBlock'}
               | {__typename: 'TeaserGridFlexBlock'}
               | {__typename: 'TeaserListBlock'}
+              | {__typename: 'TeaserSlotsBlock'}
               | {__typename: 'TikTokVideoBlock'}
               | {__typename: 'TitleBlock'}
               | {__typename: 'TwitterTweetBlock'}
@@ -4729,6 +4818,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
               | {__typename: 'TeaserGridBlock'}
               | {__typename: 'TeaserGridFlexBlock'}
               | {__typename: 'TeaserListBlock'}
+              | {__typename: 'TeaserSlotsBlock'}
               | {__typename: 'TikTokVideoBlock'}
               | {__typename: 'TitleBlock'}
               | {__typename: 'TwitterTweetBlock'}
@@ -4775,6 +4865,8 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {__typename: 'TeaserGridFlexBlock'
 
 type FullBlock_TeaserListBlock_Fragment = {__typename: 'TeaserListBlock'}
 
+type FullBlock_TeaserSlotsBlock_Fragment = {__typename: 'TeaserSlotsBlock'}
+
 type FullBlock_TikTokVideoBlock_Fragment = {__typename: 'TikTokVideoBlock'}
 
 type FullBlock_TitleBlock_Fragment = {
@@ -4815,6 +4907,7 @@ export type FullBlockFragment =
   | FullBlock_TeaserGridBlock_Fragment
   | FullBlock_TeaserGridFlexBlock_Fragment
   | FullBlock_TeaserListBlock_Fragment
+  | FullBlock_TeaserSlotsBlock_Fragment
   | FullBlock_TikTokVideoBlock_Fragment
   | FullBlock_TitleBlock_Fragment
   | FullBlock_TwitterTweetBlock_Fragment

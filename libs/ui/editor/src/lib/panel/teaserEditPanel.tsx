@@ -281,6 +281,10 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
       preTitle = teaser.preTitle ?? undefined
       contentUrl = teaser.contentUrl
       break
+
+    case TeaserType.Advertisement:
+      type = 'Advertisement'
+      break
   }
 
   return (

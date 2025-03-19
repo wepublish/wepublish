@@ -465,6 +465,7 @@ export const updatePage = async (
 ) => {
   const {roles} = authenticate()
   authorise(CanCreatePage, roles)
+  console.log(JSON.stringify(input, null, 2))
 
   const page = await pageLoader.load(id)
 
@@ -472,69 +473,77 @@ export const updatePage = async (
     throw new NotFound('page', id)
   }
 
-  return pageClient.update({
-    where: {id},
-    data: {
-      draft: {
-        upsert: {
-          update: {
-            ...input,
-            revision: page.pending
-              ? page.pending.revision + 1
-              : page.published
-              ? page.published.revision + 1
-              : 0,
-            updatedAt: null,
-            createdAt: page.draft?.createdAt ?? new Date(),
-            properties: {
-              deleteMany: {
-                pageRevisionId: page.draft?.id ?? ''
-              },
-              createMany: {
-                data: properties.map(property => ({
-                  key: property.key,
-                  value: property.value,
-                  public: property.public
-                }))
+  try {
+    const pageData = await pageClient.update({
+      where: {id},
+      data: {
+        draft: {
+          upsert: {
+            update: {
+              ...input,
+              revision: page.pending
+                ? page.pending.revision + 1
+                : page.published
+                ? page.published.revision + 1
+                : 0,
+              updatedAt: null,
+              createdAt: page.draft?.createdAt ?? new Date(),
+              properties: {
+                deleteMany: {
+                  pageRevisionId: page.draft?.id ?? ''
+                },
+                createMany: {
+                  data: properties.map(property => ({
+                    key: property.key,
+                    value: property.value,
+                    public: property.public
+                  }))
+                }
               }
+            },
+            create: {
+              ...input,
+              revision: page.pending
+                ? page.pending.revision + 1
+                : page.published
+                ? page.published.revision + 1
+                : 0,
+              updatedAt: null,
+              createdAt: page.draft?.createdAt ?? new Date(),
+              properties: {
+                createMany: {
+                  data: properties.map(property => ({
+                    key: property.key,
+                    value: property.value,
+                    public: property.public
+                  }))
+                }
+              }
+            }
+          }
+        },
+        tags: {
+          deleteMany: {
+            tagId: {
+              notIn: tags
             }
           },
-          create: {
-            ...input,
-            revision: page.pending
-              ? page.pending.revision + 1
-              : page.published
-              ? page.published.revision + 1
-              : 0,
-            updatedAt: null,
-            createdAt: page.draft?.createdAt ?? new Date(),
-            properties: {
-              createMany: {
-                data: properties.map(property => ({
-                  key: property.key,
-                  value: property.value,
-                  public: property.public
-                }))
-              }
-            }
+          createMany: {
+            data: tags
+              .filter(tagId => !page.tags.some(tag => tag.tagId === tagId))
+              .map(tagId => ({
+                tagId
+              }))
           }
         }
       },
-      tags: {
-        deleteMany: {
-          tagId: {
-            notIn: tags
-          }
-        },
-        createMany: {
-          data: tags
-            .filter(tagId => !page.tags.some(tag => tag.tagId === tagId))
-            .map(tagId => ({
-              tagId
-            }))
-        }
-      }
-    },
-    include: fullPageInclude
-  })
+      include: fullPageInclude
+    })
+    return pageData
+  } catch (e) {
+    throw e
+    console.log(e.message)
+    console.log(e)
+  }
+  return null
 }

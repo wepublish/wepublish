@@ -95,6 +95,7 @@ enum BlockType {
   TeaserGrid6
   TeaserGridFlex
   TeaserList
+  TeaserSlots
   Title
 }
 

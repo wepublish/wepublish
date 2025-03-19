@@ -34,12 +34,12 @@ import {
   Input,
   InputGroup as RInputGroup,
   List as RList,
+  Loader as RLoader,
   Nav as RNav,
   Notification,
   Panel,
   toaster,
-  Toggle as RToggle,
-  Loader as RLoader
+  Toggle as RToggle
 } from 'rsuite'
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
@@ -132,12 +132,39 @@ const NoData = styled(RList.Item)`
   text-align: center;
 `
 
+export const AdTeaserWrapper = styled.div`
+  cursor: pointer;
+  padding: 10px;
+  max-width: 300px;
+  max-height: 300px;
+  background-color: #eee;
+  align-content: center;
+  align-items: center;
+  object-fit: fill;
+  margin-bottom: 12px;
+`
+export const AdTeaser = styled.div`
+  background: #ddd;
+  margin: auto;
+  font-family: monospace;
+  text-align: center;
+  align-content: center;
+`
+
 export interface TeaserSelectPanelProps {
   onClose(): void
   onSelect(teaserLink: TeaserLink): void
+  onFinalSelect(teaser: Teaser): void
 }
 
-export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
+export interface Zone {
+  zoneId: string
+  name: string
+  width: number
+  height: number
+}
+
+export function TeaserSelectPanel({onClose, onSelect, onFinalSelect}: TeaserSelectPanelProps) {
   const initialTeaser = {
     style: TeaserStyle.Default,
     title: '',
@@ -239,6 +266,14 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchPolicy: 'network-only',
     variables: eventVariables
   })
+
+  const zones: Zone[] = [
+    {zoneId: '23516', name: 'Wideboard', width: 994, height: 250},
+    {zoneId: '23515', name: 'Half page', width: 300, height: 600},
+    {zoneId: '23517', name: 'Box', width: 300, height: 250}
+  ]
+  const maxWidth = Math.max(...zones.map(zone => zone.width))
+  const maxHeight = Math.max(...zones.map(zone => zone.height))
 
   const events = eventListData?.events?.nodes ?? []
 
@@ -657,6 +692,33 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             )}
           </>
         )
+
+      case TeaserType.Advertisement:
+        return (
+          <>
+            {zones.map(({name, zoneId, width, height}) => {
+              return (
+                <AdTeaserWrapper
+                  style={{aspectRatio: maxWidth / maxHeight}}
+                  onClick={() =>
+                    onFinalSelect({
+                      type: TeaserType.Advertisement,
+                      zoneId,
+                      style: TeaserStyle.Default
+                    })
+                  }>
+                  <AdTeaser
+                    style={{
+                      width: `${(width / maxWidth) * 100}%`,
+                      height: `${(height / maxHeight) * 100}%`
+                    }}>
+                    {name}
+                  </AdTeaser>
+                </AdTeaserWrapper>
+              )
+            })}
+          </>
+        )
     }
   }
 
@@ -689,6 +751,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           <RNav.Item eventKey={TeaserType.Custom} icon={<MdSettings />}>
             {t('resources.teaserType.custom')}
           </RNav.Item>
+          <RNav.Item eventKey={TeaserType.Advertisement} icon={<MdSettings />}>
+            {t('resources.teaserType.advertisement')}
+          </RNav.Item>
         </Nav>
 
         {type === TeaserType.Event && !isEventListLoading && events.length !== 0 && (
@@ -698,16 +763,19 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           </EventFilterContainer>
         )}
 
-        {type !== TeaserType.Custom &&
-          type !== TeaserType.PeerArticle &&
-          type !== TeaserType.Event && (
-            <InputGroup>
-              <Input value={filter.title || ''} onChange={value => updateFilter(value as string)} />
-              <RInputGroup.Addon>
-                <MdSearch />
-              </RInputGroup.Addon>
-            </InputGroup>
-          )}
+        {![
+          TeaserType.Custom,
+          TeaserType.PeerArticle,
+          TeaserType.Event,
+          TeaserType.Advertisement
+        ].includes(type) && (
+          <InputGroup>
+            <Input value={filter.title || ''} onChange={value => updateFilter(value as string)} />
+            <RInputGroup.Addon>
+              <MdSearch />
+            </RInputGroup.Addon>
+          </InputGroup>
+        )}
 
         <List>{currentContent()}</List>
       </Drawer.Body>

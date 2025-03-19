@@ -30,6 +30,7 @@ export enum BlockType {
   TeaserGrid = 'teaserGrid',
   TeaserGridFlex = 'teaserGridFlex',
   TeaserList = 'teaserList',
+  TeaserSlots = 'teaserSlots',
   HTML = 'html',
   Poll = 'poll',
   Comment = 'comment',
@@ -205,7 +206,8 @@ export enum TeaserType {
   PeerArticle = 'peerArticle',
   Page = 'page',
   Event = 'event',
-  Custom = 'custom'
+  Custom = 'custom',
+  Advertisement = 'advertisement'
 }
 
 export enum TeaserStyle {
@@ -270,12 +272,35 @@ export interface CustomTeaser {
   properties?: MetadataProperty[]
 }
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
+export interface AdvertisementTeaser {
+  type: TeaserType.Advertisement
+  zone: string
+  properties?: MetadataProperty[]
+}
+
+export type Teaser =
+  | ArticleTeaser
+  | PeerArticleTeaser
+  | PageTeaser
+  | CustomTeaser
+  | EventTeaser
+  | AdvertisementTeaser
+
+export enum TeaserSlotType {
+  Autofill = 'Autofill',
+  Manual = 'Manual'
+}
+
+export type TeaserSlot = {
+  type: TeaserSlotType
+  teaser?: Teaser
+}
 
 export enum TeaserListBlockSort {
   PublishedAt = 'publishedAt',
   HotAndTrending = 'hotAndTrending'
 }
+
 export interface TeaserListBlock extends BaseBlock {
   type: BlockType.TeaserList
   teaserType: TeaserType
@@ -291,6 +316,21 @@ export interface TeaserGridBlock extends BaseBlock {
   type: BlockType.TeaserGrid
   teasers: Teaser[]
   numColumns: number
+}
+
+export interface TeaserSlotsBlockAutofillConfig {
+  enabled: boolean
+  tags?: string[]
+  limit?: number
+  skip?: number
+  sort?: TeaserListBlockSort
+}
+
+export interface TeaserSlotsBlock extends BaseBlock {
+  type: BlockType.TeaserSlots
+  teasers: Teaser[]
+  teaserType: TeaserType
+  slots: TeaserSlot[]
 }
 
 export interface FlexAlignment {
@@ -335,6 +375,7 @@ export type ArticleBlock =
   | TikTokVideoBlock
   | BildwurfAdBlock
   | TeaserGridBlock
+  | TeaserSlotsBlock
   | TeaserGridFlexBlock
   | Prisma.JsonValue
 

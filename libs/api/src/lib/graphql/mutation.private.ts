@@ -210,7 +210,17 @@ function mapBlockUnionMap(value: any) {
   switch (type) {
     case BlockType.TeaserGrid:
       return {type, ...blockValue, teasers: blockValue.teasers.map(mapTeaserUnionMap)}
-
+    case BlockType.TeaserSlots:
+      return {
+        type,
+        ...blockValue,
+        teasers: blockValue.teasers.map(mapTeaserUnionMap),
+        slots: blockValue.slots.map(({teaser, type, ...rest}) => ({
+          type: type.toString(),
+          ...rest,
+          teaser: mapTeaserUnionMap(teaser)
+        }))
+      }
     case BlockType.TeaserGridFlex:
       return {
         type,

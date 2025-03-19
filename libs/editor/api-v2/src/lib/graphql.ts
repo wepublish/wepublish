@@ -212,7 +212,7 @@ export type BildwurfAdBlock = {
   zoneID: Scalars['String'];
 };
 
-export type Block = BildwurfAdBlock | CommentBlock | EmbedBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | LinkPageBreakBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type Block = BildwurfAdBlock | CommentBlock | EmbedBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | LinkPageBreakBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockStyle = {
   __typename?: 'BlockStyle';
@@ -228,7 +228,6 @@ export enum BlockType {
   Embed = 'Embed',
   Event = 'Event',
   Html = 'HTML',
-  Subscribe = 'Subscribe',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
   LinkPageBreak = 'LinkPageBreak',
@@ -236,10 +235,12 @@ export enum BlockType {
   Poll = 'Poll',
   Quote = 'Quote',
   RichText = 'RichText',
+  Subscribe = 'Subscribe',
   TeaserGrid1 = 'TeaserGrid1',
   TeaserGrid6 = 'TeaserGrid6',
   TeaserGridFlex = 'TeaserGridFlex',
   TeaserList = 'TeaserList',
+  TeaserSlots = 'TeaserSlots',
   Title = 'Title'
 }
 
@@ -2295,6 +2296,7 @@ export type TagConnection = {
 };
 
 export type TagFilter = {
+  ids?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   tag?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<TagType>;
 };
@@ -2345,6 +2347,17 @@ export type TeaserListBlockFilter = {
   tags?: Maybe<Array<Scalars['ID']>>;
 };
 
+export type TeaserSlotsBlock = {
+  __typename?: 'TeaserSlotsBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  filter: TeaserListBlockFilter;
+  numColumns: Scalars['Int'];
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+  teaserType?: Maybe<TeaserType>;
+  teasers: Array<Maybe<Teaser>>;
+};
+
 export enum TeaserStyle {
   Default = 'default',
   Light = 'light',
@@ -2352,6 +2365,7 @@ export enum TeaserStyle {
 }
 
 export enum TeaserType {
+  Advertisement = 'advertisement',
   Article = 'article',
   Custom = 'custom',
   Event = 'event',

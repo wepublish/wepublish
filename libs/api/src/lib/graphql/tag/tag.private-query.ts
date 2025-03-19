@@ -1,12 +1,13 @@
 import {Prisma, PrismaClient, TagType} from '@prisma/client'
 import {CanGetTags} from '@wepublish/permissions/api'
-import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
+import {getMaxTake, graphQLSortOrderToPrisma, SortOrder} from '@wepublish/utils/api'
 import {Context} from '../../context'
 import {authorise} from '../permissions'
 
 export type TagFilter = {
   type: TagType
   tag: string
+  ids: string[]
 }
 
 export enum TagSort {
@@ -61,8 +62,20 @@ const createTagNameFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInput 
   return {}
 }
 
+const createTagIdsFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInput => {
+  if (filter?.ids) {
+    return {
+      id: {
+        in: filter?.ids
+      }
+    }
+  }
+
+  return {}
+}
+
 export const createTagFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInput => ({
-  AND: [createTypeFilter(filter), createTagNameFilter(filter)]
+  AND: [createTypeFilter(filter), createTagNameFilter(filter), createTagIdsFilter(filter)]
 })
 
 export const getTags = async (
