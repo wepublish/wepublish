@@ -25,6 +25,7 @@ import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {ArticleTeaser, Teaser as TeaserTypeMixed, TeaserSlotsBlockValue} from './types'
 import {TeaserSlotsAutofillControls} from './teaserSlots/teaser-slots-autofill-controls'
+import {AdTeaser, AdTeaserWrapper} from '@wepublish/ui/editor'
 
 const IconButton = styled(RIconButton)`
   padding: 5px !important;
@@ -188,12 +189,13 @@ export function TeaserSlotsBlock({value, onChange}: BlockProps<TeaserSlotsBlockV
   }
 
   function handleSlotDelete(index: number) {
-    slots.splice(index, 1)
+    const newSlots = [...slots]
+    newSlots.splice(index, 1)
     onChange({
       ...rest,
       autofillConfig,
       numColumns,
-      slots: [...slots]
+      slots: newSlots
     })
   }
 
@@ -233,7 +235,7 @@ export function TeaserSlotsBlock({value, onChange}: BlockProps<TeaserSlotsBlockV
     let newSlots = slots
     if (!autofillConfig.enabled && newAutofillConfig.enabled) {
       newSlots = [
-        ...slots.map(slot => (!slot.teaser ? {type: TeaserSlotType.Autofill, teaser: null} : slot))
+        ...slots.map(slot => (!slot?.teaser ? {type: TeaserSlotType.Autofill, teaser: null} : slot))
       ]
     }
     if (autofillConfig.enabled && !newAutofillConfig.enabled) {
@@ -333,16 +335,18 @@ export function TeaserSlotsBlock({value, onChange}: BlockProps<TeaserSlotsBlockV
         <Button onClick={handleAddSlot}>Add slot</Button>
       </TeaserSlotsControls>
       <Drawer open={isEditModalOpen} size="sm" onClose={() => setEditModalOpen(false)}>
-        <TeaserEditPanel
-          initialTeaser={slots[editIndex].teaser!}
-          onClose={() => setEditModalOpen(false)}
-          onConfirm={teaser => {
-            setEditModalOpen(false)
-            handleTeaserLinkChange(editIndex, teaser)
-          }}
-        />
+        {slots[editIndex] && (
+          <TeaserEditPanel
+            initialTeaser={slots[editIndex].teaser!}
+            onClose={() => setEditModalOpen(false)}
+            onConfirm={teaser => {
+              setEditModalOpen(false)
+              handleTeaserLinkChange(editIndex, teaser)
+            }}
+          />
+        )}
       </Drawer>
-      <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size="md" onClose={() => setChooseModalOpen(false)}>
         <TeaserSelectAndEditPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={teaser => {
@@ -400,7 +404,8 @@ export function TeaserBlock({
               <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
                 <IconButton icon={<MdArticle />} onClick={onChoose} appearance={'subtle'} />
               </IconButtonTooltip>
-              {teaser.type !== TeaserType.PeerArticle || !teaser?.peer?.isDisabled ? (
+              {teaser.type !== TeaserType.Advertisement &&
+              (teaser.type !== TeaserType.PeerArticle || !teaser?.peer?.isDisabled) ? (
                 <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
                   <IconButton icon={<MdEdit />} onClick={onEdit} appearance={'subtle'} />
                 </IconButtonTooltip>
@@ -518,6 +523,18 @@ export function ContentForTeaser({teaser, numColumns}: ContentForTeaserProps) {
           lead={teaser.lead ?? undefined}
           numColumns={numColumns}
         />
+      )
+    }
+
+    case TeaserType.Advertisement: {
+      return (
+        <AdTeaserWrapper style={{height: '100%'}}>
+          <AdTeaser style={{width: `100%`, height: `100%`}}>
+            Advertisement
+            <br />
+            zone={teaser.zoneId}
+          </AdTeaser>
+        </AdTeaserWrapper>
       )
     }
 

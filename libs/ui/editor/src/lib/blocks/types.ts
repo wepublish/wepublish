@@ -235,12 +235,19 @@ export interface CustomTeaserLink extends BaseTeaser {
   properties?: TeaserMetadataProperty[]
 }
 
+export interface AdvertisementTeaserLink {
+  type: TeaserType.Advertisement
+  zoneId: string
+  properties?: TeaserMetadataProperty[]
+}
+
 export type TeaserLink =
   | ArticleTeaserLink
   | PeerArticleTeaserLink
   | PageTeaserLink
   | CustomTeaserLink
   | EventTeaserLink
+  | AdvertisementTeaserLink
 
 export interface BaseTeaser {
   style: TeaserStyle
@@ -260,7 +267,15 @@ export interface CustomTeaser extends CustomTeaserLink, BaseTeaser {}
 
 export interface EventTeaser extends EventTeaserLink, BaseTeaser {}
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
+export interface AdvertisementTeaser extends AdvertisementTeaserLink, BaseTeaser {}
+
+export type Teaser =
+  | ArticleTeaser
+  | PeerArticleTeaser
+  | PageTeaser
+  | CustomTeaser
+  | EventTeaser
+  | AdvertisementTeaser
 export type TeaserSlot = {
   type: TeaserSlotType
   teaser?: Teaser | null
@@ -451,6 +466,21 @@ export const mapUnionForTeaser = (teaser?: FullTeaserFragment | null): Teaser | 
           }
         : null
 
+    case 'AdvertisementTeaser':
+      return teaser
+        ? {
+            type: TeaserType.Advertisement,
+            style: TeaserStyle.Default,
+            zoneId: teaser.zone,
+            properties:
+              teaser?.properties?.map(({key, value, public: isPublic}) => ({
+                key,
+                value,
+                public: isPublic
+              })) ?? undefined
+          }
+        : null
+
     default:
       return null
   }
@@ -516,6 +546,19 @@ export const mapUnionForTeaserInput = (value?: Teaser | null): TeaserInput | nul
           title: value.title || undefined,
           lead: value.lead || undefined,
           contentUrl: value.contentUrl || undefined,
+          properties:
+            value.properties?.map(({key, value, public: isPublic}) => ({
+              key,
+              value,
+              public: isPublic
+            })) || []
+        }
+      }
+
+    case TeaserType.Advertisement:
+      return {
+        advertisement: {
+          zone: value.zoneId,
           properties:
             value.properties?.map(({key, value, public: isPublic}) => ({
               key,

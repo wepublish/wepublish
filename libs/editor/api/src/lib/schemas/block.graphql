@@ -85,6 +85,14 @@ fragment FullTeaser on Teaser {
             public
         }
     }
+    ... on AdvertisementTeaser {
+        zone
+        properties {
+            key
+            value
+            public
+        }
+    }
 }
 
 fragment FullBlock on Block {

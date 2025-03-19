@@ -2365,6 +2365,7 @@ export enum TeaserStyle {
 }
 
 export enum TeaserType {
+  Advertisement = 'advertisement',
   Article = 'article',
   Custom = 'custom',
   Event = 'event',

@@ -206,7 +206,8 @@ export enum TeaserType {
   PeerArticle = 'peerArticle',
   Page = 'page',
   Event = 'event',
-  Custom = 'custom'
+  Custom = 'custom',
+  Advertisement = 'advertisement'
 }
 
 export enum TeaserStyle {
@@ -271,7 +272,19 @@ export interface CustomTeaser {
   properties?: MetadataProperty[]
 }
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
+export interface AdvertisementTeaser {
+  type: TeaserType.Advertisement
+  zone: string
+  properties?: MetadataProperty[]
+}
+
+export type Teaser =
+  | ArticleTeaser
+  | PeerArticleTeaser
+  | PageTeaser
+  | CustomTeaser
+  | EventTeaser
+  | AdvertisementTeaser
 
 export enum TeaserSlotType {
   Autofill = 'Autofill',

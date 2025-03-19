@@ -720,6 +720,7 @@ enum TeaserType {
   event
   page
   custom
+  advertisement
 }
 
 type TeaserListBlockFilter {

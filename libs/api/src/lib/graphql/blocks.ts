@@ -17,6 +17,7 @@ import {GraphQLRichText} from '@wepublish/richtext/api'
 import {Context} from '../context'
 
 import {
+  AdvertisementTeaser,
   ArticleTeaser,
   BildwurfAdBlock,
   BlockType,
@@ -276,6 +277,16 @@ export const GraphQLCustomTeaser = new GraphQLObjectType<CustomTeaser, Context>(
   isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Custom)
 })
 
+export const GraphQLAdvertisementTeaser = new GraphQLObjectType<AdvertisementTeaser, Context>({
+  name: 'AdvertisementTeaser',
+  fields: () => ({
+    zone: {type: new GraphQLNonNull(GraphQLString)},
+    properties: {type: new GraphQLList(new GraphQLNonNull(GraphQLMetadataProperty))}
+  }),
+
+  isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Advertisement)
+})
+
 export const GraphQLTeaser = new GraphQLUnionType({
   name: 'Teaser',
   types: [
@@ -283,7 +294,8 @@ export const GraphQLTeaser = new GraphQLUnionType({
     GraphQLPeerArticleTeaser,
     GraphQLPageTeaser,
     GraphQLCustomTeaser,
-    GraphQLEventTeaser
+    GraphQLEventTeaser,
+    GraphQLAdvertisementTeaser
   ]
 })
 
@@ -347,110 +359,6 @@ export const GraphQLTeaserSlotsBlock = new GraphQLObjectType<TeaserSlotsBlock, C
     autofillConfig: {type: new GraphQLNonNull(GraphQLTeaserSlotsAutofillConfig)},
     slots: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTeaserSlot)))},
     teasers: {type: new GraphQLNonNull(new GraphQLList(GraphQLTeaser))}
-    // teasers: {
-    //   type: new GraphQLNonNull(new GraphQLList(GraphQLTeaser)),
-    //   resolve: createProxyingResolver(
-    //     async (
-    //       {filter, sort, skip, take, teaserType},
-    //       _,
-    //       {loaders, prisma, hotAndTrendingDataSource}
-    //     ) => {
-    //       if (teaserType === TeaserType.Article) {
-    //         let articles: Article[] = []
-    //
-    //         if (sort === TeaserListBlockSort.HotAndTrending) {
-    //           try {
-    //             articles = await hotAndTrendingDataSource.getMostViewedArticles({skip, take})
-    //           } catch (e) {
-    //             console.error(e)
-    //           }
-    //         } else {
-    //           articles = (
-    //             await getArticles(
-    //               {
-    //                 tags: filter.tags
-    //               },
-    //               ArticleSort.PublishedAt,
-    //               SortOrder.Descending,
-    //               undefined,
-    //               skip,
-    //               take,
-    //               prisma.article
-    //             )
-    //           )?.nodes
-    //         }
-    //
-    //         return articles.map(
-    //           article =>
-    //             ({
-    //               articleID: article.id,
-    //               style: TeaserStyle.Default,
-    //               type: TeaserType.Article,
-    //               imageID: null,
-    //               lead: null,
-    //               title: null
-    //             } as ArticleTeaser)
-    //         )
-    //       }
-    //
-    //       if (teaserType === TeaserType.Page) {
-    //         const pages = await getPages(
-    //           {
-    //             tags: filter.tags
-    //           },
-    //           PageSort.PublishedAt,
-    //           SortOrder.Descending,
-    //           undefined,
-    //           skip,
-    //           take,
-    //           prisma.page
-    //         )
-    //
-    //         return pages.nodes.map(
-    //           page =>
-    //             ({
-    //               pageID: page.id,
-    //               style: TeaserStyle.Default,
-    //               type: TeaserType.Page,
-    //               imageID: null,
-    //               lead: null,
-    //               title: null
-    //             } as PageTeaser)
-    //         )
-    //       }
-    //
-    //       if (teaserType === TeaserType.Event) {
-    //         const pages = await getEvents(
-    //           {
-    //             tags: filter.tags
-    //           },
-    //           EventSort.StartsAt,
-    //           SortOrder.Descending,
-    //           undefined,
-    //           skip,
-    //           take,
-    //           prisma.event
-    //         )
-    //
-    //         pages.nodes.forEach(event => loaders.eventById.prime(event.id, event))
-    //
-    //         return pages.nodes.map(
-    //           event =>
-    //             ({
-    //               eventID: event.id,
-    //               style: TeaserStyle.Default,
-    //               type: TeaserType.Event,
-    //               imageID: null,
-    //               lead: null,
-    //               title: null
-    //             } as EventTeaser)
-    //         )
-    //       }
-    //
-    //       return []
-    //     }
-    //   )
-    // }
   }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TeaserSlots
@@ -695,7 +603,8 @@ export const GraphQLTeaserType = new GraphQLEnumType({
     [TeaserType.PeerArticle]: {value: TeaserType.PeerArticle},
     [TeaserType.Event]: {value: TeaserType.Event},
     [TeaserType.Page]: {value: TeaserType.Page},
-    [TeaserType.Custom]: {value: TeaserType.Custom}
+    [TeaserType.Custom]: {value: TeaserType.Custom},
+    [TeaserType.Advertisement]: {value: TeaserType.Advertisement}
   }
 })
 
@@ -1914,6 +1823,16 @@ export const GraphQLCustomTeaserInput = new GraphQLInputObjectType({
   })
 })
 
+export const GraphQLAdvertisementTeaserInput = new GraphQLInputObjectType({
+  name: 'AdvertisementTeaserInput',
+  fields: () => ({
+    zone: {type: GraphQLString},
+    properties: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyInput)))
+    }
+  })
+})
+
 export const GraphQLTeaserInput = new GraphQLInputObjectType({
   name: 'TeaserInput',
   fields: () => ({
@@ -1921,7 +1840,8 @@ export const GraphQLTeaserInput = new GraphQLInputObjectType({
     [TeaserType.PeerArticle]: {type: GraphQLPeerArticleTeaserInput},
     [TeaserType.Page]: {type: GraphQLPageTeaserInput},
     [TeaserType.Event]: {type: GraphQLEventTeaserInput},
-    [TeaserType.Custom]: {type: GraphQLCustomTeaserInput}
+    [TeaserType.Custom]: {type: GraphQLCustomTeaserInput},
+    [TeaserType.Advertisement]: {type: GraphQLAdvertisementTeaserInput}
   })
 })
 

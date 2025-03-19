@@ -38,6 +38,17 @@ export type Action =
   | SubscriptionCreatedAction
   | UserCreatedAction
 
+export type AdvertisementTeaser = {
+  __typename?: 'AdvertisementTeaser'
+  properties?: Maybe<Array<Properties>>
+  zone: Scalars['String']
+}
+
+export type AdvertisementTeaserInput = {
+  properties: Array<PropertiesInput>
+  zone?: InputMaybe<Scalars['String']>
+}
+
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals'
   boolChoice?: Maybe<Scalars['Boolean']>
@@ -2506,7 +2517,13 @@ export enum TagType {
   Page = 'Page'
 }
 
-export type Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | PeerArticleTeaser
+export type Teaser =
+  | AdvertisementTeaser
+  | ArticleTeaser
+  | CustomTeaser
+  | EventTeaser
+  | PageTeaser
+  | PeerArticleTeaser
 
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock'
@@ -2533,6 +2550,7 @@ export type TeaserGridFlexBlockInput = {
 }
 
 export type TeaserInput = {
+  advertisement?: InputMaybe<AdvertisementTeaserInput>
   article?: InputMaybe<ArticleTeaserInput>
   custom?: InputMaybe<CustomTeaserInput>
   event?: InputMaybe<EventTeaserInput>
@@ -2638,6 +2656,7 @@ export enum TeaserStyle {
 }
 
 export enum TeaserType {
+  Advertisement = 'advertisement',
   Article = 'article',
   Custom = 'custom',
   Event = 'event',
@@ -3605,6 +3624,7 @@ export type ArticleQuery = {
             __typename: 'TeaserGridBlock'
             numColumns: number
             teasers: Array<
+              | {__typename?: 'AdvertisementTeaser'}
               | {
                   __typename?: 'ArticleTeaser'
                   style: TeaserStyle
@@ -4140,6 +4160,8 @@ export type AuthorBySlugQuery = {
   author?: {__typename?: 'Author'; id: string} | null
 }
 
+type FullTeaser_AdvertisementTeaser_Fragment = {__typename?: 'AdvertisementTeaser'}
+
 type FullTeaser_ArticleTeaser_Fragment = {
   __typename?: 'ArticleTeaser'
   style: TeaserStyle
@@ -4406,6 +4428,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
 }
 
 export type FullTeaserFragment =
+  | FullTeaser_AdvertisementTeaser_Fragment
   | FullTeaser_ArticleTeaser_Fragment
   | FullTeaser_CustomTeaser_Fragment
   | FullTeaser_EventTeaser_Fragment
@@ -4573,6 +4596,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
   __typename: 'TeaserGridBlock'
   numColumns: number
   teasers: Array<
+    | {__typename?: 'AdvertisementTeaser'}
     | {
         __typename?: 'ArticleTeaser'
         style: TeaserStyle

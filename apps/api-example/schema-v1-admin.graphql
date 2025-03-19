@@ -637,7 +637,7 @@ type TeaserGridBlock {
   numColumns: Int!
 }
 
-union Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
+union Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser | AdvertisementTeaser
 
 type ArticleTeaser {
   style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
@@ -775,6 +775,11 @@ type EventTeaser {
   event: Event
 }
 
+type AdvertisementTeaser {
+  zone: String!
+  properties: [Properties!]
+}
+
 type TeaserSlotsBlock {
   blockStyle: String
   numColumns: Int!
@@ -791,6 +796,7 @@ enum TeaserType {
   event
   page
   custom
+  advertisement
 }
 
 type TeaserSlotsAutofillConfig {
@@ -1886,6 +1892,7 @@ input TeaserInput {
   page: PageTeaserInput
   event: EventTeaserInput
   custom: CustomTeaserInput
+  advertisement: AdvertisementTeaserInput
 }
 
 input ArticleTeaserInput {
@@ -1932,6 +1939,11 @@ input CustomTeaserInput {
   title: String
   lead: String
   contentUrl: String
+  properties: [PropertiesInput!]!
+}
+
+input AdvertisementTeaserInput {
+  zone: String
   properties: [PropertiesInput!]!
 }
 

@@ -26,6 +26,10 @@ export function TeaserSelectAndEditPanel({onClose, onSelect}: TeaserSelectAndEdi
             ? (setEditOpen(true), setTeaser(teaser))
             : (onClose(), onSelect(teaser))
         }
+        onFinalSelect={teaser => {
+          onClose()
+          onSelect(teaser)
+        }}
       />
       <Drawer open={isEditOpen} size="sm" onClose={() => setEditOpen(false)}>
         <TeaserEditPanel
