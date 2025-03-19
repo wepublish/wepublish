@@ -2,6 +2,7 @@ import {DefaultOptions, InMemoryCache} from '@apollo/client'
 import {MockedProvider} from '@apollo/client/testing'
 import {Preview} from '@storybook/react'
 import {possibleTypes} from '@wepublish/website/api'
+import i18 from './i18next'
 
 const defaultOptions: DefaultOptions = {
   watchQuery: {
@@ -33,5 +34,6 @@ export const parameters = {
     showWarnings: false,
     assumeImmutableResults: true,
     defaultOptions
-  }
+  },
+  i18
 } as Preview['parameters']

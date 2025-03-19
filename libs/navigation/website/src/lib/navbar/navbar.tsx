@@ -16,6 +16,7 @@ import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
 import {TextToIcon} from '@wepublish/ui'
+import {useTranslation} from 'react-i18next'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -248,6 +249,8 @@ export function Navbar({
   const [isMenuOpen, setMenuOpen] = useState(false)
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
 
+  const {t} = useTranslation()
+
   const imageStyles = useImageStyles()
   const appBarStyles = useAppBarStyles(isMenuOpen)
   const logoLinkStyles = useLogoLinkStyles(isMenuOpen)
@@ -324,7 +327,7 @@ export function Navbar({
 
             {!hasRunningSubscription && !hasUnpaidInvoices && subscribeUrl && (
               <Button LinkComponent={Link} href={subscribeUrl} sx={buttonStyles}>
-                Member werden
+                {t('navbar.subscribe')}
               </Button>
             )}
 
@@ -489,6 +492,7 @@ const NavPaper = ({
   const {
     elements: {Link, Button, H4, H6}
   } = useWebsiteBuilder()
+  const {t} = useTranslation()
   const {hasUser, logout} = useUser()
   const theme = useTheme()
 
@@ -529,7 +533,7 @@ const NavPaper = ({
               variant="contained"
               color="secondary"
               onClick={closeMenu}>
-              Member werden
+              {t('navbar.subscribe')}
             </Button>
           )}
 
