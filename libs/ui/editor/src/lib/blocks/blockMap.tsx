@@ -38,8 +38,9 @@ import {BlockValue, EmbedType} from './types'
 import {BlockType} from '@wepublish/editor/api-v2'
 import {isFunctionalUpdate} from '../utility'
 import {TeaserListBlock} from './teaserListBlock'
-import {TeaserListBlockSort, TeaserType} from '@wepublish/editor/api'
+import {TeaserListBlockSort, TeaserSlotType, TeaserType} from '@wepublish/editor/api'
 import {SubscribeBlock} from './subscribeBlock'
+import {TeaserSlotsBlock} from './teaserSlotsBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
@@ -171,10 +172,44 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         [nanoid(), null],
         [nanoid(), null],
         [nanoid(), null]
-      ],
-      blockStyle: undefined
+      ]
     },
     label: 'blocks.teaserGrid6.label',
+    icon: <MdFilter6 />
+  },
+
+  [BlockType.TeaserSlots]: {
+    field: props => <TeaserSlotsBlock {...props} />,
+    defaultValue: {
+      title: null,
+      blockStyle: undefined,
+      autofillConfig: {
+        enabled: false,
+        tags: [],
+        skip: 0,
+        take: 6,
+        sort: TeaserListBlockSort.PublishedAt
+      },
+      teaserType: TeaserType.Article,
+      numColumns: 3,
+      slots: [
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual}
+      ],
+      teasers: [
+        [nanoid(), null],
+        [nanoid(), null],
+        [nanoid(), null],
+        [nanoid(), null],
+        [nanoid(), null],
+        [nanoid(), null]
+      ]
+    },
+    label: 'blocks.teaserSlots.label',
     icon: <MdFilter6 />
   },
 

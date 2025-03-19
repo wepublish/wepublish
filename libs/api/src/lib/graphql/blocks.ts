@@ -23,6 +23,8 @@ import {
   CommentBlock,
   CustomTeaser,
   EmbedBlock,
+  EventBlock,
+  EventTeaser,
   FacebookPostBlock,
   FacebookVideoBlock,
   FlexAlignment,
@@ -36,26 +38,28 @@ import {
   ListicleBlock,
   ListicleItem,
   PageTeaser,
-  EventTeaser,
   PeerArticleTeaser,
   PolisConversationBlock,
   PollBlock,
-  EventBlock,
   QuoteBlock,
   RichTextBlock,
   SoundCloudTrackBlock,
+  SubscribeBlock,
   TeaserGridBlock,
   TeaserGridFlexBlock,
+  TeaserListBlock,
+  TeaserListBlockSort,
+  TeaserSlot,
+  TeaserSlotsBlock,
+  TeaserSlotsBlockAutofillConfig,
+  TeaserSlotType,
   TeaserStyle,
   TeaserType,
   TikTokVideoBlock,
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
-  YouTubeVideoBlock,
-  TeaserListBlock,
-  TeaserListBlockSort,
-  SubscribeBlock
+  YouTubeVideoBlock
 } from '../db/block'
 
 import {createProxyingIsTypeOf, createProxyingResolver, delegateToPeerSchema} from '../utility'
@@ -283,6 +287,14 @@ export const GraphQLTeaser = new GraphQLUnionType({
   ]
 })
 
+export const GraphQLTeaserSlot = new GraphQLObjectType<TeaserSlot>({
+  name: 'TeaserSlot',
+  fields: () => ({
+    type: {type: new GraphQLNonNull(GraphQLTeaserSlotType)},
+    teaser: {type: GraphQLTeaser}
+  })
+})
+
 export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Context>({
   name: 'TeaserGridBlock',
   fields: () => ({
@@ -295,6 +307,153 @@ export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Con
   }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TeaserGrid
+  })
+})
+
+export const GraphQLTeaserSlotType = new GraphQLEnumType({
+  name: 'TeaserSlotType',
+  values: {
+    [TeaserSlotType.Autofill]: {value: TeaserSlotType.Autofill},
+    [TeaserSlotType.Manual]: {value: TeaserSlotType.Manual}
+  }
+})
+
+export const GraphQLTeaserSlotsAutofillConfig = new GraphQLObjectType<
+  TeaserSlotsBlockAutofillConfig,
+  Context
+>({
+  name: 'TeaserSlotsAutofillConfig',
+  fields: () => ({
+    enabled: {type: new GraphQLNonNull(GraphQLBoolean)},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    take: {type: GraphQLInt},
+    skip: {type: GraphQLInt},
+    sort: {type: GraphQLTeaserListBlockSort}
+  })
+})
+
+export const GraphQLTeaserSlotsBlock = new GraphQLObjectType<TeaserSlotsBlock, Context>({
+  name: 'TeaserSlotsBlock',
+  fields: () => ({
+    blockStyle: {
+      type: GraphQLString,
+      resolve: resolveBlockStyleIdToName
+    },
+    numColumns: {type: new GraphQLNonNull(GraphQLInt)},
+    title: {type: GraphQLString},
+    teaserType: {
+      type: GraphQLTeaserType
+    },
+    autofillConfig: {type: new GraphQLNonNull(GraphQLTeaserSlotsAutofillConfig)},
+    slots: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTeaserSlot)))},
+    teasers: {type: new GraphQLNonNull(new GraphQLList(GraphQLTeaser))}
+    // teasers: {
+    //   type: new GraphQLNonNull(new GraphQLList(GraphQLTeaser)),
+    //   resolve: createProxyingResolver(
+    //     async (
+    //       {filter, sort, skip, take, teaserType},
+    //       _,
+    //       {loaders, prisma, hotAndTrendingDataSource}
+    //     ) => {
+    //       if (teaserType === TeaserType.Article) {
+    //         let articles: Article[] = []
+    //
+    //         if (sort === TeaserListBlockSort.HotAndTrending) {
+    //           try {
+    //             articles = await hotAndTrendingDataSource.getMostViewedArticles({skip, take})
+    //           } catch (e) {
+    //             console.error(e)
+    //           }
+    //         } else {
+    //           articles = (
+    //             await getArticles(
+    //               {
+    //                 tags: filter.tags
+    //               },
+    //               ArticleSort.PublishedAt,
+    //               SortOrder.Descending,
+    //               undefined,
+    //               skip,
+    //               take,
+    //               prisma.article
+    //             )
+    //           )?.nodes
+    //         }
+    //
+    //         return articles.map(
+    //           article =>
+    //             ({
+    //               articleID: article.id,
+    //               style: TeaserStyle.Default,
+    //               type: TeaserType.Article,
+    //               imageID: null,
+    //               lead: null,
+    //               title: null
+    //             } as ArticleTeaser)
+    //         )
+    //       }
+    //
+    //       if (teaserType === TeaserType.Page) {
+    //         const pages = await getPages(
+    //           {
+    //             tags: filter.tags
+    //           },
+    //           PageSort.PublishedAt,
+    //           SortOrder.Descending,
+    //           undefined,
+    //           skip,
+    //           take,
+    //           prisma.page
+    //         )
+    //
+    //         return pages.nodes.map(
+    //           page =>
+    //             ({
+    //               pageID: page.id,
+    //               style: TeaserStyle.Default,
+    //               type: TeaserType.Page,
+    //               imageID: null,
+    //               lead: null,
+    //               title: null
+    //             } as PageTeaser)
+    //         )
+    //       }
+    //
+    //       if (teaserType === TeaserType.Event) {
+    //         const pages = await getEvents(
+    //           {
+    //             tags: filter.tags
+    //           },
+    //           EventSort.StartsAt,
+    //           SortOrder.Descending,
+    //           undefined,
+    //           skip,
+    //           take,
+    //           prisma.event
+    //         )
+    //
+    //         pages.nodes.forEach(event => loaders.eventById.prime(event.id, event))
+    //
+    //         return pages.nodes.map(
+    //           event =>
+    //             ({
+    //               eventID: event.id,
+    //               style: TeaserStyle.Default,
+    //               type: TeaserType.Event,
+    //               imageID: null,
+    //               lead: null,
+    //               title: null
+    //             } as EventTeaser)
+    //         )
+    //       }
+    //
+    //       return []
+    //     }
+    //   )
+    // }
+  }),
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.TeaserSlots
   })
 })
 
@@ -858,6 +1017,27 @@ export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBloc
   }),
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TeaserGrid
+  })
+})
+
+export const GraphQLPublicTeaserSlotsBlock = new GraphQLObjectType<TeaserSlotsBlock, Context>({
+  name: 'TeaserSlotsBlock',
+  fields: () => ({
+    blockStyle: {
+      type: GraphQLString,
+      resolve: resolveBlockStyleIdToName
+    },
+    teasers: {type: new GraphQLNonNull(new GraphQLList(GraphQLPublicTeaser))},
+    numColumns: {type: new GraphQLNonNull(GraphQLInt)},
+    teaserType: {
+      type: GraphQLTeaserType
+    },
+    filter: {type: new GraphQLNonNull(GraphQLTeaserListBlockFilter)},
+    take: {type: GraphQLInt},
+    skip: {type: GraphQLInt}
+  }),
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.TeaserSlots
   })
 })
 
@@ -1745,10 +1925,44 @@ export const GraphQLTeaserInput = new GraphQLInputObjectType({
   })
 })
 
+export const GraphQLTeaserSlotInput = new GraphQLInputObjectType({
+  name: 'TeaserSlotInput',
+  fields: () => ({
+    type: {type: new GraphQLNonNull(GraphQLTeaserSlotType)},
+    teaser: {type: GraphQLTeaserInput}
+  })
+})
+
+export const GraphQLTeaserSlotsAutofillConfigInput = new GraphQLInputObjectType({
+  name: 'TeaserSlotsAutofillConfigInput',
+  fields: () => ({
+    enabled: {type: new GraphQLNonNull(GraphQLBoolean)},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    take: {type: GraphQLInt},
+    skip: {type: GraphQLInt},
+    sort: {type: GraphQLTeaserListBlockSort}
+  })
+})
+
 export const GraphQLTeaserGridBlockInput = new GraphQLInputObjectType({
   name: 'TeaserGridBlockInput',
   fields: () => ({
     blockStyle: {type: GraphQLString},
+    teasers: {type: new GraphQLNonNull(new GraphQLList(GraphQLTeaserInput))},
+    numColumns: {type: new GraphQLNonNull(GraphQLInt)}
+  })
+})
+
+export const GraphQLTeaserSlotsBlockInput = new GraphQLInputObjectType({
+  name: 'TeaserSlotsBlockInput',
+  fields: () => ({
+    blockStyle: {type: GraphQLString},
+    teaserType: {
+      type: GraphQLTeaserType
+    },
+    title: {type: GraphQLString},
+    autofillConfig: {type: new GraphQLNonNull(GraphQLTeaserSlotsAutofillConfigInput)},
+    slots: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTeaserSlotInput)))},
     teasers: {type: new GraphQLNonNull(new GraphQLList(GraphQLTeaserInput))},
     numColumns: {type: new GraphQLNonNull(GraphQLInt)}
   })
@@ -1800,6 +2014,7 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.Comment]: {type: GraphQLCommentBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
     [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput},
+    [BlockType.TeaserSlots]: {type: GraphQLTeaserSlotsBlockInput},
     [BlockType.TeaserGridFlex]: {type: GraphQLTeaserGridFlexBlockInput},
     [BlockType.TeaserList]: {type: GraphQLTeaserListBlockInput}
   })
@@ -1832,6 +2047,7 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
     GraphQLTeaserGridBlock,
+    GraphQLTeaserSlotsBlock,
     GraphQLTeaserGridFlexBlock,
     GraphQLTeaserListBlock
   ]
@@ -1864,6 +2080,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
     GraphQLPublicTeaserGridBlock,
+    GraphQLPublicTeaserSlotsBlock,
     GraphQLPublicTeaserGridFlexBlock,
     GraphQLPublicTeaserListBlock
   ]

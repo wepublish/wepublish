@@ -85,6 +85,16 @@ export const getAdminArticles = async (
   const canGetArticles = hasPermission(CanGetArticles, roles)
   const canGetSharedArticles = hasPermission(CanGetSharedArticles, roles)
 
+  console.log({
+    filter: {...filter, shared: !canGetArticles ? true : undefined},
+    sortedField,
+    order,
+    cursorId,
+    skip,
+    take,
+    article
+  })
+
   if (canGetArticles || canGetSharedArticles) {
     return getArticles(
       {...filter, shared: !canGetArticles ? true : undefined},

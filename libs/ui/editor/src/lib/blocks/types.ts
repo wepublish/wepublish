@@ -5,11 +5,14 @@ import {
   FullBlockFragment,
   FullCommentFragment,
   FullPoll,
+  FullTeaserFragment,
   ImageRefFragment,
   PageRefFragment,
   PeerRefFragment,
   Tag,
+  TeaserInput,
   TeaserListBlockSort,
+  TeaserSlotType,
   TeaserStyle,
   TeaserType
 } from '@wepublish/editor/api'
@@ -248,12 +251,20 @@ export interface BaseTeaser {
 }
 
 export interface ArticleTeaser extends ArticleTeaserLink, BaseTeaser {}
+
 export interface PeerArticleTeaser extends PeerArticleTeaserLink, BaseTeaser {}
+
 export interface PageTeaser extends PageTeaserLink, BaseTeaser {}
+
 export interface CustomTeaser extends CustomTeaserLink, BaseTeaser {}
+
 export interface EventTeaser extends EventTeaserLink, BaseTeaser {}
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
+export type TeaserSlot = {
+  type: TeaserSlotType
+  teaser?: Teaser | null
+}
 
 export interface TeaserListBlockValue extends BaseBlockValue {
   title?: string | null
@@ -266,6 +277,22 @@ export interface TeaserListBlockValue extends BaseBlockValue {
   take: number
   sort?: TeaserListBlockSort | null
   teasers: Array<[string, Teaser]>
+}
+
+export interface TeaserSlotsBlockValue extends BaseBlockValue {
+  teasers: Array<[string, Teaser | null]>
+  numColumns: number
+  title?: string | null
+  description?: string | null
+  teaserType: TeaserType
+  autofillConfig: {
+    enabled: boolean
+    tags?: string[] | null
+    skip?: number | null
+    take?: number | null
+    sort?: TeaserListBlockSort | null
+  }
+  slots: Array<TeaserSlot>
 }
 
 export interface TeaserGridBlockValue extends BaseBlockValue {
@@ -317,6 +344,8 @@ export type TeaserGridFlexBlockListValue = BlockListValue<
   TeaserGridFlexBlockValue
 >
 
+export type TeaserSlotsBlockListValue = BlockListValue<BlockType.TeaserSlots, TeaserSlotsBlockValue>
+
 export type HTMLBlockListValue = BlockListValue<BlockType.Html, HTMLBlockValue>
 
 export type SubscribeBlockListValue = BlockListValue<BlockType.Subscribe, SubscribeBlockValue>
@@ -339,12 +368,167 @@ export type BlockValue =
   | TeaserGridBlock1ListValue
   | TeaserGridBlock6ListValue
   | TeaserGridFlexBlockListValue
+  | TeaserSlotsBlockListValue
   | HTMLBlockListValue
   | SubscribeBlockListValue
   | PollBlockListValue
   | CommentBlockListValue
   | EventBlockListValue
   | TeaserListBlockListValue
+
+export const mapUnionForTeaser = (teaser?: FullTeaserFragment | null): Teaser | null => {
+  switch (teaser?.__typename) {
+    case 'ArticleTeaser':
+      return teaser.article
+        ? {
+            type: TeaserType.Article,
+            style: teaser.style,
+            image: teaser.image ?? undefined,
+            preTitle: teaser.preTitle ?? undefined,
+            title: teaser.title ?? undefined,
+            lead: teaser.lead ?? undefined,
+            article: teaser.article
+          }
+        : null
+
+    case 'PeerArticleTeaser':
+      return teaser.peer
+        ? {
+            type: TeaserType.PeerArticle,
+            style: teaser.style,
+            image: teaser.image ?? undefined,
+            preTitle: teaser.preTitle ?? undefined,
+            title: teaser.title ?? undefined,
+            lead: teaser.lead ?? undefined,
+            peer: teaser.peer,
+            articleID: teaser.articleID,
+            article: teaser.article ?? undefined
+          }
+        : null
+
+    case 'PageTeaser':
+      return teaser.page
+        ? {
+            type: TeaserType.Page,
+            style: teaser.style,
+            image: teaser.image ?? undefined,
+            preTitle: teaser.preTitle ?? undefined,
+            title: teaser.title ?? undefined,
+            lead: teaser.lead ?? undefined,
+            page: teaser.page
+          }
+        : null
+
+    case 'EventTeaser':
+      return teaser.event
+        ? {
+            type: TeaserType.Event,
+            style: teaser.style,
+            image: teaser.image ?? undefined,
+            preTitle: teaser.preTitle ?? undefined,
+            title: teaser.title ?? undefined,
+            lead: teaser.lead ?? undefined,
+            event: teaser.event
+          }
+        : null
+
+    case 'CustomTeaser':
+      return teaser
+        ? {
+            type: TeaserType.Custom,
+            style: teaser.style,
+            image: teaser.image ?? undefined,
+            preTitle: teaser.preTitle ?? undefined,
+            title: teaser.title ?? undefined,
+            lead: teaser.lead ?? undefined,
+            contentUrl: teaser.contentUrl ?? undefined,
+            properties:
+              teaser?.properties?.map(({key, value, public: isPublic}) => ({
+                key,
+                value,
+                public: isPublic
+              })) ?? undefined
+          }
+        : null
+
+    default:
+      return null
+  }
+}
+
+export const mapUnionForTeaserInput = (value?: Teaser | null): TeaserInput | null => {
+  switch (value?.type) {
+    case TeaserType.Article:
+      return {
+        article: {
+          style: value.style,
+          imageID: value.image?.id,
+          preTitle: value.preTitle || undefined,
+          title: value.title || undefined,
+          lead: value.lead || undefined,
+          articleID: value.article.id
+        }
+      }
+
+    case TeaserType.PeerArticle:
+      return {
+        peerArticle: {
+          style: value.style,
+          imageID: value.image?.id,
+          preTitle: value.preTitle || undefined,
+          title: value.title || undefined,
+          lead: value.lead || undefined,
+          peerID: value.peer.id,
+          articleID: value.articleID
+        }
+      }
+
+    case TeaserType.Page:
+      return {
+        page: {
+          style: value.style,
+          imageID: value.image?.id,
+          preTitle: value.preTitle || undefined,
+          title: value.title || undefined,
+          lead: value.lead || undefined,
+          pageID: value.page.id
+        }
+      }
+
+    case TeaserType.Event:
+      return {
+        event: {
+          style: value.style,
+          imageID: value.image?.id,
+          preTitle: value.preTitle || undefined,
+          title: value.title || undefined,
+          lead: value.lead || undefined,
+          eventID: value.event.id
+        }
+      }
+
+    case TeaserType.Custom:
+      return {
+        custom: {
+          style: value.style,
+          imageID: value.image?.id,
+          preTitle: value.preTitle || undefined,
+          title: value.title || undefined,
+          lead: value.lead || undefined,
+          contentUrl: value.contentUrl || undefined,
+          properties:
+            value.properties?.map(({key, value, public: isPublic}) => ({
+              key,
+              value,
+              public: isPublic
+            })) || []
+        }
+      }
+
+    default:
+      return null
+  }
+}
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {
@@ -737,81 +921,27 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
     case BlockType.TeaserGrid6:
       return {
         teaserGrid: {
-          teasers: block.value.teasers.map(([, value]) => {
-            switch (value?.type) {
-              case TeaserType.Article:
-                return {
-                  article: {
-                    style: value.style,
-                    imageID: value.image?.id,
-                    preTitle: value.preTitle || undefined,
-                    title: value.title || undefined,
-                    lead: value.lead || undefined,
-                    articleID: value.article.id
-                  }
-                }
-
-              case TeaserType.PeerArticle:
-                return {
-                  peerArticle: {
-                    style: value.style,
-                    imageID: value.image?.id,
-                    preTitle: value.preTitle || undefined,
-                    title: value.title || undefined,
-                    lead: value.lead || undefined,
-                    peerID: value.peer.id,
-                    articleID: value.articleID
-                  }
-                }
-
-              case TeaserType.Page:
-                return {
-                  page: {
-                    style: value.style,
-                    imageID: value.image?.id,
-                    preTitle: value.preTitle || undefined,
-                    title: value.title || undefined,
-                    lead: value.lead || undefined,
-                    pageID: value.page.id
-                  }
-                }
-
-              case TeaserType.Event:
-                return {
-                  event: {
-                    style: value.style,
-                    imageID: value.image?.id,
-                    preTitle: value.preTitle || undefined,
-                    title: value.title || undefined,
-                    lead: value.lead || undefined,
-                    eventID: value.event.id
-                  }
-                }
-
-              case TeaserType.Custom:
-                return {
-                  custom: {
-                    style: value.style,
-                    imageID: value.image?.id,
-                    preTitle: value.preTitle || undefined,
-                    title: value.title || undefined,
-                    lead: value.lead || undefined,
-                    contentUrl: value.contentUrl || undefined,
-                    properties:
-                      value.properties?.map(({key, value, public: isPublic}) => ({
-                        key,
-                        value,
-                        public: isPublic
-                      })) || []
-                  }
-                }
-
-              default:
-                return null
-            }
-          }),
+          teasers: block.value.teasers.map(([, value]) => mapUnionForTeaserInput(value)),
           numColumns: block.value.numColumns,
           blockStyle: block.value.blockStyle
+        }
+      }
+    case BlockType.TeaserSlots:
+      return {
+        teaserSlots: {
+          ...block.value,
+          autofillConfig: {
+            enabled: block.value.autofillConfig.enabled,
+            tags: block.value.autofillConfig.tags,
+            skip: block.value.autofillConfig.skip,
+            take: block.value.autofillConfig.take,
+            sort: block.value.autofillConfig.sort
+          },
+          teasers: block.value.teasers.map(([, teaser]) => mapUnionForTeaserInput(teaser)),
+          slots: block.value.slots.map(({teaser, type}: any) => ({
+            type,
+            teaser: mapUnionForTeaserInput(teaser)
+          }))
         }
       }
   }
@@ -1057,6 +1187,24 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                   : TeaserType.Custom
             } as Teaser
           ])
+        }
+      }
+
+    case 'TeaserSlotsBlock':
+      return {
+        key,
+        type: BlockType.TeaserSlots,
+        value: {
+          numColumns: block.numColumns,
+          title: block.title,
+          blockStyle: block.blockStyle,
+          autofillConfig: block.autofillConfig,
+          teaserType: block.teaserType ?? TeaserType.Article,
+          slots: block.slots.map(({teaser, ...slot}) => ({
+            ...slot,
+            teaser: mapUnionForTeaser(teaser)
+          })),
+          teasers: block.teasers.map(teaser => [nanoid(), mapUnionForTeaser(teaser)])
         }
       }
 

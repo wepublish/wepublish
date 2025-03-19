@@ -339,7 +339,7 @@ type PageRevision {
   blocks: [Block!]!
 }
 
-union Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HTMLBlock | SubscribeBlock | PollBlock | EventBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock
+union Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HTMLBlock | SubscribeBlock | PollBlock | EventBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserSlotsBlock | TeaserGridFlexBlock | TeaserListBlock
 
 type RichTextBlock {
   blockStyle: String
@@ -775,6 +775,47 @@ type EventTeaser {
   event: Event
 }
 
+type TeaserSlotsBlock {
+  blockStyle: String
+  numColumns: Int!
+  title: String
+  teaserType: TeaserType
+  autofillConfig: TeaserSlotsAutofillConfig!
+  slots: [TeaserSlot!]!
+  teasers: [Teaser]!
+}
+
+enum TeaserType {
+  article
+  peerArticle
+  event
+  page
+  custom
+}
+
+type TeaserSlotsAutofillConfig {
+  enabled: Boolean!
+  tags: [ID!]
+  take: Int
+  skip: Int
+  sort: TeaserListBlockSort
+}
+
+enum TeaserListBlockSort {
+  publishedAt
+  hotAndTrending
+}
+
+type TeaserSlot {
+  type: TeaserSlotType!
+  teaser: Teaser
+}
+
+enum TeaserSlotType {
+  Autofill
+  Manual
+}
+
 type TeaserGridFlexBlock {
   blockStyle: String
   flexTeasers: [FlexTeaser]!
@@ -805,22 +846,9 @@ type TeaserListBlock {
   teasers: [Teaser]!
 }
 
-enum TeaserType {
-  article
-  peerArticle
-  event
-  page
-  custom
-}
-
 type TeaserListBlockFilter {
   tags: [ID!]
   tagObjects: [Tag!]!
-}
-
-enum TeaserListBlockSort {
-  publishedAt
-  hotAndTrending
 }
 
 type Invoice {
@@ -1271,6 +1299,7 @@ type TagConnection {
 input TagFilter {
   type: TagType
   tag: String
+  ids: [String]
 }
 
 enum TagSort {
@@ -1681,6 +1710,7 @@ input BlockInput {
   comment: CommentBlockInput
   linkPageBreak: LinkPageBreakBlockInput
   teaserGrid: TeaserGridBlockInput
+  teaserSlots: TeaserSlotsBlockInput
   teaserGridFlex: TeaserGridFlexBlockInput
   teaserList: TeaserListBlockInput
 }
@@ -1903,6 +1933,29 @@ input CustomTeaserInput {
   lead: String
   contentUrl: String
   properties: [PropertiesInput!]!
+}
+
+input TeaserSlotsBlockInput {
+  blockStyle: String
+  teaserType: TeaserType
+  title: String
+  autofillConfig: TeaserSlotsAutofillConfigInput!
+  slots: [TeaserSlotInput!]!
+  teasers: [TeaserInput]!
+  numColumns: Int!
+}
+
+input TeaserSlotsAutofillConfigInput {
+  enabled: Boolean!
+  tags: [ID!]
+  take: Int
+  skip: Int
+  sort: TeaserListBlockSort
+}
+
+input TeaserSlotInput {
+  type: TeaserSlotType!
+  teaser: TeaserInput
 }
 
 input TeaserGridFlexBlockInput {

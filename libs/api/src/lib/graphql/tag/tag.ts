@@ -55,7 +55,8 @@ export const GraphQLTagFilter = new GraphQLInputObjectType({
   name: 'TagFilter',
   fields: {
     type: {type: GraphQLTagType},
-    tag: {type: GraphQLString}
+    tag: {type: GraphQLString},
+    ids: {type: new GraphQLList(GraphQLString)}
   }
 })
 

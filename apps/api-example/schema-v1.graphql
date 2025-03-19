@@ -252,7 +252,7 @@ type PublicProperties {
   value: String!
 }
 
-union Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HTMLBlock | SubscribeBlock | PollBlock | EventBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock
+union Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HTMLBlock | SubscribeBlock | PollBlock | EventBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserSlotsBlock | TeaserGridFlexBlock | TeaserListBlock
 
 type RichTextBlock {
   blockStyle: String
@@ -704,6 +704,29 @@ type CustomTeaser {
   properties: [PublicProperties!]!
 }
 
+type TeaserSlotsBlock {
+  blockStyle: String
+  teasers: [Teaser]!
+  numColumns: Int!
+  teaserType: TeaserType
+  filter: TeaserListBlockFilter!
+  take: Int
+  skip: Int
+}
+
+enum TeaserType {
+  article
+  peerArticle
+  event
+  page
+  custom
+}
+
+type TeaserListBlockFilter {
+  tags: [ID!]
+  tagObjects: [Tag!]!
+}
+
 type TeaserGridFlexBlock {
   blockStyle: String
   flexTeasers: [FlexTeaser!]!
@@ -729,19 +752,6 @@ type TeaserListBlock {
   take: Int
   skip: Int
   teasers: [Teaser]!
-}
-
-enum TeaserType {
-  article
-  peerArticle
-  event
-  page
-  custom
-}
-
-type TeaserListBlockFilter {
-  tags: [ID!]
-  tagObjects: [Tag!]!
 }
 
 type ArticleNavigationLink implements BaseNavigationLink {
@@ -1018,6 +1028,7 @@ type TagConnection {
 input TagFilter {
   type: TagType
   tag: String
+  ids: [String]
 }
 
 enum TagSort {
