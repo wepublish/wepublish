@@ -367,7 +367,7 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
   let scheduledDate
 
   const teaser = teasers && teasers[0]
-  teaser?.properties.forEach(prop => {
+  teaser?.properties?.forEach(prop => {
     if (prop.key === 'showFrom') {
       showFrom = prop.value
     }
