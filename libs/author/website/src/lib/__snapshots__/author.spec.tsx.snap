@@ -162,6 +162,7 @@ https://unsplash.it/200/100 200w"
           data-slate-node="element"
         >
           <li
+            class="MuiTypography-root MuiTypography-body1 emotion-18"
             data-slate-node="element"
           >
             <span
@@ -179,6 +180,7 @@ https://unsplash.it/200/100 200w"
           data-slate-node="element"
         >
           <li
+            class="MuiTypography-root MuiTypography-body1 emotion-18"
             data-slate-node="element"
           >
             <span
@@ -193,7 +195,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="emotion-18"
+          class="emotion-20"
         >
           <tbody
             data-slate-node="element"
@@ -202,11 +204,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-19"
+                class="emotion-21"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
                   data-slate-node="element"
                 >
                   <span
@@ -221,11 +223,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-19"
+                class="emotion-21"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
                   data-slate-node="element"
                 >
                   <span
@@ -244,11 +246,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-19"
+                class="emotion-21"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
                   data-slate-node="element"
                 >
                   <span
@@ -263,11 +265,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-19"
+                class="emotion-21"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
                   data-slate-node="element"
                 >
                   <span
@@ -285,7 +287,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -430,7 +432,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-28"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-30"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -625,6 +627,7 @@ https://unsplash.it/200/100 200w"
           data-slate-node="element"
         >
           <li
+            class="MuiTypography-root MuiTypography-body1 emotion-18"
             data-slate-node="element"
           >
             <span
@@ -642,6 +645,7 @@ https://unsplash.it/200/100 200w"
           data-slate-node="element"
         >
           <li
+            class="MuiTypography-root MuiTypography-body1 emotion-18"
             data-slate-node="element"
           >
             <span
@@ -656,7 +660,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="emotion-18"
+          class="emotion-20"
         >
           <tbody
             data-slate-node="element"
@@ -665,11 +669,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-19"
+                class="emotion-21"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
                   data-slate-node="element"
                 >
                   <span
@@ -684,11 +688,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-19"
+                class="emotion-21"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
                   data-slate-node="element"
                 >
                   <span
@@ -707,11 +711,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-19"
+                class="emotion-21"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
                   data-slate-node="element"
                 >
                   <span
@@ -726,11 +730,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-19"
+                class="emotion-21"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
                   data-slate-node="element"
                 >
                   <span
@@ -748,7 +752,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -893,7 +897,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-28"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-30"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -1088,6 +1092,7 @@ https://unsplash.it/200/100 200w"
           data-slate-node="element"
         >
           <li
+            class="MuiTypography-root MuiTypography-body1 emotion-18"
             data-slate-node="element"
           >
             <span
@@ -1105,6 +1110,7 @@ https://unsplash.it/200/100 200w"
           data-slate-node="element"
         >
           <li
+            class="MuiTypography-root MuiTypography-body1 emotion-18"
             data-slate-node="element"
           >
             <span
@@ -1119,7 +1125,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="emotion-18"
+          class="emotion-20"
         >
           <tbody
             data-slate-node="element"
@@ -1128,11 +1134,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-19"
+                class="emotion-21"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
                   data-slate-node="element"
                 >
                   <span
@@ -1147,11 +1153,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-19"
+                class="emotion-21"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
                   data-slate-node="element"
                 >
                   <span
@@ -1170,11 +1176,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-19"
+                class="emotion-21"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
                   data-slate-node="element"
                 >
                   <span
@@ -1189,11 +1195,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-19"
+                class="emotion-21"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
                   data-slate-node="element"
                 >
                   <span
@@ -1211,7 +1217,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
           data-slate-node="element"
         >
           <span
@@ -1356,7 +1362,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-28"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-30"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -1658,6 +1664,7 @@ exports[`Author should render WithoutImage 1`] = `
           data-slate-node="element"
         >
           <li
+            class="MuiTypography-root MuiTypography-body1 emotion-16"
             data-slate-node="element"
           >
             <span
@@ -1675,6 +1682,7 @@ exports[`Author should render WithoutImage 1`] = `
           data-slate-node="element"
         >
           <li
+            class="MuiTypography-root MuiTypography-body1 emotion-16"
             data-slate-node="element"
           >
             <span
@@ -1689,7 +1697,7 @@ exports[`Author should render WithoutImage 1`] = `
           </li>
         </ol>
         <table
-          class="emotion-16"
+          class="emotion-18"
         >
           <tbody
             data-slate-node="element"
@@ -1698,11 +1706,11 @@ exports[`Author should render WithoutImage 1`] = `
               data-slate-node="element"
             >
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -1717,11 +1725,11 @@ exports[`Author should render WithoutImage 1`] = `
                 </p>
               </td>
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -1740,11 +1748,11 @@ exports[`Author should render WithoutImage 1`] = `
               data-slate-node="element"
             >
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -1759,11 +1767,11 @@ exports[`Author should render WithoutImage 1`] = `
                 </p>
               </td>
               <td
-                class="emotion-17"
+                class="emotion-19"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                   data-slate-node="element"
                 >
                   <span
@@ -1781,7 +1789,7 @@ exports[`Author should render WithoutImage 1`] = `
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
           data-slate-node="element"
         >
           <span
@@ -1926,7 +1934,7 @@ exports[`Author should render WithoutImage 1`] = `
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-26"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-28"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -2116,6 +2124,7 @@ https://unsplash.it/200/100 200w"
           data-slate-node="element"
         >
           <li
+            class="MuiTypography-root MuiTypography-body1 emotion-17"
             data-slate-node="element"
           >
             <span
@@ -2133,6 +2142,7 @@ https://unsplash.it/200/100 200w"
           data-slate-node="element"
         >
           <li
+            class="MuiTypography-root MuiTypography-body1 emotion-17"
             data-slate-node="element"
           >
             <span
@@ -2147,7 +2157,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="emotion-17"
+          class="emotion-19"
         >
           <tbody
             data-slate-node="element"
@@ -2156,11 +2166,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-18"
+                class="emotion-20"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-21"
                   data-slate-node="element"
                 >
                   <span
@@ -2175,11 +2185,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-18"
+                class="emotion-20"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-21"
                   data-slate-node="element"
                 >
                   <span
@@ -2198,11 +2208,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-18"
+                class="emotion-20"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-21"
                   data-slate-node="element"
                 >
                   <span
@@ -2217,11 +2227,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-18"
+                class="emotion-20"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-21"
                   data-slate-node="element"
                 >
                   <span
@@ -2239,7 +2249,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-21"
           data-slate-node="element"
         >
           <span
@@ -2384,7 +2394,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-27"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-29"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -2511,6 +2521,7 @@ https://unsplash.it/200/100 200w"
           data-slate-node="element"
         >
           <li
+            class="MuiTypography-root MuiTypography-body1 emotion-13"
             data-slate-node="element"
           >
             <span
@@ -2528,6 +2539,7 @@ https://unsplash.it/200/100 200w"
           data-slate-node="element"
         >
           <li
+            class="MuiTypography-root MuiTypography-body1 emotion-13"
             data-slate-node="element"
           >
             <span
@@ -2542,7 +2554,7 @@ https://unsplash.it/200/100 200w"
           </li>
         </ol>
         <table
-          class="emotion-13"
+          class="emotion-15"
         >
           <tbody
             data-slate-node="element"
@@ -2551,11 +2563,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-14"
+                class="emotion-16"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-15"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
                   data-slate-node="element"
                 >
                   <span
@@ -2570,11 +2582,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-14"
+                class="emotion-16"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-15"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
                   data-slate-node="element"
                 >
                   <span
@@ -2593,11 +2605,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="emotion-14"
+                class="emotion-16"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-15"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
                   data-slate-node="element"
                 >
                   <span
@@ -2612,11 +2624,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="emotion-14"
+                class="emotion-16"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-15"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
                   data-slate-node="element"
                 >
                   <span
@@ -2634,7 +2646,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-15"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
           data-slate-node="element"
         >
           <span
@@ -2779,7 +2791,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-23"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-25"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"

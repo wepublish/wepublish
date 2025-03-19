@@ -90,6 +90,7 @@ exports[`ArticleAuthor should render ArticleAuthor 1`] = `
             data-slate-node="element"
           >
             <li
+              class="MuiTypography-root MuiTypography-body1 emotion-16"
               data-slate-node="element"
             >
               <span
@@ -107,6 +108,7 @@ exports[`ArticleAuthor should render ArticleAuthor 1`] = `
             data-slate-node="element"
           >
             <li
+              class="MuiTypography-root MuiTypography-body1 emotion-16"
               data-slate-node="element"
             >
               <span
@@ -121,7 +123,7 @@ exports[`ArticleAuthor should render ArticleAuthor 1`] = `
             </li>
           </ol>
           <table
-            class="emotion-16"
+            class="emotion-18"
           >
             <tbody
               data-slate-node="element"
@@ -130,11 +132,11 @@ exports[`ArticleAuthor should render ArticleAuthor 1`] = `
                 data-slate-node="element"
               >
                 <td
-                  class="emotion-17"
+                  class="emotion-19"
                   data-slate-node="element"
                 >
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                     data-slate-node="element"
                   >
                     <span
@@ -149,11 +151,11 @@ exports[`ArticleAuthor should render ArticleAuthor 1`] = `
                   </p>
                 </td>
                 <td
-                  class="emotion-17"
+                  class="emotion-19"
                   data-slate-node="element"
                 >
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                     data-slate-node="element"
                   >
                     <span
@@ -172,11 +174,11 @@ exports[`ArticleAuthor should render ArticleAuthor 1`] = `
                 data-slate-node="element"
               >
                 <td
-                  class="emotion-17"
+                  class="emotion-19"
                   data-slate-node="element"
                 >
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                     data-slate-node="element"
                   >
                     <span
@@ -191,11 +193,11 @@ exports[`ArticleAuthor should render ArticleAuthor 1`] = `
                   </p>
                 </td>
                 <td
-                  class="emotion-17"
+                  class="emotion-19"
                   data-slate-node="element"
                 >
                   <p
-                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
                     data-slate-node="element"
                   >
                     <span
@@ -213,7 +215,7 @@ exports[`ArticleAuthor should render ArticleAuthor 1`] = `
             </tbody>
           </table>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20"
             data-slate-node="element"
           >
             <span
@@ -358,7 +360,7 @@ exports[`ArticleAuthor should render ArticleAuthor 1`] = `
               </span>
             </span>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-26"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-28"
               data-slate-node="element"
               href="https://google.com"
               rel="noreferrer"
@@ -392,10 +394,10 @@ exports[`ArticleAuthor should render ArticleAuthor 1`] = `
       class="emotion-9 emotion-10"
     >
       <aside
-        class="emotion-29 emotion-30"
+        class="emotion-31 emotion-32"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-31"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-33"
           href="https://twitter.com"
           target="__blank"
           title="Twitter"
@@ -415,7 +417,7 @@ exports[`ArticleAuthor should render ArticleAuthor 1`] = `
           </svg>
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-31"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-33"
           href="https://facebook.com"
           target="__blank"
           title="Facebook"
@@ -439,7 +441,7 @@ exports[`ArticleAuthor should render ArticleAuthor 1`] = `
           </svg>
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-31"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-33"
           href="https://instagram.com"
           target="__blank"
           title="Instagram"
