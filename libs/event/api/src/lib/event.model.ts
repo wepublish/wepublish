@@ -14,7 +14,7 @@ import {EventStatus} from '@prisma/client'
 import {Image} from '@wepublish/image/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {PaginatedType, SortOrder} from '@wepublish/utils/api'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 
 export enum EventSort {
   CreatedAt = 'CreatedAt',
@@ -62,7 +62,7 @@ export class EventV2 {
   location?: string
 
   @Field(type => GraphQLRichText, {nullable: true})
-  description?: Node[]
+  description?: Descendant[]
 
   @Field(type => EventStatus)
   status!: EventStatus

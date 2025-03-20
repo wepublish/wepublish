@@ -6,9 +6,10 @@ import {
 } from '@wepublish/editor/api'
 import {DirectusSyncStatus, ImageInfo} from './directus-downloader'
 import {SlateDeserializer} from './slate-deserializer'
-import {ElementNodeType} from '@wepublish/richtext/api'
 import {slugify} from '@wepublish/utils'
 import {BaseImporter, RequestCollection} from './base-importer'
+import {Element} from 'slate'
+import {BlockFormat, InlineFormat} from '@wepublish/richtext'
 
 export interface PersonOfTheDay {
   id: number
@@ -168,14 +169,15 @@ export class PersonOfTheDayImporter extends BaseImporter {
     const url = this.person.video
 
     const linkNode = {
-      type: ElementNodeType.Link,
+      type: InlineFormat.Link,
       url,
       children: [{text: url}]
-    }
+    } as Element
+
     return {
       richText: [
         {
-          type: 'paragraph',
+          type: BlockFormat.Paragraph,
           children: [linkNode]
         }
       ]

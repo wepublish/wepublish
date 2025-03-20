@@ -1,6 +1,6 @@
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {Inject, Injectable} from '@nestjs/common'
-import {Prisma, PrismaClient} from '@prisma/client'
+import {PrismaClient} from '@prisma/client'
 import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
 import {Cache} from 'cache-manager'
 import {EventFromSource} from './events-import.model'
@@ -83,7 +83,7 @@ export class KulturZueriService implements EventsProvider {
     const createdEvent = await this.prisma.event.create({
       data: {
         name: event.name,
-        description: event.description as Prisma.InputJsonValue[],
+        description: event.description as any[],
         location: event.location,
         startsAt: event.startsAt,
         imageId: createdImageId || null,

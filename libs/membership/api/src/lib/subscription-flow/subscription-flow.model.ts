@@ -14,6 +14,7 @@ import {Image} from '@wepublish/image/api'
 import {GraphQLSlug} from '@wepublish/utils/api'
 import {PageV2} from '@wepublish/event/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
+import {Descendant} from 'slate'
 
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'
@@ -68,7 +69,7 @@ class MemberPlan {
   image?: Image
 
   @Field(() => GraphQLRichText, {nullable: true})
-  description?: Node[]
+  description?: Descendant[]
 
   @Field(() => [String], {nullable: true})
   tags?: string[]
