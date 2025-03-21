@@ -1,7 +1,7 @@
 import {Context} from '../../context'
 import {UserInputError} from '../../error'
 import {authorise} from '../permissions'
-import {CanGetAuthor, CanGetAuthors} from '@wepublish/permissions/api'
+import {CanGetAuthor, CanGetAuthors} from '@wepublish/permissions'
 import {PrismaClient} from '@prisma/client'
 import {AuthorFilter, AuthorSort} from '../../db/author'
 import {getAuthors} from './author.queries'

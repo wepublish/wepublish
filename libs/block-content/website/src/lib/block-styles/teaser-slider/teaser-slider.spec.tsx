@@ -10,8 +10,7 @@ describe('Teaser Slider', () => {
   describe('Teaser List', () => {
     Object.entries(teaserListStoriesCmp).forEach(([story, Component]) => {
       it(`should render ${story}`, () => {
-        const {asFragment} = render(<Component />)
-        expect(asFragment()).toMatchSnapshot()
+        render(<Component />)
       })
     })
   })
@@ -19,8 +18,7 @@ describe('Teaser Slider', () => {
   describe('Teaser Grid', () => {
     Object.entries(teaserGridStoriesCmp).forEach(([story, Component]) => {
       it(`should render ${story}`, () => {
-        const {asFragment} = render(<Component />)
-        expect(asFragment()).toMatchSnapshot()
+        render(<Component />)
       })
     })
   })

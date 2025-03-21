@@ -1,4 +1,5 @@
-import {Block, SubscribeBlock as SubscribeBlockType} from '@wepublish/website/api'
+import {BlockContent, SubscribeBlock as SubscribeBlockType} from '@wepublish/website/api'
 
-export const isSubscribeBlock = (block: Block): block is SubscribeBlockType =>
-  block.__typename === 'SubscribeBlock'
+export const isSubscribeBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is SubscribeBlockType => block.__typename === 'SubscribeBlock'

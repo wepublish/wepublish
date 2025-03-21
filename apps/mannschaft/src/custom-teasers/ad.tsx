@@ -1,5 +1,5 @@
 import {css, GlobalStyles, Theme, useTheme} from '@mui/material'
-import {BuilderTeaserProps} from '@wepublish/website'
+import {BuilderTeaserProps} from '@wepublish/website/builder'
 import {allPass, anyPass} from 'ramda'
 import {useId, useMemo} from 'react'
 import {Ad} from 'react-ad-manager'

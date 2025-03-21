@@ -34,6 +34,7 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
       console.warn(
         'GoogleAnalyticsService.getMostViewedArticles: No Google Analytics credentials set, returning empty array'
       )
+
       return []
     }
 
@@ -101,34 +102,28 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
 
     const articles = await this.prisma.article.findMany({
       where: {
-        published: {
-          slug: {
-            in: Object.keys(slicedArticleViewMap),
-            mode: 'insensitive'
-          }
-        }
-      },
-      include: {
-        published: {
-          select: {
-            slug: true
-          }
+        slug: {
+          in: Object.keys(slicedArticleViewMap),
+          mode: 'insensitive'
+        },
+        publishedAt: {
+          not: null
         }
       }
     })
 
     return articles.sort((a, b) => {
-      if (!a.published?.slug || !articleViewMap[a.published.slug]) {
+      if (!a.slug || !articleViewMap[a.slug]) {
         return 1
       }
 
-      if (!b.published?.slug || !articleViewMap[b.published.slug]) {
+      if (!b.slug || !articleViewMap[b.slug]) {
         return -1
       }
 
-      return articleViewMap[a.published.slug] > articleViewMap[b.published.slug]
+      return articleViewMap[a.slug] > articleViewMap[b.slug]
         ? -1
-        : articleViewMap[b.published.slug] > articleViewMap[a.published.slug]
+        : articleViewMap[b.slug] > articleViewMap[a.slug]
         ? 1
         : 0
     })

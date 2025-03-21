@@ -1,11 +1,12 @@
 import {css} from '@emotion/react'
-import {styled} from '@mui/material'
-import {ApiV1, useWebsiteBuilder} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {Author} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {memo} from 'react'
 import {MdPerson} from 'react-icons/md'
 
 interface AuthorBoxProps {
-  author: ApiV1.Author
+  author: Author
   className?: string
 }
 

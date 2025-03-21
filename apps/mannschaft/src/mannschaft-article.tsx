@@ -1,6 +1,6 @@
-import {styled} from '@mui/material'
-import {Article, ArticleWrapper} from '@wepublish/website'
-import {BuilderArticleProps} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {Article, ArticleWrapper} from '@wepublish/article/website'
+import {BuilderArticleProps} from '@wepublish/website/builder'
 
 import {MannschaftBlockRenderer} from './mannschaft-block-renderer'
 import {createNewAdTeaser} from './mannschaft-blocks'

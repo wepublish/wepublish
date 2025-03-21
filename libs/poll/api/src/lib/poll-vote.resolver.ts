@@ -7,7 +7,8 @@ import {
   PollVote
 } from './poll-vote.model'
 import {PollVoteService} from './poll-vote.service'
-import {CanDeletePollVote, CanGetPollVote, Permissions} from '@wepublish/permissions/api'
+import {CanDeletePollVote, CanGetPollVote} from '@wepublish/permissions'
+import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => PollVote)
 export class PollVoteResolver {

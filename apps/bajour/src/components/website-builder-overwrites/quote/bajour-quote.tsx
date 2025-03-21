@@ -1,5 +1,6 @@
-import {css, styled} from '@mui/material'
-import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {css} from '@mui/material'
+import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const BajourQuoteBlockWrapper = styled('blockquote')<{withImage: boolean}>`
   font-style: italic;

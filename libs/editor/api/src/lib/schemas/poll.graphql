@@ -23,7 +23,7 @@ mutation CreatePoll($opensAt: DateTime, $closedAt: DateTime, $question: String) 
 }
 
 mutation UpdatePoll(
-  $pollId: ID!
+  $pollId: String!
   $opensAt: DateTime
   $closedAt: DateTime
   $question: String
@@ -57,13 +57,13 @@ mutation UpdatePoll(
   }
 }
 
-mutation DeletePoll($deletePollId: ID!) {
+mutation DeletePoll($deletePollId: String!) {
   deletePoll(id: $deletePollId) {
     id
   }
 }
 
-mutation CreatePollAnswer($pollId: ID!, $answer: String) {
+mutation CreatePollAnswer($pollId: String!, $answer: String) {
   createPollAnswer(pollId: $pollId, answer: $answer) {
     answer
     id
@@ -71,26 +71,26 @@ mutation CreatePollAnswer($pollId: ID!, $answer: String) {
   }
 }
 
-mutation DeletePollAnswer($deletePollAnswerId: ID!) {
+mutation DeletePollAnswer($deletePollAnswerId: String!) {
   deletePollAnswer(id: $deletePollAnswerId) {
     id
   }
 }
 
-mutation CreatePollExternalVoteSource($pollId: ID!, $source: String) {
+mutation CreatePollExternalVoteSource($pollId: String!, $source: String) {
   createPollExternalVoteSource(pollId: $pollId, source: $source) {
     ...PollExternalVoteSource
   }
 }
 
-mutation DeletePollExternalVoteSource($deletePollExternalVoteSourceId: ID!) {
+mutation DeletePollExternalVoteSource($deletePollExternalVoteSourceId: String!) {
   deletePollExternalVoteSource(id: $deletePollExternalVoteSourceId) {
     ...PollExternalVoteSource
   }
 }
 
 query Polls(
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $filter: PollFilter
@@ -114,7 +114,7 @@ query Polls(
   }
 }
 
-query Poll($pollId: ID) {
+query Poll($pollId: String) {
   poll(id: $pollId) {
     id
     question

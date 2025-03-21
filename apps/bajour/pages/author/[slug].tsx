@@ -1,11 +1,16 @@
 import {css} from '@mui/material'
+import {ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
+import {AuthorContainer} from '@wepublish/author/website'
 import {
-  ApiV1,
-  ArticleListContainer,
-  ArticleWrapper,
-  AuthorContainer,
-  useWebsiteBuilder
-} from '@wepublish/website'
+  addClientCacheToV1Props,
+  AuthorDocument,
+  getV1ApiClient,
+  NavigationListDocument,
+  PeerProfileDocument,
+  useArticleListQuery,
+  useAuthorQuery
+} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -33,7 +38,7 @@ export default function AuthorBySlug() {
   const {query, replace} = useRouter()
   const {page, slug} = pageSchema.parse(query)
 
-  const {data} = ApiV1.useAuthorQuery({
+  const {data} = useAuthorQuery({
     fetchPolicy: 'cache-only',
     variables: {
       slug
@@ -51,7 +56,7 @@ export default function AuthorBySlug() {
     [page, data?.author?.id]
   )
 
-  const {data: articleListData} = ApiV1.useArticleListQuery({
+  const {data: articleListData} = useArticleListQuery({
     fetchPolicy: 'cache-only',
     variables
   })
@@ -110,24 +115,24 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   const {slug} = params || {}
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
   await Promise.all([
     client.query({
-      query: ApiV1.AuthorDocument,
+      query: AuthorDocument,
       variables: {
         slug
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,

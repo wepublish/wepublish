@@ -1,4 +1,4 @@
-import {DynamicModule, Module, ModuleMetadata, Provider, Type} from '@nestjs/common'
+import {DynamicModule, Global, Module, ModuleMetadata, Provider, Type} from '@nestjs/common'
 import {
   HOT_AND_TRENDING_DATA_SOURCE,
   HotAndTrendingDataSource,
@@ -21,9 +21,11 @@ export interface HotAndTrendingClientAsyncOptions extends Pick<ModuleMetadata, '
   inject?: any[]
 }
 
+@Global()
 @Module({
   imports: [PrismaModule],
-  providers: [HotAndTrendingResolver]
+  providers: [HotAndTrendingResolver],
+  exports: [HOT_AND_TRENDING_DATA_SOURCE]
 })
 export class HotAndTrendingModule {
   public static register(config: HotAndTrendingDataSourceType): DynamicModule {

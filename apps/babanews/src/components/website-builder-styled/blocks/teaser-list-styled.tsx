@@ -1,11 +1,12 @@
-import {css, styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {css} from '@mui/material'
 import {
   TeaserImageWrapper,
   TeaserListBlockTeasers,
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper,
   TeaserWrapper
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
 
 import {ListTeaser} from '../../website-builder-overwrites/blocks/list-teaser'
 

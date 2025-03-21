@@ -4,6 +4,7 @@ import {
   FullMemberPlanFragment,
   useCheckInvoiceStatusLazyQuery,
   useInvoicesQuery,
+  usePageLazyQuery,
   usePayInvoiceMutation
 } from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -55,6 +56,10 @@ export function InvoiceListContainer({filter, className}: InvoiceListContainerPr
     }
   })
 
+  // @TODO: Replace with objects on Memberplan when Memberplan has been migrated to V2
+  // Pages are currently in V2 and Memberplan are in V1, so we have no access to page objects.
+  const [fetchPage] = usePageLazyQuery()
+
   const filteredInvoices = useMemo(
     () =>
       produce(data, draftData => {
@@ -75,11 +80,19 @@ export function InvoiceListContainer({filter, className}: InvoiceListContainerPr
       {stripeClientSecret && (
         <StripeElement clientSecret={stripeClientSecret}>
           <StripePayment
-            onClose={success => {
+            onClose={async success => {
               if (stripeMemberPlan) {
-                window.location.href = success
-                  ? stripeMemberPlan.successPage?.url ?? ''
-                  : stripeMemberPlan.failPage?.url ?? ''
+                const page = await fetchPage({
+                  variables: {
+                    id: success ? stripeMemberPlan.successPageId : stripeMemberPlan.failPageId
+                  }
+                })
+
+                window.location.href = page.data?.page.url ?? ''
+
+                // window.location.href = success
+                //   ? stripeMemberPlan.successPage?.url ?? ''
+                //   : stripeMemberPlan.failPage?.url ?? ''
               }
             }}
           />
@@ -96,12 +109,27 @@ export function InvoiceListContainer({filter, className}: InvoiceListContainerPr
             ?.subscription?.memberPlan
           setStripeMemberPlan(memberPlan)
 
+          const [successPage, failPage] = await Promise.all([
+            fetchPage({
+              variables: {
+                id: memberPlan?.successPageId
+              }
+            }),
+            fetchPage({
+              variables: {
+                id: memberPlan?.successPageId
+              }
+            })
+          ])
+
           await pay({
             variables: {
               invoiceId,
               paymentMethodId,
-              failureURL: memberPlan?.failPage?.url,
-              successURL: memberPlan?.successPage?.url
+              successURL: successPage.data?.page.url,
+              failureURL: failPage.data?.page.url
+              // failureURL: memberPlan?.failPage?.url,
+              // successURL: memberPlan?.successPage?.url
             }
           })
         }}

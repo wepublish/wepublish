@@ -1,5 +1,5 @@
 import {Context} from '../../context'
-import {CanDeleteAuthor, CanCreateAuthor} from '@wepublish/permissions/api'
+import {CanDeleteAuthor, CanCreateAuthor} from '@wepublish/permissions'
 import {authorise} from '../permissions'
 import {PrismaClient, Prisma} from '@prisma/client'
 
