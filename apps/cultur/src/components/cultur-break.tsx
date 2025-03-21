@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {BreakBlock} from '@wepublish/website'
+import {BreakBlock} from '@wepublish/block-content/website'
 
 export const CulturBreakBlock = styled(BreakBlock)`
   background-color: ${({theme}) => theme.palette.primary.contrastText};

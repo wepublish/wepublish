@@ -3,8 +3,7 @@ import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import {de, enUS, fr} from 'date-fns/locale'
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-
-import {ApolloClient, ApolloLink, createHttpLink, InMemoryCache} from '@apollo/client'
+import {getSettings} from '@wepublish/editor/api-v2'
 
 export const addOrUpdateOneInArray = (
   array: Record<string | 'id', any>[] | null | undefined,
@@ -160,67 +159,6 @@ export function flattenDOMTokenList(list: DOMTokenList) {
     string = `${string} ${element}`
   }
   return string.substring(1)
-}
-
-export interface ClientSettings {
-  readonly apiURL: string
-  readonly peerByDefault: boolean
-  readonly imgMinSizeToCompress: number
-}
-
-export enum ElementID {
-  Settings = 'settings',
-  ReactRoot = 'react-root'
-}
-
-export function getSettings(): ClientSettings {
-  const defaultSettings = {
-    apiURL: 'http://localhost:4000',
-    peerByDefault: false,
-    imgMinSizeToCompress: 10
-  }
-
-  const settingsJson = document.getElementById(ElementID.Settings)
-
-  return settingsJson
-    ? JSON.parse(document.getElementById(ElementID.Settings)!.textContent!)
-    : defaultSettings
-}
-
-export interface ClientSettings {
-  readonly apiURL: string
-  readonly peerByDefault: boolean
-  readonly imgMinSizeToCompress: number
-}
-
-export enum LocalStorageKey {
-  SessionToken = 'sessionToken',
-  ImageListLayout = 'imageListLayout'
-}
-
-const authLink = new ApolloLink((operation, forward) => {
-  const token = localStorage.getItem(LocalStorageKey.SessionToken)
-  const context = operation.getContext()
-
-  operation.setContext({
-    headers: {
-      authorization: token ? `Bearer ${token}` : '',
-      ...context.headers
-    },
-    credentials: 'include',
-    ...context
-  })
-
-  return forward(operation)
-})
-
-export function getApiClientV2() {
-  const {apiURL} = getSettings()
-
-  return new ApolloClient({
-    link: authLink.concat(createHttpLink({uri: `${apiURL}/v1`, fetch})),
-    cache: new InMemoryCache()
-  })
 }
 
 /**

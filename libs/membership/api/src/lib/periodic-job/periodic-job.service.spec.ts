@@ -210,7 +210,7 @@ describe('PeriodicJobService', () => {
 
     const testUserAndData = await UserFactory.create({
       email: mail,
-      Subscription: {
+      subscriptions: {
         create: {
           currency: Currency.CHF,
           paymentPeriodicity: PaymentPeriodicity.yearly,
@@ -341,7 +341,7 @@ describe('PeriodicJobService', () => {
           customerID: 'testId'
         }
       },
-      Subscription: {
+      subscriptions: {
         create: {
           currency: Currency.CHF,
           paymentPeriodicity: PaymentPeriodicity.yearly,
@@ -517,7 +517,7 @@ describe('PeriodicJobService', () => {
 
     await UserFactory.create({
       email: mail,
-      Subscription: {
+      subscriptions: {
         create: {
           currency: Currency.CHF,
           paymentPeriodicity: PaymentPeriodicity.yearly,
@@ -596,7 +596,7 @@ describe('PeriodicJobService', () => {
 
     await UserFactory.create({
       email: mail,
-      Subscription: {
+      subscriptions: {
         create: {
           currency: Currency.CHF,
           paymentPeriodicity: PaymentPeriodicity.yearly,
@@ -697,7 +697,7 @@ describe('PeriodicJobService', () => {
     })
     await UserFactory.create({
       email: mail,
-      Subscription: {
+      subscriptions: {
         create: {
           currency: Currency.CHF,
           paymentPeriodicity: PaymentPeriodicity.yearly,
@@ -1088,7 +1088,7 @@ describe('PeriodicJobService', () => {
       id: 100
     }
     try {
-      await service['deactivateSubscription'](pjo, invoice)
+      await service['deactivateSubscriptionByInvoice'](pjo, invoice)
       fail()
     } catch (e) {
       expect((e as Error).toString()).toMatchInlineSnapshot(
@@ -1102,7 +1102,7 @@ describe('PeriodicJobService', () => {
       paymentPeriodicity: PaymentPeriodicity.biannual
     }
     try {
-      await service['deactivateSubscription'](pjo, invoice)
+      await service['deactivateSubscriptionByInvoice'](pjo, invoice)
       fail()
     } catch (e) {
       expect((e as Error).toString()).toEqual(

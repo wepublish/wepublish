@@ -1,7 +1,10 @@
 import styled from '@emotion/styled'
 import {css, Pagination, TextField} from '@mui/material'
+import {articleToTeaser} from '@wepublish/article/website'
+import {alignmentForTeaserBlock} from '@wepublish/block-content/website'
 import {Button} from '@wepublish/ui'
-import {alignmentForTeaserBlock, ApiV1, articleToTeaser, Teaser} from '@wepublish/website'
+import {Article, Page, PageTeaser, Teaser, TeaserType, usePhraseQuery} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {useRouter} from 'next/router'
 import {ChangeEvent, FormEvent, useEffect, useState} from 'react'
 import {MdSearch} from 'react-icons/md'
@@ -54,9 +57,8 @@ export const SearchPagination = styled(Pagination)`
   margin-top: ${({theme}) => theme.spacing(2)};
 `
 
-export const pageToTeaser = (page: ApiV1.Page): ApiV1.PageTeaser => ({
-  __typename: 'PageTeaser',
-  style: ApiV1.TeaserStyle.Default,
+export const pageToTeaser = (page: Page): PageTeaser => ({
+  type: TeaserType.Page,
   page,
   image: null,
   lead: null,
@@ -77,7 +79,7 @@ const SearchPage: React.FC = () => {
     data: phraseData,
     loading,
     error
-  } = ApiV1.usePhraseQuery({
+  } = usePhraseQuery({
     variables: {
       query: phraseQuery,
       take: ITEMS_PER_PAGE,
@@ -116,8 +118,8 @@ const SearchPage: React.FC = () => {
   const totalPagesCount = phraseData?.phrase?.pages?.totalCount || 0
   const totalCount = totalArticlesCount + totalPagesCount
 
-  const modifiedArticlesNodes = articlesNodes.map(node => articleToTeaser(node as ApiV1.Article))
-  const modifiedPagesNodes = pagesNodes.map(node => pageToTeaser(node as ApiV1.Page))
+  const modifiedArticlesNodes = articlesNodes.map(node => articleToTeaser(node as Article))
+  const modifiedPagesNodes = pagesNodes.map(node => pageToTeaser(node as Page))
 
   const phraseResultTeasers = [...modifiedArticlesNodes, ...modifiedPagesNodes]
 
@@ -151,7 +153,11 @@ const SearchPage: React.FC = () => {
   )
 }
 
-export const NavbarPhraseResults = ({teasers}: {teasers: ApiV1.Teaser[]}) => {
+export const NavbarPhraseResults = ({teasers}: {teasers: Teaser[]}) => {
+  const {
+    blocks: {Teaser}
+  } = useWebsiteBuilder()
+
   return (
     <NavbarPhraseResultsWrapper>
       {teasers.map((teaser, index) => {

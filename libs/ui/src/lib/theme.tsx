@@ -12,9 +12,8 @@ const {
 } = createTheme()
 
 declare module '@emotion/react' {
-  export interface Theme extends MaterialTheme {
-    test: never
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  export interface Theme extends MaterialTheme {}
 }
 
 declare module '@mui/material/styles' {

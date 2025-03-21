@@ -1,5 +1,13 @@
 import mailchimp, {campaigns} from '@mailchimp/mailchimp_marketing'
-import {ApiV1, ContentWidthProvider, PageContainer} from '@wepublish/website'
+import {ContentWidthProvider} from '@wepublish/content/website'
+import {PageContainer} from '@wepublish/page/website'
+import {
+  addClientCacheToV1Props,
+  getV1ApiClient,
+  NavigationListDocument,
+  PageDocument,
+  PeerProfileDocument
+} from '@wepublish/website/api'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
@@ -12,7 +20,7 @@ type IndexProps = {
 export default function Index({campaigns}: IndexProps) {
   return (
     <DailyBriefingContext.Provider value={campaigns}>
-      <ContentWidthProvider fullWidth={false}>
+      <ContentWidthProvider fullWidth={true}>
         <PageContainer slug={''} />
       </ContentWidthProvider>
     </DailyBriefingContext.Provider>
@@ -31,7 +39,7 @@ export const getStaticProps: GetStaticProps = async () => {
     server: serverRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX
   })
 
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
   const [mailchimpResponse] = await Promise.all([
     mailchimp.campaigns.list({
       count: 4,
@@ -42,22 +50,22 @@ export const getStaticProps: GetStaticProps = async () => {
       fields: ['campaigns.id', 'campaigns.long_archive_url', 'campaigns.settings.subject_line']
     }),
     client.query({
-      query: ApiV1.PageDocument,
+      query: PageDocument,
       variables: {
         slug: ''
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     })
   ])
 
   const {campaigns} = mailchimpResponse as campaigns.CampaignsSuccessResponse
 
-  const props = ApiV1.addClientCacheToV1Props(client, {campaigns})
+  const props = addClientCacheToV1Props(client, {campaigns})
 
   return {
     props,

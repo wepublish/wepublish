@@ -1,6 +1,13 @@
 import styled from '@emotion/styled'
 import {Typography} from '@mui/material'
-import {ApiV1, RegistrationFormContainer, useUser, useWebsiteBuilder} from '@wepublish/website'
+import {RegistrationFormContainer, useUser} from '@wepublish/authentication/website'
+import {
+  addClientCacheToV1Props,
+  getV1ApiClient,
+  NavigationListDocument,
+  PeerProfileDocument
+} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -44,17 +51,17 @@ export const getStaticProps: GetStaticProps = async () => {
     return {props: {}, revalidate: 1}
   }
 
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
   await Promise.all([
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,

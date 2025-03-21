@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {RichTextBlock} from '@wepublish/website'
+import {RichTextBlock} from '@wepublish/block-content/website'
 
 export const MannschaftRichtextBlock = styled(RichTextBlock)`
   & + & {

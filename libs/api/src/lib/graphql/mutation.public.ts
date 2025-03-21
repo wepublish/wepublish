@@ -1,16 +1,15 @@
 import {
+  MemberPlan,
   PaymentState,
-  SubscriptionDeactivationReason,
-  UserEvent,
   Subscription,
-  MemberPlan
+  SubscriptionDeactivationReason,
+  UserEvent
 } from '@prisma/client'
 import {SettingName} from '@wepublish/settings/api'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import * as crypto from 'crypto'
 import {
   GraphQLBoolean,
-  GraphQLID,
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
@@ -32,10 +31,11 @@ import {
   SubscriptionNotExtendable,
   SubscriptionNotFound,
   SubscriptionToDeactivateDoesNotExist,
+  UserIdNotFound,
   UserInputError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
-import {logger} from '@wepublish/utils/api'
+import {GraphQLSlug, logger} from '@wepublish/utils/api'
 import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
 import {Validator} from '../validator'
 import {rateComment} from './comment-rating/comment-rating.public-mutation'
@@ -60,7 +60,6 @@ import {
   createUserSession,
   revokeSessionByToken
 } from './session/session.mutation'
-import {GraphQLSlug} from '@wepublish/utils/api'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription-public'
 import {updatePublicSubscription} from './subscription/subscription.public-mutation'
 import {
@@ -83,8 +82,6 @@ import {
 import {mailLogType} from '@wepublish/mail/api'
 import {sub} from 'date-fns'
 import {GraphQLDateTime} from 'graphql-scalars'
-import {GraphQLPublicLikeCreateInput, GraphQLPublicLikeDeleteInput} from './like/like'
-import {updateLikes} from './like/like.public-mutation'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -139,22 +136,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         revokeSessionByToken(authenticateUser, session)
     },
 
-    addLike: {
-      type: new GraphQLNonNull(GraphQLInt),
-      args: {input: {type: new GraphQLNonNull(GraphQLPublicLikeCreateInput)}},
-      description: 'Add a like to an existing article.',
-      resolve: (_, {input}, {prisma: {article, articleRevision}}) =>
-        updateLikes(input, 1, article, articleRevision)
-    },
-
-    removeLike: {
-      type: new GraphQLNonNull(GraphQLInt),
-      args: {input: {type: new GraphQLNonNull(GraphQLPublicLikeDeleteInput)}},
-      description: 'Remove a like from an existing article.',
-      resolve: (_, {input}, {prisma: {article, articleRevision}}) =>
-        updateLikes(input, -1, article, articleRevision)
-    },
-
     // Comment
     // =======
     addComment: {
@@ -179,8 +160,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     rateComment: {
       type: new GraphQLNonNull(GraphQLPublicComment),
       args: {
-        commentId: {type: new GraphQLNonNull(GraphQLID)},
-        answerId: {type: new GraphQLNonNull(GraphQLID)},
+        commentId: {type: new GraphQLNonNull(GraphQLString)},
+        answerId: {type: new GraphQLNonNull(GraphQLString)},
         value: {type: new GraphQLNonNull(GraphQLInt)}
       },
       description: 'This mutation allows to rate a comment. Supports logged in and anonymous',
@@ -295,12 +276,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         email: {type: new GraphQLNonNull(GraphQLString)},
         address: {type: GraphQLUserAddressInput},
         password: {type: GraphQLString},
-        memberPlanID: {type: GraphQLID},
+        memberPlanID: {type: GraphQLString},
         memberPlanSlug: {type: GraphQLSlug},
         autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
         paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
         monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
-        paymentMethodID: {type: GraphQLID},
+        paymentMethodID: {type: GraphQLString},
         paymentMethodSlug: {type: GraphQLSlug},
         subscriptionProperties: {
           type: new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
@@ -456,19 +437,19 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     createSubscription: {
       type: new GraphQLNonNull(GraphQLPublicPayment),
       args: {
-        memberPlanID: {type: GraphQLID},
+        memberPlanID: {type: GraphQLString},
         memberPlanSlug: {type: GraphQLSlug},
         autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
         paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
         monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
-        paymentMethodID: {type: GraphQLID},
+        paymentMethodID: {type: GraphQLString},
         paymentMethodSlug: {type: GraphQLSlug},
         subscriptionProperties: {
           type: new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
         },
         successURL: {type: GraphQLString},
         failureURL: {type: GraphQLString},
-        deactivateSubscriptionId: {type: GraphQLID}
+        deactivateSubscriptionId: {type: GraphQLString}
       },
       description: 'Allows authenticated users to create additional subscriptions',
       async resolve(
@@ -490,7 +471,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       ) {
         // authenticate user
         const {user} = authenticateUser()
-
         await memberContext.validateInputParamsCreateSubscription(
           memberPlanID,
           memberPlanSlug,
@@ -550,7 +530,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           memberPlan.id,
           properties,
           autoRenew,
-          memberPlan.extendable
+          memberPlan.extendable,
+          subscriptionToDeactivate
         )
 
         if (!invoice) {
@@ -564,7 +545,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (subscriptionToDeactivate) {
           await memberContext.deactivateSubscription({
             subscription: subscriptionToDeactivate,
-            deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
+            deactivationReason: SubscriptionDeactivationReason.userReplacedSubscription
           })
         }
 
@@ -579,10 +560,114 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    createSubscriptionWithConfirmation: {
+      type: new GraphQLNonNull(GraphQLBoolean),
+      args: {
+        userId: {type: GraphQLString},
+        memberPlanID: {type: GraphQLString},
+        memberPlanSlug: {type: GraphQLSlug},
+        autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
+        paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
+        monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
+        paymentMethodID: {type: GraphQLString},
+        paymentMethodSlug: {type: GraphQLSlug},
+        subscriptionProperties: {
+          type: new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
+        }
+      },
+      description: 'Allows authenticated users to create additional subscriptions',
+      async resolve(
+        root,
+        {
+          userId,
+          memberPlanID,
+          memberPlanSlug,
+          autoRenew,
+          paymentPeriodicity,
+          monthlyAmount,
+          paymentMethodID,
+          paymentMethodSlug,
+          subscriptionProperties
+        },
+        {prisma, loaders, memberContext, createPaymentWithProvider, authenticateUser}
+      ) {
+        try {
+          // authenticate user
+          const getUserByUserId = async (userId: string) => ({
+            user: await prisma.user.findFirst({where: {id: userId}})
+          })
+          const {user} = userId ? await getUserByUserId(userId) : authenticateUser()
+
+          if (!user) {
+            throw new UserIdNotFound()
+          }
+
+          await memberContext.validateInputParamsCreateSubscription(
+            memberPlanID,
+            memberPlanSlug,
+            paymentMethodID,
+            paymentMethodSlug
+          )
+
+          const memberPlan = await memberContext.getMemberPlanByIDOrSlug(
+            loaders,
+            memberPlanSlug,
+            memberPlanID
+          )
+          const paymentMethod = await memberContext.getPaymentMethodByIDOrSlug(
+            loaders,
+            paymentMethodSlug,
+            paymentMethodID
+          )
+
+          if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+
+          await memberContext.validateSubscriptionPaymentConfiguration(
+            memberPlan,
+            autoRenew,
+            paymentPeriodicity,
+            paymentMethod
+          )
+
+          const properties = await memberContext.processSubscriptionProperties(
+            subscriptionProperties
+          )
+
+          const {subscription, invoice} = await memberContext.createSubscription(
+            prisma,
+            user.id,
+            paymentMethod.id,
+            paymentPeriodicity,
+            monthlyAmount,
+            memberPlan.id,
+            properties,
+            autoRenew,
+            memberPlan.extendable,
+            undefined,
+            undefined,
+            true
+          )
+
+          if (!invoice) {
+            logger('mutation.public').error(
+              'Could not create new invoice for subscription with ID "%s"',
+              subscription.id
+            )
+            throw new InternalError()
+          }
+
+          return true
+        } catch (e: any) {
+          console.log(e.stack)
+          throw e
+        }
+      }
+    },
+
     extendSubscription: {
       type: new GraphQLNonNull(GraphQLPublicPayment),
       args: {
-        subscriptionId: {type: new GraphQLNonNull(GraphQLID)},
+        subscriptionId: {type: new GraphQLNonNull(GraphQLString)},
         successURL: {type: GraphQLString},
         failureURL: {type: GraphQLString}
       },
@@ -721,7 +806,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           paymentMethodID: subscription.paymentMethodID,
           successURL,
           failureURL,
-          migrateToTargetPaymentMethodID: subscription.memberPlan.migrateToTargetPaymentMethodID
+          migrateToTargetPaymentMethodID:
+            subscription.memberPlan.migrateToTargetPaymentMethodID ?? undefined
         })
       }
     },
@@ -845,7 +931,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     updateUserSubscription: {
       type: GraphQLPublicSubscription,
       args: {
-        id: {type: new GraphQLNonNull(GraphQLID)},
+        id: {type: new GraphQLNonNull(GraphQLString)},
         input: {type: new GraphQLNonNull(GraphQLPublicSubscriptionInput)}
       },
       description:
@@ -870,7 +956,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     cancelUserSubscription: {
       type: GraphQLPublicSubscription,
       args: {
-        id: {type: new GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       description:
         'This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now',
@@ -1001,7 +1087,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           successURL,
           failureURL,
           user,
-          migrateToTargetPaymentMethodID: subscription.memberPlan.migrateToTargetPaymentMethodID
+          migrateToTargetPaymentMethodID:
+            subscription.memberPlan.migrateToTargetPaymentMethodID ?? undefined
         })
       }
     },
@@ -1009,7 +1096,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     createPaymentFromSubscription: {
       type: GraphQLPublicPayment,
       args: {
-        subscriptionId: {type: GraphQLID},
+        subscriptionId: {type: GraphQLString},
         successURL: {type: GraphQLString},
         failureURL: {type: GraphQLString}
       },
@@ -1041,18 +1128,18 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           throw new NotFound('Unpaid Invoice', subscriptionId)
         }
 
-        if (invoice.subscription.userID !== user.id) {
+        if (invoice.subscription?.userID !== user.id) {
           throw new NotFound('Subscription', subscriptionId)
         }
 
         return await createPaymentWithProvider({
-          paymentMethodID: invoice.subscription.paymentMethodID,
+          paymentMethodID: invoice.subscription?.paymentMethodID,
           invoice,
           saveCustomer: true,
           successURL,
           failureURL,
           migrateToTargetPaymentMethodID:
-            invoice.subscription.memberPlan.migrateToTargetPaymentMethodID
+            invoice.subscription?.memberPlan.migrateToTargetPaymentMethodID ?? undefined
         })
       }
     },
@@ -1060,7 +1147,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     voteOnPoll: {
       type: GraphQLPollVote,
       args: {
-        answerId: {type: new GraphQLNonNull(GraphQLID)}
+        answerId: {type: new GraphQLNonNull(GraphQLString)}
       },
       description:
         "This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous",

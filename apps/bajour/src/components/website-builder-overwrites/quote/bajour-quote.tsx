@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {css} from '@mui/material'
-import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website'
+import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const BajourQuoteBlockWrapper = styled('blockquote')<{withImage: boolean}>`
   font-style: italic;
@@ -100,10 +100,12 @@ export const BajourQuoteBlock = ({quote, author, image, className}: BuilderQuote
           <Image image={image} square />
         </QuoteImage>
       )}
+
       <BajourQuoteContent>
         <Paragraph component={BajourQuoteQuote} gutterBottom={false}>
           {quote}
         </Paragraph>
+
         {author && (
           <Paragraph component={BajourQuoteAuthor} gutterBottom={false}>
             {author}

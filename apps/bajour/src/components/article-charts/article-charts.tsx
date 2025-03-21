@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {css} from '@mui/material'
-import {ApiV1, useWebsiteBuilder} from '@wepublish/website'
+import {useHotAndTrendingQuery} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 const ArticleChatsWrapper = styled('article')`
   display: grid;
@@ -65,7 +66,7 @@ export const ArticleCharts = () => {
     elements: {Image, Link}
   } = useWebsiteBuilder()
 
-  const {data} = ApiV1.useHotAndTrendingQuery({
+  const {data} = useHotAndTrendingQuery({
     variables: {
       take: 4
     }
@@ -77,8 +78,8 @@ export const ArticleCharts = () => {
 
   return (
     <ArticleChatsWrapper>
-      {data.hotAndTrending[0].image && (
-        <Image image={data.hotAndTrending[0].image} css={articleChartsBigItemImage} />
+      {data.hotAndTrending[0].latest.image && (
+        <Image image={data.hotAndTrending[0].latest.image} css={articleChartsBigItemImage} />
       )}
 
       <ArticleChatsList>
@@ -87,12 +88,12 @@ export const ArticleCharts = () => {
             <Link href={article.url} color="inherit" underline="none">
               <ArticleChartsItem>
                 <ArticleChartsItemText>
-                  <ArticleChartsItemTitle>{article.title}</ArticleChartsItemTitle>
-                  <ArticleChartsItemLead>{article.lead}</ArticleChartsItemLead>
+                  <ArticleChartsItemTitle>{article.latest.title}</ArticleChartsItemTitle>
+                  <ArticleChartsItemLead>{article.latest.lead}</ArticleChartsItemLead>
                 </ArticleChartsItemText>
 
-                {index !== 0 && article.image && (
-                  <Image image={article.image} css={articleChartsItemImage} />
+                {index !== 0 && article.latest.image && (
+                  <Image image={article.latest.image} css={articleChartsItemImage} />
                 )}
               </ArticleChartsItem>
             </Link>

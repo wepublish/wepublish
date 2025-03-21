@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import {Button} from '@mui/material'
+import {TeaserInnerWrapper, TeaserLead} from '@wepublish/block-content/website'
+import {Image} from '@wepublish/image/website'
 import {H1, Paragraph} from '@wepublish/ui'
 import {NextWepublishLink} from '@wepublish/utils/website'
-import {Image, TeaserInnerWrapper, TeaserLead} from '@wepublish/website'
 
 export const fluidTypography = (minSize: number, maxSize: number): string => {
   const minViewPort = 390

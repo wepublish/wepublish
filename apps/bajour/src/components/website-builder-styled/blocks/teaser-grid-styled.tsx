@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {css} from '@mui/material'
-import {TeaserGridBlock, TeaserListBlock} from '@wepublish/website'
+import {TeaserGridBlock, TeaserListBlock} from '@wepublish/block-content/website'
 
 export const BajourTeaserGrid = styled(TeaserGridBlock)`
   ${({numColumns, theme}) =>

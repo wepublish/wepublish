@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {ImageRefFragment} from '@wepublish/editor/api'
+import {FullImageFragment} from '@wepublish/editor/api'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdBuild, MdEdit, MdPhoto} from 'react-icons/md'
@@ -19,7 +19,7 @@ export const Panel = styled(RPanel)`
   overflow: hidden;
 `
 
-export const ImagePanel = styled(RPanel)<{image: ImageRefFragment}>`
+export const ImagePanel = styled(RPanel)<{image: FullImageFragment}>`
   padding: 0;
   position: relative;
   height: 100%;
@@ -45,7 +45,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
     }
   }, [])
 
-  function handleImageChange(image: ImageRefFragment | null) {
+  function handleImageChange(image: FullImageFragment | null) {
     onChange({...value, image})
   }
 

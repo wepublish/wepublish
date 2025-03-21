@@ -1,15 +1,14 @@
 import styled from '@emotion/styled'
 import {css, Theme, useTheme} from '@mui/material'
 import {
-  BuilderTeaserProps,
   selectTeaserAuthors,
   selectTeaserDate,
   selectTeaserImage,
   selectTeaserLead,
   selectTeaserTitle,
-  selectTeaserUrl,
-  useWebsiteBuilder
-} from '@wepublish/website'
+  selectTeaserUrl
+} from '@wepublish/block-content/website'
+import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useMemo} from 'react'
 
 import {fluidTypography} from '../teaser-overwrite.style'

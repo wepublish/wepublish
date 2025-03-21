@@ -32,6 +32,19 @@ const nextConfig = {
       }
     }
   },
+  webpack(config, {webpack}) {
+    /**
+     * Tells Apollo turn run in production mode
+     * @see https://www.apollographql.com/docs/react/development-testing/reducing-bundle-size
+     */
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'globalThis.__DEV__': false
+      })
+    )
+
+    return config
+  },
   async headers() {
     return [
       {
@@ -52,6 +65,15 @@ const nextConfig = {
             value: 's-maxage=59, stale-while-revalidate=59, maxage=59, public'
           }
         ]
+      }
+    ]
+  },
+  async redirects() {
+    return [
+      {
+        source: '/profile/subscription',
+        destination: '/profile',
+        permanent: true
       }
     ]
   },

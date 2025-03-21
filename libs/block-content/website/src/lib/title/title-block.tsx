@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
-import {Block, TitleBlock as TitleBlockType} from '@wepublish/website/api'
+import {BlockContent, TitleBlock as TitleBlockType} from '@wepublish/website/api'
 import {BuilderTitleBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {H3} from '@wepublish/ui'
 
-export const isTitleBlock = (block: Block): block is TitleBlockType =>
+export const isTitleBlock = (block: Pick<BlockContent, '__typename'>): block is TitleBlockType =>
   block.__typename === 'TitleBlock'
 
 export const TitleBlockWrapper = styled('div')`

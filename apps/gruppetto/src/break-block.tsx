@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {css} from '@mui/material'
-import {BreakBlock, BuilderBreakBlockProps} from '@wepublish/website'
+import {BreakBlock} from '@wepublish/block-content/website'
+import {BuilderBreakBlockProps} from '@wepublish/website/builder'
 
 export const CTABreakBlock = styled(BreakBlock)`
   background-color: ${({theme}) => theme.palette.primary.main};

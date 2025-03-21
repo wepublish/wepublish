@@ -81,6 +81,7 @@ export class MediaService {
       if (e.code == 'NoSuchKey') {
         throw new NotFoundException()
       }
+
       throw e
     }
 

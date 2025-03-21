@@ -1,5 +1,10 @@
 import styled from '@emotion/styled'
-import {ContextBox, ContextBoxAllAbout, ContextBoxIcon, ContextBoxLine} from '@wepublish/website'
+import {
+  ContextBox,
+  ContextBoxAllAbout,
+  ContextBoxIcon,
+  ContextBoxLine
+} from '@wepublish/block-content/website'
 
 export const BajourContextBox = styled(ContextBox)`
   ${({theme}) => theme.breakpoints.up('sm')} {

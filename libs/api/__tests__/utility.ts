@@ -1,97 +1,33 @@
-import {
-  CommentItemType,
-  Currency,
-  Event,
-  Peer,
-  PrismaClient,
-  Subscription,
-  Tag
-} from '@prisma/client'
+import {Currency, PrismaClient} from '@prisma/client'
 import {ApolloServer} from 'apollo-server-express'
 import * as crypto from 'crypto'
 import {URL} from 'url'
 import {
   AlgebraicCaptchaChallenge,
-  Article,
-  Author,
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
   KarmaMediaAdapter,
-  PublicArticle,
-  PublicComment,
-  PublicPage,
-  URLAdapter,
-  DefaultSessionTTL,
-  FakeMailProvider,
-  PayrexxPaymentProvider,
-  GatewayClient,
-  TransactionClient
+  DefaultSessionTTL
 } from '../src'
 import {createUserSession} from '../src/lib/graphql/session/session.mutation'
 import {PartialDeep} from 'type-fest'
 import Mock = jest.Mock
-import {CreateGatewayRequestData, Gateway} from '@wepublish/payment/api'
+import {
+  CreateGatewayRequestData,
+  Gateway,
+  GatewayClient,
+  PayrexxPaymentProvider,
+  TransactionClient
+} from '@wepublish/payment/api'
+import {FakeMailProvider} from '@wepublish/mail/api'
+import {URLAdapter} from '@wepublish/nest-modules'
 
 export interface TestClient {
   testServerPublic: ApolloServer
   testServerPrivate: ApolloServer
   prisma: PrismaClient
   challenge: AlgebraicCaptchaChallenge
-}
-
-class ExampleURLAdapter implements URLAdapter {
-  async getPublicArticleURL(article: PublicArticle) {
-    return `https://demo.wepublish.ch/article/${article.id}/${article.slug}`
-  }
-
-  async getPublicPageURL(page: PublicPage) {
-    return `https://demo.wepublish.ch/page/${page.id}/${page.slug}`
-  }
-
-  async getPeeredArticleURL(peer: Peer, article: Article) {
-    return `https://demo.wepublish.ch/peerArticle/${peer.id}/${article.id}`
-  }
-
-  async getAuthorURL(author: Author) {
-    return `https://demo.wepublish.ch/author/${author.slug || author.id}`
-  }
-
-  async getEventURL(event: Event) {
-    return `https://demo.wepublish.ch/events/${event.id}`
-  }
-
-  async getArticlePreviewURL(token: string) {
-    return `https://demo.wepulish.ch/article/preview/${token}`
-  }
-
-  async getPagePreviewURL(token: string) {
-    return `https://demo.wepulish.ch/page/preview/${token}`
-  }
-
-  async getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer) {
-    if (comment.itemType === CommentItemType.article) {
-      return `https://demo.wepublish.media/comments/a/${item.id}/${item.slug}/${comment.id}`
-    }
-
-    if (comment.itemType === CommentItemType.peerArticle) {
-      return `https://demo.wepublish.media/comments/p/${peer?.id}/${item.id}#${comment.id}`
-    }
-
-    return `https://demo.wepublish.media/comments/${item.slug}/${comment.id}`
-  }
-
-  getLoginURL(token: string) {
-    return `https://demo.wepublish.ch/login/${token}`
-  }
-
-  async getSubscriptionURL(subscription: Subscription) {
-    return `https://demo.wepublish.ch/profile/subscription/${subscription.id}`
-  }
-
-  async getTagURL(tag: Tag) {
-    return `https://demo.wepublish.ch/a/tag/${encodeURIComponent(tag.tag)}`
-  }
 }
 
 export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
@@ -209,13 +145,10 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
           defaultFromAddress: 'dev@fake.org',
           defaultReplyToAddress: 'reply-to@fake.org'
         },
-        urlAdapter: new ExampleURLAdapter(),
+        urlAdapter: new URLAdapter(''),
         oauth2Providers: [],
         paymentProviders: [mockPaymentProvider],
-        challenge,
-        hotAndTrendingDataSource: {
-          getMostViewedArticles: () => []
-        }
+        challenge
       })
   })
 
@@ -233,13 +166,10 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
           defaultFromAddress: 'dev@fake.org',
           defaultReplyToAddress: 'reply-to@fake.org'
         },
-        urlAdapter: new ExampleURLAdapter(),
+        urlAdapter: new URLAdapter(''),
         oauth2Providers: [],
         paymentProviders: [mockPaymentProvider],
-        challenge,
-        hotAndTrendingDataSource: {
-          getMostViewedArticles: () => []
-        }
+        challenge
       })
   })
 

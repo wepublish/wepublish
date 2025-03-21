@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import {
-  ImageWrapper,
   TeaserLead,
   TeaserMetadata,
   TeaserPreTitle,
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
+import {ImageWrapper} from '@wepublish/image/website'
 
 import {MannschaftBaseTeaser} from '../mannschaft-base-teaser'
 

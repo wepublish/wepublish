@@ -68,7 +68,7 @@ export function SelectTags({
       order: SortOrder.Ascending,
       take: 50
     },
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     onError: showErrors
   })
 

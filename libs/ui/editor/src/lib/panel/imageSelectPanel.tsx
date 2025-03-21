@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {ImageRefFragment, useImageListQuery} from '@wepublish/editor/api'
+import {FullImageFragment, useImageListQuery} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdFileUpload, MdSearch} from 'react-icons/md'
@@ -50,7 +50,7 @@ const FlexItem = styled(FlexboxGrid.Item)`
 
 export interface ImageSelectPanelProps {
   onClose(): void
-  onSelect(image: ImageRefFragment): void
+  onSelect(image: FullImageFragment): void
 }
 
 const ImagesPerPage = 20
@@ -126,7 +126,7 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
       <ImageEditPanel
         onClose={onClose}
         file={file}
-        onSave={(image: ImageRefFragment) => onSelect(image)}
+        onSave={(image: FullImageFragment) => onSelect(image)}
         imageMetaData={imageMetaData}
       />
     )

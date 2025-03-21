@@ -57,6 +57,7 @@ export type Article = {
   published?: Maybe<ArticleRevision>
   shared: Scalars['Boolean']
   tags: Array<Tag>
+  trackingPixels?: Maybe<Array<Maybe<TrackingPixel>>>
 }
 
 export type ArticleConnection = {
@@ -298,6 +299,7 @@ export type Block =
   | QuoteBlock
   | RichTextBlock
   | SoundCloudTrackBlock
+  | SubscribeBlock
   | TeaserGridBlock
   | TeaserGridFlexBlock
   | TeaserListBlock
@@ -325,6 +327,7 @@ export type BlockInput = {
   quote?: InputMaybe<QuoteBlockInput>
   richText?: InputMaybe<RichTextBlockInput>
   soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>
+  subscribe?: InputMaybe<SubscribeBlockInput>
   teaserGrid?: InputMaybe<TeaserGridBlockInput>
   teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>
   teaserList?: InputMaybe<TeaserListBlockInput>
@@ -987,6 +990,8 @@ export type MemberPlan = {
   amountPerMonthMin: Scalars['Int']
   amountPerMonthTarget?: Maybe<Scalars['Int']>
   availablePaymentMethods: Array<AvailablePaymentMethod>
+  confirmationPage?: Maybe<Page>
+  confirmationPageId?: Maybe<Scalars['ID']>
   createdAt: Scalars['DateTime']
   currency: Currency
   description?: Maybe<Scalars['RichText']>
@@ -1023,6 +1028,7 @@ export type MemberPlanInput = {
   amountPerMonthMin: Scalars['Int']
   amountPerMonthTarget?: InputMaybe<Scalars['Int']>
   availablePaymentMethods: Array<AvailablePaymentMethodInput>
+  confirmationPageId?: InputMaybe<Scalars['ID']>
   currency: Currency
   description?: InputMaybe<Scalars['RichText']>
   extendable: Scalars['Boolean']
@@ -2346,6 +2352,15 @@ export type SoundCloudTrackBlockInput = {
   trackID: Scalars['String']
 }
 
+export type SubscribeBlock = {
+  __typename?: 'SubscribeBlock'
+  blockStyle?: Maybe<Scalars['String']>
+}
+
+export type SubscribeBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>
+}
+
 export type SubscribersPerMonth = {
   __typename?: 'SubscribersPerMonth'
   month: Scalars['String']
@@ -2398,6 +2413,7 @@ export type SubscriptionDeactivationInput = {
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
+  UserReplacedSubscription = 'userReplacedSubscription',
   UserSelfDeactivated = 'userSelfDeactivated'
 }
 
@@ -2610,6 +2626,26 @@ export type TokenInput = {
   name: Scalars['String']
 }
 
+export type TrackingPixel = {
+  __typename?: 'TrackingPixel'
+  error?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  pixelUid?: Maybe<Scalars['String']>
+  trackingPixelMethod: TrackingPixelMethod
+  uri?: Maybe<Scalars['String']>
+}
+
+export type TrackingPixelMethod = {
+  __typename?: 'TrackingPixelMethod'
+  id: Scalars['ID']
+  trackingPixelProviderID: Scalars['String']
+  trackingPixelProviderType: TrackingPixelProviderType
+}
+
+export enum TrackingPixelProviderType {
+  Prolitteris = 'prolitteris'
+}
+
 export type TwitterTweetBlock = {
   __typename?: 'TwitterTweetBlock'
   blockStyle?: Maybe<Scalars['String']>
@@ -2802,6 +2838,7 @@ export enum UserSort {
 export type UserSubscription = {
   __typename?: 'UserSubscription'
   autoRenew: Scalars['Boolean']
+  confirmed: Scalars['Boolean']
   createdAt: Scalars['DateTime']
   currency: Currency
   deactivation?: Maybe<SubscriptionDeactivation>
@@ -2910,6 +2947,7 @@ export type ArticleRefFragment = {
       | {__typename: 'QuoteBlock'}
       | {__typename: 'RichTextBlock'; richText: Node[]}
       | {__typename: 'SoundCloudTrackBlock'}
+      | {__typename: 'SubscribeBlock'}
       | {__typename: 'TeaserGridBlock'}
       | {__typename: 'TeaserGridFlexBlock'}
       | {__typename: 'TeaserListBlock'}
@@ -2995,6 +3033,7 @@ export type ArticleListQuery = {
           | {__typename: 'QuoteBlock'}
           | {__typename: 'RichTextBlock'; richText: Node[]}
           | {__typename: 'SoundCloudTrackBlock'}
+          | {__typename: 'SubscribeBlock'}
           | {__typename: 'TeaserGridBlock'}
           | {__typename: 'TeaserGridFlexBlock'}
           | {__typename: 'TeaserListBlock'}
@@ -3502,6 +3541,7 @@ export type ArticleQuery = {
           }
         | {__typename: 'RichTextBlock'; richText: Node[]}
         | {__typename: 'SoundCloudTrackBlock'; trackID: string}
+        | {__typename: 'SubscribeBlock'}
         | {
             __typename: 'TeaserGridBlock'
             numColumns: number
@@ -3564,6 +3604,7 @@ export type ArticleQuery = {
                         | {__typename: 'QuoteBlock'}
                         | {__typename: 'RichTextBlock'; richText: Node[]}
                         | {__typename: 'SoundCloudTrackBlock'}
+                        | {__typename: 'SubscribeBlock'}
                         | {__typename: 'TeaserGridBlock'}
                         | {__typename: 'TeaserGridFlexBlock'}
                         | {__typename: 'TeaserListBlock'}
@@ -3721,6 +3762,7 @@ export type ArticleQuery = {
                         | {__typename: 'QuoteBlock'}
                         | {__typename: 'RichTextBlock'; richText: Node[]}
                         | {__typename: 'SoundCloudTrackBlock'}
+                        | {__typename: 'SubscribeBlock'}
                         | {__typename: 'TeaserGridBlock'}
                         | {__typename: 'TeaserGridFlexBlock'}
                         | {__typename: 'TeaserListBlock'}
@@ -4094,6 +4136,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
         | {__typename: 'QuoteBlock'}
         | {__typename: 'RichTextBlock'; richText: Node[]}
         | {__typename: 'SoundCloudTrackBlock'}
+        | {__typename: 'SubscribeBlock'}
         | {__typename: 'TeaserGridBlock'}
         | {__typename: 'TeaserGridFlexBlock'}
         | {__typename: 'TeaserListBlock'}
@@ -4255,6 +4298,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
         | {__typename: 'QuoteBlock'}
         | {__typename: 'RichTextBlock'; richText: Node[]}
         | {__typename: 'SoundCloudTrackBlock'}
+        | {__typename: 'SubscribeBlock'}
         | {__typename: 'TeaserGridBlock'}
         | {__typename: 'TeaserGridFlexBlock'}
         | {__typename: 'TeaserListBlock'}
@@ -4459,6 +4503,8 @@ type FullBlock_RichTextBlock_Fragment = {__typename: 'RichTextBlock'; richText: 
 
 type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBlock'; trackID: string}
 
+type FullBlock_SubscribeBlock_Fragment = {__typename: 'SubscribeBlock'}
+
 type FullBlock_TeaserGridBlock_Fragment = {
   __typename: 'TeaserGridBlock'
   numColumns: number
@@ -4521,6 +4567,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
               | {__typename: 'QuoteBlock'}
               | {__typename: 'RichTextBlock'; richText: Node[]}
               | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'SubscribeBlock'}
               | {__typename: 'TeaserGridBlock'}
               | {__typename: 'TeaserGridFlexBlock'}
               | {__typename: 'TeaserListBlock'}
@@ -4678,6 +4725,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
               | {__typename: 'QuoteBlock'}
               | {__typename: 'RichTextBlock'; richText: Node[]}
               | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'SubscribeBlock'}
               | {__typename: 'TeaserGridBlock'}
               | {__typename: 'TeaserGridFlexBlock'}
               | {__typename: 'TeaserListBlock'}
@@ -4763,6 +4811,7 @@ export type FullBlockFragment =
   | FullBlock_QuoteBlock_Fragment
   | FullBlock_RichTextBlock_Fragment
   | FullBlock_SoundCloudTrackBlock_Fragment
+  | FullBlock_SubscribeBlock_Fragment
   | FullBlock_TeaserGridBlock_Fragment
   | FullBlock_TeaserGridFlexBlock_Fragment
   | FullBlock_TeaserListBlock_Fragment
@@ -4784,7 +4833,7 @@ export type ImageUrLsFragment = {
   column6URL?: string | null
 }
 
-export type ImageRefFragment = {
+export type FullImageFragment = {
   __typename?: 'Image'
   id: string
   link?: string | null

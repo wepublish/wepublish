@@ -30,147 +30,10 @@ export type Scalars = {
   VoteValue: number;
 };
 
-export type Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction;
-
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
   boolChoice?: Maybe<Scalars['Boolean']>;
   stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
-};
-
-export type Article = {
-  __typename?: 'Article';
-  createdAt: Scalars['DateTime'];
-  disableComments?: Maybe<Scalars['Boolean']>;
-  draft?: Maybe<ArticleRevision>;
-  hidden?: Maybe<Scalars['Boolean']>;
-  id: Scalars['ID'];
-  latest: ArticleRevision;
-  modifiedAt: Scalars['DateTime'];
-  pending?: Maybe<ArticleRevision>;
-  published?: Maybe<ArticleRevision>;
-  shared: Scalars['Boolean'];
-  tags: Array<Tag>;
-};
-
-export type ArticleConnection = {
-  __typename?: 'ArticleConnection';
-  nodes: Array<Article>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type ArticleCreatedAction = {
-  __typename?: 'ArticleCreatedAction';
-  article: Article;
-  date: Scalars['DateTime'];
-};
-
-export type ArticleFilter = {
-  authors?: InputMaybe<Array<Scalars['ID']>>;
-  draft?: InputMaybe<Scalars['Boolean']>;
-  includeHidden?: InputMaybe<Scalars['Boolean']>;
-  lead?: InputMaybe<Scalars['String']>;
-  pending?: InputMaybe<Scalars['Boolean']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  publicationDateFrom?: InputMaybe<DateFilter>;
-  publicationDateTo?: InputMaybe<DateFilter>;
-  published?: InputMaybe<Scalars['Boolean']>;
-  shared?: InputMaybe<Scalars['Boolean']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export type ArticleInput = {
-  authorIDs: Array<Scalars['ID']>;
-  blocks: Array<BlockInput>;
-  breaking: Scalars['Boolean'];
-  canonicalUrl?: InputMaybe<Scalars['String']>;
-  disableComments?: InputMaybe<Scalars['Boolean']>;
-  hidden?: InputMaybe<Scalars['Boolean']>;
-  hideAuthor: Scalars['Boolean'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  likes?: InputMaybe<Scalars['Int']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  properties: Array<PropertiesInput>;
-  seoTitle?: InputMaybe<Scalars['String']>;
-  shared: Scalars['Boolean'];
-  slug?: InputMaybe<Scalars['Slug']>;
-  socialMediaAuthorIDs: Array<Scalars['ID']>;
-  socialMediaDescription?: InputMaybe<Scalars['String']>;
-  socialMediaImageID?: InputMaybe<Scalars['ID']>;
-  socialMediaTitle?: InputMaybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  title: Scalars['String'];
-};
-
-export type ArticleNavigationLink = BaseNavigationLink & {
-  __typename?: 'ArticleNavigationLink';
-  article?: Maybe<Article>;
-  label: Scalars['String'];
-};
-
-export type ArticleNavigationLinkInput = {
-  articleID: Scalars['ID'];
-  label: Scalars['String'];
-};
-
-export type ArticleRevision = {
-  __typename?: 'ArticleRevision';
-  authors: Array<Author>;
-  blocks: Array<Block>;
-  breaking: Scalars['Boolean'];
-  canonicalUrl?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-  hideAuthor: Scalars['Boolean'];
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  likes?: Maybe<Scalars['Int']>;
-  preTitle?: Maybe<Scalars['String']>;
-  properties: Array<Properties>;
-  publishAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  revision: Scalars['Int'];
-  seoTitle?: Maybe<Scalars['String']>;
-  slug?: Maybe<Scalars['String']>;
-  socialMediaAuthors: Array<Author>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaImage?: Maybe<Image>;
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  /** @deprecated Tags now live on the Article itself */
-  tags: Array<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  url: Scalars['String'];
-};
-
-export enum ArticleSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt',
-  PublishAt = 'publishAt',
-  PublishedAt = 'publishedAt',
-  UpdatedAt = 'updatedAt'
-}
-
-export type ArticleTeaser = {
-  __typename?: 'ArticleTeaser';
-  article?: Maybe<Article>;
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  /** @deprecated Use block styles instead of this */
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type ArticleTeaserInput = {
-  articleID: Scalars['ID'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  style?: InputMaybe<TeaserStyle>;
-  title?: InputMaybe<Scalars['String']>;
 };
 
 export type AuthProvider = {
@@ -186,12 +49,13 @@ export type Author = {
   hideOnArticle?: Maybe<Scalars['Boolean']>;
   hideOnTeam?: Maybe<Scalars['Boolean']>;
   hideOnTeaser?: Maybe<Scalars['Boolean']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   image?: Maybe<Image>;
   jobTitle?: Maybe<Scalars['String']>;
   links?: Maybe<Array<AuthorLink>>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  peer?: Maybe<Peer>;
   slug: Scalars['Slug'];
   tags: Array<Tag>;
   url: Scalars['String'];
@@ -204,16 +68,10 @@ export type AuthorConnection = {
   totalCount: Scalars['Int'];
 };
 
-export type AuthorCreatedAction = {
-  __typename?: 'AuthorCreatedAction';
-  author: Author;
-  date: Scalars['DateTime'];
-};
-
 export type AuthorFilter = {
   hideOnTeam?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']>>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type AuthorInput = {
@@ -221,12 +79,12 @@ export type AuthorInput = {
   hideOnArticle?: InputMaybe<Scalars['Boolean']>;
   hideOnTeam?: InputMaybe<Scalars['Boolean']>;
   hideOnTeaser?: InputMaybe<Scalars['Boolean']>;
-  imageID?: InputMaybe<Scalars['ID']>;
+  imageID?: InputMaybe<Scalars['String']>;
   jobTitle?: InputMaybe<Scalars['String']>;
   links?: InputMaybe<Array<AuthorLinkInput>>;
   name: Scalars['String'];
   slug: Scalars['Slug'];
-  tagIds?: InputMaybe<Array<Scalars['ID']>>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type AuthorLink = {
@@ -259,51 +117,6 @@ export type AvailablePaymentMethodInput = {
   paymentPeriodicities: Array<PaymentPeriodicity>;
 };
 
-export type BaseNavigationLink = {
-  label: Scalars['String'];
-};
-
-export type BildwurfAdBlock = {
-  __typename?: 'BildwurfAdBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  zoneID: Scalars['String'];
-};
-
-export type BildwurfAdBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  zoneID: Scalars['String'];
-};
-
-export type Block = BildwurfAdBlock | CommentBlock | EmbedBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | LinkPageBreakBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock;
-
-export type BlockInput = {
-  bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
-  comment?: InputMaybe<CommentBlockInput>;
-  embed?: InputMaybe<EmbedBlockInput>;
-  event?: InputMaybe<EventBlockInput>;
-  facebookPost?: InputMaybe<FacebookPostBlockInput>;
-  facebookVideo?: InputMaybe<FacebookVideoBlockInput>;
-  html?: InputMaybe<HtmlBlockInput>;
-  image?: InputMaybe<ImageBlockInput>;
-  imageGallery?: InputMaybe<ImageGalleryBlockInput>;
-  instagramPost?: InputMaybe<InstagramPostBlockInput>;
-  linkPageBreak?: InputMaybe<LinkPageBreakBlockInput>;
-  listicle?: InputMaybe<ListicleBlockInput>;
-  polisConversation?: InputMaybe<PolisConversationBlockInput>;
-  poll?: InputMaybe<PollBlockInput>;
-  quote?: InputMaybe<QuoteBlockInput>;
-  richText?: InputMaybe<RichTextBlockInput>;
-  soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>;
-  teaserGrid?: InputMaybe<TeaserGridBlockInput>;
-  teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>;
-  teaserList?: InputMaybe<TeaserListBlockInput>;
-  tikTokVideo?: InputMaybe<TikTokVideoBlockInput>;
-  title?: InputMaybe<TitleBlockInput>;
-  twitterTweet?: InputMaybe<TwitterTweetBlockInput>;
-  vimeoVideo?: InputMaybe<VimeoVideoBlockInput>;
-  youTubeVideo?: InputMaybe<YouTubeVideoBlockInput>;
-};
-
 export type Comment = {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
@@ -311,13 +124,12 @@ export type Comment = {
   featured?: Maybe<Scalars['Boolean']>;
   guestUserImage?: Maybe<Image>;
   guestUsername?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  itemID: Scalars['ID'];
+  id: Scalars['String'];
+  itemID: Scalars['String'];
   itemType: CommentItemType;
   modifiedAt: Scalars['DateTime'];
   overriddenRatings?: Maybe<Array<OverriddenRating>>;
   parentComment?: Maybe<Comment>;
-  peerId?: Maybe<Scalars['ID']>;
   rejectionReason?: Maybe<CommentRejectionReason>;
   revisions: Array<CommentRevision>;
   source?: Maybe<Scalars['String']>;
@@ -333,31 +145,6 @@ export enum CommentAuthorType {
   VerifiedUser = 'verifiedUser'
 }
 
-export type CommentBlock = {
-  __typename?: 'CommentBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  comments: Array<Comment>;
-  filter: CommentBlockFilter;
-};
-
-export type CommentBlockFilter = {
-  __typename?: 'CommentBlockFilter';
-  comments?: Maybe<Array<Scalars['ID']>>;
-  item?: Maybe<Scalars['ID']>;
-  tags?: Maybe<Array<Scalars['ID']>>;
-};
-
-export type CommentBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  filter: CommentBlockInputFilter;
-};
-
-export type CommentBlockInputFilter = {
-  comments?: InputMaybe<Array<Scalars['ID']>>;
-  item?: InputMaybe<Scalars['ID']>;
-  tags?: InputMaybe<Array<Scalars['ID']>>;
-};
-
 export type CommentConnection = {
   __typename?: 'CommentConnection';
   nodes: Array<Comment>;
@@ -365,36 +152,29 @@ export type CommentConnection = {
   totalCount: Scalars['Int'];
 };
 
-export type CommentCreatedAction = {
-  __typename?: 'CommentCreatedAction';
-  comment: Comment;
-  date: Scalars['DateTime'];
-};
-
 export type CommentFilter = {
-  item?: InputMaybe<Scalars['ID']>;
-  itemID?: InputMaybe<Scalars['ID']>;
+  item?: InputMaybe<Scalars['String']>;
+  itemID?: InputMaybe<Scalars['String']>;
   itemType?: InputMaybe<CommentItemType>;
   states?: InputMaybe<Array<CommentState>>;
-  tags?: InputMaybe<Array<Scalars['ID']>>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export enum CommentItemType {
   Article = 'article',
-  Page = 'page',
-  PeerArticle = 'peerArticle'
+  Page = 'page'
 }
 
 export type CommentRatingOverrideUpdateInput = {
-  answerId: Scalars['ID'];
+  answerId: Scalars['String'];
   value?: InputMaybe<Scalars['Int']>;
 };
 
 export type CommentRatingSystemAnswer = {
   __typename?: 'CommentRatingSystemAnswer';
   answer?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  ratingSystemId: Scalars['ID'];
+  id: Scalars['String'];
+  ratingSystemId: Scalars['String'];
   type: RatingSystemType;
 };
 
@@ -439,7 +219,7 @@ export type CreatePeerInput = {
 export type CreatedToken = {
   __typename?: 'CreatedToken';
   createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   token: Scalars['String'];
@@ -450,225 +230,18 @@ export enum Currency {
   Eur = 'EUR'
 }
 
-export type CustomTeaser = {
-  __typename?: 'CustomTeaser';
-  contentUrl?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  properties?: Maybe<Array<Properties>>;
-  /** @deprecated Use block styles instead of this */
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type CustomTeaserInput = {
-  contentUrl?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  properties: Array<PropertiesInput>;
-  style?: InputMaybe<TeaserStyle>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
 export type DateFilter = {
   comparison: DateFilterComparison;
   date?: InputMaybe<Scalars['DateTime']>;
 };
 
 export enum DateFilterComparison {
-  Eq = 'eq',
-  Gt = 'gt',
-  Gte = 'gte',
-  Lt = 'lt',
-  Lte = 'lte'
+  Equal = 'Equal',
+  GreaterThan = 'GreaterThan',
+  GreaterThanOrEqual = 'GreaterThanOrEqual',
+  LowerThan = 'LowerThan',
+  LowerThanOrEqual = 'LowerThanOrEqual'
 }
-
-export type EmbedBlock = {
-  __typename?: 'EmbedBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['Int']>;
-  sandbox?: Maybe<Scalars['String']>;
-  styleCustom?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
-};
-
-export type EmbedBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['Int']>;
-  sandbox?: InputMaybe<Scalars['String']>;
-  styleCustom?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
-  url?: InputMaybe<Scalars['String']>;
-  width?: InputMaybe<Scalars['Int']>;
-};
-
-export type Event = {
-  __typename?: 'Event';
-  description?: Maybe<Scalars['RichText']>;
-  endsAt?: Maybe<Scalars['DateTime']>;
-  externalSourceId?: Maybe<Scalars['String']>;
-  externalSourceName?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  startsAt: Scalars['DateTime'];
-  status: EventStatus;
-  tags: Array<Tag>;
-  url: Scalars['String'];
-};
-
-export type EventBlock = {
-  __typename?: 'EventBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  events: Array<Event>;
-  filter: EventBlockFilter;
-};
-
-export type EventBlockFilter = {
-  __typename?: 'EventBlockFilter';
-  events?: Maybe<Array<Scalars['ID']>>;
-  tags?: Maybe<Array<Scalars['ID']>>;
-};
-
-export type EventBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  filter: EventBlockInputFilter;
-};
-
-export type EventBlockInputFilter = {
-  events?: InputMaybe<Array<Scalars['ID']>>;
-  tags?: InputMaybe<Array<Scalars['ID']>>;
-};
-
-export type EventConnection = {
-  __typename?: 'EventConnection';
-  nodes: Array<Event>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type EventCreatedAction = {
-  __typename?: 'EventCreatedAction';
-  date: Scalars['DateTime'];
-  event: Event;
-};
-
-export type EventFilter = {
-  from?: InputMaybe<Scalars['DateTime']>;
-  location?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['ID']>>;
-  to?: InputMaybe<Scalars['DateTime']>;
-  upcomingOnly?: InputMaybe<Scalars['Boolean']>;
-};
-
-export enum EventSort {
-  CreatedAt = 'CreatedAt',
-  EndsAt = 'EndsAt',
-  ModifiedAt = 'ModifiedAt',
-  StartsAt = 'StartsAt'
-}
-
-export enum EventStatus {
-  Cancelled = 'Cancelled',
-  Postponed = 'Postponed',
-  Rescheduled = 'Rescheduled',
-  Scheduled = 'Scheduled'
-}
-
-export type EventTeaser = {
-  __typename?: 'EventTeaser';
-  event?: Maybe<Event>;
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  /** @deprecated Use block styles instead of this */
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type EventTeaserInput = {
-  eventID: Scalars['ID'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  style?: InputMaybe<TeaserStyle>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export type ExternalNavigationLink = BaseNavigationLink & {
-  __typename?: 'ExternalNavigationLink';
-  label: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type ExternalNavigationLinkInput = {
-  label: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type FacebookPostBlock = {
-  __typename?: 'FacebookPostBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  postID: Scalars['String'];
-  userID: Scalars['String'];
-};
-
-export type FacebookPostBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  postID: Scalars['String'];
-  userID: Scalars['String'];
-};
-
-export type FacebookVideoBlock = {
-  __typename?: 'FacebookVideoBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  userID: Scalars['String'];
-  videoID: Scalars['String'];
-};
-
-export type FacebookVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  userID: Scalars['String'];
-  videoID: Scalars['String'];
-};
-
-export type FlexAlignment = {
-  __typename?: 'FlexAlignment';
-  h: Scalars['Int'];
-  i: Scalars['String'];
-  static: Scalars['Boolean'];
-  w: Scalars['Int'];
-  x: Scalars['Int'];
-  y: Scalars['Int'];
-};
-
-export type FlexAlignmentInput = {
-  h: Scalars['Int'];
-  i: Scalars['String'];
-  static: Scalars['Boolean'];
-  w: Scalars['Int'];
-  x: Scalars['Int'];
-  y: Scalars['Int'];
-};
-
-export type FlexTeaser = {
-  __typename?: 'FlexTeaser';
-  alignment: FlexAlignment;
-  teaser?: Maybe<Teaser>;
-};
-
-export type FlexTeaserInput = {
-  alignment: FlexAlignmentInput;
-  blockStyle?: InputMaybe<Scalars['String']>;
-  teaser?: InputMaybe<TeaserInput>;
-};
 
 export type FocalPoint = {
   __typename?: 'FocalPoint';
@@ -679,7 +252,7 @@ export type FocalPoint = {
 export type FullCommentRatingSystem = {
   __typename?: 'FullCommentRatingSystem';
   answers: Array<CommentRatingSystemAnswer>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   name?: Maybe<Scalars['String']>;
 };
 
@@ -688,32 +261,10 @@ export type FullPoll = {
   answers: Array<PollAnswerWithVoteCount>;
   closedAt?: Maybe<Scalars['DateTime']>;
   externalVoteSources: Array<PollExternalVoteSource>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
-};
-
-export type GalleryImageEdge = {
-  __typename?: 'GalleryImageEdge';
-  caption?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-};
-
-export type GalleryImageEdgeInput = {
-  caption?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-};
-
-export type HtmlBlock = {
-  __typename?: 'HTMLBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  html?: Maybe<Scalars['String']>;
-};
-
-export type HtmlBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  html?: InputMaybe<Scalars['String']>;
 };
 
 export type Image = {
@@ -726,7 +277,7 @@ export type Image = {
   focalPoint?: Maybe<FocalPoint>;
   format: Scalars['String'];
   height: Scalars['Int'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   license?: Maybe<Scalars['String']>;
   link?: Maybe<Scalars['String']>;
   mimeType: Scalars['String'];
@@ -744,21 +295,6 @@ export type ImageTransformUrlArgs = {
   input?: InputMaybe<ImageTransformation>;
 };
 
-export type ImageBlock = {
-  __typename?: 'ImageBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  caption?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-  linkUrl?: Maybe<Scalars['String']>;
-};
-
-export type ImageBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  caption?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-  linkUrl?: InputMaybe<Scalars['String']>;
-};
-
 export type ImageConnection = {
   __typename?: 'ImageConnection';
   nodes: Array<Image>;
@@ -769,17 +305,6 @@ export type ImageConnection = {
 export type ImageFilter = {
   tags?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
-};
-
-export type ImageGalleryBlock = {
-  __typename?: 'ImageGalleryBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  images: Array<GalleryImageEdge>;
-};
-
-export type ImageGalleryBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  images?: InputMaybe<Array<InputMaybe<GalleryImageEdgeInput>>>;
 };
 
 export enum ImageOutput {
@@ -814,27 +339,16 @@ export type InputPoint = {
   y: Scalars['Float'];
 };
 
-export type InstagramPostBlock = {
-  __typename?: 'InstagramPostBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  postID: Scalars['String'];
-};
-
-export type InstagramPostBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  postID: Scalars['String'];
-};
-
 export type Invoice = {
   __typename?: 'Invoice';
   canceledAt?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
   currency: Currency;
   description?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   items: Array<InvoiceItem>;
   mail: Scalars['String'];
-  manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>;
+  manuallySetAsPaidByUserId?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   paidAt?: Maybe<Scalars['DateTime']>;
   total: Scalars['Int'];
@@ -851,16 +365,16 @@ export type InvoiceFilter = {
   canceledAt?: InputMaybe<Scalars['Date']>;
   mail?: InputMaybe<Scalars['String']>;
   paidAt?: InputMaybe<Scalars['Date']>;
-  subscriptionID?: InputMaybe<Scalars['ID']>;
-  userID?: InputMaybe<Scalars['ID']>;
+  subscriptionID?: InputMaybe<Scalars['String']>;
+  userID?: InputMaybe<Scalars['String']>;
 };
 
 export type InvoiceInput = {
   description?: InputMaybe<Scalars['String']>;
   items: Array<InvoiceItemInput>;
   mail: Scalars['String'];
-  manuallySetAsPaidByUserId?: InputMaybe<Scalars['ID']>;
-  subscriptionID?: InputMaybe<Scalars['ID']>;
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
+  subscriptionID?: InputMaybe<Scalars['String']>;
 };
 
 export type InvoiceItem = {
@@ -895,83 +409,26 @@ export type JwtToken = {
   token: Scalars['String'];
 };
 
-export type LinkPageBreakBlock = {
-  __typename?: 'LinkPageBreakBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  hideButton: Scalars['Boolean'];
-  image?: Maybe<Image>;
-  /** @deprecated Use block styles instead of this */
-  layoutOption?: Maybe<Scalars['String']>;
-  linkTarget?: Maybe<Scalars['String']>;
-  linkText?: Maybe<Scalars['String']>;
-  linkURL?: Maybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-  /** @deprecated Use block styles instead of this */
-  styleOption?: Maybe<Scalars['String']>;
-  /** @deprecated Use block styles instead of this */
-  templateOption?: Maybe<Scalars['String']>;
-  text?: Maybe<Scalars['String']>;
-};
-
-export type LinkPageBreakBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  hideButton: Scalars['Boolean'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  layoutOption?: InputMaybe<Scalars['String']>;
-  linkTarget?: InputMaybe<Scalars['String']>;
-  linkText?: InputMaybe<Scalars['String']>;
-  linkURL?: InputMaybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-  styleOption?: InputMaybe<Scalars['String']>;
-  templateOption?: InputMaybe<Scalars['String']>;
-  text?: InputMaybe<Scalars['String']>;
-};
-
-export type ListicleBlock = {
-  __typename?: 'ListicleBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  items: Array<ListicleItem>;
-};
-
-export type ListicleBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  items?: InputMaybe<Array<InputMaybe<ListicleItemInput>>>;
-};
-
-export type ListicleItem = {
-  __typename?: 'ListicleItem';
-  image?: Maybe<Image>;
-  richText: Scalars['RichText'];
-  title: Scalars['String'];
-};
-
-export type ListicleItemInput = {
-  imageID?: InputMaybe<Scalars['ID']>;
-  richText: Scalars['RichText'];
-  title: Scalars['String'];
-};
-
 export type MemberPlan = {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
+  confirmationPageId?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
-  failPage?: Maybe<Page>;
-  failPageId?: Maybe<Scalars['ID']>;
-  id: Scalars['ID'];
+  failPageId?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
   image?: Maybe<Image>;
   maxCount?: Maybe<Scalars['Int']>;
-  migrateToTargetPaymentMethodID?: Maybe<Scalars['ID']>;
+  migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['String'];
-  successPage?: Maybe<Page>;
-  successPageId?: Maybe<Scalars['ID']>;
+  successPageId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
 };
 
@@ -993,16 +450,17 @@ export type MemberPlanInput = {
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
+  confirmationPageId?: InputMaybe<Scalars['String']>;
   currency: Currency;
   description?: InputMaybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
-  failPageId?: InputMaybe<Scalars['ID']>;
-  imageID?: InputMaybe<Scalars['ID']>;
+  failPageId?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['String']>;
   maxCount?: InputMaybe<Scalars['Int']>;
-  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['ID']>;
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   slug: Scalars['String'];
-  successPageId?: InputMaybe<Scalars['ID']>;
+  successPageId?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -1015,14 +473,10 @@ export type Mutation = {
   __typename?: 'Mutation';
   approveComment: Comment;
   cancelSubscription?: Maybe<Subscription>;
-  createArticle: Article;
   createAuthor?: Maybe<Author>;
   createComment: Comment;
-  createEvent?: Maybe<Event>;
   createInvoice?: Maybe<Invoice>;
   createMemberPlan?: Maybe<MemberPlan>;
-  createNavigation?: Maybe<Navigation>;
-  createPage: Page;
   createPaymentFromInvoice?: Maybe<Payment>;
   createPaymentMethod?: Maybe<PaymentMethod>;
   createPeer: Peer;
@@ -1038,15 +492,11 @@ export type Mutation = {
   createToken: CreatedToken;
   createUser?: Maybe<User>;
   createUserRole?: Maybe<UserRole>;
-  deleteArticle?: Maybe<Article>;
   deleteAuthor?: Maybe<Author>;
   deleteComment: Comment;
-  deleteEvent?: Maybe<Event>;
   deleteImage?: Maybe<Image>;
   deleteInvoice?: Maybe<Invoice>;
   deleteMemberPlan?: Maybe<MemberPlan>;
-  deleteNavigation?: Maybe<Navigation>;
-  deletePage?: Maybe<Page>;
   deletePaymentMethod?: Maybe<PaymentMethod>;
   deletePeer?: Maybe<Peer>;
   deletePoll?: Maybe<FullPoll>;
@@ -1058,12 +508,8 @@ export type Mutation = {
   deleteToken?: Maybe<CreatedToken>;
   deleteUser?: Maybe<User>;
   deleteUserRole?: Maybe<UserRole>;
-  duplicateArticle: Article;
-  duplicatePage: Page;
   importSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
-  publishArticle?: Maybe<Article>;
-  publishPage?: Maybe<Page>;
   rejectComment: Comment;
   renewSubscription?: Maybe<Invoice>;
   requestChangesOnComment: Comment;
@@ -1073,17 +519,11 @@ export type Mutation = {
   sendJWTLogin: Scalars['String'];
   sendWebsiteLogin: Scalars['String'];
   sessions: Array<Session>;
-  unpublishArticle?: Maybe<Article>;
-  unpublishPage?: Maybe<Page>;
-  updateArticle?: Maybe<Article>;
   updateAuthor?: Maybe<Author>;
   updateComment: Comment;
-  updateEvent?: Maybe<Event>;
   updateImage?: Maybe<Image>;
   updateInvoice?: Maybe<Invoice>;
   updateMemberPlan?: Maybe<MemberPlan>;
-  updateNavigation?: Maybe<Navigation>;
-  updatePage?: Maybe<Page>;
   updatePaymentMethod?: Maybe<PaymentMethod>;
   updatePeer: Peer;
   updatePeerProfile: PeerProfile;
@@ -1099,18 +539,13 @@ export type Mutation = {
 
 
 export type MutationApproveCommentArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationCancelSubscriptionArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   reason: SubscriptionDeactivationReason;
-};
-
-
-export type MutationCreateArticleArgs = {
-  input: ArticleInput;
 };
 
 
@@ -1120,25 +555,11 @@ export type MutationCreateAuthorArgs = {
 
 
 export type MutationCreateCommentArgs = {
-  itemID: Scalars['ID'];
+  itemID: Scalars['String'];
   itemType: CommentItemType;
-  parentID?: InputMaybe<Scalars['ID']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']>>;
+  parentID?: InputMaybe<Scalars['String']>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
   text?: InputMaybe<Scalars['RichText']>;
-};
-
-
-export type MutationCreateEventArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  externalSourceId?: InputMaybe<Scalars['String']>;
-  externalSourceName?: InputMaybe<Scalars['String']>;
-  imageId?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  startsAt: Scalars['DateTime'];
-  tagIds?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 
@@ -1149,16 +570,6 @@ export type MutationCreateInvoiceArgs = {
 
 export type MutationCreateMemberPlanArgs = {
   input: MemberPlanInput;
-};
-
-
-export type MutationCreateNavigationArgs = {
-  input: NavigationInput;
-};
-
-
-export type MutationCreatePageArgs = {
-  input: PageInput;
 };
 
 
@@ -1186,19 +597,19 @@ export type MutationCreatePollArgs = {
 
 export type MutationCreatePollAnswerArgs = {
   answer?: InputMaybe<Scalars['String']>;
-  pollId: Scalars['ID'];
+  pollId: Scalars['String'];
 };
 
 
 export type MutationCreatePollExternalVoteSourceArgs = {
-  pollId: Scalars['ID'];
+  pollId: Scalars['String'];
   source?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationCreateRatingSystemAnswerArgs = {
   answer?: InputMaybe<Scalars['String']>;
-  ratingSystemId: Scalars['ID'];
+  ratingSystemId: Scalars['String'];
   type?: InputMaybe<RatingSystemType>;
 };
 
@@ -1249,113 +660,83 @@ export type MutationCreateUserRoleArgs = {
 };
 
 
-export type MutationDeleteArticleArgs = {
-  id: Scalars['ID'];
-};
-
-
 export type MutationDeleteAuthorArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteCommentArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDeleteEventArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteImageArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteInvoiceArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteMemberPlanArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDeleteNavigationArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDeletePageArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeletePaymentMethodArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeletePeerArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeletePollArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeletePollAnswerArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeletePollExternalVoteSourceArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteRatingSystemAnswerArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteSubscriptionArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteTagArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteTokenArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteUserRoleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDuplicateArticleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDuplicatePageArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
@@ -1365,52 +746,36 @@ export type MutationImportSubscriptionArgs = {
 
 
 export type MutationMarkInvoiceAsPaidArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationPublishArticleArgs = {
-  id: Scalars['ID'];
-  publishAt?: InputMaybe<Scalars['DateTime']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']>;
-};
-
-
-export type MutationPublishPageArgs = {
-  id: Scalars['ID'];
-  publishAt?: InputMaybe<Scalars['DateTime']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  id: Scalars['String'];
 };
 
 
 export type MutationRejectCommentArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   rejectionReason?: InputMaybe<CommentRejectionReason>;
 };
 
 
 export type MutationRenewSubscriptionArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationRequestChangesOnCommentArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   rejectionReason: CommentRejectionReason;
 };
 
 
 export type MutationResetUserPasswordArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   password: Scalars['String'];
   sendMail?: InputMaybe<Scalars['Boolean']>;
 };
 
 
 export type MutationRevokeSessionArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
@@ -1425,95 +790,51 @@ export type MutationSendWebsiteLoginArgs = {
 };
 
 
-export type MutationUnpublishArticleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationUnpublishPageArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationUpdateArticleArgs = {
-  id: Scalars['ID'];
-  input: ArticleInput;
-};
-
-
 export type MutationUpdateAuthorArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: AuthorInput;
 };
 
 
 export type MutationUpdateCommentArgs = {
   featured?: InputMaybe<Scalars['Boolean']>;
-  guestUserImageID?: InputMaybe<Scalars['ID']>;
+  guestUserImageID?: InputMaybe<Scalars['String']>;
   guestUsername?: InputMaybe<Scalars['String']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   ratingOverrides?: InputMaybe<Array<CommentRatingOverrideUpdateInput>>;
   revision?: InputMaybe<CommentRevisionUpdateInput>;
   source?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']>>;
-  userID?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type MutationUpdateEventArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  externalSourceId?: InputMaybe<Scalars['String']>;
-  externalSourceName?: InputMaybe<Scalars['String']>;
-  id: Scalars['ID'];
-  imageId?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  startsAt?: InputMaybe<Scalars['DateTime']>;
-  status?: InputMaybe<EventStatus>;
-  tagIds?: InputMaybe<Array<Scalars['ID']>>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
+  userID?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationUpdateImageArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UpdateImageInput;
 };
 
 
 export type MutationUpdateInvoiceArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: InvoiceInput;
 };
 
 
 export type MutationUpdateMemberPlanArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: MemberPlanInput;
 };
 
 
-export type MutationUpdateNavigationArgs = {
-  id: Scalars['ID'];
-  input: NavigationInput;
-};
-
-
-export type MutationUpdatePageArgs = {
-  id: Scalars['ID'];
-  input: PageInput;
-};
-
-
 export type MutationUpdatePaymentMethodArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: PaymentMethodInput;
 };
 
 
 export type MutationUpdatePeerArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UpdatePeerInput;
 };
 
@@ -1529,7 +850,7 @@ export type MutationUpdatePollArgs = {
   externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources>>;
   infoText?: InputMaybe<Scalars['RichText']>;
   opensAt?: InputMaybe<Scalars['DateTime']>;
-  pollId: Scalars['ID'];
+  pollId: Scalars['String'];
   question?: InputMaybe<Scalars['String']>;
 };
 
@@ -1537,7 +858,7 @@ export type MutationUpdatePollArgs = {
 export type MutationUpdateRatingSystemArgs = {
   answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswer>>;
   name?: InputMaybe<Scalars['String']>;
-  ratingSystemId: Scalars['ID'];
+  ratingSystemId: Scalars['String'];
 };
 
 
@@ -1547,26 +868,26 @@ export type MutationUpdateSettingListArgs = {
 
 
 export type MutationUpdateSubscriptionArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: SubscriptionInput;
 };
 
 
 export type MutationUpdateTagArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationUpdateUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UserInput;
 };
 
 
 export type MutationUpdateUserRoleArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UserRoleInput;
 };
 
@@ -1575,70 +896,11 @@ export type MutationUploadImageArgs = {
   input: UploadImageInput;
 };
 
-export type Navigation = {
-  __typename?: 'Navigation';
-  id: Scalars['ID'];
-  key: Scalars['String'];
-  links: Array<NavigationLink>;
-  name: Scalars['String'];
-};
-
-export type NavigationInput = {
-  key: Scalars['String'];
-  links: Array<NavigationLinkInput>;
-  name: Scalars['String'];
-};
-
-export type NavigationLink = ArticleNavigationLink | ExternalNavigationLink | PageNavigationLink;
-
-export type NavigationLinkInput = {
-  article?: InputMaybe<ArticleNavigationLinkInput>;
-  external?: InputMaybe<ExternalNavigationLinkInput>;
-  page?: InputMaybe<PageNavigationLinkInput>;
-};
-
 export type OAuth2Account = {
   __typename?: 'OAuth2Account';
   provider: Scalars['String'];
   scope: Scalars['String'];
   type: Scalars['String'];
-};
-
-export type Page = {
-  __typename?: 'Page';
-  createdAt: Scalars['DateTime'];
-  draft?: Maybe<PageRevision>;
-  id: Scalars['ID'];
-  latest: PageRevision;
-  modifiedAt: Scalars['DateTime'];
-  pending?: Maybe<PageRevision>;
-  published?: Maybe<PageRevision>;
-  shared: Scalars['Boolean'];
-  tags: Array<Tag>;
-};
-
-export type PageConnection = {
-  __typename?: 'PageConnection';
-  nodes: Array<Page>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type PageCreatedAction = {
-  __typename?: 'PageCreatedAction';
-  date: Scalars['DateTime'];
-  page: Page;
-};
-
-export type PageFilter = {
-  description?: InputMaybe<Scalars['String']>;
-  draft?: InputMaybe<Scalars['Boolean']>;
-  pending?: InputMaybe<Scalars['Boolean']>;
-  publicationDateFrom?: InputMaybe<DateFilter>;
-  publicationDateTo?: InputMaybe<DateFilter>;
-  published?: InputMaybe<Scalars['Boolean']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
 };
 
 export type PageInfo = {
@@ -1649,83 +911,10 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars['String']>;
 };
 
-export type PageInput = {
-  blocks: Array<BlockInput>;
-  description?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-  properties: Array<PropertiesInput>;
-  slug: Scalars['Slug'];
-  socialMediaDescription?: InputMaybe<Scalars['String']>;
-  socialMediaImageID?: InputMaybe<Scalars['ID']>;
-  socialMediaTitle?: InputMaybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  title: Scalars['String'];
-};
-
-export type PageNavigationLink = BaseNavigationLink & {
-  __typename?: 'PageNavigationLink';
-  label: Scalars['String'];
-  page?: Maybe<Page>;
-};
-
-export type PageNavigationLinkInput = {
-  label: Scalars['String'];
-  pageID: Scalars['ID'];
-};
-
-export type PageRevision = {
-  __typename?: 'PageRevision';
-  blocks: Array<Block>;
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-  properties: Array<Properties>;
-  publishAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  revision: Scalars['Int'];
-  slug?: Maybe<Scalars['Slug']>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaImage?: Maybe<Image>;
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  /** @deprecated Tags now live on the Page itself */
-  tags: Array<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  url: Scalars['String'];
-};
-
-export enum PageSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt',
-  PublishAt = 'publishAt',
-  PublishedAt = 'publishedAt',
-  UpdatedAt = 'updatedAt'
-}
-
-export type PageTeaser = {
-  __typename?: 'PageTeaser';
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  page?: Maybe<Page>;
-  preTitle?: Maybe<Scalars['String']>;
-  /** @deprecated Use block styles instead of this */
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type PageTeaserInput = {
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  pageID: Scalars['ID'];
-  preTitle?: InputMaybe<Scalars['String']>;
-  style?: InputMaybe<TeaserStyle>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
 export type Payment = {
   __typename?: 'Payment';
   createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   intentData?: Maybe<Scalars['String']>;
   intentID?: Maybe<Scalars['String']>;
   intentSecret?: Maybe<Scalars['String']>;
@@ -1749,8 +938,8 @@ export type PaymentFilter = {
 
 export type PaymentFromInvoiceInput = {
   failureURL?: InputMaybe<Scalars['String']>;
-  invoiceID: Scalars['ID'];
-  paymentMethodID?: InputMaybe<Scalars['ID']>;
+  invoiceID: Scalars['String'];
+  paymentMethodID?: InputMaybe<Scalars['String']>;
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
   successURL?: InputMaybe<Scalars['String']>;
 };
@@ -1760,7 +949,7 @@ export type PaymentMethod = {
   active: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
@@ -1787,7 +976,7 @@ export enum PaymentPeriodicity {
 
 export type PaymentProvider = {
   __typename?: 'PaymentProvider';
-  id: Scalars['ID'];
+  id: Scalars['String'];
   name: Scalars['String'];
 };
 
@@ -1816,49 +1005,12 @@ export type Peer = {
   __typename?: 'Peer';
   createdAt: Scalars['DateTime'];
   hostURL: Scalars['String'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   isDisabled?: Maybe<Scalars['Boolean']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   profile?: Maybe<PeerProfile>;
   slug: Scalars['String'];
-};
-
-export type PeerArticle = {
-  __typename?: 'PeerArticle';
-  article: Article;
-  peer: Peer;
-  peeredArticleURL: Scalars['String'];
-};
-
-export type PeerArticleConnection = {
-  __typename?: 'PeerArticleConnection';
-  nodes: Array<PeerArticle>;
-  pageInfo: UnidirectionalPageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type PeerArticleTeaser = {
-  __typename?: 'PeerArticleTeaser';
-  article?: Maybe<Article>;
-  articleID: Scalars['ID'];
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  peer?: Maybe<Peer>;
-  preTitle?: Maybe<Scalars['String']>;
-  /** @deprecated Use block styles instead of this */
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type PeerArticleTeaserInput = {
-  articleID: Scalars['ID'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  peerID: Scalars['ID'];
-  preTitle?: InputMaybe<Scalars['String']>;
-  style?: InputMaybe<TeaserStyle>;
-  title?: InputMaybe<Scalars['String']>;
 };
 
 export type PeerProfile = {
@@ -1876,11 +1028,11 @@ export type PeerProfile = {
 };
 
 export type PeerProfileInput = {
-  callToActionImageID?: InputMaybe<Scalars['ID']>;
+  callToActionImageID?: InputMaybe<Scalars['String']>;
   callToActionImageURL?: InputMaybe<Scalars['String']>;
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
-  logoID?: InputMaybe<Scalars['ID']>;
+  logoID?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   themeColor: Scalars['Color'];
   themeFontColor: Scalars['Color'];
@@ -1893,21 +1045,10 @@ export type Permission = {
   id: Scalars['String'];
 };
 
-export type PolisConversationBlock = {
-  __typename?: 'PolisConversationBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  conversationID: Scalars['String'];
-};
-
-export type PolisConversationBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  conversationID: Scalars['String'];
-};
-
 export type Poll = {
   __typename?: 'Poll';
   closedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
@@ -1915,27 +1056,16 @@ export type Poll = {
 export type PollAnswer = {
   __typename?: 'PollAnswer';
   answer?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  pollId: Scalars['ID'];
+  id: Scalars['String'];
+  pollId: Scalars['String'];
 };
 
 export type PollAnswerWithVoteCount = {
   __typename?: 'PollAnswerWithVoteCount';
   answer?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  pollId: Scalars['ID'];
+  id: Scalars['String'];
+  pollId: Scalars['String'];
   votes: Scalars['Int'];
-};
-
-export type PollBlock = {
-  __typename?: 'PollBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  poll?: Maybe<FullPoll>;
-};
-
-export type PollBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  pollId?: InputMaybe<Scalars['ID']>;
 };
 
 export type PollConnection = {
@@ -1948,13 +1078,13 @@ export type PollConnection = {
 export type PollExternalVote = {
   __typename?: 'PollExternalVote';
   amount: Scalars['VoteValue'];
-  answerId: Scalars['ID'];
-  id: Scalars['ID'];
+  answerId: Scalars['String'];
+  id: Scalars['String'];
 };
 
 export type PollExternalVoteSource = {
   __typename?: 'PollExternalVoteSource';
-  id: Scalars['ID'];
+  id: Scalars['String'];
   source?: Maybe<Scalars['String']>;
   voteAmounts: Array<PollExternalVote>;
 };
@@ -1969,17 +1099,11 @@ export enum PollSort {
   OpensAt = 'OpensAt'
 }
 
-export type PollStartedAction = {
-  __typename?: 'PollStartedAction';
-  date: Scalars['DateTime'];
-  poll: Poll;
-};
-
 export type PollWithAnswers = {
   __typename?: 'PollWithAnswers';
   answers?: Maybe<Array<PollAnswer>>;
   closedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
@@ -1999,41 +1123,26 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  actions: Array<Action>;
-  article?: Maybe<Article>;
-  articlePreviewLink?: Maybe<Scalars['String']>;
-  articles: ArticleConnection;
   authProviders: Array<AuthProvider>;
   author?: Maybe<Author>;
   authors: AuthorConnection;
   comment?: Maybe<Comment>;
   comments: CommentConnection;
   createJWTForUser?: Maybe<JwtToken>;
-  event?: Maybe<Event>;
-  events?: Maybe<EventConnection>;
   image?: Maybe<Image>;
   images: ImageConnection;
-  /** This query returns a list of original ids of imported events */
-  importedEventsIds?: Maybe<Array<Maybe<Scalars['String']>>>;
   invoice?: Maybe<Invoice>;
   invoices: InvoiceConnection;
   me?: Maybe<User>;
   memberPlan?: Maybe<MemberPlan>;
   memberPlans: MemberPlanConnection;
-  navigation?: Maybe<Navigation>;
-  navigations: Array<Navigation>;
   newSubscribersPerMonth?: Maybe<Array<Maybe<SubscribersPerMonth>>>;
-  page?: Maybe<Page>;
-  pagePreviewLink?: Maybe<Scalars['String']>;
-  pages: PageConnection;
   payment?: Maybe<Payment>;
   paymentMethod?: Maybe<PaymentMethod>;
   paymentMethods: Array<PaymentMethod>;
   paymentProviders: Array<PaymentProvider>;
   payments: PaymentConnection;
   peer?: Maybe<Peer>;
-  peerArticle?: Maybe<Article>;
-  peerArticles: PeerArticleConnection;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
   permissions?: Maybe<Array<Permission>>;
@@ -2056,40 +1165,19 @@ export type Query = {
 };
 
 
-export type QueryArticleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryArticlePreviewLinkArgs = {
-  hours: Scalars['Int'];
-  id: Scalars['ID'];
-};
-
-
-export type QueryArticlesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<ArticleFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<ArticleSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryAuthProvidersArgs = {
   redirectUri?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryAuthorArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['Slug']>;
 };
 
 
 export type QueryAuthorsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<AuthorFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2099,12 +1187,12 @@ export type QueryAuthorsArgs = {
 
 
 export type QueryCommentArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type QueryCommentsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<CommentFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2119,28 +1207,13 @@ export type QueryCreateJwtForUserArgs = {
 };
 
 
-export type QueryEventArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type QueryEventsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<EventFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<EventSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryImageArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryImagesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<ImageFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2150,12 +1223,12 @@ export type QueryImagesArgs = {
 
 
 export type QueryInvoiceArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryInvoicesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<InvoiceFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2165,13 +1238,13 @@ export type QueryInvoicesArgs = {
 
 
 export type QueryMemberPlanArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['Slug']>;
 };
 
 
 export type QueryMemberPlansArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<MemberPlanFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2180,50 +1253,23 @@ export type QueryMemberPlansArgs = {
 };
 
 
-export type QueryNavigationArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  key?: InputMaybe<Scalars['ID']>;
-};
-
-
 export type QueryNewSubscribersPerMonthArgs = {
   monthsBack?: InputMaybe<Scalars['Int']>;
 };
 
 
-export type QueryPageArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type QueryPagePreviewLinkArgs = {
-  hours: Scalars['Int'];
-  id: Scalars['ID'];
-};
-
-
-export type QueryPagesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<PageFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<PageSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryPaymentArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryPaymentMethodArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryPaymentsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<PaymentFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2233,35 +1279,17 @@ export type QueryPaymentsArgs = {
 
 
 export type QueryPeerArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryPeerArticleArgs = {
-  id: Scalars['ID'];
-  peerID: Scalars['ID'];
-};
-
-
-export type QueryPeerArticlesArgs = {
-  cursors?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<ArticleFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<SortOrder>;
-  peerFilter?: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<ArticleSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
 };
 
 
 export type QueryPollArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryPollsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<PollFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2282,12 +1310,12 @@ export type QuerySettingArgs = {
 
 
 export type QuerySubscriptionArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type QuerySubscriptionsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<SubscriptionFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2302,7 +1330,7 @@ export type QuerySubscriptionsAsCsvArgs = {
 
 
 export type QueryTagsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<TagFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2312,17 +1340,17 @@ export type QueryTagsArgs = {
 
 
 export type QueryUserArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryUserRoleArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryUserRolesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<UserRoleFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2332,7 +1360,7 @@ export type QueryUserRolesArgs = {
 
 
 export type QueryUsersArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<UserFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2340,41 +1368,15 @@ export type QueryUsersArgs = {
   take?: InputMaybe<Scalars['Int']>;
 };
 
-export type QuoteBlock = {
-  __typename?: 'QuoteBlock';
-  author?: Maybe<Scalars['String']>;
-  blockStyle?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-  quote?: Maybe<Scalars['String']>;
-};
-
-export type QuoteBlockInput = {
-  author?: InputMaybe<Scalars['String']>;
-  blockStyle?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-  quote?: InputMaybe<Scalars['String']>;
-};
-
 export enum RatingSystemType {
   Star = 'star'
 }
-
-export type RichTextBlock = {
-  __typename?: 'RichTextBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-};
-
-export type RichTextBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-};
 
 export type Session = {
   __typename?: 'Session';
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   user: User;
 };
 
@@ -2382,14 +1384,14 @@ export type SessionWithToken = {
   __typename?: 'SessionWithToken';
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   token: Scalars['String'];
   user: User;
 };
 
 export type Setting = {
   __typename?: 'Setting';
-  id: Scalars['ID'];
+  id: Scalars['String'];
   name: SettingName;
   settingRestriction?: Maybe<SettingRestriction>;
   value: Scalars['GraphQLSettingValueType'];
@@ -2425,17 +1427,6 @@ export enum SortOrder {
   Descending = 'Descending'
 }
 
-export type SoundCloudTrackBlock = {
-  __typename?: 'SoundCloudTrackBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  trackID: Scalars['String'];
-};
-
-export type SoundCloudTrackBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  trackID: Scalars['String'];
-};
-
 export type SubscribersPerMonth = {
   __typename?: 'SubscribersPerMonth';
   month: Scalars['String'];
@@ -2449,7 +1440,7 @@ export type Subscription = {
   currency: Currency;
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   memberPlan: MemberPlan;
   modifiedAt: Scalars['DateTime'];
   monthlyAmount: Scalars['Int'];
@@ -2468,12 +1459,6 @@ export type SubscriptionConnection = {
   totalCount: Scalars['Int'];
 };
 
-export type SubscriptionCreatedAction = {
-  __typename?: 'SubscriptionCreatedAction';
-  date: Scalars['DateTime'];
-  subscription: Subscription;
-};
-
 export type SubscriptionDeactivation = {
   __typename?: 'SubscriptionDeactivation';
   date: Scalars['DateTime'];
@@ -2488,6 +1473,7 @@ export type SubscriptionDeactivationInput = {
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
+  UserReplacedSubscription = 'userReplacedSubscription',
   UserSelfDeactivated = 'userSelfDeactivated'
 }
 
@@ -2509,7 +1495,7 @@ export type SubscriptionFilter = {
   startsAtFrom?: InputMaybe<DateFilter>;
   startsAtTo?: InputMaybe<DateFilter>;
   userHasAddress?: InputMaybe<Scalars['Boolean']>;
-  userID?: InputMaybe<Scalars['ID']>;
+  userID?: InputMaybe<Scalars['String']>;
 };
 
 export type SubscriptionInput = {
@@ -2523,7 +1509,7 @@ export type SubscriptionInput = {
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertiesInput>;
   startsAt: Scalars['DateTime'];
-  userID: Scalars['ID'];
+  userID: Scalars['String'];
 };
 
 export type SubscriptionPeriod = {
@@ -2531,8 +1517,8 @@ export type SubscriptionPeriod = {
   amount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   endsAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  invoiceID: Scalars['ID'];
+  id: Scalars['String'];
+  invoiceID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
   startsAt: Scalars['DateTime'];
 };
@@ -2544,7 +1530,7 @@ export enum SubscriptionSort {
 
 export type Tag = {
   __typename?: 'Tag';
-  id: Scalars['ID'];
+  id: Scalars['String'];
   main: Scalars['Boolean'];
   tag?: Maybe<Scalars['String']>;
   type?: Maybe<TagType>;
@@ -2577,121 +1563,10 @@ export enum TagType {
   Page = 'Page'
 }
 
-export type Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | PeerArticleTeaser;
-
-export type TeaserGridBlock = {
-  __typename?: 'TeaserGridBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  numColumns: Scalars['Int'];
-  teasers: Array<Maybe<Teaser>>;
-};
-
-export type TeaserGridBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  numColumns: Scalars['Int'];
-  teasers: Array<InputMaybe<TeaserInput>>;
-};
-
-export type TeaserGridFlexBlock = {
-  __typename?: 'TeaserGridFlexBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  flexTeasers: Array<Maybe<FlexTeaser>>;
-};
-
-export type TeaserGridFlexBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  flexTeasers: Array<FlexTeaserInput>;
-};
-
-export type TeaserInput = {
-  article?: InputMaybe<ArticleTeaserInput>;
-  custom?: InputMaybe<CustomTeaserInput>;
-  event?: InputMaybe<EventTeaserInput>;
-  page?: InputMaybe<PageTeaserInput>;
-  peerArticle?: InputMaybe<PeerArticleTeaserInput>;
-};
-
-export type TeaserListBlock = {
-  __typename?: 'TeaserListBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  filter: TeaserListBlockFilter;
-  skip?: Maybe<Scalars['Int']>;
-  sort?: Maybe<TeaserListBlockSort>;
-  take?: Maybe<Scalars['Int']>;
-  teaserType?: Maybe<TeaserType>;
-  teasers: Array<Maybe<Teaser>>;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type TeaserListBlockFilter = {
-  __typename?: 'TeaserListBlockFilter';
-  tagObjects: Array<Tag>;
-  tags?: Maybe<Array<Scalars['ID']>>;
-};
-
-export type TeaserListBlockFilterInput = {
-  tags?: InputMaybe<Array<Scalars['ID']>>;
-};
-
-export type TeaserListBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  filter: TeaserListBlockFilterInput;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<TeaserListBlockSort>;
-  take?: InputMaybe<Scalars['Int']>;
-  teaserType?: InputMaybe<TeaserType>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export enum TeaserListBlockSort {
-  HotAndTrending = 'hotAndTrending',
-  PublishedAt = 'publishedAt'
-}
-
-export enum TeaserStyle {
-  Default = 'default',
-  Light = 'light',
-  Text = 'text'
-}
-
-export enum TeaserType {
-  Article = 'article',
-  Custom = 'custom',
-  Event = 'event',
-  Page = 'page',
-  PeerArticle = 'peerArticle'
-}
-
-export type TikTokVideoBlock = {
-  __typename?: 'TikTokVideoBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  userID: Scalars['String'];
-  videoID: Scalars['String'];
-};
-
-export type TikTokVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  userID: Scalars['String'];
-  videoID: Scalars['String'];
-};
-
-export type TitleBlock = {
-  __typename?: 'TitleBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type TitleBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
 export type Token = {
   __typename?: 'Token';
   createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
 };
@@ -2700,28 +1575,9 @@ export type TokenInput = {
   name: Scalars['String'];
 };
 
-export type TwitterTweetBlock = {
-  __typename?: 'TwitterTweetBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  tweetID: Scalars['String'];
-  userID: Scalars['String'];
-};
-
-export type TwitterTweetBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  tweetID: Scalars['String'];
-  userID: Scalars['String'];
-};
-
-export type UnidirectionalPageInfo = {
-  __typename?: 'UnidirectionalPageInfo';
-  endCursor?: Maybe<Scalars['String']>;
-  hasNextPage: Scalars['Boolean'];
-};
-
 export type UpdateCommentRatingSystemAnswer = {
   answer?: InputMaybe<Scalars['String']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   type?: InputMaybe<RatingSystemType>;
 };
 
@@ -2746,16 +1602,16 @@ export type UpdatePeerInput = {
 
 export type UpdatePollAnswer = {
   answer?: InputMaybe<Scalars['String']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 export type UpdatePollExternalVote = {
   amount?: InputMaybe<Scalars['VoteValue']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 export type UpdatePollExternalVoteSources = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   source?: InputMaybe<Scalars['String']>;
   voteAmounts?: InputMaybe<Array<UpdatePollExternalVote>>;
 };
@@ -2825,12 +1681,6 @@ export type UserConnection = {
   totalCount: Scalars['Int'];
 };
 
-export type UserCreatedAction = {
-  __typename?: 'UserCreatedAction';
-  date: Scalars['DateTime'];
-  user: User;
-};
-
 export type UserFilter = {
   name?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
@@ -2848,7 +1698,7 @@ export type UserInput = {
   name: Scalars['String'];
   properties: Array<PropertiesInput>;
   roleIDs?: InputMaybe<Array<Scalars['String']>>;
-  userImageID?: InputMaybe<Scalars['ID']>;
+  userImageID?: InputMaybe<Scalars['String']>;
 };
 
 export type UserRole = {
@@ -2892,10 +1742,11 @@ export enum UserSort {
 export type UserSubscription = {
   __typename?: 'UserSubscription';
   autoRenew: Scalars['Boolean'];
+  confirmed: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   currency: Currency;
   deactivation?: Maybe<SubscriptionDeactivation>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   invoices: Array<Invoice>;
   memberPlan: MemberPlan;
   modifiedAt: Scalars['DateTime'];
@@ -2907,146 +1758,11 @@ export type UserSubscription = {
   startsAt: Scalars['DateTime'];
 };
 
-export type VimeoVideoBlock = {
-  __typename?: 'VimeoVideoBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  videoID: Scalars['String'];
-};
-
-export type VimeoVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  videoID: Scalars['String'];
-};
-
-export type YouTubeVideoBlock = {
-  __typename?: 'YouTubeVideoBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  videoID: Scalars['String'];
-};
-
-export type YouTubeVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  videoID: Scalars['String'];
-};
-
 export type OverriddenRating = {
   __typename?: 'overriddenRating';
-  answerId: Scalars['ID'];
+  answerId: Scalars['String'];
   value?: Maybe<Scalars['Int']>;
 };
-
-export type RecentActionsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type RecentActionsQuery = { __typename?: 'Query', actions: Array<{ __typename: 'ArticleCreatedAction', date: string, article: { __typename?: 'Article', id: string, createdAt: string, latest: { __typename?: 'ArticleRevision', title?: string | null, url: string } } } | { __typename: 'AuthorCreatedAction', date: string, author: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } } | { __typename: 'CommentCreatedAction', date: string, comment: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null, text?: Node[] | null }> } } | { __typename: 'EventCreatedAction', date: string, event: { __typename?: 'Event', id: string, name: string, location?: string | null } } | { __typename: 'PageCreatedAction', date: string, page: { __typename?: 'Page', id: string, createdAt: string, latest: { __typename?: 'PageRevision', title?: string | null, socialMediaTitle?: string | null, url: string } } } | { __typename: 'PollStartedAction', date: string, poll: { __typename?: 'Poll', id: string, question?: string | null } } | { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', email: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } } | { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } }> };
-
-type FullAction_ArticleCreatedAction_Fragment = { __typename: 'ArticleCreatedAction', date: string, article: { __typename?: 'Article', id: string, createdAt: string, latest: { __typename?: 'ArticleRevision', title?: string | null, url: string } } };
-
-type FullAction_AuthorCreatedAction_Fragment = { __typename: 'AuthorCreatedAction', date: string, author: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } };
-
-type FullAction_CommentCreatedAction_Fragment = { __typename: 'CommentCreatedAction', date: string, comment: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null, text?: Node[] | null }> } };
-
-type FullAction_EventCreatedAction_Fragment = { __typename: 'EventCreatedAction', date: string, event: { __typename?: 'Event', id: string, name: string, location?: string | null } };
-
-type FullAction_PageCreatedAction_Fragment = { __typename: 'PageCreatedAction', date: string, page: { __typename?: 'Page', id: string, createdAt: string, latest: { __typename?: 'PageRevision', title?: string | null, socialMediaTitle?: string | null, url: string } } };
-
-type FullAction_PollStartedAction_Fragment = { __typename: 'PollStartedAction', date: string, poll: { __typename?: 'Poll', id: string, question?: string | null } };
-
-type FullAction_SubscriptionCreatedAction_Fragment = { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', email: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } };
-
-type FullAction_UserCreatedAction_Fragment = { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } };
-
-export type FullActionFragment = FullAction_ArticleCreatedAction_Fragment | FullAction_AuthorCreatedAction_Fragment | FullAction_CommentCreatedAction_Fragment | FullAction_EventCreatedAction_Fragment | FullAction_PageCreatedAction_Fragment | FullAction_PollStartedAction_Fragment | FullAction_SubscriptionCreatedAction_Fragment | FullAction_UserCreatedAction_Fragment;
-
-export type MutationArticleFragment = { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } };
-
-export type ArticleRefFragment = { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
-
-export type ArticleListQueryVariables = Exact<{
-  filter?: InputMaybe<ArticleFilter>;
-  cursor?: InputMaybe<Scalars['ID']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<SortOrder>;
-  sort?: InputMaybe<ArticleSort>;
-}>;
-
-
-export type ArticleListQuery = { __typename?: 'Query', articles: { __typename?: 'ArticleConnection', totalCount: number, nodes: Array<{ __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type PeerArticleListQueryVariables = Exact<{
-  filter?: InputMaybe<ArticleFilter>;
-  cursors?: InputMaybe<Scalars['String']>;
-  peerFilter?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<SortOrder>;
-  sort?: InputMaybe<ArticleSort>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type PeerArticleListQuery = { __typename?: 'Query', peerArticles: { __typename?: 'PeerArticleConnection', totalCount: number, nodes: Array<{ __typename?: 'PeerArticle', peeredArticleURL: string, peer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null }, article: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } }>, pageInfo: { __typename?: 'UnidirectionalPageInfo', endCursor?: string | null, hasNextPage: boolean } } };
-
-export type CreateArticleMutationVariables = Exact<{
-  input: ArticleInput;
-}>;
-
-
-export type CreateArticleMutation = { __typename?: 'Mutation', createArticle: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } };
-
-export type UpdateArticleMutationVariables = Exact<{
-  id: Scalars['ID'];
-  input: ArticleInput;
-}>;
-
-
-export type UpdateArticleMutation = { __typename?: 'Mutation', updateArticle?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
-
-export type PublishArticleMutationVariables = Exact<{
-  id: Scalars['ID'];
-  publishAt: Scalars['DateTime'];
-  publishedAt: Scalars['DateTime'];
-  updatedAt: Scalars['DateTime'];
-}>;
-
-
-export type PublishArticleMutation = { __typename?: 'Mutation', publishArticle?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
-
-export type UnpublishArticleMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type UnpublishArticleMutation = { __typename?: 'Mutation', unpublishArticle?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
-
-export type DeleteArticleMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type DeleteArticleMutation = { __typename?: 'Mutation', deleteArticle?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
-
-export type DuplicateArticleMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type DuplicateArticleMutation = { __typename?: 'Mutation', duplicateArticle: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } };
-
-export type ArticlePreviewLinkQueryVariables = Exact<{
-  id: Scalars['ID'];
-  hours: Scalars['Int'];
-}>;
-
-
-export type ArticlePreviewLinkQuery = { __typename?: 'Query', articlePreviewLink?: string | null };
-
-export type ArticleQueryVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type ArticleQuery = { __typename?: 'Query', article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null }>, draft?: { __typename?: 'ArticleRevision', publishAt?: string | null } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number, slug?: string | null, preTitle?: string | null, title?: string | null, lead?: string | null, seoTitle?: string | null, url: string, canonicalUrl?: string | null, hideAuthor: boolean, breaking: boolean, socialMediaTitle?: string | null, socialMediaDescription?: string | null, likes?: number | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, authors: Array<{ __typename?: 'Author', id: string, name: string, jobTitle?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, socialMediaAuthors: Array<{ __typename?: 'Author', id: string, name: string, jobTitle?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, socialMediaImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, blocks: Array<{ __typename: 'BildwurfAdBlock', blockStyle?: string | null, zoneID: string } | { __typename: 'CommentBlock', blockStyle?: string | null, filter: { __typename?: 'CommentBlockFilter', item?: string | null, tags?: Array<string> | null, comments?: Array<string> | null }, comments: Array<{ __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null }> } | { __typename: 'EmbedBlock', blockStyle?: string | null, url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock', blockStyle?: string | null, filter: { __typename?: 'EventBlockFilter', tags?: Array<string> | null, events?: Array<string> | null }, events: Array<{ __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> }> } | { __typename: 'FacebookPostBlock', blockStyle?: string | null, userID: string, postID: string } | { __typename: 'FacebookVideoBlock', blockStyle?: string | null, userID: string, videoID: string } | { __typename: 'HTMLBlock', blockStyle?: string | null, html?: string | null } | { __typename: 'ImageBlock', blockStyle?: string | null, caption?: string | null, linkUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', blockStyle?: string | null, images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', blockStyle?: string | null, postID: string } | { __typename: 'LinkPageBreakBlock', blockStyle?: string | null, text?: string | null, linkText?: string | null, linkURL?: string | null, styleOption?: string | null, richText: Node[], linkTarget?: string | null, hideButton: boolean, templateOption?: string | null, layoutOption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ListicleBlock', blockStyle?: string | null, items: Array<{ __typename?: 'ListicleItem', title: string, richText: Node[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock', blockStyle?: string | null, conversationID: string } | { __typename: 'PollBlock', blockStyle?: string | null, poll?: { __typename?: 'FullPoll', id: string, question?: string | null } | null } | { __typename: 'QuoteBlock', blockStyle?: string | null, quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'RichTextBlock', blockStyle?: string | null, richText: Node[] } | { __typename: 'SoundCloudTrackBlock', blockStyle?: string | null, trackID: string } | { __typename: 'TeaserGridBlock', blockStyle?: string | null, numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> } | { __typename: 'TeaserGridFlexBlock', blockStyle?: string | null, flexTeasers: Array<{ __typename?: 'FlexTeaser', alignment: { __typename?: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean }, teaser?: { __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null } | null> } | { __typename: 'TeaserListBlock', title?: string | null, blockStyle?: string | null, teaserType?: TeaserType | null, take?: number | null, skip?: number | null, sort?: TeaserListBlockSort | null, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null>, filter: { __typename?: 'TeaserListBlockFilter', tags?: Array<string> | null, tagObjects: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } } | { __typename: 'TikTokVideoBlock', blockStyle?: string | null, userID: string, videoID: string } | { __typename: 'TitleBlock', blockStyle?: string | null, title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', blockStyle?: string | null, userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', blockStyle?: string | null, videoID: string } | { __typename: 'YouTubeVideoBlock', blockStyle?: string | null, videoID: string }> } } | null };
 
 export type CreateSessionMutationVariables = Exact<{
   email: Scalars['String'];
@@ -3079,13 +1795,13 @@ export type CreateSessionWithJwtMutationVariables = Exact<{
 
 export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } } };
 
-export type AuthorRefFragment = { __typename?: 'Author', id: string, name: string, jobTitle?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type AuthorRefFragment = { __typename?: 'Author', id: string, name: string, jobTitle?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null };
 
-export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null };
 
 export type AuthorListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
@@ -3093,100 +1809,36 @@ export type AuthorListQueryVariables = Exact<{
 }>;
 
 
-export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type AuthorQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null } | null };
 
 export type CreateAuthorMutationVariables = Exact<{
   input: AuthorInput;
 }>;
 
 
-export type CreateAuthorMutation = { __typename?: 'Mutation', createAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type CreateAuthorMutation = { __typename?: 'Mutation', createAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null } | null };
 
 export type UpdateAuthorMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: AuthorInput;
 }>;
 
 
-export type UpdateAuthorMutation = { __typename?: 'Mutation', updateAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type UpdateAuthorMutation = { __typename?: 'Mutation', updateAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null } | null };
 
 export type DeleteAuthorMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
-
-type FullTeaser_ArticleTeaser_Fragment = { __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null };
-
-type FullTeaser_CustomTeaser_Fragment = { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null };
-
-type FullTeaser_EventTeaser_Fragment = { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null };
-
-type FullTeaser_PageTeaser_Fragment = { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null };
-
-type FullTeaser_PeerArticleTeaser_Fragment = { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null };
-
-export type FullTeaserFragment = FullTeaser_ArticleTeaser_Fragment | FullTeaser_CustomTeaser_Fragment | FullTeaser_EventTeaser_Fragment | FullTeaser_PageTeaser_Fragment | FullTeaser_PeerArticleTeaser_Fragment;
-
-type FullBlock_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock', blockStyle?: string | null, zoneID: string };
-
-type FullBlock_CommentBlock_Fragment = { __typename: 'CommentBlock', blockStyle?: string | null, filter: { __typename?: 'CommentBlockFilter', item?: string | null, tags?: Array<string> | null, comments?: Array<string> | null }, comments: Array<{ __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null }> };
-
-type FullBlock_EmbedBlock_Fragment = { __typename: 'EmbedBlock', blockStyle?: string | null, url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null };
-
-type FullBlock_EventBlock_Fragment = { __typename: 'EventBlock', blockStyle?: string | null, filter: { __typename?: 'EventBlockFilter', tags?: Array<string> | null, events?: Array<string> | null }, events: Array<{ __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> }> };
-
-type FullBlock_FacebookPostBlock_Fragment = { __typename: 'FacebookPostBlock', blockStyle?: string | null, userID: string, postID: string };
-
-type FullBlock_FacebookVideoBlock_Fragment = { __typename: 'FacebookVideoBlock', blockStyle?: string | null, userID: string, videoID: string };
-
-type FullBlock_HtmlBlock_Fragment = { __typename: 'HTMLBlock', blockStyle?: string | null, html?: string | null };
-
-type FullBlock_ImageBlock_Fragment = { __typename: 'ImageBlock', blockStyle?: string | null, caption?: string | null, linkUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-type FullBlock_ImageGalleryBlock_Fragment = { __typename: 'ImageGalleryBlock', blockStyle?: string | null, images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> };
-
-type FullBlock_InstagramPostBlock_Fragment = { __typename: 'InstagramPostBlock', blockStyle?: string | null, postID: string };
-
-type FullBlock_LinkPageBreakBlock_Fragment = { __typename: 'LinkPageBreakBlock', blockStyle?: string | null, text?: string | null, linkText?: string | null, linkURL?: string | null, styleOption?: string | null, richText: Node[], linkTarget?: string | null, hideButton: boolean, templateOption?: string | null, layoutOption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-type FullBlock_ListicleBlock_Fragment = { __typename: 'ListicleBlock', blockStyle?: string | null, items: Array<{ __typename?: 'ListicleItem', title: string, richText: Node[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> };
-
-type FullBlock_PolisConversationBlock_Fragment = { __typename: 'PolisConversationBlock', blockStyle?: string | null, conversationID: string };
-
-type FullBlock_PollBlock_Fragment = { __typename: 'PollBlock', blockStyle?: string | null, poll?: { __typename?: 'FullPoll', id: string, question?: string | null } | null };
-
-type FullBlock_QuoteBlock_Fragment = { __typename: 'QuoteBlock', blockStyle?: string | null, quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-type FullBlock_RichTextBlock_Fragment = { __typename: 'RichTextBlock', blockStyle?: string | null, richText: Node[] };
-
-type FullBlock_SoundCloudTrackBlock_Fragment = { __typename: 'SoundCloudTrackBlock', blockStyle?: string | null, trackID: string };
-
-type FullBlock_TeaserGridBlock_Fragment = { __typename: 'TeaserGridBlock', blockStyle?: string | null, numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> };
-
-type FullBlock_TeaserGridFlexBlock_Fragment = { __typename: 'TeaserGridFlexBlock', blockStyle?: string | null, flexTeasers: Array<{ __typename?: 'FlexTeaser', alignment: { __typename?: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean }, teaser?: { __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null } | null> };
-
-type FullBlock_TeaserListBlock_Fragment = { __typename: 'TeaserListBlock', title?: string | null, blockStyle?: string | null, teaserType?: TeaserType | null, take?: number | null, skip?: number | null, sort?: TeaserListBlockSort | null, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null>, filter: { __typename?: 'TeaserListBlockFilter', tags?: Array<string> | null, tagObjects: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } };
-
-type FullBlock_TikTokVideoBlock_Fragment = { __typename: 'TikTokVideoBlock', blockStyle?: string | null, userID: string, videoID: string };
-
-type FullBlock_TitleBlock_Fragment = { __typename: 'TitleBlock', blockStyle?: string | null, title?: string | null, lead?: string | null };
-
-type FullBlock_TwitterTweetBlock_Fragment = { __typename: 'TwitterTweetBlock', blockStyle?: string | null, userID: string, tweetID: string };
-
-type FullBlock_VimeoVideoBlock_Fragment = { __typename: 'VimeoVideoBlock', blockStyle?: string | null, videoID: string };
-
-type FullBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', blockStyle?: string | null, videoID: string };
-
-export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TeaserListBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
+export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null } | null };
 
 export type RatingSystemQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3194,7 +1846,7 @@ export type RatingSystemQueryVariables = Exact<{ [key: string]: never; }>;
 export type RatingSystemQuery = { __typename?: 'Query', ratingSystem: { __typename?: 'FullCommentRatingSystem', id: string, name?: string | null, answers: Array<{ __typename?: 'CommentRatingSystemAnswer', id: string, type: RatingSystemType, answer?: string | null, ratingSystemId: string }> } };
 
 export type UpdateRatingSystemMutationVariables = Exact<{
-  ratingSystemId: Scalars['ID'];
+  ratingSystemId: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
   answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswer> | UpdateCommentRatingSystemAnswer>;
 }>;
@@ -3203,7 +1855,7 @@ export type UpdateRatingSystemMutationVariables = Exact<{
 export type UpdateRatingSystemMutation = { __typename?: 'Mutation', updateRatingSystem: { __typename?: 'FullCommentRatingSystem', id: string, name?: string | null, answers: Array<{ __typename?: 'CommentRatingSystemAnswer', id: string, type: RatingSystemType, answer?: string | null, ratingSystemId: string }> } };
 
 export type CreateRatingSystemAnswerMutationVariables = Exact<{
-  ratingSystemId: Scalars['ID'];
+  ratingSystemId: Scalars['String'];
   type: RatingSystemType;
   answer?: InputMaybe<Scalars['String']>;
 }>;
@@ -3212,7 +1864,7 @@ export type CreateRatingSystemAnswerMutationVariables = Exact<{
 export type CreateRatingSystemAnswerMutation = { __typename?: 'Mutation', createRatingSystemAnswer: { __typename?: 'CommentRatingSystemAnswer', answer?: string | null, id: string, type: RatingSystemType, ratingSystemId: string } };
 
 export type DeleteRatingSystemAnswerMutationVariables = Exact<{
-  answerId: Scalars['ID'];
+  answerId: Scalars['String'];
 }>;
 
 
@@ -3220,13 +1872,13 @@ export type DeleteRatingSystemAnswerMutation = { __typename?: 'Mutation', delete
 
 export type CommentRevisionFragment = { __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string };
 
-export type FullParentCommentFragment = { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> };
+export type FullParentCommentFragment = { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> };
 
-export type FullCommentFragment = { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null };
+export type FullCommentFragment = { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null };
 
 export type CommentListQueryVariables = Exact<{
   filter?: InputMaybe<CommentFilter>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
@@ -3234,24 +1886,24 @@ export type CommentListQueryVariables = Exact<{
 }>;
 
 
-export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'CommentConnection', totalCount: number, nodes: Array<{ __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'CommentConnection', totalCount: number, nodes: Array<{ __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type CommentQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type CommentQuery = { __typename?: 'Query', comment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } | null };
+export type CommentQuery = { __typename?: 'Query', comment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } | null };
 
 export type ApproveCommentMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
 export type ApproveCommentMutation = { __typename?: 'Mutation', approveComment: { __typename?: 'Comment', state: CommentState } };
 
 export type RejectCommentMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   rejectionReason?: InputMaybe<CommentRejectionReason>;
 }>;
 
@@ -3259,7 +1911,7 @@ export type RejectCommentMutationVariables = Exact<{
 export type RejectCommentMutation = { __typename?: 'Mutation', rejectComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
 
 export type RequestChangesOnCommentMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   rejectionReason: CommentRejectionReason;
 }>;
 
@@ -3267,33 +1919,33 @@ export type RequestChangesOnCommentMutationVariables = Exact<{
 export type RequestChangesOnCommentMutation = { __typename?: 'Mutation', requestChangesOnComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
 
 export type UpdateCommentMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   revision?: InputMaybe<CommentRevisionUpdateInput>;
-  userID?: InputMaybe<Scalars['ID']>;
+  userID?: InputMaybe<Scalars['String']>;
   guestUsername?: InputMaybe<Scalars['String']>;
-  guestUserImageID?: InputMaybe<Scalars['ID']>;
+  guestUserImageID?: InputMaybe<Scalars['String']>;
   featured?: InputMaybe<Scalars['Boolean']>;
   source?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+  tagIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
   ratingOverrides?: InputMaybe<Array<CommentRatingOverrideUpdateInput> | CommentRatingOverrideUpdateInput>;
 }>;
 
 
-export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } };
+export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } };
 
 export type CreateCommentMutationVariables = Exact<{
-  itemID: Scalars['ID'];
+  itemID: Scalars['String'];
   itemType: CommentItemType;
-  parentID?: InputMaybe<Scalars['ID']>;
+  parentID?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['RichText']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+  tagIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
 }>;
 
 
 export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: string } };
 
 export type DeleteCommentMutationVariables = Exact<{
-  deleteCommentId: Scalars['ID'];
+  deleteCommentId: Scalars['String'];
 }>;
 
 
@@ -3301,124 +1953,55 @@ export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment: { 
 
 export type MetadataPropertyFragment = { __typename?: 'Properties', key: string, value: string, public: boolean };
 
-export type EventRefFragment = { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> };
-
-export type EventListQueryVariables = Exact<{
-  filter?: InputMaybe<EventFilter>;
-  cursor?: InputMaybe<Scalars['ID']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<SortOrder>;
-  sort?: InputMaybe<EventSort>;
-}>;
-
-
-export type EventListQuery = { __typename?: 'Query', events?: { __typename?: 'EventConnection', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
-
-export type EventQueryVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type EventQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null };
-
-export type ImportedEventsIdsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ImportedEventsIdsQuery = { __typename?: 'Query', importedEventsIds?: Array<string | null> | null };
-
-export type CreateEventMutationVariables = Exact<{
-  name: Scalars['String'];
-  lead?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['RichText']>;
-  location?: InputMaybe<Scalars['String']>;
-  startsAt: Scalars['DateTime'];
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  imageId?: InputMaybe<Scalars['ID']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
-  externalSourceId?: InputMaybe<Scalars['String']>;
-  externalSourceName?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type CreateEventMutation = { __typename?: 'Mutation', createEvent?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null };
-
-export type UpdateEventMutationVariables = Exact<{
-  id: Scalars['ID'];
-  name?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['RichText']>;
-  status?: InputMaybe<EventStatus>;
-  location?: InputMaybe<Scalars['String']>;
-  startsAt?: InputMaybe<Scalars['DateTime']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  imageId?: InputMaybe<Scalars['ID']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
-  externalSourceId?: InputMaybe<Scalars['String']>;
-  externalSourceName?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null };
-
-export type DeleteEventMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null };
-
 export type PageInfoFragment = { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean };
 
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
-export type ImageRefFragment = { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
-
-export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null };
+export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null };
 
 export type ImageListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type ImageListQuery = { __typename?: 'Query', images: { __typename?: 'ImageConnection', totalCount: number, nodes: Array<{ __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ImageListQuery = { __typename?: 'Query', images: { __typename?: 'ImageConnection', totalCount: number, nodes: Array<{ __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ImageQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type ImageQuery = { __typename?: 'Query', image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
+export type ImageQuery = { __typename?: 'Query', image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type UploadImageMutationVariables = Exact<{
   input: UploadImageInput;
 }>;
 
 
-export type UploadImageMutation = { __typename?: 'Mutation', uploadImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type UploadImageMutation = { __typename?: 'Mutation', uploadImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type UpdateImageMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UpdateImageInput;
 }>;
 
 
-export type UpdateImageMutation = { __typename?: 'Mutation', updateImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
+export type UpdateImageMutation = { __typename?: 'Mutation', updateImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type DeleteImageMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
+export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type InvoiceFragment = { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> };
 
 export type InvoicesQueryVariables = Exact<{
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   filter?: InputMaybe<InvoiceFilter>;
@@ -3430,7 +2013,7 @@ export type InvoicesQueryVariables = Exact<{
 export type InvoicesQuery = { __typename?: 'Query', invoices: { __typename?: 'InvoiceConnection', totalCount: number, nodes: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type UpdateInvoiceMutationVariables = Exact<{
-  updateInvoiceId: Scalars['ID'];
+  updateInvoiceId: Scalars['String'];
   input: InvoiceInput;
 }>;
 
@@ -3438,171 +2021,58 @@ export type UpdateInvoiceMutationVariables = Exact<{
 export type UpdateInvoiceMutation = { __typename?: 'Mutation', updateInvoice?: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } | null };
 
 export type MarkInvoiceAsPaidMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
 export type MarkInvoiceAsPaidMutation = { __typename?: 'Mutation', markInvoiceAsPaid?: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } | null };
 
-export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null };
+export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
-export type FullMemberPlanFragment = { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null };
+export type FullMemberPlanFragment = { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type MemberPlanListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type MemberPlanListQuery = { __typename?: 'Query', memberPlans: { __typename?: 'MemberPlanConnection', totalCount: number, nodes: Array<{ __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type MemberPlanListQuery = { __typename?: 'Query', memberPlans: { __typename?: 'MemberPlanConnection', totalCount: number, nodes: Array<{ __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type MemberPlanQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type MemberPlanQuery = { __typename?: 'Query', memberPlan?: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null };
+export type MemberPlanQuery = { __typename?: 'Query', memberPlan?: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
 
 export type CreateMemberPlanMutationVariables = Exact<{
   input: MemberPlanInput;
 }>;
 
 
-export type CreateMemberPlanMutation = { __typename?: 'Mutation', createMemberPlan?: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null };
+export type CreateMemberPlanMutation = { __typename?: 'Mutation', createMemberPlan?: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
 
 export type UpdateMemberPlanMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: MemberPlanInput;
 }>;
 
 
-export type UpdateMemberPlanMutation = { __typename?: 'Mutation', updateMemberPlan?: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null };
+export type UpdateMemberPlanMutation = { __typename?: 'Mutation', updateMemberPlan?: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
 
 export type DeleteMemberPlanMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type DeleteMemberPlanMutation = { __typename?: 'Mutation', deleteMemberPlan?: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null };
-
-export type FullNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> };
-
-export type NavigationListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type NavigationListQuery = { __typename?: 'Query', navigations: Array<{ __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> }> };
-
-export type NavigationQueryVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type NavigationQuery = { __typename?: 'Query', navigation?: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> } | null };
-
-export type CreateNavigationMutationVariables = Exact<{
-  input: NavigationInput;
-}>;
-
-
-export type CreateNavigationMutation = { __typename?: 'Mutation', createNavigation?: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> } | null };
-
-export type UpdateNavigationMutationVariables = Exact<{
-  id: Scalars['ID'];
-  input: NavigationInput;
-}>;
-
-
-export type UpdateNavigationMutation = { __typename?: 'Mutation', updateNavigation?: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> } | null };
-
-export type DeleteNavigationMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type DeleteNavigationMutation = { __typename?: 'Mutation', deleteNavigation?: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> } | null };
-
-export type MutationPageFragment = { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } };
-
-export type PageRefFragment = { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
-
-export type PageListQueryVariables = Exact<{
-  filter?: InputMaybe<PageFilter>;
-  cursor?: InputMaybe<Scalars['ID']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<SortOrder>;
-  sort?: InputMaybe<PageSort>;
-}>;
-
-
-export type PageListQuery = { __typename?: 'Query', pages: { __typename?: 'PageConnection', totalCount: number, nodes: Array<{ __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type CreatePageMutationVariables = Exact<{
-  input: PageInput;
-}>;
-
-
-export type CreatePageMutation = { __typename?: 'Mutation', createPage: { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } };
-
-export type UpdatePageMutationVariables = Exact<{
-  id: Scalars['ID'];
-  input: PageInput;
-}>;
-
-
-export type UpdatePageMutation = { __typename?: 'Mutation', updatePage?: { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
-
-export type PublishPageMutationVariables = Exact<{
-  id: Scalars['ID'];
-  publishAt?: InputMaybe<Scalars['DateTime']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']>;
-}>;
-
-
-export type PublishPageMutation = { __typename?: 'Mutation', publishPage?: { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
-
-export type UnpublishPageMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type UnpublishPageMutation = { __typename?: 'Mutation', unpublishPage?: { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
-
-export type DeletePageMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type DeletePageMutation = { __typename?: 'Mutation', deletePage?: { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
-
-export type DuplicatePageMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type DuplicatePageMutation = { __typename?: 'Mutation', duplicatePage: { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } };
-
-export type PagePreviewLinkQueryVariables = Exact<{
-  id: Scalars['ID'];
-  hours: Scalars['Int'];
-}>;
-
-
-export type PagePreviewLinkQuery = { __typename?: 'Query', pagePreviewLink?: string | null };
-
-export type PageQueryVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type PageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null }>, draft?: { __typename?: 'PageRevision', publishAt?: string | null } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, slug?: string | null, title?: string | null, description?: string | null, url: string, socialMediaTitle?: string | null, socialMediaDescription?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, socialMediaImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, blocks: Array<{ __typename: 'BildwurfAdBlock', blockStyle?: string | null, zoneID: string } | { __typename: 'CommentBlock', blockStyle?: string | null, filter: { __typename?: 'CommentBlockFilter', item?: string | null, tags?: Array<string> | null, comments?: Array<string> | null }, comments: Array<{ __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null }> } | { __typename: 'EmbedBlock', blockStyle?: string | null, url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock', blockStyle?: string | null, filter: { __typename?: 'EventBlockFilter', tags?: Array<string> | null, events?: Array<string> | null }, events: Array<{ __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> }> } | { __typename: 'FacebookPostBlock', blockStyle?: string | null, userID: string, postID: string } | { __typename: 'FacebookVideoBlock', blockStyle?: string | null, userID: string, videoID: string } | { __typename: 'HTMLBlock', blockStyle?: string | null, html?: string | null } | { __typename: 'ImageBlock', blockStyle?: string | null, caption?: string | null, linkUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', blockStyle?: string | null, images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', blockStyle?: string | null, postID: string } | { __typename: 'LinkPageBreakBlock', blockStyle?: string | null, text?: string | null, linkText?: string | null, linkURL?: string | null, styleOption?: string | null, richText: Node[], linkTarget?: string | null, hideButton: boolean, templateOption?: string | null, layoutOption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ListicleBlock', blockStyle?: string | null, items: Array<{ __typename?: 'ListicleItem', title: string, richText: Node[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock', blockStyle?: string | null, conversationID: string } | { __typename: 'PollBlock', blockStyle?: string | null, poll?: { __typename?: 'FullPoll', id: string, question?: string | null } | null } | { __typename: 'QuoteBlock', blockStyle?: string | null, quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'RichTextBlock', blockStyle?: string | null, richText: Node[] } | { __typename: 'SoundCloudTrackBlock', blockStyle?: string | null, trackID: string } | { __typename: 'TeaserGridBlock', blockStyle?: string | null, numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> } | { __typename: 'TeaserGridFlexBlock', blockStyle?: string | null, flexTeasers: Array<{ __typename?: 'FlexTeaser', alignment: { __typename?: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean }, teaser?: { __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null } | null> } | { __typename: 'TeaserListBlock', title?: string | null, blockStyle?: string | null, teaserType?: TeaserType | null, take?: number | null, skip?: number | null, sort?: TeaserListBlockSort | null, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, shared: boolean, hidden?: boolean | null, disableComments?: boolean | null, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null>, filter: { __typename?: 'TeaserListBlockFilter', tags?: Array<string> | null, tagObjects: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } } | { __typename: 'TikTokVideoBlock', blockStyle?: string | null, userID: string, videoID: string } | { __typename: 'TitleBlock', blockStyle?: string | null, title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', blockStyle?: string | null, userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', blockStyle?: string | null, videoID: string } | { __typename: 'YouTubeVideoBlock', blockStyle?: string | null, videoID: string }> } } | null };
+export type DeleteMemberPlanMutation = { __typename?: 'Mutation', deleteMemberPlan?: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
 
 export type FullPaymentProviderFragment = { __typename?: 'PaymentProvider', id: string, name: string };
 
-export type FullPaymentMethodFragment = { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type FullPaymentMethodFragment = { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type PaymentProviderListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3612,47 +2082,45 @@ export type PaymentProviderListQuery = { __typename?: 'Query', paymentProviders:
 export type PaymentMethodListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PaymentMethodListQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> };
+export type PaymentMethodListQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> };
 
 export type PaymentMethodQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type PaymentMethodQuery = { __typename?: 'Query', paymentMethod?: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type PaymentMethodQuery = { __typename?: 'Query', paymentMethod?: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
 
 export type CreatePaymentMethodMutationVariables = Exact<{
   input: PaymentMethodInput;
 }>;
 
 
-export type CreatePaymentMethodMutation = { __typename?: 'Mutation', createPaymentMethod?: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type CreatePaymentMethodMutation = { __typename?: 'Mutation', createPaymentMethod?: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
 
 export type UpdatePaymentMethodMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: PaymentMethodInput;
 }>;
 
 
-export type UpdatePaymentMethodMutation = { __typename?: 'Mutation', updatePaymentMethod?: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type UpdatePaymentMethodMutation = { __typename?: 'Mutation', updatePaymentMethod?: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
 
 export type DeletePaymentMethodMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type DeletePaymentMethodMutation = { __typename?: 'Mutation', deletePaymentMethod?: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type DeletePaymentMethodMutation = { __typename?: 'Mutation', deletePaymentMethod?: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
 
-export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
-export type PeerRefFragment = { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
-
-export type PeerWithProfileFragment = { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type FullPeerFragment = { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
 
 export type PeerProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PeerProfileQuery = { __typename?: 'Query', peerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
+export type PeerProfileQuery = { __typename?: 'Query', peerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } };
 
 export type RemotePeerProfileQueryVariables = Exact<{
   hostURL: Scalars['String'];
@@ -3660,48 +2128,48 @@ export type RemotePeerProfileQueryVariables = Exact<{
 }>;
 
 
-export type RemotePeerProfileQuery = { __typename?: 'Query', remotePeerProfile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type RemotePeerProfileQuery = { __typename?: 'Query', remotePeerProfile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
 
 export type UpdatePeerProfileMutationVariables = Exact<{
   input: PeerProfileInput;
 }>;
 
 
-export type UpdatePeerProfileMutation = { __typename?: 'Mutation', updatePeerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
+export type UpdatePeerProfileMutation = { __typename?: 'Mutation', updatePeerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } };
 
 export type PeerListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PeerListQuery = { __typename?: 'Query', peers?: Array<{ __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null }> | null };
+export type PeerListQuery = { __typename?: 'Query', peers?: Array<{ __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null }> | null };
 
 export type PeerQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null };
+export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null };
 
 export type CreatePeerMutationVariables = Exact<{
   input: CreatePeerInput;
 }>;
 
 
-export type CreatePeerMutation = { __typename?: 'Mutation', createPeer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } };
+export type CreatePeerMutation = { __typename?: 'Mutation', createPeer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } };
 
 export type UpdatePeerMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UpdatePeerInput;
 }>;
 
 
-export type UpdatePeerMutation = { __typename?: 'Mutation', updatePeer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } };
+export type UpdatePeerMutation = { __typename?: 'Mutation', updatePeer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } };
 
 export type DeletePeerMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type DeletePeerMutation = { __typename?: 'Mutation', deletePeer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null };
+export type DeletePeerMutation = { __typename?: 'Mutation', deletePeer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null };
 
 export type PollExternalVoteSourceFragment = { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> };
 
@@ -3715,7 +2183,7 @@ export type CreatePollMutationVariables = Exact<{
 export type CreatePollMutation = { __typename?: 'Mutation', createPoll?: { __typename?: 'PollWithAnswers', id: string, question?: string | null, opensAt: string, closedAt?: string | null, answers?: Array<{ __typename?: 'PollAnswer', id: string, pollId: string, answer?: string | null }> | null } | null };
 
 export type UpdatePollMutationVariables = Exact<{
-  pollId: Scalars['ID'];
+  pollId: Scalars['String'];
   opensAt?: InputMaybe<Scalars['DateTime']>;
   closedAt?: InputMaybe<Scalars['DateTime']>;
   question?: InputMaybe<Scalars['String']>;
@@ -3728,14 +2196,14 @@ export type UpdatePollMutationVariables = Exact<{
 export type UpdatePollMutation = { __typename?: 'Mutation', updatePoll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Node[] | null, answers: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }>, externalVoteSources: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> }> } | null };
 
 export type DeletePollMutationVariables = Exact<{
-  deletePollId: Scalars['ID'];
+  deletePollId: Scalars['String'];
 }>;
 
 
 export type DeletePollMutation = { __typename?: 'Mutation', deletePoll?: { __typename?: 'FullPoll', id: string } | null };
 
 export type CreatePollAnswerMutationVariables = Exact<{
-  pollId: Scalars['ID'];
+  pollId: Scalars['String'];
   answer?: InputMaybe<Scalars['String']>;
 }>;
 
@@ -3743,14 +2211,14 @@ export type CreatePollAnswerMutationVariables = Exact<{
 export type CreatePollAnswerMutation = { __typename?: 'Mutation', createPollAnswer?: { __typename?: 'PollAnswer', answer?: string | null, id: string, pollId: string } | null };
 
 export type DeletePollAnswerMutationVariables = Exact<{
-  deletePollAnswerId: Scalars['ID'];
+  deletePollAnswerId: Scalars['String'];
 }>;
 
 
 export type DeletePollAnswerMutation = { __typename?: 'Mutation', deletePollAnswer?: { __typename?: 'PollAnswerWithVoteCount', id: string } | null };
 
 export type CreatePollExternalVoteSourceMutationVariables = Exact<{
-  pollId: Scalars['ID'];
+  pollId: Scalars['String'];
   source?: InputMaybe<Scalars['String']>;
 }>;
 
@@ -3758,14 +2226,14 @@ export type CreatePollExternalVoteSourceMutationVariables = Exact<{
 export type CreatePollExternalVoteSourceMutation = { __typename?: 'Mutation', createPollExternalVoteSource?: { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> } | null };
 
 export type DeletePollExternalVoteSourceMutationVariables = Exact<{
-  deletePollExternalVoteSourceId: Scalars['ID'];
+  deletePollExternalVoteSourceId: Scalars['String'];
 }>;
 
 
 export type DeletePollExternalVoteSourceMutation = { __typename?: 'Mutation', deletePollExternalVoteSource?: { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> } | null };
 
 export type PollsQueryVariables = Exact<{
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   filter?: InputMaybe<PollFilter>;
@@ -3777,7 +2245,7 @@ export type PollsQueryVariables = Exact<{
 export type PollsQuery = { __typename?: 'Query', polls?: { __typename?: 'PollConnection', totalCount: number, nodes: Array<{ __typename?: 'Poll', id: string, question?: string | null, opensAt: string, closedAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type PollQueryVariables = Exact<{
-  pollId?: InputMaybe<Scalars['ID']>;
+  pollId?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -3797,13 +2265,13 @@ export type UpdateSettingListMutationVariables = Exact<{
 
 export type UpdateSettingListMutation = { __typename?: 'Mutation', updateSettingList?: Array<{ __typename?: 'Setting', value: any } | null> | null };
 
-export type FullSubscriptionFragment = { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null };
+export type FullSubscriptionFragment = { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null };
 
 export type DeactivationFragment = { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason };
 
 export type SubscriptionListQueryVariables = Exact<{
   filter?: InputMaybe<SubscriptionFilter>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
@@ -3811,14 +2279,14 @@ export type SubscriptionListQueryVariables = Exact<{
 }>;
 
 
-export type SubscriptionListQuery = { __typename?: 'Query', subscriptions: { __typename?: 'SubscriptionConnection', totalCount: number, nodes: Array<{ __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type SubscriptionListQuery = { __typename?: 'Query', subscriptions: { __typename?: 'SubscriptionConnection', totalCount: number, nodes: Array<{ __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type SubscriptionQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type SubscriptionQuery = { __typename?: 'Query', subscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
+export type SubscriptionQuery = { __typename?: 'Query', subscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
 
 export type SubscriptionsAsCsvQueryVariables = Exact<{
   filter?: InputMaybe<SubscriptionFilter>;
@@ -3832,33 +2300,33 @@ export type CreateSubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
+export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
 
 export type UpdateSubscriptionMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: SubscriptionInput;
 }>;
 
 
-export type UpdateSubscriptionMutation = { __typename?: 'Mutation', updateSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
+export type UpdateSubscriptionMutation = { __typename?: 'Mutation', updateSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
 
 export type CancelSubscriptionMutationVariables = Exact<{
-  cancelSubscriptionId: Scalars['ID'];
+  cancelSubscriptionId: Scalars['String'];
   reason: SubscriptionDeactivationReason;
 }>;
 
 
-export type CancelSubscriptionMutation = { __typename?: 'Mutation', cancelSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
+export type CancelSubscriptionMutation = { __typename?: 'Mutation', cancelSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
 
 export type DeleteSubscriptionMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionMutation = { __typename?: 'Mutation', deleteSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
+export type DeleteSubscriptionMutation = { __typename?: 'Mutation', deleteSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
 
 export type RenewSubscriptionMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -3873,7 +2341,7 @@ export type NewSubscribersPerMonthQuery = { __typename?: 'Query', newSubscribers
 
 export type TagListQueryVariables = Exact<{
   filter?: InputMaybe<TagFilter>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
@@ -3892,7 +2360,7 @@ export type CreateTagMutationVariables = Exact<{
 export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, main: boolean } | null };
 
 export type UpdateTagMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   tag?: InputMaybe<Scalars['String']>;
   main?: InputMaybe<Scalars['Boolean']>;
 }>;
@@ -3901,7 +2369,7 @@ export type UpdateTagMutationVariables = Exact<{
 export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, main: boolean } | null };
 
 export type DeleteTagMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -3922,19 +2390,19 @@ export type CreateTokenMutationVariables = Exact<{
 export type CreateTokenMutation = { __typename?: 'Mutation', createToken: { __typename?: 'CreatedToken', id: string, name: string, token: string } };
 
 export type DeleteTokenMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
 export type DeleteTokenMutation = { __typename?: 'Mutation', deleteToken?: { __typename?: 'CreatedToken', id: string, name: string, token: string } | null };
 
-export type FullUserFragment = { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> };
+export type FullUserFragment = { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> };
 
-export type UserSubscriptionFragment = { __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> };
+export type UserSubscriptionFragment = { __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> };
 
 export type UserListQueryVariables = Exact<{
   filter?: InputMaybe<UserFilter>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
@@ -3942,19 +2410,19 @@ export type UserListQueryVariables = Exact<{
 }>;
 
 
-export type UserListQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', totalCount: number, nodes: Array<{ __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type UserListQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', totalCount: number, nodes: Array<{ __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type UserQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
+export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
 
 export type CreateUserMutationVariables = Exact<{
   input: UserInput;
@@ -3962,31 +2430,31 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
 
 export type UpdateUserMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UserInput;
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
 
 export type ResetUserPasswordMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   password: Scalars['String'];
   sendMail?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type ResetUserPasswordMutation = { __typename?: 'Mutation', resetUserPassword?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
+export type ResetUserPasswordMutation = { __typename?: 'Mutation', resetUserPassword?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
 
 export type DeleteUserMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, successPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null, failPage?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
 
 export type SendWebsiteLoginMutationVariables = Exact<{
   email: Scalars['String'];
@@ -4001,7 +2469,7 @@ export type FullUserRoleFragment = { __typename?: 'UserRole', id: string, name: 
 
 export type UserRoleListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
 }>;
@@ -4015,7 +2483,7 @@ export type PermissionListQueryVariables = Exact<{ [key: string]: never; }>;
 export type PermissionListQuery = { __typename?: 'Query', permissions?: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> | null };
 
 export type UserRoleQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -4029,7 +2497,7 @@ export type CreateUserRoleMutationVariables = Exact<{
 export type CreateUserRoleMutation = { __typename?: 'Mutation', createUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
 export type UpdateUserRoleMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UserRoleInput;
 }>;
 
@@ -4037,133 +2505,12 @@ export type UpdateUserRoleMutationVariables = Exact<{
 export type UpdateUserRoleMutation = { __typename?: 'Mutation', updateUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
 export type DeleteUserRoleMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
 export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
-export const FullActionFragmentDoc = gql`
-    fragment FullAction on Action {
-  __typename
-  ... on ArticleCreatedAction {
-    date
-    article {
-      id
-      createdAt
-      latest {
-        title
-        url
-      }
-    }
-  }
-  ... on PageCreatedAction {
-    date
-    page {
-      id
-      createdAt
-      latest {
-        title
-        socialMediaTitle
-        url
-      }
-    }
-  }
-  ... on CommentCreatedAction {
-    date
-    comment {
-      id
-      user {
-        name
-      }
-      guestUsername
-      revisions {
-        title
-        text
-      }
-    }
-  }
-  ... on PollStartedAction {
-    date
-    poll {
-      id
-      question
-    }
-  }
-  ... on SubscriptionCreatedAction {
-    date
-    subscription {
-      id
-      user {
-        email
-      }
-      memberPlan {
-        name
-      }
-    }
-  }
-  ... on AuthorCreatedAction {
-    date
-    author {
-      id
-      name
-      jobTitle
-    }
-  }
-  ... on UserCreatedAction {
-    date
-    user {
-      id
-      firstName
-      name
-      address {
-        city
-      }
-    }
-  }
-  ... on EventCreatedAction {
-    date
-    event {
-      id
-      name
-      location
-    }
-  }
-}
-    `;
-export const MutationArticleFragmentDoc = gql`
-    fragment MutationArticle on Article {
-  id
-  shared
-  hidden
-  disableComments
-  tags {
-    id
-    tag
-  }
-  draft {
-    publishedAt
-    updatedAt
-    revision
-  }
-  pending {
-    publishAt
-    revision
-  }
-  published {
-    publishedAt
-    updatedAt
-    publishAt
-    revision
-  }
-  latest {
-    publishedAt
-    updatedAt
-    publishAt
-    revision
-  }
-}
-    `;
 export const ImageUrLsFragmentDoc = gql`
     fragment ImageURLs on Image {
   url
@@ -4176,30 +2523,75 @@ export const ImageUrLsFragmentDoc = gql`
   column6URL: transformURL(input: {width: 260, height: 300})
 }
     `;
-export const ImageRefFragmentDoc = gql`
-    fragment ImageRef on Image {
+export const FullImageFragmentDoc = gql`
+    fragment FullImage on Image {
   id
+  createdAt
+  modifiedAt
+  title
   filename
   extension
-  title
-  description
   width
   height
+  fileSize
+  description
+  tags
+  source
+  link
+  license
+  focalPoint {
+    x
+    y
+  }
   ...ImageURLs
 }
     ${ImageUrLsFragmentDoc}`;
+export const FullPeerProfileFragmentDoc = gql`
+    fragment FullPeerProfile on PeerProfile {
+  name
+  hostURL
+  themeColor
+  themeFontColor
+  logo {
+    ...FullImage
+  }
+  callToActionText
+  callToActionURL
+  callToActionImage {
+    ...FullImage
+  }
+  callToActionImageURL
+}
+    ${FullImageFragmentDoc}`;
+export const FullPeerFragmentDoc = gql`
+    fragment FullPeer on Peer {
+  id
+  name
+  slug
+  isDisabled
+  hostURL
+  profile {
+    ...FullPeerProfile
+  }
+}
+    ${FullPeerProfileFragmentDoc}`;
 export const AuthorRefFragmentDoc = gql`
     fragment AuthorRef on Author {
   id
   name
   jobTitle
   image {
-    ...ImageRef
+    ...FullImage
+  }
+  peer {
+    ...FullPeer
   }
 }
-    ${ImageRefFragmentDoc}`;
+    ${FullImageFragmentDoc}
+${FullPeerFragmentDoc}`;
 export const FullAuthorFragmentDoc = gql`
     fragment FullAuthor on Author {
+  ...AuthorRef
   slug
   links {
     title
@@ -4214,30 +2606,8 @@ export const FullAuthorFragmentDoc = gql`
   hideOnArticle
   hideOnTeaser
   hideOnTeam
-  ...AuthorRef
 }
     ${AuthorRefFragmentDoc}`;
-export const EventRefFragmentDoc = gql`
-    fragment EventRef on Event {
-  id
-  name
-  lead
-  description
-  status
-  location
-  externalSourceId
-  externalSourceName
-  image {
-    ...ImageRef
-  }
-  tags {
-    id
-    tag
-  }
-  startsAt
-  endsAt
-}
-    ${ImageRefFragmentDoc}`;
 export const FullPermissionFragmentDoc = gql`
     fragment FullPermission on Permission {
   id
@@ -4262,39 +2632,6 @@ export const DeactivationFragmentDoc = gql`
   reason
 }
     `;
-export const PageRefFragmentDoc = gql`
-    fragment PageRef on Page {
-  id
-  tags {
-    id
-    tag
-  }
-  createdAt
-  modifiedAt
-  draft {
-    revision
-  }
-  pending {
-    publishAt
-    revision
-  }
-  published {
-    publishedAt
-    updatedAt
-    revision
-  }
-  latest {
-    publishedAt
-    updatedAt
-    revision
-    title
-    description
-    image {
-      ...ImageRef
-    }
-  }
-}
-    ${ImageRefFragmentDoc}`;
 export const MemberPlanRefFragmentDoc = gql`
     fragment MemberPlanRef on MemberPlan {
   id
@@ -4304,19 +2641,13 @@ export const MemberPlanRefFragmentDoc = gql`
   active
   tags
   image {
-    ...ImageRef
+    ...FullImage
   }
   successPageId
-  successPage {
-    ...PageRef
-  }
   failPageId
-  failPage {
-    ...PageRef
-  }
+  confirmationPageId
 }
-    ${ImageRefFragmentDoc}
-${PageRefFragmentDoc}`;
+    ${FullImageFragmentDoc}`;
 export const InvoiceFragmentDoc = gql`
     fragment Invoice on Invoice {
   id
@@ -4349,6 +2680,7 @@ export const UserSubscriptionFragmentDoc = gql`
   monthlyAmount
   currency
   autoRenew
+  confirmed
   startsAt
   paidUntil
   periods {
@@ -4396,7 +2728,7 @@ export const FullUserFragmentDoc = gql`
   flair
   birthday
   userImage {
-    ...ImageRef
+    ...FullImage
   }
   active
   lastLogin
@@ -4414,7 +2746,7 @@ export const FullUserFragmentDoc = gql`
     ...UserSubscription
   }
 }
-    ${ImageRefFragmentDoc}
+    ${FullImageFragmentDoc}
 ${FullUserRoleFragmentDoc}
 ${UserSubscriptionFragmentDoc}`;
 export const CommentRevisionFragmentDoc = gql`
@@ -4449,7 +2781,7 @@ export const FullCommentFragmentDoc = gql`
   rejectionReason
   guestUsername
   guestUserImage {
-    ...ImageRef
+    ...FullImage
   }
   user {
     ...FullUser
@@ -4475,442 +2807,16 @@ export const FullCommentFragmentDoc = gql`
   }
   featured
 }
-    ${ImageRefFragmentDoc}
+    ${FullImageFragmentDoc}
 ${FullUserFragmentDoc}
 ${CommentRevisionFragmentDoc}
 ${FullParentCommentFragmentDoc}`;
-export const ArticleRefFragmentDoc = gql`
-    fragment ArticleRef on Article {
-  id
-  shared
-  hidden
-  disableComments
-  tags {
-    id
-    tag
-  }
-  createdAt
-  modifiedAt
-  draft {
-    revision
-  }
-  pending {
-    publishAt
-    revision
-  }
-  published {
-    publishedAt
-    updatedAt
-    revision
-  }
-  latest {
-    publishedAt
-    updatedAt
-    revision
-    preTitle
-    title
-    lead
-    authors {
-      name
-    }
-    image {
-      ...ImageRef
-    }
-    canonicalUrl
-  }
-}
-    ${ImageRefFragmentDoc}`;
-export const FullPeerProfileFragmentDoc = gql`
-    fragment FullPeerProfile on PeerProfile {
-  name
-  hostURL
-  themeColor
-  themeFontColor
-  logo {
-    ...ImageRef
-  }
-  callToActionText
-  callToActionURL
-  callToActionImage {
-    ...ImageRef
-  }
-  callToActionImageURL
-}
-    ${ImageRefFragmentDoc}`;
-export const PeerRefFragmentDoc = gql`
-    fragment PeerRef on Peer {
-  id
-  name
-  slug
-  isDisabled
-  hostURL
-  profile {
-    ...FullPeerProfile
-  }
-}
-    ${FullPeerProfileFragmentDoc}`;
-export const PeerWithProfileFragmentDoc = gql`
-    fragment PeerWithProfile on Peer {
-  ...PeerRef
-  profile {
-    ...FullPeerProfile
-  }
-}
-    ${PeerRefFragmentDoc}
-${FullPeerProfileFragmentDoc}`;
-export const FullTeaserFragmentDoc = gql`
-    fragment FullTeaser on Teaser {
-  ... on ArticleTeaser {
-    style
-    image {
-      ...ImageRef
-    }
-    preTitle
-    title
-    lead
-    article {
-      ...ArticleRef
-    }
-  }
-  ... on PeerArticleTeaser {
-    style
-    image {
-      ...ImageRef
-    }
-    preTitle
-    title
-    lead
-    peer {
-      ...PeerWithProfile
-    }
-    articleID
-    article {
-      ...ArticleRef
-    }
-  }
-  ... on PageTeaser {
-    style
-    image {
-      ...ImageRef
-    }
-    preTitle
-    title
-    lead
-    page {
-      ...PageRef
-    }
-  }
-  ... on EventTeaser {
-    style
-    image {
-      ...ImageRef
-    }
-    preTitle
-    title
-    lead
-    event {
-      ...EventRef
-    }
-  }
-  ... on CustomTeaser {
-    style
-    image {
-      ...ImageRef
-    }
-    preTitle
-    title
-    lead
-    contentUrl
-    properties {
-      key
-      value
-      public
-    }
-  }
-}
-    ${ImageRefFragmentDoc}
-${ArticleRefFragmentDoc}
-${PeerWithProfileFragmentDoc}
-${PageRefFragmentDoc}
-${EventRefFragmentDoc}`;
-export const FullBlockFragmentDoc = gql`
-    fragment FullBlock on Block {
-  __typename
-  ... on TitleBlock {
-    blockStyle
-    title
-    lead
-  }
-  ... on HTMLBlock {
-    blockStyle
-    html
-  }
-  ... on RichTextBlock {
-    blockStyle
-    richText
-  }
-  ... on QuoteBlock {
-    blockStyle
-    quote
-    author
-    image {
-      ...ImageRef
-    }
-  }
-  ... on LinkPageBreakBlock {
-    blockStyle
-    text
-    linkText
-    linkURL
-    styleOption
-    richText
-    linkTarget
-    hideButton
-    templateOption
-    layoutOption
-    image {
-      ...ImageRef
-    }
-  }
-  ... on PollBlock {
-    blockStyle
-    poll {
-      id
-      question
-    }
-  }
-  ... on EventBlock {
-    blockStyle
-    filter {
-      tags
-      events
-    }
-    events {
-      ...EventRef
-    }
-  }
-  ... on CommentBlock {
-    blockStyle
-    filter {
-      item
-      tags
-      comments
-    }
-    comments {
-      ...FullComment
-    }
-  }
-  ... on ImageBlock {
-    blockStyle
-    caption
-    linkUrl
-    image {
-      ...ImageRef
-    }
-  }
-  ... on ImageGalleryBlock {
-    blockStyle
-    images {
-      caption
-      image {
-        ...ImageRef
-      }
-    }
-  }
-  ... on ListicleBlock {
-    blockStyle
-    items {
-      title
-      image {
-        ...ImageRef
-      }
-      richText
-    }
-  }
-  ... on FacebookPostBlock {
-    blockStyle
-    userID
-    postID
-  }
-  ... on FacebookVideoBlock {
-    blockStyle
-    userID
-    videoID
-  }
-  ... on InstagramPostBlock {
-    blockStyle
-    postID
-  }
-  ... on TwitterTweetBlock {
-    blockStyle
-    userID
-    tweetID
-  }
-  ... on VimeoVideoBlock {
-    blockStyle
-    videoID
-  }
-  ... on YouTubeVideoBlock {
-    blockStyle
-    videoID
-  }
-  ... on SoundCloudTrackBlock {
-    blockStyle
-    trackID
-  }
-  ... on PolisConversationBlock {
-    blockStyle
-    conversationID
-  }
-  ... on TikTokVideoBlock {
-    blockStyle
-    userID
-    videoID
-  }
-  ... on BildwurfAdBlock {
-    blockStyle
-    zoneID
-  }
-  ... on EmbedBlock {
-    blockStyle
-    url
-    title
-    width
-    height
-    styleCustom
-    sandbox
-  }
-  ... on TeaserListBlock {
-    title
-    blockStyle
-    teaserType
-    teasers {
-      ...FullTeaser
-    }
-    take
-    skip
-    sort
-    filter {
-      tags
-      tagObjects {
-        id
-        tag
-      }
-    }
-  }
-  ... on TeaserGridBlock {
-    blockStyle
-    teasers {
-      ...FullTeaser
-    }
-    numColumns
-  }
-  ... on TeaserGridFlexBlock {
-    blockStyle
-    flexTeasers {
-      alignment {
-        i
-        x
-        y
-        w
-        h
-        static
-      }
-      teaser {
-        ...FullTeaser
-      }
-    }
-  }
-}
-    ${ImageRefFragmentDoc}
-${EventRefFragmentDoc}
-${FullCommentFragmentDoc}
-${FullTeaserFragmentDoc}`;
 export const PageInfoFragmentDoc = gql`
     fragment PageInfo on PageInfo {
   startCursor
   endCursor
   hasNextPage
   hasPreviousPage
-}
-    `;
-export const FullImageFragmentDoc = gql`
-    fragment FullImage on Image {
-  id
-  createdAt
-  modifiedAt
-  filename
-  extension
-  width
-  height
-  fileSize
-  description
-  tags
-  source
-  link
-  license
-  focalPoint {
-    x
-    y
-  }
-  ...ImageRef
-}
-    ${ImageRefFragmentDoc}`;
-export const FullNavigationFragmentDoc = gql`
-    fragment FullNavigation on Navigation {
-  id
-  key
-  name
-  links {
-    __typename
-    ... on PageNavigationLink {
-      label
-      page {
-        ...PageRef
-      }
-    }
-    ... on ArticleNavigationLink {
-      label
-      article {
-        ...ArticleRef
-      }
-    }
-    ... on ExternalNavigationLink {
-      label
-      url
-    }
-  }
-}
-    ${PageRefFragmentDoc}
-${ArticleRefFragmentDoc}`;
-export const MutationPageFragmentDoc = gql`
-    fragment MutationPage on Page {
-  id
-  tags {
-    id
-    tag
-  }
-  draft {
-    publishedAt
-    updatedAt
-    revision
-  }
-  pending {
-    publishAt
-    revision
-  }
-  published {
-    publishedAt
-    updatedAt
-    publishAt
-    revision
-  }
-  latest {
-    publishedAt
-    updatedAt
-    publishAt
-    revision
-  }
 }
     `;
 export const PollExternalVoteSourceFragmentDoc = gql`
@@ -4955,11 +2861,11 @@ export const FullPaymentMethodFragmentDoc = gql`
   description
   active
   image {
-    ...ImageRef
+    ...FullImage
   }
 }
     ${FullPaymentProviderFragmentDoc}
-${ImageRefFragmentDoc}`;
+${FullImageFragmentDoc}`;
 export const FullMemberPlanFragmentDoc = gql`
     fragment FullMemberPlan on MemberPlan {
   tags
@@ -5026,494 +2932,6 @@ export const TokenRefFragmentDoc = gql`
   name
 }
     `;
-export const RecentActionsDocument = gql`
-    query RecentActions {
-  actions {
-    ...FullAction
-  }
-}
-    ${FullActionFragmentDoc}`;
-
-/**
- * __useRecentActionsQuery__
- *
- * To run a query within a React component, call `useRecentActionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useRecentActionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useRecentActionsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useRecentActionsQuery(baseOptions?: Apollo.QueryHookOptions<RecentActionsQuery, RecentActionsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RecentActionsQuery, RecentActionsQueryVariables>(RecentActionsDocument, options);
-      }
-export function useRecentActionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecentActionsQuery, RecentActionsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RecentActionsQuery, RecentActionsQueryVariables>(RecentActionsDocument, options);
-        }
-export type RecentActionsQueryHookResult = ReturnType<typeof useRecentActionsQuery>;
-export type RecentActionsLazyQueryHookResult = ReturnType<typeof useRecentActionsLazyQuery>;
-export type RecentActionsQueryResult = Apollo.QueryResult<RecentActionsQuery, RecentActionsQueryVariables>;
-export const ArticleListDocument = gql`
-    query ArticleList($filter: ArticleFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
-  articles(
-    filter: $filter
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
-    nodes {
-      ...ArticleRef
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${ArticleRefFragmentDoc}`;
-
-/**
- * __useArticleListQuery__
- *
- * To run a query within a React component, call `useArticleListQuery` and pass it any options that fit your needs.
- * When your component renders, `useArticleListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useArticleListQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *      cursor: // value for 'cursor'
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *      order: // value for 'order'
- *      sort: // value for 'sort'
- *   },
- * });
- */
-export function useArticleListQuery(baseOptions?: Apollo.QueryHookOptions<ArticleListQuery, ArticleListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ArticleListQuery, ArticleListQueryVariables>(ArticleListDocument, options);
-      }
-export function useArticleListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticleListQuery, ArticleListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ArticleListQuery, ArticleListQueryVariables>(ArticleListDocument, options);
-        }
-export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
-export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
-export type ArticleListQueryResult = Apollo.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
-export const PeerArticleListDocument = gql`
-    query PeerArticleList($filter: ArticleFilter, $cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort, $take: Int, $skip: Int) {
-  peerArticles(
-    cursors: $cursors
-    peerFilter: $peerFilter
-    order: $order
-    sort: $sort
-    filter: $filter
-    take: $take
-    skip: $skip
-  ) {
-    nodes {
-      peer {
-        ...PeerWithProfile
-      }
-      peeredArticleURL
-      article {
-        ...ArticleRef
-      }
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-    totalCount
-  }
-}
-    ${PeerWithProfileFragmentDoc}
-${ArticleRefFragmentDoc}`;
-
-/**
- * __usePeerArticleListQuery__
- *
- * To run a query within a React component, call `usePeerArticleListQuery` and pass it any options that fit your needs.
- * When your component renders, `usePeerArticleListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePeerArticleListQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *      cursors: // value for 'cursors'
- *      peerFilter: // value for 'peerFilter'
- *      order: // value for 'order'
- *      sort: // value for 'sort'
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *   },
- * });
- */
-export function usePeerArticleListQuery(baseOptions?: Apollo.QueryHookOptions<PeerArticleListQuery, PeerArticleListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PeerArticleListQuery, PeerArticleListQueryVariables>(PeerArticleListDocument, options);
-      }
-export function usePeerArticleListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerArticleListQuery, PeerArticleListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PeerArticleListQuery, PeerArticleListQueryVariables>(PeerArticleListDocument, options);
-        }
-export type PeerArticleListQueryHookResult = ReturnType<typeof usePeerArticleListQuery>;
-export type PeerArticleListLazyQueryHookResult = ReturnType<typeof usePeerArticleListLazyQuery>;
-export type PeerArticleListQueryResult = Apollo.QueryResult<PeerArticleListQuery, PeerArticleListQueryVariables>;
-export const CreateArticleDocument = gql`
-    mutation CreateArticle($input: ArticleInput!) {
-  createArticle(input: $input) {
-    ...MutationArticle
-  }
-}
-    ${MutationArticleFragmentDoc}`;
-export type CreateArticleMutationFn = Apollo.MutationFunction<CreateArticleMutation, CreateArticleMutationVariables>;
-
-/**
- * __useCreateArticleMutation__
- *
- * To run a mutation, you first call `useCreateArticleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateArticleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createArticleMutation, { data, loading, error }] = useCreateArticleMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreateArticleMutation(baseOptions?: Apollo.MutationHookOptions<CreateArticleMutation, CreateArticleMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateArticleMutation, CreateArticleMutationVariables>(CreateArticleDocument, options);
-      }
-export type CreateArticleMutationHookResult = ReturnType<typeof useCreateArticleMutation>;
-export type CreateArticleMutationResult = Apollo.MutationResult<CreateArticleMutation>;
-export type CreateArticleMutationOptions = Apollo.BaseMutationOptions<CreateArticleMutation, CreateArticleMutationVariables>;
-export const UpdateArticleDocument = gql`
-    mutation UpdateArticle($id: ID!, $input: ArticleInput!) {
-  updateArticle(id: $id, input: $input) {
-    ...MutationArticle
-  }
-}
-    ${MutationArticleFragmentDoc}`;
-export type UpdateArticleMutationFn = Apollo.MutationFunction<UpdateArticleMutation, UpdateArticleMutationVariables>;
-
-/**
- * __useUpdateArticleMutation__
- *
- * To run a mutation, you first call `useUpdateArticleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateArticleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateArticleMutation, { data, loading, error }] = useUpdateArticleMutation({
- *   variables: {
- *      id: // value for 'id'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateArticleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateArticleMutation, UpdateArticleMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateArticleMutation, UpdateArticleMutationVariables>(UpdateArticleDocument, options);
-      }
-export type UpdateArticleMutationHookResult = ReturnType<typeof useUpdateArticleMutation>;
-export type UpdateArticleMutationResult = Apollo.MutationResult<UpdateArticleMutation>;
-export type UpdateArticleMutationOptions = Apollo.BaseMutationOptions<UpdateArticleMutation, UpdateArticleMutationVariables>;
-export const PublishArticleDocument = gql`
-    mutation PublishArticle($id: ID!, $publishAt: DateTime!, $publishedAt: DateTime!, $updatedAt: DateTime!) {
-  publishArticle(
-    id: $id
-    publishAt: $publishAt
-    publishedAt: $publishedAt
-    updatedAt: $updatedAt
-  ) {
-    ...MutationArticle
-  }
-}
-    ${MutationArticleFragmentDoc}`;
-export type PublishArticleMutationFn = Apollo.MutationFunction<PublishArticleMutation, PublishArticleMutationVariables>;
-
-/**
- * __usePublishArticleMutation__
- *
- * To run a mutation, you first call `usePublishArticleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePublishArticleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [publishArticleMutation, { data, loading, error }] = usePublishArticleMutation({
- *   variables: {
- *      id: // value for 'id'
- *      publishAt: // value for 'publishAt'
- *      publishedAt: // value for 'publishedAt'
- *      updatedAt: // value for 'updatedAt'
- *   },
- * });
- */
-export function usePublishArticleMutation(baseOptions?: Apollo.MutationHookOptions<PublishArticleMutation, PublishArticleMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<PublishArticleMutation, PublishArticleMutationVariables>(PublishArticleDocument, options);
-      }
-export type PublishArticleMutationHookResult = ReturnType<typeof usePublishArticleMutation>;
-export type PublishArticleMutationResult = Apollo.MutationResult<PublishArticleMutation>;
-export type PublishArticleMutationOptions = Apollo.BaseMutationOptions<PublishArticleMutation, PublishArticleMutationVariables>;
-export const UnpublishArticleDocument = gql`
-    mutation UnpublishArticle($id: ID!) {
-  unpublishArticle(id: $id) {
-    ...MutationArticle
-  }
-}
-    ${MutationArticleFragmentDoc}`;
-export type UnpublishArticleMutationFn = Apollo.MutationFunction<UnpublishArticleMutation, UnpublishArticleMutationVariables>;
-
-/**
- * __useUnpublishArticleMutation__
- *
- * To run a mutation, you first call `useUnpublishArticleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUnpublishArticleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [unpublishArticleMutation, { data, loading, error }] = useUnpublishArticleMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useUnpublishArticleMutation(baseOptions?: Apollo.MutationHookOptions<UnpublishArticleMutation, UnpublishArticleMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UnpublishArticleMutation, UnpublishArticleMutationVariables>(UnpublishArticleDocument, options);
-      }
-export type UnpublishArticleMutationHookResult = ReturnType<typeof useUnpublishArticleMutation>;
-export type UnpublishArticleMutationResult = Apollo.MutationResult<UnpublishArticleMutation>;
-export type UnpublishArticleMutationOptions = Apollo.BaseMutationOptions<UnpublishArticleMutation, UnpublishArticleMutationVariables>;
-export const DeleteArticleDocument = gql`
-    mutation DeleteArticle($id: ID!) {
-  deleteArticle(id: $id) {
-    ...MutationArticle
-  }
-}
-    ${MutationArticleFragmentDoc}`;
-export type DeleteArticleMutationFn = Apollo.MutationFunction<DeleteArticleMutation, DeleteArticleMutationVariables>;
-
-/**
- * __useDeleteArticleMutation__
- *
- * To run a mutation, you first call `useDeleteArticleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteArticleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteArticleMutation, { data, loading, error }] = useDeleteArticleMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteArticleMutation(baseOptions?: Apollo.MutationHookOptions<DeleteArticleMutation, DeleteArticleMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteArticleMutation, DeleteArticleMutationVariables>(DeleteArticleDocument, options);
-      }
-export type DeleteArticleMutationHookResult = ReturnType<typeof useDeleteArticleMutation>;
-export type DeleteArticleMutationResult = Apollo.MutationResult<DeleteArticleMutation>;
-export type DeleteArticleMutationOptions = Apollo.BaseMutationOptions<DeleteArticleMutation, DeleteArticleMutationVariables>;
-export const DuplicateArticleDocument = gql`
-    mutation DuplicateArticle($id: ID!) {
-  duplicateArticle(id: $id) {
-    ...MutationArticle
-  }
-}
-    ${MutationArticleFragmentDoc}`;
-export type DuplicateArticleMutationFn = Apollo.MutationFunction<DuplicateArticleMutation, DuplicateArticleMutationVariables>;
-
-/**
- * __useDuplicateArticleMutation__
- *
- * To run a mutation, you first call `useDuplicateArticleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDuplicateArticleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [duplicateArticleMutation, { data, loading, error }] = useDuplicateArticleMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDuplicateArticleMutation(baseOptions?: Apollo.MutationHookOptions<DuplicateArticleMutation, DuplicateArticleMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DuplicateArticleMutation, DuplicateArticleMutationVariables>(DuplicateArticleDocument, options);
-      }
-export type DuplicateArticleMutationHookResult = ReturnType<typeof useDuplicateArticleMutation>;
-export type DuplicateArticleMutationResult = Apollo.MutationResult<DuplicateArticleMutation>;
-export type DuplicateArticleMutationOptions = Apollo.BaseMutationOptions<DuplicateArticleMutation, DuplicateArticleMutationVariables>;
-export const ArticlePreviewLinkDocument = gql`
-    query ArticlePreviewLink($id: ID!, $hours: Int!) {
-  articlePreviewLink(id: $id, hours: $hours)
-}
-    `;
-
-/**
- * __useArticlePreviewLinkQuery__
- *
- * To run a query within a React component, call `useArticlePreviewLinkQuery` and pass it any options that fit your needs.
- * When your component renders, `useArticlePreviewLinkQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useArticlePreviewLinkQuery({
- *   variables: {
- *      id: // value for 'id'
- *      hours: // value for 'hours'
- *   },
- * });
- */
-export function useArticlePreviewLinkQuery(baseOptions: Apollo.QueryHookOptions<ArticlePreviewLinkQuery, ArticlePreviewLinkQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ArticlePreviewLinkQuery, ArticlePreviewLinkQueryVariables>(ArticlePreviewLinkDocument, options);
-      }
-export function useArticlePreviewLinkLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticlePreviewLinkQuery, ArticlePreviewLinkQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ArticlePreviewLinkQuery, ArticlePreviewLinkQueryVariables>(ArticlePreviewLinkDocument, options);
-        }
-export type ArticlePreviewLinkQueryHookResult = ReturnType<typeof useArticlePreviewLinkQuery>;
-export type ArticlePreviewLinkLazyQueryHookResult = ReturnType<typeof useArticlePreviewLinkLazyQuery>;
-export type ArticlePreviewLinkQueryResult = Apollo.QueryResult<ArticlePreviewLinkQuery, ArticlePreviewLinkQueryVariables>;
-export const ArticleDocument = gql`
-    query Article($id: ID!) {
-  article(id: $id) {
-    id
-    shared
-    hidden
-    disableComments
-    tags {
-      id
-      tag
-      type
-    }
-    draft {
-      publishAt
-    }
-    pending {
-      publishAt
-    }
-    published {
-      publishedAt
-      updatedAt
-      publishAt
-    }
-    latest {
-      publishedAt
-      updatedAt
-      publishAt
-      revision
-      slug
-      preTitle
-      title
-      lead
-      seoTitle
-      image {
-        ...ImageRef
-      }
-      url
-      canonicalUrl
-      properties {
-        key
-        value
-        public
-      }
-      authors {
-        ...AuthorRef
-      }
-      hideAuthor
-      breaking
-      socialMediaTitle
-      socialMediaDescription
-      socialMediaAuthors {
-        ...AuthorRef
-      }
-      socialMediaImage {
-        ...ImageRef
-      }
-      blocks {
-        ...FullBlock
-      }
-      likes
-    }
-  }
-}
-    ${ImageRefFragmentDoc}
-${AuthorRefFragmentDoc}
-${FullBlockFragmentDoc}`;
-
-/**
- * __useArticleQuery__
- *
- * To run a query within a React component, call `useArticleQuery` and pass it any options that fit your needs.
- * When your component renders, `useArticleQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useArticleQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useArticleQuery(baseOptions: Apollo.QueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, options);
-      }
-export function useArticleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, options);
-        }
-export type ArticleQueryHookResult = ReturnType<typeof useArticleQuery>;
-export type ArticleLazyQueryHookResult = ReturnType<typeof useArticleLazyQuery>;
-export type ArticleQueryResult = Apollo.QueryResult<ArticleQuery, ArticleQueryVariables>;
 export const CreateSessionDocument = gql`
     mutation CreateSession($email: String!, $password: String!) {
   createSession(email: $email, password: $password) {
@@ -5671,7 +3089,7 @@ export type CreateSessionWithJwtMutationHookResult = ReturnType<typeof useCreate
 export type CreateSessionWithJwtMutationResult = Apollo.MutationResult<CreateSessionWithJwtMutation>;
 export type CreateSessionWithJwtMutationOptions = Apollo.BaseMutationOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
 export const AuthorListDocument = gql`
-    query AuthorList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: AuthorSort) {
+    query AuthorList($filter: String, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: AuthorSort) {
   authors(
     filter: {name: $filter}
     cursor: $cursor
@@ -5727,7 +3145,7 @@ export type AuthorListQueryHookResult = ReturnType<typeof useAuthorListQuery>;
 export type AuthorListLazyQueryHookResult = ReturnType<typeof useAuthorListLazyQuery>;
 export type AuthorListQueryResult = Apollo.QueryResult<AuthorListQuery, AuthorListQueryVariables>;
 export const AuthorDocument = gql`
-    query Author($id: ID!) {
+    query Author($id: String!) {
   author(id: $id) {
     ...FullAuthor
   }
@@ -5795,7 +3213,7 @@ export type CreateAuthorMutationHookResult = ReturnType<typeof useCreateAuthorMu
 export type CreateAuthorMutationResult = Apollo.MutationResult<CreateAuthorMutation>;
 export type CreateAuthorMutationOptions = Apollo.BaseMutationOptions<CreateAuthorMutation, CreateAuthorMutationVariables>;
 export const UpdateAuthorDocument = gql`
-    mutation UpdateAuthor($id: ID!, $input: AuthorInput!) {
+    mutation UpdateAuthor($id: String!, $input: AuthorInput!) {
   updateAuthor(id: $id, input: $input) {
     ...FullAuthor
   }
@@ -5829,7 +3247,7 @@ export type UpdateAuthorMutationHookResult = ReturnType<typeof useUpdateAuthorMu
 export type UpdateAuthorMutationResult = Apollo.MutationResult<UpdateAuthorMutation>;
 export type UpdateAuthorMutationOptions = Apollo.BaseMutationOptions<UpdateAuthorMutation, UpdateAuthorMutationVariables>;
 export const DeleteAuthorDocument = gql`
-    mutation DeleteAuthor($id: ID!) {
+    mutation DeleteAuthor($id: String!) {
   deleteAuthor(id: $id) {
     ...FullAuthor
   }
@@ -5903,7 +3321,7 @@ export type RatingSystemQueryHookResult = ReturnType<typeof useRatingSystemQuery
 export type RatingSystemLazyQueryHookResult = ReturnType<typeof useRatingSystemLazyQuery>;
 export type RatingSystemQueryResult = Apollo.QueryResult<RatingSystemQuery, RatingSystemQueryVariables>;
 export const UpdateRatingSystemDocument = gql`
-    mutation UpdateRatingSystem($ratingSystemId: ID!, $name: String, $answers: [UpdateCommentRatingSystemAnswer!]) {
+    mutation UpdateRatingSystem($ratingSystemId: String!, $name: String, $answers: [UpdateCommentRatingSystemAnswer!]) {
   updateRatingSystem(
     ratingSystemId: $ratingSystemId
     name: $name
@@ -5949,7 +3367,7 @@ export type UpdateRatingSystemMutationHookResult = ReturnType<typeof useUpdateRa
 export type UpdateRatingSystemMutationResult = Apollo.MutationResult<UpdateRatingSystemMutation>;
 export type UpdateRatingSystemMutationOptions = Apollo.BaseMutationOptions<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>;
 export const CreateRatingSystemAnswerDocument = gql`
-    mutation CreateRatingSystemAnswer($ratingSystemId: ID!, $type: RatingSystemType!, $answer: String) {
+    mutation CreateRatingSystemAnswer($ratingSystemId: String!, $type: RatingSystemType!, $answer: String) {
   createRatingSystemAnswer(
     ratingSystemId: $ratingSystemId
     type: $type
@@ -5991,7 +3409,7 @@ export type CreateRatingSystemAnswerMutationHookResult = ReturnType<typeof useCr
 export type CreateRatingSystemAnswerMutationResult = Apollo.MutationResult<CreateRatingSystemAnswerMutation>;
 export type CreateRatingSystemAnswerMutationOptions = Apollo.BaseMutationOptions<CreateRatingSystemAnswerMutation, CreateRatingSystemAnswerMutationVariables>;
 export const DeleteRatingSystemAnswerDocument = gql`
-    mutation DeleteRatingSystemAnswer($answerId: ID!) {
+    mutation DeleteRatingSystemAnswer($answerId: String!) {
   deleteRatingSystemAnswer(id: $answerId) {
     id
   }
@@ -6024,7 +3442,7 @@ export type DeleteRatingSystemAnswerMutationHookResult = ReturnType<typeof useDe
 export type DeleteRatingSystemAnswerMutationResult = Apollo.MutationResult<DeleteRatingSystemAnswerMutation>;
 export type DeleteRatingSystemAnswerMutationOptions = Apollo.BaseMutationOptions<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>;
 export const CommentListDocument = gql`
-    query CommentList($filter: CommentFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
+    query CommentList($filter: CommentFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
   comments(
     filter: $filter
     cursor: $cursor
@@ -6080,7 +3498,7 @@ export type CommentListQueryHookResult = ReturnType<typeof useCommentListQuery>;
 export type CommentListLazyQueryHookResult = ReturnType<typeof useCommentListLazyQuery>;
 export type CommentListQueryResult = Apollo.QueryResult<CommentListQuery, CommentListQueryVariables>;
 export const CommentDocument = gql`
-    query Comment($id: ID!) {
+    query Comment($id: String!) {
   comment(id: $id) {
     ...FullComment
   }
@@ -6115,7 +3533,7 @@ export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
 export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
 export type CommentQueryResult = Apollo.QueryResult<CommentQuery, CommentQueryVariables>;
 export const ApproveCommentDocument = gql`
-    mutation ApproveComment($id: ID!) {
+    mutation ApproveComment($id: String!) {
   approveComment(id: $id) {
     state
   }
@@ -6148,7 +3566,7 @@ export type ApproveCommentMutationHookResult = ReturnType<typeof useApproveComme
 export type ApproveCommentMutationResult = Apollo.MutationResult<ApproveCommentMutation>;
 export type ApproveCommentMutationOptions = Apollo.BaseMutationOptions<ApproveCommentMutation, ApproveCommentMutationVariables>;
 export const RejectCommentDocument = gql`
-    mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason) {
+    mutation RejectComment($id: String!, $rejectionReason: CommentRejectionReason) {
   rejectComment(id: $id, rejectionReason: $rejectionReason) {
     state
     rejectionReason
@@ -6183,7 +3601,7 @@ export type RejectCommentMutationHookResult = ReturnType<typeof useRejectComment
 export type RejectCommentMutationResult = Apollo.MutationResult<RejectCommentMutation>;
 export type RejectCommentMutationOptions = Apollo.BaseMutationOptions<RejectCommentMutation, RejectCommentMutationVariables>;
 export const RequestChangesOnCommentDocument = gql`
-    mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+    mutation RequestChangesOnComment($id: String!, $rejectionReason: CommentRejectionReason!) {
   requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
     state
     rejectionReason
@@ -6218,7 +3636,7 @@ export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useReq
 export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const UpdateCommentDocument = gql`
-    mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $featured: Boolean, $source: String, $tagIds: [ID!], $ratingOverrides: [CommentRatingOverrideUpdateInput!]) {
+    mutation updateComment($id: String!, $revision: CommentRevisionUpdateInput, $userID: String, $guestUsername: String, $guestUserImageID: String, $featured: Boolean, $source: String, $tagIds: [String!], $ratingOverrides: [CommentRatingOverrideUpdateInput!]) {
   updateComment(
     id: $id
     revision: $revision
@@ -6269,7 +3687,7 @@ export type UpdateCommentMutationHookResult = ReturnType<typeof useUpdateComment
 export type UpdateCommentMutationResult = Apollo.MutationResult<UpdateCommentMutation>;
 export type UpdateCommentMutationOptions = Apollo.BaseMutationOptions<UpdateCommentMutation, UpdateCommentMutationVariables>;
 export const CreateCommentDocument = gql`
-    mutation createComment($itemID: ID!, $itemType: CommentItemType!, $parentID: ID, $text: RichText, $tagIds: [ID!]) {
+    mutation createComment($itemID: String!, $itemType: CommentItemType!, $parentID: String, $text: RichText, $tagIds: [String!]) {
   createComment(
     itemID: $itemID
     itemType: $itemType
@@ -6312,7 +3730,7 @@ export type CreateCommentMutationHookResult = ReturnType<typeof useCreateComment
 export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
 export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
 export const DeleteCommentDocument = gql`
-    mutation DeleteComment($deleteCommentId: ID!) {
+    mutation DeleteComment($deleteCommentId: String!) {
   deleteComment(id: $deleteCommentId) {
     id
   }
@@ -6344,277 +3762,11 @@ export function useDeleteCommentMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteCommentMutationHookResult = ReturnType<typeof useDeleteCommentMutation>;
 export type DeleteCommentMutationResult = Apollo.MutationResult<DeleteCommentMutation>;
 export type DeleteCommentMutationOptions = Apollo.BaseMutationOptions<DeleteCommentMutation, DeleteCommentMutationVariables>;
-export const EventListDocument = gql`
-    query EventList($filter: EventFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: EventSort) {
-  events(
-    filter: $filter
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
-    nodes {
-      ...EventRef
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${EventRefFragmentDoc}`;
-
-/**
- * __useEventListQuery__
- *
- * To run a query within a React component, call `useEventListQuery` and pass it any options that fit your needs.
- * When your component renders, `useEventListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useEventListQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *      cursor: // value for 'cursor'
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *      order: // value for 'order'
- *      sort: // value for 'sort'
- *   },
- * });
- */
-export function useEventListQuery(baseOptions?: Apollo.QueryHookOptions<EventListQuery, EventListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<EventListQuery, EventListQueryVariables>(EventListDocument, options);
-      }
-export function useEventListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EventListQuery, EventListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<EventListQuery, EventListQueryVariables>(EventListDocument, options);
-        }
-export type EventListQueryHookResult = ReturnType<typeof useEventListQuery>;
-export type EventListLazyQueryHookResult = ReturnType<typeof useEventListLazyQuery>;
-export type EventListQueryResult = Apollo.QueryResult<EventListQuery, EventListQueryVariables>;
-export const EventDocument = gql`
-    query Event($id: ID!) {
-  event(id: $id) {
-    ...EventRef
-  }
-}
-    ${EventRefFragmentDoc}`;
-
-/**
- * __useEventQuery__
- *
- * To run a query within a React component, call `useEventQuery` and pass it any options that fit your needs.
- * When your component renders, `useEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useEventQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useEventQuery(baseOptions: Apollo.QueryHookOptions<EventQuery, EventQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<EventQuery, EventQueryVariables>(EventDocument, options);
-      }
-export function useEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EventQuery, EventQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<EventQuery, EventQueryVariables>(EventDocument, options);
-        }
-export type EventQueryHookResult = ReturnType<typeof useEventQuery>;
-export type EventLazyQueryHookResult = ReturnType<typeof useEventLazyQuery>;
-export type EventQueryResult = Apollo.QueryResult<EventQuery, EventQueryVariables>;
-export const ImportedEventsIdsDocument = gql`
-    query ImportedEventsIds {
-  importedEventsIds
-}
-    `;
-
-/**
- * __useImportedEventsIdsQuery__
- *
- * To run a query within a React component, call `useImportedEventsIdsQuery` and pass it any options that fit your needs.
- * When your component renders, `useImportedEventsIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useImportedEventsIdsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useImportedEventsIdsQuery(baseOptions?: Apollo.QueryHookOptions<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>(ImportedEventsIdsDocument, options);
-      }
-export function useImportedEventsIdsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>(ImportedEventsIdsDocument, options);
-        }
-export type ImportedEventsIdsQueryHookResult = ReturnType<typeof useImportedEventsIdsQuery>;
-export type ImportedEventsIdsLazyQueryHookResult = ReturnType<typeof useImportedEventsIdsLazyQuery>;
-export type ImportedEventsIdsQueryResult = Apollo.QueryResult<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>;
-export const CreateEventDocument = gql`
-    mutation CreateEvent($name: String!, $lead: String, $description: RichText, $location: String, $startsAt: DateTime!, $endsAt: DateTime, $imageId: ID, $tagIds: [ID!], $externalSourceId: String, $externalSourceName: String) {
-  createEvent(
-    name: $name
-    lead: $lead
-    description: $description
-    location: $location
-    startsAt: $startsAt
-    endsAt: $endsAt
-    imageId: $imageId
-    tagIds: $tagIds
-    externalSourceId: $externalSourceId
-    externalSourceName: $externalSourceName
-  ) {
-    ...EventRef
-  }
-}
-    ${EventRefFragmentDoc}`;
-export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation, CreateEventMutationVariables>;
-
-/**
- * __useCreateEventMutation__
- *
- * To run a mutation, you first call `useCreateEventMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateEventMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createEventMutation, { data, loading, error }] = useCreateEventMutation({
- *   variables: {
- *      name: // value for 'name'
- *      lead: // value for 'lead'
- *      description: // value for 'description'
- *      location: // value for 'location'
- *      startsAt: // value for 'startsAt'
- *      endsAt: // value for 'endsAt'
- *      imageId: // value for 'imageId'
- *      tagIds: // value for 'tagIds'
- *      externalSourceId: // value for 'externalSourceId'
- *      externalSourceName: // value for 'externalSourceName'
- *   },
- * });
- */
-export function useCreateEventMutation(baseOptions?: Apollo.MutationHookOptions<CreateEventMutation, CreateEventMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument, options);
-      }
-export type CreateEventMutationHookResult = ReturnType<typeof useCreateEventMutation>;
-export type CreateEventMutationResult = Apollo.MutationResult<CreateEventMutation>;
-export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventMutation, CreateEventMutationVariables>;
-export const UpdateEventDocument = gql`
-    mutation UpdateEvent($id: ID!, $name: String, $lead: String, $description: RichText, $status: EventStatus, $location: String, $startsAt: DateTime, $endsAt: DateTime, $imageId: ID, $tagIds: [ID!], $externalSourceId: String, $externalSourceName: String) {
-  updateEvent(
-    id: $id
-    name: $name
-    lead: $lead
-    description: $description
-    status: $status
-    location: $location
-    startsAt: $startsAt
-    endsAt: $endsAt
-    imageId: $imageId
-    tagIds: $tagIds
-    externalSourceId: $externalSourceId
-    externalSourceName: $externalSourceName
-  ) {
-    ...EventRef
-  }
-}
-    ${EventRefFragmentDoc}`;
-export type UpdateEventMutationFn = Apollo.MutationFunction<UpdateEventMutation, UpdateEventMutationVariables>;
-
-/**
- * __useUpdateEventMutation__
- *
- * To run a mutation, you first call `useUpdateEventMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateEventMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateEventMutation, { data, loading, error }] = useUpdateEventMutation({
- *   variables: {
- *      id: // value for 'id'
- *      name: // value for 'name'
- *      lead: // value for 'lead'
- *      description: // value for 'description'
- *      status: // value for 'status'
- *      location: // value for 'location'
- *      startsAt: // value for 'startsAt'
- *      endsAt: // value for 'endsAt'
- *      imageId: // value for 'imageId'
- *      tagIds: // value for 'tagIds'
- *      externalSourceId: // value for 'externalSourceId'
- *      externalSourceName: // value for 'externalSourceName'
- *   },
- * });
- */
-export function useUpdateEventMutation(baseOptions?: Apollo.MutationHookOptions<UpdateEventMutation, UpdateEventMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateEventMutation, UpdateEventMutationVariables>(UpdateEventDocument, options);
-      }
-export type UpdateEventMutationHookResult = ReturnType<typeof useUpdateEventMutation>;
-export type UpdateEventMutationResult = Apollo.MutationResult<UpdateEventMutation>;
-export type UpdateEventMutationOptions = Apollo.BaseMutationOptions<UpdateEventMutation, UpdateEventMutationVariables>;
-export const DeleteEventDocument = gql`
-    mutation DeleteEvent($id: ID!) {
-  deleteEvent(id: $id) {
-    ...EventRef
-  }
-}
-    ${EventRefFragmentDoc}`;
-export type DeleteEventMutationFn = Apollo.MutationFunction<DeleteEventMutation, DeleteEventMutationVariables>;
-
-/**
- * __useDeleteEventMutation__
- *
- * To run a mutation, you first call `useDeleteEventMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteEventMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteEventMutation, { data, loading, error }] = useDeleteEventMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteEventMutation(baseOptions?: Apollo.MutationHookOptions<DeleteEventMutation, DeleteEventMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteEventMutation, DeleteEventMutationVariables>(DeleteEventDocument, options);
-      }
-export type DeleteEventMutationHookResult = ReturnType<typeof useDeleteEventMutation>;
-export type DeleteEventMutationResult = Apollo.MutationResult<DeleteEventMutation>;
-export type DeleteEventMutationOptions = Apollo.BaseMutationOptions<DeleteEventMutation, DeleteEventMutationVariables>;
 export const ImageListDocument = gql`
-    query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    query ImageList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
-      ...ImageRef
+      ...FullImage
     }
     pageInfo {
       startCursor
@@ -6625,7 +3777,7 @@ export const ImageListDocument = gql`
     totalCount
   }
 }
-    ${ImageRefFragmentDoc}`;
+    ${FullImageFragmentDoc}`;
 
 /**
  * __useImageListQuery__
@@ -6658,7 +3810,7 @@ export type ImageListQueryHookResult = ReturnType<typeof useImageListQuery>;
 export type ImageListLazyQueryHookResult = ReturnType<typeof useImageListLazyQuery>;
 export type ImageListQueryResult = Apollo.QueryResult<ImageListQuery, ImageListQueryVariables>;
 export const ImageDocument = gql`
-    query Image($id: ID!) {
+    query Image($id: String!) {
   image(id: $id) {
     ...FullImage
   }
@@ -6695,10 +3847,10 @@ export type ImageQueryResult = Apollo.QueryResult<ImageQuery, ImageQueryVariable
 export const UploadImageDocument = gql`
     mutation UploadImage($input: UploadImageInput!) {
   uploadImage(input: $input) {
-    ...ImageRef
+    ...FullImage
   }
 }
-    ${ImageRefFragmentDoc}`;
+    ${FullImageFragmentDoc}`;
 export type UploadImageMutationFn = Apollo.MutationFunction<UploadImageMutation, UploadImageMutationVariables>;
 
 /**
@@ -6726,7 +3878,7 @@ export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMuta
 export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
 export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
 export const UpdateImageDocument = gql`
-    mutation UpdateImage($id: ID!, $input: UpdateImageInput!) {
+    mutation UpdateImage($id: String!, $input: UpdateImageInput!) {
   updateImage(id: $id, input: $input) {
     ...FullImage
   }
@@ -6760,7 +3912,7 @@ export type UpdateImageMutationHookResult = ReturnType<typeof useUpdateImageMuta
 export type UpdateImageMutationResult = Apollo.MutationResult<UpdateImageMutation>;
 export type UpdateImageMutationOptions = Apollo.BaseMutationOptions<UpdateImageMutation, UpdateImageMutationVariables>;
 export const DeleteImageDocument = gql`
-    mutation DeleteImage($id: ID!) {
+    mutation DeleteImage($id: String!) {
   deleteImage(id: $id) {
     ...FullImage
   }
@@ -6793,7 +3945,7 @@ export type DeleteImageMutationHookResult = ReturnType<typeof useDeleteImageMuta
 export type DeleteImageMutationResult = Apollo.MutationResult<DeleteImageMutation>;
 export type DeleteImageMutationOptions = Apollo.BaseMutationOptions<DeleteImageMutation, DeleteImageMutationVariables>;
 export const InvoicesDocument = gql`
-    query Invoices($cursor: ID, $take: Int, $skip: Int, $filter: InvoiceFilter, $sort: InvoiceSort, $order: SortOrder) {
+    query Invoices($cursor: String, $take: Int, $skip: Int, $filter: InvoiceFilter, $sort: InvoiceSort, $order: SortOrder) {
   invoices(
     cursor: $cursor
     take: $take
@@ -6847,7 +3999,7 @@ export type InvoicesQueryHookResult = ReturnType<typeof useInvoicesQuery>;
 export type InvoicesLazyQueryHookResult = ReturnType<typeof useInvoicesLazyQuery>;
 export type InvoicesQueryResult = Apollo.QueryResult<InvoicesQuery, InvoicesQueryVariables>;
 export const UpdateInvoiceDocument = gql`
-    mutation UpdateInvoice($updateInvoiceId: ID!, $input: InvoiceInput!) {
+    mutation UpdateInvoice($updateInvoiceId: String!, $input: InvoiceInput!) {
   updateInvoice(id: $updateInvoiceId, input: $input) {
     ...Invoice
   }
@@ -6881,7 +4033,7 @@ export type UpdateInvoiceMutationHookResult = ReturnType<typeof useUpdateInvoice
 export type UpdateInvoiceMutationResult = Apollo.MutationResult<UpdateInvoiceMutation>;
 export type UpdateInvoiceMutationOptions = Apollo.BaseMutationOptions<UpdateInvoiceMutation, UpdateInvoiceMutationVariables>;
 export const MarkInvoiceAsPaidDocument = gql`
-    mutation MarkInvoiceAsPaid($id: ID!) {
+    mutation MarkInvoiceAsPaid($id: String!) {
   markInvoiceAsPaid(id: $id) {
     ...Invoice
   }
@@ -6914,7 +4066,7 @@ export type MarkInvoiceAsPaidMutationHookResult = ReturnType<typeof useMarkInvoi
 export type MarkInvoiceAsPaidMutationResult = Apollo.MutationResult<MarkInvoiceAsPaidMutation>;
 export type MarkInvoiceAsPaidMutationOptions = Apollo.BaseMutationOptions<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>;
 export const MemberPlanListDocument = gql`
-    query MemberPlanList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    query MemberPlanList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullMemberPlan
@@ -6961,7 +4113,7 @@ export type MemberPlanListQueryHookResult = ReturnType<typeof useMemberPlanListQ
 export type MemberPlanListLazyQueryHookResult = ReturnType<typeof useMemberPlanListLazyQuery>;
 export type MemberPlanListQueryResult = Apollo.QueryResult<MemberPlanListQuery, MemberPlanListQueryVariables>;
 export const MemberPlanDocument = gql`
-    query MemberPlan($id: ID!) {
+    query MemberPlan($id: String!) {
   memberPlan(id: $id) {
     ...FullMemberPlan
   }
@@ -7029,7 +4181,7 @@ export type CreateMemberPlanMutationHookResult = ReturnType<typeof useCreateMemb
 export type CreateMemberPlanMutationResult = Apollo.MutationResult<CreateMemberPlanMutation>;
 export type CreateMemberPlanMutationOptions = Apollo.BaseMutationOptions<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>;
 export const UpdateMemberPlanDocument = gql`
-    mutation UpdateMemberPlan($id: ID!, $input: MemberPlanInput!) {
+    mutation UpdateMemberPlan($id: String!, $input: MemberPlanInput!) {
   updateMemberPlan(id: $id, input: $input) {
     ...FullMemberPlan
   }
@@ -7063,7 +4215,7 @@ export type UpdateMemberPlanMutationHookResult = ReturnType<typeof useUpdateMemb
 export type UpdateMemberPlanMutationResult = Apollo.MutationResult<UpdateMemberPlanMutation>;
 export type UpdateMemberPlanMutationOptions = Apollo.BaseMutationOptions<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>;
 export const DeleteMemberPlanDocument = gql`
-    mutation DeleteMemberPlan($id: ID!) {
+    mutation DeleteMemberPlan($id: String!) {
   deleteMemberPlan(id: $id) {
     ...FullMemberPlan
   }
@@ -7095,549 +4247,6 @@ export function useDeleteMemberPlanMutation(baseOptions?: Apollo.MutationHookOpt
 export type DeleteMemberPlanMutationHookResult = ReturnType<typeof useDeleteMemberPlanMutation>;
 export type DeleteMemberPlanMutationResult = Apollo.MutationResult<DeleteMemberPlanMutation>;
 export type DeleteMemberPlanMutationOptions = Apollo.BaseMutationOptions<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>;
-export const NavigationListDocument = gql`
-    query NavigationList {
-  navigations {
-    ...FullNavigation
-  }
-}
-    ${FullNavigationFragmentDoc}`;
-
-/**
- * __useNavigationListQuery__
- *
- * To run a query within a React component, call `useNavigationListQuery` and pass it any options that fit your needs.
- * When your component renders, `useNavigationListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useNavigationListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useNavigationListQuery(baseOptions?: Apollo.QueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, options);
-      }
-export function useNavigationListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, options);
-        }
-export type NavigationListQueryHookResult = ReturnType<typeof useNavigationListQuery>;
-export type NavigationListLazyQueryHookResult = ReturnType<typeof useNavigationListLazyQuery>;
-export type NavigationListQueryResult = Apollo.QueryResult<NavigationListQuery, NavigationListQueryVariables>;
-export const NavigationDocument = gql`
-    query Navigation($id: ID!) {
-  navigation(id: $id) {
-    ...FullNavigation
-  }
-}
-    ${FullNavigationFragmentDoc}`;
-
-/**
- * __useNavigationQuery__
- *
- * To run a query within a React component, call `useNavigationQuery` and pass it any options that fit your needs.
- * When your component renders, `useNavigationQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useNavigationQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useNavigationQuery(baseOptions: Apollo.QueryHookOptions<NavigationQuery, NavigationQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<NavigationQuery, NavigationQueryVariables>(NavigationDocument, options);
-      }
-export function useNavigationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NavigationQuery, NavigationQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<NavigationQuery, NavigationQueryVariables>(NavigationDocument, options);
-        }
-export type NavigationQueryHookResult = ReturnType<typeof useNavigationQuery>;
-export type NavigationLazyQueryHookResult = ReturnType<typeof useNavigationLazyQuery>;
-export type NavigationQueryResult = Apollo.QueryResult<NavigationQuery, NavigationQueryVariables>;
-export const CreateNavigationDocument = gql`
-    mutation CreateNavigation($input: NavigationInput!) {
-  createNavigation(input: $input) {
-    ...FullNavigation
-  }
-}
-    ${FullNavigationFragmentDoc}`;
-export type CreateNavigationMutationFn = Apollo.MutationFunction<CreateNavigationMutation, CreateNavigationMutationVariables>;
-
-/**
- * __useCreateNavigationMutation__
- *
- * To run a mutation, you first call `useCreateNavigationMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateNavigationMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createNavigationMutation, { data, loading, error }] = useCreateNavigationMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreateNavigationMutation(baseOptions?: Apollo.MutationHookOptions<CreateNavigationMutation, CreateNavigationMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateNavigationMutation, CreateNavigationMutationVariables>(CreateNavigationDocument, options);
-      }
-export type CreateNavigationMutationHookResult = ReturnType<typeof useCreateNavigationMutation>;
-export type CreateNavigationMutationResult = Apollo.MutationResult<CreateNavigationMutation>;
-export type CreateNavigationMutationOptions = Apollo.BaseMutationOptions<CreateNavigationMutation, CreateNavigationMutationVariables>;
-export const UpdateNavigationDocument = gql`
-    mutation UpdateNavigation($id: ID!, $input: NavigationInput!) {
-  updateNavigation(id: $id, input: $input) {
-    ...FullNavigation
-  }
-}
-    ${FullNavigationFragmentDoc}`;
-export type UpdateNavigationMutationFn = Apollo.MutationFunction<UpdateNavigationMutation, UpdateNavigationMutationVariables>;
-
-/**
- * __useUpdateNavigationMutation__
- *
- * To run a mutation, you first call `useUpdateNavigationMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateNavigationMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateNavigationMutation, { data, loading, error }] = useUpdateNavigationMutation({
- *   variables: {
- *      id: // value for 'id'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateNavigationMutation(baseOptions?: Apollo.MutationHookOptions<UpdateNavigationMutation, UpdateNavigationMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateNavigationMutation, UpdateNavigationMutationVariables>(UpdateNavigationDocument, options);
-      }
-export type UpdateNavigationMutationHookResult = ReturnType<typeof useUpdateNavigationMutation>;
-export type UpdateNavigationMutationResult = Apollo.MutationResult<UpdateNavigationMutation>;
-export type UpdateNavigationMutationOptions = Apollo.BaseMutationOptions<UpdateNavigationMutation, UpdateNavigationMutationVariables>;
-export const DeleteNavigationDocument = gql`
-    mutation DeleteNavigation($id: ID!) {
-  deleteNavigation(id: $id) {
-    ...FullNavigation
-  }
-}
-    ${FullNavigationFragmentDoc}`;
-export type DeleteNavigationMutationFn = Apollo.MutationFunction<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
-
-/**
- * __useDeleteNavigationMutation__
- *
- * To run a mutation, you first call `useDeleteNavigationMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteNavigationMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteNavigationMutation, { data, loading, error }] = useDeleteNavigationMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteNavigationMutation(baseOptions?: Apollo.MutationHookOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteNavigationMutation, DeleteNavigationMutationVariables>(DeleteNavigationDocument, options);
-      }
-export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavigationMutation>;
-export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;
-export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
-export const PageListDocument = gql`
-    query PageList($filter: PageFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
-  pages(
-    filter: $filter
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
-    nodes {
-      ...PageRef
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${PageRefFragmentDoc}`;
-
-/**
- * __usePageListQuery__
- *
- * To run a query within a React component, call `usePageListQuery` and pass it any options that fit your needs.
- * When your component renders, `usePageListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePageListQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *      cursor: // value for 'cursor'
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *      order: // value for 'order'
- *      sort: // value for 'sort'
- *   },
- * });
- */
-export function usePageListQuery(baseOptions?: Apollo.QueryHookOptions<PageListQuery, PageListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PageListQuery, PageListQueryVariables>(PageListDocument, options);
-      }
-export function usePageListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PageListQuery, PageListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PageListQuery, PageListQueryVariables>(PageListDocument, options);
-        }
-export type PageListQueryHookResult = ReturnType<typeof usePageListQuery>;
-export type PageListLazyQueryHookResult = ReturnType<typeof usePageListLazyQuery>;
-export type PageListQueryResult = Apollo.QueryResult<PageListQuery, PageListQueryVariables>;
-export const CreatePageDocument = gql`
-    mutation CreatePage($input: PageInput!) {
-  createPage(input: $input) {
-    ...MutationPage
-  }
-}
-    ${MutationPageFragmentDoc}`;
-export type CreatePageMutationFn = Apollo.MutationFunction<CreatePageMutation, CreatePageMutationVariables>;
-
-/**
- * __useCreatePageMutation__
- *
- * To run a mutation, you first call `useCreatePageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreatePageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createPageMutation, { data, loading, error }] = useCreatePageMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreatePageMutation(baseOptions?: Apollo.MutationHookOptions<CreatePageMutation, CreatePageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePageMutation, CreatePageMutationVariables>(CreatePageDocument, options);
-      }
-export type CreatePageMutationHookResult = ReturnType<typeof useCreatePageMutation>;
-export type CreatePageMutationResult = Apollo.MutationResult<CreatePageMutation>;
-export type CreatePageMutationOptions = Apollo.BaseMutationOptions<CreatePageMutation, CreatePageMutationVariables>;
-export const UpdatePageDocument = gql`
-    mutation UpdatePage($id: ID!, $input: PageInput!) {
-  updatePage(id: $id, input: $input) {
-    ...MutationPage
-  }
-}
-    ${MutationPageFragmentDoc}`;
-export type UpdatePageMutationFn = Apollo.MutationFunction<UpdatePageMutation, UpdatePageMutationVariables>;
-
-/**
- * __useUpdatePageMutation__
- *
- * To run a mutation, you first call `useUpdatePageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdatePageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updatePageMutation, { data, loading, error }] = useUpdatePageMutation({
- *   variables: {
- *      id: // value for 'id'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdatePageMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePageMutation, UpdatePageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePageMutation, UpdatePageMutationVariables>(UpdatePageDocument, options);
-      }
-export type UpdatePageMutationHookResult = ReturnType<typeof useUpdatePageMutation>;
-export type UpdatePageMutationResult = Apollo.MutationResult<UpdatePageMutation>;
-export type UpdatePageMutationOptions = Apollo.BaseMutationOptions<UpdatePageMutation, UpdatePageMutationVariables>;
-export const PublishPageDocument = gql`
-    mutation PublishPage($id: ID!, $publishAt: DateTime, $publishedAt: DateTime, $updatedAt: DateTime) {
-  publishPage(
-    id: $id
-    publishAt: $publishAt
-    publishedAt: $publishedAt
-    updatedAt: $updatedAt
-  ) {
-    ...MutationPage
-  }
-}
-    ${MutationPageFragmentDoc}`;
-export type PublishPageMutationFn = Apollo.MutationFunction<PublishPageMutation, PublishPageMutationVariables>;
-
-/**
- * __usePublishPageMutation__
- *
- * To run a mutation, you first call `usePublishPageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePublishPageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [publishPageMutation, { data, loading, error }] = usePublishPageMutation({
- *   variables: {
- *      id: // value for 'id'
- *      publishAt: // value for 'publishAt'
- *      publishedAt: // value for 'publishedAt'
- *      updatedAt: // value for 'updatedAt'
- *   },
- * });
- */
-export function usePublishPageMutation(baseOptions?: Apollo.MutationHookOptions<PublishPageMutation, PublishPageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<PublishPageMutation, PublishPageMutationVariables>(PublishPageDocument, options);
-      }
-export type PublishPageMutationHookResult = ReturnType<typeof usePublishPageMutation>;
-export type PublishPageMutationResult = Apollo.MutationResult<PublishPageMutation>;
-export type PublishPageMutationOptions = Apollo.BaseMutationOptions<PublishPageMutation, PublishPageMutationVariables>;
-export const UnpublishPageDocument = gql`
-    mutation UnpublishPage($id: ID!) {
-  unpublishPage(id: $id) {
-    ...MutationPage
-  }
-}
-    ${MutationPageFragmentDoc}`;
-export type UnpublishPageMutationFn = Apollo.MutationFunction<UnpublishPageMutation, UnpublishPageMutationVariables>;
-
-/**
- * __useUnpublishPageMutation__
- *
- * To run a mutation, you first call `useUnpublishPageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUnpublishPageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [unpublishPageMutation, { data, loading, error }] = useUnpublishPageMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useUnpublishPageMutation(baseOptions?: Apollo.MutationHookOptions<UnpublishPageMutation, UnpublishPageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UnpublishPageMutation, UnpublishPageMutationVariables>(UnpublishPageDocument, options);
-      }
-export type UnpublishPageMutationHookResult = ReturnType<typeof useUnpublishPageMutation>;
-export type UnpublishPageMutationResult = Apollo.MutationResult<UnpublishPageMutation>;
-export type UnpublishPageMutationOptions = Apollo.BaseMutationOptions<UnpublishPageMutation, UnpublishPageMutationVariables>;
-export const DeletePageDocument = gql`
-    mutation DeletePage($id: ID!) {
-  deletePage(id: $id) {
-    ...MutationPage
-  }
-}
-    ${MutationPageFragmentDoc}`;
-export type DeletePageMutationFn = Apollo.MutationFunction<DeletePageMutation, DeletePageMutationVariables>;
-
-/**
- * __useDeletePageMutation__
- *
- * To run a mutation, you first call `useDeletePageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeletePageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deletePageMutation, { data, loading, error }] = useDeletePageMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeletePageMutation(baseOptions?: Apollo.MutationHookOptions<DeletePageMutation, DeletePageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePageMutation, DeletePageMutationVariables>(DeletePageDocument, options);
-      }
-export type DeletePageMutationHookResult = ReturnType<typeof useDeletePageMutation>;
-export type DeletePageMutationResult = Apollo.MutationResult<DeletePageMutation>;
-export type DeletePageMutationOptions = Apollo.BaseMutationOptions<DeletePageMutation, DeletePageMutationVariables>;
-export const DuplicatePageDocument = gql`
-    mutation DuplicatePage($id: ID!) {
-  duplicatePage(id: $id) {
-    ...MutationPage
-  }
-}
-    ${MutationPageFragmentDoc}`;
-export type DuplicatePageMutationFn = Apollo.MutationFunction<DuplicatePageMutation, DuplicatePageMutationVariables>;
-
-/**
- * __useDuplicatePageMutation__
- *
- * To run a mutation, you first call `useDuplicatePageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDuplicatePageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [duplicatePageMutation, { data, loading, error }] = useDuplicatePageMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDuplicatePageMutation(baseOptions?: Apollo.MutationHookOptions<DuplicatePageMutation, DuplicatePageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DuplicatePageMutation, DuplicatePageMutationVariables>(DuplicatePageDocument, options);
-      }
-export type DuplicatePageMutationHookResult = ReturnType<typeof useDuplicatePageMutation>;
-export type DuplicatePageMutationResult = Apollo.MutationResult<DuplicatePageMutation>;
-export type DuplicatePageMutationOptions = Apollo.BaseMutationOptions<DuplicatePageMutation, DuplicatePageMutationVariables>;
-export const PagePreviewLinkDocument = gql`
-    query PagePreviewLink($id: ID!, $hours: Int!) {
-  pagePreviewLink(id: $id, hours: $hours)
-}
-    `;
-
-/**
- * __usePagePreviewLinkQuery__
- *
- * To run a query within a React component, call `usePagePreviewLinkQuery` and pass it any options that fit your needs.
- * When your component renders, `usePagePreviewLinkQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePagePreviewLinkQuery({
- *   variables: {
- *      id: // value for 'id'
- *      hours: // value for 'hours'
- *   },
- * });
- */
-export function usePagePreviewLinkQuery(baseOptions: Apollo.QueryHookOptions<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>(PagePreviewLinkDocument, options);
-      }
-export function usePagePreviewLinkLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>(PagePreviewLinkDocument, options);
-        }
-export type PagePreviewLinkQueryHookResult = ReturnType<typeof usePagePreviewLinkQuery>;
-export type PagePreviewLinkLazyQueryHookResult = ReturnType<typeof usePagePreviewLinkLazyQuery>;
-export type PagePreviewLinkQueryResult = Apollo.QueryResult<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>;
-export const PageDocument = gql`
-    query Page($id: ID!) {
-  page(id: $id) {
-    id
-    tags {
-      id
-      tag
-      type
-    }
-    draft {
-      publishAt
-    }
-    pending {
-      publishAt
-    }
-    published {
-      publishedAt
-      updatedAt
-      publishAt
-    }
-    latest {
-      publishedAt
-      updatedAt
-      publishAt
-      slug
-      title
-      description
-      image {
-        ...ImageRef
-      }
-      url
-      properties {
-        key
-        value
-        public
-      }
-      socialMediaTitle
-      socialMediaDescription
-      socialMediaImage {
-        ...ImageRef
-      }
-      blocks {
-        ...FullBlock
-      }
-    }
-  }
-}
-    ${ImageRefFragmentDoc}
-${FullBlockFragmentDoc}`;
-
-/**
- * __usePageQuery__
- *
- * To run a query within a React component, call `usePageQuery` and pass it any options that fit your needs.
- * When your component renders, `usePageQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePageQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function usePageQuery(baseOptions: Apollo.QueryHookOptions<PageQuery, PageQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PageQuery, PageQueryVariables>(PageDocument, options);
-      }
-export function usePageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PageQuery, PageQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PageQuery, PageQueryVariables>(PageDocument, options);
-        }
-export type PageQueryHookResult = ReturnType<typeof usePageQuery>;
-export type PageLazyQueryHookResult = ReturnType<typeof usePageLazyQuery>;
-export type PageQueryResult = Apollo.QueryResult<PageQuery, PageQueryVariables>;
 export const PaymentProviderListDocument = gql`
     query PaymentProviderList {
   paymentProviders {
@@ -7707,7 +4316,7 @@ export type PaymentMethodListQueryHookResult = ReturnType<typeof usePaymentMetho
 export type PaymentMethodListLazyQueryHookResult = ReturnType<typeof usePaymentMethodListLazyQuery>;
 export type PaymentMethodListQueryResult = Apollo.QueryResult<PaymentMethodListQuery, PaymentMethodListQueryVariables>;
 export const PaymentMethodDocument = gql`
-    query PaymentMethod($id: ID!) {
+    query PaymentMethod($id: String!) {
   paymentMethod(id: $id) {
     ...FullPaymentMethod
   }
@@ -7775,7 +4384,7 @@ export type CreatePaymentMethodMutationHookResult = ReturnType<typeof useCreateP
 export type CreatePaymentMethodMutationResult = Apollo.MutationResult<CreatePaymentMethodMutation>;
 export type CreatePaymentMethodMutationOptions = Apollo.BaseMutationOptions<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>;
 export const UpdatePaymentMethodDocument = gql`
-    mutation UpdatePaymentMethod($id: ID!, $input: PaymentMethodInput!) {
+    mutation UpdatePaymentMethod($id: String!, $input: PaymentMethodInput!) {
   updatePaymentMethod(id: $id, input: $input) {
     ...FullPaymentMethod
   }
@@ -7809,7 +4418,7 @@ export type UpdatePaymentMethodMutationHookResult = ReturnType<typeof useUpdateP
 export type UpdatePaymentMethodMutationResult = Apollo.MutationResult<UpdatePaymentMethodMutation>;
 export type UpdatePaymentMethodMutationOptions = Apollo.BaseMutationOptions<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>;
 export const DeletePaymentMethodDocument = gql`
-    mutation DeletePaymentMethod($id: ID!) {
+    mutation DeletePaymentMethod($id: String!) {
   deletePaymentMethod(id: $id) {
     ...FullPaymentMethod
   }
@@ -7947,10 +4556,10 @@ export type UpdatePeerProfileMutationOptions = Apollo.BaseMutationOptions<Update
 export const PeerListDocument = gql`
     query PeerList {
   peers {
-    ...PeerWithProfile
+    ...FullPeer
   }
 }
-    ${PeerWithProfileFragmentDoc}`;
+    ${FullPeerFragmentDoc}`;
 
 /**
  * __usePeerListQuery__
@@ -7979,12 +4588,12 @@ export type PeerListQueryHookResult = ReturnType<typeof usePeerListQuery>;
 export type PeerListLazyQueryHookResult = ReturnType<typeof usePeerListLazyQuery>;
 export type PeerListQueryResult = Apollo.QueryResult<PeerListQuery, PeerListQueryVariables>;
 export const PeerDocument = gql`
-    query Peer($id: ID!) {
+    query Peer($id: String!) {
   peer(id: $id) {
-    ...PeerRef
+    ...FullPeer
   }
 }
-    ${PeerRefFragmentDoc}`;
+    ${FullPeerFragmentDoc}`;
 
 /**
  * __usePeerQuery__
@@ -8016,10 +4625,10 @@ export type PeerQueryResult = Apollo.QueryResult<PeerQuery, PeerQueryVariables>;
 export const CreatePeerDocument = gql`
     mutation CreatePeer($input: CreatePeerInput!) {
   createPeer(input: $input) {
-    ...PeerRef
+    ...FullPeer
   }
 }
-    ${PeerRefFragmentDoc}`;
+    ${FullPeerFragmentDoc}`;
 export type CreatePeerMutationFn = Apollo.MutationFunction<CreatePeerMutation, CreatePeerMutationVariables>;
 
 /**
@@ -8047,12 +4656,12 @@ export type CreatePeerMutationHookResult = ReturnType<typeof useCreatePeerMutati
 export type CreatePeerMutationResult = Apollo.MutationResult<CreatePeerMutation>;
 export type CreatePeerMutationOptions = Apollo.BaseMutationOptions<CreatePeerMutation, CreatePeerMutationVariables>;
 export const UpdatePeerDocument = gql`
-    mutation UpdatePeer($id: ID!, $input: UpdatePeerInput!) {
+    mutation UpdatePeer($id: String!, $input: UpdatePeerInput!) {
   updatePeer(id: $id, input: $input) {
-    ...PeerRef
+    ...FullPeer
   }
 }
-    ${PeerRefFragmentDoc}`;
+    ${FullPeerFragmentDoc}`;
 export type UpdatePeerMutationFn = Apollo.MutationFunction<UpdatePeerMutation, UpdatePeerMutationVariables>;
 
 /**
@@ -8081,12 +4690,12 @@ export type UpdatePeerMutationHookResult = ReturnType<typeof useUpdatePeerMutati
 export type UpdatePeerMutationResult = Apollo.MutationResult<UpdatePeerMutation>;
 export type UpdatePeerMutationOptions = Apollo.BaseMutationOptions<UpdatePeerMutation, UpdatePeerMutationVariables>;
 export const DeletePeerDocument = gql`
-    mutation DeletePeer($id: ID!) {
+    mutation DeletePeer($id: String!) {
   deletePeer(id: $id) {
-    ...PeerRef
+    ...FullPeer
   }
 }
-    ${PeerRefFragmentDoc}`;
+    ${FullPeerFragmentDoc}`;
 export type DeletePeerMutationFn = Apollo.MutationFunction<DeletePeerMutation, DeletePeerMutationVariables>;
 
 /**
@@ -8157,7 +4766,7 @@ export type CreatePollMutationHookResult = ReturnType<typeof useCreatePollMutati
 export type CreatePollMutationResult = Apollo.MutationResult<CreatePollMutation>;
 export type CreatePollMutationOptions = Apollo.BaseMutationOptions<CreatePollMutation, CreatePollMutationVariables>;
 export const UpdatePollDocument = gql`
-    mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $infoText: RichText, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
+    mutation UpdatePoll($pollId: String!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $infoText: RichText, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
   updatePoll(
     pollId: $pollId
     opensAt: $opensAt
@@ -8217,7 +4826,7 @@ export type UpdatePollMutationHookResult = ReturnType<typeof useUpdatePollMutati
 export type UpdatePollMutationResult = Apollo.MutationResult<UpdatePollMutation>;
 export type UpdatePollMutationOptions = Apollo.BaseMutationOptions<UpdatePollMutation, UpdatePollMutationVariables>;
 export const DeletePollDocument = gql`
-    mutation DeletePoll($deletePollId: ID!) {
+    mutation DeletePoll($deletePollId: String!) {
   deletePoll(id: $deletePollId) {
     id
   }
@@ -8250,7 +4859,7 @@ export type DeletePollMutationHookResult = ReturnType<typeof useDeletePollMutati
 export type DeletePollMutationResult = Apollo.MutationResult<DeletePollMutation>;
 export type DeletePollMutationOptions = Apollo.BaseMutationOptions<DeletePollMutation, DeletePollMutationVariables>;
 export const CreatePollAnswerDocument = gql`
-    mutation CreatePollAnswer($pollId: ID!, $answer: String) {
+    mutation CreatePollAnswer($pollId: String!, $answer: String) {
   createPollAnswer(pollId: $pollId, answer: $answer) {
     answer
     id
@@ -8286,7 +4895,7 @@ export type CreatePollAnswerMutationHookResult = ReturnType<typeof useCreatePoll
 export type CreatePollAnswerMutationResult = Apollo.MutationResult<CreatePollAnswerMutation>;
 export type CreatePollAnswerMutationOptions = Apollo.BaseMutationOptions<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>;
 export const DeletePollAnswerDocument = gql`
-    mutation DeletePollAnswer($deletePollAnswerId: ID!) {
+    mutation DeletePollAnswer($deletePollAnswerId: String!) {
   deletePollAnswer(id: $deletePollAnswerId) {
     id
   }
@@ -8319,7 +4928,7 @@ export type DeletePollAnswerMutationHookResult = ReturnType<typeof useDeletePoll
 export type DeletePollAnswerMutationResult = Apollo.MutationResult<DeletePollAnswerMutation>;
 export type DeletePollAnswerMutationOptions = Apollo.BaseMutationOptions<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>;
 export const CreatePollExternalVoteSourceDocument = gql`
-    mutation CreatePollExternalVoteSource($pollId: ID!, $source: String) {
+    mutation CreatePollExternalVoteSource($pollId: String!, $source: String) {
   createPollExternalVoteSource(pollId: $pollId, source: $source) {
     ...PollExternalVoteSource
   }
@@ -8353,7 +4962,7 @@ export type CreatePollExternalVoteSourceMutationHookResult = ReturnType<typeof u
 export type CreatePollExternalVoteSourceMutationResult = Apollo.MutationResult<CreatePollExternalVoteSourceMutation>;
 export type CreatePollExternalVoteSourceMutationOptions = Apollo.BaseMutationOptions<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>;
 export const DeletePollExternalVoteSourceDocument = gql`
-    mutation DeletePollExternalVoteSource($deletePollExternalVoteSourceId: ID!) {
+    mutation DeletePollExternalVoteSource($deletePollExternalVoteSourceId: String!) {
   deletePollExternalVoteSource(id: $deletePollExternalVoteSourceId) {
     ...PollExternalVoteSource
   }
@@ -8386,7 +4995,7 @@ export type DeletePollExternalVoteSourceMutationHookResult = ReturnType<typeof u
 export type DeletePollExternalVoteSourceMutationResult = Apollo.MutationResult<DeletePollExternalVoteSourceMutation>;
 export type DeletePollExternalVoteSourceMutationOptions = Apollo.BaseMutationOptions<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>;
 export const PollsDocument = gql`
-    query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
+    query Polls($cursor: String, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
   polls(
     cursor: $cursor
     take: $take
@@ -8445,7 +5054,7 @@ export type PollsQueryHookResult = ReturnType<typeof usePollsQuery>;
 export type PollsLazyQueryHookResult = ReturnType<typeof usePollsLazyQuery>;
 export type PollsQueryResult = Apollo.QueryResult<PollsQuery, PollsQueryVariables>;
 export const PollDocument = gql`
-    query Poll($pollId: ID) {
+    query Poll($pollId: String) {
   poll(id: $pollId) {
     id
     question
@@ -8571,7 +5180,7 @@ export type UpdateSettingListMutationHookResult = ReturnType<typeof useUpdateSet
 export type UpdateSettingListMutationResult = Apollo.MutationResult<UpdateSettingListMutation>;
 export type UpdateSettingListMutationOptions = Apollo.BaseMutationOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
 export const SubscriptionListDocument = gql`
-    query SubscriptionList($filter: SubscriptionFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
+    query SubscriptionList($filter: SubscriptionFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
   subscriptions(
     filter: $filter
     cursor: $cursor
@@ -8627,7 +5236,7 @@ export type SubscriptionListQueryHookResult = ReturnType<typeof useSubscriptionL
 export type SubscriptionListLazyQueryHookResult = ReturnType<typeof useSubscriptionListLazyQuery>;
 export type SubscriptionListQueryResult = Apollo.QueryResult<SubscriptionListQuery, SubscriptionListQueryVariables>;
 export const SubscriptionDocument = gql`
-    query Subscription($id: ID!) {
+    query Subscription($id: String!) {
   subscription(id: $id) {
     ...FullSubscription
   }
@@ -8728,7 +5337,7 @@ export type CreateSubscriptionMutationHookResult = ReturnType<typeof useCreateSu
 export type CreateSubscriptionMutationResult = Apollo.MutationResult<CreateSubscriptionMutation>;
 export type CreateSubscriptionMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>;
 export const UpdateSubscriptionDocument = gql`
-    mutation UpdateSubscription($id: ID!, $input: SubscriptionInput!) {
+    mutation UpdateSubscription($id: String!, $input: SubscriptionInput!) {
   updateSubscription(id: $id, input: $input) {
     ...FullSubscription
   }
@@ -8762,7 +5371,7 @@ export type UpdateSubscriptionMutationHookResult = ReturnType<typeof useUpdateSu
 export type UpdateSubscriptionMutationResult = Apollo.MutationResult<UpdateSubscriptionMutation>;
 export type UpdateSubscriptionMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>;
 export const CancelSubscriptionDocument = gql`
-    mutation CancelSubscription($cancelSubscriptionId: ID!, $reason: SubscriptionDeactivationReason!) {
+    mutation CancelSubscription($cancelSubscriptionId: String!, $reason: SubscriptionDeactivationReason!) {
   cancelSubscription(id: $cancelSubscriptionId, reason: $reason) {
     ...FullSubscription
   }
@@ -8796,7 +5405,7 @@ export type CancelSubscriptionMutationHookResult = ReturnType<typeof useCancelSu
 export type CancelSubscriptionMutationResult = Apollo.MutationResult<CancelSubscriptionMutation>;
 export type CancelSubscriptionMutationOptions = Apollo.BaseMutationOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>;
 export const DeleteSubscriptionDocument = gql`
-    mutation DeleteSubscription($id: ID!) {
+    mutation DeleteSubscription($id: String!) {
   deleteSubscription(id: $id) {
     ...FullSubscription
   }
@@ -8829,7 +5438,7 @@ export type DeleteSubscriptionMutationHookResult = ReturnType<typeof useDeleteSu
 export type DeleteSubscriptionMutationResult = Apollo.MutationResult<DeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
 export const RenewSubscriptionDocument = gql`
-    mutation RenewSubscription($id: ID!) {
+    mutation RenewSubscription($id: String!) {
   renewSubscription(id: $id) {
     ...Invoice
   }
@@ -8898,7 +5507,7 @@ export type NewSubscribersPerMonthQueryHookResult = ReturnType<typeof useNewSubs
 export type NewSubscribersPerMonthLazyQueryHookResult = ReturnType<typeof useNewSubscribersPerMonthLazyQuery>;
 export type NewSubscribersPerMonthQueryResult = Apollo.QueryResult<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>;
 export const TagListDocument = gql`
-    query TagList($filter: TagFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
+    query TagList($filter: TagFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
   tags(
     filter: $filter
     cursor: $cursor
@@ -8992,7 +5601,7 @@ export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation
 export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
 export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
 export const UpdateTagDocument = gql`
-    mutation UpdateTag($id: ID!, $tag: String, $main: Boolean) {
+    mutation UpdateTag($id: String!, $tag: String, $main: Boolean) {
   updateTag(id: $id, tag: $tag, main: $main) {
     id
     tag
@@ -9029,7 +5638,7 @@ export type UpdateTagMutationHookResult = ReturnType<typeof useUpdateTagMutation
 export type UpdateTagMutationResult = Apollo.MutationResult<UpdateTagMutation>;
 export type UpdateTagMutationOptions = Apollo.BaseMutationOptions<UpdateTagMutation, UpdateTagMutationVariables>;
 export const DeleteTagDocument = gql`
-    mutation DeleteTag($id: ID!) {
+    mutation DeleteTag($id: String!) {
   deleteTag(id: $id) {
     id
     tag
@@ -9133,7 +5742,7 @@ export type CreateTokenMutationHookResult = ReturnType<typeof useCreateTokenMuta
 export type CreateTokenMutationResult = Apollo.MutationResult<CreateTokenMutation>;
 export type CreateTokenMutationOptions = Apollo.BaseMutationOptions<CreateTokenMutation, CreateTokenMutationVariables>;
 export const DeleteTokenDocument = gql`
-    mutation DeleteToken($id: ID!) {
+    mutation DeleteToken($id: String!) {
   deleteToken(id: $id) {
     id
     name
@@ -9168,7 +5777,7 @@ export type DeleteTokenMutationHookResult = ReturnType<typeof useDeleteTokenMuta
 export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutation>;
 export type DeleteTokenMutationOptions = Apollo.BaseMutationOptions<DeleteTokenMutation, DeleteTokenMutationVariables>;
 export const UserListDocument = gql`
-    query UserList($filter: UserFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
+    query UserList($filter: UserFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
   users(
     filter: $filter
     cursor: $cursor
@@ -9224,7 +5833,7 @@ export type UserListQueryHookResult = ReturnType<typeof useUserListQuery>;
 export type UserListLazyQueryHookResult = ReturnType<typeof useUserListLazyQuery>;
 export type UserListQueryResult = Apollo.QueryResult<UserListQuery, UserListQueryVariables>;
 export const UserDocument = gql`
-    query User($id: ID!) {
+    query User($id: String!) {
   user(id: $id) {
     ...FullUser
   }
@@ -9327,7 +5936,7 @@ export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutati
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const UpdateUserDocument = gql`
-    mutation UpdateUser($id: ID!, $input: UserInput!) {
+    mutation UpdateUser($id: String!, $input: UserInput!) {
   updateUser(id: $id, input: $input) {
     ...FullUser
   }
@@ -9361,7 +5970,7 @@ export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutati
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
 export const ResetUserPasswordDocument = gql`
-    mutation ResetUserPassword($id: ID!, $password: String!, $sendMail: Boolean) {
+    mutation ResetUserPassword($id: String!, $password: String!, $sendMail: Boolean) {
   resetUserPassword(id: $id, password: $password, sendMail: $sendMail) {
     ...FullUser
   }
@@ -9396,7 +6005,7 @@ export type ResetUserPasswordMutationHookResult = ReturnType<typeof useResetUser
 export type ResetUserPasswordMutationResult = Apollo.MutationResult<ResetUserPasswordMutation>;
 export type ResetUserPasswordMutationOptions = Apollo.BaseMutationOptions<ResetUserPasswordMutation, ResetUserPasswordMutationVariables>;
 export const DeleteUserDocument = gql`
-    mutation DeleteUser($id: ID!) {
+    mutation DeleteUser($id: String!) {
   deleteUser(id: $id) {
     ...FullUser
   }
@@ -9460,7 +6069,7 @@ export type SendWebsiteLoginMutationHookResult = ReturnType<typeof useSendWebsit
 export type SendWebsiteLoginMutationResult = Apollo.MutationResult<SendWebsiteLoginMutation>;
 export type SendWebsiteLoginMutationOptions = Apollo.BaseMutationOptions<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>;
 export const UserRoleListDocument = gql`
-    query UserRoleList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    query UserRoleList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullUserRole
@@ -9541,7 +6150,7 @@ export type PermissionListQueryHookResult = ReturnType<typeof usePermissionListQ
 export type PermissionListLazyQueryHookResult = ReturnType<typeof usePermissionListLazyQuery>;
 export type PermissionListQueryResult = Apollo.QueryResult<PermissionListQuery, PermissionListQueryVariables>;
 export const UserRoleDocument = gql`
-    query UserRole($id: ID!) {
+    query UserRole($id: String!) {
   userRole(id: $id) {
     ...FullUserRole
   }
@@ -9609,7 +6218,7 @@ export type CreateUserRoleMutationHookResult = ReturnType<typeof useCreateUserRo
 export type CreateUserRoleMutationResult = Apollo.MutationResult<CreateUserRoleMutation>;
 export type CreateUserRoleMutationOptions = Apollo.BaseMutationOptions<CreateUserRoleMutation, CreateUserRoleMutationVariables>;
 export const UpdateUserRoleDocument = gql`
-    mutation UpdateUserRole($id: ID!, $input: UserRoleInput!) {
+    mutation UpdateUserRole($id: String!, $input: UserRoleInput!) {
   updateUserRole(id: $id, input: $input) {
     ...FullUserRole
   }
@@ -9643,7 +6252,7 @@ export type UpdateUserRoleMutationHookResult = ReturnType<typeof useUpdateUserRo
 export type UpdateUserRoleMutationResult = Apollo.MutationResult<UpdateUserRoleMutation>;
 export type UpdateUserRoleMutationOptions = Apollo.BaseMutationOptions<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>;
 export const DeleteUserRoleDocument = gql`
-    mutation DeleteUserRole($id: ID!) {
+    mutation DeleteUserRole($id: String!) {
   deleteUserRole(id: $id) {
     ...FullUserRole
   }

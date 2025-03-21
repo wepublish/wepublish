@@ -1,11 +1,11 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, InputAdornment, Slider} from '@mui/material'
+import {Checkbox, FormControlLabel} from '@mui/material'
 import styled from '@emotion/styled'
 import {
   Challenge,
-  UserForm,
   defaultRegisterSchema,
   requiredRegisterSchema,
+  UserForm,
   useUser,
   zodAlwaysRefine
 } from '@wepublish/authentication/website'
@@ -14,6 +14,7 @@ import {
   FullMemberPlanFragment,
   PaymentPeriodicity,
   RegisterMutationVariables,
+  ResubscribeMutationVariables,
   SubscribeMutationVariables,
   UserAddressInput
 } from '@wepublish/website/api'
@@ -26,7 +27,7 @@ import {
 import {useEffect, useMemo, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'
-import {formatCurrency} from '../formatters/format-currency'
+import {formatCurrency, roundUpTo5Cents} from '../formatters/format-currency'
 import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
@@ -45,7 +46,8 @@ const subscribeSchema = z.object({
     PaymentPeriodicity.Quarterly,
     PaymentPeriodicity.Biannual,
     PaymentPeriodicity.Yearly
-  ])
+  ]),
+  payTransactionFee: z.boolean()
 })
 
 export const SubscribeWrapper = styled('form')`
@@ -64,6 +66,20 @@ export const SubscribeSection = styled('div')`
   }
 `
 
+export const SubscribeAmount = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(1)};
+  grid-template-columns: 1fr;
+  align-items: center;
+  padding: ${({theme}) => theme.spacing(3)};
+  border: 1px solid ${({theme}) => theme.palette.divider};
+  border-radius: ${({theme}) => theme.shape.borderRadius}px;
+`
+
+export const SubscribeAmountText = styled('p')`
+  text-align: center;
+`
+
 export const SubscribePayment = styled('div')`
   display: flex;
   flex-flow: row wrap;
@@ -79,32 +95,6 @@ export const SubscribePayment = styled('div')`
 
 const buttonStyles = css`
   justify-self: center;
-`
-
-export const SubscribeAmount = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
-  grid-template-columns: 1fr;
-  align-items: center;
-  padding: ${({theme}) => theme.spacing(3)};
-  border: 1px solid ${({theme}) => theme.palette.divider};
-  border-radius: ${({theme}) => theme.shape.borderRadius}px;
-`
-
-export const SubscribeAmountSlider = styled('div')`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: ${({theme}) => theme.spacing(3)};
-  align-items: center;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    grid-auto-flow: column;
-    grid-auto-columns: 300px;
-  }
-`
-
-export const SubscribeAmountText = styled('p')`
-  text-align: center;
 `
 
 export const SubscribeCancelable = styled('div')`
@@ -153,16 +143,22 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   className,
   onSubscribe,
   onSubscribeWithRegister,
+  onResubscribe,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate
+  donate,
+  transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
+  transactionFeeText,
+  returningUserId
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale, siteTitle},
-    elements: {Alert, Button, TextField, H5, Link, Paragraph},
+    elements: {Alert, Button, H5, Link, Paragraph},
     MemberPlanPicker,
     PaymentMethodPicker,
-    PeriodicityPicker
+    PeriodicityPicker,
+    PaymentAmount,
+    TransactionFee
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
   const [openConfirm, setOpenConfirm] = useState(false)
@@ -178,6 +174,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       ),
     [fields]
   )
+  const hasUserContext = hasUser || !!returningUserId
 
   /**
    * Done like this to avoid type errors due to z.ZodObject vs z.ZodEffect<z.ZodObject>.
@@ -201,11 +198,12 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const {control, handleSubmit, watch, setValue, resetField} = useForm<
     z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
   >({
-    resolver: zodResolver(hasUser ? loggedInSchema : loggedOutSchema),
+    resolver: zodResolver(hasUserContext ? loggedInSchema : loggedOutSchema),
     defaultValues: {
       ...defaults,
       monthlyAmount: 0,
       autoRenew: true,
+      payTransactionFee: false,
       memberPlanId: defaults?.memberPlanSlug
         ? memberPlans.data?.memberPlans.nodes.find(
             memberPlan => memberPlan.slug === defaults?.memberPlanSlug
@@ -223,7 +221,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const selectedPaymentMethodId = watch<'paymentMethodId'>('paymentMethodId')
   const selectedPaymentPeriodicity = watch<'paymentPeriodicity'>('paymentPeriodicity')
   const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId')
-  const monthlyAmount = watch<'monthlyAmount'>('monthlyAmount')
+  const payTransactionFee = watch<'payTransactionFee'>('payTransactionFee')
+  const monthlyAmount =
+    watch<'monthlyAmount'>('monthlyAmount') +
+    (payTransactionFee ? transactionFee(watch<'monthlyAmount'>('monthlyAmount')) : 0)
   const autoRenew = watch<'autoRenew'>('autoRenew')
 
   const sortedMemberPlans = useMemo(
@@ -270,7 +271,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     true,
     selectedMemberPlan?.extendable ?? true,
     PaymentPeriodicity.Monthly,
-    monthlyAmount,
+    watch<'monthlyAmount'>('monthlyAmount'),
     selectedMemberPlan?.currency ?? Currency.Chf,
     locale
   )
@@ -286,6 +287,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
     if (hasUser) {
       return callAction(onSubscribe)(subscribeData)
+    }
+
+    if (returningUserId) {
+      const resubscribeData: ResubscribeMutationVariables = {
+        ...subscribeData,
+        userId: returningUserId
+      }
+
+      return callAction(onResubscribe)(resubscribeData)
     }
 
     const {address, challengeAnswer, email, birthday, password, name, firstName} = data as z.infer<
@@ -379,6 +389,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
+      {!hasUser && returningUserId && (
+        <SubscribeSection>
+          <H5 component="h2">
+            {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}, willkommen
+            zurück!
+          </H5>
+        </SubscribeSection>
+      )}
+
       <SubscribeSection>
         {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
           <H5 component="h2">Abo wählen</H5>
@@ -387,14 +406,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         {hasOpenInvoices && (
           <Alert severity="warning">
             Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen
-            in deinem <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+            in deinem <Link href="/profile">Profil</Link> anschauen.
           </Alert>
         )}
 
         {alreadyHasSubscription && (
           <Alert severity="warning">
             Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem{' '}
-            <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+            <Link href="/profile">Profil</Link> anschauen.
           </Alert>
         )}
 
@@ -423,44 +442,20 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                 Ich unterstütze {siteTitle} {replace(/^./, toLower)(monthlyPaymentText)}
               </Paragraph>
 
-              <SubscribeAmountSlider>
-                <Slider
-                  {...field}
-                  min={amountPerMonthMin}
-                  max={amountPerMonthMin * 5}
-                  valueLabelFormat={val =>
-                    formatCurrency(val / 100, selectedMemberPlan?.currency ?? Currency.Chf, locale)
-                  }
-                  step={100}
-                  color="secondary"
-                />
-
-                {donate?.(selectedMemberPlan) && (
-                  <TextField
-                    {...field}
-                    value={field.value / 100}
-                    onChange={event => field.onChange(+event.target.value * 100)}
-                    type={'number'}
-                    fullWidth
-                    inputProps={{
-                      step: 'any',
-                      min: amountPerMonthMin / 100
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          {selectedMemberPlan?.currency ?? Currency.Chf}
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                )}
-              </SubscribeAmountSlider>
+              <PaymentAmount
+                {...field}
+                error={error}
+                slug={selectedMemberPlan?.slug}
+                donate={!!donate?.(selectedMemberPlan)}
+                amountPerMonthMin={amountPerMonthMin}
+                amountPerMonthTarget={selectedMemberPlan?.amountPerMonthTarget ?? undefined}
+                currency={selectedMemberPlan?.currency ?? Currency.Chf}
+              />
             </SubscribeAmount>
           )}
         />
 
-        {!hasUser && <UserForm control={control} fields={fields} />}
+        {!hasUserContext && <UserForm control={control} fields={fields} />}
       </SubscribeSection>
 
       <SubscribeSection>
@@ -513,8 +508,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           )}
         </SubscribePayment>
       </SubscribeSection>
-
-      {!hasUser && (
+      {!hasUserContext && (
         <SubscribeSection>
           <H5 component="h2">Spam-Schutz</H5>
 
@@ -538,7 +532,16 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
         </SubscribeSection>
       )}
+
       {error && <ApiAlert error={error as ApolloError} severity="error" />}
+
+      <SubscribeSection>
+        <Controller
+          name={'payTransactionFee'}
+          control={control}
+          render={({field: feeField}) => <TransactionFee text={transactionFeeText} {...feeField} />}
+        />
+      </SubscribeSection>
 
       <SubscribeNarrowSection>
         <Button
@@ -581,14 +584,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         {hasOpenInvoices && (
           <Paragraph gutterBottom={false}>
             Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen
-            in deinem <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+            in deinem <Link href="/profile">Profil</Link> anschauen.
           </Paragraph>
         )}
 
         {alreadyHasSubscription && (
           <Paragraph gutterBottom={false}>
             Du hast dieses Abo schon. Du kannst deine Abos in deinem{' '}
-            <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+            <Link href="/profile">Profil</Link> anschauen.
           </Paragraph>
         )}
       </MembershipModal>

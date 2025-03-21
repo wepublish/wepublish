@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {campaigns} from '@mailchimp/mailchimp_marketing'
-import {BuilderTeaserProps, TeaserWrapper, useWebsiteBuilder} from '@wepublish/website'
+import {TeaserWrapper} from '@wepublish/block-content/website'
+import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 import {createContext, useContext} from 'react'
 

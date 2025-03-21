@@ -1,5 +1,9 @@
 import styled from '@emotion/styled'
-import {PollBlockResult, PollBlockVoteBar, PollBlockVoteBarFill} from '@wepublish/website'
+import {
+  PollBlockResult,
+  PollBlockVoteBar,
+  PollBlockVoteBarFill
+} from '@wepublish/block-content/website'
 
 export const PollBlockResultOverwrite = styled(PollBlockResult)`
   ${PollBlockVoteBar} {

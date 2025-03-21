@@ -1,7 +1,6 @@
 import {Injectable} from '@nestjs/common'
-import {Page, PrismaClient} from '@prisma/client'
+import {LoginStatus, Page, PrismaClient} from '@prisma/client'
 import {
-  Banner,
   BannerDocumentType,
   CreateBannerInput,
   PrimaryBannerArgs,
@@ -13,7 +12,7 @@ import {PaginationArgs} from './pagination.model'
 export class BannerService {
   constructor(private prisma: PrismaClient) {}
 
-  async findOne(id: string): Promise<Banner | null> {
+  async findOne(id: string) {
     return this.prisma.banner.findUnique({
       where: {
         id
@@ -21,19 +20,23 @@ export class BannerService {
     })
   }
 
-  async findAll(args: PaginationArgs): Promise<Banner[]> {
+  async findAll(args: PaginationArgs) {
     return this.prisma.banner.findMany({
       skip: args.skip,
       take: args.take
     })
   }
 
-  async findFirst(args: PrimaryBannerArgs): Promise<Banner | null> {
+  async findFirst(args: PrimaryBannerArgs) {
     if (args.documentType === BannerDocumentType.ARTICLE) {
       return this.prisma.banner.findFirst({
         where: {
           active: true,
-          showOnArticles: true
+          showOnArticles: true,
+          OR: [
+            {showForLoginStatus: LoginStatus.ALL},
+            {showForLoginStatus: args.loggedIn ? LoginStatus.LOGGED_IN : LoginStatus.LOGGED_OUT}
+          ]
         }
       })
     } else if (args.documentType === BannerDocumentType.PAGE) {
@@ -44,7 +47,11 @@ export class BannerService {
             some: {
               id: args.documentId
             }
-          }
+          },
+          OR: [
+            {showForLoginStatus: LoginStatus.ALL},
+            {showForLoginStatus: args.loggedIn ? LoginStatus.LOGGED_IN : LoginStatus.LOGGED_OUT}
+          ]
         }
       })
     } else {
@@ -69,7 +76,7 @@ export class BannerService {
     return banner.showOnPages
   }
 
-  async create(args: CreateBannerInput): Promise<Banner> {
+  async create(args: CreateBannerInput) {
     const {actions, showOnPages, ...bannerInputs} = args
     return this.prisma.banner.create({
       data: {
@@ -84,7 +91,7 @@ export class BannerService {
     })
   }
 
-  async update(args: UpdateBannerInput): Promise<Banner> {
+  async update(args: UpdateBannerInput) {
     const {id, actions, showOnPages, imageId, ...args_without_id} = args
 
     return this.prisma.banner.update({

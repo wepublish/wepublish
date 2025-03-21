@@ -39,7 +39,7 @@ mutation AddComment($input: CommentInput!) {
   }
 }
 
-query Comments($itemID: ID!, $order: SortOrder, $sort: CommentSort) {
+query Comments($itemID: String!, $order: SortOrder, $sort: CommentSort) {
   comments(itemId: $itemID, order: $order, sort: $sort) {
     ...FullComment
   }

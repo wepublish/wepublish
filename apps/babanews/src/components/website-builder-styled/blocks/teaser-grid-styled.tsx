@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {css} from '@mui/material'
-import {TeaserGridBlock} from '@wepublish/website'
+import {TeaserGridBlock} from '@wepublish/block-content/website'
 
 export const BabanewsTeaserGrid = styled(TeaserGridBlock)`
   ${({numColumns, theme}) =>

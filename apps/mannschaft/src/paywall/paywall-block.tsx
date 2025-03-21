@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {useWebsiteBuilder} from '@wepublish/website'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const PaywallBlockWrapper = styled('div')`
   display: grid !important; // exception as it should always be shown

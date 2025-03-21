@@ -1,23 +1,11 @@
 import styled from '@emotion/styled'
 import {BuilderSubscriptionListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {SubscriptionListItemContent, SubscriptionListItemWrapper} from './subscription-list-item'
-import {FullInvoiceFragment, FullSubscriptionFragment} from '@wepublish/website/api'
 
 export const SubscriptionListWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
 `
-
-export const canExtendSubscription = (
-  subscription: FullSubscriptionFragment,
-  invoices: FullInvoiceFragment[]
-) =>
-  subscription.memberPlan.extendable &&
-  // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
-  subscription.paymentMethod.slug !== 'payrexx-subscription' &&
-  invoices
-    .filter(({subscriptionID}) => subscriptionID === subscription.id)
-    .every(invoice => invoice.canceledAt || invoice.paidAt)
 
 export const SubscriptionList = ({
   data,
@@ -26,11 +14,12 @@ export const SubscriptionList = ({
   invoices,
   onCancel,
   onExtend,
-  className
+  className,
+  subscribeUrl
 }: BuilderSubscriptionListProps) => {
   const {
     SubscriptionListItem,
-    elements: {Alert}
+    elements: {Alert, Link}
   } = useWebsiteBuilder()
 
   return (
@@ -38,7 +27,9 @@ export const SubscriptionList = ({
       {!loading && !error && !data?.subscriptions?.length && (
         <SubscriptionListItemWrapper>
           <SubscriptionListItemContent>
-            <strong>Kein aktives Abo</strong>
+            <strong>
+              Du hast noch kein aktives Abo. <Link href={subscribeUrl}>Jetzt ein Abo lösen.</Link>
+            </strong>
           </SubscriptionListItemContent>
         </SubscriptionListItemWrapper>
       )}
@@ -49,7 +40,6 @@ export const SubscriptionList = ({
         <SubscriptionListItem
           key={subscription.id}
           {...subscription}
-          canExtend={canExtendSubscription(subscription, invoices.data?.invoices ?? [])}
           extend={async () => await onExtend?.(subscription.id)}
           cancel={async () => await onCancel?.(subscription.id)}
         />

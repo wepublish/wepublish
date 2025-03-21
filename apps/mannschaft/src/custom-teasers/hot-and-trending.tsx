@@ -1,5 +1,7 @@
 import styled from '@emotion/styled'
-import {ApiV1, BuilderTeaserProps, TeaserWrapper, useWebsiteBuilder} from '@wepublish/website'
+import {TeaserWrapper} from '@wepublish/block-content/website'
+import {useHotAndTrendingQuery} from '@wepublish/website/api'
+import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 import {useMemo} from 'react'
 
@@ -51,7 +53,7 @@ export const HotAndTrendingTeaser = ({alignment, teaser}: BuilderTeaserProps) =>
     return now.toISOString()
   }, [])
 
-  const {data} = ApiV1.useHotAndTrendingQuery({
+  const {data} = useHotAndTrendingQuery({
     variables: {
       take: 5,
       start: yesterday
@@ -67,7 +69,7 @@ export const HotAndTrendingTeaser = ({alignment, teaser}: BuilderTeaserProps) =>
           {data?.hotAndTrending.map(article => (
             <HotAndTrendingLink key={article.id}>
               <Link href={article.url} color="inherit" underline="none">
-                {article.title}
+                {article.latest.title}
               </Link>
             </HotAndTrendingLink>
           ))}

@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import {css, GlobalStyles, Theme} from '@mui/material'
-import {ContentWidthProvider, Page} from '@wepublish/website'
-import {BuilderPageProps} from '@wepublish/website'
+import {ContentWidthProvider} from '@wepublish/content/website'
+import {Page} from '@wepublish/page/website'
+import {BuilderPageProps} from '@wepublish/website/builder'
 
 const fullWidthMainSpacer = (theme: Theme) => css`
   main > .MuiContainer-root {

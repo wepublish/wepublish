@@ -37,17 +37,15 @@ model MetadataProperty {
 }
 
 model ArticleRevision {
-  id                     String                             @id @default(cuid())
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
   preTitle               String?
   title                  String?
   lead                   String?
   seoTitle               String?
-  slug                   String?
-  tags                   String[]
   canonicalUrl           String?
   properties             MetadataProperty[]
-  image                  Image?                             @relation("articleRevisionImage", fields: [imageID], references: [id])
-  imageID                String?
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json
@@ -56,25 +54,21 @@ model ArticleRevision {
   socialMediaTitle       String?
   socialMediaDescription String?
   socialMediaAuthors     ArticleRevisionSocialMediaAuthor[]
-  socialMediaImage       Image?                             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
-  socialMediaImageID     String?
-  likes                  Int                                @default(0)
+  publishedAt            DateTime?
 
-  revision    Int       @default(0)
-  createdAt   DateTime  @default(now())
-  modifiedAt  DateTime? @updatedAt
-  updatedAt   DateTime?
-  publishAt   DateTime?
-  publishedAt DateTime?
+  image   Image?  @relation("articleRevisionImage", fields: [imageID], references: [id])
+  imageID String?
 
-  PublishedArticle Article[] @relation("publishedArticleRevision")
-  PendingArticle   Article[] @relation("pendingArticleRevision")
-  DraftArticle     Article[] @relation("draftArticleRevision")
+  socialMediaImage   Image?  @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
+  socialMediaImageID String?
 
-  @@index([publishAt])
+  articleId String
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([publishedAt])
-  @@index([updatedAt])
-  @@index([tags])
   @@map("articles.revisions")
 }
 
@@ -101,34 +95,62 @@ model ArticleRevisionSocialMediaAuthor {
 }
 
 model Article {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  modifiedAt  DateTime  @updatedAt
+  publishedAt DateTime?
 
-  // The better way in the future to go around draft, pending, published is to have the articleId and a state on the revision
-  // There should then be a unique constraint on id + state.
-  // This would allow us to
-  //  cascade the revisions on article delete
-  //  promoting/demoting a revision to a different state easily
-  publishedId String?          @unique
-  published   ArticleRevision? @relation("publishedArticleRevision", fields: [publishedId], references: [id], onDelete: SetNull)
-
-  pendingId String?          @unique
-  pending   ArticleRevision? @relation("pendingArticleRevision", fields: [pendingId], references: [id], onDelete: SetNull)
-
-  draftId String?          @unique
-  draft   ArticleRevision? @relation("draftArticleRevision", fields: [draftId], references: [id], onDelete: SetNull)
-
+  slug            String?
   shared          Boolean
   hidden          Boolean @default(false)
   disableComments Boolean @default(false)
+  likes           Int     @default(0)
 
-  navigations NavigationLink[]
-  tags        TaggedArticles[]
+  peer          Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peerId        String?
+  peerArticleId String?
+
+  navigations    NavigationLink[]
+  tags           TaggedArticles[]
+  revisions      ArticleRevision[]
+  trackingPixels ArticleTrackingPixels[]
 
   @@index([createdAt])
   @@index([modifiedAt])
+  @@index([publishedAt])
   @@map("articles")
+}
+
+enum TrackingPixelProviderType {
+  prolitteris @map("prolitteris")
+}
+
+model ArticleTrackingPixels {
+  id                   String              @id @default(cuid())
+  article              Article             @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId            String
+  createdAt            DateTime            @default(now())
+  modifiedAt           DateTime            @updatedAt
+  tackingPixelMethodID String
+  trackingPixelMethod  TrackingPixelMethod @relation(fields: [tackingPixelMethodID], references: [id])
+
+  uri      String? @unique
+  pixelUid String? @unique
+  error    String?
+
+  @@map("articles.tracking-pixels")
+}
+
+model TrackingPixelMethod {
+  id                        String                    @id @default(cuid())
+  createdAt                 DateTime                  @default(now())
+  modifiedAt                DateTime                  @updatedAt
+  trackingPixelProviderID   String                    @unique
+  trackingPixelProviderType TrackingPixelProviderType
+
+  ArticleTrackingPixels ArticleTrackingPixels[]
+
+  @@map("tracking.pixels.methods")
 }
 
 model TaggedArticles {
@@ -162,7 +184,7 @@ model Author {
   createdAt  DateTime       @default(now())
   modifiedAt DateTime       @updatedAt
   name       String
-  slug       String         @unique
+  slug       String
   jobTitle   String?
   links      AuthorsLinks[]
   bio        Json?
@@ -172,12 +194,16 @@ model Author {
   articlesAsAuthor            ArticleRevisionAuthor[]
   articlesAsSocialMediaAuthor ArticleRevisionSocialMediaAuthor[]
 
+  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peerId String?
+
   tags TaggedAuthors[]
 
   hideOnArticle Boolean @default(false)
   hideOnTeaser  Boolean @default(false)
   hideOnTeam    Boolean @default(false)
 
+  @@unique([slug, peerId])
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([name])
@@ -236,6 +262,9 @@ model Image {
   pageRevisionSocialMediaImages PageRevision[] @relation("pageRevisionSocialMediaImage")
   pageRevisionImages            PageRevision[] @relation("pageRevisionImage")
 
+  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peerId String?
+
   users          User[]
   events         Event[]
   paymentMethods PaymentMethod[]
@@ -250,9 +279,8 @@ model Image {
 }
 
 enum CommentItemType {
-  peerArticle @map("peerArticle")
-  article     @map("article")
-  page        @map("page")
+  article @map("article")
+  page    @map("page")
 }
 
 enum CommentRejectionReason {
@@ -295,9 +323,6 @@ model Comment {
 
   itemID           String
   itemType         CommentItemType
-  /// only populated when itemType is peerArticle
-  peerId           String?
-  peer             Peer?                   @relation(fields: [peerId], references: [id])
   parentID         String?
   revisions        CommentsRevisions[]
   rejectionReason  CommentRejectionReason?
@@ -528,6 +553,9 @@ model MemberPlan {
   failPageId String?
   failPage   Page?   @relation("failPage", fields: [failPageId], references: [id])
 
+  confirmationPageId String?
+  confirmationPage   Page?   @relation("confirmationPage", fields: [confirmationPageId], references: [id])
+
   subscription      Subscription[]
   subscriptionFlows SubscriptionFlow[]
 
@@ -572,60 +600,53 @@ model Navigation {
 }
 
 model PageRevision {
-  id                     String             @id @default(cuid())
-  revision               Int                @default(0)
-  createdAt              DateTime           @default(now())
-  modifiedAt             DateTime?          @updatedAt
-  updatedAt              DateTime?
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
   publishedAt            DateTime?
-  publishAt              DateTime?
-  slug                   String?
-  title                  String
+  title                  String?
   description            String?
-  tags                   String[]
   properties             MetadataProperty[]
-  imageID                String?
-  image                  Image?             @relation("pageRevisionImage", fields: [imageID], references: [id])
   socialMediaTitle       String?
   socialMediaDescription String?
-  socialMediaImageID     String?
-  socialMediaImage       Image?             @relation("pageRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   blocks                 Json
   searchPlainText        String?
-  PublishedPage          Page[]             @relation("publishedPageRevision")
-  PendingPage            Page[]             @relation("pendingPageRevision")
-  DraftPage              Page[]             @relation("draftPageRevision")
 
-  @@index([publishAt])
+  imageID String?
+  image   Image?  @relation("pageRevisionImage", fields: [imageID], references: [id])
+
+  socialMediaImageID String?
+  socialMediaImage   Image?  @relation("pageRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
+
+  pageId String
+  page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([publishedAt])
-  @@index([updatedAt])
-  @@index([tags])
   @@map("pages.revisions")
 }
 
 model Page {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  modifiedAt  DateTime  @updatedAt
+  publishedAt DateTime?
 
-  publishedId String?       @unique
-  published   PageRevision? @relation("publishedPageRevision", fields: [publishedId], references: [id], onDelete: SetNull)
+  slug String?
 
-  pendingId String?       @unique
-  pending   PageRevision? @relation("pendingPageRevision", fields: [pendingId], references: [id], onDelete: SetNull)
-
-  draftId String?       @unique
-  draft   PageRevision? @relation("draftPageRevision", fields: [draftId], references: [id], onDelete: SetNull)
-
-  navigations        NavigationLink[]
-  tags               TaggedPages[]
-  memberPlansSuccess MemberPlan[]     @relation("successPage")
-  memberPlansFail    MemberPlan[]     @relation("failPage")
-
-  banners Banner[]
+  revisions               PageRevision[]
+  navigations             NavigationLink[]
+  tags                    TaggedPages[]
+  memberPlansSuccess      MemberPlan[]     @relation("successPage")
+  memberPlansFail         MemberPlan[]     @relation("failPage")
+  memberPlansConfirmation MemberPlan[]     @relation("confirmationPage")
+  banners                 Banner[]
 
   @@index([createdAt])
   @@index([modifiedAt])
+  @@index([publishedAt])
   @@map("pages")
 }
 
@@ -717,7 +738,10 @@ model Peer {
   token      String
   isDisabled Boolean @default(false)
 
-  comments Comment[]
+  articles Article[]
+  images   Image[]
+  tags     Tag[]
+  authors  Author[]
 
   @@map("peers")
 }
@@ -769,9 +793,10 @@ model SubscriptionPeriod {
 }
 
 enum SubscriptionDeactivationReason {
-  none                @map("none")
-  userSelfDeactivated @map("userSelfDeactivated")
-  invoiceNotPaid      @map("invoiceNotPaid")
+  none                     @map("none")
+  userSelfDeactivated      @map("userSelfDeactivated")
+  invoiceNotPaid           @map("invoiceNotPaid")
+  userReplacedSubscription @map("userReplacedSubscription")
 }
 
 model SubscriptionDeactivation {
@@ -802,6 +827,7 @@ model Subscription {
   deactivation       SubscriptionDeactivation?
   extendable         Boolean                   @default(true)
   currency           Currency
+  confirmed          Boolean                   @default(true)
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
@@ -811,6 +837,10 @@ model Subscription {
 
   userID String
   user   User   @relation(fields: [userID], references: [id])
+
+  replacesSubscriptionID String?
+  replacesSubscription   Subscription?  @relation(name: "ReplacementHistory", fields: [replacesSubscriptionID], references: [id])
+  replacedBy             Subscription[] @relation("ReplacementHistory")
 
   invoices Invoice[]
 
@@ -894,13 +924,15 @@ model User {
   oauth2Accounts           UserOAuth2Account[]
   paymentProviderCustomers PaymentProviderCustomer[]
 
-  Comment       Comment[]
-  Session       Session[]
-  Subscription  Subscription[]
-  CommentRating CommentRating[]
-  PollVote      PollVote[]
-  mailSent      MailLog[]
-  UserConsent   UserConsent[]
+  comments         Comment[]
+  sessions         Session[]
+  subscriptions    Subscription[]
+  commentRatings   CommentRating[]
+  pollVotes        PollVote[]
+  mailSent         MailLog[]
+  consents         UserConsent[]
+  articleRevisions ArticleRevision[]
+  pageRevisions    PageRevision[]
 
   @@map("users")
 }
@@ -945,6 +977,9 @@ model Tag {
   type TagType
   tag  String?
   main Boolean @default(false)
+
+  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peerId String?
 
   comments TaggedComments[]
   events   TaggedEvents[]
@@ -1140,6 +1175,7 @@ model UserFlowMail {
 
 enum SubscriptionEvent {
   SUBSCRIBE
+  CONFIRM_SUBSCRIPTION
   INVOICE_CREATION
   RENEWAL_SUCCESS
   RENEWAL_FAILED
@@ -1230,6 +1266,7 @@ enum BlockType {
   TeaserGridFlex @map("teaserGridFlex")
   TeaserList     @map("teaserList")
   HTML           @map("html")
+  Subscribe      @map("subscribe")
   Poll           @map("poll")
   Comment        @map("comment")
   Event          @map("event")
@@ -1260,12 +1297,19 @@ model Banner {
 
   active Boolean @default(true)
 
-  showOnArticles Boolean @default(true)
-  showOnPages    Page[]
+  showOnArticles     Boolean     @default(true)
+  showOnPages        Page[]
+  showForLoginStatus LoginStatus @default(ALL)
 
   actions BannerAction[]
 
   @@map("banners")
+}
+
+enum LoginStatus {
+  LOGGED_IN  @map("logged_in")
+  LOGGED_OUT @map("logged_out")
+  ALL        @map("all")
 }
 
 model BannerAction {

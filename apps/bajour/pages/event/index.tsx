@@ -1,7 +1,19 @@
 import styled from '@emotion/styled'
 import {Checkbox, FormControlLabel, FormGroup} from '@mui/material'
 import {DateTimePicker} from '@mui/x-date-pickers'
-import {ApiV1, EventListContainer, useWebsiteBuilder} from '@wepublish/website'
+import {EventListContainer} from '@wepublish/event/website'
+import {
+  addClientCacheToV1Props,
+  EventListDocument,
+  EventListQueryVariables,
+  EventSort,
+  getV1ApiClient,
+  NavigationListDocument,
+  PeerProfileDocument,
+  SortOrder,
+  useEventListQuery
+} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -49,13 +61,13 @@ export default function EventList() {
           to: to?.toISOString(),
           upcomingOnly
         },
-        sort: ApiV1.EventSort.StartsAt,
-        order: ApiV1.SortOrder.Ascending
-      } satisfies Partial<ApiV1.EventListQueryVariables>),
+        sort: EventSort.StartsAt,
+        order: SortOrder.Ascending
+      } satisfies Partial<EventListQueryVariables>),
     [from, page, to, upcomingOnly]
   )
 
-  const {data} = ApiV1.useEventListQuery({
+  const {data} = useEventListQuery({
     fetchPolicy: 'cache-only',
     variables
   })
@@ -148,26 +160,26 @@ export const getStaticProps: GetStaticProps = async () => {
     return {props: {}, revalidate: 1}
   }
 
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
   await Promise.all([
     client.query({
-      query: ApiV1.EventListDocument,
+      query: EventListDocument,
       variables: {
         take,
         skip: 0,
-        sort: ApiV1.EventSort.StartsAt,
-        order: ApiV1.SortOrder.Ascending
+        sort: EventSort.StartsAt,
+        order: SortOrder.Ascending
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,

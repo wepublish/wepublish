@@ -1,0 +1,29 @@
+{
+  "website": {
+    "production": {
+      "deployment": true,
+      "custom_domain": "https://wnti.ch",
+      "env": {
+        "MAILCHIMP_SERVER_PREFIX": "us17",
+        "GA_ID": "",
+        "SPARKLOOP_ID": "",
+        "STRIPE_PUBLIC_KEY": ""
+      },
+      "secret_env": ["MAILCHIMP_API_KEY"]
+    },
+    "staging": {
+      "deployment": true,
+      "env": {
+        "MAILCHIMP_SERVER_PREFIX": "us17"
+      },
+      "secret_env": ["MAILCHIMP_API_KEY"]
+    },
+    "review": {
+      "deployment": true,
+      "env": {
+        "MAILCHIMP_SERVER_PREFIX": "us17"
+      },
+      "secret_env": ["MAILCHIMP_API_KEY"]
+    }
+  }
+}

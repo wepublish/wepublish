@@ -1,12 +1,12 @@
 import {Theme, css, useTheme} from '@mui/material'
 import styled from '@emotion/styled'
-import {Block, LinkPageBreakBlock as LinkPageBreakBlockType} from '@wepublish/website/api'
+import {BlockContent, BreakBlock as BreakBlockType} from '@wepublish/website/api'
 import {BuilderBreakBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-export const isBreakBlock = (block: Block): block is LinkPageBreakBlockType =>
-  block.__typename === 'LinkPageBreakBlock'
+export const isBreakBlock = (block: Pick<BlockContent, '__typename'>): block is BreakBlockType =>
+  block.__typename === 'BreakBlock'
 
-export const BreakBlockWrapper = styled('div')<{reverse?: boolean}>`
+export const BreakBlockWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(4)};
   justify-content: center;
@@ -20,18 +20,10 @@ export const BreakBlockWrapper = styled('div')<{reverse?: boolean}>`
   }
 `
 
-export const BreakBlockSegment = styled('div')<{reverse?: boolean}>`
+export const BreakBlockSegment = styled('div')`
   display: grid;
   align-items: center;
   gap: ${({theme}) => theme.spacing(2)};
-
-  ${({theme, reverse}) =>
-    reverse &&
-    css`
-      ${theme.breakpoints.up('md')} {
-        order: 1;
-      }
-    `}
 `
 
 const imageStyles = (theme: Theme) => css`
@@ -99,13 +91,10 @@ export const BreakBlock = ({
   text,
   image,
   richText,
-  layoutOption,
   hideButton,
   linkTarget,
   linkText,
-  linkURL,
-  styleOption,
-  templateOption
+  linkURL
 }: BuilderBreakBlockProps) => {
   const {
     elements: {H2, H4, Image, Button, Link},
@@ -113,11 +102,10 @@ export const BreakBlock = ({
   } = useWebsiteBuilder()
 
   const theme = useTheme()
-  const reverse = layoutOption === 'image-right'
 
   return (
-    <BreakBlockWrapper className={className} reverse={reverse}>
-      <BreakBlockSegment reverse={reverse}>
+    <BreakBlockWrapper className={className}>
+      <BreakBlockSegment>
         {!image && <H2 component={HeadingWithoutImage}>{text}</H2>}
         {image && <Image image={image} css={imageStyles(theme)} />}
       </BreakBlockSegment>

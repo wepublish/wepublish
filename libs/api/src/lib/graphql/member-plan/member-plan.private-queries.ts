@@ -3,7 +3,7 @@ import {Context} from '../../context'
 import {MemberPlanFilter, MemberPlanSort} from '../../db/memberPlan'
 import {UserInputError} from '../../error'
 import {authorise} from '../permissions'
-import {CanGetMemberPlan, CanGetMemberPlans} from '@wepublish/permissions/api'
+import {CanGetMemberPlan, CanGetMemberPlans} from '@wepublish/permissions'
 import {getMemberPlans} from './member-plan.queries'
 import {SortOrder} from '@wepublish/utils/api'
 

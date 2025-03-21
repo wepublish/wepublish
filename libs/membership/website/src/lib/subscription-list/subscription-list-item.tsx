@@ -11,7 +11,6 @@ import {
   MdAutorenew,
   MdCalendarMonth,
   MdCancel,
-  MdEventRepeat,
   MdHistory,
   MdOutlinePayments,
   MdTimelapse
@@ -186,10 +185,7 @@ export function SubscriptionListItem({
             </Button>
 
             {canExtend && (
-              <Button
-                onClick={() => setConfirmExtend(true)}
-                disabled={loading}
-                startIcon={<MdEventRepeat />}>
+              <Button onClick={() => setConfirmExtend(true)} disabled={loading}>
                 Jetzt Verlängern
               </Button>
             )}
@@ -197,7 +193,6 @@ export function SubscriptionListItem({
         )}
       </SubscriptionListItemContent>
 
-      {/* confirm cancel */}
       <MembershipModal
         open={!!confirmCancel}
         onSubmit={async () => {
@@ -216,7 +211,6 @@ export function SubscriptionListItem({
         </Paragraph>
       </MembershipModal>
 
-      {/* confirm extend */}
       <MembershipModal
         open={confirmExtend}
         onCancel={() => setConfirmExtend(false)}

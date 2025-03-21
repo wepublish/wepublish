@@ -1,5 +1,9 @@
 import styled from '@emotion/styled'
-import {Footer as WepFooter, FooterInnerWrapper, FooterPaperWrapper} from '@wepublish/website'
+import {
+  Footer as WepFooter,
+  FooterInnerWrapper,
+  FooterPaperWrapper
+} from '@wepublish/navigation/website'
 
 export const Footer = styled(WepFooter)`
   background-color: transparent;

@@ -3,7 +3,7 @@ import {
   AvailablePaymentMethod,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
-  ImageRefFragment,
+  FullImageFragment,
   PaymentMethod,
   Currency
 } from '@wepublish/editor/api'
@@ -19,10 +19,10 @@ import {
   Message,
   Panel,
   Row,
+  SelectPicker,
   TagPicker,
   toaster,
-  Toggle,
-  SelectPicker
+  Toggle
 } from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import {slugify} from '@wepublish/utils'
@@ -441,7 +441,7 @@ export function MemberPlanForm({
                 />
               </Row>
 
-              <Row>
+              <RowPaddingTop>
                 <Form.ControlLabel>{t('memberPlanEdit.failPage')}</Form.ControlLabel>
                 <SelectPage
                   setSelectedPage={failPageId => {
@@ -454,28 +454,23 @@ export function MemberPlanForm({
                   selectedPage={memberPlan?.failPageId}
                   name="failPageId"
                 />
-              </Row>
-            </Col>
+              </RowPaddingTop>
 
-            <Col xs={12}>
-              <ControlLabel>{t('memberplanForm.migratePMTitle')}</ControlLabel>
-              <Control
-                name="migrateToTargetPaymentMethodID"
-                block
-                virtualized
-                disabled={loading}
-                data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-                value={memberPlan?.migrateToTargetPaymentMethodID}
-                accepter={SelectPicker}
-                placement="auto"
-                onChange={migrateToTargetPaymentMethodID =>
-                  setMemberPlan({
-                    ...(memberPlan as FullMemberPlanFragment),
-                    migrateToTargetPaymentMethodID: migrateToTargetPaymentMethodID || null
-                  })
-                }
-              />
-              <HelpText>{t('memberplanForm.migratePMHelptext')}</HelpText>
+              <RowPaddingTop>
+                <Form.ControlLabel>{t('memberplanForm.confirmationPage')}</Form.ControlLabel>
+                <SelectPage
+                  setSelectedPage={confirmationPageId => {
+                    if (!memberPlan) {
+                      return
+                    }
+
+                    setMemberPlan({...memberPlan, confirmationPageId})
+                  }}
+                  selectedPage={memberPlan?.confirmationPageId}
+                  name="failPageId"
+                />
+              </RowPaddingTop>
+              <HelpText>{t('memberplanForm.confirmationPageHelptext')}</HelpText>
             </Col>
           </Row>
         </Panel>
@@ -562,7 +557,7 @@ export function MemberPlanForm({
       <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={(image: ImageRefFragment) => {
+          onSelect={(image: FullImageFragment) => {
             setChooseModalOpen(false)
             if (!memberPlan) {
               return

@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
-import {Block, CommentBlock as CommentBlockType} from '@wepublish/website/api'
+import {BlockContent, CommentBlock as CommentBlockType} from '@wepublish/website/api'
 import {BuilderCommentBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-export const isCommentBlock = (block: Block): block is CommentBlockType =>
-  block.__typename === 'CommentBlock'
+export const isCommentBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is CommentBlockType => block.__typename === 'CommentBlock'
 
 export const CommentBlockWrapper = styled('article')`
   display: grid;
@@ -18,7 +19,7 @@ export const CommentBlock = ({className, comments}: BuilderCommentBlockProps) =>
   return (
     <CommentBlockWrapper className={className}>
       {comments?.map(({children, ...comment}) => (
-        <BuilderComment key={comment.id} {...comment} />
+        <BuilderComment key={comment.id} includeAnchor={false} {...comment} />
       ))}
     </CommentBlockWrapper>
   )

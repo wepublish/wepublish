@@ -1,14 +1,16 @@
 import styled from '@emotion/styled'
+import {AuthorRefFragment} from '@wepublish/editor/api'
 import {
-  ArticleInput,
-  AuthorRefFragment,
-  useArticlePreviewLinkLazyQuery,
+  CreateArticleMutationVariables,
+  EditorBlockType,
+  getApiClientV2,
+  getSettings,
   useArticleQuery,
   useCreateArticleMutation,
   usePublishArticleMutation,
   useUpdateArticleMutation
-} from '@wepublish/editor/api'
-import {BlockType} from '@wepublish/editor/api-v2'
+} from '@wepublish/editor/api-v2'
+import {CanPreview} from '@wepublish/permissions'
 import {
   ArticleMetadata,
   ArticleMetadataPanel,
@@ -18,7 +20,6 @@ import {
   BlockValue,
   createCheckedPermissionComponent,
   EditorTemplate,
-  getSettings,
   InfoData,
   ListicleBlockListValue,
   NavigationBar,
@@ -31,7 +32,6 @@ import {
   TitleBlockValue,
   unionMapForBlock,
   useAuthorisation,
-  useBlockMap,
   useUnsavedChangesDialog
 } from '@wepublish/ui/editor'
 import React, {useCallback, useEffect, useState} from 'react'
@@ -89,8 +89,8 @@ const Tag = styled(RTag, {
 `
 
 const InitialArticleBlocks: BlockValue[] = [
-  {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
-  {key: '1', type: BlockType.Image, value: {image: null, caption: ''}}
+  {key: '0', type: EditorBlockType.Title, value: {title: '', lead: ''}},
+  {key: '1', type: EditorBlockType.Image, value: {image: null, caption: ''}}
 ]
 
 function countRichtextChars(blocksCharLength: number, nodes: Node[]): number {
@@ -110,40 +110,24 @@ function ArticleEditor() {
   const params = useParams()
   const {id} = params
 
-  const [previewLinkFetch, {data}] = useArticlePreviewLinkLazyQuery({
-    fetchPolicy: 'no-cache'
-  })
-
-  useEffect(() => {
-    if (data?.articlePreviewLink) {
-      window.open(data?.articlePreviewLink)
-    }
-  }, [data?.articlePreviewLink])
-
   const {t} = useTranslation()
 
   const {peerByDefault}: ClientSettings = getSettings()
 
-  const [createArticle, {loading: isCreating, data: createData, error: createError}] =
-    useCreateArticleMutation()
-
+  const client = getApiClientV2()
+  const [createArticle, {data: createData, loading: isCreating, error: createError}] =
+    useCreateArticleMutation({client})
   const [updateArticle, {loading: isUpdating, error: updateError}] = useUpdateArticleMutation({
-    fetchPolicy: 'no-cache'
+    client
   })
-
-  const [publishArticle, {data: publishData, loading: isPublishing, error: publishError}] =
-    usePublishArticleMutation({
-      fetchPolicy: 'no-cache'
-    })
+  const [publishArticle, {loading: isPublishing, error: publishError}] = usePublishArticleMutation({
+    client
+  })
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
 
   const [publishedAt, setPublishedAt] = useState<Date>()
-
-  const [updatedAt, setUpdatedAt] = useState<Date>()
-
-  const [publishAt, setPublishAt] = useState<Date>()
 
   const [metadata, setMetadata] = useState<ArticleMetadata>({
     slug: '',
@@ -167,7 +151,8 @@ function ArticleEditor() {
     socialMediaDescription: undefined,
     socialMediaAuthors: [],
     socialMediaImage: undefined,
-    likes: 0
+    likes: 0,
+    trackingPixels: undefined
   })
 
   const isNew = id === undefined
@@ -180,19 +165,15 @@ function ArticleEditor() {
     refetch,
     loading: isLoading
   } = useArticleQuery({
+    client,
     errorPolicy: 'all',
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     variables: {id: articleID!}
   })
 
   const isNotFound = articleData && !articleData.article
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
   const canPreview = Boolean(articleData?.article?.draft)
-  const pendingPublishDate = publishData?.publishArticle?.pending?.publishAt
-    ? new Date(publishData?.publishArticle?.pending?.publishAt)
-    : articleData?.article?.pending?.publishAt
-    ? new Date(articleData?.article?.pending?.publishAt)
-    : undefined
 
   const [hasChanged, setChanged] = useState(false)
 
@@ -207,14 +188,23 @@ function ArticleEditor() {
 
   useEffect(() => {
     if (articleData?.article) {
-      const {latest, shared, hidden, disableComments, pending, tags} = articleData.article
       const {
+        latest,
+        shared,
+        hidden,
+        disableComments,
+        pending,
+        tags,
+        url,
         slug,
+        trackingPixels,
+        likes
+      } = articleData.article
+      const {
         preTitle,
         title,
         seoTitle,
         lead,
-        url,
         breaking,
         authors,
         image,
@@ -225,18 +215,12 @@ function ArticleEditor() {
         socialMediaTitle,
         socialMediaDescription,
         socialMediaAuthors,
-        socialMediaImage,
-        likes
+        socialMediaImage
       } = latest
 
-      const {publishedAt} = latest ?? {}
-      if (publishedAt) setPublishedAt(new Date(publishedAt))
-
-      const {updatedAt} = latest ?? {}
-      if (updatedAt) setUpdatedAt(new Date(updatedAt))
-
-      const {publishAt} = pending ?? latest
-      if (publishAt) setPublishAt(new Date(publishAt))
+      if (latest.publishedAt) {
+        setPublishedAt(new Date(latest.publishedAt))
+      }
 
       setMetadata({
         slug,
@@ -247,11 +231,7 @@ function ArticleEditor() {
         tags: tags.map(({id}) => id),
         defaultTags: tags,
         url,
-        properties: properties.map(property => ({
-          key: property.key,
-          value: property.value,
-          public: property.public
-        })),
+        properties,
         canonicalUrl: canonicalUrl ?? '',
         shared,
         hidden,
@@ -266,7 +246,8 @@ function ArticleEditor() {
           socialMediaAuthor => socialMediaAuthor != null
         ) as AuthorRefFragment[],
         socialMediaImage: socialMediaImage || undefined,
-        likes: likes ?? 0
+        likes: likes ?? 0,
+        trackingPixels: trackingPixels || undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))
@@ -281,7 +262,7 @@ function ArticleEditor() {
       setStateColor(StateColor.pending)
       setTagTitle(
         t('articleEditor.overview.pending', {
-          date: new Date(articleData?.article?.pending?.publishAt ?? '')
+          date: new Date(articleData?.article?.pending?.publishedAt ?? '')
         })
       )
     } else if (articleData?.article?.published) {
@@ -321,12 +302,12 @@ function ArticleEditor() {
 
   function countListicleChars(block: ListicleBlockListValue) {
     const titleArray = block.value.items.map(item => {
-      return item.value.title.length
+      return item.value.title?.length ?? 0
     })
 
     const totalTitleChars = titleArray.reduce(function (charCount: number, b) {
       return charCount + b
-    })
+    }, 0)
 
     const richTextBlocks = block.value.items.map(item => item.value.richText)
 
@@ -341,13 +322,13 @@ function ArticleEditor() {
   function wordCounter(blocks: BlockValue[]): number {
     return blocks.reduce((charLength: number, block: BlockValue) => {
       switch (block.type) {
-        case BlockType.Listicle:
+        case EditorBlockType.Listicle:
           return charLength + countListicleChars(block)
-        case BlockType.Title:
+        case EditorBlockType.Title:
           return charLength + countTitleChars(block)
-        case BlockType.Quote:
+        case EditorBlockType.Quote:
           return charLength + countQuoteChars(block)
-        case BlockType.RichText:
+        case EditorBlockType.RichText:
           return charLength + countRichTextBlocksChars(block)
         default:
           return charLength
@@ -355,28 +336,29 @@ function ArticleEditor() {
     }, 0)
   }
 
-  function createInput(): ArticleInput {
+  function createInput(): CreateArticleMutationVariables {
     return {
       slug: metadata.slug,
       preTitle: metadata.preTitle || undefined,
       title: metadata.title,
       lead: metadata.lead,
       seoTitle: metadata.seoTitle,
-      authorIDs: metadata.authors.map(({id}) => id),
+      authorIds: metadata.authors.map(({id}) => id),
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
       shared: metadata.shared,
       hidden: metadata.hidden ?? false,
       disableComments: metadata.disableComments ?? false,
-      tags: metadata.tags,
+      tagIds: metadata.tags,
       canonicalUrl: metadata.canonicalUrl,
       properties: metadata.properties,
       blocks: blocks.map(unionMapForBlock),
       hideAuthor: metadata.hideAuthor,
       socialMediaTitle: metadata.socialMediaTitle || undefined,
       socialMediaDescription: metadata.socialMediaDescription || undefined,
-      socialMediaAuthorIDs: metadata.socialMediaAuthors.map(({id}) => id),
-      socialMediaImageID: metadata.socialMediaImage?.id || undefined
+      socialMediaAuthorIds: metadata.socialMediaAuthors.map(({id}) => id),
+      socialMediaImageID: metadata.socialMediaImage?.id || undefined,
+      likes: metadata.likes ?? 0
     }
   }
 
@@ -388,7 +370,7 @@ function ArticleEditor() {
       metadata.seoTitle === '' &&
       blocks.length > 0
     ) {
-      const titleBlock = blocks.find(block => block.type === BlockType.Title)
+      const titleBlock = blocks.find(block => block.type === EditorBlockType.Title)
 
       if (titleBlock?.value) {
         const titleBlockValue = titleBlock.value as TitleBlockValue
@@ -406,7 +388,7 @@ function ArticleEditor() {
     const input = createInput()
 
     if (articleID) {
-      await updateArticle({variables: {id: articleID, input}})
+      await updateArticle({variables: {id: articleID, ...input}})
 
       setChanged(false)
       toaster.push(
@@ -419,7 +401,7 @@ function ArticleEditor() {
       )
       await refetch({id: articleID})
     } else {
-      const {data} = await createArticle({variables: {input}})
+      const {data} = await createArticle({variables: input})
       if (data) {
         navigate(`/articles/edit/${data?.createArticle.id}`, {replace: true})
       }
@@ -435,7 +417,7 @@ function ArticleEditor() {
     }
   }
 
-  async function handlePublish(publishedAt: Date, publishAt: Date, updatedAt?: Date) {
+  async function handlePublish(publishedAt: Date) {
     if (!metadata.slug) {
       toaster.push(
         <Message type="error" showIcon closable duration={0}>
@@ -447,40 +429,29 @@ function ArticleEditor() {
 
     if (articleID) {
       const {data} = await updateArticle({
-        variables: {id: articleID, input: createInput()}
+        variables: {id: articleID, ...createInput()}
       })
 
       if (data) {
         const {data: publishData} = await publishArticle({
           variables: {
             id: articleID,
-            publishAt: publishAt ? publishAt.toISOString() : publishedAt.toISOString(),
-            publishedAt: publishedAt.toISOString(),
-            updatedAt: updatedAt ? updatedAt.toISOString() : publishedAt.toISOString()
+            publishedAt: publishedAt.toISOString()
           }
         })
 
         if (publishData?.publishArticle?.latest?.publishedAt) {
           setPublishedAt(new Date(publishData?.publishArticle?.latest.publishedAt))
         }
-        if (publishData?.publishArticle?.latest?.updatedAt) {
-          setUpdatedAt(new Date(publishData?.publishArticle?.latest.updatedAt))
-        }
-        if (publishData?.publishArticle?.latest?.publishAt) {
-          setPublishAt(new Date(publishData?.publishArticle?.latest.publishAt))
-        } else if (
-          publishData?.publishArticle?.latest?.publishAt === null &&
-          publishData?.publishArticle?.latest?.publishedAt
-        ) {
-          setPublishAt(new Date(publishData?.publishArticle?.latest?.publishedAt))
-        }
       }
+
       setChanged(false)
+
       toaster.push(
         <Notification
           type="success"
           header={t(
-            publishAt <= new Date() || (!publishAt && publishedAt <= new Date())
+            publishedAt <= new Date()
               ? 'articleEditor.overview.articlePublished'
               : 'articleEditor.overview.articlePending'
           )}
@@ -595,18 +566,8 @@ function ArticleEditor() {
                 </CenterChildren>
               }
               rightChildren={
-                <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
-                  <Link
-                    to="#"
-                    className="actionButton"
-                    onClick={e => {
-                      previewLinkFetch({
-                        variables: {
-                          id: id!,
-                          hours: 1
-                        }
-                      })
-                    }}>
+                <PermissionControl qualifyingPermissions={[CanPreview.id]}>
+                  <Link to={articleData?.article.previewUrl ?? ''} className="actionButton">
                     <IconButtonMarginTop
                       disabled={hasChanged || !id || !canPreview}
                       size="lg"
@@ -622,13 +583,15 @@ function ArticleEditor() {
             itemId={articleID}
             value={blocks}
             onChange={handleChange}
-            disabled={isLoading || isDisabled || !isAuthorized}>
-            {useBlockMap<BlockValue>(() => BlockMap, [])}
-          </BlockList>
+            disabled={isLoading || isDisabled || !isAuthorized}
+            blockMap={BlockMap}
+          />
         </EditorTemplate>
       </FieldSet>
+
       <Drawer open={isMetaDrawerOpen} size="md" onClose={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
+          peerId={articleData?.article.peer?.id}
           articleID={articleID}
           value={metadata}
           infoData={infoData}
@@ -642,16 +605,14 @@ function ArticleEditor() {
           }}
         />
       </Drawer>
+
       <Modal open={isPublishDialogOpen} size="sm" onClose={() => setPublishDialogOpen(false)}>
         <PublishArticlePanel
           publishedAtDate={publishedAt}
-          updatedAtDate={updatedAt}
-          pendingPublishDate={pendingPublishDate}
-          publishAtDate={publishAt}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishedAt, publishAt, updatedAt) => {
-            handlePublish(publishedAt, publishAt, updatedAt)
+          onConfirm={publishedAt => {
+            handlePublish(publishedAt)
             setPublishDialogOpen(false)
           }}
         />

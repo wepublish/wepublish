@@ -1,14 +1,17 @@
 import styled from '@emotion/styled'
 import {css} from '@mui/material'
+import {isPollBlock} from '@wepublish/block-content/website'
+import {Comment} from '@wepublish/comments/website'
+import {Image} from '@wepublish/image/website'
 import {Button} from '@wepublish/ui'
 import {
-  ApiV1,
-  BuilderCommentProps,
-  BuilderTeaserListBlockProps,
-  Comment,
-  Image,
-  isPollBlock
-} from '@wepublish/website'
+  ArticleTeaser,
+  CommentSort,
+  FullCommentFragment,
+  SortOrder,
+  useCommentListQuery
+} from '@wepublish/website/api'
+import {BuilderCommentProps, BuilderTeaserListBlockProps} from '@wepublish/website/builder'
 import Link from 'next/link'
 import {useMemo} from 'react'
 import {MdForum} from 'react-icons/md'
@@ -17,7 +20,7 @@ import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-bl
 import {AuthorBox} from './author-box'
 import {InfoBox} from './info-box'
 
-interface CommentWithChildren extends ApiV1.Comment {
+interface CommentWithChildren extends FullCommentFragment {
   children: CommentWithChildren[]
 }
 
@@ -153,17 +156,17 @@ const ReadMoreButton = styled(Button)`
 `
 
 export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps) => {
-  const article = (teasers[0] as ApiV1.ArticleTeaser | undefined)?.article
+  const article = (teasers[0] as ArticleTeaser | undefined)?.article
 
-  const {data: commentsData} = ApiV1.useCommentListQuery({
+  const {data: commentsData} = useCommentListQuery({
     variables: {
       itemId: article?.id || '',
-      sort: ApiV1.CommentSort.Rating,
-      order: ApiV1.SortOrder.Descending
+      sort: CommentSort.Rating,
+      order: SortOrder.Descending
     }
   })
 
-  const pollToPass = article?.blocks.find(isPollBlock)?.poll
+  const pollToPass = article?.latest.blocks.find(isPollBlock)?.poll
 
   const numberOfComments = useMemo(() => {
     return countComments((commentsData?.comments as CommentWithChildren[]) || [])
@@ -173,13 +176,17 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
     <FrageDesTagesContainer>
       <FrageDesTagesWrapper className={className}>
         <PollWrapper>
-          {article?.image && <FdtArticleImage image={article.image} />}
+          {article?.latest.image && <FdtArticleImage image={article.latest.image} />}
           <PollBlock poll={pollToPass} />
         </PollWrapper>
 
         <CommentsWrapper>
           <AuthorAndContext>
-            <div>{article?.authors[0] ? <AuthorBox author={article?.authors[0]} /> : null}</div>
+            <div>
+              {article?.latest.authors[0] ? (
+                <AuthorBox author={article?.latest.authors[0]} />
+              ) : null}
+            </div>
             <div>
               <InfoBox richText={pollToPass?.infoText || []} />
             </div>

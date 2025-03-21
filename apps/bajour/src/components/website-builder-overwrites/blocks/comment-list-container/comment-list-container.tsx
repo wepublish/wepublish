@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import {theme} from '@wepublish/ui'
 import {
   CommentContent,
   CommentEditorWrapper,
@@ -8,7 +7,8 @@ import {
   CommentListItemActions,
   CommentListItemChildren,
   CommentWrapper
-} from '@wepublish/website'
+} from '@wepublish/comments/website'
+import {theme} from '@wepublish/ui'
 
 export const CommentListContainer = styled(BaseCommentListContainer)`
   ${CommentListItemChildren} {

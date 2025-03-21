@@ -42,6 +42,7 @@ export const BannerCloseButton = styled('span')`
 export const BannerTitle = styled('h2')`
   margin-top: 0;
   margin-bottom: ${({theme}) => theme.spacing(2)};
+  line-height: 1.2;
 `
 
 export const BannerText = styled('div')`
@@ -82,7 +83,7 @@ const BannerWrapper = styled('div')<BannerWrapperProps>(
 
 export const Banner = ({data, loading, error, className}: BuilderBannerProps) => {
   const [collapsed, setCollapsed] = useState(true)
-  const storageKey = `banner-last-closed-${data?.primaryBanner.id}`
+  const storageKey = `banner-last-closed-${data?.primaryBanner?.id}`
 
   useEffect(() => {
     const lastClosedTime = Number(localStorage.getItem(storageKey)) ?? 0

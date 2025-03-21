@@ -14,6 +14,11 @@ export const AuthorWrapper = styled('article')`
   gap: ${({theme}) => theme.spacing(3)};
 `
 
+export const AuthorImage = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(1)};
+`
+
 const imageStyles = css`
   width: 100%;
   max-width: 500px;
@@ -37,11 +42,13 @@ export function Author({className, data, loading, error}: BuilderAuthorProps) {
         {data.author.jobTitle && <H5 component="aside">{data.author.jobTitle}</H5>}
       </header>
 
-      {data.author.image && (
-        <Image image={data.author.image} fetchPriority="high" css={imageStyles} />
-      )}
+      <AuthorImage>
+        {data.author.image && (
+          <Image image={data.author.image} fetchPriority="high" css={imageStyles} />
+        )}
 
-      {!!data.author.links?.length && <AuthorLinks links={data.author.links} />}
+        {!!data.author.links?.length && <AuthorLinks links={data.author.links} />}
+      </AuthorImage>
 
       <RichText richText={data.author.bio ?? []} />
     </AuthorWrapper>
