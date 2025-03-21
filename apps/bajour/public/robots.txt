@@ -7,3 +7,4 @@ User-agent: GPTBot
 Disallow: /
 
 Sitemap: https://bajour.ch/api/sitemap
+Sitemap: https://bajour.ch/sitemap-full-2025-02-26.xml

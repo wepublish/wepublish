@@ -18,10 +18,12 @@ import {
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -31,22 +33,22 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {ReactComponent as Logo} from '../src/logo.svg'
-import {OnlineReportsNavAppBar} from '../src/components/onlinereports-nav-app-bar'
-import {OnlineReportsNavPaper} from '../src/components/onlinereports-nav-paper'
-import theme from '../src/theme'
-
-import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
-import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
+import {Advertisement} from '../src/components/advertisement'
 import {OnlineReportsAuthorChip} from '../src/components/author-chip'
 import {OnlineReportsArticleAuthors} from '../src/components/online-reports-article-authors'
-import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
-import {Advertisement} from '../src/components/advertisement'
-import {Structure} from '../src/structure'
+import {OnlineReportsNavAppBar} from '../src/components/onlinereports-nav-app-bar'
+import {OnlineReportsNavPaper} from '../src/components/onlinereports-nav-paper'
 import {
   OnlineReportsQuoteBlock,
   OnlineReportsQuoteBlockWrapper
 } from '../src/components/quote-block'
+import {ReactComponent as Logo} from '../src/logo.svg'
+import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
+import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
+import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
+import {Structure} from '../src/structure'
+import theme from '../src/theme'
+import Mitmachen from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -55,7 +57,9 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
+  .use(resourcesToBackend(() => deTranlations))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
@@ -181,7 +185,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Teaser: OnlineReportsTeaser,
               Renderer: OnlineReportsBlockRenderer,
               TeaserList: OnlineReportsTeaserListBlock,
-              Quote: OnlineReportsQuoteBlock
+              Quote: OnlineReportsQuoteBlock,
+              Subscribe: Mitmachen
             }}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>

@@ -54,7 +54,8 @@ import {
   VimeoVideoBlock,
   YouTubeVideoBlock,
   TeaserListBlock,
-  TeaserListBlockSort
+  TeaserListBlockSort,
+  SubscribeBlock
 } from '../db/block'
 
 import {createProxyingIsTypeOf, createProxyingResolver, delegateToPeerSchema} from '../utility'
@@ -1107,6 +1108,19 @@ export const GraphQLHTMLBlock = new GraphQLObjectType<HTMLBlock, Context>({
   })
 })
 
+export const GraphQLSubscribeBlock = new GraphQLObjectType<SubscribeBlock, Context>({
+  name: 'SubscribeBlock',
+  fields: () => ({
+    blockStyle: {
+      type: GraphQLString,
+      resolve: resolveBlockStyleIdToName
+    }
+  }),
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.Subscribe
+  })
+})
+
 export const GraphQLPollBlock = new GraphQLObjectType<PollBlock, Context>({
   name: 'PollBlock',
   fields: () => ({
@@ -1588,6 +1602,13 @@ export const GraphQLHTMLBlockInput = new GraphQLInputObjectType({
   })
 })
 
+export const GraphQLSubscribeBlockInput = new GraphQLInputObjectType({
+  name: 'SubscribeBlockInput',
+  fields: () => ({
+    blockStyle: {type: GraphQLString}
+  })
+})
+
 export const GraphQLPollBlockInput = new GraphQLInputObjectType({
   name: 'PollBlockInput',
   fields: () => ({
@@ -1773,6 +1794,7 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.BildwurfAd]: {type: GraphQLBildwurfAdBlockInput},
     [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
     [BlockType.HTML]: {type: GraphQLHTMLBlockInput},
+    [BlockType.Subscribe]: {type: GraphQLSubscribeBlockInput},
     [BlockType.Poll]: {type: GraphQLPollBlockInput},
     [BlockType.Event]: {type: GraphQLEventBlockInput},
     [BlockType.Comment]: {type: GraphQLCommentBlockInput},
@@ -1802,6 +1824,7 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLBildwurfAdBlock,
     GraphQLEmbedBlock,
     GraphQLHTMLBlock,
+    GraphQLSubscribeBlock,
     GraphQLPollBlock,
     GraphQLEventBlock,
     GraphQLCommentBlock,
@@ -1833,6 +1856,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLBildwurfAdBlock,
     GraphQLEmbedBlock,
     GraphQLHTMLBlock,
+    GraphQLSubscribeBlock,
     GraphQLPollBlock,
     GraphQLEventBlock,
     GraphQLPublicCommentBlock,

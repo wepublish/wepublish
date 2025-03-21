@@ -9,10 +9,12 @@ import {
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -24,6 +26,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import Mitmachen from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -32,7 +35,9 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
+  .use(resourcesToBackend(() => deTranlations))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
@@ -40,6 +45,7 @@ i18next
       de: {zod: translation}
     }
   })
+
 z.setErrorMap(zodI18nMap)
 
 const Spacer = styled('div')`
@@ -102,6 +108,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Head={Head}
             Script={Script}
             elements={{Link: NextWepublishLink}}
+            blocks={{Subscribe: Mitmachen}}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>
             <ThemeProvider theme={theme}>

@@ -17,6 +17,8 @@ import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -36,6 +38,7 @@ import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {MitmachenInner} from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -44,7 +47,9 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
+  .use(resourcesToBackend(() => deTranlations))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
@@ -126,7 +131,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Break: TsriBreakBlock,
               Quote: TsriQuoteBlock,
               RichText: TsriRichText,
-              Title: TsriTitle
+              Title: TsriTitle,
+              Subscribe: MitmachenInner
             }}
             blockStyles={{
               ContextBox: TsriContextBox

@@ -24,6 +24,8 @@ import {setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -39,6 +41,7 @@ import {GruppettoBreakBlock} from '../src/break-block'
 import {Footer} from '../src/footer'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
+import Mitmachen from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -47,7 +50,9 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
+  .use(resourcesToBackend(() => deTranlations))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
@@ -139,7 +144,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Footer={Footer}
             MemberPlanItem={YearlyMemberPlanItem}
             elements={{Link: NextWepublishLink}}
-            blocks={{Break: GruppettoBreakBlock}}>
+            blocks={{Break: GruppettoBreakBlock, Subscribe: Mitmachen}}>
             <ThemeProvider theme={gruppettoTheme}>
               <CssBaseline />
 

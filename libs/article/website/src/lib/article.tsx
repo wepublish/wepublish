@@ -37,7 +37,6 @@ export function Article({className, data, children, loading, error}: BuilderArti
 
       <ArticleInfoWrapper>
         {article && <ArticleAuthors article={article} />}
-
         {article && <ArticleMeta article={article} />}
       </ArticleInfoWrapper>
 

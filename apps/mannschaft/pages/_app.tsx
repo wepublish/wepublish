@@ -14,6 +14,8 @@ import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -37,12 +39,13 @@ import {MannschaftBlockRenderer} from '../src/mannschaft-block-renderer'
 import {MannschaftBlocks} from '../src/mannschaft-blocks'
 import {MannschaftBreakBlock} from '../src/mannschaft-break-block'
 import {MannschaftFocusTeaser} from '../src/mannschaft-focus-teaser'
+import {MannschaftGlobalStyles} from '../src/mannschaft-global-styles'
 import {MannschaftPage} from '../src/mannschaft-page'
 import {MannschaftRichtextBlock} from '../src/mannschaft-richtext-block'
 import {MannschaftTeaser} from '../src/mannschaft-teaser'
 import {MannschaftTeaserGrid} from '../src/mannschaft-teaser-grid'
 import theme from '../src/theme'
-import {MannschaftGlobalStyles} from '../src/mannschaft-global-styles'
+import Mitmachen from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -51,7 +54,9 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
+  .use(resourcesToBackend(() => deTranlations))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
@@ -139,7 +144,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Teaser: MannschaftTeaser,
               TeaserGrid: MannschaftTeaserGrid,
               Break: MannschaftBreakBlock,
-              RichText: MannschaftRichtextBlock
+              RichText: MannschaftRichtextBlock,
+              Subscribe: Mitmachen
             }}
             blockStyles={{
               FocusTeaser: MannschaftFocusTeaser
