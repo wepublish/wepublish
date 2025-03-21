@@ -46,11 +46,10 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     })
   ])
 
-  return generate(articleData.articles.nodes ?? [], [
+  return generate(articleData.articles.nodes ?? [], pageData.pages.nodes ?? [], [
     `${siteUrl}/author`,
     `${siteUrl}/login`,
     `${siteUrl}/signup`,
-    `${siteUrl}/abo`,
-    ...(pageData.pages.nodes ?? []).map((page: Page) => page.url)
+    `${siteUrl}/abo`
   ])
 }
