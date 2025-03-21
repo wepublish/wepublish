@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import {CanUpdatePeerProfile} from '@wepublish/permissions/api'
+import {CanUpdatePeerProfile} from '@wepublish/permissions'
 import {Context} from '../../context'
 import {authorise} from '../permissions'
 

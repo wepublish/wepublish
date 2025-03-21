@@ -1,12 +1,4 @@
-import {
-  ArgsType,
-  Field,
-  ID,
-  InputType,
-  ObjectType,
-  PickType,
-  registerEnumType
-} from '@nestjs/graphql'
+import {ArgsType, Field, InputType, ObjectType, PickType, registerEnumType} from '@nestjs/graphql'
 import {BannerActionRole} from '@prisma/client'
 
 @ArgsType()
@@ -21,7 +13,7 @@ registerEnumType(BannerActionRole, {
 
 @ObjectType()
 export class BannerAction {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()

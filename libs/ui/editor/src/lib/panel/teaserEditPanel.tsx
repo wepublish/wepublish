@@ -1,18 +1,9 @@
 import styled from '@emotion/styled'
-import {TeaserType} from '@wepublish/editor/api'
+import {TeaserType} from '@wepublish/editor/api-v2'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {TFunction} from 'i18next'
-import {
-  Button,
-  Drawer,
-  Form,
-  Input,
-  Panel as RPanel,
-  Radio,
-  RadioGroup,
-  Toggle as RToggle
-} from 'rsuite'
+import {Button, Drawer, Form, Input, Panel as RPanel, Toggle as RToggle} from 'rsuite'
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -21,7 +12,6 @@ import {Teaser} from '../blocks/types'
 import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {TeaserStyle} from '@wepublish/website/api'
 
 const {Group, ControlLabel, Control} = Form
 
@@ -58,6 +48,7 @@ const FormGroup = styled(Group)`
 `
 
 export interface TeaserMetadataProperty {
+  readonly id?: string | null
   readonly key: string
   readonly value: string
   readonly public: boolean
@@ -78,7 +69,6 @@ export function TeaserEditPanel({
   onConfirm,
   closeLabel = 'Close'
 }: TeaserEditPanelProps) {
-  const [style, setStyle] = useState(initialTeaser.style)
   const [image, setImage] = useState(initialTeaser.image)
   const [contentUrl, setContentUrl] = useState(
     initialTeaser.type === TeaserType.Custom ? initialTeaser.contentUrl : undefined
@@ -111,7 +101,6 @@ export function TeaserEditPanel({
             onClick={() => {
               onConfirm({
                 ...initialTeaser,
-                style,
                 preTitle: preTitle || undefined,
                 title: title || undefined,
                 lead: lead || undefined,
@@ -134,18 +123,6 @@ export function TeaserEditPanel({
         {previewForTeaser(initialTeaser, t)}
         <RPanel header={t('articleEditor.panels.displayOptions')}>
           <Form fluid>
-            <Group controlId="articleStyle">
-              <ControlLabel>{t('articleEditor.panels.style')}</ControlLabel>
-              <RadioGroup
-                inline
-                value={style}
-                onChange={teaserStyle => setStyle(teaserStyle as TeaserStyle)}>
-                <Radio value={TeaserStyle.Default}>{t('articleEditor.panels.default')}</Radio>
-                <Radio value={TeaserStyle.Light}>{t('articleEditor.panels.light')}</Radio>
-                <Radio value={TeaserStyle.Text}>{t('articleEditor.panels.text')}</Radio>
-              </RadioGroup>
-            </Group>
-
             <Group controlId="articlePreTitle">
               <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
               <Control
@@ -236,23 +213,15 @@ export function TeaserEditPanel({
 
 export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
   let type: string
-  let imageURL: string | undefined
-  let contentUrl: string | undefined
-  let preTitle: string | undefined
-  let title: string | undefined
-  let lead: string | undefined
+  let imageURL: string | undefined | null
+  let contentUrl: string | undefined | null
+  let preTitle: string | undefined | null
+  let title: string | undefined | null
+  let lead: string | undefined | null
 
   switch (teaser.type) {
     case TeaserType.Article:
       type = 'Article'
-      imageURL = teaser.article.latest.image?.previewURL ?? undefined
-      preTitle = teaser.article.latest.preTitle ?? undefined
-      title = teaser.article.latest.title ?? undefined
-      lead = teaser.article.latest.lead ?? undefined
-      break
-
-    case TeaserType.PeerArticle:
-      type = 'Peer Article'
       imageURL = teaser.article?.latest.image?.previewURL ?? undefined
       preTitle = teaser.article?.latest.preTitle ?? undefined
       title = teaser.article?.latest.title ?? undefined
@@ -261,16 +230,16 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
 
     case TeaserType.Page:
       type = 'Page'
-      imageURL = teaser.page.latest.image?.previewURL ?? undefined
-      title = teaser.page.latest.title ?? undefined
-      lead = teaser.page.latest.description ?? undefined
+      imageURL = teaser.page?.latest.image?.previewURL ?? undefined
+      title = teaser.page?.latest.title ?? undefined
+      lead = teaser.page?.latest.description ?? undefined
       break
 
     case TeaserType.Event:
       type = 'Event'
-      imageURL = teaser.event.image?.previewURL ?? undefined
-      title = teaser.event.name ?? undefined
-      lead = teaser.event.lead || teaser.event.location || undefined
+      imageURL = teaser.event?.image?.previewURL ?? undefined
+      title = teaser.event?.name ?? undefined
+      lead = teaser.event?.lead || teaser.event?.location || undefined
       break
 
     case TeaserType.Custom:

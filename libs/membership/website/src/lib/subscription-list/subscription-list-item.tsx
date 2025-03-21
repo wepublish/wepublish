@@ -193,7 +193,6 @@ export function SubscriptionListItem({
         )}
       </SubscriptionListItemContent>
 
-      {/* confirm cancel */}
       <MembershipModal
         open={!!confirmCancel}
         onSubmit={async () => {
@@ -212,7 +211,6 @@ export function SubscriptionListItem({
         </Paragraph>
       </MembershipModal>
 
-      {/* confirm extend */}
       <MembershipModal
         open={confirmExtend}
         onCancel={() => setConfirmExtend(false)}

@@ -11,11 +11,12 @@ import {
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {
+  BuilderArticleAuthorsProps,
   BuilderArticleDateProps,
   BuilderArticleListProps,
+  BuilderArticleMetaProps,
   BuilderArticleProps,
-  BuilderArticleSEOProps,
-  BuilderArticleMetaProps
+  BuilderArticleSEOProps
 } from './article.interface'
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
@@ -32,11 +33,12 @@ import {
   BuilderBlocksProps,
   BuilderBreakBlockProps,
   BuilderCommentBlockProps,
-  BuilderEmbedBlockProps,
+  BuilderIFrameBlockProps,
   BuilderEventBlockProps,
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
+  BuilderSubscribeBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
   BuilderInstagramPostBlockProps,
@@ -87,7 +89,8 @@ import {
   BuilderPeriodicityPickerProps,
   BuilderSubscribeProps,
   BuilderSubscriptionListItemProps,
-  BuilderSubscriptionListProps
+  BuilderSubscriptionListProps,
+  BuilderTransactionFeeProps
 } from './membership.interface'
 import {BuilderNavbarProps} from './navbar.interface'
 import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
@@ -125,6 +128,7 @@ export type WebsiteBuilderProps = {
   AuthorListItem: ComponentType<BuilderAuthorListItemProps>
   AuthorList: ComponentType<BuilderAuthorListProps>
   ArticleList: ComponentType<BuilderArticleListProps>
+  ArticleAuthors: ComponentType<BuilderArticleAuthorsProps>
   Banner: ComponentType<BuilderBannerProps>
   Event: ComponentType<BuilderEventProps>
   EventSEO: ComponentType<BuilderEventSEOProps>
@@ -149,6 +153,7 @@ export type WebsiteBuilderProps = {
   PaymentAmount: ComponentType<BuilderPaymentAmountProps>
   PaymentMethodPicker: ComponentType<BuilderPaymentMethodPickerProps>
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>
+  TransactionFee: ComponentType<BuilderTransactionFeeProps>
   Subscribe: ComponentType<BuilderSubscribeProps>
 
   elements: {
@@ -188,6 +193,7 @@ export type WebsiteBuilderProps = {
     Quote: ComponentType<BuilderQuoteBlockProps>
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
+    Subscribe: ComponentType<BuilderSubscribeBlockProps>
     FacebookPost: ComponentType<BuilderFacebookPostBlockProps>
     FacebookVideo: ComponentType<BuilderFacebookVideoBlockProps>
     InstagramPost: ComponentType<BuilderInstagramPostBlockProps>
@@ -198,7 +204,7 @@ export type WebsiteBuilderProps = {
     PolisConversation: ComponentType<BuilderPolisConversationBlockProps>
     TikTokVideo: ComponentType<BuilderTikTokVideoBlockProps>
     BildwurfAd: ComponentType<BuilderBildwurfAdBlockProps>
-    Embed: ComponentType<BuilderEmbedBlockProps>
+    IFrame: ComponentType<BuilderIFrameBlockProps>
     Event: ComponentType<BuilderEventBlockProps>
     Poll: ComponentType<BuilderPollBlockProps>
     Listicle: ComponentType<BuilderListicleBlockProps>
@@ -237,6 +243,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   InvoiceList: NoComponent,
   InvoiceListItem: NoComponent,
   Subscribe: NoComponent,
+  TransactionFee: NoComponent,
   MemberPlanPicker: NoComponent,
   MemberPlanItem: NoComponent,
   PaymentAmount: NoComponent,
@@ -248,6 +255,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleSEO: NoComponent,
   ArticleMeta: NoComponent,
   ArticleDate: NoComponent,
+  ArticleAuthors: NoComponent,
   PeerInformation: NoComponent,
   Author: NoComponent,
   AuthorLinks: NoComponent,
@@ -308,6 +316,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     Quote: NoComponent,
     RichText: NoComponent,
     HTML: NoComponent,
+    Subscribe: NoComponent,
     FacebookPost: NoComponent,
     FacebookVideo: NoComponent,
     InstagramPost: NoComponent,
@@ -318,7 +327,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     PolisConversation: NoComponent,
     TikTokVideo: NoComponent,
     BildwurfAd: NoComponent,
-    Embed: NoComponent,
+    IFrame: NoComponent,
     Event: NoComponent,
     Poll: NoComponent,
     Listicle: NoComponent,

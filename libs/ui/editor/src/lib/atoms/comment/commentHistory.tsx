@@ -87,7 +87,7 @@ export function CommentHistory({
       sort: CommentSort.CreatedAt,
       take: 1000
     },
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'cache-and-network'
   })
 
   useEffect(() => {

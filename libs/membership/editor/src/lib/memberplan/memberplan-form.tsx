@@ -1,11 +1,11 @@
 import React, {Dispatch, SetStateAction, useMemo, useState} from 'react'
 import {
   AvailablePaymentMethod,
-  Currency,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
-  ImageRefFragment,
-  PaymentMethod
+  FullImageFragment,
+  PaymentMethod,
+  Currency
 } from '@wepublish/editor/api'
 import {
   Button,
@@ -557,7 +557,7 @@ export function MemberPlanForm({
       <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={(image: ImageRefFragment) => {
+          onSelect={(image: FullImageFragment) => {
             setChooseModalOpen(false)
             if (!memberPlan) {
               return

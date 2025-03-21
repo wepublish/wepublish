@@ -1,24 +1,31 @@
-import {ApiV1, hasBlockStyle, isTeaserGridBlock} from '@wepublish/website'
+import {hasBlockStyle, isTeaserGridBlock} from '@wepublish/block-content/website'
+import {BlockContent, TeaserGridBlock} from '@wepublish/website/api'
 import {allPass, anyPass} from 'ramda'
 
 export enum BriefingType {
   BaselBriefing = 'BaselBriefing',
   FCBBriefing = 'FCBBriefing',
-  FasnachtsBriefing = 'FasnachtsBriefing'
+  FasnachtsBriefing = 'FasnachtsBriefing',
+  EscBriefing = 'EscBriefing'
 }
 
-export const isBaselBriefingIgnoringBlockType = (
-  block: ApiV1.Block
-): block is ApiV1.TeaserGridBlock => hasBlockStyle(BriefingType.BaselBriefing)(block)
+export const isBaselBriefingIgnoringBlockType = (block: Pick<BlockContent, 'blockStyle'>) =>
+  hasBlockStyle(BriefingType.BaselBriefing)(block)
 
-export const isBaselBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
-  allPass([hasBlockStyle(BriefingType.BaselBriefing), isTeaserGridBlock])(block)
+export const isBaselBriefing = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserGridBlock => allPass([isBaselBriefingIgnoringBlockType, isTeaserGridBlock])(block)
 
-export const isFCBBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
+export const isFCBBriefing = (block: Pick<BlockContent, '__typename'>): block is TeaserGridBlock =>
   allPass([hasBlockStyle(BriefingType.FCBBriefing), isTeaserGridBlock])(block)
 
-export const isFasnachtsBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
+export const isFasnachtsBriefing = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserGridBlock =>
   allPass([hasBlockStyle(BriefingType.FasnachtsBriefing), isTeaserGridBlock])(block)
 
-export const isAnyBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
-  anyPass([isBaselBriefing, isFCBBriefing, isFasnachtsBriefing])(block)
+export const isEscBriefing = (block: Pick<BlockContent, '__typename'>): block is TeaserGridBlock =>
+  allPass([hasBlockStyle(BriefingType.EscBriefing), isTeaserGridBlock])(block)
+
+export const isAnyBriefing = (block: Pick<BlockContent, '__typename'>): block is TeaserGridBlock =>
+  anyPass([isBaselBriefing, isFCBBriefing, isFasnachtsBriefing, isEscBriefing])(block)

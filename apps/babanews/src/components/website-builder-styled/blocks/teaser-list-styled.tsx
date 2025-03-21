@@ -5,7 +5,7 @@ import {
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper,
   TeaserWrapper
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
 
 import {ListTeaser} from '../../website-builder-overwrites/blocks/list-teaser'
 

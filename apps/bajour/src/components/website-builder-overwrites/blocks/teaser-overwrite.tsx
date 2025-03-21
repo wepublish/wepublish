@@ -1,5 +1,4 @@
 import {
-  BuilderTeaserProps,
   hasBlockStyle,
   selectTeaserAuthors,
   selectTeaserDate,
@@ -7,9 +6,9 @@ import {
   selectTeaserLead,
   selectTeaserPreTitle,
   selectTeaserTitle,
-  selectTeaserUrl,
-  useWebsiteBuilder
-} from '@wepublish/website'
+  selectTeaserUrl
+} from '@wepublish/block-content/website'
+import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 import {
   AuthorsAndDate,

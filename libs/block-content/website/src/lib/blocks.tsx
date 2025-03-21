@@ -4,13 +4,14 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website/builder'
 import {isHtmlBlock} from './html/html-block'
+import {isSubscribeBlock} from './subscribe/subscribe-block'
 import {isImageBlock} from './image/image-block'
 import {isQuoteBlock} from './quote/quote-block'
 import {isRichTextBlock} from './richtext/richtext-block'
 import {isTeaserGridFlexBlock} from './teaser/teaser-grid-flex-block'
 import {isTitleBlock} from './title/title-block'
 import {cond} from 'ramda'
-import {isEmbedBlock} from './embed/embed-block'
+import {isIFrameBlock} from './iframe/iframe-block'
 import {isCommentBlock} from './comment/comment-block'
 import {isBildwurfAdBlock} from './bildwurf-ad/bildwurf-ad-block'
 import {isFacebookPostBlock} from './facebook/facebook-post-block'
@@ -59,7 +60,7 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   ])
 
   const embedCond = cond([
-    [isEmbedBlock, block => <blocks.Embed {...block} />],
+    [isIFrameBlock, block => <blocks.IFrame {...block} />],
     [isBildwurfAdBlock, block => <blocks.BildwurfAd {...block} />],
     [isInstagramBlock, block => <blocks.InstagramPost {...block} />],
     [isSoundCloudTrackBlock, block => <blocks.SoundCloudTrack {...block} />],
@@ -93,6 +94,7 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
       [isBreakBlock, block => <blocks.Break {...block} />],
       [isRichTextBlock, block => <blocks.RichText {...block} />],
       [isHtmlBlock, block => <blocks.HTML {...block} />],
+      [isSubscribeBlock, block => <blocks.Subscribe {...block} />],
       [isEventBlock, block => <blocks.Event {...block} />],
       [isPollBlock, block => <blocks.Poll {...block} />],
       [isListicleBlock, block => <blocks.Listicle {...block} />],

@@ -20,8 +20,8 @@ const TikTokEmbed = styled.div`
 `
 
 export interface TikTokVideoEmbedProps {
-  userID: string
-  videoID: string
+  userID: string | null | undefined
+  videoID: string | null | undefined
 }
 
 export function TikTokVideoEmbed({userID, videoID}: TikTokVideoEmbedProps) {

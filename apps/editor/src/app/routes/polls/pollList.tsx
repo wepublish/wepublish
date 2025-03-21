@@ -42,7 +42,7 @@ function PollList() {
   const [limit, setLimit] = useState<number>(10)
 
   const {data, loading, refetch} = usePollsQuery({
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     variables: {
       take: limit,
       skip: (page - 1) * limit

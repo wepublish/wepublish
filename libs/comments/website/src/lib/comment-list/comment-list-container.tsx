@@ -22,14 +22,8 @@ import {useEffect, useReducer} from 'react'
 import {commentListReducer} from './comment-list.state'
 import {CommentRatingsProvider} from '../comment-ratings/comment-ratings.provider'
 
-type PeerArticleComments = {
-  type: CommentItemType.PeerArticle
-  peerId: string
-}
-
 type ArticleOrPageComments = {
   type: CommentItemType
-  peerId?: never
 }
 
 export type CommentListContainerProps = {
@@ -37,14 +31,13 @@ export type CommentListContainerProps = {
   signUpUrl?: string
 } & BuilderContainerProps &
   Pick<BuilderCommentListProps, 'maxCommentDepth' | 'variables' | 'onVariablesChange'> &
-  (PeerArticleComments | ArticleOrPageComments)
+  ArticleOrPageComments
 
 export function CommentListContainer({
   className,
   variables,
   id,
   type,
-  peerId,
   onVariablesChange,
   signUpUrl = '/signup',
   maxCommentDepth
@@ -132,8 +125,7 @@ export function CommentListContainer({
               input: {
                 ...input,
                 itemID: id,
-                itemType: type,
-                peerId
+                itemType: type
               }
             }
           })
