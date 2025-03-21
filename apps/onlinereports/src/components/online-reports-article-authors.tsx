@@ -1,6 +1,7 @@
-import {AuthorChipImageWrapper, avatarImageStyles} from './author-chip'
-import {AuthorChipName, BuilderArticleAuthorsProps, useWebsiteBuilder} from '@wepublish/website'
 import {styled} from '@mui/material'
+import {AuthorChipName, BuilderArticleAuthorsProps, useWebsiteBuilder} from '@wepublish/website'
+
+import {AuthorChipImageWrapper, avatarImageStyles} from './author-chip'
 
 export const ArticleAuthorsWrapper = styled('div')`
   display: grid;
@@ -51,16 +52,15 @@ export function OnlineReportsArticleAuthors({article}: BuilderArticleAuthorsProp
   return (
     <ArticleAuthorsWrapper>
       <AuthorAvatars>
-        {authors?.map(author => (
-          <>
-            {author.image && (
-              <AuthorChipImageWrapper key={author.id}>
-                <Image image={author.image} square css={avatarImageStyles} maxWidth={200} />
-              </AuthorChipImageWrapper>
-            )}
-          </>
-        ))}
+        {authors?.map(author =>
+          author.image ? (
+            <AuthorChipImageWrapper key={author.id}>
+              <Image image={author.image} square css={avatarImageStyles} maxWidth={200} />
+            </AuthorChipImageWrapper>
+          ) : null
+        )}
       </AuthorAvatars>
+
       <AuthorNames>
         {authors?.map((author, i) => (
           <AuthorChipName key={author.id}>
@@ -69,6 +69,7 @@ export function OnlineReportsArticleAuthors({article}: BuilderArticleAuthorsProp
           </AuthorChipName>
         ))}
       </AuthorNames>
+
       <div style={{gridArea: 'date'}}>
         <ArticleDate article={article} />
       </div>
