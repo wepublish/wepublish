@@ -1,4 +1,4 @@
-import {css, lighten, useTheme} from '@mui/material'
+import {css, lighten, Theme} from '@mui/material'
 import styled from '@emotion/styled'
 import {useUser} from '@wepublish/authentication/website'
 import {CommentState} from '@wepublish/website/api'
@@ -7,7 +7,6 @@ import {cond} from 'ramda'
 import {MdEdit, MdReply} from 'react-icons/md'
 import {getStateForEditor} from './comment-list.state'
 import {CommentListItemShare} from './comment-list-item-share'
-import {useMemo} from 'react'
 
 export const CommentListItemChildren = styled('aside')`
   display: grid;
@@ -33,19 +32,14 @@ export const CommentListItemActionsButtons = styled('div')`
   justify-content: space-between;
 `
 
-const useButtonStyles = () => {
-  const theme = useTheme()
-  return useMemo(
-    () => css`
-      border-width: 1px;
-      &:hover {
-        border-width: 1px;
-        background-color: ${lighten(theme.palette.primary.main, 0.9)};
-      }
-    `,
-    [theme]
-  )
-}
+const buttonStyles = (theme: Theme) => css`
+  border-width: 1px;
+
+  &:hover {
+    border-width: 1px;
+    background-color: ${lighten(theme.palette.primary.main, 0.9)};
+  }
+`
 
 export const CommentListItem = ({
   anonymousCanComment,
@@ -88,8 +82,6 @@ export const CommentListItem = ({
 
   const showReply = getStateForEditor(openEditorsState)('add', id)
   const showEdit = getStateForEditor(openEditorsState)('edit', id)
-
-  const buttonStyles = useButtonStyles()
 
   return (
     <Comment {...comment} showContent={!showEdit} className={className}>

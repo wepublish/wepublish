@@ -38,20 +38,13 @@ export const NavbarWrapper = styled('nav')`
   background-color: ${({theme}) => theme.palette.background.default};
 `
 
-const useAppBarStyles = (isMenuOpen: boolean) => {
-  const theme = useTheme()
-
-  return useMemo(
-    () =>
-      isMenuOpen
-        ? css`
-            background-color: ${theme.palette.primary.main};
-            color: ${theme.palette.primary.contrastText};
-          `
-        : null,
-    [theme, isMenuOpen]
-  )
-}
+const appBarStyles = (isMenuOpen: boolean) => (theme: Theme) =>
+  isMenuOpen
+    ? css`
+        background-color: ${theme.palette.primary.main};
+        color: ${theme.palette.primary.contrastText};
+      `
+    : null
 
 export const NavbarInnerWrapper = styled(Toolbar)`
   display: grid;
@@ -95,22 +88,15 @@ export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
   }
 `
 
-const useNavbarLinkStyles = () => {
-  const theme = useTheme()
+const navbarLinkStyles = (theme: Theme) => css`
+  font-size: 1rem;
+  text-decoration: none;
+  color: ${theme.palette.common.black};
 
-  return useMemo(
-    () => css`
-      font-size: 1rem;
-      text-decoration: none;
-      color: ${theme.palette.common.black};
-
-      ${theme.breakpoints.up('md')} {
-        font-size: 1.3rem;
-      }
-    `,
-    [theme]
-  )
-}
+  ${theme.breakpoints.up('md')} {
+    font-size: 1.3rem;
+  }
+`
 
 export const NavbarMain = styled('div')<{isMenuOpen?: boolean}>`
   display: grid;
@@ -168,23 +154,19 @@ export const NavbarIconButtonWrapper = styled('div')`
   }
 `
 
-const useLogoLinkStyles = (isMenuOpen: boolean) => {
-  return useMemo(
-    () => css`
-      color: unset;
-      display: grid;
-      align-items: center;
-      justify-items: center;
-      justify-self: center;
+const logoLinkStyles = (isMenuOpen: boolean) => (theme: Theme) =>
+  css`
+    color: unset;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    justify-self: center;
 
-      ${isMenuOpen &&
-      css`
-        z-index: -1;
-      `}
-    `,
-    [isMenuOpen]
-  )
-}
+    ${isMenuOpen &&
+    css`
+      z-index: -1;
+    `}
+  `
 
 const buttonStyles: SxProps<Theme> = theme => ({
   [theme.breakpoints.up('sm')]: {
@@ -200,26 +182,20 @@ export const NavbarLogoWrapper = styled('div')`
 
 export const NavbarSpacer = styled('div')``
 
-const useImageStyles = () => {
-  const theme = useTheme()
-  return useMemo(
-    () => css`
-      max-height: ${theme.spacing(5)};
-      max-width: ${theme.spacing(15)};
+const imageStyles = (theme: Theme) => css`
+  max-height: ${theme.spacing(5)};
+  max-width: ${theme.spacing(15)};
 
-      ${theme.breakpoints.up('md')} {
-        max-height: ${theme.spacing(6)};
-        max-width: ${theme.spacing(30)};
-      }
+  ${theme.breakpoints.up('md')} {
+    max-height: ${theme.spacing(6)};
+    max-width: ${theme.spacing(30)};
+  }
 
-      ${theme.breakpoints.up('lg')} {
-        max-height: ${theme.spacing(9)};
-        max-width: ${theme.spacing(38)};
-      }
-    `,
-    [theme]
-  )
-}
+  ${theme.breakpoints.up('lg')} {
+    max-height: ${theme.spacing(9)};
+    max-width: ${theme.spacing(38)};
+  }
+`
 
 export function Navbar({
   className,
@@ -238,11 +214,6 @@ export function Navbar({
 }: BuilderNavbarProps) {
   const [isMenuOpen, setMenuOpen] = useState(false)
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
-
-  const imageStyles = useImageStyles()
-  const appBarStyles = useAppBarStyles(isMenuOpen)
-  const logoLinkStyles = useLogoLinkStyles(isMenuOpen)
-  const navbarLinkStyles = useNavbarLinkStyles()
 
   const mainItems = data?.navigations?.find(({key}) => key === slug)
   const headerItems = data?.navigations?.find(({key}) => key === headerSlug)
@@ -272,7 +243,7 @@ export function Navbar({
     <NavbarWrapper className={className}>
       <GlobalStyles styles={theme => cssVariables(theme)} />
 
-      <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
+      <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles(isMenuOpen)}>
         <NavbarInnerWrapper>
           <NavbarMain>
             <NavbarIconButtonWrapper>
@@ -293,7 +264,7 @@ export function Navbar({
             )}
           </NavbarMain>
 
-          <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
+          <Link href="/" aria-label="Startseite" css={logoLinkStyles(isMenuOpen)}>
             <NavbarLogoWrapper>
               {!!logo && (
                 <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
