@@ -27,7 +27,7 @@
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
     "publish": "lerna publish from-package --ignore-scripts --no-verify-access",
     "try": "docker-compose up database migration api editor media storage",
-    "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
+    "prettier": "prettier --write \"{apps,libs}/**/*.{js,ts,tsx,json}\"",
     "prepare": "prisma generate",
     "postinstall": "node build/postInstall.js",
     "deploy:production": "node deployment/deploy_production.js",
