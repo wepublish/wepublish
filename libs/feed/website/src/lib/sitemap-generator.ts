@@ -1,5 +1,5 @@
 import {getArticleSEO} from '@wepublish/article/website'
-import {Article} from '@wepublish/website/api'
+import {Article, Page} from '@wepublish/website/api'
 import {escape} from 'lodash'
 
 const SITEMAP_MAX_ENTRIES = 49999
@@ -12,8 +12,8 @@ export type SitemapConfig = {
 
 export const generateSitemap =
   ({lang = 'de', title, siteUrl}: SitemapConfig) =>
-  (articles: Article[], pageUrls: string[]) => {
-    if (articles.length + pageUrls.length > SITEMAP_MAX_ENTRIES) {
+  (articles: Article[], pages: Page[], pageUrls: string[]) => {
+    if (articles.length + pages.length + pageUrls.length > SITEMAP_MAX_ENTRIES) {
       throw new Error('Too many URLs for sitemap.xml')
     }
 
@@ -38,6 +38,17 @@ export const generateSitemap =
           )
           .join('\n')}
 
+          ${pages
+            .map(page => {
+              return `
+              <url>
+                  <loc>${page.url}</loc>
+                  <lastmod>${page.latest.publishedAt}</lastmod>
+              </url>
+          `
+            })
+            .join('\n')}
+
         ${articles
           .map(article => {
             const seo = getArticleSEO(article)
@@ -45,6 +56,7 @@ export const generateSitemap =
             return `
             <url>
                 <loc>${article.url}</loc>
+                <lastmod>${article.latest.publishedAt}</lastmod>
 
                 <news:news>
                     <news:publication>
